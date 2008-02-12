@@ -65,14 +65,13 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class AnyResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final NodePool nodePool;
-    private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
+    private ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
 
     public AnyResourcePredicateIterator(final LongIndex newLongIndex, final NodePool newNodePool) {
         this.nodePool = newNodePool;
@@ -98,6 +97,7 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
     }
 
     public boolean close() {
+        iterator.close();
         return true;
     }
 }

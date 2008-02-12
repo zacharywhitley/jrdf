@@ -71,7 +71,7 @@ import java.util.Set;
 
 public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final Long resource;
-    private final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> posIterator;
+    private final ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> posIterator;
     private final NodePool nodePool;
     private Iterator<Long> predicateIterator;
     private Long nextPredicate;
@@ -144,6 +144,7 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
     }
 
     public boolean close() {
+        posIterator.close();
         return true;
     }
 }
