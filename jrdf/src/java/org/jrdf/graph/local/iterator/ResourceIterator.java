@@ -78,8 +78,8 @@ import java.util.Set;
 public abstract class ResourceIterator<E> implements ClosableIterator<E> {
     protected final LongIndex longIndex012;
     protected final ResourceFactory resourceFactory;
-    protected Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012;    //spo iterator
-    protected Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
+    protected ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012;    //spo iterator
+    protected ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
     protected Resource nextResource;
     protected boolean firstTime = true;
     protected NodePool nodePool;
@@ -96,6 +96,8 @@ public abstract class ResourceIterator<E> implements ClosableIterator<E> {
     }
 
     public boolean close() {
+        iterator201.close();
+        iterator012.close();
         return true;
     }
 

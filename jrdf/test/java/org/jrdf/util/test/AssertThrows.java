@@ -73,6 +73,9 @@ import java.io.StringWriter;
  */
 public class AssertThrows {
 
+    private AssertThrows() {
+    }
+
     public static void assertThrows(Class exceptionClass, String message, Block block) {
         try {
             block.execute();
