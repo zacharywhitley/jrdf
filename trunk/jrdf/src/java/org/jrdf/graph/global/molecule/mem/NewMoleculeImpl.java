@@ -295,6 +295,8 @@ public class NewMoleculeImpl implements NewMolecule {
     @Override
     public String toString() {
         MoleculeTraverser traverser = new MoleculeTraverserImpl();
-        return traverser.traverse(this, new NewMoleculeToString()).toString();
+        StringBuilder builder = new StringBuilder();
+        traverser.traverse(this, new NewMoleculeToString(builder));
+        return builder.toString();
     }
 }

@@ -62,7 +62,6 @@ package org.jrdf.graph.global.index;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
 import java.util.Iterator;
@@ -72,7 +71,9 @@ import java.util.Map;
  * The generic interface for storing indexed global molecules.
  */
 public interface NewMoleculeIndex {
-    void add(Node first, Node second, Node third, Molecule molecule);
+    void add(Node first, Node second, Node third);
+
+    void add(Node first, Node second, Node third, NewMolecule molecule);
 
     void remove(Node first, Node second, Node third) throws GraphException;
 
