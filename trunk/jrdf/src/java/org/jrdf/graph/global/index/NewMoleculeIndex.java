@@ -66,6 +66,7 @@ import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The generic interface for storing indexed global molecules.
@@ -87,11 +88,11 @@ public interface NewMoleculeIndex {
 
     long getNumberOfMolecules();
 
-    Map<Node, Map<Node, NewMolecule>> getSubIndex(Node first);
+    Map<Node, Map<Node, Set<NewMolecule>>> getSubIndex(Node first);
 
     boolean removeSubIndex(Node first);
 
-    NewMolecule getMolecule(Triple headTriple);
+    Set<NewMolecule> getMolecules(Triple headTriple);
 
-    Iterator<Map.Entry<Node, Map<Node, Map<Node, NewMolecule>>>> keySetIterator();
+    Iterator<Map.Entry<Node, Map<Node, Map<Node, Set<NewMolecule>>>>> keySetIterator();
 }

@@ -70,17 +70,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
-    private static final long serialVersionUID = -8587157481997476484L;
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
-    private Map<Node, Map<Node, Map<Node, NewMolecule>>> index;
+    private Map<Node, Map<Node, Map<Node, Set<NewMolecule>>>> index;
 
     protected AbstractNewMoleculeIndexMem() {
-        this.index = new HashMap<Node, Map<Node, Map<Node, NewMolecule>>>();
+        this.index = new HashMap<Node, Map<Node, Map<Node, Set<NewMolecule>>>>();
     }
 
-    protected AbstractNewMoleculeIndexMem(Map<Node, Map<Node, Map<Node, NewMolecule>>> newIndex) {
+    protected AbstractNewMoleculeIndexMem(Map<Node, Map<Node, Map<Node, Set<NewMolecule>>>> newIndex) {
         this.index = newIndex;
     }
 
@@ -96,25 +96,26 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
     protected abstract Node[] getNodes(Triple triple);
 
     private void addInternalNodes(Node first, Node second, Node third, NewMolecule molecule) {
-        Map<Node, Map<Node, NewMolecule>> subIndex = index.get(first);
+        Map<Node, Map<Node, Set<NewMolecule>>> subIndex = index.get(first);
 
         //check subindex exists
         if (null == subIndex) {
-            subIndex = new HashMap<Node, Map<Node, NewMolecule>>();
+            subIndex = new HashMap<Node, Map<Node, Set<NewMolecule>>>();
             index.put(first, subIndex);
         }
 
         //find the final group
-        Map<Node, NewMolecule> group = subIndex.get(second);
+        Map<Node, Set<NewMolecule>> group = subIndex.get(second);
         if (null == group) {
-            group = new HashMap<Node, NewMolecule>();
+            group = new HashMap<Node, Set<NewMolecule>>();
             subIndex.put(second, group);
         }
         if (molecule != null && group.containsKey(third)) {
-            NewMolecule tmpMolecule = group.remove(third);
-            group.put(third, tmpMolecule.add(molecule));
+            Set<NewMolecule> tmpMolecules = group.remove(third);
+            tmpMolecules.add(molecule);
+            group.put(third, tmpMolecules);
         } else {
-            group.put(third, molecule);
+            group.put(third, null);
         }
     }
 
@@ -134,16 +135,16 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
     }
 
     private NewMolecule removeInternal(Node first, Node second, Node third) throws GraphException {
-        Map<Node, Map<Node, NewMolecule>> subIndex = index.get(first);
+        Map<Node, Map<Node, Set<NewMolecule>>> subIndex = index.get(first);
         if (null == subIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
 
-        Map<Node, NewMolecule> group = subIndex.get(second);
+        Map<Node, Set<NewMolecule>> group = subIndex.get(second);
         if (null == group) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
-        NewMolecule molecule = group.get(third);
+        Set<NewMolecule> molecule = group.get(third);
 
         //remove the main index value
         if (group.remove(third) == null) {
@@ -156,7 +157,8 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
                 index.remove(first);
             }
         }
-        return molecule;
+        //return molecule;
+        return null;
     }
 
     public void remove(Node[] nodes) throws GraphException {
@@ -171,12 +173,12 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
         return index.containsKey(node);
     }
 
-    public NewMolecule getMolecule(Triple headTriple) {
+    public Set<NewMolecule> getMolecules(Triple headTriple) {
         Node[] nodes = getNodes(headTriple);
-        NewMolecule molecule = null;
-        Map<Node, Map<Node, NewMolecule>> subIndex = getSubIndex(nodes[0]);
+        Set<NewMolecule> molecule = null;
+        Map<Node, Map<Node, Set<NewMolecule>>> subIndex = getSubIndex(nodes[0]);
         if (subIndex != null) {
-            Map<Node, NewMolecule> subSubIndex = subIndex.get(nodes[1]);
+            Map<Node, Set<NewMolecule>> subSubIndex = subIndex.get(nodes[1]);
             if (subSubIndex != null && subSubIndex.containsKey(nodes[2])) {
                 molecule = subSubIndex.get(nodes[2]);
             }
@@ -186,9 +188,9 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
 
     public long getNumberOfTriples() {
         long size = 0;
-        Collection<Map<Node, Map<Node, NewMolecule>>> spoMap = index.values();
-        for (Map<Node, Map<Node, NewMolecule>> poMap : spoMap) {
-            for (Map<Node, NewMolecule> oMap : poMap.values()) {
+        Collection<Map<Node, Map<Node, Set<NewMolecule>>>> spoMap = index.values();
+        for (Map<Node, Map<Node, Set<NewMolecule>>> poMap : spoMap) {
+            for (Map<Node, Set<NewMolecule>> oMap : poMap.values()) {
                 size += oMap.size();
             }
         }
@@ -199,25 +201,21 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
         long size = 0;
         //spo-m
         for (Node node : index.keySet()) {
-            Map<Node, Map<Node, NewMolecule>> firstLevelIndex = index.get(node);
+            Map<Node, Map<Node, Set<NewMolecule>>> firstLevelIndex = index.get(node);
             // po-m
-            for (Map.Entry<Node, Map<Node, NewMolecule>> mapEntries : firstLevelIndex.entrySet()) {
+            for (Map.Entry<Node, Map<Node, Set<NewMolecule>>> mapEntries : firstLevelIndex.entrySet()) {
                 //o-m
-                for (Map.Entry<Node, NewMolecule> secondLevelIndex : mapEntries.getValue().entrySet()) {
+                for (Map.Entry<Node, Set<NewMolecule>> secondLevelIndex : mapEntries.getValue().entrySet()) {
                     //m
-                    NewMolecule molecule = secondLevelIndex.getValue();
-                    Node[] headNodes = getNodes(molecule.getHeadTriple());
-                    if (headNodes[0].equals(node) && headNodes[1].equals(mapEntries.getKey()) &&
-                        headNodes[2].equals(secondLevelIndex.getKey())) {
-                        size++;
-                    }
+                    Set<NewMolecule> molecules = secondLevelIndex.getValue();
+                    size += molecules.size();
                 }
             }
         }
         return size;
     }
 
-    public Map<Node, Map<Node, NewMolecule>> getSubIndex(Node first) {
+    public Map<Node, Map<Node, Set<NewMolecule>>> getSubIndex(Node first) {
         return index.get(first);
     }
 
@@ -227,7 +225,7 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
     }
 
 
-    public Iterator<Map.Entry<Node, Map<Node, Map<Node, NewMolecule>>>> keySetIterator() {
+    public Iterator<Map.Entry<Node, Map<Node, Map<Node, Set<NewMolecule>>>>> keySetIterator() {
         return index.entrySet().iterator();
     }
 
