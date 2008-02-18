@@ -88,9 +88,12 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
         addInternalNodes(first, second, third, null);
     }
 
+    public void add(NewMolecule molecule) {
+        traverser.traverse(molecule, new AddNewMoleculeToIndex(this, molecule));
+    }
+
     public void add(Node first, Node second, Node third, NewMolecule molecule) {
         addInternalNodes(first, second, third, molecule);
-        traverser.traverse(molecule, new NewMoleculeToIndex(this));
     }
 
     protected abstract Node[] getNodes(Triple triple);
@@ -120,13 +123,7 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
     }
 
     public void remove(Node first, Node second, Node third) throws GraphException {
-        NewMolecule molecule = removeInternal(first, second, third);
-        Iterator<Triple> iterator = molecule.getRootTriples();
-        while (iterator.hasNext()) {
-            Triple triple = iterator.next();
-            Node[] nodes = getNodes(triple);
-            removeInternal(nodes[0], nodes[1], nodes[2]);
-        }
+        removeInternal(first, second, third, null);
     }
 
     public void remove(NewMolecule molecule) throws GraphException {
@@ -134,31 +131,54 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
         remove(nodes[0], nodes[1], nodes[2]);
     }
 
-    private NewMolecule removeInternal(Node first, Node second, Node third) throws GraphException {
+    private void removeInternal(Node first, Node second, Node third, NewMolecule molecule) throws GraphException {
         Map<Node, Map<Node, Set<NewMolecule>>> subIndex = index.get(first);
         if (null == subIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
-
         Map<Node, Set<NewMolecule>> group = subIndex.get(second);
         if (null == group) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
-        Set<NewMolecule> molecule = group.get(third);
-
-        //remove the main index value
-        if (group.remove(third) == null) {
+        Set<NewMolecule> tmpMolecules = group.get(third);
+        if (tmpMolecules == null) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
+        if (molecule == null) {
+            removeTriple(third, group, tmpMolecules);
+        } else {
+            removeMolecule(third, group, molecule, tmpMolecules);
+        }
+        cleanupMolecule(first, second, subIndex, group);
+    }
 
+    private void cleanupMolecule(Node first, Node second, Map<Node, Map<Node, Set<NewMolecule>>> subIndex,
+        Map<Node, Set<NewMolecule>> group) {
         if (group.isEmpty()) {
             subIndex.remove(second);
             if (subIndex.isEmpty()) {
                 index.remove(first);
             }
         }
-        //return molecule;
-        return null;
+    }
+
+    private void removeMolecule(Node third, Map<Node, Set<NewMolecule>> group, NewMolecule molecule,
+        Set<NewMolecule> tmpMolecules) throws GraphException {
+        if (!tmpMolecules.remove(molecule)) {
+            throw new GraphException("Unable to remove nonexistent molecule");
+        }
+        if (tmpMolecules.isEmpty()) {
+            group.remove(third);
+        }
+    }
+
+    private void removeTriple(Node third, Map<Node, Set<NewMolecule>> group, Set<NewMolecule> tmpMolecules)
+        throws GraphException {
+        if (tmpMolecules.isEmpty()) {
+            group.remove(third);
+        } else {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
     }
 
     public void remove(Node[] nodes) throws GraphException {

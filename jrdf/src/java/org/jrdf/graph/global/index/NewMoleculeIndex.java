@@ -74,7 +74,7 @@ import java.util.Set;
 public interface NewMoleculeIndex {
     void add(Node first, Node second, Node third);
 
-    void add(Node first, Node second, Node third, NewMolecule molecule);
+    void add(NewMolecule molecule);
 
     void remove(Node first, Node second, Node third) throws GraphException;
 
@@ -95,4 +95,6 @@ public interface NewMoleculeIndex {
     Set<NewMolecule> getMolecules(Triple headTriple);
 
     Iterator<Map.Entry<Node, Map<Node, Map<Node, Set<NewMolecule>>>>> keySetIterator();
+
+    void add(Node first, Node second, Node third, NewMolecule molecule);
 }

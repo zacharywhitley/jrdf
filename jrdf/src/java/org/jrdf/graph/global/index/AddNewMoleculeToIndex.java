@@ -65,15 +65,17 @@ import org.jrdf.graph.Triple;
 
 import java.util.Set;
 
-public class NewMoleculeToIndex implements MoleculeHandler {
+public class AddNewMoleculeToIndex implements MoleculeHandler {
     private final NewMoleculeIndex index;
+    private final NewMolecule molecule;
 
-    public NewMoleculeToIndex(NewMoleculeIndex index) {
-        this.index = index;
+    public AddNewMoleculeToIndex(NewMoleculeIndex newIndex, NewMolecule newMolecule) {
+        this.index = newIndex;
+        this.molecule = newMolecule;
     }
 
     public void handleTriple(Triple triple) {
-        index.add(triple.getSubject(), triple.getPredicate(), triple.getObject());
+        index.add(triple.getSubject(), triple.getPredicate(), triple.getObject(), molecule);
     }
 
     public void handleEmptyMolecules() {
