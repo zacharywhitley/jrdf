@@ -86,6 +86,7 @@ public abstract class AbstractNewMoleculeIndexMemUnitTest extends TestCase {
         Triple t1 = new TripleImpl(p1, p1, p1);
         Node[] nodes = getNodes(t1);
         moleculeIndex.add(nodes[0], nodes[1], nodes[2]);
+        moleculeIndex.add(nodes[0], nodes[1], nodes[2]);
         assertEquals(1, moleculeIndex.getNumberOfTriples());
     }
 }
