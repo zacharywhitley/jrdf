@@ -99,6 +99,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class DecomposerPerformance {
+    private static final int CHAIN_SIZE = 20;
+    private static final int LOOP_SIZE = 9;
     private static final int NUMBER_OF_MOLECULES = 500;
     private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private final Graph graph = factory.getNewGraph();
@@ -171,7 +173,7 @@ public class DecomposerPerformance {
     private void addChain(String predicate) throws Exception {
         URIReference p1 = elementFactory.createURIReference(URI.create(predicate));
         BlankNode thisNode = elementFactory.createBlankNode();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < CHAIN_SIZE; i++) {
             BlankNode nextNode = elementFactory.createBlankNode();
             graph.add(thisNode, p1, nextNode);
             thisNode = nextNode;
@@ -182,7 +184,7 @@ public class DecomposerPerformance {
         URIReference p1 = elementFactory.createURIReference(URI.create(predicate));
         BlankNode firstNode = elementFactory.createBlankNode();
         BlankNode thisNode = firstNode;
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < LOOP_SIZE; i++) {
             BlankNode nextNode = elementFactory.createBlankNode();
             graph.add(thisNode, p1, nextNode);
             thisNode = nextNode;
