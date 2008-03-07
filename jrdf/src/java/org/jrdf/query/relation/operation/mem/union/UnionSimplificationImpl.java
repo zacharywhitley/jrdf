@@ -70,8 +70,7 @@ public class UnionSimplificationImpl implements UnionSimplification {
         LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
         checkForDeeOrDum(relation1, relation2, relations);
         checkForSame(relation1, relation2, relations);
-
-        if (relations.size() == 0) {
+        if (relations.isEmpty()) {
             relations.add(relation1);
             relations.add(relation2);
         }
@@ -92,9 +91,9 @@ public class UnionSimplificationImpl implements UnionSimplification {
     private void checkForSame(Relation relation1, Relation relation2, LinkedHashSet<Relation> relations) {
         if (relation1.equals(relation2)) {
             relations.add(relation1);
-        } else if (relation1.getTuples().size() == 0 && relation2.getTuples().size() != 0) {
+        } else if (relation1.getTuples().isEmpty() && !relation2.getTuples().isEmpty()) {
             relations.add(relation2);
-        } else if (relation1.getTuples().size() != 0 && relation2.getTuples().size() == 0) {
+        } else if (!relation1.getTuples().isEmpty() && relation2.getTuples().isEmpty()) {
             relations.add(relation1);
         }
     }

@@ -92,11 +92,9 @@ public class MinimumUnionImpl implements Union {
     private Relation performMinimumUnion(LinkedHashSet<Relation> relations) {
         Relation relation = relationProcessor.processRelations(relations, unionTupleEngine);
         Relation subsumptionRelation = relationProcessor.processRelations(relations, subsumptionTupleEngine);
-
         for (Tuple tuple : subsumptionRelation.getSortedTuples()) {
             relation.getSortedTuples().remove(tuple);
         }
-
         return relation;
     }
 }
