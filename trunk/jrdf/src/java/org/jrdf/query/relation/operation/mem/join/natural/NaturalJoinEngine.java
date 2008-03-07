@@ -111,8 +111,7 @@ public class NaturalJoinEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public void process(SortedSet<Attribute> headings,
-        SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
+    public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
         boolean contradiction = false;
         for (Attribute attribute : headings) {
