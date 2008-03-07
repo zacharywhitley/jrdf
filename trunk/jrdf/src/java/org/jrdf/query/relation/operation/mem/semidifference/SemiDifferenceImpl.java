@@ -75,14 +75,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class SemiDifferenceImpl implements SemiDifference {
-
     private final RelationFactory relationFactory;
     private TupleComparator tupleComparator;
     private RelationProcessor relationProcessor;
 
     public SemiDifferenceImpl(RelationProcessor relationProcessor, RelationFactory relationFactory,
-        TupleComparator tupleComparator
-    ) {
+        TupleComparator tupleComparator) {
         this.relationFactory = relationFactory;
         this.tupleComparator = tupleComparator;
         this.relationProcessor = relationProcessor;
@@ -93,7 +91,6 @@ public class SemiDifferenceImpl implements SemiDifference {
         if (result != null) {
             return result;
         }
-
         SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
         performMinus(relation1, relation2, resultTuples);
         result = relationFactory.getRelation(resultTuples);
