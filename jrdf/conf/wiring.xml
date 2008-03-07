@@ -133,7 +133,6 @@
     </bean>
 
     <bean id="outerUnionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.OuterUnionEngine">
-        <constructor-arg ref="tupleFactory"/>
         <constructor-arg ref="relationHelper"/>
     </bean>
 
