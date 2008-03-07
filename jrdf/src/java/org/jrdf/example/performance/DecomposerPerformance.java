@@ -99,7 +99,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class DecomposerPerformance {
-    private static final int NUMBER_OF_MOLECULES = 400;
+    private static final int NUMBER_OF_MOLECULES = 500;
     private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private final Graph graph = factory.getNewGraph();
     private final GraphElementFactory elementFactory = graph.getElementFactory();
@@ -169,28 +169,25 @@ public class DecomposerPerformance {
     }
 
     private void addChain(String predicate) throws Exception {
-        BlankNode s = elementFactory.createBlankNode();
         URIReference p1 = elementFactory.createURIReference(URI.create(predicate));
-        URIReference p2 = elementFactory.createURIReference(URI.create(predicate));
-        URIReference p3 = elementFactory.createURIReference(URI.create(predicate));
-        BlankNode o1 = elementFactory.createBlankNode();
-        BlankNode o2 = elementFactory.createBlankNode();
-        BlankNode o3 = elementFactory.createBlankNode();
-        graph.add(s, p1, o1);
-        graph.add(o1, p2, o2);
-        graph.add(o2, p3, o3);
+        BlankNode thisNode = elementFactory.createBlankNode();
+        for (int i = 0; i < 20; i++) {
+            BlankNode nextNode = elementFactory.createBlankNode();
+            graph.add(thisNode, p1, nextNode);
+            thisNode = nextNode;
+        }
     }
 
     private void addLoop(String predicate) throws Exception {
         URIReference p1 = elementFactory.createURIReference(URI.create(predicate));
-        URIReference p2 = elementFactory.createURIReference(URI.create(predicate));
-        URIReference p3 = elementFactory.createURIReference(URI.create(predicate));
-        BlankNode o1 = elementFactory.createBlankNode();
-        BlankNode o2 = elementFactory.createBlankNode();
-        BlankNode o3 = elementFactory.createBlankNode();
-        graph.add(o1, p1, o2);
-        graph.add(o2, p2, o3);
-        graph.add(o3, p3, o1);
+        BlankNode firstNode = elementFactory.createBlankNode();
+        BlankNode thisNode = firstNode;
+        for (int i = 0; i < 9; i++) {
+            BlankNode nextNode = elementFactory.createBlankNode();
+            graph.add(thisNode, p1, nextNode);
+            thisNode = nextNode;
+        }
+        graph.add(thisNode, p1, firstNode);
     }
 
     public static void main(String[] args) throws Exception {
