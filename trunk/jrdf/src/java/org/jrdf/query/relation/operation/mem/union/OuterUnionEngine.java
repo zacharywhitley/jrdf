@@ -62,19 +62,16 @@ package org.jrdf.query.relation.operation.mem.union;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.SortedSet;
 
 public class OuterUnionEngine implements TupleEngine {
-    private final TupleFactory tupleFactory;
     private final RelationHelper relationHelper;
 
-    public OuterUnionEngine(TupleFactory tupleFactory, RelationHelper relationHelper) {
-        this.tupleFactory = tupleFactory;
-        this.relationHelper = relationHelper;
+    public OuterUnionEngine(RelationHelper newRelationHelper) {
+        this.relationHelper = newRelationHelper;
     }
 
     public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {

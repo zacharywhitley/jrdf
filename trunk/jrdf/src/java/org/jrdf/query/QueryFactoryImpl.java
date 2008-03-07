@@ -153,7 +153,7 @@ public class QueryFactoryImpl implements QueryFactory {
         RelationHelper relationHelper = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
         TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, ATTRIBUTE_VALUE_PAIR_COMPARATOR,
             relationHelper);
-        TupleEngine unionTupleEngine = new OuterUnionEngine(TUPLE_FACTORY, relationHelper);
+        TupleEngine unionTupleEngine = new OuterUnionEngine(relationHelper);
         NadicJoin join = new NadicJoinImpl(relationProcessor, joinTupleEngine);
         Restrict restrict = new RestrictImpl(RELATION_FACTORY);
         Union union = new OuterUnionImpl(relationProcessor, unionTupleEngine);
