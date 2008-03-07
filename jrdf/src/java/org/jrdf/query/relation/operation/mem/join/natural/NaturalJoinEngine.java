@@ -114,8 +114,6 @@ public class NaturalJoinEngine implements TupleEngine {
     public void process(SortedSet<Attribute> headings,
         SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
-        SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
-        SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
         boolean contradiction = false;
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = tuple1.getAttribute(attribute);
