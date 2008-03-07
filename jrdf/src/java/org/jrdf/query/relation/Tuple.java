@@ -80,4 +80,6 @@ public interface Tuple extends Serializable {
 
     // TODO (AN) Test drive me
     SortedSet<AttributeValuePair> getSortedAttributeValues();
+
+    AttributeValuePair getAttribute(Attribute attribute);
 }

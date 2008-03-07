@@ -86,12 +86,13 @@ public class SubsumptionEngine implements TupleEngine {
      * Returns the tuples to be subsumed in the result set.
      *
      * @param headings the headings of the resultant tuple.
-     * @param avps1    the first set of avps to consider.
-     * @param avps2    the second set of avps to consider.
      * @param result   the tuples to be subsumed.
+     * @param tuple1
+     * @param tuple2
      */
-    public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+    public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
+        SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
+        SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
         int subsumes = subsumes(headings, avps1, avps2);
         if (tuple2SubsumesTuple1(subsumes)) {
             result.add(tupleFactory.getTuple(avps1));

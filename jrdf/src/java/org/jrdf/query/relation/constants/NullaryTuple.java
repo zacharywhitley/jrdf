@@ -62,6 +62,7 @@ package org.jrdf.query.relation.constants;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.Attribute;
 import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.NULLARY_ATTRIBUTE_VALUE_PAIR;
 import org.jrdf.query.relation.mem.ComparatorFactory;
 import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
@@ -105,5 +106,9 @@ public final class NullaryTuple implements Tuple, Serializable {
         SortedSet<AttributeValuePair> sortedPairs = new TreeSet<AttributeValuePair>(avpComparator);
         sortedPairs.addAll(NULLARY_AVP_SET);
         return sortedPairs;
+    }
+
+    public AttributeValuePair getAttribute(Attribute attribute) {
+        return null;
     }
 }

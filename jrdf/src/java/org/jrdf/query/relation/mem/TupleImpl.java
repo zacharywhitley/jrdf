@@ -61,6 +61,7 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.Attribute;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
@@ -108,6 +109,15 @@ public final class TupleImpl implements Tuple {
         sortedPairs.addAll(attributeValues);
         attributeValues = sortedPairs;
         return sortedPairs;
+    }
+
+    public AttributeValuePair getAttribute(Attribute expectedAttribute) {
+        for (AttributeValuePair avp : attributeValues) {
+            if (avp.getAttribute().equals(expectedAttribute)) {
+                return avp;
+            }
+        }
+        return null;
     }
 
     public int hashCode() {
