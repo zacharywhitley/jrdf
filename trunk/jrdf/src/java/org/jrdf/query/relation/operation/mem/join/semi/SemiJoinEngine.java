@@ -87,16 +87,13 @@ public class SemiJoinEngine implements TupleEngine {
         return relation1.getSortedHeading();
     }
 
-    public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+    public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         SortedSet<AttributeValuePair> allAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
         SortedSet<AttributeValuePair> lhsAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
         boolean contradiction = false;
-
         for (Attribute attribute : headings) {
-            AttributeValuePair avp1 = getAttribute(avps1, attribute);
-            AttributeValuePair avp2 = getAttribute(avps2, attribute);
-
+            AttributeValuePair avp1 = tuple1.getAttribute(attribute);
+            AttributeValuePair avp2 = tuple2.getAttribute(attribute);
             contradiction = addAttributeValuePair(avp1, avp2, allAttributeValuePairs, lhsAttributeValuePairs);
 
             // If we didn't find one for the current heading end early.
@@ -110,15 +107,6 @@ public class SemiJoinEngine implements TupleEngine {
             Tuple t = tupleFactory.getTuple(lhsAttributeValuePairs);
             result.add(t);
         }
-    }
-
-    private AttributeValuePair getAttribute(SortedSet<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
-        for (AttributeValuePair avp : actualAvps) {
-            if (avp.getAttribute().equals(expectedAttribute)) {
-                return avp;
-            }
-        }
-        return null;
     }
 
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,

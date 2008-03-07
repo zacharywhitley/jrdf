@@ -98,6 +98,7 @@ public class NaturalJoinEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
     private final AttributeValuePairComparator avpComparator;
     private final RelationHelper relationHelper;
+    private SortedSet<AttributeValuePair> resultantAttributeValues;
 
     public NaturalJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
         RelationHelper relationHelper) {
@@ -110,14 +111,16 @@ public class NaturalJoinEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
-        SortedSet<AttributeValuePair> resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
+    public void process(SortedSet<Attribute> headings,
+        SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
+        resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
+        SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
+        SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
         boolean contradiction = false;
         for (Attribute attribute : headings) {
-            AttributeValuePair avp1 = getAttribute(avps1, attribute);
-            AttributeValuePair avp2 = getAttribute(avps2, attribute);
-            contradiction = addAttributeValuePair(avp1, avp2, resultantAttributeValues);
+            AttributeValuePair avp1 = tuple1.getAttribute(attribute);
+            AttributeValuePair avp2 = tuple2.getAttribute(attribute);
+            contradiction = addAttributeValuePair(avp1, avp2);
 
             // If we didn't find one for the current heading end early.
             if (contradiction) {
@@ -126,62 +129,46 @@ public class NaturalJoinEngine implements TupleEngine {
         }
 
         // Only add results if we have found more items to add and there wasn't a contradiction in bound values.
-        if (resultantAttributeValues.size() > 0 && !contradiction) {
+        if (!resultantAttributeValues.isEmpty() && !contradiction) {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
     }
 
-    private AttributeValuePair getAttribute(SortedSet<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
-        for (AttributeValuePair avp : actualAvps) {
-            if (avp.getAttribute().equals(expectedAttribute)) {
-                return avp;
-            }
-        }
-        return null;
-    }
-
-    private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
-        SortedSet<AttributeValuePair> resultantAttributeValues) {
+    private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2) {
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
-            return avp1NotNull(avp2, avp1, resultantAttributeValues);
+            return avp1NotNull(avp2, avp1);
         } else {
             // Add if avp1 is null and avp2 is not.
-            return avp1Null(avp2, resultantAttributeValues);
+            return avp1Null(avp2);
         }
     }
 
-    private boolean avp1NotNull(AttributeValuePair avp2, AttributeValuePair avp1,
-        SortedSet<AttributeValuePair> resultantAttributeValues) {
+    private boolean avp1NotNull(AttributeValuePair avp2, AttributeValuePair avp1) {
         if (avp2 == null) {
-            addResults(avp1, resultantAttributeValues);
+            resultantAttributeValues.add(avp1);
             return false;
         } else if (avpComparator.compare(avp1, avp2) == 0) {
-            addNonNullaryAvp(avp1, avp2, resultantAttributeValues);
+            addNonNullaryAvp(avp1, avp2);
             return false;
         } else {
             return true;
         }
     }
 
-    private boolean avp1Null(AttributeValuePair avp2, SortedSet<AttributeValuePair> resultantAttributeValues) {
+    private boolean avp1Null(AttributeValuePair avp2) {
         if (avp2 != null) {
-            addResults(avp2, resultantAttributeValues);
+            resultantAttributeValues.add(avp2);
         }
         return false;
     }
 
-    private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,
-        SortedSet<AttributeValuePair> resultantAttributeValues) {
+    private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2) {
         if (!(avp1 instanceof NullaryAttributeValuePair)) {
-            addResults(avp1, resultantAttributeValues);
+            resultantAttributeValues.add(avp1);
         } else {
-            addResults(avp2, resultantAttributeValues);
+            resultantAttributeValues.add(avp2);
         }
-    }
-
-    private void addResults(AttributeValuePair avp, SortedSet<AttributeValuePair> resultantAttributeValues) {
-        resultantAttributeValues.add(avp);
     }
 }

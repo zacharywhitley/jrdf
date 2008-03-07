@@ -60,7 +60,6 @@
 package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
@@ -82,10 +81,7 @@ public class OuterUnionEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
-        Tuple tuple1 = tupleFactory.getTuple(avps1);
-        Tuple tuple2 = tupleFactory.getTuple(avps2);
+    public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         result.add(tuple1);
         result.add(tuple2);
     }

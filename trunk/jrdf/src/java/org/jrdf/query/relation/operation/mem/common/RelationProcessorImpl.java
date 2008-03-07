@@ -134,7 +134,7 @@ public final class RelationProcessorImpl implements RelationProcessor {
         TupleEngine tupleEngine) {
         SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
         SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
-        tupleEngine.process(headings, avps1, avps2, result);
+        tupleEngine.process(headings, result, tuple1, tuple2);
     }
 
 }

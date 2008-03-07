@@ -60,7 +60,6 @@
 package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 
@@ -72,6 +71,5 @@ import java.util.SortedSet;
 public interface TupleEngine {
     SortedSet<Attribute> getHeading(Relation relation1, Relation relation2);
 
-    void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result);
+    void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2);
 }
