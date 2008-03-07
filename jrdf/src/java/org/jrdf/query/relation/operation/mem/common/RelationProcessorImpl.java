@@ -60,7 +60,6 @@
 package org.jrdf.query.relation.operation.mem.common;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
@@ -93,11 +92,9 @@ public final class RelationProcessorImpl implements RelationProcessor {
         Relation relation1 = iterator.next();
         Relation relation2 = iterator.next();
         SortedSet<Attribute> headings = tupleEngine.getHeading(relation1, relation2);
-
         SortedSet<Tuple> tuples = processTuples(headings, relation1.getSortedTuples(), relation2.getSortedTuples(),
             tupleEngine);
         Relation resultRelation = relationFactory.getRelation(headings, tuples);
-
         while (iterator.hasNext()) {
             Relation nextRelation = iterator.next();
             headings = tupleEngine.getHeading(resultRelation, nextRelation);
@@ -109,8 +106,8 @@ public final class RelationProcessorImpl implements RelationProcessor {
     }
 
     public Relation convertToConstants(Relation resultRelation) {
-        if (resultRelation.getHeading().size() == 0) {
-            if (resultRelation.getTuples().size() == 0) {
+        if (resultRelation.getHeading().isEmpty()) {
+            if (resultRelation.getTuples().isEmpty()) {
                 return RELATION_DUM;
             } else {
                 return RELATION_DEE;
@@ -124,17 +121,9 @@ public final class RelationProcessorImpl implements RelationProcessor {
         SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple1 : tuples1) {
             for (Tuple tuple2 : tuples2) {
-                processRhs(headings, tuple1, tuple2, result, tupleEngine);
+                tupleEngine.process(headings, result, tuple1, tuple2);
             }
         }
         return result;
     }
-
-    private void processRhs(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2, SortedSet<Tuple> result,
-        TupleEngine tupleEngine) {
-        SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
-        SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
-        tupleEngine.process(headings, result, tuple1, tuple2);
-    }
-
 }
