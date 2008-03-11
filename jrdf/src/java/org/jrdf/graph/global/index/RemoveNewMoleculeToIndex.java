@@ -59,30 +59,28 @@
 
 package org.jrdf.graph.global.index;
 
-import junit.framework.TestCase;
+import org.jrdf.graph.global.molecule.MoleculeHandler;
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleImpl;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.URIReferenceImpl;
 
-import java.net.URI;
+import java.util.Set;
 
-public abstract class AbstractNewMoleculeIndexMemUnitTest extends TestCase {
-    private NewMoleculeIndex moleculeIndex;
+public class RemoveNewMoleculeToIndex implements MoleculeHandler {
+    private final NewMoleculeIndex index;
+    private final NewMolecule molecule;
 
-    public void setUp() throws Exception {
-        moleculeIndex = getIndex();
+    public RemoveNewMoleculeToIndex(NewMoleculeIndex newIndex, NewMolecule newMolecule) {
+        this.index = newIndex;
+        this.molecule = newMolecule;
     }
 
-    protected abstract NewMoleculeIndex getIndex();
+    public void handleTriple(Triple triple) {
+        index.remove(triple, molecule);
+    }
 
-    public void testAdd() {
-        URIReference p1 = new URIReferenceImpl(URI.create("urn:p1"));
-//        URIReference p2 = new URIReferenceImpl(URI.create("urn:p2"));
-//        URIReference p3 = new URIReferenceImpl(URI.create("urn:p3"));
-        Triple t1 = new TripleImpl(p1, p1, p1);
-        moleculeIndex.add(t1);
-        moleculeIndex.add(t1);
-        assertEquals(1, moleculeIndex.getNumberOfTriples());
+    public void handleEmptyMolecules() {
+    }
+
+    public void handleContainsMolecules(Set<NewMolecule> newMolecules) {
     }
 }
