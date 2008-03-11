@@ -60,32 +60,22 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.molecule.MergeSubmolecules;
-import org.jrdf.graph.global.molecule.MoleculeSubsumption;
-import org.jrdf.graph.global.molecule.MergeSubmoleculesImpl;
 
 import java.util.Set;
 
 public class NewMoleculeFactoryImpl implements NewMoleculeFactory {
-    private final TripleComparator comparator;
     private final NewMoleculeComparator moleculeComparator;
-    private final MergeSubmolecules moleculeMerger;
 
-    public NewMoleculeFactoryImpl(TripleComparator newTripleComparator, NewMoleculeComparator newMoleculeComparator,
-        MoleculeSubsumption subsumption) {
-        comparator = newTripleComparator;
+    public NewMoleculeFactoryImpl(NewMoleculeComparator newMoleculeComparator) {
         moleculeComparator = newMoleculeComparator;
-        // TODO FIXME AN Circular dependency this is just wrong!
-        moleculeMerger = new MergeSubmoleculesImpl(comparator, moleculeComparator, this, subsumption);
     }
 
     public NewMolecule createMolecue() {
-        return new NewMoleculeImpl(moleculeComparator, moleculeMerger);
+        return new NewMoleculeImpl(moleculeComparator);
     }
 
     public NewMolecule createMolecule(Triple... rootTriples) {
-        return new NewMoleculeImpl(moleculeComparator, moleculeMerger, rootTriples);
+        return new NewMoleculeImpl(moleculeComparator, rootTriples);
     }
 
     public NewMolecule createMolecule(Set<Triple> triples) {

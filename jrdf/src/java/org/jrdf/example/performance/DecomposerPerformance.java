@@ -113,8 +113,7 @@ public class DecomposerPerformance {
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
     private final NewMoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
     private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
-    private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(comparator, moleculeComparator,
-        new MoleculeSubsumptionImpl());
+    private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
     private final NewGraphDecomposer decomposer = new NewNaiveGraphDecomposerImpl(setFactory, moleculeFactory,
         moleculeComparator, comparator);
     private final BlankNodeMapper mapper = new BlankNodeMapperImpl();

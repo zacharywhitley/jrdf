@@ -60,6 +60,7 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -89,7 +90,7 @@ public final class NullNewMolecule implements NewMolecule {
         throw new UnsupportedOperationException();
     }
 
-    public NewMolecule add(NewMolecule childMolecule) {
+    public NewMolecule add(MergeSubmolecules merger, NewMolecule childMolecule) {
         throw new UnsupportedOperationException();
     }
 

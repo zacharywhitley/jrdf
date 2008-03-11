@@ -60,6 +60,7 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -73,7 +74,7 @@ public interface NewMolecule {
 
     NewMolecule add(Triple triple);
 
-    NewMolecule add(NewMolecule childMolecule);
+    NewMolecule add(MergeSubmolecules merger, NewMolecule childMolecule);
 
     Iterator<Triple> getRootTriples();
 

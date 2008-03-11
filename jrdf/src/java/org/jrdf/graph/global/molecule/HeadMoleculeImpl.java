@@ -104,7 +104,7 @@ public class HeadMoleculeImpl implements NewMolecule {
         return null;
     }
 
-    public NewMolecule add(NewMolecule childMolecule) {
+    public NewMolecule add(MergeSubmolecules merger, NewMolecule childMolecule) {
         return null;
     }
 
