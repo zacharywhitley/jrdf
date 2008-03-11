@@ -77,11 +77,11 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
     private final MoleculeSubsumption subsumption;
 
     public MergeSubmoleculesImpl(TripleComparator newComparator, NewMoleculeComparator newMoleculeComparator,
-        NewMoleculeFactory newMoleculeFactory, MoleculeSubsumption subsumption) {
+        NewMoleculeFactory newMoleculeFactory, MoleculeSubsumption newSubsumption) {
         this.comparator = newComparator;
         this.moleculeComparator = newMoleculeComparator;
         this.moleculeFactory = newMoleculeFactory;
-        this.subsumption = subsumption;
+        this.subsumption = newSubsumption;
     }
 
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2) {
