@@ -66,27 +66,25 @@ import java.util.Iterator;
 import java.util.Set;
 
 public interface NewMolecule {
-    Triple getHeadTriple();
-
-    boolean contains(NewMolecule molecule);
-
-    int size();
-
     NewMolecule add(Triple triple);
 
+    NewMolecule add(Triple triple, NewMolecule newMolecule);
+
+    NewMolecule add(Triple triple, Triple newTriple);
+
     NewMolecule add(MergeSubmolecules merger, NewMolecule childMolecule);
+
+    boolean contains(Triple triple);
+
+    Triple getHeadTriple();
 
     Iterator<Triple> getRootTriples();
 
     Set<NewMolecule> getSubMolecules(Triple rootTriple);
 
-    NewMolecule add(Triple triple, NewMolecule newMolecule);
-
     void specialAdd(NewMolecule molecule);
 
-    NewMolecule add(Triple triple, Triple newTriple);
-
-    boolean contains(Triple triple);
-
     void remove(Triple triple);
+
+    int size();
 }

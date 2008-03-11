@@ -59,12 +59,8 @@
 
 package org.jrdf.graph.global.molecule.mem;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
@@ -79,7 +75,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -125,10 +120,6 @@ public class NewMoleculeImpl implements NewMolecule {
 
     public void remove(Triple triple) {
         subMolecules.remove(triple);
-    }
-
-    public SortedSet<Triple> getTriples() {
-        return null;
     }
 
     public NewMolecule add(Triple triple) {
@@ -189,19 +180,6 @@ public class NewMoleculeImpl implements NewMolecule {
 
     public boolean contains(Triple triple) {
         return subMolecules.keySet().contains(triple);
-    }
-
-    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return contains(new TripleImpl(subject, predicate, object));
-    }
-
-    public boolean contains(NewMolecule molecule) {
-        // Head triple comparison
-        if (subMolecules.keySet().contains(molecule)) {
-            return true;
-        } else {
-            throw new UnsupportedOperationException();
-        }
     }
 
     public Iterator<Triple> getRootTriples() {
