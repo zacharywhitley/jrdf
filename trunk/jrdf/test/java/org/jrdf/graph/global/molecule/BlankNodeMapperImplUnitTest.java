@@ -105,8 +105,8 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
     private final NewMoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
-    private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(comparator, moleculeComparator,
-        new MoleculeSubsumptionImpl());
+    private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator
+    );
     private BlankNodeMapper mapper;
 
     public void setUp() throws Exception {

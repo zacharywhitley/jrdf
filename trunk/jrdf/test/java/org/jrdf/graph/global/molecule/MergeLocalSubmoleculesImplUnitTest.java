@@ -124,7 +124,7 @@ public class MergeLocalSubmoleculesImplUnitTest extends TestCase {
     public void setUp() {
         NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(tripleComparator);
         MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
-        NewMoleculeFactory factory = new NewMoleculeFactoryImpl(tripleComparator, moleculeComparator, subsumption);
+        NewMoleculeFactory factory = new NewMoleculeFactoryImpl(moleculeComparator);
         MergeSubmolecules globalMerger = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory,
             subsumption);
         mergeSubmolecules = new MergeLocalSubmoleculesImpl(globalMerger, factory);

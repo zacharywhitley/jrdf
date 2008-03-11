@@ -107,7 +107,7 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         TripleComparator tripleComparator = TRIPLE_COMPARATOR_FACTORY.newComparator();
         NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(tripleComparator);
         MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
-        NewMoleculeFactory factory = new NewMoleculeFactoryImpl(tripleComparator, moleculeComparator, subsumption);
+        NewMoleculeFactory factory = new NewMoleculeFactoryImpl(moleculeComparator);
         mergeSubmolecules = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory, subsumption);
     }
 

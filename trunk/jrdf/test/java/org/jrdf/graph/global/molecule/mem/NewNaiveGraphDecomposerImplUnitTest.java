@@ -97,7 +97,6 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
-import org.jrdf.graph.global.molecule.MoleculeSubsumptionImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
@@ -123,8 +122,8 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
     private final NewMoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
     private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
-    private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(comparator, moleculeComparator,
-        new MoleculeSubsumptionImpl());
+    private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator
+    );
     private final NewGraphDecomposer decomposer = new NewNaiveGraphDecomposerImpl(setFactory, moleculeFactory,
         moleculeComparator, comparator);
 

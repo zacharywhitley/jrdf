@@ -88,34 +88,28 @@ public class NewMoleculeImpl implements NewMolecule {
     // This should be a set of molecules for the values.
     private final SortedMap<Triple, Set<NewMolecule>> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
-    private final MergeSubmolecules moleculeMerger;
 
-    private NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger,
-        SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
+    private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
         subMolecules = newSubMolecules;
-        this.moleculeMerger = newMoleculeMerger;
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger) {
+    public NewMoleculeImpl(NewMoleculeComparator newComparator) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
         subMolecules = new TreeMap<Triple, Set<NewMolecule>>(tripleComparator);
-        moleculeMerger = newMoleculeMerger;
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger,
-        Triple... rootTriples) {
-        this(newComparator, newMoleculeMerger);
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, Triple... rootTriples) {
+        this(newComparator);
         for (Triple rootTriple : rootTriples) {
             subMolecules.put(rootTriple, new TreeSet<NewMolecule>(moleculeComparator));
         }
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger,
-        NewMolecule... childMolecules) {
-        this(newComparator, newMoleculeMerger);
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, NewMolecule... childMolecules) {
+        this(newComparator);
         for (NewMolecule molecule : childMolecules) {
             Triple headTriple = molecule.getHeadTriple();
             Set<NewMolecule> submolecules = new TreeSet<NewMolecule>(moleculeComparator);
@@ -140,7 +134,7 @@ public class NewMoleculeImpl implements NewMolecule {
         if (!subMolecules.keySet().contains(triple)) {
             subMolecules.put(triple, new TreeSet<NewMolecule>(moleculeComparator));
         }
-        return new NewMoleculeImpl(moleculeComparator, moleculeMerger, subMolecules);
+        return new NewMoleculeImpl(moleculeComparator, subMolecules);
     }
 
     public NewMolecule add(Triple triple, NewMolecule newMolecule) {
@@ -152,7 +146,7 @@ public class NewMoleculeImpl implements NewMolecule {
             moleculeSet.add(newMolecule);
         }
         subMolecules.put(triple, moleculeSet);
-        return new NewMoleculeImpl(moleculeComparator, moleculeMerger, subMolecules);
+        return new NewMoleculeImpl(moleculeComparator, subMolecules);
     }
 
     public NewMolecule add(Triple triple, Triple newTriple) {
@@ -160,10 +154,10 @@ public class NewMoleculeImpl implements NewMolecule {
         if (moleculeSet == null) {
             moleculeSet = new TreeSet<NewMolecule>(moleculeComparator);
         }
-        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, moleculeMerger, newTriple);
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
         moleculeSet.add(newMolecule);
         subMolecules.put(triple, moleculeSet);
-        return new NewMoleculeImpl(moleculeComparator, moleculeMerger, subMolecules);
+        return new NewMoleculeImpl(moleculeComparator, subMolecules);
     }
 
     public void specialAdd(NewMolecule molecule) {
@@ -174,12 +168,12 @@ public class NewMoleculeImpl implements NewMolecule {
         }
     }
 
-    public NewMolecule add(NewMolecule childMolecule) {
+    public NewMolecule add(MergeSubmolecules merger, NewMolecule childMolecule) {
         Triple headTriple = getHeadTriple();
         Triple childHeadTriple = childMolecule.getHeadTriple();
         if (childHeadTriple.equals(headTriple)) {
             // Assume that there are no molecules hanging off the any of the triples.
-            return moleculeMerger.merge(this, childMolecule);
+            return merger.merge(this, childMolecule);
         } else {
             // For now assume there is a match with the least grounded to the head triple and therefore we are adding
             // a child molecule onto the head triple.
@@ -188,7 +182,7 @@ public class NewMoleculeImpl implements NewMolecule {
             Set<NewMolecule> containedMolecules = new TreeSet<NewMolecule>(moleculeComparator);
             containedMolecules.add(childMolecule);
             subMolecules.put(headTriple, containedMolecules);
-            return new NewMoleculeImpl(moleculeComparator, moleculeMerger, subMolecules);
+            return new NewMoleculeImpl(moleculeComparator, subMolecules);
         }
     }
 
@@ -239,8 +233,7 @@ public class NewMoleculeImpl implements NewMolecule {
         for (Triple triple : set) {
             newMolecules.add(triple);
         }
-        return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
-            newMolecules.toArray(new Triple[newMolecules.size()]));
+        return new NewMoleculeImpl(moleculeComparator, newMolecules.toArray(new Triple[newMolecules.size()]));
     }
 
     public int size() {
