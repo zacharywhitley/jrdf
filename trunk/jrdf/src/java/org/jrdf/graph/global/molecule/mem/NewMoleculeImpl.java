@@ -88,17 +88,18 @@ public class NewMoleculeImpl implements NewMolecule {
     // This should be a set of molecules for the values.
     private final SortedMap<Triple, Set<NewMolecule>> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
-
-    private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
-        checkNotNull(newComparator, newSubMolecules);
-        moleculeComparator = newComparator;
-        subMolecules = newSubMolecules;
-    }
+    private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
         subMolecules = new TreeMap<Triple, Set<NewMolecule>>(tripleComparator);
+    }
+
+    private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
+        checkNotNull(newComparator, newSubMolecules);
+        moleculeComparator = newComparator;
+        subMolecules = newSubMolecules;
     }
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator, Triple... rootTriples) {
@@ -194,7 +195,6 @@ public class NewMoleculeImpl implements NewMolecule {
         return contains(new TripleImpl(subject, predicate, object));
     }
 
-    // TODO: Molecule or NewMolecule?
     public boolean contains(NewMolecule molecule) {
         // Head triple comparison
         if (subMolecules.keySet().contains(molecule)) {
@@ -287,7 +287,6 @@ public class NewMoleculeImpl implements NewMolecule {
 
     @Override
     public String toString() {
-        MoleculeTraverser traverser = new MoleculeTraverserImpl();
         StringBuilder builder = new StringBuilder();
         traverser.traverse(this, new NewMoleculeToString(builder));
         return builder.toString();
