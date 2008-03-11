@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
@@ -84,21 +83,24 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
         this.index = newIndex;
     }
 
-    public void add(Node first, Node second, Node third) {
-        addInternalNodes(first, second, third, null);
+    public void add(Triple triple) {
+        addInternalNodes(null, getNodes(triple));
     }
 
     public void add(NewMolecule molecule) {
         traverser.traverse(molecule, new AddNewMoleculeToIndex(this, molecule));
     }
 
-    public void add(Node first, Node second, Node third, NewMolecule molecule) {
-        addInternalNodes(first, second, third, molecule);
+    public void add(Triple triple, NewMolecule molecule) {
+        addInternalNodes(molecule, getNodes(triple));
     }
 
     protected abstract Node[] getNodes(Triple triple);
 
-    private void addInternalNodes(Node first, Node second, Node third, NewMolecule molecule) {
+    private void addInternalNodes(NewMolecule molecule, Node... node) {
+        Node first = node[0];
+        Node second = node[1];
+        Node third = node[2];
         Map<Node, Map<Node, Set<NewMolecule>>> subIndex = index.get(first);
 
         //check subindex exists
@@ -122,27 +124,31 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
         }
     }
 
-    public void remove(Node first, Node second, Node third) throws GraphException {
-        removeInternal(first, second, third, null);
+    public void remove(Triple triple) {
+        removeInternal(null, getNodes(triple));
     }
 
-    public void remove(NewMolecule molecule) throws GraphException {
-        Node[] nodes = getNodes(molecule.getHeadTriple());
-        remove(nodes[0], nodes[1], nodes[2]);
+    public void remove(NewMolecule molecule) {
     }
 
-    private void removeInternal(Node first, Node second, Node third, NewMolecule molecule) throws GraphException {
+    public void remove(Triple triple, NewMolecule molecule) {
+    }
+
+    private void removeInternal(NewMolecule molecule, Node... node) {
+        Node first = node[0];
+        Node second = node[1];
+        Node third = node[2];
         Map<Node, Map<Node, Set<NewMolecule>>> subIndex = index.get(first);
         if (null == subIndex) {
-            throw new GraphException("Unable to remove nonexistent statement");
+            throw new RuntimeException("Unable to remove nonexistent statement");
         }
         Map<Node, Set<NewMolecule>> group = subIndex.get(second);
         if (null == group) {
-            throw new GraphException("Unable to remove nonexistent statement");
+            throw new RuntimeException("Unable to remove nonexistent statement");
         }
         Set<NewMolecule> tmpMolecules = group.get(third);
         if (tmpMolecules == null) {
-            throw new GraphException("Unable to remove nonexistent statement");
+            throw new RuntimeException("Unable to remove nonexistent statement");
         }
         if (molecule == null) {
             removeTriple(third, group, tmpMolecules);
@@ -163,26 +169,21 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
     }
 
     private void removeMolecule(Node third, Map<Node, Set<NewMolecule>> group, NewMolecule molecule,
-        Set<NewMolecule> tmpMolecules) throws GraphException {
+        Set<NewMolecule> tmpMolecules) {
         if (!tmpMolecules.remove(molecule)) {
-            throw new GraphException("Unable to remove nonexistent molecule");
+            throw new RuntimeException("Unable to remove nonexistent molecule");
         }
         if (tmpMolecules.isEmpty()) {
             group.remove(third);
         }
     }
 
-    private void removeTriple(Node third, Map<Node, Set<NewMolecule>> group, Set<NewMolecule> tmpMolecules)
-        throws GraphException {
+    private void removeTriple(Node third, Map<Node, Set<NewMolecule>> group, Set<NewMolecule> tmpMolecules) {
         if (tmpMolecules.isEmpty()) {
             group.remove(third);
         } else {
-            throw new GraphException("Unable to remove nonexistent statement");
+            throw new RuntimeException("Unable to remove nonexistent statement");
         }
-    }
-
-    public void remove(Node[] nodes) throws GraphException {
-        remove(nodes[0], nodes[1], nodes[2]);
     }
 
     public void clear() {
