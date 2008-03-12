@@ -75,7 +75,7 @@ public class RemoveNewMoleculeToIndex implements MoleculeHandler {
     }
 
     public void handleTriple(Triple triple) {
-        index.remove(triple, molecule);
+        //index.remove(triple, molecule);
     }
 
     public void handleEmptyMolecules() {

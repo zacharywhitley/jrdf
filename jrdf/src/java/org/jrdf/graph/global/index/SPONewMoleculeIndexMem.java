@@ -59,13 +59,111 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
+import org.jrdf.graph.GraphException;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class SPONewMoleculeIndexMem extends AbstractNewMoleculeIndexMem {
-    private static final long serialVersionUID = 1322726924429705420L;
+    protected Map<Long, Map<Long, Map<Long, Set<Long>>>> index;
 
-    protected Node[] getNodes(Triple triple) {
-        return new Node[]{triple.getSubject(), triple.getPredicate(), triple.getObject()};
+    protected SPONewMoleculeIndexMem(Map<Long, Map<Long, Map<Long, Set<Long>>>> newIndex) {
+        index = newIndex;
+    }
+
+    protected SPONewMoleculeIndexMem() {
+        index = new HashMap<Long, Map<Long, Map<Long, Set<Long>>>>();
+    }
+
+    public void add(Long... quad) {
+        // find the sub index
+        Map<Long, Map<Long, Set<Long>>> subIndex = index.get(quad[0]);
+        if (null == subIndex) {
+            subIndex = new HashMap<Long, Map<Long, Set<Long>>>();
+            index.put(quad[0], subIndex);
+        }
+        Map<Long, Set<Long>> subSubIndex = subIndex.get(quad[1]);
+        if (null == subSubIndex) {
+            subSubIndex = new HashMap<Long, Set<Long>>();
+            subIndex.put(quad[1], subSubIndex);
+        }
+        Set<Long> subSubSubIndex = subSubIndex.get(quad[2]);
+        if (null == subSubSubIndex) {
+            subSubSubIndex = new HashSet<Long>();
+            subSubIndex.put(quad[2], subSubSubIndex);
+        }
+        subSubSubIndex.add(quad[3]);
+    }
+
+    public boolean contains(Long node) {
+        return index.containsKey(node);
+    }
+
+    public ClosableIterator<Map.Entry<Long, Map<Long, Map<Long, Set<Long>>>>> iterator() {
+        return new ClosableIteratorImpl<Map.Entry<Long, Map<Long, Map<Long, Set<Long>>>>>(index.entrySet().iterator());
+    }
+
+    public void remove(Long... node) throws GraphException {
+        Map<Long, Map<Long, Set<Long>>> subIndex = index.get(node[0]);
+        if (null == subIndex) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        Map<Long, Set<Long>> subSubIndex = subIndex.get(node[1]);
+        if (null == subSubIndex) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        Set<Long> subSubSubIndex = subSubIndex.get(node[2]);
+        if (null == subSubSubIndex) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        if (!subSubSubIndex.remove(node[3])) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        if (subSubSubIndex.isEmpty()) {
+            subSubIndex.remove(node[2]);
+            if (subSubIndex.isEmpty()) {
+                subIndex.remove(node[1]);
+                if (subIndex.isEmpty()) {
+                    index.remove(node[0]);
+                }
+            }
+        }
+    }
+
+    public boolean keyExists(Long node) {
+        return index.containsKey(node);
+    }
+
+    public Map<Long, Map<Long, Set<Long>>> getSubIndex(Long first) {
+        return index.get(first);
+    }
+
+    public boolean removeSubIndex(Long first) {
+        final boolean containsKey = index.containsKey(first);
+        index.remove(first);
+        return containsKey;
+    }
+
+    public void clear() {
+        index.clear();
+    }
+
+    public void close() {
+    }
+
+    public long getSize() {
+        long size = 0;
+        for (Map<Long, Map<Long, Set<Long>>> subIndex : index.values()) {
+            for (Map<Long, Set<Long>> subSubIndex : subIndex.values()) {
+                for (Set<Long> subSubSubIndex : subSubIndex.values()) {
+                    size += subSubSubIndex.size();
+                }
+            }
+        }
+        return size;
     }
 }

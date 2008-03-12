@@ -59,15 +59,9 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
-
 public class SPONewMoleculeIndexMemUnitTest extends AbstractNewMoleculeIndexMemUnitTest {
+    @Override
     protected NewMoleculeIndex getIndex() {
         return new SPONewMoleculeIndexMem();
-    }
-
-    protected Node[] getNodes(Triple triple) {
-        return new Node[]{triple.getSubject(), triple.getPredicate(), triple.getObject()};
     }
 }
