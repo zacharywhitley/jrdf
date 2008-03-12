@@ -60,8 +60,6 @@
 package org.jrdf.graph.global.index;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.URIReferenceImpl;
 
@@ -80,9 +78,5 @@ public abstract class AbstractNewMoleculeIndexMemUnitTest extends TestCase {
         URIReference p1 = new URIReferenceImpl(URI.create("urn:p1"));
 //        URIReference p2 = new URIReferenceImpl(URI.create("urn:p2"));
 //        URIReference p3 = new URIReferenceImpl(URI.create("urn:p3"));
-        Triple t1 = new TripleImpl(p1, p1, p1);
-        moleculeIndex.add(t1);
-        moleculeIndex.add(t1);
-        assertEquals(1, moleculeIndex.getNumberOfTriples());
     }
 }

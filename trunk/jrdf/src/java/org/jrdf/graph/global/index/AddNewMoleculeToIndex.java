@@ -75,7 +75,7 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
     }
 
     public void handleTriple(Triple triple) {
-        index.add(triple, molecule);
+        //index.add(triple, molecule);
     }
 
     public void handleEmptyMolecules() {

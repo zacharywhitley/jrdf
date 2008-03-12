@@ -59,41 +59,32 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.GraphException;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * The generic interface for storing indexed global molecules.
  */
-public interface NewMoleculeIndex {
-    void add(Triple triple);
+public interface NewMoleculeIndex<T> {
 
-    void add(NewMolecule molecule);
+    void add(T... quad) throws GraphException;
 
-    void add(Triple triple, NewMolecule molecule);
-
-    void remove(Triple triple);
-
-    void remove(Triple triple, NewMolecule molecule);
+    void remove(T... quad) throws GraphException;
 
     void clear();
 
-    boolean contains(Node node);
+    ClosableIterator<Map.Entry<T, Map<T, Map<T, Set<T>>>>> iterator();
 
-    long getNumberOfTriples();
+    Map<T, Map<T, Set<T>>> getSubIndex(T first);
 
-    long getNumberOfMolecules();
+    boolean contains(T first);
 
-    Map<Node, Map<Node, Set<NewMolecule>>> getSubIndex(Node first);
+    boolean removeSubIndex(T first);
 
-    boolean removeSubIndex(Node first);
+    long getSize();
 
-    Set<NewMolecule> getMolecules(Triple headTriple);
-
-    Iterator<Map.Entry<Node, Map<Node, Map<Node, Set<NewMolecule>>>>> keySetIterator();
+    void close();
 }
