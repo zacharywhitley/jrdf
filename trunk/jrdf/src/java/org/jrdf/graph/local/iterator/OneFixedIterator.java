@@ -220,7 +220,7 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
             // check if a subindex was cleaned out
             if (subIndex.isEmpty()) {
                 // remove the subindex
-                handler.removeSubIndex(first);
+                index.removeSubIndex(first);
                 subIndex = null;
             }
         }
