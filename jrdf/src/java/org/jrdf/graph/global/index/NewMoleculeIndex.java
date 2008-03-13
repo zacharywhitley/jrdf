@@ -87,4 +87,6 @@ public interface NewMoleculeIndex<T> {
     long getSize();
 
     void close();
+
+    boolean keyExists(Long node);
 }
