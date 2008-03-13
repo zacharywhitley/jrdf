@@ -63,10 +63,10 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class AbstractNewMoleculeStructureIndex implements NewMoleculeStructureIndex<Long> {
     private Map<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>> index;
@@ -109,8 +109,8 @@ public class AbstractNewMoleculeStructureIndex implements NewMoleculeStructureIn
     }
 
     public ClosableIterator<Map.Entry<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>> iterator() {
-        return new ClosableIteratorImpl<Map.Entry<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>>
-            (index.entrySet().iterator());
+        return new ClosableIteratorImpl<Map.Entry<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>>(
+            index.entrySet().iterator());
     }
 
     public void remove(Long... quin) throws GraphException {

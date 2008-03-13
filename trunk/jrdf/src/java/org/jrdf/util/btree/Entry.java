@@ -4,7 +4,7 @@
  * Licensed under the Aduna BSD-style license.
  */
 
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.util.btree;
 
 import java.util.Map;
 import java.util.Set;

@@ -57,10 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.sesame;
-
-import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.fromBytes;
-import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.toBytes;
+package org.jrdf.util.btree;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -80,7 +77,7 @@ public final class RecordIteratorHelper {
         try {
             byte[] bytes = getNextBytes(iterator);
             while (bytes != null) {
-                Long[] longs = fromBytes(bytes, TRIPLES);
+                Long[] longs = ByteHandler.fromBytes(bytes, TRIPLES);
                 Set<Long> longSet = getLongSet(longs, resultMap);
                 longSet.add(longs[2]);
                 resultMap.put(longs[1], longSet);
@@ -108,7 +105,7 @@ public final class RecordIteratorHelper {
             if (getNextBytes(iterator) == null) {
                 return false;
             }
-            removeBytes(btree, toBytes(node));
+            removeBytes(btree, ByteHandler.toBytes(node));
             return true;
         } finally {
             iterator.close();

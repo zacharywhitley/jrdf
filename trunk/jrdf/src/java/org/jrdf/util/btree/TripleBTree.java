@@ -56,43 +56,64 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.index.longindex.sesame;
 
+package org.jrdf.util.btree;
+
+import java.io.File;
 import java.io.IOException;
 
-/**
- * An iterator that iterates over the values in a BTree.
- *
- * @see BTree
- * @author Arjohn Kampman
- */
-public interface RecordIterator {
+public class TripleBTree extends BTree {
+    private static final int TRIPLES = 3;
+    private static final int VALUE_SIZE = 24;
+    private static final int OFFSET = 8;
+    private static final long ON_MASK = 0xffffffffffffffffL;
 
-    /**
-     * Returns the next value in the BTree.
-     *
-     * @return A value that is stored in the BTree, or <tt>null</tt> if all
-     *         values have been returned.
-     * @exception IOException
-     *            In case an I/O error occurred.
-     */
-    byte[] next() throws IOException;
+    public TripleBTree(File dataFile, int blockSize, int valueSize) throws IOException {
+        super(dataFile, blockSize, valueSize);
+    }
 
-    /**
-     * Replaces the last value returned by {@link #next} with the specified
-     * value.
-     *
-     * @exception IOException
-     *            In case an I/O error occurred.
-     */
-    void set(byte[] value) throws IOException;
+    public TripleBTree(File dataFile, int blockSize, int valueSize, boolean forceSync) throws IOException {
+        super(dataFile, blockSize, valueSize, forceSync);
+    }
 
-    /**
-     * Closes the iterator, freeing any resources that it uses. Once closed, the
-     * iterator will not return any more values.
-     *
-     * @exception IOException
-     *            In case an I/O error occurred.
-     */
-    void close() throws IOException;
+    public TripleBTree(File dataFile, int blockSize, int valueSize, RecordComparator comparator)
+        throws IOException {
+        super(dataFile, blockSize, valueSize, comparator);
+    }
+
+    public TripleBTree(File dataFile, int blockSize, int valueSize, RecordComparator comparator, boolean forceSync)
+        throws IOException {
+        super(dataFile, blockSize, valueSize, comparator, forceSync);
+    }
+
+    public RecordIterator getIterator(Long... node) {
+        byte[] key = ByteHandler.toBytes(node);
+        byte[] filter = new byte[VALUE_SIZE];
+        byte[] minValue = new byte[VALUE_SIZE];
+        byte[] maxValue = new byte[VALUE_SIZE];
+        for (int i = 0; i < TRIPLES; i++) {
+            addToFilter(filter, i, node);
+            addToMinValue(minValue, i, node);
+            addToMaxValue(maxValue, i, node);
+        }
+        return iterateRangedValues(key, filter, minValue, maxValue);
+    }
+
+    private void addToFilter(byte[] filter, int index, Long... node) {
+        if (node[index] != 0) {
+            ByteArrayUtil.putLong(ON_MASK, filter, index * OFFSET);
+        }
+    }
+
+    private void addToMinValue(byte[] minValue, int index, Long... node) {
+        ByteArrayUtil.putLong(node[index], minValue, index * OFFSET);
+    }
+
+    private void addToMaxValue(byte[] maxValue, int index, Long... node) {
+        if (node[index] == 0) {
+            ByteArrayUtil.putLong(ON_MASK, maxValue, index * OFFSET);
+        } else {
+            ByteArrayUtil.putLong(node[index], maxValue, index * OFFSET);
+        }
+    }
 }

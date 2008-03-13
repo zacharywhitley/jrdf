@@ -57,30 +57,17 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.util.btree;
 
-import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.getLong;
-import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.putLong;
+import junit.framework.TestCase;
 
-public final class ByteHandler {
-    private static final int BITS = 8;
+public class ByteHandlerUnitTest extends TestCase {
 
-    private ByteHandler() {
-    }
-
-    public static byte[] toBytes(Long... longs) {
-        byte[] b = new byte[BITS * longs.length];
-        for (int i = 0; i < longs.length; i++) {
-            putLong(longs[i], b, BITS * i);
-        }
-        return b;
-    }
-
-    public static Long[] fromBytes(byte[] b, int size) {
-        Long[] results = new Long[size];
-        for (int i = 0; i < size; i++) {
-            results[i] = getLong(b, BITS * i);
-        }
-        return results;
+    public void testEncodeDecode() {
+        byte[] bytes = ByteHandler.toBytes(1234L, 3456L, 123456838L);
+        Long[] newLong = ByteHandler.fromBytes(bytes, 3);
+        assertEquals(1234L, (long) newLong[0]);
+        assertEquals(3456L, (long) newLong[1]);
+        assertEquals(123456838L, (long) newLong[2]);
     }
 }

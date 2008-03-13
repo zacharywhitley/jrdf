@@ -62,7 +62,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
+import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.EmptyClosableIterator;

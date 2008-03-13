@@ -61,8 +61,11 @@ package org.jrdf.graph.local.index.longindex.sesame;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.toBytes;
+import static org.jrdf.util.btree.ByteHandler.toBytes;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.btree.RecordIteratorHelper;
+import org.jrdf.util.btree.TripleBTree;
+import org.jrdf.util.btree.EntryIterator;
 
 import java.io.IOException;
 import java.util.Map;
