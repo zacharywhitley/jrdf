@@ -59,9 +59,34 @@
 
 package org.jrdf.graph.global.index;
 
-public class SPONewMoleculeIndexMemUnitTest extends AbstractNewMoleculeIndexMemUnitTest {
-    @Override
-    protected NewMoleculeIndex getIndex() {
-        return new AbstractNewMoleculeIndex();
-    }
+import org.jrdf.graph.GraphException;
+import org.jrdf.util.ClosableIterator;
+
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * The generic interface for storing indexed global molecules.
+ */
+public interface NewMoleculeStructureIndex<T> {
+
+    void add(T... quin) throws GraphException;
+
+    void remove(T... quin) throws GraphException;
+
+    void clear();
+
+    ClosableIterator<Map.Entry<T, Map<T, Map<T, Map<T, Set<T>>>>>> iterator();
+
+    Map<T, Map<T, Map<T, Set<T>>>> getSubIndex(T first);
+
+    boolean contains(T first);
+
+    boolean removeSubIndex(T first);
+
+    long getSize();
+
+    void close();
+
+    boolean keyExists(Long node);
 }
