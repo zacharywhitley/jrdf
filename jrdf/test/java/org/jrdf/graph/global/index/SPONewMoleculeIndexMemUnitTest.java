@@ -62,6 +62,6 @@ package org.jrdf.graph.global.index;
 public class SPONewMoleculeIndexMemUnitTest extends AbstractNewMoleculeIndexMemUnitTest {
     @Override
     protected NewMoleculeIndex getIndex() {
-        return new SPONewMoleculeIndexMem();
+        return new AbstractNewMoleculeIndex();
     }
 }
