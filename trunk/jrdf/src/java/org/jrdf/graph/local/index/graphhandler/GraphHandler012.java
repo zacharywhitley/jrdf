@@ -90,10 +90,6 @@ public class GraphHandler012 extends AbstractGraphHandler {
         this.nodePool = newNodePool;
     }
 
-    public Map<Long, Set<Long>> getSubIndex(Long first) {
-        return index012.getSubIndex(first);
-    }
-
     public boolean removeSubIndex(Long first) {
         return index012.removeSubIndex(first);
     }
