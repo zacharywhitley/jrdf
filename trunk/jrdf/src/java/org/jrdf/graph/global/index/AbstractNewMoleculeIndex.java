@@ -68,14 +68,14 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class SPONewMoleculeIndexMem extends AbstractNewMoleculeIndexMem {
+public class AbstractNewMoleculeIndex implements NewMoleculeIndex<Long> {
     protected Map<Long, Map<Long, Map<Long, Set<Long>>>> index;
 
-    protected SPONewMoleculeIndexMem(Map<Long, Map<Long, Map<Long, Set<Long>>>> newIndex) {
+    protected AbstractNewMoleculeIndex(Map<Long, Map<Long, Map<Long, Set<Long>>>> newIndex) {
         index = newIndex;
     }
 
-    protected SPONewMoleculeIndexMem() {
+    protected AbstractNewMoleculeIndex() {
         index = new HashMap<Long, Map<Long, Map<Long, Set<Long>>>>();
     }
 
