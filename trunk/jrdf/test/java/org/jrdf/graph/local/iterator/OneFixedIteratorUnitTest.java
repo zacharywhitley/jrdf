@@ -70,6 +70,6 @@ public class OneFixedIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(ClosableLocalIterator.class, OneFixedIterator.class);
-        checkConstructor(OneFixedIterator.class, PUBLIC, Long.class, GraphHandler.class, LongIndex.class);
+        checkConstructor(OneFixedIterator.class, PUBLIC, Long.class, GraphHandler.class);
     }
 }

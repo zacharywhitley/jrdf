@@ -60,9 +60,10 @@
 package org.jrdf.graph.local.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,13 +76,31 @@ import java.util.Set;
 public interface GraphHandler {
 
     /**
+     * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id
+     * is given and it returns a map of predicates to objects.
+     *
+     * @param first the entry set to find.
+     * @return a map containing the list of longs to set of longs.
+     */
+    Map<Long, Set<Long>> getSubIndex(Long first);
+
+    /**
+     * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is
+     * given and it will remove all the associated predicate and objects for that subject.
+     *
+     * @param first the entry set to remove.
+     * @return true if the entry set was non-null.
+     */
+    boolean removeSubIndex(Long first);
+
+    /**
      * Returns an iterator over an internal representation of the graph in the fixed order based on the underlying
      * index.
      *
      * @return an iterator over an internal representation of the graph in the fixed order based on the underlying
      *         index.
      */
-    Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
+    ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
 
     /**
      * Creates the globalized nodes based on the internal representation of the nodes.  This may move to the NodePool
@@ -91,6 +110,14 @@ public interface GraphHandler {
      * @return an array of three nodes.
      */
     Triple createTriple(Long... nodes);
+
+    /**
+     * Creates a globalized PredicateNode.
+     *
+     * @param node the internal node number to convert.
+     * @return the PredicateNode.
+     */
+    PredicateNode createPredicateNode(Long node);
 
     /**
      * Removes a triple from the other indexes of the graph.  For example, if this is the 012 GraphHandler it will

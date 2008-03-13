@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.local.index.graphhandler;
 
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 
 /**
@@ -69,4 +70,8 @@ import org.jrdf.graph.local.index.nodepool.NodePool;
  */
 public abstract class AbstractGraphHandler implements GraphHandler {
     protected NodePool nodePool;
+
+    public PredicateNode createPredicateNode(Long node) {
+        return (PredicateNode) nodePool.getNodeById(node);
+    }
 }

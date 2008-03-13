@@ -78,17 +78,13 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  * @version $Id$
  */
 public final class DiskIteratorFactory implements IteratorFactory {
-    private final LongIndex[] longIndexes;
     private final GraphHandler[] graphHandlers;
-    private final NodePool nodePool;
     private final TripleBTree[] trees;
 
     public DiskIteratorFactory(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
         final NodePool newNodePool, final Localizer newLocalizer, final TripleBTree[] newTrees) {
         checkNotNull(newLongIndexes, newGraphHandlers, newNodePool, newLocalizer, newTrees);
-        this.longIndexes = newLongIndexes;
         this.graphHandlers = newGraphHandlers;
-        this.nodePool = newNodePool;
         this.trees = newTrees;
     }
 
@@ -117,6 +113,6 @@ public final class DiskIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return new FixedResourcePredicateIterator(resource, longIndexes[0], longIndexes[1], nodePool);
+        return new FixedResourcePredicateIterator(resource, graphHandlers[0], graphHandlers[1]);
     }
 }

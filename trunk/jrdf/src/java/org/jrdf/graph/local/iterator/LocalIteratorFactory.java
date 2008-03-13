@@ -73,16 +73,12 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  * @version $Id$
  */
 public final class LocalIteratorFactory implements IteratorFactory {
-    private final LongIndex[] longIndexes;
     private final GraphHandler[] graphHandlers;
-    private final NodePool nodePool;
 
     public LocalIteratorFactory(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
         final NodePool newNodePool) {
         checkNotNull(newLongIndexes, newGraphHandlers, newNodePool);
-        this.longIndexes = newLongIndexes;
         this.graphHandlers = newGraphHandlers;
-        this.nodePool = newNodePool;
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
@@ -93,24 +89,23 @@ public final class LocalIteratorFactory implements IteratorFactory {
         return new GraphIterator(graphHandlers[0]);
     }
 
-    // TODO (AN) Long indexes and graph handler move into one object? (next one too).
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return new OneFixedIterator(fixedFirstNode, graphHandlers[index], longIndexes[index]);
+        return new OneFixedIterator(fixedFirstNode, graphHandlers[index]);
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index], graphHandlers[index]);
+        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, graphHandlers[index]);
     }
 
     public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
-        return new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]);
+        return new ThreeFixedIterator(newNodes, graphHandlers[0]);
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return new AnyResourcePredicateIterator(longIndexes[1], nodePool);
+        return new AnyResourcePredicateIterator(graphHandlers[1]);
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return new FixedResourcePredicateIterator(resource, longIndexes[0], longIndexes[1], nodePool);
+        return new FixedResourcePredicateIterator(resource, graphHandlers[0], graphHandlers[1]);
     }
 }

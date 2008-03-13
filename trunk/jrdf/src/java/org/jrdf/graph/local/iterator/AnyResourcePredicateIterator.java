@@ -59,10 +59,8 @@
 
 package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Map;
@@ -70,12 +68,13 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class AnyResourcePredicateIterator implements ClosableIterator<PredicateNode> {
-    private final NodePool nodePool;
-    private ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
+    private final GraphHandler graphHandler;
+    private final ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
 
-    public AnyResourcePredicateIterator(final LongIndex newLongIndex, final NodePool newNodePool) {
-        this.nodePool = newNodePool;
-        iterator = newLongIndex.iterator();
+
+    public AnyResourcePredicateIterator(final GraphHandler newGraphHandler) {
+        this.graphHandler = newGraphHandler;
+        this.iterator = graphHandler.getEntries();
     }
 
     public boolean hasNext() {
@@ -87,9 +86,7 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
             throw new NoSuchElementException();
         }
         Long id = iterator.next().getKey();
-        final Node node = nodePool.getNodeById(id);
-        // Add check to see if it's a predicate.
-        return (PredicateNode) node;
+        return graphHandler.createPredicateNode(id);
     }
 
     public void remove() {

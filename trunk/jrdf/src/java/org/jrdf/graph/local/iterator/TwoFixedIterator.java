@@ -62,7 +62,6 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -93,11 +92,6 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
      * The second fixed item.
      */
     private final Long second;
-
-    /**
-     * Allows access to a particular part of the index.
-     */
-    private LongIndex longIndex;
 
     /**
      * The subIndex of this iterator.  Only needed for initialization and the remove method.
@@ -132,18 +126,16 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
     /**
      * Constructor.  Sets up the internal iterators.
      */
-    public TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex,
-        GraphHandler newHandler) {
+    public TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, GraphHandler newHandler) {
 
         // store the node factory and other starting data
         first = fixedFirstNode;
         second = fixedSecondNode;
-        longIndex = newLongIndex;
 
         handler = newHandler;
 
         // find the subIndex from the main index
-        subIndex = longIndex.getSubIndex(first);
+        subIndex = handler.getSubIndex(first);
 
         // check that data exists
         if (null != subIndex) {
@@ -178,7 +170,6 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
     public void remove() {
         if (null != currentNodes && null != currentNodes[2]) {
             try {
-                thirdIndexIterator.remove();
                 handler.remove(currentNodes);
                 cleanIndex();
             } catch (GraphException ge) {
@@ -197,7 +188,7 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
             // check if a subindex was cleaned out
             if (subIndex.isEmpty()) {
                 // remove the subindex
-                longIndex.removeSubIndex(first);
+                handler.removeSubIndex(first);
             }
         }
     }

@@ -115,13 +115,10 @@ public class BTreeGraphIterator implements ClosableIterator<Triple> {
             if (!nextCalled && null == bytesToRemove) {
                 throw new IllegalStateException("Next not called or beyond end of data");
             } else {
-                btree.remove(bytesToRemove);
                 Long[] longs = fromBytes(bytesToRemove, TRIPLES);
                 handler.remove(longs);
             }
         } catch (GraphException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
