@@ -88,15 +88,6 @@ public interface GraphHandler {
     void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws GraphException;
 
     /**
-     * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is
-     * given and it will remove all the associated predicate and objects for that subject.
-     *
-     * @param first the entry set to remove.
-     * @return true if the entry set was non-null.
-     */
-    boolean removeSubIndex(Long first);
-
-    /**
      * Returns an iterator over an internal representation of the graph in the fixed order based on the underlying
      * index.
      *

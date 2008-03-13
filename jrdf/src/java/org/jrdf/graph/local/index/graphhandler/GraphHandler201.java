@@ -90,10 +90,6 @@ public class GraphHandler201 extends AbstractGraphHandler {
         this.nodePool = nodePool;
     }
 
-    public boolean removeSubIndex(Long first) {
-        return index201.removeSubIndex(first);
-    }
-
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
         return index201.iterator();
     }
