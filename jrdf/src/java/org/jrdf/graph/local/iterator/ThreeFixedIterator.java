@@ -62,7 +62,6 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -83,11 +82,6 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
     private Long[] nodes;
 
     /**
-     * Allows access to a particular part of the index.
-     */
-    private LongIndex longIndex;
-
-    /**
      * Handles the removal of nodes.
      */
     private GraphHandler handler;
@@ -105,9 +99,8 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
     /**
      * Constructor.
      */
-    public ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, GraphHandler newHandler) {
+    public ThreeFixedIterator(Long[] newNodes, GraphHandler newHandler) {
         nodes = newNodes;
-        longIndex = newLongIndex;
         handler = newHandler;
         createTriple();
     }
@@ -119,7 +112,7 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
     }
 
     private boolean contains(Long[] longNodes) {
-        Map<Long, Set<Long>> subIndex = longIndex.getSubIndex(longNodes[0]);
+        Map<Long, Set<Long>> subIndex = handler.getSubIndex(longNodes[0]);
         if (subIndex != null) {
             Set<Long> predicates = subIndex.get(longNodes[1]);
             if (predicates.contains(longNodes[2])) {
@@ -150,7 +143,6 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
     public void remove() {
         if (null != removeTriple) {
             try {
-                longIndex.remove(nodes);
                 handler.remove(nodes);
                 removeTriple = null;
             } catch (GraphException ge) {

@@ -103,7 +103,6 @@ public class TripleClosableIterator implements ClosableLocalIterator<Triple> {
     public void remove() {
         try {
             Long[] longs = localizer.localize(triple.getSubject(), triple.getPredicate(), triple.getObject());
-            longIndex.remove(longs);
             handler.remove(longs);
         } catch (Exception ise) {
             throw new IllegalStateException("Next not called or beyond end of data", ise);

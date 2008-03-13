@@ -60,7 +60,6 @@ package org.jrdf.graph.local.iterator;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
@@ -69,6 +68,6 @@ import static java.lang.reflect.Modifier.PUBLIC;
 public class ThreeFixedIteratorUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(ClosableLocalIterator.class, ThreeFixedIterator.class);
-        checkConstructor(ThreeFixedIterator.class, PUBLIC, Long[].class, LongIndex.class, GraphHandler.class);
+        checkConstructor(ThreeFixedIterator.class, PUBLIC, Long[].class, GraphHandler.class);
     }
 }

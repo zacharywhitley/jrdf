@@ -60,8 +60,7 @@
 package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
@@ -71,21 +70,21 @@ import java.util.Set;
 
 public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final Long resource;
+    private final GraphHandler graphHandler012;
     private final ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> posIterator;
-    private final NodePool nodePool;
     private Iterator<Long> predicateIterator;
     private Long nextPredicate;
     private Set<Long> spoPredicates;
 
-    public FixedResourcePredicateIterator(Long newResource, LongIndex spoIndex, LongIndex posIndex,
-        NodePool newNodePool) {
+    public FixedResourcePredicateIterator(final Long newResource, final GraphHandler newGraphHandler012,
+        final GraphHandler newGraphHandler120) {
         this.resource = newResource;
-        this.spoPredicates = spoIndex.getSubIndex(resource).keySet();
+        this.graphHandler012 = newGraphHandler012;
+        this.posIterator = newGraphHandler120.getEntries();
+        this.spoPredicates = graphHandler012.getSubIndex(resource).keySet();
         if (spoPredicates != null) {
             predicateIterator = spoPredicates.iterator();
         }
-        this.posIterator = posIndex.iterator();
-        this.nodePool = newNodePool;
         nextPredicate();
     }
 
@@ -99,7 +98,7 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
         }
         Long currentPredicate = nextPredicate;
         nextPredicate();
-        return (PredicateNode) nodePool.getNodeById(currentPredicate);
+        return graphHandler012.createPredicateNode(currentPredicate);
     }
 
     private void nextPredicate() {
@@ -144,7 +143,9 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
     }
 
     public boolean close() {
-        posIterator.close();
+        if (posIterator != null) {
+            posIterator.close();
+        }
         return true;
     }
 }

@@ -230,11 +230,15 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
      */
     public void remove() {
         if (nextCalled && null != itemIterator) {
-            itemIterator.remove();
+            try {
+                handler.remove(currentNodes);
+            } catch (GraphException ge) {
+                IllegalStateException illegalStateException = new IllegalStateException();
+                illegalStateException.setStackTrace(ge.getStackTrace());
+                throw illegalStateException;
+            }
             // clean up the current index after the removal
             cleanIndex();
-            // now remove from the other 2 indexes
-            removeFromNonCurrentIndex();
         } else {
             throw new IllegalStateException("Next not called or beyond end of data");
         }
@@ -258,23 +262,6 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
             }
         }
     }
-
-
-    /**
-     * Helper function for removal.  This removes the current statement from the indexes which
-     * the current iterator is not associated with.
-     */
-    private void removeFromNonCurrentIndex() {
-        try {
-            // can instead use var here to determine how to delete, but this is more intuitive
-            handler.remove(currentNodes);
-        } catch (GraphException ge) {
-            IllegalStateException illegalStateException = new IllegalStateException();
-            illegalStateException.setStackTrace(ge.getStackTrace());
-            throw illegalStateException;
-        }
-    }
-
 
     /**
      * Closes the iterator by freeing any resources that it current holds.

@@ -67,8 +67,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,7 +90,15 @@ public class GraphHandler201 extends AbstractGraphHandler {
         this.nodePool = nodePool;
     }
 
-    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
+    public Map<Long, Set<Long>> getSubIndex(Long first) {
+        return index201.getSubIndex(first);
+    }
+
+    public boolean removeSubIndex(Long first) {
+        return index201.removeSubIndex(first);
+    }
+
+    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
         return index201.iterator();
     }
 
@@ -103,6 +111,7 @@ public class GraphHandler201 extends AbstractGraphHandler {
     }
 
     public void remove(Long... currentNodes) throws GraphException {
+        index201.remove(currentNodes[0], currentNodes[1], currentNodes[2]);
         index012.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
         index120.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
     }
