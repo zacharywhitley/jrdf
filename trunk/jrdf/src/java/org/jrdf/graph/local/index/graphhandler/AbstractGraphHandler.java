@@ -59,15 +59,7 @@
 
 package org.jrdf.graph.local.index.graphhandler;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.operation.mem.BasicOperations;
-
-import java.io.PrintStream;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Turn this into delegation rather than inheritance?
@@ -77,77 +69,4 @@ import java.util.Set;
  */
 public abstract class AbstractGraphHandler implements GraphHandler {
     protected NodePool nodePool;
-    private static final int STATEMENT_OFFSET = 5;
-
-    public void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws
-        GraphException {
-        BasicOperations.reconstruct(firstIndex, secondIndex, thirdIndex);
-    }
-
-    /**
-     * Debug method to see the current state of the first index.
-     */
-    public void dumpIndex(PrintStream out) {
-        // TODO AN Now this is smaller test drive.
-        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator = getEntries();
-        while (iterator.hasNext()) {
-            printSubjects(out, iterator.next());
-        }
-    }
-
-    private void printSubjects(PrintStream out, Map.Entry<Long, Map<Long, Set<Long>>> subjectEntry) {
-        Map<Long, Set<Long>> secondIndex = subjectEntry.getValue();
-
-        String subject = subjectEntry.getKey().toString();
-        Iterator<Map.Entry<Long, Set<Long>>> predIterator = secondIndex.entrySet().iterator();
-
-        out.print(subject + " --> ");
-
-        if (!predIterator.hasNext()) {
-            out.println("X");
-        } else {
-            int sWidth = subject.length() + STATEMENT_OFFSET;
-            printPredicates(out, predIterator, createSpaces(sWidth));
-        }
-    }
-
-    private void printPredicates(PrintStream out, Iterator<Map.Entry<Long, Set<Long>>> predIterator, String spaces) {
-        int numberOfPredicates = 0;
-        while (predIterator.hasNext()) {
-            Map.Entry<Long, Set<Long>> predicateEntry = predIterator.next();
-
-            String predicate = predicateEntry.getKey().toString();
-            Iterator<Long> objIterator = predicateEntry.getValue().iterator();
-
-            if (++numberOfPredicates > 1) {
-                out.print(spaces);
-            }
-            out.print(predicate + " --> ");
-
-            if (!objIterator.hasNext()) {
-                out.println("X");
-            } else {
-                int pWidth = predicate.length() + STATEMENT_OFFSET;
-                printObjects(out, objIterator, spaces + createSpaces(pWidth));
-            }
-        }
-    }
-
-    private void printObjects(PrintStream out, Iterator<Long> objIterator, String spaces) {
-        if (objIterator.hasNext()) {
-            out.println(objIterator.next());
-            while (objIterator.hasNext()) {
-                out.println(spaces + objIterator.next());
-            }
-        }
-    }
-
-    private String createSpaces(int numberOfSpaces) {
-        StringBuilder space = new StringBuilder(numberOfSpaces);
-        space.setLength(numberOfSpaces);
-        for (int c = 0; c < numberOfSpaces; c++) {
-            space.setCharAt(c, ' ');
-        }
-        return space.toString();
-    }
 }
