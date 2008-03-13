@@ -69,7 +69,7 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
+import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;

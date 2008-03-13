@@ -56,18 +56,43 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+package org.jrdf.util.btree;
 
-package org.jrdf.graph.local.index.longindex.sesame;
+import java.io.IOException;
 
-import junit.framework.TestCase;
+/**
+ * An iterator that iterates over the values in a BTree.
+ *
+ * @see BTree
+ * @author Arjohn Kampman
+ */
+public interface RecordIterator {
 
-public class ByteHandlerUnitTest extends TestCase {
+    /**
+     * Returns the next value in the BTree.
+     *
+     * @return A value that is stored in the BTree, or <tt>null</tt> if all
+     *         values have been returned.
+     * @exception IOException
+     *            In case an I/O error occurred.
+     */
+    byte[] next() throws IOException;
 
-    public void testEncodeDecode() {
-        byte[] bytes = ByteHandler.toBytes(1234L, 3456L, 123456838L);
-        Long[] newLong = ByteHandler.fromBytes(bytes, 3);
-        assertEquals(1234L, (long) newLong[0]);
-        assertEquals(3456L, (long) newLong[1]);
-        assertEquals(123456838L, (long) newLong[2]);
-    }
+    /**
+     * Replaces the last value returned by {@link #next} with the specified
+     * value.
+     *
+     * @exception IOException
+     *            In case an I/O error occurred.
+     */
+    void set(byte[] value) throws IOException;
+
+    /**
+     * Closes the iterator, freeing any resources that it uses. Once closed, the
+     * iterator will not return any more values.
+     *
+     * @exception IOException
+     *            In case an I/O error occurred.
+     */
+    void close() throws IOException;
 }

@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.util.btree;
 
 /**
  * A BTreeValueComparator that compares values with eachother by comparing all

@@ -61,6 +61,8 @@ package org.jrdf.graph.local.index.longindex.sesame;
 
 import org.jrdf.graph.local.index.longindex.AbstractLongIndexIntegrationTest;
 import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.btree.TripleBTree;
+import org.jrdf.util.btree.BTreeFactoryImpl;
 
 public class LongIndexSesameIntegrationTest extends AbstractLongIndexIntegrationTest {
 

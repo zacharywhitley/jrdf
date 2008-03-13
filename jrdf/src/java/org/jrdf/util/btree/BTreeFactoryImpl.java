@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.util.btree;
 
 import org.jrdf.util.DirectoryHandler;
 

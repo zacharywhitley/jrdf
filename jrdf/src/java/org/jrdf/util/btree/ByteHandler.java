@@ -57,10 +57,27 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.util.btree;
 
-import org.jrdf.util.DirectoryHandler;
+public final class ByteHandler {
+    private static final int BITS = 8;
 
-public interface BTreeFactory {
-    TripleBTree createBTree(DirectoryHandler handler, String fileName);
+    private ByteHandler() {
+    }
+
+    public static byte[] toBytes(Long... longs) {
+        byte[] b = new byte[BITS * longs.length];
+        for (int i = 0; i < longs.length; i++) {
+            ByteArrayUtil.putLong(longs[i], b, BITS * i);
+        }
+        return b;
+    }
+
+    public static Long[] fromBytes(byte[] b, int size) {
+        Long[] results = new Long[size];
+        for (int i = 0; i < size; i++) {
+            results[i] = ByteArrayUtil.getLong(b, BITS * i);
+        }
+        return results;
+    }
 }

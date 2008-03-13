@@ -57,66 +57,10 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.util.btree;
 
-import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.putLong;
-import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.toBytes;
+import org.jrdf.util.DirectoryHandler;
 
-import java.io.File;
-import java.io.IOException;
-
-public class TripleBTree extends BTree {
-    private static final int TRIPLES = 3;
-    private static final int VALUE_SIZE = 24;
-    private static final int OFFSET = 8;
-    private static final long ON_MASK = 0xffffffffffffffffL;
-
-    public TripleBTree(File dataFile, int blockSize, int valueSize) throws IOException {
-        super(dataFile, blockSize, valueSize);
-    }
-
-    public TripleBTree(File dataFile, int blockSize, int valueSize, boolean forceSync) throws IOException {
-        super(dataFile, blockSize, valueSize, forceSync);
-    }
-
-    public TripleBTree(File dataFile, int blockSize, int valueSize, RecordComparator comparator)
-        throws IOException {
-        super(dataFile, blockSize, valueSize, comparator);
-    }
-
-    public TripleBTree(File dataFile, int blockSize, int valueSize, RecordComparator comparator, boolean forceSync)
-        throws IOException {
-        super(dataFile, blockSize, valueSize, comparator, forceSync);
-    }
-
-    public RecordIterator getIterator(Long... node) {
-        byte[] key = toBytes(node);
-        byte[] filter = new byte[VALUE_SIZE];
-        byte[] minValue = new byte[VALUE_SIZE];
-        byte[] maxValue = new byte[VALUE_SIZE];
-        for (int i = 0; i < TRIPLES; i++) {
-            addToFilter(filter, i, node);
-            addToMinValue(minValue, i, node);
-            addToMaxValue(maxValue, i, node);
-        }
-        return iterateRangedValues(key, filter, minValue, maxValue);
-    }
-
-    private void addToFilter(byte[] filter, int index, Long... node) {
-        if (node[index] != 0) {
-            putLong(ON_MASK, filter, index * OFFSET);
-        }
-    }
-
-    private void addToMinValue(byte[] minValue, int index, Long... node) {
-        putLong(node[index], minValue, index * OFFSET);
-    }
-
-    private void addToMaxValue(byte[] maxValue, int index, Long... node) {
-        if (node[index] == 0) {
-            putLong(ON_MASK, maxValue, index * OFFSET);
-        } else {
-            putLong(node[index], maxValue, index * OFFSET);
-        }
-    }
+public interface BTreeFactory {
+    TripleBTree createBTree(DirectoryHandler handler, String fileName);
 }

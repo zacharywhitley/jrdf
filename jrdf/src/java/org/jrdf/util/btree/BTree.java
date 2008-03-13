@@ -3,7 +3,7 @@
  *
  * Licensed under the Aduna BSD-style license.
  */
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.util.btree;
 
 import java.io.File;
 import java.io.IOException;
