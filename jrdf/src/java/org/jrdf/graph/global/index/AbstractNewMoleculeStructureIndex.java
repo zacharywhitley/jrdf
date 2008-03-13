@@ -80,7 +80,6 @@ public class AbstractNewMoleculeStructureIndex implements NewMoleculeStructureIn
     }
 
     public void add(Long... quin) throws GraphException {
-        // find the sub index
         Map<Long, Map<Long, Map<Long, Set<Long>>>> mids = index.get(quin[0]);
         if (null == mids) {
             mids = new HashMap<Long, Map<Long, Map<Long, Set<Long>>>>();

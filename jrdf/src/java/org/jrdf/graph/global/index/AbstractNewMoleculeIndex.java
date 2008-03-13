@@ -80,7 +80,6 @@ public class AbstractNewMoleculeIndex implements NewMoleculeIndex<Long> {
     }
 
     public void add(Long... quad) {
-        // find the sub index
         Map<Long, Map<Long, Set<Long>>> subIndex = index.get(quad[0]);
         if (null == subIndex) {
             subIndex = new HashMap<Long, Map<Long, Set<Long>>>();

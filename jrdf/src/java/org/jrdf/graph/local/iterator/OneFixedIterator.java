@@ -62,6 +62,7 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.graph.local.index.longindex.LongIndex;
 
 import static java.util.Arrays.asList;
 import java.util.Iterator;
@@ -87,6 +88,7 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
      * The fixed item.
      */
     private final Long first;
+    private final LongIndex index;
 
     /**
      * The subIndex of this iterator.  Only needed for initialization and the remove method.
@@ -123,15 +125,16 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
      *
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
-    public OneFixedIterator(Long fixedFirstNode, GraphHandler newHandler) {
+    public OneFixedIterator(Long fixedFirstNode, GraphHandler newHandler, LongIndex newIndex) {
         // store the node factory and other starting data
         handler = newHandler;
         first = fixedFirstNode;
+        index = newIndex;
         // initialise the iterators to empty
         thirdIndexIterator = null;
         secondIndexIterator = null;
         // find the subIndex from the main index
-        subIndex = handler.getSubIndex(first);
+        subIndex = index.getSubIndex(first);
         // check that data exists
         if (null != subIndex) {
             // now get an iterator to the sub index map

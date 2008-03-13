@@ -78,7 +78,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphHandler201 extends AbstractGraphHandler implements GraphHandler {
+public class GraphHandler201 extends AbstractGraphHandler {
     private LongIndex index012;
     private LongIndex index120;
     private LongIndex index201;
@@ -88,10 +88,6 @@ public class GraphHandler201 extends AbstractGraphHandler implements GraphHandle
         this.index120 = indexes[1];
         this.index201 = indexes[2];
         this.nodePool = nodePool;
-    }
-
-    public Map<Long, Set<Long>> getSubIndex(Long first) {
-        return index201.getSubIndex(first);
     }
 
     public boolean removeSubIndex(Long first) {

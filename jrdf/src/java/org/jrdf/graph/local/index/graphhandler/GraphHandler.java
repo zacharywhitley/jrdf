@@ -88,15 +88,6 @@ public interface GraphHandler {
     void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws GraphException;
 
     /**
-     * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id
-     * is given and it returns a map of predicates to objects.
-     *
-     * @param first the entry set to find.
-     * @return a map containing the list of longs to set of longs.
-     */
-    Map<Long, Set<Long>> getSubIndex(Long first);
-
-    /**
      * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is
      * given and it will remove all the associated predicate and objects for that subject.
      *
