@@ -103,6 +103,9 @@ public final class SparqlQueryTestUtil {
         createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) + "} \nUNION {" +
         createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " } \nUNION {" +
         createTriple(SUBJECT_URI_3, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
+    public static final String QUERY_BOOK_1_UNION_2_UNION_EMPTY = createSelectClause() + "\nWHERE {{ " +
+        createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) + "} \nUNION {" +
+        createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " } \nUNION { }}";
     public static final String QUERY_BOOK_1_AND_2_INNER_RIGHT = createSelectClause() + "\n" +
         "WHERE { " + createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) + " . {" +
         createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";

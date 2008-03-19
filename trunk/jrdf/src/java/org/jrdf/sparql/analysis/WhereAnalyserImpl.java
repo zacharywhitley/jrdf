@@ -66,6 +66,7 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Union;
+import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
@@ -189,6 +190,9 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             List<Expression<ExpressionVisitor>> expressions = new ArrayList<Expression<ExpressionVisitor>>();
             for (PUnionGraphPattern pUnionGraphPattern : unionGraphPattern) {
                 Expression<ExpressionVisitor> rhs = getExpression((PUnionGraphPattern) pUnionGraphPattern.clone());
+                if (rhs == null) {
+                    rhs = EMPTY_CONSTRAINT;
+                }
                 expressions.add(rhs);
             }
             Expression<ExpressionVisitor> lhsSide = lhs;

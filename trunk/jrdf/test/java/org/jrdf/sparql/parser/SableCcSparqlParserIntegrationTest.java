@@ -67,6 +67,7 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
 import org.jrdf.query.expression.Conjunction;
+import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Optional;
@@ -77,7 +78,6 @@ import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.SparqlQueryTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_2;
@@ -89,7 +89,10 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2_WITH_PRE
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2_UNION_3;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2_UNION_EMPTY;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_LITERAL_DOUBLE_QUOTES;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_LITERAL_SINGLE_QUOTES;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_3;
@@ -122,6 +125,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_UNION
         = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
+    private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_EMPTY_UNION
+        = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, EMPTY_CONSTRAINT);
     private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
         "name", 1);
     private static final Expression<ExpressionVisitor> FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK,
@@ -178,6 +183,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression(QUERY_BOOK_1_UNION_2_UNION_3, BOOK1_AND_2_AND_3_UNION);
     }
 
+    public void testUnionConstraint3() {
+        checkConstraintExpression(QUERY_BOOK_1_UNION_2_UNION_EMPTY, BOOK1_AND_2_AND_EMPTY_UNION);
+    }
+
     public void testSingleOptionalConstraint() throws Exception {
         Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
         checkConstraintExpression(QUERY_SINGLE_OPTIONAL, optional1);
@@ -216,11 +225,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testQuotedLiteralWithNoDataTypeOrLanguage() {
-        checkConstraintExpression(SparqlQueryTestUtil.QUERY_LITERAL_SINGLE_QUOTES, TITLE_EXP_1);
+        checkConstraintExpression(QUERY_LITERAL_SINGLE_QUOTES, TITLE_EXP_1);
     }
 
     public void testDoubleQuotedLiteralWithNoDataTypeOrLanguage() {
-        checkConstraintExpression(SparqlQueryTestUtil.QUERY_LITERAL_DOUBLE_QUOTES, TITLE_EXP_1);
+        checkConstraintExpression(QUERY_LITERAL_DOUBLE_QUOTES, TITLE_EXP_1);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {

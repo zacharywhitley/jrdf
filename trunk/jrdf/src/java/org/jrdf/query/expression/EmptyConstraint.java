@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -59,22 +59,62 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.util.EqualsUtil;
+
+import static java.util.Collections.emptyList;
+import java.util.List;
+import java.util.Map;
+
 /**
- * Visits the various expression objects.  Can be used to execute or optimize (transform) expressions.
+ * A expression expression comprising an empty expression.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Revision$
  */
-public interface ExpressionVisitor {
-    <V extends ExpressionVisitor> void visitProjection(Projection<V> projection);
+public final class EmptyConstraint<V extends ExpressionVisitor> implements Expression<V> {
+    /**
+     * Represents the EMPTY GRAPH PATTERN - or empty constraint.
+     */
+    public static final EmptyConstraint<ExpressionVisitor> EMPTY_CONSTRAINT = new EmptyConstraint<ExpressionVisitor>();
+    private static final int DUMMY_HASHCODE = 47;
+    private static final long serialVersionUID = 8277006464668938996L;
 
-    <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint);
+    private EmptyConstraint() {
+    }
 
-    <V extends ExpressionVisitor> void visitEmptyConstraint(EmptyConstraint<V> constraint);
+    public List<AttributeValuePair> getAvp(Map<AttributeName, ? extends NodeType> allVariables) {
+        return emptyList();
+    }
 
-    <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction);
+    public void accept(V v) {
+        v.visitEmptyConstraint(this);
+    }
 
-    <V extends ExpressionVisitor> void visitUnion(Union<V> union);
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (EqualsUtil.differentClasses(this, obj)) {
+            return false;
+        }
+        return false;
+    }
 
-    <V extends ExpressionVisitor> void visitOptional(Optional<V> optional);
+    public int hashCode() {
+        // FIXME TJA: Test drive out values of triple.hashCode()
+        return DUMMY_HASHCODE;
+    }
+
+    /**
+     * Delegates to <code>getAvp().toString()</code>.
+     */
+    public String toString() {
+        return "EMPTY";
+    }
 }
