@@ -61,6 +61,7 @@ package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.EmptyConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
@@ -71,6 +72,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.constants.RelationDEE;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
@@ -125,6 +127,11 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         Relation expression = getExpression(projection.getNextExpression());
         Set<Attribute> attributes = projection.getAttributes();
         result = project.include(expression, attributes);
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitEmptyConstraint(EmptyConstraint<V> constraint) {
+        result = RelationDEE.RELATION_DEE;
     }
 
     @Override
