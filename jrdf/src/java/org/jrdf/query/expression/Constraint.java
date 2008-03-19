@@ -68,7 +68,6 @@ import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +78,7 @@ import java.util.Map;
  * @author Tom Adams
  * @version $Revision$
  */
-public final class Constraint<V extends ExpressionVisitor> implements Expression<V>, Serializable {
+public final class Constraint<V extends ExpressionVisitor> implements Expression<V> {
     private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
     private List<AttributeValuePair> singleAvp;
