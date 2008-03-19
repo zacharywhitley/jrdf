@@ -185,14 +185,12 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     @Override
     public void caseAGroupOrUnionGraphPattern(AGroupOrUnionGraphPattern node) {
         if (node.getUnionGraphPattern() != null) {
-            Expression<ExpressionVisitor> lhs = getExpression((PGroupGraphPattern) node.getGroupGraphPattern().clone());
+            Expression<ExpressionVisitor> lhs = getExpressionWithEmptyConstraint(
+                (Node) node.getGroupGraphPattern().clone());
             LinkedList<PUnionGraphPattern> unionGraphPattern = node.getUnionGraphPattern();
             List<Expression<ExpressionVisitor>> expressions = new ArrayList<Expression<ExpressionVisitor>>();
             for (PUnionGraphPattern pUnionGraphPattern : unionGraphPattern) {
-                Expression<ExpressionVisitor> rhs = getExpression((PUnionGraphPattern) pUnionGraphPattern.clone());
-                if (rhs == null) {
-                    rhs = EMPTY_CONSTRAINT;
-                }
+                Expression<ExpressionVisitor> rhs = getExpressionWithEmptyConstraint((Node) pUnionGraphPattern.clone());
                 expressions.add(rhs);
             }
             Expression<ExpressionVisitor> lhsSide = lhs;
@@ -264,6 +262,15 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         Optional<ExpressionVisitor> rhsOptional) {
         Optional<ExpressionVisitor> optional = new Optional<ExpressionVisitor>(lhs, rhsOptional.getLhs());
         return new Optional<ExpressionVisitor>(optional, rhsOptional.getRhs());
+    }
+
+    private Expression<ExpressionVisitor> getExpressionWithEmptyConstraint(Node node) {
+        Expression<ExpressionVisitor> result = getExpression(node);
+        if (result == null) {
+            return EMPTY_CONSTRAINT;
+        } else {
+            return result;
+        }
     }
 
     private Expression<ExpressionVisitor> getExpression(Node node) {
