@@ -59,39 +59,11 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.global.molecule.MoleculeHandler;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphException;
 
-import java.util.Set;
+public interface MoleculeLocalizer {
+    Long getNextMoleculeId();
 
-public class AddNewMoleculeToIndex implements MoleculeHandler {
-    private static final int QUAD_SIZE = 4;
-    private static final int TRIPLE_SIZE = 3;
-    private final NewMoleculeIndex<Long> index;
-    private final NewMolecule molecule;
-    private final MoleculeLocalizer localizer;
-    private final Long moleculeId;
-
-    public AddNewMoleculeToIndex(NewMoleculeIndex<Long> newIndex, NewMolecule newMolecule,
-        MoleculeLocalizer newLocalizer) {
-        this.index = newIndex;
-        this.molecule = newMolecule;
-        this.localizer = newLocalizer;
-        this.moleculeId = newLocalizer.getNextMoleculeId();
-    }
-
-    public void handleTriple(Triple triple) throws GraphException {
-        Long[] quad = new Long[QUAD_SIZE];
-        System.arraycopy(localizer.localizeTriple(triple), 0, quad, 0, TRIPLE_SIZE);
-        quad[TRIPLE_SIZE] = moleculeId;
-        index.add(quad);
-    }
-
-    public void handleEmptyMolecules() {
-    }
-
-    public void handleContainsMolecules(Set<NewMolecule> newMolecules) {
-    }
+    Long[] localizeTriple(Triple triple) throws GraphException;
 }
