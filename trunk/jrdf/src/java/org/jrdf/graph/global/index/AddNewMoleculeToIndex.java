@@ -93,5 +93,6 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
     }
 
     public void handleContainsMolecules(Set<NewMolecule> newMolecules) {
+        // Add a stack of molecule ids here?
     }
 }
