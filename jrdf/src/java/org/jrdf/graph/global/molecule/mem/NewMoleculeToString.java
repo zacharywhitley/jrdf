@@ -76,19 +76,19 @@ public class NewMoleculeToString implements MoleculeHandler {
         return builder;
     }
 
-    public void handleEmptyMolecules() {
-        builder.append("{}");
-    }
-
-    public void handleContainsMolecules(Set<NewMolecule> newMolecules) {
-        level++;
-    }
-
     public void handleTriple(Triple triple) {
         builder.append("\n");
         for (int index = 0; index < level; index++) {
             builder.append("--");
         }
         builder.append("> ").append(triple).append(" = ");
+    }
+
+    public void handleEmptyMolecules() {
+        builder.append("{}");
+    }
+
+    public void handleContainsMolecules(Set<NewMolecule> newMolecules) {
+        level++;
     }
 }
