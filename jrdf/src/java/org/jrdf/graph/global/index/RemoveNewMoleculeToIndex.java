@@ -81,6 +81,10 @@ public class RemoveNewMoleculeToIndex implements MoleculeHandler {
     public void handleEmptyMolecules() {
     }
 
-    public void handleContainsMolecules(Set<NewMolecule> newMolecules) {
+    public void handleStartContainsMolecules(Set<NewMolecule> newMolecules) {
+    }
+
+    public void handleEndContainsMolecules(Set<NewMolecule> newMolecules) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

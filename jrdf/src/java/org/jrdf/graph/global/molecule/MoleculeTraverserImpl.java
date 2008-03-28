@@ -93,9 +93,10 @@ public class MoleculeTraverserImpl implements MoleculeTraverser {
     }
 
     private void iterateOverMolecules(Set<NewMolecule> newMolecules) {
-        handler.handleContainsMolecules(newMolecules);
+        handler.handleStartContainsMolecules(newMolecules);
         for (NewMolecule molecule : newMolecules) {
             iterateOverTriples(molecule, molecule.getRootTriples());
         }
+        handler.handleEndContainsMolecules(newMolecules);
     }
 }
