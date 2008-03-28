@@ -110,8 +110,8 @@
         <include name="${lib.dir}/junit-3.8.1.jar"/>
         <include name="${lib.dir}/gsbase-2.0.1.jar"/>
         <include name="${lib.dir}/jester-1.3.7.jar"/>
-        <include name="${lib.dir}/easymock/easymock-2.1.0.jar"/>
-        <include name="${lib.dir}/easymock/easymockclassextension-2.1.0.jar"/>
+        <include name="${lib.dir}/easymock/easymock-2.3.0.jar"/>
+        <include name="${lib.dir}/easymock/easymockclassextension-2.3.0.jar"/>
         <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
         <include name="${lib.dir}/spring/spring-beans-2.0.7.jar"/>
         <include name="${lib.dir}/spring/spring-context-2.0.7.jar"/>
