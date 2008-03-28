@@ -59,12 +59,13 @@
 
 package org.jrdf.graph.global.index;
 
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.MoleculeHandler;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.GraphException;
 
 import java.util.Set;
+import java.util.Stack;
 
 public class AddNewMoleculeToIndex implements MoleculeHandler {
     private static final int QUAD_SIZE = 4;
@@ -72,21 +73,21 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
     private final NewMoleculeIndex<Long> index;
     private final NewMolecule molecule;
     private final MoleculeLocalizer localizer;
-    private final Long moleculeId;
+    private Long currentMoleculeId;
+    private Stack<Long> moleculeIds;
 
     public AddNewMoleculeToIndex(NewMoleculeIndex<Long> newIndex, NewMolecule newMolecule,
         MoleculeLocalizer newLocalizer) {
         this.index = newIndex;
         this.molecule = newMolecule;
         this.localizer = newLocalizer;
-        this.moleculeId = newLocalizer.getNextMoleculeId();
     }
 
     public void handleTriple(Triple triple) {
         try {
             Long[] quad = new Long[QUAD_SIZE];
             System.arraycopy(localizer.localizeTriple(triple), 0, quad, 0, TRIPLE_SIZE);
-            quad[TRIPLE_SIZE] = moleculeId;
+            quad[TRIPLE_SIZE] = currentMoleculeId;
             index.add(quad);
         } catch (GraphException e) {
             throw new RuntimeException(e);
@@ -96,7 +97,12 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
     public void handleEmptyMolecules() {
     }
 
-    public void handleContainsMolecules(Set<NewMolecule> newMolecules) {
-        // Add a stack of molecule ids here?
+    public void handleStartContainsMolecules(Set<NewMolecule> newMolecules) {
+        currentMoleculeId = localizer.getNextMoleculeId();
+        moleculeIds.push(currentMoleculeId);
+    }
+
+    public void handleEndContainsMolecules(Set<NewMolecule> newMolecules) {
+        currentMoleculeId = moleculeIds.pop();
     }
 }

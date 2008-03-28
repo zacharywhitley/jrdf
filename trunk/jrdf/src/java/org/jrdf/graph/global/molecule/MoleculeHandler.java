@@ -69,5 +69,7 @@ public interface MoleculeHandler {
 
     void handleEmptyMolecules();
 
-    void handleContainsMolecules(Set<NewMolecule> newMolecules);
+    void handleStartContainsMolecules(Set<NewMolecule> newMolecules);
+
+    void handleEndContainsMolecules(Set<NewMolecule> newMolecules);
 }
