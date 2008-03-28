@@ -60,13 +60,12 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
 import java.util.Set;
 
 public interface MoleculeHandler {
-    void handleTriple(Triple triple) throws GraphException;
+    void handleTriple(Triple triple);
 
     void handleEmptyMolecules();
 
