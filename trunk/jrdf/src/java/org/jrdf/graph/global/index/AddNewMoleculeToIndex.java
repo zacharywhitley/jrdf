@@ -82,11 +82,15 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
         this.moleculeId = newLocalizer.getNextMoleculeId();
     }
 
-    public void handleTriple(Triple triple) throws GraphException {
-        Long[] quad = new Long[QUAD_SIZE];
-        System.arraycopy(localizer.localizeTriple(triple), 0, quad, 0, TRIPLE_SIZE);
-        quad[TRIPLE_SIZE] = moleculeId;
-        index.add(quad);
+    public void handleTriple(Triple triple) {
+        try {
+            Long[] quad = new Long[QUAD_SIZE];
+            System.arraycopy(localizer.localizeTriple(triple), 0, quad, 0, TRIPLE_SIZE);
+            quad[TRIPLE_SIZE] = moleculeId;
+            index.add(quad);
+        } catch (GraphException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void handleEmptyMolecules() {
