@@ -129,8 +129,7 @@ public class GlobalGraphTestUtil {
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY =
         new GroundedTripleComparatorFactoryImpl();
     private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
-    public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(
-        MOLECULE_COMPARATOR);
+    public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(MOLECULE_COMPARATOR);
 
     private GlobalGraphTestUtil() {
     }
