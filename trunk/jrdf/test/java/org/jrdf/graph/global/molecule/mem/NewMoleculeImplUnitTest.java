@@ -60,10 +60,9 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.GroundedTripleComparatorImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.MOLECULE_FACTORY;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2b1;
@@ -74,14 +73,6 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r3r1r1;
 import org.jrdf.graph.global.molecule.MergeSubmoleculesImpl;
 import org.jrdf.graph.global.molecule.MoleculeSubsumption;
 import org.jrdf.graph.global.molecule.MoleculeSubsumptionImpl;
-import org.jrdf.graph.local.BlankNodeComparator;
-import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.LocalizedNodeComparator;
-import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.NodeComparatorImpl;
-import org.jrdf.graph.local.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,12 +81,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class NewMoleculeImplUnitTest extends TestCase {
-    private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
-    private final LocalizedNodeComparator localNodeComparator = new LocalizedNodeComparatorImpl();
-    private final BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localNodeComparator);
-    private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
-    private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
-    private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
+    private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private final NewMoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
     private NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
     private MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
