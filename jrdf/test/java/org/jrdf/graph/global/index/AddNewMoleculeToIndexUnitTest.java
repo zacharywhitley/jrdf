@@ -60,21 +60,70 @@
 package org.jrdf.graph.global.index;
 
 import junit.framework.TestCase;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
+import org.jrdf.graph.global.molecule.MoleculeHandler;
+import org.jrdf.graph.global.molecule.MoleculeTraverser;
+import org.jrdf.graph.global.molecule.MoleculeTraverserImpl;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.util.test.MockFactory;
+import static org.jrdf.util.test.SetUtil.asSet;
+
+import java.util.Collections;
 
 public class AddNewMoleculeToIndexUnitTest extends TestCase {
+    private static final Long MID_1 = 1L;
+    private static final Long[] TRIPLE_1 = new Long[]{1L, 2L, 3L};
+    private static final Long[] TRIPLE_2 = new Long[]{1L, 4L, 4L};
+    private static final Long[] TRIPLE_3 = new Long[]{1L, 2L, 5L};
+    private static final Long[] QUAD_1 = new Long[]{MID_1, 2L, 3L, MID_1};
+    private static final Long[] QUAD_2 = new Long[]{MID_1, 4L, 4L, MID_1};
+    private static final Long[] QUAD_3 = new Long[]{MID_1, 2L, 5L, MID_1};
     private MockFactory factory = new MockFactory();
-    private NewMoleculeIndex moleculeIndex;
-    private NewMolecule molcule;
+    private NewMoleculeIndex<Long> moleculeIndex;
     private MoleculeLocalizer localizer;
+    private MoleculeHandler handler;
+    private MoleculeTraverser traverser;
 
     public void setUp() {
         moleculeIndex = factory.createMock(NewMoleculeIndex.class);
         localizer = factory.createMock(MoleculeLocalizer.class);
+        traverser = new MoleculeTraverserImpl();
     }
 
-    public void testSingleMolcule() {
-        assertTrue(true);
+    public void testSingleMolcule() throws GraphException {
+        NewMolecule molecule = createMultiLevelMolecule(asSet(B1R1B2), Collections.<Triple>emptySet(),
+            Collections.<Triple>emptySet());
+        handler = new AddNewMoleculeToIndex(moleculeIndex, molecule, localizer);
+        expect(localizer.getNextMoleculeId()).andReturn(MID_1);
+        expect(localizer.localizeTriple(B1R1B2)).andReturn(TRIPLE_1);
+        moleculeIndex.add(QUAD_1);
+        expectLastCall();
+        factory.replay();
+        traverser.traverse(molecule, handler);
+        factory.verify();
+    }
+
+    public void testMultipleTriplesMolcule() throws GraphException {
+        NewMolecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2), Collections.<Triple>emptySet(),
+            Collections.<Triple>emptySet());
+        handler = new AddNewMoleculeToIndex(moleculeIndex, molecule, localizer);
+        expect(localizer.getNextMoleculeId()).andReturn(MID_1);
+        expect(localizer.localizeTriple(B1R1R1)).andReturn(TRIPLE_1);
+        expect(localizer.localizeTriple(B1R2R2)).andReturn(TRIPLE_2);
+        expect(localizer.localizeTriple(B1R1B2)).andReturn(TRIPLE_3);
+        moleculeIndex.add(QUAD_1);
+        moleculeIndex.add(QUAD_2);
+        moleculeIndex.add(QUAD_3);
+        expectLastCall();
+        factory.replay();
+        traverser.traverse(molecule, handler);
+        factory.verify();
     }
 }

@@ -81,6 +81,7 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
         this.index = newIndex;
         this.molecule = newMolecule;
         this.localizer = newLocalizer;
+        this.moleculeIds = new Stack<Long>();
     }
 
     public void handleTriple(Triple triple) {
