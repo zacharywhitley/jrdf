@@ -104,6 +104,13 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
     }
 
     public void handleEndContainsMolecules(Set<NewMolecule> newMolecules) {
-        currentMoleculeId = moleculeIds.pop();
+        if (!moleculeIds.isEmpty()) {
+            Long tmpMoleculeId = moleculeIds.pop();
+            if (tmpMoleculeId.equals(currentMoleculeId) && !moleculeIds.isEmpty()) {
+                currentMoleculeId = moleculeIds.pop();
+            } else {
+                currentMoleculeId = tmpMoleculeId;
+            }
+        }
     }
 }
