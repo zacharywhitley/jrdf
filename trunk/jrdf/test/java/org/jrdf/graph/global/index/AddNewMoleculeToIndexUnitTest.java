@@ -118,7 +118,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
 
     public void setUp() {
         moleculeIndex = factory.createMock(NewMoleculeIndex.class);
-        localizer = factory.createMock(MoleculeLocalizer.class);
+        localizer = factory.createStrictMock(MoleculeLocalizer.class);
         traverser = new MoleculeTraverserImpl();
     }
 
@@ -140,9 +140,9 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
             Collections.<Triple>emptySet());
         handler = new AddNewMoleculeToIndex(moleculeIndex, molecule, localizer);
         expect(localizer.getNextMoleculeId()).andReturn(MID_1);
-        expect(localizer.localizeTriple(B1R1R1)).andReturn(TRIPLE_1);
-        expect(localizer.localizeTriple(B1R2R2)).andReturn(TRIPLE_2);
         expect(localizer.localizeTriple(B1R1B2)).andReturn(TRIPLE_3);
+        expect(localizer.localizeTriple(B1R2R2)).andReturn(TRIPLE_2);
+        expect(localizer.localizeTriple(B1R1R1)).andReturn(TRIPLE_1);
         moleculeIndex.add(QUAD_1);
         expectLastCall();
         moleculeIndex.add(QUAD_2);
@@ -159,18 +159,16 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
             asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
         handler = new AddNewMoleculeToIndex(moleculeIndex, molecule, localizer);
         expect(localizer.getNextMoleculeId()).andReturn(MID_1);
-        expect(localizer.getNextMoleculeId()).andReturn(MID_2);
-        expect(localizer.getNextMoleculeId()).andReturn(MID_3);
-
         expect(localizer.localizeTriple(B1R1B2)).andReturn(TRIPLE_3);
+        expect(localizer.getNextMoleculeId()).andReturn(MID_2);
         expect(localizer.localizeTriple(B2R2B3)).andReturn(TRIPLE_6);
-        expect(localizer.localizeTriple(B3R2R3)).andReturn(TRIPLE_7);
+        expect(localizer.getNextMoleculeId()).andReturn(MID_3);
         expect(localizer.localizeTriple(B3R2R2)).andReturn(TRIPLE_8);
-        expect(localizer.localizeTriple(R1R2B2)).andReturn(TRIPLE_4);
+        expect(localizer.localizeTriple(B3R2R3)).andReturn(TRIPLE_7);
         expect(localizer.localizeTriple(B2R2R1)).andReturn(TRIPLE_5);
-        expect(localizer.localizeTriple(B1R1R1)).andReturn(TRIPLE_1);
+        expect(localizer.localizeTriple(R1R2B2)).andReturn(TRIPLE_4);
         expect(localizer.localizeTriple(B1R2R2)).andReturn(TRIPLE_2);
-
+        expect(localizer.localizeTriple(B1R1R1)).andReturn(TRIPLE_1);
         moleculeIndex.add(QUAD_1);
         expectLastCall();
         moleculeIndex.add(QUAD_6);
