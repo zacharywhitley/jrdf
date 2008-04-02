@@ -71,15 +71,12 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
     private static final int QUAD_SIZE = 4;
     private static final int TRIPLE_SIZE = 3;
     private final NewMoleculeIndex<Long> index;
-    private final NewMolecule molecule;
     private final MoleculeLocalizer localizer;
     private Long currentMoleculeId;
     private Stack<Long> moleculeIds;
 
-    public AddNewMoleculeToIndex(NewMoleculeIndex<Long> newIndex, NewMolecule newMolecule,
-        MoleculeLocalizer newLocalizer) {
+    public AddNewMoleculeToIndex(NewMoleculeIndex<Long> newIndex, MoleculeLocalizer newLocalizer) {
         this.index = newIndex;
-        this.molecule = newMolecule;
         this.localizer = newLocalizer;
         this.moleculeIds = new Stack<Long>();
     }
