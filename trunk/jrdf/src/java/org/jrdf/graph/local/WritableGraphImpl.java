@@ -104,10 +104,6 @@ public class WritableGraphImpl implements WritableGraph {
         }
     }
 
-    private boolean nodeFreed(Long value) {
-        return !longIndexes[0].contains(value) && !longIndexes[1].contains(value) && !longIndexes[2].contains(value);
-    }
-
     public void removeIterator(Iterator<Triple> triples) throws GraphException {
         if (ClosableLocalIterator.class.isAssignableFrom(triples.getClass())) {
             localIteratorRemove(triples);
@@ -116,19 +112,8 @@ public class WritableGraphImpl implements WritableGraph {
         }
     }
 
-    private void localIteratorRemove(Iterator<Triple> triples) {
-        ClosableLocalIterator<Triple> localIterator = (ClosableLocalIterator<Triple>) triples;
-        while (localIterator.hasNext()) {
-            localIterator.next();
-            localIterator.remove();
-        }
-    }
-
-    private void globalIteratorRemove(Iterator<Triple> triples) throws GraphException {
-        while (triples.hasNext()) {
-            Triple triple = triples.next();
-            localizeAndRemove(triple.getSubject(), triple.getPredicate(), triple.getObject());
-        }
+    private boolean nodeFreed(Long value) {
+        return !longIndexes[0].contains(value) && !longIndexes[1].contains(value) && !longIndexes[2].contains(value);
     }
 
     public void localizeAndAdd(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
@@ -151,5 +136,20 @@ public class WritableGraphImpl implements WritableGraph {
         longIndexes[1].clear();
         longIndexes[2].clear();
         nodePool.clear();
+    }
+
+    private void localIteratorRemove(Iterator<Triple> triples) {
+        ClosableLocalIterator<Triple> localIterator = (ClosableLocalIterator<Triple>) triples;
+        while (localIterator.hasNext()) {
+            localIterator.next();
+            localIterator.remove();
+        }
+    }
+
+    private void globalIteratorRemove(Iterator<Triple> triples) throws GraphException {
+        while (triples.hasNext()) {
+            Triple triple = triples.next();
+            localizeAndRemove(triple.getSubject(), triple.getPredicate(), triple.getObject());
+        }
     }
 }
