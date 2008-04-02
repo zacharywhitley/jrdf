@@ -64,7 +64,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.MoleculeHandler;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.Stack;
 
@@ -82,6 +81,8 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
         this.index = newIndex;
         this.localizer = newLocalizer;
         this.parentIds = new Stack<Long>();
+        parentIds.push(0L);
+        parentIds.push(0L);
     }
 
     public void handleTriple(Triple triple) {
@@ -90,7 +91,6 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
             System.arraycopy(localizer.localizeTriple(triple), 0, quin, 0, MOLECULE_ID_INDEX);
             quin[MOLECULE_ID_INDEX] = moleculeId;
             quin[PARENT_ID_INDEX] = parentId;
-            System.err.println("Adding: " + Arrays.toString(quin));
             index.add(quin);
         } catch (GraphException e) {
             throw new RuntimeException(e);
@@ -101,22 +101,18 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
     }
 
     public void handleStartContainsMolecules(Set<NewMolecule> newMolecules) {
-        if (moleculeId.equals(0L)) {
-            moleculeId = localizer.getNextMoleculeId();
-        } else {
-            parentId = localizer.getNextMoleculeId();
-            parentIds.push(parentId);
-        }
+        parentId = moleculeId;
+        moleculeId = localizer.getNextMoleculeId();
+        parentIds.push(moleculeId);
     }
 
     public void handleEndContainsMolecules(Set<NewMolecule> newMolecules) {
-        if (!parentIds.isEmpty()) {
-            Long tmpMoleculeId = parentIds.pop();
-            if (tmpMoleculeId.equals(parentId) && !parentIds.isEmpty()) {
-                parentId = parentIds.pop();
-            } else {
-                parentId = tmpMoleculeId;
-            }
+        Long tmpId = parentIds.pop();
+        // Check to see if we have come to the end of the molecules - if so go one more deep.
+        if (tmpId.equals(moleculeId)) {
+            tmpId = parentIds.pop();
         }
+        moleculeId = tmpId;
+        parentId = parentIds.peek();
     }
 }
