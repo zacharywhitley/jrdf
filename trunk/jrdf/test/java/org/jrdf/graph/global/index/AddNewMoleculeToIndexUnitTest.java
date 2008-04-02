@@ -116,6 +116,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
     private MoleculeHandler handler;
     private MoleculeTraverser traverser;
 
+    @SuppressWarnings({"unchecked"})
     public void setUp() {
         moleculeIndex = factory.createMock(NewMoleculeIndex.class);
         localizer = factory.createStrictMock(MoleculeLocalizer.class);
@@ -125,7 +126,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
     public void testSingleMolcule() throws GraphException {
         NewMolecule molecule = createMultiLevelMolecule(asSet(B1R1R1), Collections.<Triple>emptySet(),
             Collections.<Triple>emptySet());
-        handler = new AddNewMoleculeToIndex(moleculeIndex, molecule, localizer);
+        handler = new AddNewMoleculeToIndex(moleculeIndex, localizer);
         expect(localizer.getNextMoleculeId()).andReturn(MID_1);
         expect(localizer.localizeTriple(B1R1R1)).andReturn(TRIPLE_1);
         moleculeIndex.add(QUAD_1);
@@ -138,7 +139,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
     public void testMultipleTriplesMolcule() throws GraphException {
         NewMolecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2), Collections.<Triple>emptySet(),
             Collections.<Triple>emptySet());
-        handler = new AddNewMoleculeToIndex(moleculeIndex, molecule, localizer);
+        handler = new AddNewMoleculeToIndex(moleculeIndex, localizer);
         expect(localizer.getNextMoleculeId()).andReturn(MID_1);
         expect(localizer.localizeTriple(B1R1B2)).andReturn(TRIPLE_3);
         expect(localizer.localizeTriple(B1R2R2)).andReturn(TRIPLE_2);
@@ -157,7 +158,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
     public void testManyLevelMolecule() throws GraphException {
         NewMolecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
             asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
-        handler = new AddNewMoleculeToIndex(moleculeIndex, molecule, localizer);
+        handler = new AddNewMoleculeToIndex(moleculeIndex, localizer);
         expect(localizer.getNextMoleculeId()).andReturn(MID_1);
         expect(localizer.localizeTriple(B1R1B2)).andReturn(TRIPLE_3);
         expect(localizer.getNextMoleculeId()).andReturn(MID_2);
