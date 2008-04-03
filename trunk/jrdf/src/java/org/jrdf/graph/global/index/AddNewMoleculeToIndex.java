@@ -108,7 +108,9 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
 
     public void handleEndContainsMolecules(Set<NewMolecule> newMolecules) {
         Long tmpId = parentIds.pop();
-        // Check to see if we have come to the end of the molecules - if so go one more deep.
+        // Check to see if we have come to the deepest level of the molecule - that is we've not pushed on a new
+        // molecule id and we've come to the end.  If we have then we need to pop that id off and get the next level
+        // up.
         if (tmpId.equals(moleculeId)) {
             tmpId = parentIds.pop();
         }
