@@ -72,10 +72,6 @@ public class NewMoleculeToString implements MoleculeHandler {
         this.builder = newBuilder;
     }
 
-    public Object getResult() {
-        return builder;
-    }
-
     public void handleTriple(Triple triple) {
         builder.append("\n");
         for (int index = 0; index < level; index++) {
@@ -93,6 +89,5 @@ public class NewMoleculeToString implements MoleculeHandler {
     }
 
     public void handleEndContainsMolecules(Set<NewMolecule> newMolecules) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
