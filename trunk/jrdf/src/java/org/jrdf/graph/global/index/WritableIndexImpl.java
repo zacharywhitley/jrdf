@@ -70,10 +70,17 @@ public class WritableIndexImpl implements WritableIndex<Long> {
         this.structureIndex = newStructureIndex;
     }
 
-    public void add(Long[] quin) throws GraphException {
+    public void add(Long... quin) throws GraphException {
         indexes[0].add(quin);
         indexes[1].add(quin[1], quin[2], quin[0], quin[3]);
         indexes[2].add(quin[2], quin[0], quin[1], quin[3]);
         structureIndex.add(quin);
+    }
+
+    public void remove(Long... quin) throws GraphException {
+        indexes[0].remove(quin);
+        indexes[1].remove(quin[1], quin[2], quin[0], quin[3]);
+        indexes[2].remove(quin[2], quin[0], quin[1], quin[3]);
+        structureIndex.remove(quin);
     }
 }
