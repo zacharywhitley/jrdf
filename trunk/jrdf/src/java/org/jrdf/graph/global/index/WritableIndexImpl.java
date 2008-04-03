@@ -59,7 +59,21 @@
 
 package org.jrdf.graph.global.index;
 
-public class WritableIndexImpl implements WritableIndex {
-    public void add(Object[] quin) {
+import org.jrdf.graph.GraphException;
+
+public class WritableIndexImpl implements WritableIndex<Long> {
+    private final NewMoleculeIndex<Long>[] indexes;
+    private final NewMoleculeStructureIndex<Long> structureIndex;
+
+    public WritableIndexImpl(NewMoleculeIndex<Long>[] newIndexes, NewMoleculeStructureIndex<Long> newStructureIndex) {
+        this.indexes = newIndexes;
+        this.structureIndex = newStructureIndex;
+    }
+
+    public void add(Long[] quin) throws GraphException {
+        indexes[0].add(quin);
+        indexes[1].add(quin[1], quin[2], quin[0], quin[3]);
+        indexes[2].add(quin[2], quin[0], quin[1], quin[3]);
+        structureIndex.add(quin);
     }
 }

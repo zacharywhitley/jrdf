@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.global.index;
 
+import org.jrdf.graph.GraphException;
+
 public interface WritableIndex<T> {
-    void add(T... quin);
+    void add(T... quin) throws GraphException;
 }
