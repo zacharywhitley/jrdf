@@ -65,4 +65,6 @@ public interface WritableIndex<T> {
     void add(T... quin) throws GraphException;
 
     void remove(Long... quin) throws GraphException;
+
+    Long findMid(Long... quin) throws GraphException;
 }

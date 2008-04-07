@@ -71,16 +71,28 @@ public class WritableIndexImpl implements WritableIndex<Long> {
     }
 
     public void add(Long... quin) throws GraphException {
+        // spo, mid
         indexes[0].add(quin);
+        // pos, mid
         indexes[1].add(quin[1], quin[2], quin[0], quin[3]);
+        // osp, mid
         indexes[2].add(quin[2], quin[0], quin[1], quin[3]);
-        structureIndex.add(quin);
+        // parent, mid, spo
+        structureIndex.add(quin[4], quin[3], quin[0], quin[1], quin[2]);
     }
 
     public void remove(Long... quin) throws GraphException {
+        // spo, mid
         indexes[0].remove(quin);
+        // pos, mid
         indexes[1].remove(quin[1], quin[2], quin[0], quin[3]);
+        // osp, mid
         indexes[2].remove(quin[2], quin[0], quin[1], quin[3]);
-        structureIndex.remove(quin);
+        // parent, mid, spo
+        structureIndex.remove(quin[4], quin[3], quin[0], quin[1], quin[2]);
+    }
+
+    public Long findMid(Long... quin) throws GraphException {
+        return null;
     }
 }

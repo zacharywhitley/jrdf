@@ -62,6 +62,7 @@ package org.jrdf.graph.global.index;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
 import org.jrdf.graph.global.molecule.MoleculeTraverserImpl;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.GraphException;
 
 public class MoleculeGraphImpl implements MoleculeGraph {
     private final WritableIndex<Long> index;
@@ -81,7 +82,13 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     }
 
     public void delete(NewMolecule molecule) {
-        // find mid based on molecule head triple and subsequent triples.
-        // delete all mids based on one found.
+        try {
+            Long[] longs = localizer.localizeTriple(molecule.getHeadTriple());
+            // find mid based on molecule head triple and subsequent triples.
+            index.findMid(longs);
+            // delete all mids based on one found.
+        } catch (GraphException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
