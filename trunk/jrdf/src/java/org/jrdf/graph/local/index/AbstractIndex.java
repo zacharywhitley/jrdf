@@ -108,6 +108,10 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
         return index.containsKey(node);
     }
 
+    public ClosableIterator<Map.Entry<T, Map<T, Set<T>>>> newIterator() {
+        return iterator();
+    }
+
     public ClosableIterator<Map.Entry<T, Map<T, Set<T>>>> iterator() {
         return new ClosableIteratorImpl<Map.Entry<T, Map<T, Set<T>>>>(index.entrySet().iterator());
     }

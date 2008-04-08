@@ -98,6 +98,10 @@ public class GraphHandler012 extends AbstractGraphHandler {
         return index012.removeSubIndex(first);
     }
 
+    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getNewEntries() {
+        return index012.newIterator();
+    }
+
     public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
         return index012.iterator();
     }

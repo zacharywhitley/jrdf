@@ -61,11 +61,12 @@ package org.jrdf.graph.local.index.longindex.sesame;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import static org.jrdf.util.btree.ByteHandler.toBytes;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.btree.ByteHandler.toBytes;
+import org.jrdf.util.btree.EntryIterator;
+import org.jrdf.util.btree.NewEntryIterator;
 import org.jrdf.util.btree.RecordIteratorHelper;
 import org.jrdf.util.btree.TripleBTree;
-import org.jrdf.util.btree.EntryIterator;
 
 import java.io.IOException;
 import java.util.Map;
@@ -103,6 +104,10 @@ public final class LongIndexSesame implements LongIndex {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> newIterator() {
+        return new NewEntryIterator(btree);
     }
 
     // TODO AN This is still memory bound.
