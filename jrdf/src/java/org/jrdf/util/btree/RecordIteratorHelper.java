@@ -99,6 +99,16 @@ public final class RecordIteratorHelper {
         }
     }
 
+    public static boolean contains(TripleBTree btree, Long first, Long second) throws IOException {
+        RecordIterator iterator = btree.getIterator(first, second, 0L);
+        try {
+            byte[] bytes = getNextBytes(iterator);
+            return bytes != null;
+        } finally {
+            iterator.close();
+        }
+    }
+
     public static boolean remove(TripleBTree btree, Long... node) throws IOException {
         RecordIterator iterator = btree.getIterator(node);
         try {
