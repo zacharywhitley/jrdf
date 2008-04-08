@@ -78,7 +78,9 @@ public class NewEntryIterator implements ClosableIterator<Map.Entry<Long, Map<Lo
             this.btree = btree;
             this.iterator = btree.iterateAll();
             this.currentValues = iterator.next();
-            this.key = ByteHandler.fromBytes(currentValues, TRIPLES)[0];
+            if (currentValues != null) {
+                this.key = ByteHandler.fromBytes(currentValues, TRIPLES)[0];
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
