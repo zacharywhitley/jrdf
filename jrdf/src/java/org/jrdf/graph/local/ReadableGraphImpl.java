@@ -156,18 +156,22 @@ public class ReadableGraphImpl implements ReadableGraph {
 
     private boolean containsFixedSubjectFixedPredicate(Long[] values, ObjectNode object) {
         ClosableMap<Long, Set<Long>> subjIndex = longIndexes[0].getSubIndex(values[0]);
-        Set<Long> subjPredIndex = subjIndex.get(values[1]);
-        if (null != subjPredIndex) {
-            if (ANY_OBJECT_NODE != object) {
-                // Must be subj, pred, obj.
-                return subjPredIndex.contains(values[2]);
+        try {
+            Set<Long> subjPredIndex = subjIndex.get(values[1]);
+            if (null != subjPredIndex) {
+                if (ANY_OBJECT_NODE != object) {
+                    // Must be subj, pred, obj.
+                    return subjPredIndex.contains(values[2]);
+                } else {
+                    // Was subj, pred, AnyObjectNode - must be true if we get this far.
+                    return true;
+                }
             } else {
-                // Was subj, pred, AnyObjectNode - must be true if we get this far.
-                return true;
+                // subj, pred not found.
+                return false;
             }
-        } else {
-            // subj, pred not found.
-            return false;
+        } finally {
+            subjIndex.close();
         }
     }
 
