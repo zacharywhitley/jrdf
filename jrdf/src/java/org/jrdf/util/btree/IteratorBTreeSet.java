@@ -59,29 +59,69 @@
 
 package org.jrdf.util.btree;
 
-import java.util.AbstractMap;
 import java.util.Set;
-import java.io.IOException;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.Collection;
 
-public class FixedFirstBTreeMap extends AbstractMap<Long, Set<Long>> {
+public class IteratorBTreeSet implements Set<Map.Entry<Long, Set<Long>>> {
     private final long first;
     private final TripleBTree bTree;
 
-    public FixedFirstBTreeMap(long newFirst, TripleBTree newBTree) {
-        this.first = newFirst;
-        this.bTree = newBTree;
+    public IteratorBTreeSet(long first, TripleBTree bTree) {
+        this.first = first;
+        this.bTree = bTree;
     }
 
-    public boolean containsKey(Object key) {
-        try {
-            return RecordIteratorHelper.contains(bTree, first, (Long) key);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public int size() {
+        throw new UnsupportedOperationException("Cannot call this method");
     }
 
-    @Override
-    public Set<Entry<Long, Set<Long>>> entrySet() {
-        return new IteratorBTreeSet(first, bTree);
+    public boolean isEmpty() {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean contains(Object o) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public Iterator<Map.Entry<Long, Set<Long>>> iterator() {
+        return new IteratorBTree(first, bTree);
+    }
+
+    public Object[] toArray() {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public <T> T[] toArray(T[] a) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean add(Map.Entry<Long, Set<Long>> o) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean containsAll(Collection<?> c) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean addAll(Collection<? extends Map.Entry<Long, Set<Long>>> c) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public void clear() {
+        throw new UnsupportedOperationException("Cannot call this method");
     }
 }

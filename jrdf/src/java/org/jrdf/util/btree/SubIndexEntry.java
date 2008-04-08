@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,61 +57,36 @@
  *
  */
 
-package org.jrdf.graph.local.index.graphhandler;
+package org.jrdf.util.btree;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleImpl;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.util.ClosableIterator;
-
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Handles operations on 012 index.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public class GraphHandler012 extends AbstractGraphHandler {
-    private LongIndex index012;
-    private LongIndex index120;
-    private LongIndex index201;
+public class SubIndexEntry implements Map.Entry<Long, Set<Long>> {
+    private final Long first;
+    private final Long second;
+    private final TripleBTree bTree;
 
-    public GraphHandler012(LongIndex[] indexes, NodePool newNodePool) {
-        this.index012 = indexes[0];
-        this.index120 = indexes[1];
-        this.index201 = indexes[2];
-        this.nodePool = newNodePool;
+    public SubIndexEntry(Long first, Long second, TripleBTree bTree) {
+        this.first = first;
+        this.second = second;
+        this.bTree = bTree;
     }
 
-    public Map<Long, Set<Long>> getSubIndex(Long first) {
-        return index012.getSubIndex(first);
+    public Long getKey() {
+        return second;
     }
 
-    public boolean removeSubIndex(Long first) {
-        return index012.removeSubIndex(first);
+    public Set<Long> getValue() {
+        try {
+            return RecordIteratorHelper.getSubSubIndex(bTree, first, second);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-        return index012.newIterator();
-    }
-
-    public Triple createTriple(Long... nodes) {
-        SubjectNode subject = (SubjectNode) nodePool.getNodeById(nodes[0]);
-        PredicateNode predicate = (PredicateNode) nodePool.getNodeById(nodes[1]);
-        ObjectNode object = (ObjectNode) nodePool.getNodeById(nodes[2]);
-        return new TripleImpl(subject, predicate, object);
-    }
-
-    public void remove(Long... currentNodes) throws GraphException {
-        index012.remove(currentNodes[0], currentNodes[1], currentNodes[2]);
-        index120.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
-        index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
+    public Set<Long> setValue(Set<Long> value) {
+        throw new UnsupportedOperationException("Cannot set values - read only");
     }
 }

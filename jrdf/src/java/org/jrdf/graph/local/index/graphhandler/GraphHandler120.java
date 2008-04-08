@@ -99,10 +99,6 @@ public class GraphHandler120 extends AbstractGraphHandler {
     }
 
     public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-        return index120.iterator();
-    }
-
-    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getNewEntries() {
         return index120.newIterator();
     }
 

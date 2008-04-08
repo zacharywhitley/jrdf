@@ -74,7 +74,7 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
 
     public AnyResourcePredicateIterator(final GraphHandler newGraphHandler) {
         this.graphHandler = newGraphHandler;
-        this.iterator = graphHandler.getNewEntries();
+        this.iterator = graphHandler.getEntries();
     }
 
     public boolean hasNext() {

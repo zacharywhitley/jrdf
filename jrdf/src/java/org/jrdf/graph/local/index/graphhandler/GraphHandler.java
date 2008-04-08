@@ -101,7 +101,6 @@ public interface GraphHandler {
      *         index.
      */
     ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
-    ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getNewEntries();
 
     /**
      * Creates the globalized nodes based on the internal representation of the nodes.  This may move to the NodePool
