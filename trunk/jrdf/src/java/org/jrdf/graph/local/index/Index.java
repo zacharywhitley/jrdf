@@ -99,8 +99,6 @@ public interface Index<T> {
      */
     ClosableIterator<Map.Entry<T, Map<T, Set<T>>>> iterator();
 
-    ClosableIterator<Map.Entry<T, Map<T, Set<T>>>> newIterator();
-
     /**
      * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id
      * is given and it returns a map of predicates to objects.

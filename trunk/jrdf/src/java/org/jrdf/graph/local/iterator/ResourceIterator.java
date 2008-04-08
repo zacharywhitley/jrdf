@@ -89,8 +89,8 @@ public abstract class ResourceIterator<E> implements ClosableIterator<E> {
         checkNotNull(newLongIndexes, newResourceFactory, newNodePool);
         resourceFactory = newResourceFactory;
         longIndex012 = newLongIndexes[0];
-        iterator201 = newLongIndexes[2].newIterator();
-        iterator012 = newLongIndexes[0].newIterator();
+        iterator201 = newLongIndexes[2].iterator();
+        iterator012 = newLongIndexes[0].iterator();
         nodePool = newNodePool;
         nextResource = getNextNode();
     }
