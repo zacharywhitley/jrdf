@@ -64,6 +64,8 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
+import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableMapImpl;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -136,19 +138,19 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         index.clear();
     }
 
-    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
-        Map<Long, Map<Long, Set<Long>>> map = new HashMap<Long, Map<Long, Set<Long>>>();
+    public ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator() {
+        Map<Long, ClosableMap<Long, Set<Long>>> map = new HashMap<Long, ClosableMap<Long, Set<Long>>>();
         Set<Long> set = index.keySet();
         for (Long indx : set) {
-            Map<Long, Set<Long>> subIndex = getSubIndex(indx);
+            ClosableMap<Long, Set<Long>> subIndex = getSubIndex(indx);
             map.put(indx, subIndex);
         }
-        return new ClosableIteratorImpl<Map.Entry<Long, Map<Long, Set<Long>>>>(map.entrySet().iterator());
+        return new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, Set<Long>>>>(map.entrySet().iterator());
     }
 
-    public Map<Long, Set<Long>> getSubIndex(Long first) {
+    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
         if (index.containsKey(first)) {
-            Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
+            ClosableMap<Long, Set<Long>> resultMap = new ClosableMapImpl<Long, Set<Long>>();
             for (Long[] elements : index.get(first)) {
                 Set<Long> longs;
                 if (resultMap.containsKey(elements[0])) {

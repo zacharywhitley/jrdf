@@ -63,9 +63,9 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.operation.Intersection;
+import org.jrdf.util.ClosableMap;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 
@@ -77,7 +77,7 @@ import java.util.Set;
  */
 public class IntersectionImpl implements Intersection {
     public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
-        HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
+        HashMap<Long, ClosableMap<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, ClosableMap<Long, Set<Long>>>();
         LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
         BasicOperations.performIntersection(index1, index2, newIndex);
         return newIndex;

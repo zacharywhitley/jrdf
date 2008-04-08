@@ -62,6 +62,7 @@ package org.jrdf.graph.local.index.longindex.db4o;
 import org.jrdf.graph.local.index.AbstractIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.map.MapFactory;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Map;
 import java.util.Set;
@@ -82,8 +83,8 @@ public final class LongIndexDb4o extends AbstractIndex<Long> implements LongInde
     public long getSize() {
         int size = 0;
         // go over the index map
-        Set<Map.Entry<Long, Map<Long, Set<Long>>>> entries = index.entrySet();
-        for (Map.Entry<Long, Map<Long, Set<Long>>> entry : entries) {
+        Set<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entries = index.entrySet();
+        for (Map.Entry<Long, ClosableMap<Long, Set<Long>>> entry : entries) {
             Map<Long, Set<Long>> value = entry.getValue();
             for (Set<Long> sets : value.values()) {
                 size += sets.size();

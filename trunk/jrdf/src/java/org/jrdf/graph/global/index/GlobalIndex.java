@@ -60,6 +60,7 @@
 package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.local.index.AbstractIndex;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Map;
 import java.util.Set;
@@ -71,7 +72,7 @@ public class GlobalIndex<Node> extends AbstractIndex<Node> {
         super();
     }
 
-    public GlobalIndex(Map<Node, Map<Node, Set<Node>>> newIndex) {
+    public GlobalIndex(Map<Node, ClosableMap<Node, Set<Node>>> newIndex) {
         super(newIndex);
     }
 }

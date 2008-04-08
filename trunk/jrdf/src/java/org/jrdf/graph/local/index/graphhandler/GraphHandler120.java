@@ -68,6 +68,7 @@ import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Map;
 import java.util.Set;
@@ -98,7 +99,7 @@ public class GraphHandler120 extends AbstractGraphHandler {
         return index120.removeSubIndex(first);
     }
 
-    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
+    public ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> getEntries() {
         return index120.iterator();
     }
 

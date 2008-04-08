@@ -115,7 +115,7 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
         Map<Long, Set<Long>> subIndex = handler.getSubIndex(longNodes[0]);
         if (subIndex != null) {
             Set<Long> predicates = subIndex.get(longNodes[1]);
-            if (predicates.contains(longNodes[2])) {
+            if (predicates != null && predicates.contains(longNodes[2])) {
                 return true;
             }
         }

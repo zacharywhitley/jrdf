@@ -62,6 +62,7 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -71,7 +72,7 @@ import java.util.Set;
 public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final Long resource;
     private final GraphHandler graphHandler012;
-    private final ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> posIterator;
+    private final ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> posIterator;
     private Iterator<Long> predicateIterator;
     private Long nextPredicate;
     private Set<Long> spoPredicates;
@@ -125,7 +126,7 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
         Long newPredicate = null;
         boolean foundNextPredicate = false;
         while (!foundNextPredicate && posIterator.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> predicateToObjectSubjectMap = posIterator.next();
+            Map.Entry<Long, ClosableMap<Long, Set<Long>>> predicateToObjectSubjectMap = posIterator.next();
             Map<Long, Set<Long>> objectToSubjectMap = predicateToObjectSubjectMap.getValue();
             if (objectToSubjectMap.containsKey(resource)) {
                 Long key = predicateToObjectSubjectMap.getKey();

@@ -63,6 +63,7 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.local.ResourceFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class AnyResourceIterator extends ResourceIterator<Resource> {
         return getNextResource();
     }
 
-    protected long getNextNodeId(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator) {
+    protected long getNextNodeId(final Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator) {
         return iterator.next().getKey();
     }
 }

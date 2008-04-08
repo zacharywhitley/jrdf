@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Map;
 import java.util.Set;
@@ -100,7 +101,7 @@ public interface GraphHandler {
      * @return an iterator over an internal representation of the graph in the fixed order based on the underlying
      *         index.
      */
-    ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
+    ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> getEntries();
 
     /**
      * Creates the globalized nodes based on the internal representation of the nodes.  This may move to the NodePool

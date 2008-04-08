@@ -61,6 +61,7 @@ package org.jrdf.graph.local.index.operation.mem;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -89,9 +90,9 @@ public class BasicOperations {
     }
 
     private static void goOverIndex(LongIndex existingIndex, DoTripleStuff doTripleStuff) throws GraphException {
-        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = existingIndex.iterator();
+        Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> firstEntries = existingIndex.iterator();
         while (firstEntries.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
+            Map.Entry<Long, ClosableMap<Long, Set<Long>>> firstEntry = firstEntries.next();
             Long first = firstEntry.getKey();
             for (Map.Entry<Long, Set<Long>> secondEntry : firstEntry.getValue().entrySet()) {
                 Long second = secondEntry.getKey();
@@ -103,9 +104,9 @@ public class BasicOperations {
     }
 
     public static void removeEntriesFromIndex(LongIndex existingIndex, LongIndex newIndex) throws GraphException {
-        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = existingIndex.iterator();
+        Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> firstEntries = existingIndex.iterator();
         while (firstEntries.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
+            Map.Entry<Long, ClosableMap<Long, Set<Long>>> firstEntry = firstEntries.next();
             Long first = firstEntry.getKey();
 
             // Do stuff
@@ -132,9 +133,9 @@ public class BasicOperations {
 
     public static void performIntersection(LongIndex firstExistingIndex, LongIndex secondExistingIndex,
         LongIndex newIndex) throws GraphException {
-        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = firstExistingIndex.iterator();
+        Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> firstEntries = firstExistingIndex.iterator();
         while (firstEntries.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
+            Map.Entry<Long, ClosableMap<Long, Set<Long>>> firstEntry = firstEntries.next();
             Long first = firstEntry.getKey();
 
             // Do stuff

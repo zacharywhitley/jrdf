@@ -59,13 +59,14 @@
 
 package org.jrdf.util.btree;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.io.IOException;
+import org.jrdf.util.ClosableIterator;
 
-public class IteratorBTree implements Iterator<Map.Entry<Long, Set<Long>>> {
+import java.io.IOException;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+
+public class IteratorBTree implements ClosableIterator<Map.Entry<Long, Set<Long>>> {
     private static final int TRIPLES = 3;
     private final TripleBTree bTree;
     private final long first;
@@ -125,6 +126,15 @@ public class IteratorBTree implements Iterator<Map.Entry<Long, Set<Long>>> {
             return iterator.next();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public boolean close() {
+        try {
+            iterator.close();
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 }
