@@ -64,9 +64,9 @@ import java.util.Set;
 
 public class NewEntry implements Map.Entry<Long, Map<Long, Set<Long>>> {
     private final Long key;
-    private final BTree bTree;
+    private final TripleBTree bTree;
 
-    public NewEntry(Long newKey, BTree newBTree) {
+    public NewEntry(Long newKey, TripleBTree newBTree) {
         this.key = newKey;
         this.bTree = newBTree;
     }
@@ -76,7 +76,7 @@ public class NewEntry implements Map.Entry<Long, Map<Long, Set<Long>>> {
     }
 
     public Map<Long, Set<Long>> getValue() {
-        throw new UnsupportedOperationException("Cannot use this yet!");
+        return new FixedFirstBTreeMap(key, bTree);
     }
 
     public Map<Long, Set<Long>> setValue(Map<Long, Set<Long>> value) {

@@ -70,10 +70,10 @@ public class NewEntryIterator implements ClosableIterator<Map.Entry<Long, Map<Lo
     private static final int TRIPLES = 3;
     private RecordIterator iterator;
     private byte[] currentValues;
-    private final BTree btree;
+    private final TripleBTree btree;
     private long key;
 
-    public NewEntryIterator(BTree btree) {
+    public NewEntryIterator(TripleBTree btree) {
         try {
             this.btree = btree;
             this.iterator = btree.iterateAll();

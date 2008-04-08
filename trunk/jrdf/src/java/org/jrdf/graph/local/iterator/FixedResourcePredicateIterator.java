@@ -80,7 +80,7 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
         final GraphHandler newGraphHandler120) {
         this.resource = newResource;
         this.graphHandler012 = newGraphHandler012;
-        this.posIterator = newGraphHandler120.getEntries();
+        this.posIterator = newGraphHandler120.getNewEntries();
         this.spoPredicates = graphHandler012.getSubIndex(resource).keySet();
         if (spoPredicates != null) {
             predicateIterator = spoPredicates.iterator();
