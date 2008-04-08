@@ -62,8 +62,8 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.util.ClosableMap;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -112,14 +112,20 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
     }
 
     private boolean contains(Long[] longNodes) {
-        Map<Long, Set<Long>> subIndex = handler.getSubIndex(longNodes[0]);
-        if (subIndex != null) {
-            Set<Long> predicates = subIndex.get(longNodes[1]);
-            if (predicates != null && predicates.contains(longNodes[2])) {
-                return true;
+        ClosableMap<Long, Set<Long>> subIndex = handler.getSubIndex(longNodes[0]);
+        try {
+            if (subIndex != null) {
+                Set<Long> predicates = subIndex.get(longNodes[1]);
+                if (predicates != null && predicates.contains(longNodes[2])) {
+                    return true;
+                }
+            }
+            return false;
+        } finally {
+            if (subIndex != null) {
+                subIndex.close();
             }
         }
-        return false;
     }
 
 

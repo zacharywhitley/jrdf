@@ -83,7 +83,7 @@ public interface GraphHandler {
      * @param first the entry set to find.
      * @return a map containing the list of longs to set of longs.
      */
-    Map<Long, Set<Long>> getSubIndex(Long first);
+    ClosableMap<Long, Set<Long>> getSubIndex(Long first);
 
     /**
      * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is
