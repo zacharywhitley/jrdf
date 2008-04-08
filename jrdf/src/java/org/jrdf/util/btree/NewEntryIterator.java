@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,75 +57,78 @@
  *
  */
 
-package org.jrdf.graph.local.index.graphhandler;
+package org.jrdf.util.btree;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
+import java.util.NoSuchElementException;
 
-/**
- * An interface used to make modifications on the internal indexes (012, 120 and 201) of a graph.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public interface GraphHandler {
+public class NewEntryIterator implements ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> {
+    private static final int TRIPLES = 3;
+    private RecordIterator iterator;
+    private byte[] currentValues;
+    private final BTree btree;
+    private long key;
 
-    /**
-     * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id
-     * is given and it returns a map of predicates to objects.
-     *
-     * @param first the entry set to find.
-     * @return a map containing the list of longs to set of longs.
-     */
-    Map<Long, Set<Long>> getSubIndex(Long first);
+    public NewEntryIterator(BTree btree) {
+        try {
+            this.btree = btree;
+            this.iterator = btree.iterateAll();
+            this.currentValues = iterator.next();
+            this.key = ByteHandler.fromBytes(currentValues, TRIPLES)[0];
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    /**
-     * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is
-     * given and it will remove all the associated predicate and objects for that subject.
-     *
-     * @param first the entry set to remove.
-     * @return true if the entry set was non-null.
-     */
-    boolean removeSubIndex(Long first);
+    public boolean hasNext() {
+        return currentValues != null;
+    }
 
-    /**
-     * Returns an iterator over an internal representation of the graph in the fixed order based on the underlying
-     * index.
-     *
-     * @return an iterator over an internal representation of the graph in the fixed order based on the underlying
-     *         index.
-     */
-    ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
-    ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getNewEntries();
+    public Map.Entry<Long, Map<Long, Set<Long>>> next() {
+        // Current values null then we are at the end.
+        if (currentValues == null) {
+            throw new NoSuchElementException();
+        }
+        // Create entry for current key - as it is already the next one.
+        NewEntry newEntry = new NewEntry(key, btree);
+        // Attempt to get next key.
+        key = getNextKey();
+        return newEntry;
+    }
 
-    /**
-     * Creates the globalized nodes based on the internal representation of the nodes.  This may move to the NodePool
-     * interface.
-     *
-     * @param nodes an array of three triple values to create.
-     * @return an array of three nodes.
-     */
-    Triple createTriple(Long... nodes);
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot set values - read only");
+    }
 
-    /**
-     * Creates a globalized PredicateNode.
-     *
-     * @param node the internal node number to convert.
-     * @return the PredicateNode.
-     */
-    PredicateNode createPredicateNode(Long node);
+    public boolean close() {
+        try {
+            iterator.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
 
-    /**
-     * Removes a triple from the other indexes of the graph.  For example, if this is the 012 GraphHandler it will
-     * remove the 120 and 201.
-     *
-     * @param nodes the array of nodes to remove.
-     * @throws GraphException if the nodes do not exist.
-     */
-    void remove(Long... nodes) throws GraphException;
+    private long getNextKey() {
+        long currentKey = key;
+        while (currentValues != null && currentKey == key) {
+            currentValues = getNextValues();
+            if (currentValues != null) {
+                currentKey = ByteHandler.fromBytes(currentValues, TRIPLES)[0];
+            }
+        }
+        return currentKey;
+    }
+
+    private byte[] getNextValues() {
+        try {
+            return iterator.next();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

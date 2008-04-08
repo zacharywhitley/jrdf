@@ -146,6 +146,10 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         return new ClosableIteratorImpl<Map.Entry<Long, Map<Long, Set<Long>>>>(map.entrySet().iterator());
     }
 
+    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> newIterator() {
+        return iterator();
+    }
+
     public Map<Long, Set<Long>> getSubIndex(Long first) {
         if (index.containsKey(first)) {
             Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();

@@ -102,6 +102,10 @@ public class GraphHandler201 extends AbstractGraphHandler {
         return index201.iterator();
     }
 
+    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getNewEntries() {
+        return index201.newIterator();
+    }
+
     // TODO AN Not tested - can change first and last values and tests still pass.
     public Triple createTriple(Long... nodes) {
         SubjectNode subject = (SubjectNode) nodePool.getNodeById(nodes[1]);
