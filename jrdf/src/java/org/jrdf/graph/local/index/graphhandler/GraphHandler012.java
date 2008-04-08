@@ -99,7 +99,7 @@ public class GraphHandler012 extends AbstractGraphHandler {
     }
 
     public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-        return index012.newIterator();
+        return index012.iterator();
     }
 
     public Triple createTriple(Long... nodes) {

@@ -99,7 +99,7 @@ public class GraphHandler201 extends AbstractGraphHandler {
     }
 
     public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-        return index201.newIterator();
+        return index201.iterator();
     }
 
     // TODO AN Not tested - can change first and last values and tests still pass.

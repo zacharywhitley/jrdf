@@ -64,7 +64,6 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.btree.ByteHandler.toBytes;
 import org.jrdf.util.btree.EntryIterator;
-import org.jrdf.util.btree.NewEntryIterator;
 import org.jrdf.util.btree.RecordIteratorHelper;
 import org.jrdf.util.btree.TripleBTree;
 
@@ -106,13 +105,8 @@ public final class LongIndexSesame implements LongIndex {
         }
     }
 
-    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> newIterator() {
-        return new NewEntryIterator(btree);
-    }
-
-    // TODO AN This is still memory bound.
     public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
-        return new EntryIterator(btree.iterateAll());
+        return new EntryIterator(btree);
     }
 
     // TODO AN This is still memory bound.
