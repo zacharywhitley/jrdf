@@ -23,6 +23,7 @@
     <suppress checks="JavaNCSS" files="RDF"/>
     <suppress checks="JavaNCSS" files="RDFS"/>
     <suppress checks="JavaNCSS" files="XSD"/>
+    <suppress checks="JavaNCSS" files="BasicOperations"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
 

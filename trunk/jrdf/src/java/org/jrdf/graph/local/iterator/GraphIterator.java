@@ -62,6 +62,7 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
 import java.util.Iterator;
@@ -86,7 +87,7 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
     /**
      * The iterator for the first index.
      */
-    private Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator;
+    private ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator;
 
     /**
      * The iterator for the second index.
@@ -271,6 +272,7 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
      * @return <code>true</code> indicating success.
      */
     public boolean close() {
+        iterator.close();
         return true;
     }
 }
