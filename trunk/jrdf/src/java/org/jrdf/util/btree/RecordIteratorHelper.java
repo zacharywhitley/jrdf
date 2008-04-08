@@ -89,6 +89,22 @@ public final class RecordIteratorHelper {
         }
     }
 
+    public static Set<Long> getSubSubIndex(TripleBTree btree, Long first, Long second) throws IOException {
+        Set<Long> resultSet = new HashSet<Long>();
+        RecordIterator iterator = btree.getIterator(first, second, 0L);
+        try {
+            byte[] bytes = getNextBytes(iterator);
+            while (bytes != null) {
+                Long[] longs = ByteHandler.fromBytes(bytes, TRIPLES);
+                resultSet.add(longs[2]);
+                bytes = getNextBytes(iterator);
+            }
+            return resultSet;
+        } finally {
+            iterator.close();
+        }
+    }
+
     public static boolean contains(TripleBTree btree, Long first) throws IOException {
         RecordIterator iterator = btree.getIterator(first, 0L, 0L);
         try {

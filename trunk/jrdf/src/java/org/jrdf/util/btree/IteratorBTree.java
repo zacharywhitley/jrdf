@@ -57,95 +57,74 @@
  *
  */
 
-package org.jrdf.graph.local.iterator;
+package org.jrdf.util.btree;
 
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.util.ClosableIterator;
-
-import java.util.Iterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.io.IOException;
 
-public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
-    private final Long resource;
-    private final GraphHandler graphHandler012;
-    private final ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> posIterator;
-    private Iterator<Long> predicateIterator;
-    private Long nextPredicate;
-    private Set<Long> spoPredicates;
+public class IteratorBTree implements Iterator<Map.Entry<Long, Set<Long>>> {
+    private static final int TRIPLES = 3;
+    private final TripleBTree bTree;
+    private final long first;
+    private long second;
+    private RecordIterator iterator;
+    private byte[] currentValues;
 
-    public FixedResourcePredicateIterator(final Long newResource, final GraphHandler newGraphHandler012,
-        final GraphHandler newGraphHandler120) {
-        this.resource = newResource;
-        this.graphHandler012 = newGraphHandler012;
-        this.posIterator = newGraphHandler120.getEntries();
-        this.spoPredicates = graphHandler012.getSubIndex(resource).keySet();
-        if (spoPredicates != null) {
-            predicateIterator = spoPredicates.iterator();
+    public IteratorBTree(long newFirst, TripleBTree newBTree) {
+        try {
+            this.first = newFirst;
+            this.bTree = newBTree;
+            this.iterator = bTree.getIterator(first, 0L, 0L);
+            this.currentValues = iterator.next();
+            if (currentValues != null) {
+                this.second = ByteHandler.fromBytes(currentValues, TRIPLES)[1];
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        nextPredicate();
     }
 
     public boolean hasNext() {
-        return nextPredicate != null;
+        return currentValues != null;
     }
 
-    public PredicateNode next() {
-        if (nextPredicate == null) {
+    public Map.Entry<Long, Set<Long>> next() {
+        // Current values null then we are at the end.
+        if (currentValues == null) {
             throw new NoSuchElementException();
         }
-        Long currentPredicate = nextPredicate;
-        nextPredicate();
-        return graphHandler012.createPredicateNode(currentPredicate);
-    }
-
-    private void nextPredicate() {
-        Long newPredicate = nextPredicateFromSPO();
-        if (newPredicate == null) {
-            newPredicate = nextPredicateFromPOS();
-        }
-        this.nextPredicate = newPredicate;
-    }
-
-    private Long nextPredicateFromSPO() {
-        Long newPredicate = null;
-        if (predicateIterator != null) {
-            if (predicateIterator.hasNext()) {
-                newPredicate = predicateIterator.next();
-            } else {
-                predicateIterator = null;
-            }
-        }
-        return newPredicate;
-    }
-
-    private Long nextPredicateFromPOS() {
-        Long newPredicate = null;
-        boolean foundNextPredicate = false;
-        while (!foundNextPredicate && posIterator.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> predicateToObjectSubjectMap = posIterator.next();
-            Map<Long, Set<Long>> objectToSubjectMap = predicateToObjectSubjectMap.getValue();
-            if (objectToSubjectMap.containsKey(resource)) {
-                Long key = predicateToObjectSubjectMap.getKey();
-                if (!spoPredicates.contains(key)) {
-                    newPredicate = key;
-                    foundNextPredicate = true;
-                }
-            }
-        }
-        return newPredicate;
+        SubIndexEntry indexEntry = new SubIndexEntry(first, second, bTree);
+        second = getNextValue();
+        return indexEntry;
     }
 
     public void remove() {
-        throw new UnsupportedOperationException();
+        try {
+            bTree.remove(currentValues);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public boolean close() {
-        if (posIterator != null) {
-            posIterator.close();
+    private long getNextValue() {
+        long currentValue = second;
+        while (currentValues != null && currentValue == second) {
+            currentValues = getNextValues();
+            if (currentValues != null) {
+                currentValue = ByteHandler.fromBytes(currentValues, TRIPLES)[1];
+            }
         }
-        return true;
+        return currentValue;
+    }
+
+    private byte[] getNextValues() {
+        try {
+            return iterator.next();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
