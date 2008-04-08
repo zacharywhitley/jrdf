@@ -74,7 +74,17 @@ public class IteratorBTreeSet implements Set<Map.Entry<Long, Set<Long>>> {
     }
 
     public int size() {
-        throw new UnsupportedOperationException("Cannot call this method");
+        int size = 0;
+        IteratorBTree tree = new IteratorBTree(first, bTree);
+        try {
+            while (tree.hasNext()) {
+                Map.Entry<Long, Set<Long>> setEntry = tree.next();
+                size += setEntry.getValue().size();
+            }
+            return size;
+        } finally {
+            tree.close();
+        }
     }
 
     public boolean isEmpty() {

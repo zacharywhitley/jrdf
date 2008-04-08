@@ -59,10 +59,12 @@
 
 package org.jrdf.util.btree;
 
+import org.jrdf.util.ClosableMap;
+
 import java.util.Map;
 import java.util.Set;
 
-public class Entry implements Map.Entry<Long, Map<Long, Set<Long>>> {
+public class Entry implements Map.Entry<Long, ClosableMap<Long, Set<Long>>> {
     private final Long key;
     private final TripleBTree bTree;
 
@@ -75,11 +77,11 @@ public class Entry implements Map.Entry<Long, Map<Long, Set<Long>>> {
         return key;
     }
 
-    public Map<Long, Set<Long>> getValue() {
+    public ClosableMap<Long, Set<Long>> getValue() {
         return new FixedFirstBTreeMap(key, bTree);
     }
 
-    public Map<Long, Set<Long>> setValue(Map<Long, Set<Long>> value) {
+    public ClosableMap<Long, Set<Long>> setValue(ClosableMap<Long, Set<Long>> value) {
         throw new UnsupportedOperationException("Cannot set values - read only");
     }
 

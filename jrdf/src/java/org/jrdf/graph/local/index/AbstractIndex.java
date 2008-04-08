@@ -62,6 +62,8 @@ package org.jrdf.graph.local.index;
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
+import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableMapImpl;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -71,23 +73,23 @@ import java.util.Set;
 
 public class AbstractIndex<T> implements Index<T>, Serializable {
     private static final long serialVersionUID = 6761527324041518032L;
-    protected Map<T, Map<T, Set<T>>> index;
+    protected Map<T, ClosableMap<T, Set<T>>> index;
 
-    protected AbstractIndex(Map<T, Map<T, Set<T>>> newIndex) {
+    protected AbstractIndex(Map<T, ClosableMap<T, Set<T>>> newIndex) {
         index = newIndex;
     }
 
     protected AbstractIndex() {
-        index = new HashMap<T, Map<T, Set<T>>>();
+        index = new HashMap<T, ClosableMap<T, Set<T>>>();
     }
 
     public void add(T... triple) {
         // find the sub index
-        Map<T, Set<T>> subIndex = index.get(triple[0]);
+        ClosableMap<T, Set<T>> subIndex = index.get(triple[0]);
         // check that the subindex exists
         if (null == subIndex) {
             // no, so create it and add it to the index
-            subIndex = new HashMap<T, Set<T>>();
+            subIndex = new ClosableMapImpl<T, Set<T>>();
             index.put(triple[0], subIndex);
         }
 
@@ -108,12 +110,8 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
         return index.containsKey(node);
     }
 
-    public ClosableIterator<Map.Entry<T, Map<T, Set<T>>>> newIterator() {
-        return iterator();
-    }
-
-    public ClosableIterator<Map.Entry<T, Map<T, Set<T>>>> iterator() {
-        return new ClosableIteratorImpl<Map.Entry<T, Map<T, Set<T>>>>(index.entrySet().iterator());
+    public ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> iterator() {
+        return new ClosableIteratorImpl<Map.Entry<T, ClosableMap<T, Set<T>>>>(index.entrySet().iterator());
     }
 
     public void remove(T... node) throws GraphException {
@@ -146,7 +144,7 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
         return index.containsKey(node);
     }
 
-    public Map<T, Set<T>> getSubIndex(T first) {
+    public ClosableMap<T, Set<T>> getSubIndex(T first) {
         return index.get(first);
     }
 

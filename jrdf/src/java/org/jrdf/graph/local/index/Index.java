@@ -61,6 +61,7 @@ package org.jrdf.graph.local.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Map;
 import java.util.Set;
@@ -97,7 +98,7 @@ public interface Index<T> {
      *         collections of distinct longs, contains a map of longs to other longs.
      *         This prevents any duplication.
      */
-    ClosableIterator<Map.Entry<T, Map<T, Set<T>>>> iterator();
+    ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> iterator();
 
     /**
      * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id
@@ -106,7 +107,7 @@ public interface Index<T> {
      * @param first the entry set to find.
      * @return a map containing the list of longs to set of longs.
      */
-    Map<T, Set<T>> getSubIndex(T first);
+    ClosableMap<T, Set<T>> getSubIndex(T first);
 
     /**
      * Returns true if the value given exists in the index.

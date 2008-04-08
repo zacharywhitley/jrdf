@@ -72,6 +72,7 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Map;
@@ -154,7 +155,7 @@ public class ReadableGraphImpl implements ReadableGraph {
     }
 
     private boolean containsFixedSubjectFixedPredicate(Long[] values, ObjectNode object) {
-        Map<Long, Set<Long>> subjIndex = longIndexes[0].getSubIndex(values[0]);
+        ClosableMap<Long, Set<Long>> subjIndex = longIndexes[0].getSubIndex(values[0]);
         Set<Long> subjPredIndex = subjIndex.get(values[1]);
         if (null != subjPredIndex) {
             if (ANY_OBJECT_NODE != object) {

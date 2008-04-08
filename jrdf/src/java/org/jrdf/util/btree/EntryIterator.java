@@ -60,13 +60,14 @@
 package org.jrdf.util.btree;
 
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
-public class EntryIterator implements ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> {
+public class EntryIterator implements ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> {
     private static final int TRIPLES = 3;
     private RecordIterator iterator;
     private byte[] currentValues;
@@ -90,7 +91,7 @@ public class EntryIterator implements ClosableIterator<Map.Entry<Long, Map<Long,
         return currentValues != null;
     }
 
-    public Map.Entry<Long, Map<Long, Set<Long>>> next() {
+    public Map.Entry<Long, ClosableMap<Long, Set<Long>>> next() {
         // Current values null then we are at the end.
         if (currentValues == null) {
             throw new NoSuchElementException();

@@ -64,9 +64,9 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.operation.Union;
 import static org.jrdf.graph.local.index.operation.mem.BasicOperations.copyEntriesToIndex;
+import org.jrdf.util.ClosableMap;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 
@@ -78,7 +78,7 @@ import java.util.Set;
  */
 public class UnionImpl implements Union {
     public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
-        HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
+        HashMap<Long, ClosableMap<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, ClosableMap<Long, Set<Long>>>();
         LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
         copyEntriesToIndex(index1, newIndex);
         copyEntriesToIndex(index2, newIndex);

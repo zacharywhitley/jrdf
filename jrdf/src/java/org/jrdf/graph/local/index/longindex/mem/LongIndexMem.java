@@ -61,6 +61,7 @@ package org.jrdf.graph.local.index.longindex.mem;
 
 import org.jrdf.graph.local.index.AbstractIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Map;
 import java.util.Set;
@@ -78,7 +79,7 @@ public final class LongIndexMem extends AbstractIndex<Long> implements LongIndex
         super();
     }
 
-    public LongIndexMem(Map<Long, Map<Long, Set<Long>>> newIndex) {
+    public LongIndexMem(Map<Long, ClosableMap<Long, Set<Long>>> newIndex) {
         super(newIndex);
     }
 }

@@ -68,6 +68,7 @@ import org.jrdf.graph.local.ResourceFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
@@ -78,8 +79,8 @@ import java.util.Set;
 public abstract class ResourceIterator<E> implements ClosableIterator<E> {
     protected final LongIndex longIndex012;
     protected final ResourceFactory resourceFactory;
-    protected ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012;    //spo iterator
-    protected ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
+    protected ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator012;    //spo iterator
+    protected ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator201;    //osp iterator
     protected Resource nextResource;
     protected boolean firstTime = true;
     protected NodePool nodePool;
@@ -196,5 +197,5 @@ public abstract class ResourceIterator<E> implements ClosableIterator<E> {
      * @param iterator iterators over the index.
      * @return the next node identifier.
      */
-    protected abstract long getNextNodeId(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator);
+    protected abstract long getNextNodeId(Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator);
 }

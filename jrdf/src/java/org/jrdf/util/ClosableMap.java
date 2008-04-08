@@ -57,37 +57,10 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.util;
 
-import org.jrdf.util.ClosableMap;
+import java.util.Map;
 
-import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.Set;
-
-public class FixedFirstBTreeMap extends AbstractMap<Long, Set<Long>> implements ClosableMap<Long, Set<Long>> {
-    private final long first;
-    private final TripleBTree bTree;
-
-    public FixedFirstBTreeMap(long newFirst, TripleBTree newBTree) {
-        this.first = newFirst;
-        this.bTree = newBTree;
-    }
-
-    public boolean containsKey(Object key) {
-        try {
-            return RecordIteratorHelper.contains(bTree, first, (Long) key);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Set<Entry<Long, Set<Long>>> entrySet() {
-        return new IteratorBTreeSet(first, bTree);
-    }
-
-    public boolean close() {
-        return true;
-    }
+public interface ClosableMap<K, V> extends Map<K, V> {
+    boolean close();
 }
