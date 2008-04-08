@@ -59,18 +59,22 @@
 
 package org.jrdf.util.btree;
 
-import java.util.Set;
-import java.util.Map;
-import java.util.Iterator;
+import org.jrdf.util.ClosableIterator;
+
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 public class IteratorBTreeSet implements Set<Map.Entry<Long, Set<Long>>> {
     private final long first;
     private final TripleBTree bTree;
+    private final Set<ClosableIterator<Map.Entry<Long, Set<Long>>>> iterators;
 
-    public IteratorBTreeSet(long first, TripleBTree bTree) {
+    public IteratorBTreeSet(long first, TripleBTree bTree,
+        Set<ClosableIterator<Map.Entry<Long, Set<Long>>>> iterators) {
         this.first = first;
         this.bTree = bTree;
+        this.iterators = iterators;
     }
 
     public int size() {
@@ -95,8 +99,10 @@ public class IteratorBTreeSet implements Set<Map.Entry<Long, Set<Long>>> {
         throw new UnsupportedOperationException("Cannot call this method");
     }
 
-    public Iterator<Map.Entry<Long, Set<Long>>> iterator() {
-        return new IteratorBTree(first, bTree);
+    public ClosableIterator<Map.Entry<Long, Set<Long>>> iterator() {
+        ClosableIterator<Map.Entry<Long, Set<Long>>> iteratorBTree = new IteratorBTree(first, bTree);
+        iterators.add(iteratorBTree);
+        return iteratorBTree;
     }
 
     public Object[] toArray() {

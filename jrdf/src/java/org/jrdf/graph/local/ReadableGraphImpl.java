@@ -179,8 +179,14 @@ public class ReadableGraphImpl implements ReadableGraph {
         if (ANY_OBJECT_NODE != object) {
             // Was subj, AnyPredicateNode, obj
             // Use 201 index to find object and then subject.
-            Map<Long, Set<Long>> objIndex = longIndexes[2].getSubIndex(values[2]);
-            return null != objIndex && null != objIndex.get(values[0]);
+            ClosableMap<Long, Set<Long>> objIndex = longIndexes[2].getSubIndex(values[2]);
+            try {
+                return null != objIndex && null != objIndex.get(values[0]);
+            } finally {
+                if (objIndex != null) {
+                    objIndex.close();
+                }
+            }
         } else {
             // Was subj, AnyPredicate, AnyObject
             // If its AnyObjectNode then we've found all we need to find.

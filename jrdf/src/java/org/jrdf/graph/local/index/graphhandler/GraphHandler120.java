@@ -91,7 +91,7 @@ public class GraphHandler120 extends AbstractGraphHandler {
         this.nodePool = nodePool;
     }
 
-    public Map<Long, Set<Long>> getSubIndex(Long first) {
+    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
         return index120.getSubIndex(first);
     }
 

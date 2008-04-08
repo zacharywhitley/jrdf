@@ -59,15 +59,20 @@
 
 package org.jrdf.util.btree;
 
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
 import java.io.IOException;
 import java.util.AbstractMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class FixedFirstBTreeMap extends AbstractMap<Long, Set<Long>> implements ClosableMap<Long, Set<Long>> {
     private final long first;
     private final TripleBTree bTree;
+    private final Set<ClosableIterator<Entry<Long, Set<Long>>>> openEntrySets =
+        new HashSet<ClosableIterator<Map.Entry<Long, Set<Long>>>>();
 
     public FixedFirstBTreeMap(long newFirst, TripleBTree newBTree) {
         this.first = newFirst;
@@ -84,10 +89,13 @@ public class FixedFirstBTreeMap extends AbstractMap<Long, Set<Long>> implements 
 
     @Override
     public Set<Entry<Long, Set<Long>>> entrySet() {
-        return new IteratorBTreeSet(first, bTree);
+        return new IteratorBTreeSet(first, bTree, openEntrySets);
     }
 
     public boolean close() {
+        for (ClosableIterator<Entry<Long, Set<Long>>> openEntrySet : openEntrySets) {
+            openEntrySet.close();
+        }
         return true;
     }
 }

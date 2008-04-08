@@ -62,6 +62,7 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.util.ClosableMap;
 
 import static java.util.Arrays.asList;
 import java.util.Iterator;
@@ -91,7 +92,7 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
     /**
      * The subIndex of this iterator.  Only needed for initialization and the remove method.
      */
-    private Map<Long, Set<Long>> subIndex;
+    private ClosableMap<Long, Set<Long>> subIndex;
 
     /**
      * The iterator for the second index.
@@ -217,13 +218,15 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
             if (subIndex.isEmpty()) {
                 // remove the subindex
                 handler.removeSubIndex(first);
-                subIndex = null;
             }
         }
     }
 
 
     public boolean close() {
+        if (subIndex != null) {
+            subIndex.close();
+        }
         return true;
     }
 }
