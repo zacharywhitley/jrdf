@@ -92,7 +92,8 @@ public class WritableIndexImpl implements WritableIndex<Long> {
         structureIndex.remove(quin[4], quin[3], quin[0], quin[1], quin[2]);
     }
 
-    public Long findMid(Long... quin) throws GraphException {
+    public Long findMid(Long... triple) throws GraphException {
+        // Find the mid using the spo index.
         return null;
     }
 }
