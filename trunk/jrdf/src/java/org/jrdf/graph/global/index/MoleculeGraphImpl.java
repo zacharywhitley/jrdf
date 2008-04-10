@@ -86,7 +86,9 @@ public class MoleculeGraphImpl implements MoleculeGraph {
             Long[] longs = localizer.localizeTriple(molecule.getHeadTriple());
             // find mid based on molecule head triple and subsequent triples.
             index.findMid(longs);
-            // delete all mids based on one found.
+            // Find the triple that matches in the structureIndex where it is 1, mid, *, *, *
+            // Recursively reconstruct molecule.
+            // Delete all triples in the molecule.
         } catch (GraphException e) {
             throw new RuntimeException(e);
         }
