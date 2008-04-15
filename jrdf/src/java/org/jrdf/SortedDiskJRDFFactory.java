@@ -68,6 +68,7 @@ import org.jrdf.util.btree.BTreeFactoryImpl;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.db4o.Db4oNodePoolFactory;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
@@ -111,10 +112,6 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     public void refresh() {
     }
 
-    public TripleBTree[] getBTrees() {
-        return bTrees;
-    }
-
     public Graph getNewGraph() {
         graphNumber++;
         bTrees = createBTrees();
@@ -122,7 +119,9 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
         NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
         openIndexes.addAll(asList(indexes));
         openFactories.add(nodePoolFactory);
-        orderedGraphFactory = new GraphFactoryImpl(indexes, nodePoolFactory, bTrees);
+        NodePool nodePool = nodePoolFactory.createNodePool();
+        nodePool.clear();
+        orderedGraphFactory = new GraphFactoryImpl(indexes, bTrees, nodePool);
         return orderedGraphFactory.getGraph();
     }
 
