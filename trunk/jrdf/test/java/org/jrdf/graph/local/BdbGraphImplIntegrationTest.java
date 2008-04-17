@@ -60,13 +60,13 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedBdbJRDFFactory;
+import org.jrdf.SortedDiskJRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.util.TempDirectoryHandler;
 
 public class BdbGraphImplIntegrationTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SortedBdbJRDFFactory.getFactory();
+    private static final JRDFFactory FACTORY = SortedDiskJRDFFactory.getFactory();
 
     /**
      * Create a graph implementation.

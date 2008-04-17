@@ -61,31 +61,30 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.disk.GraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.db4o.Db4oNodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
+import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.sparql.builder.QueryBuilder;
-import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
 import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The optimal version of an on disk JRDF graph.  Currently, uses BDB for sorting intermedia results, Sesame for the on
- * disk triple store and db4o for the ValueStore/NodePool/Stringpool.
+ * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
  *
  * @author Andrew Newman
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
@@ -94,13 +93,13 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
     private static long graphNumber;
-    private GraphFactory orderedGraphFactory;
-    private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
-    private TripleBTree[] bTrees;
+    private BTreeFactory btreeFactory = new BTreeFactoryImpl();
+    private GraphFactory orderedGraphFactory;
 
     private SortedDiskJRDFFactory() {
     }
@@ -114,14 +113,12 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        bTrees = createBTrees();
+        TripleBTree[] bTrees = createBTrees();
         LongIndex[] indexes = createIndexes(bTrees);
-        NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
+        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);
         openIndexes.addAll(asList(indexes));
         openFactories.add(nodePoolFactory);
-        NodePool nodePool = nodePoolFactory.createNodePool();
-        nodePool.clear();
-        orderedGraphFactory = new GraphFactoryImpl(indexes, bTrees, nodePool);
+        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory);
         return orderedGraphFactory.getGraph();
     }
 
