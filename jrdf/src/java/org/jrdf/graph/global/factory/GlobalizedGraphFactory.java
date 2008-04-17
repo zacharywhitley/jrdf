@@ -60,7 +60,7 @@
 package org.jrdf.graph.global.factory;
 
 import org.jrdf.graph.global.GlobalizedGraph;
-import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.urql.UrqlConnection;
 
 
 /**
@@ -88,5 +88,5 @@ public interface GlobalizedGraphFactory {
      *
      * @return a new instance of a SPARQL connection.
      */
-    SparqlConnection getNewSparqlConnection();
+    UrqlConnection getNewUrqlConnection();
 }

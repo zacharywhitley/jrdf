@@ -66,7 +66,7 @@ import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.EscapeURL;
 
 import java.net.URL;
@@ -74,9 +74,9 @@ import java.net.URL;
 public class JRDFModelImpl implements JRDFModel {
     private final GraphFactory graphFactory;
     private Graph graph;
-    private SparqlConnection connection;
+    private UrqlConnection connection;
 
-    public JRDFModelImpl(GraphFactory graphFactory, SparqlConnection connection) {
+    public JRDFModelImpl(GraphFactory graphFactory, UrqlConnection connection) {
         this.graphFactory = graphFactory;
         this.connection = connection;
     }

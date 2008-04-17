@@ -68,23 +68,23 @@
     </bean>
 
     <!-- Query Classes -->
-    <bean id="sparqlConnection" class="org.jrdf.sparql.SparqlConnectionImpl">
+    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl">
         <constructor-arg ref="queryBuilder"/>
         <constructor-arg ref="queryEngine"/>
     </bean>
 
-    <bean id="queryBuilder" class="org.jrdf.sparql.builder.SparqlQueryBuilder">
+    <bean id="queryBuilder" class="org.jrdf.urql.builder.UrqlQueryBuilder">
         <constructor-arg ref="sparqlParser"/>
     </bean>
 
-    <bean id="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqlParser">
+    <bean id="sparqlParser" class="org.jrdf.urql.parser.SableCcSparqllParser">
         <constructor-arg ref="parserFactory"/>
         <constructor-arg ref="graphRelationFactory"/>
         <constructor-arg ref="attributeValuePairHelper"/>
         <constructor-arg ref="sortedAttributeFactory"/>
     </bean>
 
-    <bean id="parserFactory" class="org.jrdf.sparql.parser.ParserFactoryImpl"/>
+    <bean id="parserFactory" class="org.jrdf.urql.parser.ParserFactoryImpl"/>
 
     <bean id="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
         <constructor-arg ref="project"/>

@@ -121,8 +121,8 @@ public final class SerializationIntegrationTest extends TestCase {
         excludedClasses.add(LongIndexMem.class);
         excludedClasses.add(NullaryTuple.class);
         excludedClasses.add(NodeTypeEnum.class);
-        excludedClasses.add(org.jrdf.sparql.parser.lexer.LexerException.class);
-        excludedClasses.add(org.jrdf.sparql.parser.parser.ParserException.class);
+        excludedClasses.add(org.jrdf.urql.parser.lexer.LexerException.class);
+        excludedClasses.add(org.jrdf.urql.parser.parser.ParserException.class);
         excludedClasses.add(QueryImpl.class); // not sure why this doesn't work, it references Expression.ALL
         return excludedClasses;
     }

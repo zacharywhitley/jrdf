@@ -70,7 +70,7 @@ import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactoryImpl;
-import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.urql.UrqlConnection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -102,7 +102,7 @@ public class GlobalizedGraphMemFactoryImpl implements GlobalizedGraphFactory {
         return new GlobalizedGraphImpl(indexes, iteratorFactory, comparator);
     }
 
-    public SparqlConnection getNewSparqlConnection() {
+    public UrqlConnection getNewUrqlConnection() {
         throw new UnsupportedOperationException("Method not implemented yet");
     }
 }
