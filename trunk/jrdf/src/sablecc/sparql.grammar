@@ -1,4 +1,4 @@
-Package org.jrdf.sparql.parser;
+Package org.jrdf.urql.parser;
 
 /*
  * SPARQL Query Language for RDF SableCC grammar.

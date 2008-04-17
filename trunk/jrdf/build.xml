@@ -2,13 +2,13 @@
 <project name="jrdf" default="dist" basedir=".">
 
     <import file="build-setup.xml"/>
-    <import file="build-sparql.xml"/>
+    <import file="build-urql.xml"/>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="gen-src" depends="gen-sparql-parser"/>
+    <target name="gen-src" depends="gen-urql-parser"/>
 
     <target name="checkstyle">
         <checkstyle config="${conf.dir}/checkstyle.xml">
@@ -75,7 +75,7 @@
         </sequential>
     </macrodef>
 
-    <target name="dist" depends="compile,-copy-sparql-sablecc-resources">
+    <target name="dist" depends="compile,-copy-urql-sablecc-resources">
         <antcall target="-dist-jar"/>
         <antcall target="-dist-gui"/>
     </target>
@@ -100,7 +100,7 @@
         </pathconvert>
         <jar destfile="${dist.dir}/gui/main.jar">
             <manifest>
-                <attribute name="Main-Class" value="org.jrdf.gui.SparqlGui"/>
+                <attribute name="Main-Class" value="org.jrdf.gui.UrqlGui"/>
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
             <fileset dir="${prod.classes.dir}" excludes="com/**/*"/>
@@ -139,7 +139,7 @@
                  source="${java.src.version}"
                  windowtitle="${project.longname} Framework ${project.version.full}"
                  doctitle="${project.longname} Framework ${project.version.full}"
-                 excludepackagenames="org.jrdf.sparql.parser.analysis.*, org.jrdf.sparql.parser.lexer.*, org.jrdf.sparql.parser.node.*, org.jrdf.sparql.parser.parser.*">
+                 excludepackagenames="org.jrdf.urql.parser.analysis.*, org.jrdf.urql.parser.lexer.*, org.jrdf.urql.parser.node.*, org.jrdf.urql.parser.parser.*">
             <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
         </javadoc>
     </target>

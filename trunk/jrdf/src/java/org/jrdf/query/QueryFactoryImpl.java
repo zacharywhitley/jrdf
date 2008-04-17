@@ -104,12 +104,12 @@ import org.jrdf.query.relation.operation.mem.union.OuterUnionEngine;
 import org.jrdf.query.relation.operation.mem.union.OuterUnionImpl;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.type.TypeComparatorImpl;
-import org.jrdf.sparql.builder.QueryBuilder;
-import org.jrdf.sparql.builder.SparqlQueryBuilder;
-import org.jrdf.sparql.parser.ParserFactory;
-import org.jrdf.sparql.parser.ParserFactoryImpl;
-import org.jrdf.sparql.parser.SableCcSparqlParser;
-import org.jrdf.sparql.parser.SparqlParser;
+import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.urql.builder.UrqlQueryBuilder;
+import org.jrdf.urql.parser.ParserFactory;
+import org.jrdf.urql.parser.ParserFactoryImpl;
+import org.jrdf.urql.parser.SableCcSparqllParser;
+import org.jrdf.urql.parser.SparqlParser;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
@@ -138,9 +138,9 @@ public class QueryFactoryImpl implements QueryFactory {
         GraphRelationFactory graphRelationFactory = new GraphRelationFactoryImpl(ATTRIBUTE_FACTORY, avpHelper,
             TUPLE_COMPARATOR, TUPLE_FACTORY);
         ParserFactory parserFactory = new ParserFactoryImpl();
-        SparqlParser sparqlParser = new SableCcSparqlParser(parserFactory, graphRelationFactory, avpHelper,
+        SparqlParser sparqlParser = new SableCcSparqllParser(parserFactory, graphRelationFactory, avpHelper,
             ATTRIBUTE_FACTORY);
-        return new SparqlQueryBuilder(sparqlParser);
+        return new UrqlQueryBuilder(sparqlParser);
     }
 
     public RelationFactory createRelationFactory() {
