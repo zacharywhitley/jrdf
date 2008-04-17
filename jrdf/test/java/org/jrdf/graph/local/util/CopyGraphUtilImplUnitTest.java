@@ -61,7 +61,7 @@ package org.jrdf.graph.local.util;
 
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedBdbJRDFFactory;
+import org.jrdf.SortedDiskJRDFFactory;
 import org.jrdf.graph.AbstractBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -95,7 +95,7 @@ import java.util.Set;
 
 public class CopyGraphUtilImplUnitTest extends TestCase {
     private static final TempDirectoryHandler DIR_HANDLER = new TempDirectoryHandler();
-    private static final JRDFFactory FACTORY = SortedBdbJRDFFactory.getFactory();
+    private static final JRDFFactory FACTORY = SortedDiskJRDFFactory.getFactory();
     private BdbEnvironmentHandler handler1;
     private BdbEnvironmentHandler handler2;
     private MapFactory mapFactory;
