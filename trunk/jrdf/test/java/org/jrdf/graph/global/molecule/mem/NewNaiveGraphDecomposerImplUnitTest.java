@@ -228,8 +228,7 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule m2 = mergeMolecules(branch2, leaf2);
         NewMolecule m = moleculeFactory.createMolecule(tfac.createTriple(b1, u1, b2));
         m.add(tfac.createTriple(b1, u1, b2), m1);
-        // Can't produce the correct molecule - this puts it in the wrong place.
-        //m.add(tfac.createTriple(b1, u1, b2), m2);
+        m.add(tfac.createTriple(b1, u1, b2), m2);
         System.err.println("actualMolecules " + actualMolecules);
     }
 

@@ -94,6 +94,10 @@ public final class NullNewMolecule implements NewMolecule {
         throw new UnsupportedOperationException();
     }
 
+    public Set<Triple> getRootTriplesAsSet() {
+        throw new UnsupportedOperationException();
+    }
+
     public Iterator<Triple> getRootTriples() {
         throw new UnsupportedOperationException();
     }

@@ -186,6 +186,10 @@ public class NewMoleculeImpl implements NewMolecule {
         return subMolecules.keySet().iterator();
     }
 
+    public Set<Triple> getRootTriplesAsSet() {
+        return subMolecules.keySet();
+    }
+
     public Set<NewMolecule> getSubMolecules(Triple rootTriple) {
         Set<NewMolecule> molecules = subMolecules.get(rootTriple);
         if (molecules == null) {

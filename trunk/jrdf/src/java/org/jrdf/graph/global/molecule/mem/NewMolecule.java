@@ -87,4 +87,6 @@ public interface NewMolecule {
     void remove(Triple triple);
 
     int size();
+
+    Set<Triple> getRootTriplesAsSet();
 }
