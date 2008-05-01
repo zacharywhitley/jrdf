@@ -64,6 +64,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.MOLECULE_FACTORY;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2b2;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2b1;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
@@ -135,6 +136,20 @@ public class NewMoleculeImplUnitTest extends TestCase {
         HashMap<Triple, NewMolecule> expectedSubMolecules = new HashMap<Triple, NewMolecule>();
         expectedSubMolecules.put(r1r1b1, internalMolecule);
         checkHasSubMolecule(newMolecule, expectedSubMolecules);
+    }
+
+    public void testAddSubMolecules() {
+        NewMolecule internalMolecule = MOLECULE_FACTORY.createMolecule(r1r1r1);
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3, b1r2b2);
+        newMolecule.add(b1r2b2, internalMolecule);
+        Set<Triple> triples = newMolecule.getRootTriplesAsSet();
+        assertTrue(triples.contains(b1r3r3));
+        assertTrue(triples.contains(b1r2b2));
+        Set<NewMolecule> molecules = newMolecule.getSubMolecules(b1r2b2);
+        assertTrue(molecules.size() == 1);
+        Set<Triple> triplesAsSet = molecules.iterator().next().getRootTriplesAsSet();
+        assertTrue(triplesAsSet.size() == 1);
+        assertTrue(triplesAsSet.contains((r1r1r1)));
     }
 
     private void checkHasHeadMolecules(NewMolecule actualMolecule, Triple... triples) {

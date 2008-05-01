@@ -89,5 +89,6 @@ public class NewMoleculeToString implements MoleculeHandler {
     }
 
     public void handleEndContainsMolecules(Set<NewMolecule> newMolecules) {
+        level--;
     }
 }
