@@ -125,11 +125,11 @@ public class GlobalGraphTestUtil {
     public static final Triple b3r2r3 = new TripleImpl(BNODE3, REF2, REF3);
     public static final Triple b3r3r3 = new TripleImpl(BNODE3, REF3, REF3);
     public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeComparatorImpl(COMPARATOR);
-    public static final MergeMolecules MERGE_MOLECULE = new MergeMoleculesImpl();
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY =
         new GroundedTripleComparatorFactoryImpl();
     private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
     public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(MOLECULE_COMPARATOR);
+    private static final MergeMolecules MERGE_MOLECULES = new MergeMoleculesImpl();
 
     private GlobalGraphTestUtil() {
     }
@@ -151,9 +151,12 @@ public class GlobalGraphTestUtil {
         NewMolecule level3 = createMolecule(level3Triples.toArray(new Triple[level3Triples.size()]));
         NewMolecule level2 = createMolecule(level2Triples.toArray(new Triple[level2Triples.size()]));
         NewMolecule level1 = createMolecule(level1Triples.toArray(new Triple[level1Triples.size()]));
-        MergeMolecules mergeMolecules = new MergeMoleculesImpl();
-        NewMolecule level2And3 = mergeMolecules.merge(level2, level3);
-        return mergeMolecules.merge(level1, level2And3);
+        NewMolecule level2And3 = mergeMolecules(level2, level3);
+        return mergeMolecules(level1, level2And3);
+    }
+
+    public static NewMolecule mergeMolecules(NewMolecule m1, NewMolecule m2) {
+        return MERGE_MOLECULES.merge(m1, m2);
     }
 
     public static NewMolecule createMolecule(Triple rootTriple, NewMolecule molecule) {
