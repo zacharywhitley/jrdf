@@ -85,16 +85,16 @@ public class NewMoleculeImpl implements NewMolecule {
     private final NewMoleculeComparator moleculeComparator;
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator) {
-        checkNotNull(newComparator);
-        moleculeComparator = newComparator;
-        subMolecules = new TreeMap<Triple, Set<NewMolecule>>(tripleComparator);
-    }
-
     private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
         subMolecules = newSubMolecules;
+    }
+
+    public NewMoleculeImpl(NewMoleculeComparator newComparator) {
+        checkNotNull(newComparator);
+        moleculeComparator = newComparator;
+        subMolecules = new TreeMap<Triple, Set<NewMolecule>>(tripleComparator);
     }
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator, Triple... rootTriples) {
