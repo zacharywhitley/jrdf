@@ -229,7 +229,9 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule m = moleculeFactory.createMolecule(tfac.createTriple(b1, u1, b2));
         m.add(tfac.createTriple(b1, u1, b2), m1);
         m.add(tfac.createTriple(b1, u1, b2), m2);
+        // This should be 1.
         System.err.println("actualMolecules " + actualMolecules.size());
+        // Should have 5 triples.
         System.err.println("actualMolecules " + actualMolecules);
         System.err.println("actualMolecules " + actualMolecules.iterator().next().getRootTriplesAsSet());
     }
