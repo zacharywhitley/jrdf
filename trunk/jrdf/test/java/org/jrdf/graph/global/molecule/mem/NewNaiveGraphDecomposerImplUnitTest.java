@@ -218,7 +218,6 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         b3.addValue(u3, u4);
         b2.addValue(u2, b4);
         b4.addValue(u3, u5);
-        // This is decomposing the molecule incorrectly - it should be three levels deep not two.
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
         NewMolecule branch1 = createMolecule(tfac.createTriple(b2, u2, b3));
         NewMolecule leaf1 = createMolecule(tfac.createTriple(b3, u3, u4));
