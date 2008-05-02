@@ -229,7 +229,9 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule m = moleculeFactory.createMolecule(tfac.createTriple(b1, u1, b2));
         m.add(tfac.createTriple(b1, u1, b2), m1);
         m.add(tfac.createTriple(b1, u1, b2), m2);
+        System.err.println("actualMolecules " + actualMolecules.size());
         System.err.println("actualMolecules " + actualMolecules);
+        System.err.println("actualMolecules " + actualMolecules.iterator().next().getRootTriplesAsSet());
     }
 
     public void test3LevelMoleculeWithType() throws Exception {
@@ -245,6 +247,8 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         b2.addValue(create("urn:participant"), b4);
         b4.addValue(create("urn:hasUniprotID"), "bar");
         Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
+        System.err.println("actualMolecules " + molecules.size());
+        System.err.println("actualMolecules " + molecules);
         // This creates an incorrect decomposition - i think due to the fact that the first type doesn't work.
     }
 
