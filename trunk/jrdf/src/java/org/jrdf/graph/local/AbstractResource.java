@@ -223,4 +223,18 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     public ClosableIterator<SubjectNode> getSubjects(URI predicate) throws GraphException {
         return getSubjects(elementFactory.createURIReference(predicate));
     }
+
+    public boolean containsTriple(PredicateNode predicate, ObjectNode object) throws GraphException {
+        boolean result = false;
+        try {
+            ClosableIterator<Triple> closableIterator = graph.find((SubjectNode) node, predicate, object);
+            if (closableIterator.hasNext()) {
+                result = true;
+            }
+            closableIterator.close();
+        } catch (Exception e) {
+            result = false;
+        }
+        return result;
+    }
 }

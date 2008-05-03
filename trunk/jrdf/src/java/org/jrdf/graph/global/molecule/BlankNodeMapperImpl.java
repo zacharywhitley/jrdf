@@ -75,6 +75,12 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
     private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private Map<BlankNode, BlankNode> map;
 
+    /**
+     * TODO: Seems blank nodes of top-level root triples are not added to the map.
+     * @param m1
+     * @param m2
+     * @return
+     */
     public Map<BlankNode, BlankNode> createMap(NewMolecule m1, NewMolecule m2) {
         map = new HashMap<BlankNode, BlankNode>();
         Iterator<Triple> m1Triples = m1.getRootTriples();

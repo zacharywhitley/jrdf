@@ -266,4 +266,14 @@ public abstract class AbstractResourceUnitTest extends TestCase {
             }
         });
     }
+
+    public void testContainsTriple() throws GraphException {
+        Resource subject = this.createURIReferenceResource(readWriteGraph, uriRef1);
+
+        subject.addValue(predicate1, object1);
+        assertTrue("Contains p1, o1", subject.containsTriple(predicate1, object1));
+        assertFalse("Doesn't contain p1, o2", subject.containsTriple(predicate1, object2));
+        assertFalse("Doesn't contain p2, o1", subject.containsTriple(predicate2, object1));
+        assertFalse("Doesn't contain p2, o2", subject.containsTriple(predicate2, object2));
+    }
 }

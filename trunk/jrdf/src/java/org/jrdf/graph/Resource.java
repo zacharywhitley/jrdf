@@ -297,4 +297,6 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      * @return the BlankNode or URIReference.
      */
     Node getUnderlyingNode();
+
+    boolean containsTriple(PredicateNode predicate, ObjectNode object) throws GraphException;
 }

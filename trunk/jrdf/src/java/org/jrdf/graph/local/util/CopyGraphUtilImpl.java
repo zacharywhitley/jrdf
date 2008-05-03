@@ -213,8 +213,8 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
      */
     private void getAllBNodesForNode1(Node node, Graph graph, Set<BlankNode> bSet) throws GraphException {
         Set<Triple> set = setFactory.createSet(Triple.class);
-        addTriplesToSetForSubject(graph, set, (SubjectNode) node);
-        addTriplesToSetForObject(graph, set, (ObjectNode) node);
+        addTriplesToSetForSubject(graph, set, node);
+        addTriplesToSetForObject(graph, set, node);
         for (Triple triple : set) {
             final SubjectNode sNode = triple.getSubject();
             addBlankNodeToSet(graph, bSet, sNode);
@@ -244,7 +244,6 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
      */
     private void getAllTriplesForNode0(Graph graph, Set<Triple> set, Set<BlankNode> bSet, Node node)
         throws GraphException {
-
         getAllBNodesForNode1(node, graph, bSet);
         for (BlankNode bNode : bSet) {
             addTriplesToSet(graph, set, bNode, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);

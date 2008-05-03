@@ -104,6 +104,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 molecules.add(molecule);
             }
         }
+        iterator.close();
         return molecules;
     }
 
@@ -139,6 +140,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 }
             }
         }
+        closableIterator.close();
         return molecule;
     }
 
@@ -173,8 +175,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
 
     private void addTriplesToMolecule(NewMolecule molecule, SubjectNode subject, ObjectNode object)
         throws GraphException {
-        ClosableIterator<Triple> tripleClosableIterator = graph.find(subject, ANY_PREDICATE_NODE,
-            object);
+        ClosableIterator<Triple> tripleClosableIterator = graph.find(subject, ANY_PREDICATE_NODE, object);
         while (tripleClosableIterator.hasNext()) {
             Triple currentTriple = tripleClosableIterator.next();
             if (!triplesChecked.contains(currentTriple)) {
@@ -182,6 +183,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 triplesChecked.add(currentTriple);
             }
         }
+        tripleClosableIterator.close();
     }
 
     private void getSubMolecule(NewMolecule subMolecule) throws GraphException {
