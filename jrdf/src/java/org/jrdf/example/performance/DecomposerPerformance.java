@@ -97,11 +97,12 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
 
 public class DecomposerPerformance {
-    private static final int CHAIN_SIZE = 20;
+    private static final int CHAIN_SIZE = 3;
     private static final int LOOP_SIZE = 9;
-    private static final int NUMBER_OF_MOLECULES = 500;
+    private static final int NUMBER_OF_MOLECULES = 5;
     private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private final Graph graph = factory.getNewGraph();
     private final GraphElementFactory elementFactory = graph.getElementFactory();
@@ -125,36 +126,59 @@ public class DecomposerPerformance {
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
             addChain("urn:foo");
         }
-        long startTime = System.currentTimeMillis();
-        Set<NewMolecule> moleculeSet = decomposer.decompose(graph);
+        System.err.println("Graph size = " + graph.getNumberOfTriples());
         NewMoleculeHeadTripleComparatorImpl tripleComparator = new NewMoleculeHeadTripleComparatorImpl(
             new GroundedTripleComparatorFactoryImpl().newComparator());
         Set<NewMolecule> results = new TreeSet<NewMolecule>(tripleComparator);
+        long startTime = System.currentTimeMillis();
+        Set<NewMolecule> moleculeSet = decomposer.decompose(graph);
         NewMolecule[] molecules = moleculeSet.toArray(new NewMolecule[]{});
         results.add(molecules[0]);
-        int count = 0;
-        for (int i = 1; i < molecules.length; i++) {
-            for (int j = i; j < molecules.length; j++) {
-                Map<BlankNode, BlankNode> map = mapper.createMap(molecules[i], molecules[j]);
-                NewMolecule molecule = localMerger.merge(molecules[i], molecules[j], map);
-                addResult(results, molecules, i, molecule);
-                count++;
-            }
-        }
-        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + " comparisons: " + count +
-            " results: " + results);
+        int count = mergeMolecules(results, moleculeSet);
+        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + ", comparisons: " + count +
+            ", no: of triples = " + results.iterator().next().size());
     }
 
-    private void addResult(Set<NewMolecule> results, NewMolecule[] molecules, int i, NewMolecule molecule) {
-        if (molecule != null) {
-            if (!results.contains(molecule)) {
-                results.add(molecule);
-            }
-        } else {
-            if (!results.contains(molecules[i])) {
-                results.add(molecules[i]);
+    private int mergeMolecules(Set<NewMolecule> results, Set<NewMolecule> molecules) {
+        int count = 0;
+        int length = molecules.size();
+        Vector<NewMolecule> moleculeArray = new Vector(molecules);
+        System.err.println("vec size = " + length);
+        System.err.println("");
+        boolean skip;
+        for (int i = 0; i < length; i++) {
+            for (int j = i + 1; j < length; j++) {
+                System.err.println("i = " + i + " j = " + j + " length = " + length);
+                NewMolecule m1 = moleculeArray.get(i);
+                //System.err.println("m1 = " + i + " " + m1.toString());
+                NewMolecule m2 = moleculeArray.get(j);
+                //System.err.println("m2 = " + j + " " + m2.toString());
+                Map<BlankNode, BlankNode> map = mapper.createMap(m1, m2);
+                NewMolecule molecule = localMerger.merge(m1, m2, map);
+                if (molecule != null) {
+                    System.err.println("Merged = " + molecule.toString());
+                    //moleculeArray.remove(m1);
+                    //moleculeArray.remove(m2);
+                    //moleculeArray.add(molecule);
+                    addResult(results, m1);
+                    //i = 0;
+                    //j = i;
+                    count++;
+                    //skip = true;
+                    //length = moleculeArray.size();
+                    System.err.println("new length = " + length);
+                    //continue;
+                } else {
+                    //skip = false;
+                    System.err.println("Cannot merge j: " + j);
+                }
             }
         }
+        return count;
+    }
+
+    private void addResult(Set<NewMolecule> results, NewMolecule molecule) {
+        results.add(molecule);
     }
 
     private void addGrounded(String predicate) throws Exception {
