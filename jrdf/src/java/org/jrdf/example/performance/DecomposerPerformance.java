@@ -97,7 +97,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Vector;
 
 public class DecomposerPerformance {
     private static final int CHAIN_SIZE = 3;
@@ -127,58 +126,40 @@ public class DecomposerPerformance {
             addChain("urn:foo");
         }
         System.err.println("Graph size = " + graph.getNumberOfTriples());
+        long startTime = System.currentTimeMillis();
+        Set<NewMolecule> moleculeSet = decomposer.decompose(graph);
         NewMoleculeHeadTripleComparatorImpl tripleComparator = new NewMoleculeHeadTripleComparatorImpl(
             new GroundedTripleComparatorFactoryImpl().newComparator());
         Set<NewMolecule> results = new TreeSet<NewMolecule>(tripleComparator);
-        long startTime = System.currentTimeMillis();
-        Set<NewMolecule> moleculeSet = decomposer.decompose(graph);
         NewMolecule[] molecules = moleculeSet.toArray(new NewMolecule[]{});
         results.add(molecules[0]);
-        int count = mergeMolecules(results, moleculeSet);
-        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + ", comparisons: " + count +
-            ", no: of triples = " + results.iterator().next().size());
-    }
-
-    private int mergeMolecules(Set<NewMolecule> results, Set<NewMolecule> molecules) {
         int count = 0;
-        int length = molecules.size();
-        Vector<NewMolecule> moleculeArray = new Vector(molecules);
-        System.err.println("vec size = " + length);
-        System.err.println("");
-        boolean skip;
-        for (int i = 0; i < length; i++) {
-            for (int j = i + 1; j < length; j++) {
-                System.err.println("i = " + i + " j = " + j + " length = " + length);
-                NewMolecule m1 = moleculeArray.get(i);
-                //System.err.println("m1 = " + i + " " + m1.toString());
-                NewMolecule m2 = moleculeArray.get(j);
-                //System.err.println("m2 = " + j + " " + m2.toString());
-                Map<BlankNode, BlankNode> map = mapper.createMap(m1, m2);
-                NewMolecule molecule = localMerger.merge(m1, m2, map);
+        for (int i = 0; i < molecules.length; i++) {
+            for (int j = i + 1; j < molecules.length; j++) {
+                Map<BlankNode, BlankNode> map = mapper.createMap(molecules[i], molecules[j]);
+                NewMolecule molecule = localMerger.merge(molecules[i], molecules[j], map);
+                System.err.println("merging i = " + i + ", j = " + j);
                 if (molecule != null) {
-                    System.err.println("Merged = " + molecule.toString());
-                    //moleculeArray.remove(m1);
-                    //moleculeArray.remove(m2);
-                    //moleculeArray.add(molecule);
-                    addResult(results, m1);
-                    //i = 0;
-                    //j = i;
-                    count++;
-                    //skip = true;
-                    //length = moleculeArray.size();
-                    System.err.println("new length = " + length);
-                    //continue;
-                } else {
-                    //skip = false;
-                    System.err.println("Cannot merge j: " + j);
+                    System.err.println("merged = " + molecule.toString());
                 }
+                addResult(results, molecules, i, molecule);
+                count++;
             }
         }
-        return count;
+        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + " comparisons: " + count +
+            " results: " + results);
     }
 
-    private void addResult(Set<NewMolecule> results, NewMolecule molecule) {
-        results.add(molecule);
+    private void addResult(Set<NewMolecule> results, NewMolecule[] molecules, int i, NewMolecule molecule) {
+        if (molecule != null) {
+            if (!results.contains(molecule)) {
+                results.add(molecule);
+            }
+        } else {
+            if (!results.contains(molecules[i])) {
+                results.add(molecules[i]);
+            }
+        }
     }
 
     private void addGrounded(String predicate) throws Exception {
