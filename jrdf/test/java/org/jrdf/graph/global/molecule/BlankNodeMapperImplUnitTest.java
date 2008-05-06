@@ -61,14 +61,23 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
@@ -127,24 +136,24 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
         assertEquals(BNODE2, blankNodeMap.get(BNODE3));
     }
 
-    public void test3LvlNodes() throws GraphException {
-        GraphElementFactory fac = GRAPH.getElementFactory();
-        TripleFactory tFac = GRAPH.getTripleFactory();
-        BlankNode BNODE4 = fac.createBlankNode();
-        Triple B2R1B3 = tFac.createTriple(BNODE2, REF1, BNODE3);
-        Triple B3R1B4 = tFac.createTriple(BNODE3, REF1, BNODE4);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
-        BlankNode BNODE5 = fac.createBlankNode();
-        BlankNode BNODE6 = fac.createBlankNode();
-        BlankNode BNODE7 = fac.createBlankNode();
-        BlankNode BNODE8 = fac.createBlankNode();
-        Triple B5R2B6 = tFac.createTriple(BNODE5, REF1, BNODE6);
-        Triple B6R2B7 = tFac.createTriple(BNODE6, REF1, BNODE7);
-        Triple B7R2B8 = tFac.createTriple(BNODE7, REF1, BNODE8);
-        NewMolecule m2 = createMultiLevelMolecule(asSet(B5R2B6), asSet(B6R2B7), asSet(B7R2B8));
-        Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
-        assertFalse(blankNodeMap.isEmpty());
-        assertEquals("size of map", 4, blankNodeMap.size());
-        assertEquals(BNODE1, blankNodeMap.get(BNODE5));
-    }
+//    public void test3LvlNodes() throws GraphException {
+//        GraphElementFactory fac = GRAPH.getElementFactory();
+//        TripleFactory tFac = GRAPH.getTripleFactory();
+//        BlankNode BNODE4 = fac.createBlankNode();
+//        Triple B2R1B3 = tFac.createTriple(BNODE2, REF1, BNODE3);
+//        Triple B3R1B4 = tFac.createTriple(BNODE3, REF1, BNODE4);
+//        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
+//        BlankNode BNODE5 = fac.createBlankNode();
+//        BlankNode BNODE6 = fac.createBlankNode();
+//        BlankNode BNODE7 = fac.createBlankNode();
+//        BlankNode BNODE8 = fac.createBlankNode();
+//        Triple B5R2B6 = tFac.createTriple(BNODE5, REF1, BNODE6);
+//        Triple B6R2B7 = tFac.createTriple(BNODE6, REF1, BNODE7);
+//        Triple B7R2B8 = tFac.createTriple(BNODE7, REF1, BNODE8);
+//        NewMolecule m2 = createMultiLevelMolecule(asSet(B5R2B6), asSet(B6R2B7), asSet(B7R2B8));
+//        Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+//        assertFalse(blankNodeMap.isEmpty());
+//        assertEquals("size of map", 4, blankNodeMap.size());
+//        assertEquals(BNODE1, blankNodeMap.get(BNODE5));
+//    }
 }
