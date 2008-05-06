@@ -64,19 +64,18 @@ import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.BlankNodeMapper;
-import org.jrdf.graph.global.molecule.BlankNodeMapperImpl;
 import org.jrdf.graph.global.molecule.LocalMergeSubmolecules;
 import org.jrdf.graph.global.molecule.MergeLocalSubmoleculesImpl;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.MergeSubmoleculesImpl;
 import org.jrdf.graph.global.molecule.MoleculeSubsumptionImpl;
+import org.jrdf.graph.global.molecule.NewBlankNodeMapperImpl;
 import org.jrdf.graph.global.molecule.mem.NewGraphDecomposer;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
@@ -90,31 +89,20 @@ import org.jrdf.graph.local.LocalizedNodeComparator;
 import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorImpl;
-import org.jrdf.parser.ParseException;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.set.MemSortedSetFactory;
-import org.jrdf.util.EscapeURL;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
+import java.util.Vector;
 
 public class DecomposerPerformance {
-    private static final int CHAIN_SIZE = 3;
+    private static final int CHAIN_SIZE = 10;
     private static final int LOOP_SIZE = 9;
-    private static final int NUMBER_OF_MOLECULES = 100;
+    private static final int NUMBER_OF_MOLECULES = 1000;
     private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private final Graph graph = factory.getNewGraph();
     private final GraphElementFactory elementFactory = graph.getElementFactory();
@@ -129,7 +117,7 @@ public class DecomposerPerformance {
     private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
     private final NewGraphDecomposer decomposer = new NewNaiveGraphDecomposerImpl(setFactory, moleculeFactory,
         moleculeComparator, comparator);
-    private final BlankNodeMapper mapper = new BlankNodeMapperImpl();
+    private final BlankNodeMapper mapper = new NewBlankNodeMapperImpl();
     private final MergeSubmolecules globalMerger = new MergeSubmoleculesImpl(comparator, moleculeComparator,
         moleculeFactory, new MoleculeSubsumptionImpl());
     private final LocalMergeSubmolecules localMerger = new MergeLocalSubmoleculesImpl(globalMerger, moleculeFactory);
@@ -139,39 +127,61 @@ public class DecomposerPerformance {
             addChain("urn:foo");
         }
         System.err.println("Graph size = " + graph.getNumberOfTriples());
-        long startTime = System.currentTimeMillis();
-        Set<NewMolecule> moleculeSet = decomposer.decompose(graph);
         NewMoleculeHeadTripleComparatorImpl tripleComparator = new NewMoleculeHeadTripleComparatorImpl(
             new GroundedTripleComparatorFactoryImpl().newComparator());
         Set<NewMolecule> results = new TreeSet<NewMolecule>(tripleComparator);
+        long startTime = System.currentTimeMillis();
+        Set<NewMolecule> moleculeSet = decomposer.decompose(graph);
         NewMolecule[] molecules = moleculeSet.toArray(new NewMolecule[]{});
         results.add(molecules[0]);
-        int count = 0;
-        for (int i = 0; i < molecules.length; i++) {
-            for (int j = i + 1; j < molecules.length; j++) {
-                Map<BlankNode, BlankNode> map = mapper.createMap(molecules[i], molecules[j]);
-                NewMolecule molecule = localMerger.merge(molecules[i], molecules[j], map);
-                //System.err.println("merging i = " + i + ", j = " + j);
-                /*if (molecule != null) {
-                    System.err.println("merged = " + molecule.toString());
-                }*/
-                addResult(results, molecules, i, molecule);
-                count++;
-            }
-        }
-        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + " comparisons: " + count);
+        int count = mergeMolecules(results, moleculeSet);
+        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + ", comparisons: " + count +
+            ", no: of triples = " + results.iterator().next().size());
     }
 
-    private void addResult(Set<NewMolecule> results, NewMolecule[] molecules, int i, NewMolecule molecule) {
-        if (molecule != null) {
-            if (!results.contains(molecule)) {
-                results.add(molecule);
+    private int mergeMolecules(Set<NewMolecule> results, Set<NewMolecule> molecules) {
+        int count = 0;
+        int length = molecules.size();
+        Vector<NewMolecule> moleculeArray = new Vector(molecules);
+        System.err.println("vec size = " + length);
+        System.err.println("");
+        boolean skip = false;
+        int i1 = 0, i2;
+        while (i1 < length && length > 1) {
+            i2 = i1 + 1;
+            while (i2 < length) {
+                NewMolecule m1 = moleculeArray.get(i1);
+                NewMolecule m2 = moleculeArray.get(i2);
+                Map<BlankNode, BlankNode> map = mapper.createMap(m1, m2);
+                NewMolecule molecule = localMerger.merge(m1, m2, map);
+                //map.clear();
+                if (molecule != null) {
+                    moleculeArray.remove(m1);
+                    moleculeArray.remove(m2);
+                    moleculeArray.add(molecule);
+                    addResult(results, m1);
+                    i1 = 0;
+                    i2 = i1 + 1;
+                    count++;
+                    length = moleculeArray.size();
+                    skip = true;
+                    break;
+                } else {
+                    i2++;
+                    skip = false;
+                }
             }
-        } else {
-            if (!results.contains(molecules[i])) {
-                results.add(molecules[i]);
+            if (skip) {
+                continue;
+            } else {
+                i1++;
             }
         }
+        return count;
+    }
+
+    private void addResult(Set<NewMolecule> results, NewMolecule molecule) {
+        results.add(molecule);
     }
 
     private void addGrounded(String predicate) throws Exception {
@@ -211,30 +221,5 @@ public class DecomposerPerformance {
     public static void main(String[] args) throws Exception {
         DecomposerPerformance performance = new DecomposerPerformance();
         performance.testPerformance();
-    }
-
-    private static void readFromInputStream(Graph graph, URL url)
-        throws IOException, GraphException, ParseException, StatementHandlerException {
-        System.out.println("Reading RDF/XML from: " + url.getPath());
-        InputStream in = getInputStream(url);
-        Parser parser = new GraphRdfXmlParser(graph);
-        parser.parse(in, EscapeURL.toEscapedString(url));
-        in.close();
-    }
-
-    private static InputStream getInputStream(URL url) throws IOException {
-        URLConnection urlConnection = url.openConnection();
-        urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-        urlConnection.connect();
-        String encoding = urlConnection.getContentEncoding();
-        InputStream in;
-        if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
-            in = new GZIPInputStream(urlConnection.getInputStream());
-        } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
-            in = new InflaterInputStream(urlConnection.getInputStream(), new Inflater(true));
-        } else {
-            in = urlConnection.getInputStream();
-        }
-        return in;
     }
 }
