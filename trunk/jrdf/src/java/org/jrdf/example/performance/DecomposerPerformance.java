@@ -64,6 +64,7 @@ import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.URIReference;
@@ -89,19 +90,31 @@ import org.jrdf.graph.local.LocalizedNodeComparator;
 import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorImpl;
+import org.jrdf.parser.ParseException;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.set.MemSortedSetFactory;
+import org.jrdf.util.EscapeURL;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 public class DecomposerPerformance {
     private static final int CHAIN_SIZE = 3;
     private static final int LOOP_SIZE = 9;
-    private static final int NUMBER_OF_MOLECULES = 5;
+    private static final int NUMBER_OF_MOLECULES = 100;
     private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private final Graph graph = factory.getNewGraph();
     private final GraphElementFactory elementFactory = graph.getElementFactory();
@@ -138,16 +151,15 @@ public class DecomposerPerformance {
             for (int j = i + 1; j < molecules.length; j++) {
                 Map<BlankNode, BlankNode> map = mapper.createMap(molecules[i], molecules[j]);
                 NewMolecule molecule = localMerger.merge(molecules[i], molecules[j], map);
-                System.err.println("merging i = " + i + ", j = " + j);
-                if (molecule != null) {
+                //System.err.println("merging i = " + i + ", j = " + j);
+                /*if (molecule != null) {
                     System.err.println("merged = " + molecule.toString());
-                }
+                }*/
                 addResult(results, molecules, i, molecule);
                 count++;
             }
         }
-        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + " comparisons: " + count +
-            " results: " + results);
+        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + " comparisons: " + count);
     }
 
     private void addResult(Set<NewMolecule> results, NewMolecule[] molecules, int i, NewMolecule molecule) {
@@ -199,5 +211,30 @@ public class DecomposerPerformance {
     public static void main(String[] args) throws Exception {
         DecomposerPerformance performance = new DecomposerPerformance();
         performance.testPerformance();
+    }
+
+    private static void readFromInputStream(Graph graph, URL url)
+        throws IOException, GraphException, ParseException, StatementHandlerException {
+        System.out.println("Reading RDF/XML from: " + url.getPath());
+        InputStream in = getInputStream(url);
+        Parser parser = new GraphRdfXmlParser(graph);
+        parser.parse(in, EscapeURL.toEscapedString(url));
+        in.close();
+    }
+
+    private static InputStream getInputStream(URL url) throws IOException {
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+        urlConnection.connect();
+        String encoding = urlConnection.getContentEncoding();
+        InputStream in;
+        if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
+            in = new GZIPInputStream(urlConnection.getInputStream());
+        } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
+            in = new InflaterInputStream(urlConnection.getInputStream(), new Inflater(true));
+        } else {
+            in = urlConnection.getInputStream();
+        }
+        return in;
     }
 }
