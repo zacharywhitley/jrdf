@@ -133,7 +133,6 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         throws GraphException {
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
-            System.err.println("Triple: " + triple);
             if (!triplesChecked.contains(triple)) {
                 if (isDoubleLinkedTriple(triple)) {
                     molecule = addLinkedTriple(molecule, triple);
