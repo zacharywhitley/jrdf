@@ -161,7 +161,6 @@ public class DecomposerPerformance {
                     moleculeArray.add(molecule);
                     addResult(results, m1);
                     i1 = 0;
-                    i2 = i1 + 1;
                     count++;
                     length = moleculeArray.size();
                     skip = true;
