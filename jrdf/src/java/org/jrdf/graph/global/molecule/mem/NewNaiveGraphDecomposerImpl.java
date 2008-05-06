@@ -100,7 +100,9 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 NewMolecule molecule = moleculeFactory.createMolecue();
                 molecule = molecule.add(currentTriple);
                 triplesChecked.add(currentTriple);
+                System.err.println("Molecule before " + molecule);
                 molecule = convertTripleToMolecule(molecule);
+                System.err.println("Molecule after " + molecule);
                 molecules.add(molecule);
             }
         }
@@ -131,6 +133,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         throws GraphException {
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
+            System.err.println("Triple: " + triple);
             if (!triplesChecked.contains(triple)) {
                 if (isDoubleLinkedTriple(triple)) {
                     molecule = addLinkedTriple(molecule, triple);
@@ -149,6 +152,9 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         subMolecule.add(triple);
         triplesChecked.add(triple);
         getSubMolecule(subMolecule);
+        System.err.println("Molecule " + molecule);
+        System.err.println("Triple " + triple);
+        System.err.println("Submolecule " + subMolecule);
         // Put submolecule inside molecule's head triple
         if (isDoubleLinkedTriple(molecule.getHeadTriple()) &&
             molecule.getHeadTriple().getObject().equals(triple.getSubject())) {
