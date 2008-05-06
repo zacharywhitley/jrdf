@@ -63,19 +63,41 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.mergeMolecules;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
@@ -87,8 +109,9 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
+import org.jrdf.vocabulary.RDF;
 
-import java.net.URI;
+import static java.net.URI.create;
 import java.util.Collections;
 import java.util.Set;
 
@@ -179,25 +202,53 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(actualMolecules, m1, m2, m3);
     }
 
-    public void test3LevelMolecule() throws GraphElementFactoryException, GraphException {
+    public void test3LevelMolecule() throws GraphException {
         GraphElementFactory fac = GRAPH.getElementFactory();
-        BlankNode b1 = fac.createBlankNode();
-        BlankNode b2 = fac.createBlankNode();
-        BlankNode b3 = fac.createBlankNode();
-        BlankNode b4 = fac.createBlankNode();
-        PredicateNode p1 = fac.createURIReference(URI.create("urn:p1"));
-        PredicateNode p2 = fac.createURIReference(URI.create("urn:p2"));
-        PredicateNode p3 = fac.createURIReference(URI.create("urn:p3"));
-        ObjectNode o1 = fac.createURIReference(URI.create("urn:o1"));
-        ObjectNode o2 = fac.createURIReference(URI.create("urn:o2"));
-        GRAPH.add(b1, p1, b2);
-        GRAPH.add(b2, p2, b3);
-        GRAPH.add(b3, p3, o1);
+        TripleFactory tfac = GRAPH.getTripleFactory();
+        Resource b1 = fac.createResource();
+        Resource b2 = fac.createResource();
+        Resource b3 = fac.createResource();
+        Resource b4 = fac.createResource();
+        URIReference u1 = fac.createURIReference(create("urn:p1"));
+        URIReference u2 = fac.createURIReference(create("urn:p2"));
+        URIReference u3 = fac.createURIReference(create("urn:p3"));
+        URIReference u4 = fac.createURIReference(create("urn:o1"));
+        URIReference u5 = fac.createURIReference(create("urn:o2"));
+        b1.addValue(u1, b2);
+        b2.addValue(u2, b3);
+        b3.addValue(u3, u4);
+        b2.addValue(u2, b4);
+        b4.addValue(u3, u5);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule branch1 = createMolecule(tfac.createTriple(b2, u2, b3));
+        NewMolecule leaf1 = createMolecule(tfac.createTriple(b3, u3, u4));
+        NewMolecule branch2 = createMolecule(tfac.createTriple(b2, u2, b4));
+        NewMolecule leaf2 = createMolecule(tfac.createTriple(b4, u3, u5));
+        NewMolecule m1 = mergeMolecules(branch1, leaf1);
+        NewMolecule m2 = mergeMolecules(branch2, leaf2);
+        NewMolecule m = moleculeFactory.createMolecule(tfac.createTriple(b1, u1, b2));
+        m.add(tfac.createTriple(b1, u1, b2), m1);
+        m.add(tfac.createTriple(b1, u1, b2), m2);
+        assertEquals("Should create 3 molecules", 3, actualMolecules.size());
+        // Add tests for molecule values.
+    }
 
-        GRAPH.add(b1, p1, b2);
-        GRAPH.add(b2, p2, b4);
-        GRAPH.add(b4, p3, o2);
+    public void test3LevelMoleculeWithType() throws Exception {
+        GraphElementFactory elFactory = GRAPH.getElementFactory();
+        Resource b1 = elFactory.createResource();
+        Resource b2 = elFactory.createResource();
+        Resource b3 = elFactory.createResource();
+        Resource b4 = elFactory.createResource();
+        b1.addValue(RDF.TYPE, create("urn:experimentObservation"));
+        b1.addValue(create("urn:observedInteraction"), b2);
+        b2.addValue(create("urn:participant"), b3);
+        b3.addValue(create("urn:hasUniprotID"), "foo");
+        b2.addValue(create("urn:participant"), b4);
+        b4.addValue(create("urn:hasUniprotID"), "bar");
         Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
+        System.err.println("actualMolecules " + molecules.size());
+        System.err.println("actualMolecules " + molecules);
+        // This creates an incorrect decomposition - i think due to the fact that the first type doesn't work.
     }
 
     public void testSingleNestingSubjects() throws Exception {
