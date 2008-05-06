@@ -47,6 +47,7 @@
     <suppress checks="MagicNumber" files="NewMoleculeIndex"/>
     <suppress checks="MagicNumber" files="NewMoleculeStructureIndex"/>
     <suppress checks="MagicNumber" files="WritableIndexImpl"/>
+    <suppress checks="ReturnCount" files="NewBlankNodeMapperImpl"/>
 
     <!-- Import -->
     <!-- Persistence -->
