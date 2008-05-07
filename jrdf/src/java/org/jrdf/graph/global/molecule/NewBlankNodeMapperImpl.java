@@ -134,8 +134,8 @@ public class NewBlankNodeMapperImpl implements BlankNodeMapper {
                         }
                     }
                 } else {
-                    throw new UnsupportedOperationException("Cannot handle more than one level of submolecules at " +
-                        "this time");
+                    throw new UnsupportedOperationException("Cannot handle more than one level of " +
+                            "submolecules at this time");
                 }
             } else if (sm1s.size() < sm2s.size()) {
                 return new HashMap<BlankNode, BlankNode>();

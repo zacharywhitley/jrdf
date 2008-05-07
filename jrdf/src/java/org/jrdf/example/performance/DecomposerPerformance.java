@@ -142,7 +142,7 @@ public class DecomposerPerformance {
     private int mergeMolecules(Set<NewMolecule> results, Set<NewMolecule> molecules) {
         int count = 0;
         int length = molecules.size();
-        Vector<NewMolecule> moleculeArray = new Vector(molecules);
+        Vector<NewMolecule> moleculeArray = new Vector<NewMolecule>(molecules);
         System.err.println("vec size = " + length);
         System.err.println("");
         boolean skip = false;
