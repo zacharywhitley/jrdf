@@ -230,6 +230,7 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         m.add(tfac.createTriple(b1, u1, b2), m1);
         m.add(tfac.createTriple(b1, u1, b2), m2);
         assertEquals("Should create 3 molecules", 3, actualMolecules.size());
+        System.err.println("actualMolecules " + actualMolecules);
         // Add tests for molecule values.
     }
 

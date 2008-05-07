@@ -150,19 +150,21 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         NewMolecule subMolecule = moleculeFactory.createMolecue();
         subMolecule.add(triple);
         triplesChecked.add(triple);
-        getSubMolecule(subMolecule);
         //System.err.println("Molecule " + molecule);
         //System.err.println("Triple " + triple);
         //System.err.println("Submolecule " + subMolecule);
         // Put submolecule inside molecule's head triple
         if (isDoubleLinkedTriple(molecule.getHeadTriple()) &&
             molecule.getHeadTriple().getObject().equals(triple.getSubject())) {
+            getSubMolecule(subMolecule, triple);
             return molecule.add(molecule.getHeadTriple(), subMolecule);
             // Put molecule inside submolecule
         } else if (triple.getObject().equals(molecule.getHeadTriple().getSubject())) {
+            getSubMolecule(subMolecule, triple);
             return subMolecule.add(triple, molecule);
             // Put submolecule inside molecule
         } else {
+            getSubMolecule(subMolecule, triple);
             subMolecule.remove(triple);
             getNewRootTriples(molecule, triple);
             return molecule.add(triple, subMolecule);
@@ -191,8 +193,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         tripleClosableIterator.close();
     }
 
-    private void getSubMolecule(NewMolecule subMolecule) throws GraphException {
-        Triple triple = subMolecule.getHeadTriple();
+    private void getSubMolecule(NewMolecule subMolecule, Triple triple) throws GraphException {
         findEnclosedTriples(subMolecule, graph.find((SubjectNode) triple.getObject(), ANY_PREDICATE_NODE,
             ANY_OBJECT_NODE));
         findEnclosedTriples(subMolecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, triple.getObject()));
