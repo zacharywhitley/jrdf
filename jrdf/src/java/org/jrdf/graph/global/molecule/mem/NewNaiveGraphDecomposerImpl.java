@@ -74,6 +74,7 @@ import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.SortedSet;
+import java.util.Set;
 
 public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private final NewMoleculeFactory moleculeFactory;
@@ -165,6 +166,12 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
             // Put submolecule inside molecule
         } else {
             getSubMolecule(subMolecule, triple);
+            if (isDoubleLinkedTriple(triple)) {
+                Set<NewMolecule> subMolecules = subMolecule.getSubMolecules(triple);
+                for (NewMolecule newMole : subMolecules) {
+                    molecule.add(triple, newMole);
+                }
+            }
             subMolecule.remove(triple);
             getNewRootTriples(molecule, triple);
             return molecule.add(triple, subMolecule);
