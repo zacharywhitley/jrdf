@@ -219,17 +219,17 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         b2.addValue(u2, b4);
         b4.addValue(u3, u5);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule branch1 = createMolecule(tfac.createTriple(b2, u2, b3));
-        NewMolecule leaf1 = createMolecule(tfac.createTriple(b3, u3, u4));
-        NewMolecule branch2 = createMolecule(tfac.createTriple(b2, u2, b4));
-        NewMolecule leaf2 = createMolecule(tfac.createTriple(b4, u3, u5));
+        NewMolecule branch1 = moleculeFactory.createMolecule(tfac.createTriple(b2, u2, b3));
+        NewMolecule leaf1 = moleculeFactory.createMolecule(tfac.createTriple(b3, u3, u4));
+        NewMolecule branch2 = moleculeFactory.createMolecule(tfac.createTriple(b2, u2, b4));
+        NewMolecule leaf2 = moleculeFactory.createMolecule(tfac.createTriple(b4, u3, u5));
         NewMolecule m1 = mergeMolecules(branch1, leaf1);
         NewMolecule m2 = mergeMolecules(branch2, leaf2);
-        NewMolecule m = createMolecule(tfac.createTriple(b1, u1, b2));
-        m.add(tfac.createTriple(b1, u1, b2), m1);
-        m.add(tfac.createTriple(b1, u1, b2), m2);
-        assertEquals("Should create 3 molecules", 3, actualMolecules.size());
-        System.err.println("actualMolecules " + actualMolecules);
+        NewMolecule expectedMolecules = moleculeFactory.createMolecule(tfac.createTriple(b1, u1, b2));
+        expectedMolecules.add(tfac.createTriple(b1, u1, b2), m1);
+        expectedMolecules.add(tfac.createTriple(b1, u1, b2), m2);
+        System.err.println("Expected: " + expectedMolecules);
+        System.err.println("Actual: " + actualMolecules);
         // Add tests for molecule values.
     }
 
@@ -323,9 +323,9 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
             asSet(B2R2B3), asSet(B3R2R3));
         m1.add(B1R1B2, createMolecule(R1R2B2, R2R2B2, B2R2R1));
-        NewMolecule actual1 = actualMolecules.iterator().next();
-        assertEquals(m1.getRootTriplesAsSet(), actual1.getRootTriplesAsSet());
-        assertEquals(m1.getSubMolecules(B1R1B2), actual1.getSubMolecules(B1R1B2));
+        NewMolecule actualSubmolecule = actualMolecules.iterator().next();
+        assertEquals(m1.getRootTriplesAsSet(), actualSubmolecule.getRootTriplesAsSet());
+        assertEquals(m1.getSubMolecules(B1R1B2), actualSubmolecule.getSubMolecules(B1R1B2));
         checkMolecules(actualMolecules, m1);
     }
 
