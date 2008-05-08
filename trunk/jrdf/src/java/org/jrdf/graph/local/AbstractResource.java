@@ -69,6 +69,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.local.iterator.ObjectNodeIterator;
 import org.jrdf.graph.local.iterator.SubjectNodeIterator;
 import org.jrdf.util.ClosableIterator;
@@ -194,6 +195,36 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
 
     public void removeValues(URI predicate) throws GraphException {
         removeValues(elementFactory.createURIReference(predicate));
+    }
+
+    public Triple asTriple(PredicateNode predicate, ObjectNode object) throws GraphException {
+        return new TripleImpl(this, predicate, object);
+    }
+
+    public Triple asTriple(URI predicate, URI object) throws GraphException {
+        return asTriple(elementFactory.createURIReference(predicate), elementFactory.createURIReference(object));
+    }
+
+    public Triple asTriple(URI predicate, String lexicalValue) throws GraphException {
+        return asTriple(elementFactory.createURIReference(predicate), elementFactory.createLiteral(lexicalValue));
+    }
+
+    public Triple asTriple(URI predicate, Resource object) throws GraphException {
+        return asTriple(elementFactory.createURIReference(predicate), (ObjectNode) object.getUnderlyingNode());
+    }
+
+    public Triple asTriple(URI predicate, Object object) throws GraphException {
+        return asTriple(elementFactory.createURIReference(predicate), elementFactory.createLiteral(object));
+    }
+
+    public Triple asTriple(URI predicate, String lexicalValue, String language) throws GraphException {
+        return asTriple(elementFactory.createURIReference(predicate),
+            elementFactory.createLiteral(lexicalValue, language));
+    }
+
+    public Triple asTriple(URI predicate, String lexicalValue, URI dataType) throws GraphException {
+        return asTriple(elementFactory.createURIReference(predicate),
+            elementFactory.createLiteral(lexicalValue, dataType));
     }
 
     public void removeSubject(SubjectNode subject, PredicateNode predicate) throws GraphException {

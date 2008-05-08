@@ -64,7 +64,6 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Resource;
@@ -178,7 +177,7 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(actualMolecules, m1);
     }
 
-    public void testNestedBlankNodeDecompose() throws GraphException, GraphElementFactoryException {
+    public void testNestedBlankNodeDecompose() throws Exception {
         GRAPH.add(B1R1B2, B1R1B3, B2R2R2, B3R2R3);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
         NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
@@ -186,7 +185,7 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(actualMolecules, m1, m2);
     }
 
-    public void testCircularBlankNodes() throws GraphElementFactoryException, GraphException {
+    public void testCircularBlankNodes() throws Exception {
         GRAPH.add(B1R1B2, B2R2B3, B3R3B1);
         Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
         NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2B3), asSet(B3R3B1));
@@ -196,9 +195,9 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
     public void testNoSimpleLeanification() throws Exception {
         GRAPH.add(B1R1R1, B2R1R1, B3R1R1);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = moleculeFactory.createMolecule(B1R1R1);
-        NewMolecule m2 = moleculeFactory.createMolecule(B2R1R1);
-        NewMolecule m3 = moleculeFactory.createMolecule(B3R1R1);
+        NewMolecule m1 = createMolecule(B1R1R1);
+        NewMolecule m2 = createMolecule(B2R1R1);
+        NewMolecule m3 = createMolecule(B3R1R1);
         checkMolecules(actualMolecules, m1, m2, m3);
     }
 
@@ -246,9 +245,19 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         b3.addValue(create("urn:hasUniprotID"), "foo");
         b2.addValue(create("urn:participant"), b4);
         b4.addValue(create("urn:hasUniprotID"), "bar");
-        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
-        System.err.println("actualMolecules " + molecules);
-        // This creates an incorrect decomposition - i think due to the fact that the first type doesn't work.
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMolecule(b1.asTriple(RDF.TYPE, create("urn:experimentObservation")),
+            b1.asTriple(create("urn:observedInteraction"), b2));
+        NewMolecule sm1 = createMolecule(b2.asTriple(create("urn:participant"), b3));
+        NewMolecule sm2 = createMolecule(b2.asTriple(create("urn:participant"), b4));
+        NewMolecule ssm1 = createMolecule(b3.asTriple(create("urn:hasUniprotID"), "foo"));
+        NewMolecule ssm2 = createMolecule(b4.asTriple(create("urn:hasUniprotID"), "bar"));
+        sm1.add(b2.asTriple(create("urn:participant"), b3), ssm1);
+        sm2.add(b2.asTriple(create("urn:participant"), b4), ssm2);
+        m1.add(b1.asTriple(create("urn:observedInteraction"), b2), sm1);
+        m1.add(b1.asTriple(create("urn:observedInteraction"), b2), sm2);
+        System.err.println("M1 " + m1);
+        System.err.println("Actual " + actualMolecules);
     }
 
     public void testSingleNestingSubjects() throws Exception {
@@ -264,9 +273,9 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
         NewMolecule m1 = createMolecule(B1R1R1, B1R2R2);
         NewMolecule m2 = createMolecule(B2R2R1, B2R2R2);
-        NewMolecule m3 = moleculeFactory.createMolecule(R1R1R1);
-        NewMolecule m4 = moleculeFactory.createMolecule(R2R1R1);
-        NewMolecule m5 = moleculeFactory.createMolecule(R2R1R2);
+        NewMolecule m3 = createMolecule(R1R1R1);
+        NewMolecule m4 = createMolecule(R2R1R1);
+        NewMolecule m5 = createMolecule(R2R1R2);
         checkMolecules(actualMolecules, m1, m2, m3, m4, m5);
     }
 
@@ -305,7 +314,6 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule actual1 = actualMolecules.iterator().next();
         assertEquals(m1.getRootTriplesAsSet(), actual1.getRootTriplesAsSet());
         assertEquals(m1.getSubMolecules(B1R1B2), actual1.getSubMolecules(B1R1B2));
-        assertEquals(m1, actual1);
         checkMolecules(actualMolecules, m1);
     }
 
