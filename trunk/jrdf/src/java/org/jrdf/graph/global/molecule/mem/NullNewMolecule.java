@@ -64,6 +64,7 @@ import org.jrdf.graph.global.molecule.MergeSubmolecules;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
 
 public final class NullNewMolecule implements NewMolecule {
     /**
@@ -102,7 +103,7 @@ public final class NullNewMolecule implements NewMolecule {
         throw new UnsupportedOperationException();
     }
 
-    public Set<NewMolecule> getSubMolecules(Triple rootTriple) {
+    public SortedSet<NewMolecule> getSubMolecules(Triple rootTriple) {
         throw new UnsupportedOperationException();
     }
 
