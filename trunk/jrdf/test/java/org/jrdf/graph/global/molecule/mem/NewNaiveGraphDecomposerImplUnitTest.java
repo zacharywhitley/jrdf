@@ -315,6 +315,9 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
             asSet(B2R2B3), asSet(B3R2R3));
         m1.add(B1R1B2, createMolecule(R1R2B2, R2R2B2, B2R2R1));
+        NewMolecule actual1 = actualMolecules.iterator().next();
+        assertEquals(m1.getRootTriplesAsSet(), actual1.getRootTriplesAsSet());
+        assertEquals(m1.getSubMolecules(B1R1B2), actual1.getSubMolecules(B1R1B2));
         checkMolecules(actualMolecules, m1);
     }
 
