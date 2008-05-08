@@ -44,6 +44,7 @@
     <suppress checks="JavaNCSS" files="BlankNodeMapperImpl"/>
     <suppress checks="JavaNCSS" files="MergeSubmoleculesImpl" />
     <suppress checks="JavaNCSS" files="MergeLocalSubmoleculesImpl" />
+    <suppress checks="JavaNCSS" files="NewNaiveGraphDecomposerImpl" />
     <suppress checks="MagicNumber" files="NewMoleculeIndex"/>
     <suppress checks="MagicNumber" files="NewMoleculeStructureIndex"/>
     <suppress checks="MagicNumber" files="WritableIndexImpl"/>

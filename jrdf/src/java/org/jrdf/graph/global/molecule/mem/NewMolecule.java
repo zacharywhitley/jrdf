@@ -64,6 +64,7 @@ import org.jrdf.graph.global.molecule.MergeSubmolecules;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
 
 public interface NewMolecule {
     NewMolecule add(Triple triple);
@@ -80,7 +81,7 @@ public interface NewMolecule {
 
     Iterator<Triple> getRootTriples();
 
-    Set<NewMolecule> getSubMolecules(Triple rootTriple);
+    SortedSet<NewMolecule> getSubMolecules(Triple rootTriple);
 
     void specialAdd(NewMolecule molecule);
 
