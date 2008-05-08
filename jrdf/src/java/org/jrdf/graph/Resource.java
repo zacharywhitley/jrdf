@@ -248,6 +248,20 @@ public interface Resource extends URIReference, BlankNode, Serializable {
 
     void removeValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
 
+    Triple asTriple(PredicateNode predicate, ObjectNode object) throws GraphException;
+
+    Triple asTriple(URI predicate, URI object) throws GraphException;
+
+    Triple asTriple(URI predicate, String lexicalValue) throws GraphException;
+
+    Triple asTriple(URI predicate, Resource object) throws GraphException;
+
+    Triple asTriple(URI predicate, Object object) throws GraphException;
+
+    Triple asTriple(URI predicate, String lexicalValue, String language) throws GraphException;
+
+    Triple asTriple(URI predicate, String lexicalValue, URI dataType) throws GraphException;
+
     /**
      * Remove all the triples with this as the subject and the given predicate.
      *
