@@ -225,7 +225,7 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule leaf2 = createMolecule(tfac.createTriple(b4, u3, u5));
         NewMolecule m1 = mergeMolecules(branch1, leaf1);
         NewMolecule m2 = mergeMolecules(branch2, leaf2);
-        NewMolecule m = moleculeFactory.createMolecule(tfac.createTriple(b1, u1, b2));
+        NewMolecule m = createMolecule(tfac.createTriple(b1, u1, b2));
         m.add(tfac.createTriple(b1, u1, b2), m1);
         m.add(tfac.createTriple(b1, u1, b2), m2);
         assertEquals("Should create 3 molecules", 3, actualMolecules.size());
@@ -246,18 +246,17 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         b2.addValue(create("urn:participant"), b4);
         b4.addValue(create("urn:hasUniprotID"), "bar");
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMolecule(b1.asTriple(RDF.TYPE, create("urn:experimentObservation")),
+        NewMolecule m1 = moleculeFactory.createMolecule(b1.asTriple(RDF.TYPE, create("urn:experimentObservation")),
             b1.asTriple(create("urn:observedInteraction"), b2));
-        NewMolecule sm1 = createMolecule(b2.asTriple(create("urn:participant"), b3));
-        NewMolecule sm2 = createMolecule(b2.asTriple(create("urn:participant"), b4));
-        NewMolecule ssm1 = createMolecule(b3.asTriple(create("urn:hasUniprotID"), "foo"));
-        NewMolecule ssm2 = createMolecule(b4.asTriple(create("urn:hasUniprotID"), "bar"));
+        NewMolecule sm1 = moleculeFactory.createMolecule(b2.asTriple(create("urn:participant"), b3));
+        NewMolecule sm2 = moleculeFactory.createMolecule(b2.asTriple(create("urn:participant"), b4));
+        NewMolecule ssm1 = moleculeFactory.createMolecule(b3.asTriple(create("urn:hasUniprotID"), "foo"));
+        NewMolecule ssm2 = moleculeFactory.createMolecule(b4.asTriple(create("urn:hasUniprotID"), "bar"));
         sm1.add(b2.asTriple(create("urn:participant"), b3), ssm1);
         sm2.add(b2.asTriple(create("urn:participant"), b4), ssm2);
         m1.add(b1.asTriple(create("urn:observedInteraction"), b2), sm1);
         m1.add(b1.asTriple(create("urn:observedInteraction"), b2), sm2);
-        System.err.println("M1 " + m1);
-        System.err.println("Actual " + actualMolecules);
+        checkMolecules(actualMolecules, m1);
     }
 
     public void testSingleNestingSubjects() throws Exception {
