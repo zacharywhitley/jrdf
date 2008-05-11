@@ -60,45 +60,17 @@
 package org.jrdf.graph;
 
 /**
- * An object which can visit a {@link BlankNode}, {@link URIReference} and {@link Literal}.
+ * Indicates that a {@link SubjectNode}, {@link PredicateNode} or {@link ObjectNode} are able to be visited.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface TypedNodeVisitor {
+public interface NodePositionVisitable {
 
     /**
-     * Visit blank node.
+     * Accept a call from a NodePositionVistable.
      *
-     * @param blankNode the blank node to visit.
+     * @param visitor the object doing the visiting.
      */
-    void visitBlankNode(BlankNode blankNode);
-
-    /**
-     * Visit URI Reference.
-     *
-     * @param uriReference the URI Reference to visit.
-     */
-    void visitURIReference(URIReference uriReference);
-
-    /**
-     * Visit Literal.
-     *
-     * @param literal the Literal to visit.
-     */
-    void visitLiteral(Literal literal);
-
-    /**
-     * Visit node.
-     *
-     * @param node the node to visit.
-     */
-    void visitNode(Node node);
-
-    /**
-     * Visit Resource.
-     *
-     * @param resource the node to visit.
-     */
-    void visitResource(Resource resource);
+    void accept(NodePositionVisitor visitor);
 }
