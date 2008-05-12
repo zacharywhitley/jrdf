@@ -65,6 +65,7 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import static org.jrdf.graph.local.BlankNodeImpl.isBlankNode;
@@ -84,9 +85,32 @@ public class FindEntryNodeImpl implements FindEntryNode {
 
     public Triple find(Graph newGraph, Triple triple) throws GraphException {
         this.graph = newGraph;
-        visitedNodes.add((BlankNode) triple.getObject());
+        if (!isBlankNode(triple.getSubject())) {
+            return triple;
+        }
+        addObjectNodeIfBlank(triple);
+        if (!graph.contains(triple)) {
+            throw new GraphException("Cannot find triple: " + triple);
+        } else {
+            return findExistingTriple(triple);
+        }
+    }
+
+    private Triple findExistingTriple(Triple triple) throws GraphException {
         BlankNode node = findNextLevelOfNodes(new HashSet<BlankNode>(asList((BlankNode) triple.getSubject())));
-        return graph.find(node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).next();
+        ClosableIterator<Triple> results = graph.find(node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        if (results.hasNext()) {
+            return results.next();
+        } else {
+            return triple;
+        }
+    }
+
+    private void addObjectNodeIfBlank(Triple triple) {
+        ObjectNode object = triple.getObject();
+        if (isBlankNode(object)) {
+            visitedNodes.add((BlankNode) object);
+        }
     }
 
     private BlankNode findNextLevelOfNodes(Set<BlankNode> currentLevelNodes) throws GraphException {
