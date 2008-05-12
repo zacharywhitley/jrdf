@@ -85,7 +85,7 @@ public class FindEntryNodeImpl implements FindEntryNode {
 
     public Triple find(Graph newGraph, Triple triple) throws GraphException {
         this.graph = newGraph;
-        this.currentTriple = null;
+        this.currentTriple = triple;
         if (!isBlankNode(triple.getSubject())) {
             return triple;
         }
@@ -93,7 +93,8 @@ public class FindEntryNodeImpl implements FindEntryNode {
         if (!graph.contains(triple)) {
             throw new GraphException("Cannot find triple: " + triple);
         } else {
-            return findExistingTriple(triple);
+            findNextLevelOfNodes(new HashSet<BlankNode>(asList((BlankNode) triple.getSubject())));
+            return currentTriple;
         }
     }
 
@@ -101,15 +102,6 @@ public class FindEntryNodeImpl implements FindEntryNode {
         ObjectNode object = triple.getObject();
         if (isBlankNode(object)) {
             visitedNodes.add((BlankNode) object);
-        }
-    }
-
-    private Triple findExistingTriple(Triple triple) throws GraphException {
-        findNextLevelOfNodes(new HashSet<BlankNode>(asList((BlankNode) triple.getSubject())));
-        if (currentTriple != null) {
-            return currentTriple;
-        } else {
-            return triple;
         }
     }
 
