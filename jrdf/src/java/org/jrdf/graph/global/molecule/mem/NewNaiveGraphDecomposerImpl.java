@@ -141,6 +141,10 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
             if (!triplesChecked.contains(triple)) {
+                if (isDoubleLinkedTriple(triple) && isDoubleLinkedTriple(molecule.getHeadTriple()) &&
+                        triple.getSubject().equals(molecule.getHeadTriple().getSubject())) {
+                    return molecule;
+                }
                 if (isDoubleLinkedTriple(triple)) {
                     molecule = addLinkedTriple(molecule, triple);
                 } else {

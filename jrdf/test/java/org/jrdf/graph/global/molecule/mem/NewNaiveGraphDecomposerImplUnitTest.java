@@ -96,6 +96,8 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import org.jrdf.graph.global.molecule.LocalGraphTestUtil;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
@@ -176,15 +178,13 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(actualMolecules, m1);
     }
 
-    // TODO FIXME Should be 2 molecules I think.
-//    public void testNestedBlankNodeDecompose() throws Exception {
-//        GRAPH.add(B1R1B2, B1R1B3, B2R2R2, B3R2R3);
-//        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-//        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
-//        NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R3), Collections.<Triple>emptySet());
-//        System.err.println("Actual molecules " + actualMolecules);
-//        checkMolecules(actualMolecules, m1, m2);
-//    }
+    public void testNestedBlankNodeDecompose() throws Exception {
+        GRAPH.add(B1R1B2, B1R1B3, B2R2R2, B3R2R3);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
+        NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R3), Collections.<Triple>emptySet());
+        checkMolecules(actualMolecules, m1, m2);
+    }
 
     public void testCircularBlankNodes() throws Exception {
         GRAPH.add(B1R1B2, B2R2B3, B3R3B1);

@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.global.molecule.mem;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
@@ -78,6 +77,7 @@ import java.util.Set;
 public class FindEntryNodeImpl implements FindEntryNode {
     private Set<BlankNode> visitedNodes;
     private Graph graph;
+    private Triple currentTriple;
 
     public FindEntryNodeImpl() {
         visitedNodes = new HashSet<BlankNode>();
@@ -85,10 +85,11 @@ public class FindEntryNodeImpl implements FindEntryNode {
 
     public Triple find(Graph newGraph, Triple triple) throws GraphException {
         this.graph = newGraph;
+        this.currentTriple = null;
         if (!isBlankNode(triple.getSubject())) {
             return triple;
         }
-        //addObjectNodeIfBlank(triple);
+        addObjectNodeIfBlank(triple);
         if (!graph.contains(triple)) {
             throw new GraphException("Cannot find triple: " + triple);
         } else {
@@ -104,10 +105,9 @@ public class FindEntryNodeImpl implements FindEntryNode {
     }
 
     private Triple findExistingTriple(Triple triple) throws GraphException {
-        BlankNode node = findNextLevelOfNodes(new HashSet<BlankNode>(asList((BlankNode) triple.getSubject())));
-        ClosableIterator<Triple> results = graph.find(node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        if (results.hasNext()) {
-            return results.next();
+        final BlankNode node = findNextLevelOfNodes(new HashSet<BlankNode>(asList((BlankNode) triple.getSubject())));
+        if (currentTriple != null) {
+            return currentTriple;
         } else {
             return triple;
         }
@@ -128,8 +128,10 @@ public class FindEntryNodeImpl implements FindEntryNode {
 
     private void getNewBlankNodes(Set<BlankNode> newNodes, ClosableIterator<Triple> iterator) {
         while (iterator.hasNext()) {
-            SubjectNode newNode = iterator.next().getSubject();
+            Triple triple = iterator.next();
+            SubjectNode newNode = triple.getSubject();
             if (isBlankNode(newNode) && (!visitedNodes.contains((BlankNode) newNode))) {
+                currentTriple = triple;
                 newNodes.add((BlankNode) newNode);
             }
         }
