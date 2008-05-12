@@ -79,6 +79,10 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B5R1B4;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B5R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import org.jrdf.graph.global.molecule.LocalGraphTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 
@@ -92,6 +96,11 @@ public class FindEntryNodeImplUnitTest extends TestCase {
     public void testSingleNode() throws Exception {
         GRAPH.add(B1R1B2);
         findAndCheck(B1R1B2, B1R1B2);
+    }
+
+    public void testSingleNode2() throws Exception {
+        GRAPH.add(B1R1B1);
+        findAndCheck(B1R1B1, B1R1B1);
     }
 
     public void testSingleNodeNotBlank() throws Exception {
@@ -125,6 +134,11 @@ public class FindEntryNodeImplUnitTest extends TestCase {
     public void testTwoNodes2() throws Exception {
         GRAPH.add(B1R1B2, B1R1B3);
         findAndCheck(B1R1B3, B1R1B3);
+    }
+
+    public void testThreeNodes() throws Exception {
+        GRAPH.add(B1R1B2, R1R1B3, B2R2B3);
+        findAndCheck(B2R2B3, B1R1B2);
     }
 
     public void testThreeLevels() throws Exception {
