@@ -60,23 +60,78 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B4;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3R3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 
 public class FindEntryNodeImplUnitTest extends TestCase {
     private FindEntryNode finder = new FindEntryNodeImpl();
 
     public void testSingleNode() throws Exception {
         GRAPH.add(B1R1B2);
-        Triple triple = finder.find(GRAPH, B1R1B2);
-        assertEquals(B1R1B2, triple);
+        findAndCheck(B1R1B2, B1R1B2);
+    }
+
+    public void testSingleNodeNotBlank() throws Exception {
+        GRAPH.add(R1R1R1);
+        findAndCheck(R1R1R1, R1R1R1);
+    }
+
+    public void testSingleNodeWrongStart() throws Exception {
+        GRAPH.add(B1R1B2);
+        assertThrows(GraphException.class, "Cannot find triple: " + B2R2B3, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                findAndCheck(B2R2B3, B2R2B3);
+            }
+        });
+    }
+
+    public void testSingleNodeWrongStart2() throws Exception {
+        GRAPH.add(B1R1B2);
+        assertThrows(GraphException.class, "Cannot find triple: " + B3R3B1, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                findAndCheck(B3R3B1, B3R3B1);
+            }
+        });
     }
 
     public void testTwoNodes() throws Exception {
         GRAPH.add(B1R1B2, B1R1B3);
-        Triple triple = finder.find(GRAPH, B1R1B2);
-        assertEquals(B1R1B2, triple);
+        findAndCheck(B1R1B2, B1R1B2);
+    }
+
+    public void testTwoNodes2() throws Exception {
+        GRAPH.add(B1R1B2, B1R1B3);
+        findAndCheck(B1R1B3, B1R1B2);
+    }
+
+    public void testThreeLevels() throws Exception {
+        GRAPH.add(B1R1B2, B2R2B3, B3R3R3);
+        findAndCheck(B3R3R3, B1R1B2);
+    }
+
+    public void testThreeLevelsAllBlank() throws Exception {
+        GRAPH.add(B1R1B2, B2R2B3, B3R3B4);
+        findAndCheck(B3R3B4, B1R1B2);
+    }
+
+    public void testThreeLevels2() throws Exception {
+        GRAPH.add(B1R1B2, B2R2B3, B2R1R1, B3R3R3);
+        findAndCheck(B3R3R3, B1R1B2);
+    }
+
+    private void findAndCheck(Triple tripleToStartFrom, Triple tripleToFind) throws GraphException {
+        Triple triple = finder.find(GRAPH, tripleToStartFrom);
+        assertEquals(tripleToFind, triple);
     }
 }
