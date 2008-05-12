@@ -140,6 +140,7 @@ public class TripleUtilImpl implements TripleUtil {
 
     /**
      * Return all blank nodes related to this particular node.
+     *
      * @param node
      * @return
      * @throws GraphException
@@ -161,13 +162,6 @@ public class TripleUtilImpl implements TripleUtil {
         tmpSet.clear();
     }
 
-    private void addBlankNodeToSet(Node sNode) throws GraphException {
-        if (AbstractBlankNode.isBlankNode(sNode) && !blankNodes.contains(sNode)) {
-            blankNodes.add((BlankNode) sNode);
-            getAllBNodesForNode(sNode);
-        }
-    }
-
     private void addTriplesToSet(Set<Triple> set, SubjectNode subjectNode, PredicateNode predicateNode,
         ObjectNode objectNode) throws GraphException {
         ClosableIterator<Triple> iterator = graph.find(subjectNode, predicateNode, objectNode);
@@ -177,6 +171,13 @@ public class TripleUtilImpl implements TripleUtil {
             }
         } finally {
             iterator.close();
+        }
+    }
+
+    private void addBlankNodeToSet(Node sNode) throws GraphException {
+        if (AbstractBlankNode.isBlankNode(sNode) && !blankNodes.contains(sNode)) {
+            blankNodes.add((BlankNode) sNode);
+            getAllBNodesForNode(sNode);
         }
     }
 }
