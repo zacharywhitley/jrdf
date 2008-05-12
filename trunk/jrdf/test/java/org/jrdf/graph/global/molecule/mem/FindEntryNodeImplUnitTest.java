@@ -62,12 +62,21 @@ package org.jrdf.graph.global.molecule.mem;
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
 
 public class FindEntryNodeImplUnitTest extends TestCase {
-    public void testSimpleFind() throws Exception {
+    private FindEntryNode finder = new FindEntryNodeImpl();
+
+    public void testSingleNode() throws Exception {
         GRAPH.add(B1R1B2);
-        Triple triple = new FindEntryNodeImpl().find(GRAPH, B1R1B2);
+        Triple triple = finder.find(GRAPH, B1R1B2);
+        assertEquals(B1R1B2, triple);
+    }
+
+    public void testTwoNodes() throws Exception {
+        GRAPH.add(B1R1B2, B1R1B3);
+        Triple triple = finder.find(GRAPH, B1R1B2);
         assertEquals(B1R1B2, triple);
     }
 }
