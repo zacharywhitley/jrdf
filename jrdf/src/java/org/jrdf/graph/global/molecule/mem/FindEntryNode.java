@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.global.molecule.mem;
 
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphException;

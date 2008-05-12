@@ -80,14 +80,16 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private final NewMoleculeFactory moleculeFactory;
     private final SortedSet<Triple> triplesChecked;
     private final SortedSet<NewMolecule> molecules;
+    private TripleComparator tripleComparator;
     private Graph graph;
 
     public NewNaiveGraphDecomposerImpl(SortedSetFactory newSetFactory, NewMoleculeFactory newMoleculeFactory,
-        NewMoleculeComparator comparator, TripleComparator tripleComparator) {
+        NewMoleculeComparator comparator, TripleComparator newTripleComparator) {
         checkNotNull(newSetFactory, newMoleculeFactory);
-        this.triplesChecked = newSetFactory.createSet(Triple.class, tripleComparator);
+        this.triplesChecked = newSetFactory.createSet(Triple.class, newTripleComparator);
         this.molecules = newSetFactory.createSet(NewMolecule.class, comparator);
         this.moleculeFactory = newMoleculeFactory;
+        this.tripleComparator = newTripleComparator;
     }
 
     public SortedSet<NewMolecule> decompose(Graph newGraph) throws GraphException {
@@ -98,6 +100,10 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         while (iterator.hasNext()) {
             Triple currentTriple = iterator.next();
             if (!triplesChecked.contains(currentTriple)) {
+                Triple newStartingPoint = new FindEntryNodeImpl().find(graph, currentTriple);
+                if (tripleComparator.compare(newStartingPoint, currentTriple) < 0) {
+                    currentTriple = newStartingPoint;
+                }
                 NewMolecule molecule = moleculeFactory.createMolecue();
                 molecule = molecule.add(currentTriple);
                 triplesChecked.add(currentTriple);
