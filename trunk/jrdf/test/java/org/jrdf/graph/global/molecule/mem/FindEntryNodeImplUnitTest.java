@@ -124,7 +124,7 @@ public class FindEntryNodeImplUnitTest extends TestCase {
 
     public void testTwoNodes2() throws Exception {
         GRAPH.add(B1R1B2, B1R1B3);
-        findAndCheck(B1R1B3, B1R1B2);
+        findAndCheck(B1R1B3, B1R1B3);
     }
 
     public void testThreeLevels() throws Exception {
