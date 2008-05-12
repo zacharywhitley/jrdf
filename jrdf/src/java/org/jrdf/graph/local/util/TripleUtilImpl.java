@@ -67,7 +67,6 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.NodePositionVisitor;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -77,7 +76,7 @@ import org.jrdf.util.ClosableIterator;
 
 import java.util.Set;
 
-public class TripleUtilImpl implements TripleUtil, NodePositionVisitor {
+public class TripleUtilImpl implements TripleUtil {
     private final SortedSetFactory setFactory;
     private Set<Triple> triplesWithNode;
     private Set<BlankNode> blankNodes;
@@ -109,6 +108,7 @@ public class TripleUtilImpl implements TripleUtil, NodePositionVisitor {
         graph = newGraph;
         triplesWithNode = setFactory.createSet(Triple.class);
         blankNodes = setFactory.createSet(BlankNode.class);
+        // TODO Change to use NodePositionVisitor if waranted
         if (SubjectNode.class.isAssignableFrom(node.getClass())) {
             addTriplesToSet(triplesWithNode, (SubjectNode) node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         }
@@ -120,18 +120,6 @@ public class TripleUtilImpl implements TripleUtil, NodePositionVisitor {
         }
         getAllTriplesForNode(node);
         return triplesWithNode;
-    }
-
-    public void visitSubjectNode(SubjectNode subject) {
-        //addTriplesToSet(subject, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-    }
-
-    public void visitPredicateNode(PredicateNode predicate) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void visitObjectNode(ObjectNode object) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     /**
