@@ -85,6 +85,10 @@ import static org.jrdf.util.test.AssertThrows.assertThrows;
 public class FindEntryNodeImplUnitTest extends TestCase {
     private FindEntryNode finder = new FindEntryNodeImpl();
 
+    public void setUp() throws Exception {
+        GRAPH.remove(GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
+    }
+
     public void testSingleNode() throws Exception {
         GRAPH.add(B1R1B2);
         findAndCheck(B1R1B2, B1R1B2);
@@ -149,11 +153,7 @@ public class FindEntryNodeImplUnitTest extends TestCase {
     }
 
     private void findAndCheck(Triple tripleToStartFrom, Triple tripleToFind) throws GraphException {
-        try {
-            Triple triple = finder.find(GRAPH, tripleToStartFrom);
-            assertEquals(tripleToFind, triple);
-        } finally{
-            GRAPH.remove(GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
-        }
+        Triple triple = finder.find(GRAPH, tripleToStartFrom);
+        assertEquals(tripleToFind, triple);
     }
 }

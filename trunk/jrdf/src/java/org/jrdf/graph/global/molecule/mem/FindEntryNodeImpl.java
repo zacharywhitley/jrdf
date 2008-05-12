@@ -88,7 +88,7 @@ public class FindEntryNodeImpl implements FindEntryNode {
         if (!isBlankNode(triple.getSubject())) {
             return triple;
         }
-        addObjectNodeIfBlank(triple);
+        //addObjectNodeIfBlank(triple);
         if (!graph.contains(triple)) {
             throw new GraphException("Cannot find triple: " + triple);
         } else {
