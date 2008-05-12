@@ -96,6 +96,13 @@ public class FindEntryNodeImpl implements FindEntryNode {
         }
     }
 
+    private void addObjectNodeIfBlank(Triple triple) {
+        ObjectNode object = triple.getObject();
+        if (isBlankNode(object)) {
+            visitedNodes.add((BlankNode) object);
+        }
+    }
+
     private Triple findExistingTriple(Triple triple) throws GraphException {
         BlankNode node = findNextLevelOfNodes(new HashSet<BlankNode>(asList((BlankNode) triple.getSubject())));
         ClosableIterator<Triple> results = graph.find(node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -103,13 +110,6 @@ public class FindEntryNodeImpl implements FindEntryNode {
             return results.next();
         } else {
             return triple;
-        }
-    }
-
-    private void addObjectNodeIfBlank(Triple triple) {
-        ObjectNode object = triple.getObject();
-        if (isBlankNode(object)) {
-            visitedNodes.add((BlankNode) object);
         }
     }
 
