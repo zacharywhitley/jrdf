@@ -105,7 +105,7 @@ public class FindEntryNodeImpl implements FindEntryNode {
     }
 
     private Triple findExistingTriple(Triple triple) throws GraphException {
-        final BlankNode node = findNextLevelOfNodes(new HashSet<BlankNode>(asList((BlankNode) triple.getSubject())));
+        findNextLevelOfNodes(new HashSet<BlankNode>(asList((BlankNode) triple.getSubject())));
         if (currentTriple != null) {
             return currentTriple;
         } else {
