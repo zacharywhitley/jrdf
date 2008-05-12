@@ -69,6 +69,8 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B4;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3R3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B4R2B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B5R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
 import org.jrdf.util.test.AssertThrows;
@@ -127,6 +129,16 @@ public class FindEntryNodeImplUnitTest extends TestCase {
 
     public void testThreeLevels2() throws Exception {
         GRAPH.add(B1R1B2, B2R2B3, B2R1R1, B3R3R3);
+        findAndCheck(B3R3R3, B1R1B2);
+    }
+
+    public void testThreeLevelsWithDummies() throws Exception {
+        GRAPH.add(B1R1B2, B2R2B3, B4R2B3, B5R2B3, B3R3B4);
+        findAndCheck(B3R3R3, B1R1B2);
+    }
+
+    public void testThreeLevelsWithDummies2() throws Exception {
+        GRAPH.add(B1R1B2, B2R2B3, B4R2B3, B5R2B3, B3R3B4);
         findAndCheck(B3R3R3, B1R1B2);
     }
 
