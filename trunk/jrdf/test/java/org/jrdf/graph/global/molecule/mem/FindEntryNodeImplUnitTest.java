@@ -60,16 +60,22 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import junit.framework.TestCase;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B4;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3R3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B4R2B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B5R1B4;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B5R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
@@ -134,16 +140,20 @@ public class FindEntryNodeImplUnitTest extends TestCase {
 
     public void testThreeLevelsWithDummies() throws Exception {
         GRAPH.add(B1R1B2, B2R2B3, B4R2B3, B5R2B3, B3R3B4);
-        findAndCheck(B3R3R3, B1R1B2);
+        findAndCheck(B3R3B4, B1R1B2);
     }
 
     public void testThreeLevelsWithDummies2() throws Exception {
-        GRAPH.add(B1R1B2, B2R2B3, B4R2B3, B5R2B3, B3R3B4);
-        findAndCheck(B3R3R3, B1R1B2);
+        GRAPH.add(B5R1B4, B4R2B3, B1R2B3, B2R2B3, B3R3B2);
+        findAndCheck(B3R3B2, B5R1B4);
     }
 
     private void findAndCheck(Triple tripleToStartFrom, Triple tripleToFind) throws GraphException {
-        Triple triple = finder.find(GRAPH, tripleToStartFrom);
-        assertEquals(tripleToFind, triple);
+        try {
+            Triple triple = finder.find(GRAPH, tripleToStartFrom);
+            assertEquals(tripleToFind, triple);
+        } finally{
+            GRAPH.remove(GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
+        }
     }
 }
