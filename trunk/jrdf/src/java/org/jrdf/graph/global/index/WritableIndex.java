@@ -64,5 +64,5 @@ import org.jrdf.graph.GraphException;
 public interface WritableIndex<T> {
     void add(T... quin) throws GraphException;
 
-    void remove(Long... quin) throws GraphException;
+    void remove(T... quin) throws GraphException;
 }

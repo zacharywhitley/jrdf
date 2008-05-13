@@ -61,6 +61,10 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 
+import java.util.Set;
+
 public interface ReadableIndex<T> {
-    Long findMid(Long... quin) throws GraphException;
+    Long findMid(T... quin) throws GraphException;
+
+    Set<Long[]> findTriplesForMid(T mid);
 }

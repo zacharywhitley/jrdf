@@ -61,10 +61,11 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 
-import java.util.Set;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-public class ReadableIndexImpl implements ReadableIndex {
+public class ReadableIndexImpl implements ReadableIndex<Long> {
     private final NewMoleculeIndex<Long>[] indexes;
     private final NewMoleculeStructureIndex<Long> structureIndex;
 
@@ -78,5 +79,21 @@ public class ReadableIndexImpl implements ReadableIndex {
         Map<Long, Set<Long>> omMap = pomMap.get(quin[1]);
         Set<Long> mSet = omMap.get(quin[2]);
         return mSet.iterator().next();
+    }
+
+    public Set<Long[]> findTriplesForMid(Long mid) {
+        Map<Long, Map<Long, Map<Long, Set<Long>>>> midSPOMap = structureIndex.getSubIndex(0L);
+        Map<Long, Map<Long, Set<Long>>> triplesInMid = midSPOMap.get(mid);
+        Set<Long[]> triples = new HashSet<Long[]>();
+        for (Long subject : triplesInMid.keySet()) {
+            Map<Long, Set<Long>> poMap = triplesInMid.get(subject);
+            for (Long predicate : poMap.keySet()) {
+                Set<Long> objects = poMap.get(predicate);
+                for (Long object : objects) {
+                    triples.add(new Long[] {subject, predicate, object});
+                }
+            }
+        }
+        return triples;
     }
 }

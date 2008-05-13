@@ -64,31 +64,37 @@ import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.GraphException;
 
-public class MoleculeGraphImpl implements MoleculeGraph {
-    private final WritableIndex<Long> index;
-    private final MoleculeLocalizer localizer;
-    private final NewMoleculeStructureIndex<Long> moleculeIndex;
+import java.util.Set;
 
-    public MoleculeGraphImpl(WritableIndex<Long> newIndex, MoleculeLocalizer newLocalizer,
-        NewMoleculeStructureIndex<Long> newMoleculeStructureIndex) {
-        this.index = newIndex;
+public class MoleculeGraphImpl implements MoleculeGraph {
+    private final WritableIndex<Long> writableIndex;
+    private final ReadableIndex<Long> readableIndex;
+    private final MoleculeLocalizer localizer;
+
+    public MoleculeGraphImpl(WritableIndex<Long> newWriteIndex, ReadableIndex<Long> newReadIndex,
+        MoleculeLocalizer newLocalizer) {
+        this.writableIndex = newWriteIndex;
+        this.readableIndex = newReadIndex;
         this.localizer = newLocalizer;
-        this.moleculeIndex = newMoleculeStructureIndex;
     }
 
     public void add(NewMolecule molecule) {
         MoleculeTraverser traverser = new MoleculeTraverserImpl();
-        traverser.traverse(molecule, new AddNewMoleculeToIndex(index, localizer));
+        traverser.traverse(molecule, new AddNewMoleculeToIndex(writableIndex, localizer));
     }
 
     public void delete(NewMolecule molecule) {
         try {
             Long[] longs = localizer.localizeTriple(molecule.getHeadTriple());
             // find mid based on molecule head triple and subsequent triples.
-            index.findMid(longs);
+            Long mid = readableIndex.findMid(longs);
             // Find the triple that matches in the structureIndex where it is 1, mid, *, *, *
+            Set<Long[]> triplesForMid = readableIndex.findTriplesForMid(mid);
             // Recursively reconstruct molecule.
             // Delete all triples in the molecule.
+            for (Long[] triple : triplesForMid) {
+                writableIndex.remove(new Long[] {triple[0], triple[1], triple[2], mid, 0L});
+            }
         } catch (GraphException e) {
             throw new RuntimeException(e);
         }
