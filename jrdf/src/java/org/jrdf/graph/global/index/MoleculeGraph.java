@@ -59,9 +59,10 @@
 
 package org.jrdf.graph.global.index;
 
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
-public interface MoleculeGraph {
+public interface MoleculeGraph extends Graph {
     void add(NewMolecule molecule);
     void delete(NewMolecule molecule);
 }
