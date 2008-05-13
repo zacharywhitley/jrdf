@@ -61,34 +61,22 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 
-public class WritableIndexImpl implements WritableIndex<Long> {
+import java.util.Set;
+import java.util.Map;
+
+public class ReadableIndexImpl implements ReadableIndex {
     private final NewMoleculeIndex<Long>[] indexes;
     private final NewMoleculeStructureIndex<Long> structureIndex;
 
-    public WritableIndexImpl(NewMoleculeIndex<Long>[] newIndexes, NewMoleculeStructureIndex<Long> newStructureIndex) {
+    public ReadableIndexImpl(NewMoleculeIndex<Long>[] newIndexes, NewMoleculeStructureIndex<Long> newStructureIndex) {
         this.indexes = newIndexes;
         this.structureIndex = newStructureIndex;
     }
 
-    public void add(Long... quin) throws GraphException {
-        // spo, mid
-        indexes[0].add(quin);
-        // pos, mid
-        indexes[1].add(quin[1], quin[2], quin[0], quin[3]);
-        // osp, mid
-        indexes[2].add(quin[2], quin[0], quin[1], quin[3]);
-        // parent, mid, spo
-        structureIndex.add(quin[4], quin[3], quin[0], quin[1], quin[2]);
-    }
-
-    public void remove(Long... quin) throws GraphException {
-        // spo, mid
-        indexes[0].remove(quin);
-        // pos, mid
-        indexes[1].remove(quin[1], quin[2], quin[0], quin[3]);
-        // osp, mid
-        indexes[2].remove(quin[2], quin[0], quin[1], quin[3]);
-        // parent, mid, spo
-        structureIndex.remove(quin[4], quin[3], quin[0], quin[1], quin[2]);
+    public Long findMid(Long[] quin) throws GraphException {
+        Map<Long, Map<Long, Set<Long>>> pomMap = indexes[0].getSubIndex(quin[0]);
+        Map<Long, Set<Long>> omMap = pomMap.get(quin[1]);
+        Set<Long> mSet = omMap.get(quin[2]);
+        return mSet.iterator().next();
     }
 }
