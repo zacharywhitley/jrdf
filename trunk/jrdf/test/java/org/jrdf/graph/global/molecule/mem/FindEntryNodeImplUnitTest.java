@@ -65,6 +65,7 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2B3;
@@ -78,11 +79,8 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B4R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B5R1B4;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B5R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
-import org.jrdf.graph.global.molecule.LocalGraphTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 
@@ -164,6 +162,16 @@ public class FindEntryNodeImplUnitTest extends TestCase {
     public void testThreeLevelsWithDummies2() throws Exception {
         GRAPH.add(B5R1B4, B4R2B3, B1R2B3, B2R2B3, B3R3B2);
         findAndCheck(B3R3B2, B5R1B4);
+    }
+
+    public void testThreeLevelsStartAtStart() throws Exception {
+        GRAPH.add(B1R1B2, B2R2B3, B4R2B3, B5R2B3, B3R3B4);
+        findAndCheck(B1R1B2, B1R1B2);
+    }
+
+    public void testThreeLevelsStartAtLevel2() throws Exception {
+        GRAPH.add(B1R1B2, B2R2B3, B4R2B3, B5R2B3, B3R3B4);
+        findAndCheck(B2R2B3, B1R1B2);
     }
 
     private void findAndCheck(Triple tripleToStartFrom, Triple tripleToFind) throws GraphException {
