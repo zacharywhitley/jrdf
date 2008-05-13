@@ -69,9 +69,9 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
-import org.jrdf.graph.global.molecule.BlankNodeMapper;
-import org.jrdf.graph.global.molecule.LocalMergeSubmolecules;
-import org.jrdf.graph.global.molecule.MergeLocalSubmoleculesImpl;
+import org.jrdf.graph.global.molecule.mem.BlankNodeMapper;
+import org.jrdf.graph.global.molecule.mem.LocalMergeSubmolecules;
+import org.jrdf.graph.global.molecule.mem.LocalMergeSubmoleculesImpl;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.MergeSubmoleculesImpl;
 import org.jrdf.graph.global.molecule.MoleculeSubsumptionImpl;
@@ -120,7 +120,7 @@ public class DecomposerPerformance {
     private final BlankNodeMapper mapper = new NewBlankNodeMapperImpl();
     private final MergeSubmolecules globalMerger = new MergeSubmoleculesImpl(comparator, moleculeComparator,
         moleculeFactory, new MoleculeSubsumptionImpl());
-    private final LocalMergeSubmolecules localMerger = new MergeLocalSubmoleculesImpl(globalMerger, moleculeFactory);
+    private final LocalMergeSubmolecules localMerger = new LocalMergeSubmoleculesImpl(globalMerger, moleculeFactory);
 
     private void testPerformance() throws Exception {
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {

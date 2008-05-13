@@ -74,6 +74,7 @@ import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeHeadTripleComparatorImpl;
+import org.jrdf.graph.global.molecule.mem.BlankNodeMapper;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.Collections;
