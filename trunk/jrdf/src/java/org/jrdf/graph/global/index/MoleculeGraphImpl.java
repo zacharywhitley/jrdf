@@ -105,7 +105,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
             Long mid = readableIndex.findMid(longs);
             // Find the triple that matches in the structureIndex where it is 1, mid, *, *, *
             Set<Long[]> triplesForMid = readableIndex.findTriplesForMid(mid);
-            // Recursively reconstruct molecule.
+            // TODO Recursively reconstruct molecule.
             // Delete all triples in the molecule.
             for (Long[] triple : triplesForMid) {
                 writableIndex.remove(new Long[] {triple[0], triple[1], triple[2], mid, 0L});
