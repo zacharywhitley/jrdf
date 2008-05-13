@@ -57,13 +57,15 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
 import java.util.Map;
 
-public interface BlankNodeMapper {
-    Map<BlankNode, BlankNode> createMap(NewMolecule m1, NewMolecule m2);
+/**
+ * Class description goes here.
+ */
+public interface LocalMergeSubmolecules {
+    NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2, Map<BlankNode, BlankNode> map);
 }

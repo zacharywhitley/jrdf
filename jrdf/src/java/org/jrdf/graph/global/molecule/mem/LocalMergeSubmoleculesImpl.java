@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.ObjectNode;
@@ -65,20 +65,19 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class MergeLocalSubmoleculesImpl implements LocalMergeSubmolecules {
+public class LocalMergeSubmoleculesImpl implements LocalMergeSubmolecules {
     private final MergeSubmolecules merger;
     private final NewMoleculeFactory moleculeFactory;
     private Map<BlankNode, BlankNode> map;
 
-    public MergeLocalSubmoleculesImpl(MergeSubmolecules merger, NewMoleculeFactory moleculeFactory) {
+    public LocalMergeSubmoleculesImpl(MergeSubmolecules merger, NewMoleculeFactory moleculeFactory) {
         this.merger = merger;
         this.moleculeFactory = moleculeFactory;
     }
