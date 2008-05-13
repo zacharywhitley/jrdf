@@ -76,6 +76,7 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.mergeMolecules;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1B1;
@@ -96,8 +97,6 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
-import org.jrdf.graph.global.molecule.LocalGraphTestUtil;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
@@ -231,7 +230,6 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         expectedMolecules.add(tfac.createTriple(b1, u1, b2), m2);
         assertEquals(1, actualMolecules.size());
         checkMolecules(actualMolecules, expectedMolecules);
-        // Add tests for molecule values.
     }
 
     public void test3LevelMoleculeWithType() throws Exception {

@@ -71,9 +71,9 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1r1;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r1;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r3r1r1;
-import org.jrdf.graph.global.molecule.MergeSubmoleculesImpl;
-import org.jrdf.graph.global.molecule.MoleculeSubsumption;
-import org.jrdf.graph.global.molecule.MoleculeSubsumptionImpl;
+import org.jrdf.graph.global.molecule.mem.MergeSubmoleculesImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeSubsumption;
+import org.jrdf.graph.global.molecule.mem.MoleculeSubsumptionImpl;
 
 import java.util.HashMap;
 import java.util.HashSet;

@@ -57,12 +57,44 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.Triple;
 
-public class MoleculeSubsumptionImpl implements MoleculeSubsumption {
-    public boolean subsumes(NewMolecule molecule1, NewMolecule molecule2) {
-        return molecule1.contains(molecule2.getHeadTriple()) || (molecule2.contains(molecule1.getHeadTriple()));
-    }
+import java.util.Set;
+
+/**
+ * These methods are called as the {@link MoleculeTraverser} traverses a molecule.  For a given molecule:
+ * _1 p _2, _1 p _3, _2 p o.  First handleTriple is called with both the first triple (_1 p _2).  Next,
+ * handleStartContainsMolecules is called which has the set of molecules (one molecule that contains _1 p _3).  Then,
+ * handleTriple is called with _1 p _3.  Then handleEndContainsMolecules is called with the same set of molecules.  And
+ * so on...
+ */
+public interface MoleculeHandler {
+    /**
+     * A triple in the root set of triples is found.
+     *
+     * @param triple the triple found.
+     */
+    void handleTriple(Triple triple);
+
+    /**
+     * The is called instead of handleStart/End contains molecules when the triple visited does not contain any
+     * submolecules.
+     */
+    void handleEmptyMolecules();
+
+    /**
+     * This is called when the current top level triple contains a set of submolecules.
+     *
+     * @param newMolecules the submolecules belonging to the top level triple.
+     */
+    void handleStartContainsMolecules(Set<NewMolecule> newMolecules);
+
+    /**
+     * This is called when the top level triple's submolecules have all been visited.
+     *
+     * @param newMolecules the submolecules belonging to the top level triple.
+     */
+    void handleEndContainsMolecules(Set<NewMolecule> newMolecules);
 }

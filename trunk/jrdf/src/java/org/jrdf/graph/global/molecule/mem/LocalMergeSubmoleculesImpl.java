@@ -65,7 +65,6 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
-import org.jrdf.graph.global.molecule.MergeSubmolecules;
 
 import java.util.HashSet;
 import java.util.Iterator;

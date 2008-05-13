@@ -57,46 +57,8 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-public class MoleculeTraverserImpl implements MoleculeTraverser {
-    private MoleculeHandler handler;
-
-    public void traverse(NewMolecule newMolecule, MoleculeHandler newHandler) {
-        checkNotNull(newHandler);
-        handler = newHandler;
-        // The initial molecule is a set of one molecule.
-        Set<NewMolecule> molecules = new HashSet<NewMolecule>();
-        molecules.add(newMolecule);
-        iterateOverMolecules(molecules);
-    }
-
-    private void iterateOverTriples(NewMolecule molecule, Iterator<Triple> rootTriples) {
-        while (rootTriples.hasNext()) {
-            Triple triple = rootTriples.next();
-            handler.handleTriple(triple);
-            Set<NewMolecule> newMolecules = molecule.getSubMolecules(triple);
-            if (newMolecules.isEmpty()) {
-                handler.handleEmptyMolecules();
-            } else {
-                iterateOverMolecules(newMolecules);
-            }
-        }
-    }
-
-    private void iterateOverMolecules(Set<NewMolecule> newMolecules) {
-        handler.handleStartContainsMolecules(newMolecules);
-        for (NewMolecule molecule : newMolecules) {
-            iterateOverTriples(molecule, molecule.getRootTriples());
-        }
-        handler.handleEndContainsMolecules(newMolecules);
-    }
+public interface MoleculeSubsumption {
+    boolean subsumes(NewMolecule molecule1, NewMolecule molecule2);
 }

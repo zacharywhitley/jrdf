@@ -61,7 +61,7 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.MoleculeHandler;
+import org.jrdf.graph.global.molecule.mem.MoleculeHandler;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
 import java.util.Set;
