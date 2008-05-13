@@ -60,8 +60,8 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
 
 /**
  * Given a graph and a starting triple recursively find the starting triple in the chain.  The triple must have a

@@ -57,14 +57,11 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import static org.jrdf.graph.global.molecule.mem.NullNewMolecule.NULL_MOLECULE;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
 
 import java.util.Iterator;
 import java.util.SortedSet;

@@ -76,9 +76,8 @@ import org.jrdf.util.test.GlobalizedGraphTestUtil;
 import java.util.List;
 
 /**
- * User: imrank
- * Date: 13/09/2007
- * Time: 11:18:05
+ * @author Imran Khan (not the cricketer)
+ * @version $Revision: 1317 $
  */
 public class MoleculeIteratorFactoryImplUnitTest extends TestCase {
     private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();

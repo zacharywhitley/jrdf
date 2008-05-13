@@ -59,8 +59,8 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.global.molecule.MoleculeTraverser;
-import org.jrdf.graph.global.molecule.MoleculeTraverserImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeTraverser;
+import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.GraphException;
 

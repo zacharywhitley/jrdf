@@ -63,9 +63,6 @@ import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.graph.global.molecule.MergeSubmolecules;
-import org.jrdf.graph.global.molecule.MoleculeTraverser;
-import org.jrdf.graph.global.molecule.MoleculeTraverserImpl;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 

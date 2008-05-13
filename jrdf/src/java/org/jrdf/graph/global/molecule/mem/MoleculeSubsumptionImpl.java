@@ -57,16 +57,10 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
-import java.io.Serializable;
-import java.util.Comparator;
-
-/**
- * Compares two molecules.
- *
- * @author Imran Khan
- * @version $Revision: 1226 $
- */
-public interface MoleculeComparator extends Comparator<Molecule>, Serializable {
+public class MoleculeSubsumptionImpl implements MoleculeSubsumption {
+    public boolean subsumes(NewMolecule molecule1, NewMolecule molecule2) {
+        return molecule1.contains(molecule2.getHeadTriple()) || (molecule2.contains(molecule1.getHeadTriple()));
+    }
 }
