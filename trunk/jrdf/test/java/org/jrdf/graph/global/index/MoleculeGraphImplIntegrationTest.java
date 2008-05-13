@@ -124,9 +124,9 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         NewMoleculeIndex<Long>[] indexes = new NewMoleculeIndex[]{spom, posm, ospm};
         NewMoleculeStructureIndex<Long> structureIndex = new NewMoleculeStructureIndexImpl(
             new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
-        WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
-        ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         NodePool nodePool = nodePoolFactory.createNodePool();
+        ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
+        WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex, nodePool);
         Localizer localizer = new LocalizerImpl(nodePool, stringMapper());
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
         MoleculeGraph moleculeGraph = new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer);
@@ -141,15 +141,21 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         NewMolecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
         moleculeGraph.add(molecule);
         assertEquals(1, spom.getSize());
-//        System.err.println("Yo: " + spom.getSize());
+        Resource b2 = graph.getElementFactory().createResource();
+        NewMolecule molecule2 = moleculeFactory.createMolecule(b2.asTriple(r1, b2));
+        moleculeGraph.add(molecule2);
+        assertEquals(2, spom.getSize());
         ClosableIterator<Map.Entry<Long,Map<Long,Map<Long,Set<Long>>>>> iterator = spom.iterator();
         Map.Entry<Long, Map<Long, Map<Long, Set<Long>>>> mapEntry = iterator.next();
 //        System.err.println("Entry: " + mapEntry);
+//        System.err.println("Entry: " + iterator.next());
         ClosableIterator<Map.Entry<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>> iterator1 =
             structureIndex.iterator();
 //        System.err.println("Got: " + iterator1.next());
         moleculeGraph.delete(molecule);
-//        System.err.println("Yo: " + spom.getSize());
+        assertEquals(spom.getSize(), 1);
+        moleculeGraph.delete(molecule2);
+        assertEquals(spom.getSize(), 0);
         iterator = spom.iterator();
         assertFalse(iterator.hasNext());
     }

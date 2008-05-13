@@ -64,7 +64,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 
 public class MoleculeLocalizerImpl implements MoleculeLocalizer {
-    private long moleculeId;
+    private long moleculeId = 1;
     private final Localizer localizer;
 
     public MoleculeLocalizerImpl(Localizer localizer) {
