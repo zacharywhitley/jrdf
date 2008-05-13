@@ -59,23 +59,38 @@
 
 package org.jrdf.graph.global.index;
 
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverser;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
-import org.jrdf.graph.GraphException;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.ValueNodeType;
+import org.jrdf.util.ClosableIterator;
 
+import java.util.Iterator;
 import java.util.Set;
 
 public class MoleculeGraphImpl implements MoleculeGraph {
     private final WritableIndex<Long> writableIndex;
     private final ReadableIndex<Long> readableIndex;
     private final MoleculeLocalizer localizer;
+    private final Graph graph;
 
     public MoleculeGraphImpl(WritableIndex<Long> newWriteIndex, ReadableIndex<Long> newReadIndex,
-        MoleculeLocalizer newLocalizer) {
+        MoleculeLocalizer newLocalizer, Graph newGraph) {
         this.writableIndex = newWriteIndex;
         this.readableIndex = newReadIndex;
         this.localizer = newLocalizer;
+        this.graph = newGraph;
     }
 
     public void add(NewMolecule molecule) {
@@ -98,5 +113,91 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         } catch (GraphException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // TODO Add more stuff here to handle molecule indexes
+    public boolean contains(Triple triple) throws GraphException {
+        return graph.contains(triple);
+    }
+
+    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
+        return graph.contains(subject, predicate, object);
+    }
+
+    public ClosableIterator<Triple> find(Triple triple) throws GraphException {
+        return graph.find(triple);
+    }
+
+    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws GraphException {
+        return graph.find(subject, predicate, object);
+    }
+
+    public ClosableIterator<? extends Node> findNodes(NodeType type) {
+        return graph.findNodes(type);
+    }
+
+    public ClosableIterator<PredicateNode> findPredicates(Resource resource) throws GraphException {
+        return graph.findPredicates(resource);
+    }
+
+    public ClosableIterator<? super Resource> findResources(ValueNodeType type) {
+        return graph.findResources(type);
+    }
+
+    public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
+        graph.add(subject, predicate, object);
+    }
+
+    public void add(Triple triple) throws GraphException {
+        graph.add(triple);
+    }
+
+    public void add(Iterator<Triple> triples) throws GraphException {
+        graph.add(triples);
+    }
+
+    public void add(Triple... triples) throws GraphException {
+        graph.add(triples);
+    }
+
+    public void clear() {
+        graph.clear();
+    }
+
+    public void close() {
+        graph.close();
+    }
+
+    public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
+        graph.remove(subject, predicate, object);
+    }
+
+    public void remove(Triple triple) throws GraphException {
+        graph.remove(triple);
+    }
+
+    public void remove(Iterator<Triple> triples) throws GraphException {
+        graph.remove(triples);
+    }
+
+    public void remove(Triple... triples) throws GraphException {
+        graph.remove(triples);
+    }
+
+    public GraphElementFactory getElementFactory() {
+        return graph.getElementFactory();
+    }
+
+    public TripleFactory getTripleFactory() {
+        return graph.getTripleFactory();
+    }
+
+    public long getNumberOfTriples() throws GraphException {
+        return graph.getNumberOfTriples();
+    }
+
+    public boolean isEmpty() throws GraphException {
+        return graph.isEmpty();
     }
 }

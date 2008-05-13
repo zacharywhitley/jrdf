@@ -60,7 +60,6 @@
 package org.jrdf.graph.global.index;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.TripleComparator;
@@ -92,10 +91,10 @@ import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.graph.local.iterator.LocalIteratorFactory;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.TempDirectoryHandler;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
@@ -126,22 +125,22 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
             new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
         NodePool nodePool = nodePoolFactory.createNodePool();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
-        WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex, nodePool);
+        WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
         Localizer localizer = new LocalizerImpl(nodePool, stringMapper());
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
-        MoleculeGraph moleculeGraph = new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
         GraphHandler[] graphHandlers = new GraphHandler[]{new GraphHandler012(longIndexes, nodePool),
             new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
-        Graph graph = new GraphImpl(longIndexes, nodePool, new ReadWriteGraphImpl(longIndexes, nodePool,
-            new LocalIteratorFactory(longIndexes, graphHandlers, nodePool)));
+        MoleculeGraph moleculeGraph = new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer,
+            new GraphImpl(longIndexes, nodePool, new ReadWriteGraphImpl(longIndexes, nodePool,
+            new LocalIteratorFactory(longIndexes, graphHandlers, nodePool))));
 
-        Resource b1 = graph.getElementFactory().createResource();
-        Resource r1 = graph.getElementFactory().createResource(create("urn:foo"));
+        Resource b1 = moleculeGraph.getElementFactory().createResource();
+        Resource r1 = moleculeGraph.getElementFactory().createResource(create("urn:foo"));
         NewMolecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
         moleculeGraph.add(molecule);
         assertEquals(1, spom.getSize());
-        Resource b2 = graph.getElementFactory().createResource();
+        Resource b2 = moleculeGraph.getElementFactory().createResource();
         NewMolecule molecule2 = moleculeFactory.createMolecule(b2.asTriple(r1, b2));
         moleculeGraph.add(molecule2);
         assertEquals(2, spom.getSize());
