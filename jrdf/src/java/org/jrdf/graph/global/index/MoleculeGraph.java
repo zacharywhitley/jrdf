@@ -65,4 +65,6 @@ import org.jrdf.graph.global.molecule.mem.NewMolecule;
 public interface MoleculeGraph extends Graph {
     void add(NewMolecule molecule);
     void delete(NewMolecule molecule);
+    // TODO
+    //Set<NewMolecule> findMolecules(Triple triple);
 }
