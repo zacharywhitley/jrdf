@@ -68,13 +68,7 @@ import java.util.NoSuchElementException;
 
 /**
  * An iterator that iterates over an entire graph.
- * Relies on internal iterators which iterate over all entries in
- * the first map, the maps it points to, and the sets they point to.
- * The itemIterator  is used to indicate the current position.
- * It will always be set to return the next value until it reaches
- * the end of the graph.
  *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  * @version $Revision$
  */
