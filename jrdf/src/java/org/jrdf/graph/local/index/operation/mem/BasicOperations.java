@@ -62,9 +62,7 @@ package org.jrdf.graph.local.index.operation.mem;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
 
-import java.util.Map;
 import java.util.Set;
 
 
@@ -90,49 +88,23 @@ public class BasicOperations {
     }
 
     private static void goOverIndex(LongIndex existingIndex, DoTripleStuff doTripleStuff) throws GraphException {
-        ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> firstEntries = existingIndex.iterator();
+        ClosableIterator<Long[]> tripleIterator = existingIndex.iterator();
         try {
-            while (firstEntries.hasNext()) {
-                Map.Entry<Long, ClosableMap<Long, Set<Long>>> firstEntry = firstEntries.next();
-                Long first = firstEntry.getKey();
-                for (Map.Entry<Long, Set<Long>> secondEntry : firstEntry.getValue().entrySet()) {
-                    Long second = secondEntry.getKey();
-                    for (Long third : secondEntry.getValue()) {
-                        doTripleStuff.doStuff(first, second, third);
-                    }
-                }
+            while (tripleIterator.hasNext()) {
+                Long[] triple = tripleIterator.next();
+                doTripleStuff.doStuff(triple[0], triple[1], triple[2]);
             }
         } finally {
-            firstEntries.close();
+            tripleIterator.close();
         }
     }
 
     public static void removeEntriesFromIndex(LongIndex existingIndex, LongIndex newIndex) throws GraphException {
-        ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> firstEntries = existingIndex.iterator();
+        ClosableIterator<Long[]> firstEntries = existingIndex.iterator();
         try {
             while (firstEntries.hasNext()) {
-                Map.Entry<Long, ClosableMap<Long, Set<Long>>> firstEntry = firstEntries.next();
-                Long first = firstEntry.getKey();
-
-                // Do stuff
-                Map<Long, Set<Long>> newSecondMap = newIndex.getSubIndex(first);
-                if (newSecondMap != null) {
-
-                    for (Map.Entry<Long, Set<Long>> secondEntry : firstEntry.getValue().entrySet()) {
-                        Long second = secondEntry.getKey();
-
-                        // Do stuff
-                        Set<Long> newThirdSet = newSecondMap.get(second);
-                        if (newThirdSet != null) {
-
-                            // Common
-                            DoTripleStuff doRemoveTripleStuff = new DoRemoveTripleStuff(newThirdSet);
-                            for (Long third : secondEntry.getValue()) {
-                                doRemoveTripleStuff.doStuff(first, second, third);
-                            }
-                        }
-                    }
-                }
+                Long[] values = firstEntries.next();
+                newIndex.remove(values);
             }
         } finally {
             firstEntries.close();
@@ -141,35 +113,18 @@ public class BasicOperations {
 
     public static void performIntersection(LongIndex firstExistingIndex, LongIndex secondExistingIndex,
         LongIndex newIndex) throws GraphException {
-        ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> firstEntries = firstExistingIndex.iterator();
+        ClosableIterator<Long[]> firstEntries = firstExistingIndex.iterator();
+        ClosableIterator<Long[]> secondEntries = secondExistingIndex.iterator();
         try {
             while (firstEntries.hasNext()) {
-                Map.Entry<Long, ClosableMap<Long, Set<Long>>> firstEntry = firstEntries.next();
-                Long first = firstEntry.getKey();
-
-                // Do stuff
-                Map<Long, Set<Long>> existingSecondIndexEntryMap = secondExistingIndex.getSubIndex(first);
-                if (existingSecondIndexEntryMap != null) {
-
-                    for (Map.Entry<Long, Set<Long>> secondEntry : firstEntry.getValue().entrySet()) {
-                        Long second = secondEntry.getKey();
-
-                        // Do stuff
-                        Set<Long> existingSecondIndexLongSet = existingSecondIndexEntryMap.get(second);
-                        if (existingSecondIndexLongSet != null) {
-
-                            // Common
-                            DoTripleStuff doIntersectionTripleStuff = new DoIntersectionTripleStuff(newIndex,
-                                existingSecondIndexLongSet);
-                            for (Long third : secondEntry.getValue()) {
-                                doIntersectionTripleStuff.doStuff(first, second, third);
-                            }
-                        }
-                    }
-                }
+                newIndex.add(firstEntries.next());
+            }
+            while (secondEntries.hasNext()) {
+                newIndex.add(secondEntries.next());
             }
         } finally {
             firstEntries.close();
+            secondEntries.close();
         }
     }
 

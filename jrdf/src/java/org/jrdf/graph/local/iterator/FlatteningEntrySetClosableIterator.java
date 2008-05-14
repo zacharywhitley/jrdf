@@ -59,41 +59,28 @@
 
 package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.ResourceFactory;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
 
-public class URIReferenceResourceIterator extends ResourceIterator<URIReference> {
-    private long currentValue;
+import java.util.Map;
+import java.util.LinkedList;
+import java.util.Set;
 
-    public URIReferenceResourceIterator(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
-        final NodePool newNodePool) {
-        super(newLongIndexes, newResourceFactory, newNodePool);
+public class FlatteningEntrySetClosableIterator<T> implements ClosableIterator<Long[]> {
+    public FlatteningEntrySetClosableIterator(Set<Map.Entry<Long, LinkedList<Long[]>>> entries) {
     }
 
-    public URIReference next() {
-        Resource resource = getNextResource();
-        return (URIReference) resource.getUnderlyingNode();
+    public boolean close() {
+        return false;
     }
 
-    protected long getNextNodeId(final ClosableIterator<Long[]> iterator) {
-        long nextKey = -1;
-        while (iterator.hasNext()) {
-            // TODO Fix generics problem!!
-            Object[] obj = iterator.next();
-            final long id = (Long) obj[0];
-            if (id != currentValue) {
-                final Node node = nodePool.getNodeById(id);
-                if (URIReference.class.isAssignableFrom(node.getClass())) {
-                    nextKey = id;
-                }
-            }
-        }
-        currentValue = nextKey;
-        return currentValue;
+    public boolean hasNext() {
+        return false;
+    }
+
+    public Long[] next() {
+        return new Long[0];
+    }
+
+    public void remove() {
     }
 }

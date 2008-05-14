@@ -63,7 +63,6 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
-import java.util.Map;
 import java.util.Set;
 
 public interface Index<T> {
@@ -90,15 +89,11 @@ public interface Index<T> {
     void clear();
 
     /**
-     * Returns an iterator which contains all the elements in the graph as a
-     * collections of distinct longs, contains a map of longs to other longs.
-     * This prevents any duplication.
+     * Returns an iterator which contains all the elements in the graph as a collections of distinct longs.
      *
-     * @return an iterator which contains all the elements in the graph as a
-     *         collections of distinct longs, contains a map of longs to other longs.
-     *         This prevents any duplication.
+     * @return an iterator which contains all the elements in the graph as a collections of distinct longs.
      */
-    ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> iterator();
+    ClosableIterator<T[]> iterator();
 
     /**
      * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id

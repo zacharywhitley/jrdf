@@ -61,11 +61,10 @@ package org.jrdf.graph.local.index.longindex;
 
 import junit.framework.TestCase;
 import org.jrdf.map.MapFactory;
-import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -107,7 +106,7 @@ public abstract class AbstractLongIndexIntegrationTest extends TestCase {
         longIndex.add(1L, 2L, 4L);
         longIndex.add(2L, 2L, 4L);
         longIndex.add(2L, 2L, 5L);
-        Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entryIterator = longIndex.iterator();
+        ClosableIterator<Long[]> entryIterator = longIndex.iterator();
     }
 
     public void testAddition() throws Exception {

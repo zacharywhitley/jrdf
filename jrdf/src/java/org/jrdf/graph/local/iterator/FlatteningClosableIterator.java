@@ -59,93 +59,97 @@
 
 package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
-    private final Long resource;
-    private final GraphHandler graphHandler012;
-    private final ClosableIterator<Long[]> posIterator;
-    private Iterator<Long> predicateIterator;
-    private Long nextPredicate;
-    private Set<Long> spoPredicates;
-    private Long previousPredicate;
+public class FlatteningClosableIterator<E, T> implements ClosableIterator<T[]> {
+    private ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> iterator;
+    private Iterator<Map.Entry<T, Set<T>>> subIterator;
+    private Iterator<T> itemIterator;
+    private Map.Entry<T, ClosableMap<T, Set<T>>> firstEntry;
+    private Map.Entry<T, Set<T>> secondEntry;
 
-    public FixedResourcePredicateIterator(final Long newResource, final GraphHandler newGraphHandler012,
-        final GraphHandler newGraphHandler120) {
-        this.resource = newResource;
-        this.graphHandler012 = newGraphHandler012;
-        this.posIterator = newGraphHandler120.getEntries();
-        this.spoPredicates = graphHandler012.getSubIndex(resource).keySet();
-        if (spoPredicates != null) {
-            predicateIterator = spoPredicates.iterator();
-        }
-        nextPredicate();
+    public FlatteningClosableIterator(ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> entryIterator) {
+        this.iterator = entryIterator;
+    }
+
+    public boolean close() {
+        return iterator.close();
     }
 
     public boolean hasNext() {
-        return nextPredicate != null;
-    }
+        return (itemIteratorHasNext() || (subIteratorHasNext()) || (iteratorHasNext()));
+     }
 
-    public PredicateNode next() {
-        if (nextPredicate == null) {
+     private boolean iteratorHasNext() {
+         return null != iterator && iterator.hasNext();
+     }
+
+     private boolean subIteratorHasNext() {
+         return null != subIterator && subIterator.hasNext();
+     }
+
+     private boolean itemIteratorHasNext() {
+         return (null != itemIterator && itemIterator.hasNext());
+     }
+
+    @SuppressWarnings({ "unchecked" })
+    public T[] next() {
+       if (null == iterator) {
             throw new NoSuchElementException();
         }
-        Long currentPredicate = nextPredicate;
-        nextPredicate();
-        return graphHandler012.createPredicateNode(currentPredicate);
-    }
 
-    private void nextPredicate() {
-        Long newPredicate = nextPredicateFromSPO();
-        if (newPredicate == null) {
-            newPredicate = nextPredicateFromPOS();
+        // move to the next position
+        updatePosition();
+
+        if (null == iterator) {
+            throw new NoSuchElementException();
         }
-        this.nextPredicate = newPredicate;
+        T third = itemIterator.next();
+        T second = secondEntry.getKey();
+        T first = firstEntry.getKey();
+        return (T[]) new Object[]{first, second, third};
     }
 
-    private Long nextPredicateFromSPO() {
-        Long newPredicate = null;
-        if (predicateIterator != null) {
-            if (predicateIterator.hasNext()) {
-                newPredicate = predicateIterator.next();
-            } else {
-                predicateIterator = null;
+    /**
+     * Helper method to move the iterators on to the next position.
+     * If there is no next position then {@link #itemIterator itemIterator}
+     * will be set to null, telling {@link #hasNext() hasNext} to return
+     * <code>false</code>.
+     */
+    private void updatePosition() {
+        // progress to the next item if needed
+        if (null == itemIterator || !itemIterator.hasNext()) {
+            // the current iterator been exhausted
+            if (null == subIterator || !subIterator.hasNext()) {
+                // the subiterator has been exhausted
+                if (!iterator.hasNext()) {
+                    // the main iterator has been exhausted
+                    // tell the iterator to finish
+                    iterator = null;
+                    return;
+                }
+                // move on the main iterator
+                firstEntry = iterator.next();
+
+                // now get an iterator to the sub index map
+                subIterator = firstEntry.getValue().entrySet().iterator();
+                assert subIterator.hasNext();
             }
+            // get the next entry of the sub index
+            secondEntry = subIterator.next();
+            // get an interator to the next set from the sub index
+            itemIterator = secondEntry.getValue().iterator();
+            assert itemIterator.hasNext();
         }
-        return newPredicate;
-    }
-
-    private Long nextPredicateFromPOS() {
-        Long newPredicate = null;
-        boolean foundNextPredicate = false;
-        while (!foundNextPredicate && posIterator.hasNext()) {
-            Object[] pos = posIterator.next();
-            // TODO Fix generics problem!!
-            Long predicate = (Long) pos[0];
-            Long object = (Long) pos[1];
-            if (!predicate.equals(previousPredicate) && object.equals(resource) && !spoPredicates.contains(predicate)) {
-                newPredicate = predicate;
-                previousPredicate = newPredicate;
-                foundNextPredicate = true;
-            }
-        }
-        return newPredicate;
     }
 
     public void remove() {
         throw new UnsupportedOperationException();
-    }
-
-    public boolean close() {
-        if (posIterator != null) {
-            posIterator.close();
-        }
-        return true;
     }
 }

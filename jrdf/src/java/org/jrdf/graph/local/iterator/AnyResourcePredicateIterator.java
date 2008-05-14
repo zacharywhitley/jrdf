@@ -62,16 +62,14 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 public class AnyResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final GraphHandler graphHandler;
-    private final ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator;
-
+    private final ClosableIterator<Long[]> iterator;
+    private boolean hasNext;
+    private long currentValue;
 
     public AnyResourcePredicateIterator(final GraphHandler newGraphHandler) {
         this.graphHandler = newGraphHandler;
@@ -79,15 +77,22 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
     }
 
     public boolean hasNext() {
-        return iterator.hasNext();
+        long newNode = currentValue;
+        while (iterator.hasNext() && newNode == currentValue) {
+            // TODO Fix generics problem!!
+            Object[] objs = iterator.next();
+            newNode = (Long) objs[0];
+        }
+        hasNext = newNode != 0L && newNode != currentValue;
+        currentValue = newNode;
+        return hasNext;
     }
 
     public PredicateNode next() {
-        if (!iterator.hasNext()) {
+        if (!hasNext) {
             throw new NoSuchElementException();
         }
-        Long id = iterator.next().getKey();
-        return graphHandler.createPredicateNode(id);
+        return graphHandler.createPredicateNode(currentValue);
     }
 
     public void remove() {

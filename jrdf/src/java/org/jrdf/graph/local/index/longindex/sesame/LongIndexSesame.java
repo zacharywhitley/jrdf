@@ -70,7 +70,6 @@ import org.jrdf.util.btree.RecordIteratorHelper;
 import org.jrdf.util.btree.TripleBTree;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Set;
 
 public final class LongIndexSesame implements LongIndex {
@@ -107,7 +106,7 @@ public final class LongIndexSesame implements LongIndex {
         }
     }
 
-    public ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator() {
+    public ClosableIterator<Long[]> iterator() {
         return new EntryIterator(btree);
     }
 

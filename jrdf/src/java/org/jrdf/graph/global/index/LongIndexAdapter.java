@@ -59,12 +59,11 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.GraphException;
-import org.jrdf.util.ClosableMap;
+import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -91,8 +90,8 @@ public class LongIndexAdapter implements LongIndex {
     }
 
     // TODO Fix this.
-    public ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator() {
-        return new ClosableIteratorAdapter(index.iterator());
+    public ClosableIterator<Long[]> iterator() {
+        return null;
     }
 
     // TODO Fix this.
