@@ -59,27 +59,21 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.util.ClosableMap;
-
-import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class MoleculeIndexAdapaterMap extends AbstractMap<Long, Set<Long>> implements ClosableMap<Long, Set<Long>> {
-    private final ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap;
-
-    public MoleculeIndexAdapaterMap(ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap) {
-        this.mapClosableMap = mapClosableMap;
+public class EmptyIteratorMapEntry implements Iterator<Map.Entry<Long, Set<Long>>> {
+    public boolean hasNext() {
+        return false;
     }
 
-    public Set<Entry<Long, Set<Long>>> entrySet() {
-        return new EntrySetMap(mapClosableMap);
+    public Map.Entry<Long, Set<Long>> next() {
+        throw new NoSuchElementException();
     }
 
-    public boolean close() {
-        if (mapClosableMap != null) {
-            return mapClosableMap.close();
-        } else {
-            return false;
-        }
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }

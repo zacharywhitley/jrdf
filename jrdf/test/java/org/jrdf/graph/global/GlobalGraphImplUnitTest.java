@@ -57,29 +57,27 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global;
 
-import org.jrdf.util.ClosableMap;
+import org.jrdf.JRDFFactory;
+import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.Graph;
 
-import java.util.AbstractMap;
-import java.util.Set;
+/**
+ * Implementation of {@link AbstractGraphUnitTest} test case.
+ *
+ * @author Andrew Newman
+ * @version $Revision: 1499 $
+ */
+public class GlobalGraphImplUnitTest extends AbstractGraphUnitTest {
+    private static final JRDFFactory FACTORY = SortedMemoryGlobalJRDFFactory.getFactory();
 
-public class MoleculeIndexAdapaterMap extends AbstractMap<Long, Set<Long>> implements ClosableMap<Long, Set<Long>> {
-    private final ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap;
-
-    public MoleculeIndexAdapaterMap(ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap) {
-        this.mapClosableMap = mapClosableMap;
-    }
-
-    public Set<Entry<Long, Set<Long>>> entrySet() {
-        return new EntrySetMap(mapClosableMap);
-    }
-
-    public boolean close() {
-        if (mapClosableMap != null) {
-            return mapClosableMap.close();
-        } else {
-            return false;
-        }
+    /**
+     * Create a graph implementation.
+     *
+     * @return A new GraphImplUnitTest.
+     */
+    public Graph newGraph() throws Exception {
+        return FACTORY.getNewGraph();
     }
 }

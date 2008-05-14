@@ -73,11 +73,11 @@ import java.util.Set;
 public class NewMoleculeIndexImpl implements NewMoleculeIndex<Long> {
     protected Map<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> index;
 
-    protected NewMoleculeIndexImpl(ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> newIndex) {
+    public NewMoleculeIndexImpl(ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> newIndex) {
         index = newIndex;
     }
 
-    protected NewMoleculeIndexImpl() {
+    public NewMoleculeIndexImpl() {
         index = new HashMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
     }
 
