@@ -78,13 +78,17 @@ public class AnyResourceIterator extends ResourceIterator<Resource> {
     }
 
     protected long getNextNodeId(final ClosableIterator<Long[]> iterator) {
-        long nextKey = 0;
+        long nextKey = currentValue;
         while (iterator.hasNext() && nextKey == currentValue) {
             // TODO Fix generics problem!!
             Object[] obj = iterator.next();
             nextKey = (Long) obj[0];
         }
-        currentValue = nextKey;
-        return currentValue;
+        if (nextKey == currentValue) {
+            return -1;
+        } else {
+            currentValue = nextKey;
+            return currentValue;
+        }
     }
 }
