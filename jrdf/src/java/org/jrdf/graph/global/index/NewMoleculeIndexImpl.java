@@ -62,32 +62,34 @@ package org.jrdf.graph.global.index;
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
+import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableMapImpl;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class NewMoleculeIndexImpl implements NewMoleculeIndex<Long> {
-    protected Map<Long, Map<Long, Map<Long, Set<Long>>>> index;
+    protected Map<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> index;
 
-    protected NewMoleculeIndexImpl(Map<Long, Map<Long, Map<Long, Set<Long>>>> newIndex) {
+    protected NewMoleculeIndexImpl(ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> newIndex) {
         index = newIndex;
     }
 
     protected NewMoleculeIndexImpl() {
-        index = new HashMap<Long, Map<Long, Map<Long, Set<Long>>>>();
+        index = new HashMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
     }
 
     public void add(Long... quad) {
-        Map<Long, Map<Long, Set<Long>>> subIndex = index.get(quad[0]);
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> subIndex = index.get(quad[0]);
         if (null == subIndex) {
-            subIndex = new HashMap<Long, Map<Long, Set<Long>>>();
+            subIndex = new ClosableMapImpl<Long, ClosableMap<Long, Set<Long>>>();
             index.put(quad[0], subIndex);
         }
-        Map<Long, Set<Long>> subSubIndex = subIndex.get(quad[1]);
+        ClosableMap<Long, Set<Long>> subSubIndex = subIndex.get(quad[1]);
         if (null == subSubIndex) {
-            subSubIndex = new HashMap<Long, Set<Long>>();
+            subSubIndex = new ClosableMapImpl<Long, Set<Long>>();
             subIndex.put(quad[1], subSubIndex);
         }
         Set<Long> subSubSubIndex = subSubIndex.get(quad[2]);
@@ -102,16 +104,17 @@ public class NewMoleculeIndexImpl implements NewMoleculeIndex<Long> {
         return index.containsKey(node);
     }
 
-    public ClosableIterator<Map.Entry<Long, Map<Long, Map<Long, Set<Long>>>>> iterator() {
-        return new ClosableIteratorImpl<Map.Entry<Long, Map<Long, Map<Long, Set<Long>>>>>(index.entrySet().iterator());
+    public ClosableIterator<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator() {
+        return new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>(
+            index.entrySet().iterator());
     }
 
     public void remove(Long... node) throws GraphException {
-        Map<Long, Map<Long, Set<Long>>> subIndex = index.get(node[0]);
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> subIndex = index.get(node[0]);
         if (null == subIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
-        Map<Long, Set<Long>> subSubIndex = subIndex.get(node[1]);
+        ClosableMap<Long, Set<Long>> subSubIndex = subIndex.get(node[1]);
         if (null == subSubIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
@@ -137,7 +140,7 @@ public class NewMoleculeIndexImpl implements NewMoleculeIndex<Long> {
         return index.containsKey(node);
     }
 
-    public Map<Long, Map<Long, Set<Long>>> getSubIndex(Long first) {
+    public ClosableMap<Long, ClosableMap<Long, Set<Long>>> getSubIndex(Long first) {
         return index.get(first);
     }
 
@@ -156,7 +159,7 @@ public class NewMoleculeIndexImpl implements NewMoleculeIndex<Long> {
 
     public long getSize() {
         long size = 0;
-        for (Map<Long, Map<Long, Set<Long>>> subIndex : index.values()) {
+        for (ClosableMap<Long, ClosableMap<Long, Set<Long>>> subIndex : index.values()) {
             for (Map<Long, Set<Long>> subSubIndex : subIndex.values()) {
                 for (Set<Long> subSubSubIndex : subSubIndex.values()) {
                     size += subSubSubIndex.size();

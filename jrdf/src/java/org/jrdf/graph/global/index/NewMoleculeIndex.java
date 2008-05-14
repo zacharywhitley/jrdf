@@ -61,6 +61,7 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Map;
 import java.util.Set;
@@ -76,9 +77,9 @@ public interface NewMoleculeIndex<T> {
 
     void clear();
 
-    ClosableIterator<Map.Entry<T, Map<T, Map<T, Set<T>>>>> iterator();
+    ClosableIterator<Map.Entry<T, ClosableMap<T, ClosableMap<T, Set<T>>>>> iterator();
 
-    Map<T, Map<T, Set<T>>> getSubIndex(T first);
+    ClosableMap<T, ClosableMap<T, Set<T>>> getSubIndex(T first);
 
     boolean contains(T first);
 
