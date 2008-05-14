@@ -61,7 +61,6 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
-import org.jrdf.util.ClosableIteratorImpl;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -69,7 +68,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class FlatteningClosableIterator implements ClosableIterator<Long[]> {
-    private ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator;
+    private ClosableIterator<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator;
     private Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> subIterator;
     private Iterator<Map.Entry<Long, Set<Long>>> subSubIterator;
     private Iterator<Long> itemIterator;
@@ -77,8 +76,8 @@ public class FlatteningClosableIterator implements ClosableIterator<Long[]> {
     private Map.Entry<Long, ClosableMap<Long, Set<Long>>> secondEntry;
     private Map.Entry<Long, Set<Long>> thirdEntry;
 
-    public FlatteningClosableIterator(ClosableIteratorImpl<Map.Entry<Long, 
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> newIterator) {
+    public FlatteningClosableIterator(ClosableIterator<Map.Entry<Long, ClosableMap<Long,
+        ClosableMap<Long, Set<Long>>>>> newIterator) {
         this.iterator = newIterator;
     }
 
@@ -133,22 +132,28 @@ public class FlatteningClosableIterator implements ClosableIterator<Long[]> {
     private void updatePosition() {
         // progress to the next item if needed
         if (null == itemIterator || !itemIterator.hasNext()) {
-            if (null == subSubIterator || !subSubIterator.hasNext()) {
-                if (null == subIterator || !subIterator.hasNext()) {
-                    if (!iterator.hasNext()) {
-                        iterator = null;
-                        return;
-                    }
-                    // move on the main iterator
-                    firstEntry = iterator.next();
-                    subIterator = firstEntry.getValue().entrySet().iterator();
-                }
-                secondEntry = subIterator.next();
-                subSubIterator = secondEntry.getValue().entrySet().iterator();
+            if (hasMore()) {
+                thirdEntry = subSubIterator.next();
+                itemIterator = thirdEntry.getValue().iterator();
             }
-            thirdEntry = subSubIterator.next();
-            itemIterator = thirdEntry.getValue().iterator();
         }
+    }
+
+    private boolean hasMore() {
+        if (null == subSubIterator || !subSubIterator.hasNext()) {
+            if (null == subIterator || !subIterator.hasNext()) {
+                if (!iterator.hasNext()) {
+                    iterator = null;
+                    return false;
+                }
+                // move on the main iterator
+                firstEntry = iterator.next();
+                subIterator = firstEntry.getValue().entrySet().iterator();
+            }
+            secondEntry = subIterator.next();
+            subSubIterator = secondEntry.getValue().entrySet().iterator();
+        }
+        return true;
     }
 
     public void remove() {

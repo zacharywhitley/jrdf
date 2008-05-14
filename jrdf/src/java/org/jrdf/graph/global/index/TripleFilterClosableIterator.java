@@ -59,59 +59,29 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
 
-import java.util.Set;
+public class TripleFilterClosableIterator implements ClosableIterator<Long[]> {
+    private final ClosableIterator<Long[]> iterator;
 
-/**
- * Wraps a MolecueIndex around the LongIndex interface.  All normal LongIndex calls are translated into MoleculeIndex
- * calls where the Molecule ID is 0.
- */
-public class LongIndexAdapter implements LongIndex {
-    private final NewMoleculeIndex<Long> index;
-
-    public LongIndexAdapter(NewMoleculeIndex<Long> newIndex) {
-        this.index = newIndex;
+    public TripleFilterClosableIterator(ClosableIterator<Long[]> newIterator) {
+        this.iterator = newIterator;
     }
 
-    public void add(Long... node) throws GraphException {
-        index.add(node[0], node[1], node[2], 0L);
+    public boolean close() {
+        return iterator.close();
     }
 
-    public void remove(Long... node) throws GraphException {
-        index.remove(node[0], node[1], node[2], 0L);
+    public boolean hasNext() {
+        return iterator.hasNext();
     }
 
-    public void clear() {
-        index.clear();
+    public Long[] next() {
+        Long[] longs = iterator.next();
+        return new Long[]{longs[0], longs[1], longs[2]};
     }
 
-    public ClosableIterator<Long[]> iterator() {
-        return new TripleFilterClosableIterator(index.iterator());
-    }
-
-    // TODO Fix this.
-    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
-        return null;
-    }
-
-    public boolean contains(Long first) {
-        return index.contains(first);
-    }
-
-    // TODO Fix this.
-    public boolean removeSubIndex(Long first) {
-        return false;
-    }
-
-    public long getSize() {
-        return index.getSize();
-    }
-
-    public void close() {
-        index.close();
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }
