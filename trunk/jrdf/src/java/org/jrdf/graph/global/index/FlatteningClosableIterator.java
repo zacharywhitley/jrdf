@@ -132,14 +132,14 @@ public class FlatteningClosableIterator implements ClosableIterator<Long[]> {
     private void updatePosition() {
         // progress to the next item if needed
         if (null == itemIterator || !itemIterator.hasNext()) {
-            if (hasMore()) {
+            if (hasMoreEntries()) {
                 thirdEntry = subSubIterator.next();
                 itemIterator = thirdEntry.getValue().iterator();
             }
         }
     }
 
-    private boolean hasMore() {
+    private boolean hasMoreEntries() {
         if (null == subSubIterator || !subSubIterator.hasNext()) {
             if (null == subIterator || !subIterator.hasNext()) {
                 if (!iterator.hasNext()) {
