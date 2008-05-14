@@ -74,7 +74,12 @@ public class EntrySetMap implements Set<Map.Entry<Long, Set<Long>>> {
     }
 
     public Iterator<Map.Entry<Long, Set<Long>>> iterator() {
-        return new IteratorMapEntry(mapClosableMap);
+        if (mapClosableMap != null) {
+            Set<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entries = mapClosableMap.entrySet();
+            return new IteratorMapEntry(entries.iterator());
+        } else {
+            return new EmptyIteratorMapEntry();
+        }
     }
 
     public int size() {

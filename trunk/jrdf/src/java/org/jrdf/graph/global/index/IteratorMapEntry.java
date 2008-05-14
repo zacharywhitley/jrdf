@@ -68,8 +68,8 @@ import java.util.Iterator;
 public class IteratorMapEntry implements Iterator<Map.Entry<Long, Set<Long>>> {
     private Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator;
 
-    public IteratorMapEntry(ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap) {
-        this.iterator = mapClosableMap.entrySet().iterator();
+    public IteratorMapEntry(Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entryIterator) {
+        this.iterator = entryIterator;
     }
 
     public boolean hasNext() {
