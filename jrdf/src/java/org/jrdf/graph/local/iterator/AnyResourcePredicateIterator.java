@@ -83,7 +83,7 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
             Object[] objs = iterator.next();
             newNode = (Long) objs[0];
         }
-        hasNext = newNode != 0L && newNode != currentValue;
+        hasNext = newNode != currentValue;
         currentValue = newNode;
         return hasNext;
     }
