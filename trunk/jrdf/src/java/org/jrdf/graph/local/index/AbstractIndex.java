@@ -114,7 +114,7 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
     public ClosableIterator<T[]> iterator() {
         ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> iterator =
             new ClosableIteratorImpl<Map.Entry<T, ClosableMap<T, Set<T>>>>(index.entrySet().iterator());
-        return new FlatteningClosableIterator<T, T>(iterator);
+        return new FlatteningClosableIterator<T>(iterator);
     }
 
     public void remove(T... node) throws GraphException {

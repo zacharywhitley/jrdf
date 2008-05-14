@@ -61,9 +61,9 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
+import org.jrdf.util.ClosableIteratorImpl;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -104,9 +104,11 @@ public class NewMoleculeIndexImpl implements NewMoleculeIndex<Long> {
         return index.containsKey(node);
     }
 
-    public ClosableIterator<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator() {
-        return new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>(
-            index.entrySet().iterator());
+    public ClosableIterator<Long[]> iterator() {
+        ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator =
+            new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>(
+                index.entrySet().iterator());
+        return new FlatteningClosableIterator(iterator);
     }
 
     public void remove(Long... node) throws GraphException {
