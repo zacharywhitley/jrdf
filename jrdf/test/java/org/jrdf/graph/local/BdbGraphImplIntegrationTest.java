@@ -60,13 +60,14 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedDiskJRDFFactory;
+import org.jrdf.SortedDiskBdbJRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.DirectoryHandler;
 
 public class BdbGraphImplIntegrationTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SortedDiskJRDFFactory.getFactory();
+    private static final JRDFFactory FACTORY = SortedDiskBdbJRDFFactory.getFactory();
 
     /**
      * Create a graph implementation.
@@ -75,11 +76,18 @@ public class BdbGraphImplIntegrationTest extends AbstractGraphUnitTest {
      */
     @Override
     public Graph newGraph() throws Exception {
-        return FACTORY.getNewGraph();
+        Graph newGraph = FACTORY.getNewGraph();
+        newGraph.clear();
+        return newGraph;
     }
 
     public void setUp() throws Exception {
-        new TempDirectoryHandler().removeDir();
+        final DirectoryHandler handler = new TempDirectoryHandler();
+        handler.removeDir();
         super.setUp();
+    }
+
+    public void tearDown() {
+        FACTORY.close();
     }
 }
