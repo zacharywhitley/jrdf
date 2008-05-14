@@ -80,9 +80,10 @@ public class URIReferenceResourceIterator extends ResourceIterator<URIReference>
         return (URIReference) resource.getUnderlyingNode();
     }
 
+    @Override
     protected long getNextNodeId(final ClosableIterator<Long[]> iterator) {
-        long nextKey = -1;
-        while (iterator.hasNext()) {
+        long nextKey = currentValue;
+        while (iterator.hasNext() && nextKey == currentValue) {
             // TODO Fix generics problem!!
             Object[] obj = iterator.next();
             final long id = (Long) obj[0];
@@ -93,7 +94,11 @@ public class URIReferenceResourceIterator extends ResourceIterator<URIReference>
                 }
             }
         }
-        currentValue = nextKey;
-        return currentValue;
+        if (nextKey == currentValue) {
+            return -1;
+        } else {
+            currentValue = nextKey;
+            return currentValue;
+        }
     }
 }
