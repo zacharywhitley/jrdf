@@ -64,9 +64,17 @@ import org.jrdf.util.ClosableIterator;
 import java.util.Map;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class FlatteningEntrySetClosableIterator<T> implements ClosableIterator<Long[]> {
+    private Iterator<Long[]> itemIterator;
+    private Iterator<Map.Entry<Long, LinkedList<Long[]>>> iterator;
+    private Map.Entry<Long, LinkedList<Long[]>> firstEntry;
+    private Long[] secondEntry;
+
     public FlatteningEntrySetClosableIterator(Set<Map.Entry<Long, LinkedList<Long[]>>> entries) {
+        this.iterator = entries.iterator();
     }
 
     public boolean close() {
@@ -74,13 +82,46 @@ public class FlatteningEntrySetClosableIterator<T> implements ClosableIterator<L
     }
 
     public boolean hasNext() {
-        return false;
+        return (itemIteratorHasNext() || (iteratorHasNext()));
+    }
+
+    private boolean iteratorHasNext() {
+        return null != iterator && iterator.hasNext();
+    }
+
+    private boolean itemIteratorHasNext() {
+        return (null != itemIterator && itemIterator.hasNext());
     }
 
     public Long[] next() {
-        return new Long[0];
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
+        updatePosition();
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
+        return new Long[]{firstEntry.getKey(), secondEntry[0], secondEntry[1]};
     }
 
     public void remove() {
+        throw new UnsupportedOperationException();
+    }
+
+    private void updatePosition() {
+        // progress to the next item if needed
+        if (null == itemIterator || !itemIterator.hasNext()) {
+            // the subiterator has been exhausted
+            if (!iterator.hasNext()) {
+                // the main iterator has been exhausted
+                // tell the iterator to finish
+                iterator = null;
+                return;
+            }
+            // move on the main iterator
+            firstEntry = iterator.next();
+            itemIterator = firstEntry.getValue().iterator();
+        }
+        secondEntry = itemIterator.next();
     }
 }
