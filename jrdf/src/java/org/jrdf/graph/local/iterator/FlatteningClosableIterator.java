@@ -84,23 +84,23 @@ public class FlatteningClosableIterator<E, T> implements ClosableIterator<T[]> {
 
     public boolean hasNext() {
         return (itemIteratorHasNext() || (subIteratorHasNext()) || (iteratorHasNext()));
-     }
+    }
 
-     private boolean iteratorHasNext() {
-         return null != iterator && iterator.hasNext();
-     }
+    private boolean iteratorHasNext() {
+        return null != iterator && iterator.hasNext();
+    }
 
-     private boolean subIteratorHasNext() {
-         return null != subIterator && subIterator.hasNext();
-     }
+    private boolean subIteratorHasNext() {
+        return null != subIterator && subIterator.hasNext();
+    }
 
-     private boolean itemIteratorHasNext() {
-         return (null != itemIterator && itemIterator.hasNext());
-     }
+    private boolean itemIteratorHasNext() {
+        return (null != itemIterator && itemIterator.hasNext());
+    }
 
     @SuppressWarnings({ "unchecked" })
     public T[] next() {
-       if (null == iterator) {
+        if (null == iterator) {
             throw new NoSuchElementException();
         }
 
