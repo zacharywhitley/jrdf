@@ -92,6 +92,8 @@ import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.graph.local.iterator.LocalIteratorFactory;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.TempDirectoryHandler;
@@ -117,9 +119,15 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     private final NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, 0);
 
     public void testSimpleAddRemove() throws Exception {
-        NewMoleculeIndex<Long> spom = new NewMoleculeIndexImpl(new HashMap<Long, Map<Long, Map<Long, Set<Long>>>>());
-        NewMoleculeIndex<Long> posm = new NewMoleculeIndexImpl(new HashMap<Long, Map<Long, Map<Long, Set<Long>>>>());
-        NewMoleculeIndex<Long> ospm = new NewMoleculeIndexImpl(new HashMap<Long, Map<Long, Map<Long, Set<Long>>>>());
+        ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map1 =
+            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
+        ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map2 =
+            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
+        ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map3 =
+            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
+        NewMoleculeIndex<Long> spom = new NewMoleculeIndexImpl(map1);
+        NewMoleculeIndex<Long> posm = new NewMoleculeIndexImpl(map2);
+        NewMoleculeIndex<Long> ospm = new NewMoleculeIndexImpl(map3);
         NewMoleculeIndex<Long>[] indexes = new NewMoleculeIndex[]{spom, posm, ospm};
         NewMoleculeStructureIndex<Long> structureIndex = new NewMoleculeStructureIndexImpl(
             new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
@@ -144,8 +152,8 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         NewMolecule molecule2 = moleculeFactory.createMolecule(b2.asTriple(r1, b2));
         moleculeGraph.add(molecule2);
         assertEquals(2, spom.getSize());
-        ClosableIterator<Map.Entry<Long,Map<Long,Map<Long,Set<Long>>>>> iterator = spom.iterator();
-        Map.Entry<Long, Map<Long, Map<Long, Set<Long>>>> mapEntry = iterator.next();
+        ClosableIterator<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long,Set<Long>>>>> iterator = spom.iterator();
+        Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> mapEntry = iterator.next();
 //        System.err.println("Entry: " + mapEntry);
 //        System.err.println("Entry: " + iterator.next());
         ClosableIterator<Map.Entry<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>> iterator1 =

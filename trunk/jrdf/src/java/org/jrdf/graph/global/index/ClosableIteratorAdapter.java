@@ -59,42 +59,46 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.GraphException;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ReadableIndexImpl implements ReadableIndex<Long> {
-    private final NewMoleculeIndex<Long>[] indexes;
-    private final NewMoleculeStructureIndex<Long> structureIndex;
+// TODO Change interface to use arrays of longs!!!
 
-    public ReadableIndexImpl(NewMoleculeIndex<Long>[] newIndexes, NewMoleculeStructureIndex<Long> newStructureIndex) {
-        this.indexes = newIndexes;
-        this.structureIndex = newStructureIndex;
-    }
+public class ClosableIteratorAdapter implements ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> {
+    private final ClosableIterator<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator;
+    private Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> nextEntry;
 
-    public Long findMid(Long[] quin) throws GraphException {
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> pomMap = indexes[0].getSubIndex(quin[0]);
-        Map<Long, Set<Long>> omMap = pomMap.get(quin[1]);
-        Set<Long> mSet = omMap.get(quin[2]);
-        return mSet.iterator().next();
-    }
-
-    public Set<Long[]> findTriplesForMid(Long mid) {
-        Map<Long, Map<Long, Map<Long, Set<Long>>>> midSPOMap = structureIndex.getSubIndex(0L);
-        Map<Long, Map<Long, Set<Long>>> triplesInMid = midSPOMap.get(mid);
-        Set<Long[]> triples = new HashSet<Long[]>();
-        for (Long subject : triplesInMid.keySet()) {
-            Map<Long, Set<Long>> poMap = triplesInMid.get(subject);
-            for (Long predicate : poMap.keySet()) {
-                Set<Long> objects = poMap.get(predicate);
-                for (Long object : objects) {
-                    triples.add(new Long[] {subject, predicate, object});
-                }
-            }
+    public ClosableIteratorAdapter(
+        ClosableIterator<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> newIterator) {
+        this.iterator = newIterator;
+        if (iterator.hasNext()) {
+            nextEntry = iterator.next();
         }
-        return triples;
+    }
+
+    public boolean close() {
+        return iterator.close();
+    }
+
+    public boolean hasNext() {
+        return nextEntry != null;
+    }
+
+    public Map.Entry<Long, ClosableMap<Long, Set<Long>>> next() {
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> value = nextEntry.getValue();
+        Set<Long> thirdValues = new HashSet<Long>();
+        for (ClosableMap<Long, Set<Long>> map : value.values()) {
+            Set<Long> longs = map.keySet();
+            thirdValues.addAll(longs);
+        }
+        return null;
+    }
+
+    public void remove() {
+        iterator.remove();
     }
 }

@@ -59,42 +59,61 @@
 
 package org.jrdf.graph.global.index;
 
+import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ReadableIndexImpl implements ReadableIndex<Long> {
-    private final NewMoleculeIndex<Long>[] indexes;
-    private final NewMoleculeStructureIndex<Long> structureIndex;
+/**
+ * Wraps a MolecueIndex around the LongIndex interface.  All normal LongIndex calls are translated into MoleculeIndex
+ * calls where the Molecule ID is 0.
+ */
+public class LongIndexAdapter implements LongIndex {
+    private final NewMoleculeIndex<Long> index;
 
-    public ReadableIndexImpl(NewMoleculeIndex<Long>[] newIndexes, NewMoleculeStructureIndex<Long> newStructureIndex) {
-        this.indexes = newIndexes;
-        this.structureIndex = newStructureIndex;
+    public LongIndexAdapter(NewMoleculeIndex<Long> newIndex) {
+        this.index = newIndex;
     }
 
-    public Long findMid(Long[] quin) throws GraphException {
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> pomMap = indexes[0].getSubIndex(quin[0]);
-        Map<Long, Set<Long>> omMap = pomMap.get(quin[1]);
-        Set<Long> mSet = omMap.get(quin[2]);
-        return mSet.iterator().next();
+    public void add(Long... node) throws GraphException {
+        index.add(node[0], node[1], node[2], 0L);
     }
 
-    public Set<Long[]> findTriplesForMid(Long mid) {
-        Map<Long, Map<Long, Map<Long, Set<Long>>>> midSPOMap = structureIndex.getSubIndex(0L);
-        Map<Long, Map<Long, Set<Long>>> triplesInMid = midSPOMap.get(mid);
-        Set<Long[]> triples = new HashSet<Long[]>();
-        for (Long subject : triplesInMid.keySet()) {
-            Map<Long, Set<Long>> poMap = triplesInMid.get(subject);
-            for (Long predicate : poMap.keySet()) {
-                Set<Long> objects = poMap.get(predicate);
-                for (Long object : objects) {
-                    triples.add(new Long[] {subject, predicate, object});
-                }
-            }
-        }
-        return triples;
+    public void remove(Long... node) throws GraphException {
+        index.remove(node[0], node[1], node[2], 0L);
+    }
+
+    public void clear() {
+        index.clear();
+    }
+
+    // TODO Fix this.
+    public ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator() {
+        return new ClosableIteratorAdapter(index.iterator());
+    }
+
+    // TODO Fix this.
+    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
+        return null;
+    }
+
+    public boolean contains(Long first) {
+        return index.contains(first);
+    }
+
+    // TODO Fix this.
+    public boolean removeSubIndex(Long first) {
+        return false;
+    }
+
+    public long getSize() {
+        return index.getSize();
+    }
+
+    public void close() {
+        index.close();
     }
 }
