@@ -63,7 +63,6 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -77,7 +76,7 @@ public interface NewMoleculeIndex<T> {
 
     void clear();
 
-    ClosableIterator<Map.Entry<T, ClosableMap<T, ClosableMap<T, Set<T>>>>> iterator();
+    ClosableIterator<T[]> iterator();
 
     ClosableMap<T, ClosableMap<T, Set<T>>> getSubIndex(T first);
 

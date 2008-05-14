@@ -57,25 +57,29 @@
  *
  */
 
-package org.jrdf.graph.local.iterator;
+package org.jrdf.graph.global.index;
 
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableIteratorImpl;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-public class FlatteningClosableIterator<T> implements ClosableIterator<T[]> {
-    private ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> iterator;
-    private Iterator<Map.Entry<T, Set<T>>> subIterator;
-    private Iterator<T> itemIterator;
-    private Map.Entry<T, ClosableMap<T, Set<T>>> firstEntry;
-    private Map.Entry<T, Set<T>> secondEntry;
+public class FlatteningClosableIterator implements ClosableIterator<Long[]> {
+    private ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator;
+    private Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> subIterator;
+    private Iterator<Map.Entry<Long, Set<Long>>> subSubIterator;
+    private Iterator<Long> itemIterator;
+    private Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> firstEntry;
+    private Map.Entry<Long, ClosableMap<Long, Set<Long>>> secondEntry;
+    private Map.Entry<Long, Set<Long>> thirdEntry;
 
-    public FlatteningClosableIterator(ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> entryIterator) {
-        this.iterator = entryIterator;
+    public FlatteningClosableIterator(ClosableIteratorImpl<Map.Entry<Long, 
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> newIterator) {
+        this.iterator = newIterator;
     }
 
     public boolean close() {
@@ -83,11 +87,15 @@ public class FlatteningClosableIterator<T> implements ClosableIterator<T[]> {
     }
 
     public boolean hasNext() {
-        return (itemIteratorHasNext() || (subIteratorHasNext()) || (iteratorHasNext()));
+        return (itemIteratorHasNext() || (subSubIteratorHasNext()) || (subIteratorHasNext()) || (iteratorHasNext()));
     }
 
     private boolean itemIteratorHasNext() {
         return (null != itemIterator && itemIterator.hasNext());
+    }
+
+    private boolean subSubIteratorHasNext() {
+        return null != subSubIterator && subSubIterator.hasNext();
     }
 
     private boolean subIteratorHasNext() {
@@ -98,8 +106,7 @@ public class FlatteningClosableIterator<T> implements ClosableIterator<T[]> {
         return null != iterator && iterator.hasNext();
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public T[] next() {
+    public Long[] next() {
         if (null == iterator) {
             throw new NoSuchElementException();
         }
@@ -110,10 +117,11 @@ public class FlatteningClosableIterator<T> implements ClosableIterator<T[]> {
         if (null == iterator) {
             throw new NoSuchElementException();
         }
-        T third = itemIterator.next();
-        T second = secondEntry.getKey();
-        T first = firstEntry.getKey();
-        return (T[]) new Object[]{first, second, third};
+        Long fourth = itemIterator.next();
+        Long third = thirdEntry.getKey();
+        Long second = secondEntry.getKey();
+        Long first = firstEntry.getKey();
+        return new Long[]{first, second, third, fourth};
     }
 
     /**
@@ -125,25 +133,21 @@ public class FlatteningClosableIterator<T> implements ClosableIterator<T[]> {
     private void updatePosition() {
         // progress to the next item if needed
         if (null == itemIterator || !itemIterator.hasNext()) {
-            // the current iterator been exhausted
-            if (null == subIterator || !subIterator.hasNext()) {
-                // the subiterator has been exhausted
-                if (!iterator.hasNext()) {
-                    // the main iterator has been exhausted
-                    // tell the iterator to finish
-                    iterator = null;
-                    return;
+            if (null == subSubIterator || !subSubIterator.hasNext()) {
+                if (null == subIterator || !subIterator.hasNext()) {
+                    if (!iterator.hasNext()) {
+                        iterator = null;
+                        return;
+                    }
+                    // move on the main iterator
+                    firstEntry = iterator.next();
+                    subIterator = firstEntry.getValue().entrySet().iterator();
                 }
-                // move on the main iterator
-                firstEntry = iterator.next();
-
-                // now get an iterator to the sub index map
-                subIterator = firstEntry.getValue().entrySet().iterator();
+                secondEntry = subIterator.next();
+                subSubIterator = secondEntry.getValue().entrySet().iterator();
             }
-            // get the next entry of the sub index
-            secondEntry = subIterator.next();
-            // get an interator to the next set from the sub index
-            itemIterator = secondEntry.getValue().iterator();
+            thirdEntry = subSubIterator.next();
+            itemIterator = thirdEntry.getValue().iterator();
         }
     }
 

@@ -152,12 +152,10 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         NewMolecule molecule2 = moleculeFactory.createMolecule(b2.asTriple(r1, b2));
         moleculeGraph.add(molecule2);
         assertEquals(2, spom.getSize());
-        ClosableIterator<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long,Set<Long>>>>> iterator = spom.iterator();
-        Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> mapEntry = iterator.next();
+        ClosableIterator<Long[]> iterator = spom.iterator();
+        assertTrue(iterator.hasNext());
 //        System.err.println("Entry: " + mapEntry);
 //        System.err.println("Entry: " + iterator.next());
-        ClosableIterator<Map.Entry<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>> iterator1 =
-            structureIndex.iterator();
 //        System.err.println("Got: " + iterator1.next());
         moleculeGraph.delete(molecule);
         assertEquals(spom.getSize(), 1);
