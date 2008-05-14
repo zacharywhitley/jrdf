@@ -59,59 +59,45 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
 
-/**
- * Wraps a MolecueIndex around the LongIndex interface.  All normal LongIndex calls are translated into MoleculeIndex
- * calls where the Molecule ID is 0.
- */
-public class LongIndexAdapter implements LongIndex {
-    private final NewMoleculeIndex<Long> index;
+public class IteratorMapEntry implements Iterator<Map.Entry<Long, Set<Long>>> {
+    private Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator;
 
-    public LongIndexAdapter(NewMoleculeIndex<Long> newIndex) {
-        this.index = newIndex;
+    public IteratorMapEntry(ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap) {
+        this.iterator = mapClosableMap.entrySet().iterator();
     }
 
-    public void add(Long... node) throws GraphException {
-        index.add(node[0], node[1], node[2], 0L);
+    public boolean hasNext() {
+        return (iteratorHasNext());
     }
 
-    public void remove(Long... node) throws GraphException {
-        index.remove(node[0], node[1], node[2], 0L);
+    private boolean iteratorHasNext() {
+        return (null != iterator && iterator.hasNext());
     }
 
-    public void clear() {
-        index.clear();
+    public Map.Entry<Long, Set<Long>> next() {
+        final Map.Entry<Long, ClosableMap<Long, Set<Long>>> mapEntry = iterator.next();
+        return new Map.Entry<Long, Set<Long>>() {
+            public Long getKey() {
+                return mapEntry.getKey();
+            }
+
+            public Set<Long> getValue() {
+                return mapEntry.getValue().keySet();
+            }
+
+            public Set<Long> setValue(Set<Long> value) {
+                throw new UnsupportedOperationException("Cannot call this method");
+            }
+        };
     }
 
-    public ClosableIterator<Long[]> iterator() {
-        return new TripleFilterClosableIterator(index.iterator());
-    }
-
-    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap = index.getSubIndex(first);
-        return new MoleculeIndexAdapaterMap(mapClosableMap);
-    }
-
-    public boolean contains(Long first) {
-        return index.contains(first);
-    }
-
-    // TODO Fix this.
-    public boolean removeSubIndex(Long first) {
-        return false;
-    }
-
-    public long getSize() {
-        return index.getSize();
-    }
-
-    public void close() {
-        index.close();
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot call this method");
     }
 }

@@ -59,59 +59,69 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
 import java.util.Set;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.Collection;
 
-/**
- * Wraps a MolecueIndex around the LongIndex interface.  All normal LongIndex calls are translated into MoleculeIndex
- * calls where the Molecule ID is 0.
- */
-public class LongIndexAdapter implements LongIndex {
-    private final NewMoleculeIndex<Long> index;
+public class EntrySetMap implements Set<Map.Entry<Long, Set<Long>>> {
+    private final ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap;
 
-    public LongIndexAdapter(NewMoleculeIndex<Long> newIndex) {
-        this.index = newIndex;
+    public EntrySetMap(ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap) {
+        this.mapClosableMap = mapClosableMap;
     }
 
-    public void add(Long... node) throws GraphException {
-        index.add(node[0], node[1], node[2], 0L);
+    public Iterator<Map.Entry<Long, Set<Long>>> iterator() {
+        return new IteratorMapEntry(mapClosableMap);
     }
 
-    public void remove(Long... node) throws GraphException {
-        index.remove(node[0], node[1], node[2], 0L);
+    public int size() {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean isEmpty() {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean contains(Object o) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public Object[] toArray() {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public <T> T[] toArray(T[] a) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean add(Map.Entry<Long, Set<Long>> o) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean containsAll(Collection<?> c) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean addAll(Collection<? extends Map.Entry<Long, Set<Long>>> c) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException("Cannot call this method");
+    }
+
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException("Cannot call this method");
     }
 
     public void clear() {
-        index.clear();
-    }
-
-    public ClosableIterator<Long[]> iterator() {
-        return new TripleFilterClosableIterator(index.iterator());
-    }
-
-    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap = index.getSubIndex(first);
-        return new MoleculeIndexAdapaterMap(mapClosableMap);
-    }
-
-    public boolean contains(Long first) {
-        return index.contains(first);
-    }
-
-    // TODO Fix this.
-    public boolean removeSubIndex(Long first) {
-        return false;
-    }
-
-    public long getSize() {
-        return index.getSize();
-    }
-
-    public void close() {
-        index.close();
+        throw new UnsupportedOperationException("Cannot call this method");
     }
 }
