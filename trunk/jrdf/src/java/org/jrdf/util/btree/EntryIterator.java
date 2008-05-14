@@ -71,15 +71,8 @@ public class EntryIterator implements ClosableIterator<Long[]> {
     private long key;
 
     public EntryIterator(TripleBTree btree) {
-        try {
-            this.iterator = btree.iterateAll();
-            this.currentValues = iterator.next();
-            if (currentValues != null) {
-                this.key = ByteHandler.fromBytes(currentValues, TRIPLES)[0];
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.iterator = btree.iterateAll();
+        getNextValues();
     }
 
     public boolean hasNext() {
@@ -93,8 +86,8 @@ public class EntryIterator implements ClosableIterator<Long[]> {
         }
         // Create entry for current key - as it is already the next one.
         Long[] returnValues = ByteHandler.fromBytes(currentValues, TRIPLES);
-        // Attempt to get next key.
-        key = getNextKey();
+        // Attempt to get next values.
+        getNextValues();
         return returnValues;
     }
 
@@ -111,22 +104,11 @@ public class EntryIterator implements ClosableIterator<Long[]> {
         }
     }
 
-    private long getNextKey() {
-        long currentKey = key;
-        while (currentValues != null && currentKey == key) {
-            currentValues = getNextValues();
-            if (currentValues != null) {
-                currentKey = ByteHandler.fromBytes(currentValues, TRIPLES)[0];
-            }
-        }
-        return currentKey;
-    }
-
-    private byte[] getNextValues() {
+    private void getNextValues() {
         try {
-            return iterator.next();
+            currentValues = iterator.next();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            currentValues = null;
         }
     }
 }
