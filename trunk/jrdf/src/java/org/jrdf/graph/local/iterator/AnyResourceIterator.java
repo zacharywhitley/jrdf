@@ -63,13 +63,11 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.local.ResourceFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.util.ClosableMap;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import org.jrdf.util.ClosableIterator;
 
 public class AnyResourceIterator extends ResourceIterator<Resource> {
+    private long currentValue;
+
     public AnyResourceIterator(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
         final NodePool newNodePool) {
         super(newLongIndexes, newResourceFactory, newNodePool);
@@ -79,7 +77,14 @@ public class AnyResourceIterator extends ResourceIterator<Resource> {
         return getNextResource();
     }
 
-    protected long getNextNodeId(final Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator) {
-        return iterator.next().getKey();
+    protected long getNextNodeId(final ClosableIterator<Long[]> iterator) {
+        long nextKey = 0;
+        while (iterator.hasNext() && nextKey == currentValue) {
+            // TODO Fix generics problem!!
+            Object[] obj = iterator.next();
+            nextKey = (Long) obj[0];
+        }
+        currentValue = nextKey;
+        return currentValue;
     }
 }

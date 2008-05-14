@@ -60,23 +60,18 @@
 package org.jrdf.util.btree;
 
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
-public class EntryIterator implements ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> {
+public class EntryIterator implements ClosableIterator<Long[]> {
     private static final int TRIPLES = 3;
     private RecordIterator iterator;
     private byte[] currentValues;
-    private final TripleBTree btree;
     private long key;
 
     public EntryIterator(TripleBTree btree) {
         try {
-            this.btree = btree;
             this.iterator = btree.iterateAll();
             this.currentValues = iterator.next();
             if (currentValues != null) {
@@ -91,16 +86,16 @@ public class EntryIterator implements ClosableIterator<Map.Entry<Long, ClosableM
         return currentValues != null;
     }
 
-    public Map.Entry<Long, ClosableMap<Long, Set<Long>>> next() {
+    public Long[] next() {
         // Current values null then we are at the end.
         if (currentValues == null) {
             throw new NoSuchElementException();
         }
         // Create entry for current key - as it is already the next one.
-        Entry newEntry = new Entry(key, btree);
+        Long[] returnValues = ByteHandler.fromBytes(currentValues, TRIPLES);
         // Attempt to get next key.
         key = getNextKey();
-        return newEntry;
+        return returnValues;
     }
 
     public void remove() {

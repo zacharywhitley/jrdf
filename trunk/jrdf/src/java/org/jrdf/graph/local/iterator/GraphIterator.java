@@ -63,12 +63,8 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
 
-import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 /**
  * An iterator that iterates over an entire graph.
@@ -87,33 +83,7 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
     /**
      * The iterator for the first index.
      */
-    private ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator;
-
-    /**
-     * The iterator for the second index.
-     */
-    private Iterator<Map.Entry<Long, Set<Long>>> subIterator;
-
-    /**
-     * The iterator for the third index.
-     */
-    private Iterator<Long> itemIterator;
-
-    /**
-     * The current element for the iterator on the first index.
-     */
-    private Map.Entry<Long, ClosableMap<Long, Set<Long>>> firstEntry;
-
-    /**
-     * The current element for the iterator on the second index.
-     */
-    private Map.Entry<Long, Set<Long>> secondEntry;
-
-    /**
-     * The current subject predicate and object, last returned from next().
-     * Only needed by the remove method.
-     */
-    private Long[] currentNodes;
+    private ClosableIterator<Long[]> iterator;
 
     /**
      * Handles the removal of nodes
@@ -121,15 +91,19 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
     private GraphHandler handler;
 
     /**
-     * True if next has been called
+     * True if next has been called and it's okay to remove the current value.
      */
     private boolean nextCalled;
 
     /**
+     * The current nodes.
+     */
+    private Long[] currentNodes;
+
+    /**
      * Constructor.  Sets up the internal iterators.
      *
-     * @throws IllegalArgumentException Must be created with implementations from
-     *                                  the memory package.
+     * @throws IllegalArgumentException Must be created with implementations from the memory package.
      */
     public GraphIterator(GraphHandler newHandler) {
         // store the node factory
@@ -144,20 +118,7 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
      * @return <code>true</code> If there is an element to be read.
      */
     public boolean hasNext() {
-        // confirm we still have an item iterator, and that it has data available
-        return (itemIteratorHasNext() || (subIteratorHasNext()) || (iteratorHasNext()));
-    }
-
-    private boolean iteratorHasNext() {
-        return null != iterator && iterator.hasNext();
-    }
-
-    private boolean subIteratorHasNext() {
-        return null != subIterator && subIterator.hasNext();
-    }
-
-    private boolean itemIteratorHasNext() {
-        return (null != itemIterator && itemIterator.hasNext());
+        return iterator.hasNext();
     }
 
     /**
@@ -170,60 +131,11 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
         if (null == iterator) {
             throw new NoSuchElementException();
         }
-
-        // move to the next position
-        updatePosition();
-
-        if (null == iterator) {
-            throw new NoSuchElementException();
-        }
-
         nextCalled = true;
-
-        // get the next item
-        Long third = itemIterator.next();
-
-        // construct the triple
-        Long second = secondEntry.getKey();
-        Long first = firstEntry.getKey();
-
-        // get back the nodes for these IDs and uild the triple
-        currentNodes = new Long[]{first, second, third};
-        return handler.createTriple(first, second, third);
-    }
-
-
-    /**
-     * Helper method to move the iterators on to the next position.
-     * If there is no next position then {@link #itemIterator itemIterator}
-     * will be set to null, telling {@link #hasNext() hasNext} to return
-     * <code>false</code>.
-     */
-    private void updatePosition() {
-        // progress to the next item if needed
-        if (null == itemIterator || !itemIterator.hasNext()) {
-            // the current iterator been exhausted
-            if (null == subIterator || !subIterator.hasNext()) {
-                // the subiterator has been exhausted
-                if (!iterator.hasNext()) {
-                    // the main iterator has been exhausted
-                    // tell the iterator to finish
-                    iterator = null;
-                    return;
-                }
-                // move on the main iterator
-                firstEntry = iterator.next();
-
-                // now get an iterator to the sub index map
-                subIterator = firstEntry.getValue().entrySet().iterator();
-                assert subIterator.hasNext();
-            }
-            // get the next entry of the sub index
-            secondEntry = subIterator.next();
-            // get an interator to the next set from the sub index
-            itemIterator = secondEntry.getValue().iterator();
-            assert itemIterator.hasNext();
-        }
+        // TODO Fix generics problem!!
+        Object[] obj = iterator.next();
+        currentNodes = new Long[]{(Long) obj[0], (Long) obj[1], (Long) obj[2]};
+        return handler.createTriple(currentNodes);
     }
 
 
@@ -231,7 +143,7 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
      * Implemented for java.util.Iterator.
      */
     public void remove() {
-        if (nextCalled && null != itemIterator) {
+        if (nextCalled) {
             try {
                 handler.remove(currentNodes);
             } catch (GraphException ge) {
@@ -239,31 +151,11 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
                 illegalStateException.setStackTrace(ge.getStackTrace());
                 throw illegalStateException;
             }
-            // clean up the current index after the removal
-            cleanIndex();
         } else {
             throw new IllegalStateException("Next not called or beyond end of data");
         }
     }
 
-
-    /**
-     * Checks if a removed item is the last of its type, and removes any associated subindexes if appropriate.
-     */
-    private void cleanIndex() {
-        // check if a set was cleaned out
-        Set<Long> subGroup = secondEntry.getValue();
-        Map<Long, Set<Long>> subIndex = firstEntry.getValue();
-        if (subGroup.isEmpty()) {
-            // remove the entry for the set
-            subIterator.remove();
-            // check if a subindex was cleaned out
-            if (subIndex.isEmpty()) {
-                // remove the subindex
-                iterator.remove();
-            }
-        }
-    }
 
     /**
      * Closes the iterator by freeing any resources that it current holds.
