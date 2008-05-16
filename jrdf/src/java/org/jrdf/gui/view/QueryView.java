@@ -72,7 +72,7 @@ public interface QueryView {
 
     void setResultsPanel(ResultsPanelView newResultsPanelView);
 
-    void setTriplesLoaded(long numberOfTriples);
+    void setTriplesLoaded(long numberOfTriples, long timeTaken);
 
     void setResults(Answer answer);
 
