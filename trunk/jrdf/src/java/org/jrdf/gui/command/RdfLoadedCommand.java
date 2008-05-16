@@ -70,6 +70,7 @@ import org.springframework.richclient.command.support.ApplicationWindowAwareComm
  */
 public class RdfLoadedCommand extends ApplicationWindowAwareCommand {
     private long numberOfTriples;
+    private long timeTaken;
     private QueryView queryView;
 
     public RdfLoadedCommand(QueryView queryView) {
@@ -81,7 +82,11 @@ public class RdfLoadedCommand extends ApplicationWindowAwareCommand {
         this.numberOfTriples = numberOfTriples;
     }
 
+    public void setTimeTaken(long timeTaken) {
+        this.timeTaken = timeTaken;
+    }
+
     protected void doExecuteCommand() {
-        queryView.setTriplesLoaded(numberOfTriples);
+        queryView.setTriplesLoaded(numberOfTriples, timeTaken);
     }
 }

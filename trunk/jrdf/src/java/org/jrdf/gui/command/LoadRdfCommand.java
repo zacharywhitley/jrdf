@@ -101,10 +101,12 @@ public class LoadRdfCommand extends ApplicationWindowAwareCommand {
     private ApplicationWindowAwareCommand tryLoadModel(File file) {
         try {
             URL fileUrl = tryGetURL(file);
+            long startTime = System.currentTimeMillis();
             Graph graph = jrdfModel.loadModel(fileUrl);
             long numberOfTriples = tryGetNumberOfTriples(graph);
             RdfLoadedCommand actionCommand = getRdfLoadedCommand();
             actionCommand.setTriplesLoaded(numberOfTriples);
+            actionCommand.setTimeTaken(System.currentTimeMillis() - startTime);
             return actionCommand;
         } catch (Exception e) {
             RdfFailedToLoadCommand actionCommand = getRdfFailedToLoadCommand();
