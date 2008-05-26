@@ -59,8 +59,5 @@
 
 package org.jrdf.util.trie;
 
-/**
- * Class description goes here.
- */
 public interface Trie {
 }
