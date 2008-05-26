@@ -128,4 +128,8 @@ public final class NullNewMolecule implements NewMolecule {
     public String toString() {
         return "NULL";
     }
+
+    public boolean isTopLevelMolecule() {
+        return true;
+    }
 }

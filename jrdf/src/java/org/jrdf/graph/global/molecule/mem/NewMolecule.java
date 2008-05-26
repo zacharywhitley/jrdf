@@ -89,4 +89,6 @@ public interface NewMolecule {
     int size();
 
     Set<Triple> getRootTriplesAsSet();
+
+    boolean isTopLevelMolecule();
 }

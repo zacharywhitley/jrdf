@@ -83,17 +83,20 @@ public class NewMoleculeImpl implements NewMolecule {
     private final SortedMap<Triple, SortedSet<NewMolecule>> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
+    protected boolean isTopLevel;
 
     private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<Triple,
         SortedSet<NewMolecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
         subMolecules = newSubMolecules;
+        isTopLevel = true;
     }
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
+        isTopLevel = true;
         subMolecules = new TreeMap<Triple, SortedSet<NewMolecule>>(tripleComparator);
     }
 
@@ -102,6 +105,7 @@ public class NewMoleculeImpl implements NewMolecule {
         for (Triple rootTriple : rootTriples) {
             subMolecules.put(rootTriple, new TreeSet<NewMolecule>(moleculeComparator));
         }
+
     }
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator, NewMolecule... childMolecules) {
@@ -110,6 +114,7 @@ public class NewMoleculeImpl implements NewMolecule {
             Triple headTriple = molecule.getHeadTriple();
             SortedSet<NewMolecule> submolecules = new TreeSet<NewMolecule>(moleculeComparator);
             submolecules.add(molecule);
+            ((NewMoleculeImpl) molecule).isTopLevel = false;
             subMolecules.put(headTriple, submolecules);
         }
     }
@@ -136,6 +141,7 @@ public class NewMoleculeImpl implements NewMolecule {
         }
         if (newMolecule.size() > 0) {
             moleculeSet.add(newMolecule);
+            ((NewMoleculeImpl) newMolecule).isTopLevel = false;
         }
         subMolecules.put(triple, moleculeSet);
         return new NewMoleculeImpl(moleculeComparator, subMolecules);
@@ -149,10 +155,12 @@ public class NewMoleculeImpl implements NewMolecule {
         if (isDoubleLinkedTriple(newTriple)) {
             NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
             moleculeSet.add(newMolecule);
+            ((NewMoleculeImpl) newMolecule).isTopLevel = false;
             subMolecules.put(triple, moleculeSet);
         } else {
             if (moleculeSet.isEmpty()) {
                 NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
+                ((NewMoleculeImpl) newMolecule).isTopLevel = false;
                 moleculeSet.add(newMolecule);
                 subMolecules.put(triple, moleculeSet);
             } else {
@@ -170,7 +178,11 @@ public class NewMoleculeImpl implements NewMolecule {
         Iterator<Triple> rootTriples = molecule.getRootTriples();
         while (rootTriples.hasNext()) {
             Triple currentTriple = rootTriples.next();
-            subMolecules.put(currentTriple, molecule.getSubMolecules(currentTriple));
+            final SortedSet<NewMolecule> newMolecules = molecule.getSubMolecules(currentTriple);
+            for (NewMolecule newMolecule : newMolecules) {
+                ((NewMoleculeImpl) newMolecule).isTopLevel = false;
+            }
+            subMolecules.put(currentTriple, newMolecules);
         }
     }
 
@@ -187,6 +199,7 @@ public class NewMoleculeImpl implements NewMolecule {
             subMolecules.remove(headTriple);
             SortedSet<NewMolecule> containedMolecules = new TreeSet<NewMolecule>(moleculeComparator);
             containedMolecules.add(childMolecule);
+            ((NewMoleculeImpl) childMolecule).isTopLevel = false;
             subMolecules.put(headTriple, containedMolecules);
             return new NewMoleculeImpl(moleculeComparator, subMolecules);
         }
@@ -286,5 +299,9 @@ public class NewMoleculeImpl implements NewMolecule {
         StringBuilder builder = new StringBuilder();
         traverser.traverse(this, new NewMoleculeToString(builder));
         return builder.toString();
+    }
+
+    public boolean isTopLevelMolecule() {
+        return isTopLevel;
     }
 }

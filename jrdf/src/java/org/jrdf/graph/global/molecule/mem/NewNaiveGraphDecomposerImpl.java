@@ -104,7 +104,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 if (tripleComparator.compare(newStartingPoint, currentTriple) < 0) {
                     currentTriple = newStartingPoint;
                 }
-                NewMolecule molecule = moleculeFactory.createMolecue();
+                NewMolecule molecule = moleculeFactory.createMolecule();
                 molecule = molecule.add(currentTriple);
                 triplesChecked.add(currentTriple);
                 //System.err.println("Molecule before " + molecule);
@@ -162,7 +162,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     }
 
     private NewMolecule addLinkedTriple(NewMolecule molecule, Triple triple) throws GraphException {
-        NewMolecule subMolecule = moleculeFactory.createMolecue();
+        NewMolecule subMolecule = moleculeFactory.createMolecule();
         subMolecule.add(triple);
         triplesChecked.add(triple);
         // Put submolecule inside molecule's head triple

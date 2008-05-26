@@ -63,17 +63,7 @@ import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.MOLECULE_FACTORY;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2b2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2b1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r3r1r1;
-import org.jrdf.graph.global.molecule.mem.MergeSubmoleculesImpl;
-import org.jrdf.graph.global.molecule.mem.MoleculeSubsumption;
-import org.jrdf.graph.global.molecule.mem.MoleculeSubsumptionImpl;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -150,6 +140,14 @@ public class NewMoleculeImplUnitTest extends TestCase {
         Set<Triple> triplesAsSet = molecules.iterator().next().getRootTriplesAsSet();
         assertTrue(triplesAsSet.size() == 1);
         assertTrue(triplesAsSet.contains((r1r1r1)));
+    }
+
+    public void testSimpleTopLevel() {
+        NewMolecule molecule = MOLECULE_FACTORY.createMolecule(r1r1r1);
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3, b1r2b2);
+        molecule.add(b1r2b2, newMolecule);
+        assertTrue("Is top level", molecule.isTopLevelMolecule());
+        assertTrue("Is top level", !newMolecule.isTopLevelMolecule());
     }
 
     private void checkHasHeadMolecules(NewMolecule actualMolecule, Triple... triples) {
