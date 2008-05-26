@@ -75,7 +75,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         this.structureIndex = newStructureIndex;
     }
 
-    public Long findMid(Long[] quin) throws GraphException {
+    public Long findMid(Long... quin) throws GraphException {
         ClosableMap<Long, ClosableMap<Long, Set<Long>>> pomMap = indexes[0].getSubIndex(quin[0]);
         Map<Long, Set<Long>> omMap = pomMap.get(quin[1]);
         Set<Long> mSet = omMap.get(quin[2]);

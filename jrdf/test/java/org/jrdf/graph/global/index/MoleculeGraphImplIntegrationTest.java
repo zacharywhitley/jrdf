@@ -128,7 +128,8 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         NewMoleculeIndex<Long> spom = new NewMoleculeIndexImpl(map1);
         NewMoleculeIndex<Long> posm = new NewMoleculeIndexImpl(map2);
         NewMoleculeIndex<Long> ospm = new NewMoleculeIndexImpl(map3);
-        NewMoleculeIndex<Long>[] indexes = new NewMoleculeIndex[]{spom, posm, ospm};
+        NewMoleculeIndex<Long>[] indexes = new NewMoleculeIndexImpl[]{(NewMoleculeIndexImpl) spom,
+                (NewMoleculeIndexImpl) posm, (NewMoleculeIndexImpl) ospm};
         NewMoleculeStructureIndex<Long> structureIndex = new NewMoleculeStructureIndexImpl(
             new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
         NodePool nodePool = nodePoolFactory.createNodePool();

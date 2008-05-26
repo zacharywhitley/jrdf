@@ -59,5 +59,5 @@
 
 package org.jrdf.util.trie;
 
-public interface Container {
+public interface Container extends Trie {
 }

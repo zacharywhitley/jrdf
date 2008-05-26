@@ -59,9 +59,9 @@
 
 package org.jrdf.util.trie;
 
-public class EmptyRecord implements Record {
-    /**
-     * Represents the bottom or no record.
-     */
-    public static final Record EMPTY_RECORD = new EmptyRecord();
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+public class TrieImpl implements Trie {
+    private SortedMap<Character, Trie> nodes = new TreeMap<Character, Trie>();
 }

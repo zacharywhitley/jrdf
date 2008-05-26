@@ -69,6 +69,8 @@ import org.jrdf.graph.ObjectNode;
 import java.util.Set;
 
 public interface TripleUtil {
+    Set<Triple> getAllTriplesForTriple(Triple triple, Graph graph) throws GraphException;
+
     Set<Triple> getAllTriplesForNode(Node node, Graph graph) throws GraphException;
 
     Set<Triple> getAllTriplesForSubjectNode(SubjectNode node, Graph graph) throws GraphException;
