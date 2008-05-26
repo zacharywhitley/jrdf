@@ -139,7 +139,7 @@ public class GlobalGraphTestUtil {
     }
 
     public static NewMolecule createMolecule(Triple... triples) {
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecue();
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule();
         for (Triple triple : triples) {
             newMolecule.add(triple);
         }
@@ -160,7 +160,7 @@ public class GlobalGraphTestUtil {
     }
 
     public static NewMolecule createMolecule(Triple rootTriple, NewMolecule molecule) {
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecue();
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule();
         newMolecule.add(rootTriple, molecule);
         return newMolecule;
     }

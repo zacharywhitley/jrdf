@@ -70,7 +70,7 @@ public class NewMoleculeFactoryImpl implements NewMoleculeFactory {
         moleculeComparator = newMoleculeComparator;
     }
 
-    public NewMolecule createMolecue() {
+    public NewMolecule createMolecule() {
         return new NewMoleculeImpl(moleculeComparator);
     }
 

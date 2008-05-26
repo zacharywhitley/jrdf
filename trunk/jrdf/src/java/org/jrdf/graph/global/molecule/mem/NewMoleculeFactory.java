@@ -64,7 +64,7 @@ import org.jrdf.graph.Triple;
 import java.util.Set;
 
 public interface NewMoleculeFactory {
-    NewMolecule createMolecue();
+    NewMolecule createMolecule();
 
     NewMolecule createMolecule(Triple... triples);
 

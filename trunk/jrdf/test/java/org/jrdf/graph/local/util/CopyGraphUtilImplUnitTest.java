@@ -434,4 +434,15 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         cgUtil.copyTriplesForNode(graph1, graph2, node1, null);
         assertEquals("Graph size is 1", 1, graph2.getNumberOfTriples());
     }
+
+    public void testCopyURINode() throws GraphException {
+        TripleUtil tUtil = new TripleUtilImpl(setFactory);
+
+        triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, (ObjectNode) node1);
+        triple2 = tFac1.createTriple((SubjectNode) node2, pNode1, (ObjectNode) node1);
+        triple3 = tFac1.createTriple((SubjectNode) node2, pNode1, (ObjectNode) node2);
+        graph1.add(triple1, triple2, triple3);
+        Set<Triple> triples = tUtil.getAllTriplesForTriple(triple1, graph1);
+        assertEquals("graph size is 1", 1, triples.size());
+    }
 }
