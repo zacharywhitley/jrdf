@@ -59,5 +59,8 @@
 
 package org.jrdf.util.trie;
 
-public class StringLongRecord<String, Long> implements Record {
+public class StringLongRecord implements Record {
+    public int compareTo(Record o) {
+        return 0;
+    }
 }

@@ -59,5 +59,5 @@
 
 package org.jrdf.util.trie;
 
-public interface Record<K, V> {
+public interface Record extends Comparable<Record> {
 }
