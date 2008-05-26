@@ -64,4 +64,9 @@ public class EmptyRecord implements Record {
      * Represents the bottom or no record.
      */
     public static final Record EMPTY_RECORD = new EmptyRecord();
+
+    public int compareTo(Record o) {
+        // Always less than everything else.
+        return -1;
+    }
 }
