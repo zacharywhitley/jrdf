@@ -87,8 +87,11 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R3B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B4R2B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1B1;
@@ -175,6 +178,30 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
         NewMolecule m1 = createMultiLevelMolecule(asSet(R2R2B1, B1R1B2), asSet(R2R1B2), Collections.<Triple>emptySet());
         checkMolecules(actualMolecules, m1);
+    }
+
+    public void testOrderingMultiMolecule2() throws Exception {
+        GRAPH.add(R2R2B1, R2R1B2, B1R1B2, B3R3B2);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule leaf1 = moleculeFactory.createMolecule(R2R1B2);
+        NewMolecule leaf2 = moleculeFactory.createMolecule(B3R3B2);
+        NewMolecule root = moleculeFactory.createMolecule(R2R2B1, B1R1B2);
+        root.add(B1R1B2, leaf1);
+        root.add(B1R1B2, leaf2);
+        checkMolecules(actualMolecules, root);
+    }
+
+    public void testOrderingMultiMolecule3() throws Exception {
+        GRAPH.add(R2R2B1, R2R1B2, B1R1B2, B3R3B2, R1R1B2, B4R2B2);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule leaf1 = moleculeFactory.createMolecule(R2R1B2, R1R1B2);
+        NewMolecule leaf2 = moleculeFactory.createMolecule(B3R3B2);
+        NewMolecule leaf3 = moleculeFactory.createMolecule(B4R2B2);
+        NewMolecule root = moleculeFactory.createMolecule(R2R2B1, B1R1B2);
+        leaf2.add(B3R3B2, leaf3);
+        root.add(B1R1B2, leaf1);
+        root.add(B1R1B2, leaf2);
+        checkMolecules(actualMolecules, root);
     }
 
     public void testNestedBlankNodeDecompose() throws Exception {
