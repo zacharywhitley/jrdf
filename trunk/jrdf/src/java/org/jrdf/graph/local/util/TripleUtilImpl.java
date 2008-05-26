@@ -104,6 +104,19 @@ public class TripleUtilImpl implements TripleUtil {
         return triplesWithNode;
     }
 
+    public Set<Triple> getAllTriplesForTriple(Triple triple, Graph newGraph) throws GraphException {
+        graph = newGraph;
+        triplesWithNode = setFactory.createSet(Triple.class);
+        blankNodes = setFactory.createSet(BlankNode.class);
+        addTriplesToSet(triplesWithNode, triple.getSubject(), ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        addTriplesToSet(triplesWithNode, ANY_SUBJECT_NODE, triple.getPredicate(), ANY_OBJECT_NODE);
+        addTriplesToSet(triplesWithNode, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, triple.getObject());
+        getAllTriplesForNode(triple.getSubject());
+        getAllTriplesForNode(triple.getPredicate());
+        getAllTriplesForNode(triple.getObject());
+        return triplesWithNode;
+    }
+
     public Set<Triple> getAllTriplesForNode(Node node, Graph newGraph) throws GraphException {
         graph = newGraph;
         triplesWithNode = setFactory.createSet(Triple.class);

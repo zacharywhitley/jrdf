@@ -59,9 +59,13 @@
 
 package org.jrdf.util.trie;
 
-public class EmptyRecord implements Record {
-    /**
-     * Represents the bottom or no record.
-     */
-    public static final Record EMPTY_RECORD = new EmptyRecord();
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+public class ContainerImpl implements Container {
+    private SortedSet<Record> records = new TreeSet<Record>();
+
+    public void add(Record record) {
+        records.add(record);
+    }
 }
