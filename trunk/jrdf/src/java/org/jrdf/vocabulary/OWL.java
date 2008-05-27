@@ -168,95 +168,95 @@ public class OWL extends Vocabulary {
      */
     public static final URI DATA_RANGE;
 
-//    /**
-//     * Equivalent class.
-//     */
-//    public static final URI EQUIVALENT_CLASS;
-//
-//    /**
-//     * Disjoint with.
-//     */
-//    public static final URI DISJOINT_WITH;
-//
-//    /**
-//     * Equivalent property.
-//     */
-//    public static final URI EQUIVALENT_PROPERTY;
-//
-//    /**
-//     * Same as.
-//     */
-//    public static final URI SAME_AS;
-//
-//    /**
-//     * Different From
-//     */
-//    public static final URI DIFFERENT_FROM;
-//
-//    /**
-//     * Distinct members.
-//     */
-//    public static final URI DISTINCT_MEMBERS;
-//
-//    /**
-//     * Union of.
-//     */
-//    public static final URI UNION_OF;
-//
-//    /**
-//     * Intersection of.
-//     */
-//    public static final URI INTERSECTION_OF;
-//
-//    /**
-//     * Complement of.
-//     */
-//    public static final URI COMPLEMENT_OF;
-//
-//    /**
-//     * One of.
-//     */
-//    public static final URI ONE_OF;
-//
-//    /**
-//     * On property.
-//     */
-//    public static final URI ON_PROPERTY;
-//
-//    /**
-//     * All Values From.
-//     */
-//    public static final URI ALL_VALUES_FROM;
-//
-//    /**
-//     * Has Value.
-//     */
-//    public static final URI HAS_VALUE;
-//
-//    /**
-//     * Some values from.
-//     */
-//    public static final URI SOME_VALUES_FROM;
-//
-//    /**
-//     * Minimum cardinality.
-//     */
-//    public static final URI MIN_CARDINALITY;
-//
-//    /**
-//     * Maximum cardinality.
-//     */
-//    public static final URI MAX_CARDINALITY;
-//
-//    /**
-//     * Cardinality.
-//     */
-//    public static final URI CARDINALITY;
-//
-//    /**
-//     * Inverse of.
-//     */
-//    public static final URI INVERSE_OF;
+    /**
+     * Equivalent class.
+     */
+    public static final URI EQUIVALENT_CLASS;
+
+    /**
+     * Disjoint with.
+     */
+    public static final URI DISJOINT_WITH;
+
+    /**
+     * Equivalent property.
+     */
+    public static final URI EQUIVALENT_PROPERTY;
+
+    /**
+     * Same as.
+     */
+    public static final URI SAME_AS;
+
+    /**
+     * Different from.
+     */
+    public static final URI DIFFERENT_FROM;
+
+    /**
+     * Distinct members.
+     */
+    public static final URI DISTINCT_MEMBERS;
+
+    /**
+     * Union of.
+     */
+    public static final URI UNION_OF;
+
+    /**
+     * Intersection of.
+     */
+    public static final URI INTERSECTION_OF;
+
+    /**
+     * Complement of.
+     */
+    public static final URI COMPLEMENT_OF;
+
+    /**
+     * One of.
+     */
+    public static final URI ONE_OF;
+
+    /**
+     * On property.
+     */
+    public static final URI ON_PROPERTY;
+
+    /**
+     * All Values From.
+     */
+    public static final URI ALL_VALUES_FROM;
+
+    /**
+     * Has Value.
+     */
+    public static final URI HAS_VALUE;
+
+    /**
+     * Some values from.
+     */
+    public static final URI SOME_VALUES_FROM;
+
+    /**
+     * Minimum cardinality.
+     */
+    public static final URI MIN_CARDINALITY;
+
+    /**
+     * Maximum cardinality.
+     */
+    public static final URI MAX_CARDINALITY;
+
+    /**
+     * Cardinality.
+     */
+    public static final URI CARDINALITY;
+
+    /**
+     * Inverse of.
+     */
+    public static final URI INVERSE_OF;
 
     /**
      * Label.
@@ -278,30 +278,30 @@ public class OWL extends Vocabulary {
      */
     public static final URI IS_DEFINED_BY;
 
-//    /**
-//     * Imports.
-//     */
-//    public static final URI IMPORTS;
-//
-//    /**
-//     * Version info.
-//     */
-//    public static final URI VERSION_INFO;
-//
-//    /**
-//     * Prior version.
-//     */
-//    public static final URI PRIOR_VERSION;
-//
-//    /**
-//     * Backward compatible with.
-//     */
-//    public static final URI BACKWARD_COMPATIBLE_WITH;
-//
-//    /**
-//     * Incompatible with.
-//     */
-//    public static final URI INCOMPATIBLE_WITH;
+    /**
+     * Imports.
+     */
+    public static final URI IMPORTS;
+
+    /**
+     * Version info.
+     */
+    public static final URI VERSION_INFO;
+
+    /**
+     * Prior version.
+     */
+    public static final URI PRIOR_VERSION;
+
+    /**
+     * Backward compatible with.
+     */
+    public static final URI BACKWARD_COMPATIBLE_WITH;
+
+    /**
+     * Incompatible with.
+     */
+    public static final URI INCOMPATIBLE_WITH;
 
     static {
         try {
@@ -327,19 +327,81 @@ public class OWL extends Vocabulary {
             DATA_RANGE = new URI(BASE_URI + "DataRange");
 
             // Properties
+            EQUIVALENT_CLASS = new URI(BASE_URI + "equivalentClass");
+            DISJOINT_WITH = new URI(BASE_URI + "disjointWith");
+            EQUIVALENT_PROPERTY = new URI(BASE_URI + "equivalentProperty");
+            SAME_AS = new URI(BASE_URI + "sameAs");
+            DIFFERENT_FROM = new URI(BASE_URI + "differentFrom");
+            DISTINCT_MEMBERS = new URI(BASE_URI + "distinctMembers");
+            UNION_OF = new URI(BASE_URI + "unionOf");
+            INTERSECTION_OF = new URI(BASE_URI + "intersectionOf");
+            COMPLEMENT_OF = new URI(BASE_URI + "complementOf");
+            ONE_OF = new URI(BASE_URI + "oneOf");
+            ON_PROPERTY = new URI(BASE_URI + "onProperty");
+            ALL_VALUES_FROM = new URI(BASE_URI + "allValuesFrom");
+            HAS_VALUE = new URI(BASE_URI + "hasValue");
+            SOME_VALUES_FROM = new URI(BASE_URI + "someValuesFrom");
+            MIN_CARDINALITY = new URI(BASE_URI + "minCardinality");
+            MAX_CARDINALITY = new URI(BASE_URI + "maxCardinality");
+            CARDINALITY = new URI(BASE_URI + "cardinality");
+            INVERSE_OF = new URI(BASE_URI + "inverseOf");
             LABEL = new URI(BASE_URI + "label");
             COMMENT = new URI(BASE_URI + "comment");
             SEE_ALSO = new URI(BASE_URI + "seeAlso");
             IS_DEFINED_BY = new URI(BASE_URI + "isDefinedBy");
+            IMPORTS = new URI(BASE_URI + "imports");
+            VERSION_INFO = new URI(BASE_URI + "versionInfo");
+            PRIOR_VERSION = new URI(BASE_URI + "priorVersion");
+            BACKWARD_COMPATIBLE_WITH = new URI(BASE_URI + "backwardCompatibleWith");
+            INCOMPATIBLE_WITH = new URI(BASE_URI + "incompatibleWith");
 
             // Add Classes
             RESOURCES.add(CLASS);
+            RESOURCES.add(THING);
+            RESOURCES.add(NOTHING);
+            RESOURCES.add(ALL_DIFFERENT);
+            RESOURCES.add(RESTRICTION);
+            RESOURCES.add(OBJECT_PROPERTY);
+            RESOURCES.add(DATATYPE_PROPERTY);
+            RESOURCES.add(TRANSITIVE_PROPERTY);
+            RESOURCES.add(SYMMETRIC_PROPERTY);
+            RESOURCES.add(FUNCTIONAL_PROPERTY);
+            RESOURCES.add(INVERSE_FUNCTIONAL_PROPERTY);
+            RESOURCES.add(ANNOTATION_PROPERTY);
+            RESOURCES.add(ONTOLOGY);
+            RESOURCES.add(ONTOLOGY_PROPERTY);
+            RESOURCES.add(DEPRECATED_CLASS);
+            RESOURCES.add(DEPRECATED_PROPERTY);
+            RESOURCES.add(DATA_RANGE);
 
             // Add Properties
+            RESOURCES.add(EQUIVALENT_CLASS);
+            RESOURCES.add(DISJOINT_WITH);
+            RESOURCES.add(EQUIVALENT_PROPERTY);
+            RESOURCES.add(SAME_AS);
+            RESOURCES.add(DIFFERENT_FROM);
+            RESOURCES.add(DISTINCT_MEMBERS);
+            RESOURCES.add(UNION_OF);
+            RESOURCES.add(INTERSECTION_OF);
+            RESOURCES.add(COMPLEMENT_OF);
+            RESOURCES.add(ONE_OF);
+            RESOURCES.add(ON_PROPERTY);
+            RESOURCES.add(ALL_VALUES_FROM);
+            RESOURCES.add(HAS_VALUE);
+            RESOURCES.add(SOME_VALUES_FROM);
+            RESOURCES.add(MIN_CARDINALITY);
+            RESOURCES.add(MAX_CARDINALITY);
+            RESOURCES.add(CARDINALITY);
+            RESOURCES.add(INVERSE_OF);
             RESOURCES.add(LABEL);
             RESOURCES.add(COMMENT);
             RESOURCES.add(SEE_ALSO);
             RESOURCES.add(IS_DEFINED_BY);
+            RESOURCES.add(IMPORTS);
+            RESOURCES.add(VERSION_INFO);
+            RESOURCES.add(PRIOR_VERSION);
+            RESOURCES.add(BACKWARD_COMPATIBLE_WITH);
+            RESOURCES.add(INCOMPATIBLE_WITH);
         } catch (URISyntaxException use) {
             // This should never happen.
             throw new ExceptionInInitializerError("Failed to create required URIs");
