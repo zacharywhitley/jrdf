@@ -59,12 +59,12 @@
 
 package org.jrdf.graph.local.util;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 
 import java.util.Set;
 
