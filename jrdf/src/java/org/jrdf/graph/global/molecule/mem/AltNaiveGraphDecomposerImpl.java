@@ -101,7 +101,7 @@ public class AltNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         this.molecules = newSetFactory.createSet(NewMolecule.class, comparator);
         this.moleculeFactory = newMoleculeFactory;
         this.tripleComparator = newTripleComparator;
-        tripleUtil = new TripleUtilImpl(newSetFactory, tripleComparator);
+        this.tripleUtil = new TripleUtilImpl(newSetFactory, tripleComparator);
     }
 
     public SortedSet<NewMolecule> decompose(Graph newGraph) throws GraphException {
