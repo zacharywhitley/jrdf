@@ -84,20 +84,90 @@ public class OWL extends Vocabulary {
     public static final URI BASE_URI;
 
     /**
-     * The class.
+     * Class.
      */
     public static final URI CLASS;
 
-//    /**
-//     * Thing.
-//     */
-//    public static final URI THING;
-//
-//    /**
-//     * Nothing.
-//     */
-//    public static final URI NOTHING;
-//
+    /**
+     * Thing.
+     */
+    public static final URI THING;
+
+    /**
+     * Nothing.
+     */
+    public static final URI NOTHING;
+
+    /**
+     * All Different.
+     */
+    public static final URI ALL_DIFFERENT;
+
+    /**
+     * Restriction.
+     */
+    public static final URI RESTRICTION;
+
+    /**
+     * Object property.
+     */
+    public static final URI OBJECT_PROPERTY;
+
+    /**
+     * Datatype property.
+     */
+    public static final URI DATATYPE_PROPERTY;
+
+    /**
+     * Transitive property.
+     */
+    public static final URI TRANSITIVE_PROPERTY;
+
+    /**
+     * Symmetric property.
+     */
+    public static final URI SYMMETRIC_PROPERTY;
+
+    /**
+     * Functional property.
+     */
+    public static final URI FUNCTIONAL_PROPERTY;
+
+    /**
+     * Inverse functional property.
+     */
+    public static final URI INVERSE_FUNCTIONAL_PROPERTY;
+
+    /**
+     * Annotation property.
+     */
+    public static final URI ANNOTATION_PROPERTY;
+
+    /**
+     * Ontology.
+     */
+    public static final URI ONTOLOGY;
+
+    /**
+     * Ontology Property.
+     */
+    public static final URI ONTOLOGY_PROPERTY;
+
+    /**
+     * Deprecated Class.
+     */
+    public static final URI DEPRECATED_CLASS;
+
+    /**
+     * Deprecated property.
+     */
+    public static final URI DEPRECATED_PROPERTY;
+
+    /**
+     * Data Range.
+     */
+    public static final URI DATA_RANGE;
+
 //    /**
 //     * Equivalent class.
 //     */
@@ -124,11 +194,6 @@ public class OWL extends Vocabulary {
 //    public static final URI DIFFERENT_FROM;
 //
 //    /**
-//     * All Difference.
-//     */
-//    public static final URI ALL_DIFFERENT;
-//
-//    /**
 //     * Distinct members.
 //     */
 //    public static final URI DISTINCT_MEMBERS;
@@ -152,11 +217,6 @@ public class OWL extends Vocabulary {
 //     * One of.
 //     */
 //    public static final URI ONE_OF;
-//
-//    /**
-//     * Restriction.
-//     */
-//    public static final URI RESTRICTION;
 //
 //    /**
 //     * On property.
@@ -194,45 +254,10 @@ public class OWL extends Vocabulary {
 //    public static final URI CARDINALITY;
 //
 //    /**
-//     * Object property.
-//     */
-//    public static final URI OBJECT_PROPERTY;
-//
-//    /**
-//     * Object property.
-//     */
-//    public static final URI DATATYPE_PROPERTY;
-//
-//    /**
 //     * Inverse of.
 //     */
 //    public static final URI INVERSE_OF;
-//
-//    /**
-//     * Transitive property.
-//     */
-//    public static final URI TRANSITIVE_PROPERTY;
-//
-//    /**
-//     * Symmetric property.
-//     */
-//    public static final URI SYMMETRIC_PROPERTY;
-//
-//    /**
-//     * Functional property.
-//     */
-//    public static final URI FUNCTIONAL_PROPERTY;
-//
-//    /**
-//     * Inverse functional property.
-//     */
-//    public static final URI INVERSE_FUNCTIONAL_PROPERTY;
-//
-//    /**
-//     * Annotation property.
-//     */
-//    public static final URI ANNOTATION_PROPERTY;
-//
+
     /**
      * Label.
      */
@@ -253,16 +278,6 @@ public class OWL extends Vocabulary {
      */
     public static final URI IS_DEFINED_BY;
 
-//    /**
-//     * Ontology.
-//     */
-//    public static final URI ONTOLOGY;
-//
-//    /**
-//     * Ontology Property.
-//     */
-//    public static final URI ONTOLOGY_PROPERTY;
-//
 //    /**
 //     * Imports.
 //     */
@@ -287,21 +302,6 @@ public class OWL extends Vocabulary {
 //     * Incompatible with.
 //     */
 //    public static final URI INCOMPATIBLE_WITH;
-//
-//    /**
-//     * Deprecated Class.
-//     */
-//    public static final URI DEPRECATED_CLASS;
-//
-//    /**
-//     * Deprecated property.
-//     */
-//    public static final URI DEPRECATED_PROPERTY;
-//
-//    /**
-//     * Data Range.
-//     */
-//    public static final URI DATA_RANGE;
 
     static {
         try {
@@ -309,6 +309,22 @@ public class OWL extends Vocabulary {
 
             // Classes
             CLASS = new URI(BASE_URI + "Class");
+            THING = new URI(BASE_URI + "Thing");
+            NOTHING = new URI(BASE_URI + "Nothing");
+            ALL_DIFFERENT = new URI(BASE_URI + "AllDifferent");
+            RESTRICTION = new URI(BASE_URI + "Restriction");
+            OBJECT_PROPERTY = new URI(BASE_URI + "ObjectProperty");
+            DATATYPE_PROPERTY = new URI(BASE_URI + "DatatypeProperty");
+            TRANSITIVE_PROPERTY = new URI(BASE_URI + "TransitiveProperty");
+            SYMMETRIC_PROPERTY = new URI(BASE_URI + "SymmetricProperty");
+            FUNCTIONAL_PROPERTY = new URI(BASE_URI + "FunctionalProperty");
+            INVERSE_FUNCTIONAL_PROPERTY = new URI(BASE_URI + "InverseFunctionalProperty");
+            ANNOTATION_PROPERTY = new URI(BASE_URI + "AnnotationProperty");
+            ONTOLOGY = new URI(BASE_URI + "Ontology");
+            ONTOLOGY_PROPERTY = new URI(BASE_URI + "OntologyProperty");
+            DEPRECATED_CLASS = new URI(BASE_URI + "DeprecatedClass");
+            DEPRECATED_PROPERTY = new URI(BASE_URI + "DeprecatedProperty");
+            DATA_RANGE = new URI(BASE_URI + "DataRange");
 
             // Properties
             LABEL = new URI(BASE_URI + "label");
