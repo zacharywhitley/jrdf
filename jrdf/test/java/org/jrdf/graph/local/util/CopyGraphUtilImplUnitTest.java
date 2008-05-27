@@ -443,6 +443,6 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         triple3 = tFac1.createTriple((SubjectNode) node2, pNode1, (ObjectNode) node2);
         graph1.add(triple1, triple2, triple3);
         Set<Triple> triples = tUtil.getAllTriplesForTriple(triple1, graph1);
-        assertEquals("graph size is 3", 3, triples.size());
+        assertEquals("Set size is 1", 1, triples.size());
     }
 }
