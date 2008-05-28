@@ -75,10 +75,14 @@ public interface MoleculeTemplate {
     void setHeadTriple(TriplePattern triplePattern) throws Exception;
 
     void addRootTriple(TriplePattern... triplePatterns);
+
+    void add(TriplePattern triplePatterns, MoleculeTemplate subMolecule);
     
     TriplePattern getHeadTriple();
 
     Set<TriplePattern> getRootTriples();
 
     List<MoleculeTemplate> getSubMoleculeTemplate(TriplePattern headTriple);
+
+    void remove(TriplePattern triplePattern);
 }
