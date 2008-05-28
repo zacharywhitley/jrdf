@@ -135,4 +135,24 @@ public class MoleculeTemplateImpl implements MoleculeTemplate {
     public List<MoleculeTemplate> getSubMoleculeTemplate(TriplePattern headTriple) {
         return subMolecules.get(headTriple);
     }
+
+    public void add(TriplePattern triplePatterns, MoleculeTemplate subMolecule) {
+        List<MoleculeTemplate> subs = subMolecules.get(triplePatterns);
+        subs = createEmptySubMoleculeTemplate(subs);
+        subs.add(subMolecule);
+        subMolecules.put(triplePatterns, subs);
+    }
+
+    public void remove(TriplePattern triplePattern) {
+        if (triplePattern == null) {
+            return;
+        }
+        Set<TriplePattern> roots = subMolecules.keySet();
+        for (TriplePattern root : roots) {
+            if (root.equals(triplePattern)) {
+                subMolecules.remove(root);
+                break;
+            }
+        }
+    }
 }

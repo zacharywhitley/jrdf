@@ -82,6 +82,7 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -101,9 +102,26 @@ public class MoleculeTemplateImplUnitTest extends TestCase {
     private MoleculeTemplate molTemp;
     private GraphElementFactory eFac;
 
+    private SubjectNode s0;
+    private SubjectNode s1;
+    private SubjectNode s2;
+    private ObjectNode o0;
+    private ObjectNode o1;
+    private ObjectNode o2;
+    private PredicateNode p1;
+    private PredicateNode p2;
+
     public void setUp() throws Exception {
         super.setUp();
         eFac = GRAPH.getElementFactory();
+        s0 = eFac.createBlankNode();
+        s1 = eFac.createURIReference(URI.create("urn:s1"));
+        s2 = eFac.createURIReference(URI.create("urn:s2"));
+        o0 = eFac.createBlankNode();
+        o1 = eFac.createURIReference(URI.create("urn:o1"));
+        o2 = eFac.createURIReference(URI.create("urn:o2"));
+        p1 = eFac.createURIReference(URI.create("urn:p1"));
+        p2 = eFac.createURIReference(URI.create("urn:p2"));
         molTemp = new MoleculeTemplateImpl(GRAPH, tripleComparator);
     }
 
@@ -126,12 +144,6 @@ public class MoleculeTemplateImplUnitTest extends TestCase {
     }
 
     public void testRootTriples() throws GraphElementFactoryException {
-        SubjectNode s1 = eFac.createURIReference(URI.create("urn:s1"));
-        SubjectNode s2 = eFac.createURIReference(URI.create("urn:s2"));
-        ObjectNode o1 = eFac.createURIReference(URI.create("urn:o1"));
-        ObjectNode o2 = eFac.createURIReference(URI.create("urn:o2"));
-        PredicateNode p1 = eFac.createURIReference(URI.create("urn:p1"));
-        PredicateNode p2 = eFac.createURIReference(URI.create("urn:p2"));
         TriplePattern t1 = new TriplePattern(s1, p1, o1);
         TriplePattern t2 = new TriplePattern(s2, p2, o2);
         molTemp.addRootTriple(t1, t2);
@@ -141,6 +153,43 @@ public class MoleculeTemplateImplUnitTest extends TestCase {
         molTemp.addRootTriple(t3);
         roots = molTemp.getRootTriples();
         checkRoots(roots, t1, t2, t3);
+    }
+
+    public void test2LvlTemplate() throws Exception {
+        TriplePattern t0 = new TriplePattern(s1, p2, (ObjectNode) s0);
+        TriplePattern t1 = new TriplePattern(s0, p1, o1);
+        TriplePattern t2 = new TriplePattern(s2, p2, o2);
+        MoleculeTemplate sub1 = new MoleculeTemplateImpl(GRAPH, tripleComparator);
+        sub1.setHeadTriple(t1);
+        molTemp.add(t0, sub1);
+        molTemp.addRootTriple(t2);
+        assertTrue("head ok", t0.equals(molTemp.getHeadTriple()));
+        checkRoots(molTemp.getRootTriples(), t0, t2);
+        List<MoleculeTemplate> subs = molTemp.getSubMoleculeTemplate(t0);
+        assertEquals("1 sub molecule", 1, subs.size());
+        checkRoots(subs.get(0).getRootTriples(), t1);
+    }
+
+    public void testSimpleRemove() {
+        TriplePattern t0 = new TriplePattern(s1, p2, (ObjectNode) s0);
+        TriplePattern t1 = new TriplePattern(s0, p1, o1);
+        TriplePattern t2 = new TriplePattern(s2, p2, o2);
+        molTemp.addRootTriple(t0, t1, t2);
+        MoleculeTemplate sub1 = new MoleculeTemplateImpl(GRAPH, tripleComparator);
+        molTemp.add(t0, sub1);
+        TriplePattern t4 = new TriplePattern(s1, p2, (ObjectNode) s0);
+        molTemp.remove(t4);
+        checkRoots(molTemp.getRootTriples(), t1, t2);
+    }
+
+    public void testComplexRemove() {
+        TriplePattern t0 = new TriplePattern(s1, p2, (ObjectNode) s0);
+        TriplePattern t1 = new TriplePattern(s0, p1, o1);
+        TriplePattern t2 = new TriplePattern(s2, p2, o2);
+        molTemp.addRootTriple(t0, t1);
+        molTemp.remove(t1);
+        molTemp.addRootTriple(t2);
+        checkRoots(molTemp.getRootTriples(), t0, t2);
     }
 
     private void checkRoots(Set<TriplePattern> roots, TriplePattern... triples) {
