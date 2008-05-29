@@ -128,11 +128,9 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
         }
     }
 
-
     public boolean hasNext() {
         return null != triple;
     }
-
 
     public Triple next() throws NoSuchElementException {
         if (null == triple) {
