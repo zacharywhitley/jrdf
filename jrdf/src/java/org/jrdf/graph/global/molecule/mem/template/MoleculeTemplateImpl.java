@@ -167,7 +167,7 @@ public class MoleculeTemplateImpl implements MoleculeTemplate {
         }
     }
 
-    public MoleculeTemplateMatcher matcher(Iterator<Triple> triples) {
+    public MoleculeTemplateMatcher matcher(Set<Triple> triples) {
         MoleculeTemplateMatcher matcher = new MoleculeTemplateMatcherImpl(this, triples);
         return matcher;
     }
