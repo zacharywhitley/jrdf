@@ -57,30 +57,19 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule.mem.template;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.molecule.mem.template.MoleculeTemplate;
+import org.jrdf.graph.Triple;
 
-import java.util.Set;
+import java.util.List;
 
 /**
- * Decompose a local graph into a global graph (set of Molecules).
- *
- * @author Andrew Newman
- * @version $Revision: 1226 $
+ * Created by IntelliJ IDEA.
+ * User: liyf
+ * Date: May 28, 2008
+ * Time: 3:47:42 PM
+ * To change this template use File | Settings | File Templates.
  */
-public interface NewGraphDecomposer {
-
-    /**
-     * Given the graph, this method returns the graph as a set of Molecules conataining the Most Self Contained Graph.
-     *
-     * @param graph to decompose
-     * @return set of molecules (subgraphs) which make up the graph
-     * @throws GraphException
-     */
-    Set<NewMolecule> decompose(Graph graph) throws GraphException;
-
-    Set<NewMolecule> decompose(Graph graph, Set<MoleculeTemplate> templates) throws GraphException;
+public interface MoleculeTemplateMatcher {
+    List<Triple> matches();
 }

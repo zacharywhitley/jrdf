@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule.mem.template;
 
 import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
@@ -70,6 +70,8 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.TripleComparator;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
 import org.jrdf.graph.global.molecule.TriplePattern;
+import org.jrdf.graph.global.molecule.mem.template.MoleculeTemplate;
+import org.jrdf.graph.global.molecule.mem.template.MoleculeTemplateImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
