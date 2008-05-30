@@ -205,4 +205,35 @@ public class MoleculeTemplateImpl implements MoleculeTemplate {
         }
         return patterns;
     }
+
+    public String toString() {
+        String result;
+        int indent = 0;
+        result = rootToString(indent, this);
+        return result;
+    }
+
+    private String rootToString(int indent, MoleculeTemplate template) {
+        String result = new String();
+        Set<TriplePattern> roots = template.getRootTriples();
+        for (TriplePattern root : roots) {
+            result += getIndentation(indent) + root.toString() + "\n";
+            List<MoleculeTemplate> subs = template.getSubMoleculeTemplate(root);
+            for (MoleculeTemplate sub : subs) {
+                result += rootToString(indent + 1, sub);
+            }
+        }
+        return result;
+    }
+
+    private String getIndentation(int indent) {
+        int i = 0;
+        String space = "--";
+        String result = new String();
+        while (i < indent) {
+            result += space;
+            i++;
+        }
+        return result;
+    }
 }

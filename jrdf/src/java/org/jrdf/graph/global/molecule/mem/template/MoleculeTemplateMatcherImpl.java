@@ -70,7 +70,8 @@ import java.util.Set;
 /**
  * A strict matcher that attempts to match every triple pattern in the molecule template to a triple
  * in the triple iterator.
- * TODO: For the moment, do not cater for repeated triple patterns (triple*)
+ * TODO: 1. For the moment, do not cater for repeated triple patterns (triple*)
+ * TODO: 2. Need a way to capture matching nodes in triple patterns...
  *
  * Created by IntelliJ IDEA.
  * User: liyf
