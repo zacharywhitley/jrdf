@@ -60,39 +60,16 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.TriplePattern;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
- * A molecule template is a skeleton of an actual molecule. So all triple patterns in the template should be found
- * in a corresponding set of triples.
  * Created by IntelliJ IDEA.
  * User: liyf
- * Date: May 27, 2008
- * Time: 3:20:30 PM
+ * Date: May 28, 2008
+ * Time: 3:47:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface MoleculeTemplate {
-    void setHeadTriple(TriplePattern triplePattern) throws Exception;
-
-    void addRootTriple(TriplePattern... triplePatterns) throws Exception;
-
-    void add(TriplePattern triplePatterns, MoleculeTemplate subMolecule) throws Exception;
-
-    TriplePattern getHeadTriple();
-
-    Set<TriplePattern> getRootTriples();
-
-    List<MoleculeTemplate> getSubMoleculeTemplate(TriplePattern headTriple);
-
-    void remove(TriplePattern triplePattern);
-
-    MoleculeTemplateMatcher matcher(Iterator<Triple> triples);
-
-    boolean hasSubMolecules();
-
-    Iterator<TriplePattern> iterator();
+public interface MoleculeTemplateMatcher {
+    List<Triple> matches();
 }

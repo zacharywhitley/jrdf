@@ -80,4 +80,6 @@ public interface NewGraphDecomposer {
      * @throws GraphException
      */
     Set<NewMolecule> decompose(Graph graph) throws GraphException;
+
+    Set<NewMolecule> decompose(Graph graph, Set<MoleculeTemplate> templates) throws GraphException;
 }

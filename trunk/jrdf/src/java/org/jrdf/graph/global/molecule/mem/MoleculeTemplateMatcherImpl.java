@@ -62,37 +62,75 @@ package org.jrdf.graph.global.molecule.mem;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.TriplePattern;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
- * A molecule template is a skeleton of an actual molecule. So all triple patterns in the template should be found
- * in a corresponding set of triples.
+ * A strict matcher that attempts to match every triple pattern in the molecule template to a triple
+ * in the triple iterator.
+ * TODO: For the moment, do not cater for repeated triple patterns (triple*)
+ *
  * Created by IntelliJ IDEA.
  * User: liyf
- * Date: May 27, 2008
- * Time: 3:20:30 PM
+ * Date: May 28, 2008
+ * Time: 3:48:28 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface MoleculeTemplate {
-    void setHeadTriple(TriplePattern triplePattern) throws Exception;
+public class MoleculeTemplateMatcherImpl implements MoleculeTemplateMatcher {
+    private MoleculeTemplate template;
+    private Iterator<Triple> iterator;
+    private Iterator<TriplePattern> tpIterator;
+    private List<Triple> list;
 
-    void addRootTriple(TriplePattern... triplePatterns) throws Exception;
+    public MoleculeTemplateMatcherImpl(MoleculeTemplate template, Iterator<Triple> triples) {
+        this.template = template;
+        this.iterator = triples;
+        this.tpIterator = this.template.iterator();
+        list = new ArrayList<Triple>();
+    }
 
-    void add(TriplePattern triplePatterns, MoleculeTemplate subMolecule) throws Exception;
+    /**
+     * Return a list of triples in depth-first manner.
+     * If cannot find a match, return null list.
+     * @return a list of triples in depth-first manner.
+     */
+    public List<Triple> matches() {
+        while (tpIterator.hasNext()) {
+            TriplePattern pattern = tpIterator.next();
+            boolean matches = matchATriplePattern(pattern);
+            if (!matches) {
+                return null;
+            }
+        }
+        return list;
+    }
 
-    TriplePattern getHeadTriple();
+    private boolean matchATriplePattern(TriplePattern pattern) {
+        while (iterator.hasNext()) {
+            Triple triple = iterator.next();
+            if (pattern.matches(triple)) {
+                addToList(triple);
+                return true;
+            }
+        }
+        return false;
+    }
 
-    Set<TriplePattern> getRootTriples();
+    private boolean matchSubMoleculeTemplate(MoleculeTemplate sub) {
+        MoleculeTemplateMatcher subMatcher = new MoleculeTemplateMatcherImpl(sub, iterator);
+        List<Triple> subList = subMatcher.matches();
+        if (subList != null) {
+            list.addAll(subList);
+        } else {
+            return false;
+        }
+        return true;
+    }
 
-    List<MoleculeTemplate> getSubMoleculeTemplate(TriplePattern headTriple);
-
-    void remove(TriplePattern triplePattern);
-
-    MoleculeTemplateMatcher matcher(Iterator<Triple> triples);
-
-    boolean hasSubMolecules();
-
-    Iterator<TriplePattern> iterator();
+    private void addToList(Triple triple) {
+        list.add(triple);
+        iterator.remove();
+        tpIterator.remove();
+    }
 }
