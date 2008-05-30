@@ -90,7 +90,7 @@ public interface MoleculeTemplate {
 
     void remove(TriplePattern triplePattern);
 
-    MoleculeTemplateMatcher matcher(Iterator<Triple> triples);
+    MoleculeTemplateMatcher matcher(Set<Triple> triples);
 
     boolean hasSubMolecules();
 

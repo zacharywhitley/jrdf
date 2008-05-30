@@ -62,16 +62,19 @@ package org.jrdf.graph.global.molecule.mem.template;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.molecule.TriplePattern;
-import org.jrdf.graph.global.molecule.mem.template.MoleculeTemplate;
-import org.jrdf.graph.global.molecule.mem.template.MoleculeTemplateImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
@@ -82,7 +85,9 @@ import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -96,7 +101,7 @@ public class MoleculeTemplateMatcherImplUnitTest extends TestCase {
     private final LocalizedNodeComparator localNodeComparator = new LocalizedNodeComparatorImpl();
     private final BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localNodeComparator);
     private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
-    private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
+    private final TripleComparator comparator = new TripleComparatorImpl(nodeComparator);
     private final static JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
 
     private Graph graph;
@@ -105,7 +110,9 @@ public class MoleculeTemplateMatcherImplUnitTest extends TestCase {
     private SubjectNode s1, s2;
     private PredicateNode p1, p2;
     private ObjectNode o1, o2;
-    private TriplePattern t1, t2;
+    private TriplePattern tp1, tp2, tp3, tp4;
+    private Triple t1, t2, t3, t4;
+    private MoleculeTemplateMatcher matcher;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -118,21 +125,130 @@ public class MoleculeTemplateMatcherImplUnitTest extends TestCase {
         p1 = eFac.createURIReference(URI.create("urn:p1"));
         p2 = eFac.createURIReference(URI.create("urn:p2"));
 
-        t1 = new TriplePattern(s1, p1, o1);
-        t2 = new TriplePattern(s2, p2, o2);
-
-        template = new MoleculeTemplateImpl(null, tripleComparator);
+        template = new MoleculeTemplateImpl(null, comparator);
     }
 
-    public void testModifySet() throws Exception {
-        template.addRootTriple(t1, t2);
+    public void testOneSimpleTPMatching() throws Exception {
+        tp1 = new TriplePattern(s1, p1, o1);
+        addTPsToTemplate(tp1);
+        Triple triple = new TripleImpl(s1, p1, o1);
+        Set<Triple> set = addTriplesToSet(triple);
+        matcher = template.matcher(set);
+        List<Triple> list = matcher.matches();
+        assertEquals("1 triple", 1, list.size());
+        assertEquals("Right triple", triple, list.get(0));
+    }
 
-        Iterator<TriplePattern> roots = template.iterator();
-        while (roots.hasNext()) {
-            TriplePattern root = roots.next();
-            if (root.equals(t1)) {
-                roots.remove();
-            }
+    private void addTPsToTemplate(TriplePattern... tps) throws Exception {
+        for (TriplePattern t1 : tps) {
+            template.addRootTriple(t1);
+        }
+    }
+
+    private Set<Triple> addTriplesToSet(Triple... triples) {
+        Set<Triple> set = new HashSet<Triple>();
+        for (Triple triple : triples) {
+            set.add(triple);
+        }
+        return set;
+    }
+
+    public void testOneAnyTPMatching() throws Exception {
+        tp1 = new TriplePattern(ANY_SUBJECT_NODE, p1, o1);
+        addTPsToTemplate(tp1);
+        t1 = new TripleImpl(s1, p1, o1);
+        Set<Triple> set = addTriplesToSet(t1);
+        matcher = template.matcher(set);
+        List<Triple> list = matcher.matches();
+        assertEquals("1 triple", 1, list.size());
+        assertEquals("Right t1", t1, list.get(0));
+    }
+
+    public void test2LvlTPNotMatch() throws Exception {
+        tp1 = new TriplePattern(ANY_SUBJECT_NODE, p1, o1);
+        tp2 = new TriplePattern((SubjectNode) o1, p2, o2);
+        MoleculeTemplate sub = new MoleculeTemplateImpl(null, comparator);
+        sub.addRootTriple(tp2);
+        template.add(tp1, sub);
+        t1 = new TripleImpl(s2, p1, o1);
+        t2 = new TripleImpl(s1, p2, o2);
+        Set<Triple> set = addTriplesToSet(t1, t2);
+        matcher = template.matcher(set);
+        List<Triple> list = matcher.matches();
+        assertEquals("Not match", null, list);
+    }
+
+    public void test2LvlTPNotMatch1() throws Exception {
+        tp1 = new TriplePattern(ANY_SUBJECT_NODE, p1, o1);
+        tp2 = new TriplePattern((SubjectNode) o1, p2, o2);
+        MoleculeTemplate sub = new MoleculeTemplateImpl(null, comparator);
+        sub.addRootTriple(tp2);
+        template.add(tp1, sub);
+        t1 = new TripleImpl(s2, p1, o1);
+        Set<Triple> set = addTriplesToSet(t1);
+        matcher = template.matcher(set);
+        List<Triple> list = matcher.matches();
+        assertEquals("Not match", null, list);
+    }
+
+    public void test2LvlTPMatch() throws Exception {
+        tp1 = new TriplePattern(ANY_SUBJECT_NODE, p1, o1);
+        tp2 = new TriplePattern((SubjectNode) o1, p2, o2);
+        MoleculeTemplate sub = new MoleculeTemplateImpl(null, comparator);
+        sub.addRootTriple(tp2);
+        template.add(tp1, sub);
+        t1 = new TripleImpl(s2, p1, o1);
+        t2 = new TripleImpl((SubjectNode) o1, p2, o2);
+        Set<Triple> set = addTriplesToSet(t1, t2);
+        matcher = template.matcher(set);
+        List<Triple> list = matcher.matches();
+        assertEquals("Match", 2, list.size());
+    }
+
+    public void test3LvlChainTPMatch() throws Exception {
+        tp1 = new TriplePattern(ANY_SUBJECT_NODE, p1, o1);
+        tp2 = new TriplePattern((SubjectNode) o2, p2, ANY_OBJECT_NODE);
+        tp3 = new TriplePattern((SubjectNode) o1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        MoleculeTemplate sub = new MoleculeTemplateImpl(null, comparator);
+        MoleculeTemplate sub1 = new MoleculeTemplateImpl(null, comparator);
+        sub.addRootTriple(tp2);
+        sub1.add(tp3, sub);
+        template.add(tp1, sub1);
+        t1 = new TripleImpl(s1, p1, o1);
+        t2 = new TripleImpl((SubjectNode) o1, p2, o2);
+        t3 = new TripleImpl((SubjectNode) o2, p2, o1);
+        Set<Triple> set = addTriplesToSet(t1, t2, t3);
+        matcher = template.matcher(set);
+        List<Triple> list = matcher.matches();
+        checkTripleList(list, t1, t2, t3);
+        assertEquals("Set empty", 0, set.size());
+    }
+
+    public void test3LvlChainExtraTripleMatch() throws Exception {
+        tp1 = new TriplePattern(ANY_SUBJECT_NODE, p1, o1);
+        tp2 = new TriplePattern((SubjectNode) o2, p2, ANY_OBJECT_NODE);
+        tp3 = new TriplePattern((SubjectNode) o1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        MoleculeTemplate sub = new MoleculeTemplateImpl(null, comparator);
+        MoleculeTemplate sub1 = new MoleculeTemplateImpl(null, comparator);
+        sub.addRootTriple(tp2);
+        sub1.add(tp3, sub);
+        template.add(tp1, sub1);
+        t1 = new TripleImpl(s1, p1, o1);
+        t2 = new TripleImpl((SubjectNode) o1, p2, o2);
+        t3 = new TripleImpl((SubjectNode) o2, p2, o1);
+        t4 = new TripleImpl(s1, p2, o2);
+        Set<Triple> set = addTriplesToSet(t4, t1, t2, t3);
+        matcher = template.matcher(set);
+        List<Triple> list = matcher.matches();
+        checkTripleList(list, t1, t2, t3);
+        assertEquals("Set left 1", 1, set.size());
+        assertEquals("t4", t4, set.iterator().next());
+    }
+
+    private void checkTripleList(List<Triple> list, Triple... triples) {
+        assertEquals("Same no.", triples.length, list.size());
+        for (int i = 0; i < list.size(); i++) {
+            assertEquals("Triple " + i + " equals", triples[i], list.get(i));
         }
     }
 }

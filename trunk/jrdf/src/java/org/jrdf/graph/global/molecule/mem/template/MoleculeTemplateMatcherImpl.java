@@ -65,6 +65,7 @@ import org.jrdf.graph.global.molecule.TriplePattern;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A strict matcher that attempts to match every triple pattern in the molecule template to a triple
@@ -79,13 +80,14 @@ import java.util.List;
  */
 public class MoleculeTemplateMatcherImpl implements MoleculeTemplateMatcher {
     private MoleculeTemplate template;
+    private Set<Triple> set;
     private Iterator<Triple> iterator;
     private Iterator<TriplePattern> tpIterator;
     private List<Triple> list;
 
-    public MoleculeTemplateMatcherImpl(MoleculeTemplate template, Iterator<Triple> triples) {
+    public MoleculeTemplateMatcherImpl(MoleculeTemplate template, Set<Triple> triples) {
         this.template = template;
-        this.iterator = triples;
+        this.set = triples;
         this.tpIterator = this.template.iterator();
         list = new ArrayList<Triple>();
     }
@@ -97,6 +99,7 @@ public class MoleculeTemplateMatcherImpl implements MoleculeTemplateMatcher {
      */
     public List<Triple> matches() {
         while (tpIterator.hasNext()) {
+            iterator = set.iterator();
             TriplePattern pattern = tpIterator.next();
             boolean matches = matchATriplePattern(pattern);
             if (!matches) {
@@ -117,20 +120,9 @@ public class MoleculeTemplateMatcherImpl implements MoleculeTemplateMatcher {
         return false;
     }
 
-    private boolean matchSubMoleculeTemplate(MoleculeTemplate sub) {
-        MoleculeTemplateMatcher subMatcher = new MoleculeTemplateMatcherImpl(sub, iterator);
-        List<Triple> subList = subMatcher.matches();
-        if (subList != null) {
-            list.addAll(subList);
-        } else {
-            return false;
-        }
-        return true;
-    }
-
     private void addToList(Triple triple) {
         list.add(triple);
-        iterator.remove();
+        set.remove(triple);
         tpIterator.remove();
     }
 }
