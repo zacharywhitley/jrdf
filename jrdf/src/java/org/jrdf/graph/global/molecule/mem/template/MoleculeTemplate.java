@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule.mem.template;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.TriplePattern;

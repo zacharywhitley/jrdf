@@ -57,80 +57,82 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule.mem.template;
 
-import org.jrdf.graph.Triple;
+import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.molecule.TriplePattern;
+import org.jrdf.graph.global.molecule.mem.template.MoleculeTemplate;
+import org.jrdf.graph.global.molecule.mem.template.MoleculeTemplateImpl;
+import org.jrdf.graph.local.BlankNodeComparator;
+import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.LocalizedNodeComparator;
+import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.local.NodeComparatorImpl;
+import org.jrdf.graph.local.TripleComparatorImpl;
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.Iterator;
-import java.util.List;
 
 /**
- * A strict matcher that attempts to match every triple pattern in the molecule template to a triple
- * in the triple iterator.
- * TODO: For the moment, do not cater for repeated triple patterns (triple*)
- *
  * Created by IntelliJ IDEA.
  * User: liyf
- * Date: May 28, 2008
- * Time: 3:48:28 PM
+ * Date: May 29, 2008
+ * Time: 11:51:41 AM
  * To change this template use File | Settings | File Templates.
  */
-public class MoleculeTemplateMatcherImpl implements MoleculeTemplateMatcher {
+public class MoleculeTemplateMatcherImplUnitTest extends TestCase {
+    private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
+    private final LocalizedNodeComparator localNodeComparator = new LocalizedNodeComparatorImpl();
+    private final BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localNodeComparator);
+    private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
+    private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
+    private final static JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
+
+    private Graph graph;
+    private GraphElementFactory eFac;
     private MoleculeTemplate template;
-    private Iterator<Triple> iterator;
-    private Iterator<TriplePattern> tpIterator;
-    private List<Triple> list;
+    private SubjectNode s1, s2;
+    private PredicateNode p1, p2;
+    private ObjectNode o1, o2;
+    private TriplePattern t1, t2;
 
-    public MoleculeTemplateMatcherImpl(MoleculeTemplate template, Iterator<Triple> triples) {
-        this.template = template;
-        this.iterator = triples;
-        this.tpIterator = this.template.iterator();
-        list = new ArrayList<Triple>();
+    public void setUp() throws Exception {
+        super.setUp();
+        graph = FACTORY.getNewGraph();
+        eFac = graph.getElementFactory();
+        s1 = eFac.createURIReference(URI.create("urn:s1"));
+        s2 = eFac.createURIReference(URI.create("urn:s2"));
+        o1 = eFac.createURIReference(URI.create("urn:o1"));
+        o2 = eFac.createURIReference(URI.create("urn:o2"));
+        p1 = eFac.createURIReference(URI.create("urn:p1"));
+        p2 = eFac.createURIReference(URI.create("urn:p2"));
+
+        t1 = new TriplePattern(s1, p1, o1);
+        t2 = new TriplePattern(s2, p2, o2);
+
+        template = new MoleculeTemplateImpl(null, tripleComparator);
     }
 
-    /**
-     * Return a list of triples in depth-first manner.
-     * If cannot find a match, return null list.
-     * @return a list of triples in depth-first manner.
-     */
-    public List<Triple> matches() {
-        while (tpIterator.hasNext()) {
-            TriplePattern pattern = tpIterator.next();
-            boolean matches = matchATriplePattern(pattern);
-            if (!matches) {
-                return null;
+    public void testModifySet() throws Exception {
+        template.addRootTriple(t1, t2);
+
+        Iterator<TriplePattern> roots = template.iterator();
+        while (roots.hasNext()) {
+            TriplePattern root = roots.next();
+            if (root.equals(t1)) {
+                roots.remove();
             }
         }
-        return list;
-    }
-
-    private boolean matchATriplePattern(TriplePattern pattern) {
-        while (iterator.hasNext()) {
-            Triple triple = iterator.next();
-            if (pattern.matches(triple)) {
-                addToList(triple);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean matchSubMoleculeTemplate(MoleculeTemplate sub) {
-        MoleculeTemplateMatcher subMatcher = new MoleculeTemplateMatcherImpl(sub, iterator);
-        List<Triple> subList = subMatcher.matches();
-        if (subList != null) {
-            list.addAll(subList);
-        } else {
-            return false;
-        }
-        return true;
-    }
-
-    private void addToList(Triple triple) {
-        list.add(triple);
-        iterator.remove();
-        tpIterator.remove();
     }
 }
