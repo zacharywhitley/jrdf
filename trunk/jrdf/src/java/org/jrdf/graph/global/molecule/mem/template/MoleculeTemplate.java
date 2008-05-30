@@ -95,4 +95,6 @@ public interface MoleculeTemplate {
     boolean hasSubMolecules();
 
     Iterator<TriplePattern> iterator();
+
+    String toString();
 }
