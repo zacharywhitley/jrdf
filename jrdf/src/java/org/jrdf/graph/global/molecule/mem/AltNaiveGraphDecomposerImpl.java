@@ -80,6 +80,10 @@ import java.util.Set;
 import java.util.SortedSet;
 
 /**
+ * Decomposition strategy: maximize the "context" of the local (current) triple:
+ * (1). If a triple being added is related to the local triple, add it as a submolecule.
+ * (2). If a triple being added is not related to the local triple, then add it at the same level as a root triple.
+ *
  * Created by IntelliJ IDEA.
  * User: liyf
  * Date: 2008-5-12
@@ -186,7 +190,6 @@ public class AltNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 }
             }
         }
-        //triplesChecked.add(triple);
         return curMolecule;
     }
 
@@ -260,5 +263,28 @@ public class AltNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         for (Triple triple : triples) {
             triplesChecked.add(triple);
         }
+    }
+
+    public Set<NewMolecule> decompose(Graph graph, Set<MoleculeTemplate> templates) throws GraphException {
+        ClosableIterator<Triple> iterator = preprocess(graph);
+        while (iterator.hasNext()) {
+            Triple currentTriple = iterator.next();
+            if (!triplesChecked.contains(currentTriple)) {
+                // return all the triples that are connected by blank nodes (essentially a flat molecule as a set)
+                Set<Triple> triples = tripleUtil.getAllTriplesForTriple(currentTriple, graph);
+                NewMolecule molecule = moleculeFactory.createMolecule();
+                molecule = addAllLinkedTriples(triples, molecule, templates);
+                molecules.add(molecule);
+                addTriplesToCheckedSet(triples);
+            }
+        }
+        return molecules;
+    }
+
+    private NewMolecule addAllLinkedTriples(Set<Triple> triples, NewMolecule molecule,
+                                            Set<MoleculeTemplate> templates) {
+
+
+        return molecule;
     }
 }

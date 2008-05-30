@@ -60,14 +60,17 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.molecule.TriplePattern;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -94,6 +97,13 @@ public class MoleculeTemplateImpl implements MoleculeTemplate {
         }
         List<MoleculeTemplate> subs = subMolecules.get(triplePattern);
         subs = createEmptySubMoleculeTemplate(subs);
+        addATriplePatternWithSub(triplePattern, subs);
+    }
+
+    private void addATriplePatternWithSub(TriplePattern triplePattern, List<MoleculeTemplate> subs) throws Exception {
+        if (!TriplePattern.checkTriplesNotNull(triplePattern)) {
+            throw new Exception("New triple cannot be null.");
+        }
         subMolecules.put(triplePattern, subs);
     }
 
@@ -106,13 +116,14 @@ public class MoleculeTemplateImpl implements MoleculeTemplate {
 
     /**
      * Respecting the order of the triple patterns, adding them as root triples of the molecule template.
+     *
      * @param triplePatterns
      */
-    public void addRootTriple(TriplePattern... triplePatterns) {
+    public void addRootTriple(TriplePattern... triplePatterns) throws Exception {
         for (TriplePattern triplePattern : triplePatterns) {
             List<MoleculeTemplate> subs = subMolecules.get(triplePattern);
             subs = createEmptySubMoleculeTemplate(subs);
-            subMolecules.put(triplePattern, subs);
+            addATriplePatternWithSub(triplePattern, subs);
         }
     }
 
@@ -127,7 +138,7 @@ public class MoleculeTemplateImpl implements MoleculeTemplate {
     public Set<TriplePattern> getRootTriples() {
         if (subMolecules.size() > 0) {
             return subMolecules.keySet();
-        } else{
+        } else {
             return null;
         }
     }
@@ -136,11 +147,11 @@ public class MoleculeTemplateImpl implements MoleculeTemplate {
         return subMolecules.get(headTriple);
     }
 
-    public void add(TriplePattern triplePatterns, MoleculeTemplate subMolecule) {
-        List<MoleculeTemplate> subs = subMolecules.get(triplePatterns);
+    public void add(TriplePattern triplePattern, MoleculeTemplate subMolecule) throws Exception {
+        List<MoleculeTemplate> subs = subMolecules.get(triplePattern);
         subs = createEmptySubMoleculeTemplate(subs);
         subs.add(subMolecule);
-        subMolecules.put(triplePatterns, subs);
+        addATriplePatternWithSub(triplePattern, subs);
     }
 
     public void remove(TriplePattern triplePattern) {
@@ -154,5 +165,44 @@ public class MoleculeTemplateImpl implements MoleculeTemplate {
                 break;
             }
         }
+    }
+
+    public MoleculeTemplateMatcher matcher(Iterator<Triple> triples) {
+        MoleculeTemplateMatcher matcher = new MoleculeTemplateMatcherImpl(this, triples);
+        return matcher;
+    }
+
+    public boolean hasSubMolecules() {
+        if (subMolecules == null || subMolecules.size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Return an iterator of triple patterns in a depth-first manner.
+     * @return
+     */
+    public Iterator<TriplePattern> iterator() {
+        List<TriplePattern> patterns = new Vector<TriplePattern>();
+        patterns = addTriplePatternsForMolecule(patterns, this);
+        return patterns.iterator();
+    }
+
+    private List<TriplePattern> addTriplePatternsForMolecule(List<TriplePattern> patterns, MoleculeTemplate mt) {
+        final Set<TriplePattern> roots = mt.getRootTriples();
+        if (roots == null) {
+            return patterns;
+        }
+        for (TriplePattern tp : roots) {
+            patterns.add(tp);
+            final List<MoleculeTemplate> subMolecules = mt.getSubMoleculeTemplate(tp);
+            if (subMolecules != null) {
+                for (MoleculeTemplate subMT : subMolecules) {
+                    patterns = addTriplePatternsForMolecule(patterns, subMT);
+                }
+            }
+        }
+        return patterns;
     }
 }

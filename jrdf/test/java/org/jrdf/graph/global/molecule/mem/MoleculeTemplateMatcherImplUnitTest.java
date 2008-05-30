@@ -59,40 +59,78 @@
 
 package org.jrdf.graph.global.molecule.mem;
 
-import org.jrdf.graph.Triple;
+import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.molecule.TriplePattern;
+import org.jrdf.graph.local.BlankNodeComparator;
+import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.LocalizedNodeComparator;
+import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.local.NodeComparatorImpl;
+import org.jrdf.graph.local.TripleComparatorImpl;
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
+import java.net.URI;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 /**
- * A molecule template is a skeleton of an actual molecule. So all triple patterns in the template should be found
- * in a corresponding set of triples.
  * Created by IntelliJ IDEA.
  * User: liyf
- * Date: May 27, 2008
- * Time: 3:20:30 PM
+ * Date: May 29, 2008
+ * Time: 11:51:41 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface MoleculeTemplate {
-    void setHeadTriple(TriplePattern triplePattern) throws Exception;
+public class MoleculeTemplateMatcherImplUnitTest extends TestCase {
+    private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
+    private final LocalizedNodeComparator localNodeComparator = new LocalizedNodeComparatorImpl();
+    private final BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localNodeComparator);
+    private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
+    private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
+    private final static JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
 
-    void addRootTriple(TriplePattern... triplePatterns) throws Exception;
+    private Graph graph;
+    private GraphElementFactory eFac;
+    private MoleculeTemplate template;
+    private SubjectNode s1, s2;
+    private PredicateNode p1, p2;
+    private ObjectNode o1, o2;
+    private TriplePattern t1, t2;
 
-    void add(TriplePattern triplePatterns, MoleculeTemplate subMolecule) throws Exception;
+    public void setUp() throws Exception {
+        super.setUp();
+        graph = FACTORY.getNewGraph();
+        eFac = graph.getElementFactory();
+        s1 = eFac.createURIReference(URI.create("urn:s1"));
+        s2 = eFac.createURIReference(URI.create("urn:s2"));
+        o1 = eFac.createURIReference(URI.create("urn:o1"));
+        o2 = eFac.createURIReference(URI.create("urn:o2"));
+        p1 = eFac.createURIReference(URI.create("urn:p1"));
+        p2 = eFac.createURIReference(URI.create("urn:p2"));
 
-    TriplePattern getHeadTriple();
+        t1 = new TriplePattern(s1, p1, o1);
+        t2 = new TriplePattern(s2, p2, o2);
 
-    Set<TriplePattern> getRootTriples();
+        template = new MoleculeTemplateImpl(null, tripleComparator);
+    }
 
-    List<MoleculeTemplate> getSubMoleculeTemplate(TriplePattern headTriple);
+    public void testModifySet() throws Exception {
+        template.addRootTriple(t1, t2);
 
-    void remove(TriplePattern triplePattern);
-
-    MoleculeTemplateMatcher matcher(Iterator<Triple> triples);
-
-    boolean hasSubMolecules();
-
-    Iterator<TriplePattern> iterator();
+        Iterator<TriplePattern> roots = template.iterator();
+        while (roots.hasNext()) {
+            TriplePattern root = roots.next();
+            if (root.equals(t1)) {
+                roots.remove();
+            }
+        }
+    }
 }

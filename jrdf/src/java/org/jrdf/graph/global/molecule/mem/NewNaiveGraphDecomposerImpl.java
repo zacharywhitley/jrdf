@@ -73,6 +73,7 @@ import org.jrdf.set.SortedSetFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -215,5 +216,9 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         findEnclosedTriples(subMolecule, graph.find((SubjectNode) triple.getObject(), ANY_PREDICATE_NODE,
             ANY_OBJECT_NODE));
         findEnclosedTriples(subMolecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, triple.getObject()));
+    }
+
+    public Set<NewMolecule> decompose(Graph graph, Set<MoleculeTemplate> templates) throws GraphException {
+        throw new GraphException(new OperationNotSupportedException("Template not supported now."));
     }
 }

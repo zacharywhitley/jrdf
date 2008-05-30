@@ -63,7 +63,6 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -143,7 +142,7 @@ public class MoleculeTemplateImplUnitTest extends TestCase {
         }
     }
 
-    public void testRootTriples() throws GraphElementFactoryException {
+    public void testRootTriples() throws Exception {
         TriplePattern t1 = new TriplePattern(s1, p1, o1);
         TriplePattern t2 = new TriplePattern(s2, p2, o2);
         molTemp.addRootTriple(t1, t2);
@@ -170,7 +169,7 @@ public class MoleculeTemplateImplUnitTest extends TestCase {
         checkRoots(subs.get(0).getRootTriples(), t1);
     }
 
-    public void testSimpleRemove() {
+    public void testSimpleRemove() throws Exception {
         TriplePattern t0 = new TriplePattern(s1, p2, (ObjectNode) s0);
         TriplePattern t1 = new TriplePattern(s0, p1, o1);
         TriplePattern t2 = new TriplePattern(s2, p2, o2);
@@ -182,7 +181,7 @@ public class MoleculeTemplateImplUnitTest extends TestCase {
         checkRoots(molTemp.getRootTriples(), t1, t2);
     }
 
-    public void testComplexRemove() {
+    public void testComplexRemove() throws Exception {
         TriplePattern t0 = new TriplePattern(s1, p2, (ObjectNode) s0);
         TriplePattern t1 = new TriplePattern(s0, p1, o1);
         TriplePattern t2 = new TriplePattern(s2, p2, o2);
@@ -192,9 +191,37 @@ public class MoleculeTemplateImplUnitTest extends TestCase {
         checkRoots(molTemp.getRootTriples(), t0, t2);
     }
 
+    public void testIterator() throws Exception {
+        TriplePattern t0 = new TriplePattern(s1, p2, o1);
+        TriplePattern t1 = new TriplePattern(s0, p1, o1);
+        TriplePattern t2 = new TriplePattern(s2, p2, o2);
+        TriplePattern t3 = new TriplePattern(s2, p2, o1);
+        Iterator<TriplePattern> iterator = molTemp.iterator();
+        assertFalse("No element", iterator.hasNext());
+        molTemp.setHeadTriple(t0);
+        MoleculeTemplate mt1 = new MoleculeTemplateImpl(GRAPH, tripleComparator);
+        //mt1.addRootTriple(t1);
+        MoleculeTemplate mt2 = new MoleculeTemplateImpl(GRAPH, tripleComparator);
+        mt2.addRootTriple(t3);
+        mt1.add(t1, mt2);
+        molTemp.add(t2, mt1);
+        molTemp.addRootTriple(t3);
+        iterator = molTemp.iterator();
+        checkRootsAsIterator(iterator, t0, t2, t1, t3, t3);
+    }
+
     private void checkRoots(Set<TriplePattern> roots, TriplePattern... triples) {
         assertEquals("Same no. of triples", triples.length, roots.size());
-        Iterator<TriplePattern> rootIter = roots.iterator();
+        checkRootsAsIterator(roots.iterator(), triples);
+    }
+
+    private void checkRootsAsIterator(Iterator<TriplePattern> rootIter, TriplePattern... triples) {
+        int length = 0;
+        while (rootIter.hasNext()) {
+            rootIter.next();
+            length++;
+        }
+        assertEquals("Same no. of triples", triples.length, length);
         int i = 0;
         while (rootIter.hasNext()) {
             TriplePattern trip = rootIter.next();

@@ -60,9 +60,13 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.AbstractTriple;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 
 /**
  * Created by IntelliJ IDEA.
@@ -72,6 +76,8 @@ import org.jrdf.graph.SubjectNode;
  * To change this template use File | Settings | File Templates.
  */
 public class TriplePattern extends AbstractTriple {
+    private static final long serialVersionUID = -1930410091981788384L;
+
     private SubjectNode subject;
     private PredicateNode predicate;
     private ObjectNode object;
@@ -109,7 +115,37 @@ public class TriplePattern extends AbstractTriple {
         return result;
     }
 
+    public static boolean checkTriplesNotNull(TriplePattern pattern) {
+        return pattern != null && pattern.getSubject() != null &&
+                pattern.getPredicate() != null && pattern.getObject() != null;
+    }
+
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public String toString() {
         return "[" + subject.toString() + ", " + predicate.toString() + ", " + object.toString() + "]";
+    }
+
+    public boolean matches(Triple triple) {
+        if (predicatesMatch(triple)) {
+            if (subjectsMatch(triple)) {
+                return objectsMatch(triple);
+            }
+        }
+        return false;
+    }
+
+    private boolean subjectsMatch(Triple triple) {
+        return subject.equals(ANY_SUBJECT_NODE) || subject.equals(triple.getSubject());
+    }
+
+    private boolean predicatesMatch(Triple triple) {
+        return predicate.equals(ANY_PREDICATE_NODE) || predicate.equals(triple.getPredicate());
+    }
+
+    private boolean objectsMatch(Triple triple) {
+        return object.equals(ANY_OBJECT_NODE) || object.equals(triple.getObject());
     }
 }
