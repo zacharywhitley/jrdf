@@ -104,7 +104,7 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
 
     public void setTriplesLoaded(long numberOfTriples, long timeTaken) {
         String message = getMessage("queryView.modelLoaded");
-        getStatusBar().setMessage(message + numberOfTriples + " " + timeTaken);
+        getStatusBar().setMessage(message + " " + numberOfTriples + ", " + timeTaken + " ms");
     }
 
     public void setLoadErrorMessage(String errorMessage) {
