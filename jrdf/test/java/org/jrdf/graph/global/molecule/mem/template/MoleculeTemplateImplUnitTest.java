@@ -85,11 +85,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: May 27, 2008
- * Time: 4:04:08 PM
- * To change this template use File | Settings | File Templates.
+ *
+ * @author Yuan-Fang Li
+ * @version $Revision:$
  */
 public class MoleculeTemplateImplUnitTest extends TestCase {
     private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();

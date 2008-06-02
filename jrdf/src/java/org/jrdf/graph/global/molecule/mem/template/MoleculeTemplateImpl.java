@@ -73,11 +73,9 @@ import java.util.Set;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: May 27, 2008
- * Time: 3:23:34 PM
- * To change this template use File | Settings | File Templates.
+ *
+ * @author Yuan-Fang Li
+ * @version $Revision:$
  */
 public class MoleculeTemplateImpl implements MoleculeTemplate {
     private Graph graph;

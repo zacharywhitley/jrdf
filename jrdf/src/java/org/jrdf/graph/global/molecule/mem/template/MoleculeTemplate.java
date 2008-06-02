@@ -69,11 +69,9 @@ import java.util.Set;
 /**
  * A molecule template is a skeleton of an actual molecule. So all triple patterns in the template should be found
  * in a corresponding set of triples.
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: May 27, 2008
- * Time: 3:20:30 PM
- * To change this template use File | Settings | File Templates.
+ *
+ * @author Yuan-Fang Li
+ * @version $Revision:$
  */
 public interface MoleculeTemplate {
     void setHeadTriple(TriplePattern triplePattern) throws Exception;
