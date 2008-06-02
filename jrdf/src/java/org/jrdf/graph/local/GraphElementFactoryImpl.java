@@ -103,18 +103,16 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
         try {
-            localizer.localize(node);
             return resourceFactory.createResource(node);
-        } catch (GraphException e) {
+        } catch (IllegalArgumentException e) {
             throw new GraphElementFactoryException(e);
         }
     }
 
     public Resource createResource(URIReference node) throws GraphElementFactoryException {
         try {
-            localizer.localize(node);
             return resourceFactory.createResource(node);
-        } catch (GraphException e) {
+        } catch (IllegalArgumentException e) {
             throw new GraphElementFactoryException(e);
         }
     }

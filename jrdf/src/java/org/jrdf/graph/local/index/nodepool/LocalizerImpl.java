@@ -63,7 +63,6 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
@@ -108,15 +107,11 @@ public class LocalizerImpl implements Localizer {
     }
 
     public BlankNode createLocalBlankNode() throws GraphException {
-        try {
-            String uid = UUID.randomUUID().toString();
-            currentId = nodePool.getNewNodeId();
-            BlankNode node = new BlankNodeImpl(uid, currentId);
-            nodePool.registerLocalBlankNode(node);
-            return node;
-        } catch (Exception e) {
-            throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.", e);
-        }
+        String uid = UUID.randomUUID().toString();
+        currentId = nodePool.getNewNodeId();
+        BlankNode node = new BlankNodeImpl(uid, currentId);
+        nodePool.registerLocalBlankNode(node);
+        return node;
     }
 
     public URIReference createLocalURIReference(URI uri, boolean validate) {
@@ -135,8 +130,10 @@ public class LocalizerImpl implements Localizer {
 
     public void visitBlankNode(BlankNode blankNode) {
         currentId = ((LocalizedNode) blankNode).getId();
-        Node node = nodePool.getNodeById(currentId);
-        if (currentId == null) {
+        Node node = null;
+        if (nodePool.nodeExists(currentId)) {
+            node = nodePool.getNodeById(currentId);
+        } else {
             try {
                 node = createLocalBlankNode();
                 currentId = ((LocalizedNode) node).getId();
@@ -145,8 +142,8 @@ public class LocalizerImpl implements Localizer {
             }
         }
         if (!blankNode.equals(node)) {
-            exception = new ExternalBlankNodeException("The node returned by the nodeId (" + currentId + ") was not " +
-                "the same blank node.  Got: " + node + ", expected: " + blankNode);
+            exception = new ExternalBlankNodeException("The node returned by the nodeId (" + currentId + ") was " +
+                "not the same blank node.  Got: " + node + ", expected: " + blankNode);
         }
     }
 
