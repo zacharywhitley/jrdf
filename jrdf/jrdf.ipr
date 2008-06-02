@@ -518,20 +518,6 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="db4o-6.3-java5">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/db4o/db4o-6.3-java5.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="log4j">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/log4j/log4j-1.2.13.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="je">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/je/je-3.2.68.jar!/" />

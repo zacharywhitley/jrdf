@@ -77,6 +77,7 @@
 
     <target name="dist" depends="compile,-copy-urql-sablecc-resources">
         <antcall target="-dist-jar"/>
+        <antcall target="-dist-src-jar"/>
         <antcall target="-dist-gui"/>
     </target>
 
@@ -87,7 +88,14 @@
             <manifest>
                 <attribute name="Main-Class" value="org.jrdf.example.RdfXmlParserExample"/>
             </manifest>
-            <fileset dir="${prod.classes.dir}" excludes="com/**/*"/>
+            <fileset dir="${prod.classes.dir}"/>
+        </jar>
+    </target>
+
+    <target name="-dist-src-jar">
+        <mkdir dir="${dist.dir}/jar"/>
+        <jar destfile="${dist.dir}/jar/${project.src.jar}">
+            <fileset dir="${prod.src.dir}"/>
         </jar>
     </target>
 
