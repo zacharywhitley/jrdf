@@ -85,7 +85,20 @@ public class NodeTypePoolImpl implements NodeTypePool {
         mapper = newMapper;
     }
 
+    public boolean nodeExists(Long nodeId) {
+        return (getNodeIfExists(nodeId) != null);
+    }
+
     public Node get(Long nodeId) {
+        Node node = getNodeIfExists(nodeId);
+        if (node == null) {
+            throw new IllegalArgumentException("Couldn't find: " + nodeId);
+        } else {
+            return node;
+        }
+    }
+
+    private Node getNodeIfExists(Long nodeId) {
         Node node = null;
         if (blankNodePool.keySet().contains(nodeId)) {
             node = mapper.convertToBlankNode(blankNodePool.get(nodeId));

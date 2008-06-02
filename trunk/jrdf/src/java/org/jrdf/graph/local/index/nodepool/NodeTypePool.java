@@ -81,4 +81,6 @@ public interface NodeTypePool {
     void addNodeValues(NodePool nodePool, List<Map<Long, String>> values);
 
     String removeNode(Long value);
+
+    boolean nodeExists(Long nodeId);
 }

@@ -135,4 +135,6 @@ public interface NodePool {
     ClosableIterator<BlankNode> getBlankNodeIterator();
 
     ClosableIterator<URIReference> getURIReferenceIterator();
+
+    boolean nodeExists(Long id);
 }

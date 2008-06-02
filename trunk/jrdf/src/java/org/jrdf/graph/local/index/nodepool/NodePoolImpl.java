@@ -95,6 +95,10 @@ public final class NodePoolImpl implements NodePool {
         stringPool = newMapFactory.createMap(String.class, Long.class);
     }
 
+    public boolean nodeExists(Long id) {
+        return nextNode > id && nodeTypePool.nodeExists(id);
+    }
+
     public Node getNodeById(Long id) {
         return nodeTypePool.get(id);
     }
@@ -171,19 +175,24 @@ public final class NodePoolImpl implements NodePool {
 
     private void registerNode(LocalizedNode node) {
         Long id = node.getId();
-        LocalizedNode existingNode = (LocalizedNode) nodeTypePool.get(id);
-        if (null != existingNode) {
+        if (isNewNode(id)) {
+            LocalizedNode existingNode = (LocalizedNode) nodeTypePool.get(id);
             if (existingNode.equals(node)) {
                 return;
+            } else {
+                throw new IllegalArgumentException("Node conflicts with one already in the graph. Existing node: " +
+                    existingNode + ", new node: " + node);
             }
-            throw new IllegalArgumentException("Node conflicts with one already in the graph. Existing node: " +
-                existingNode + ", new node: " + node);
         }
         nodeTypePool.put(id, node);
 
         // update the nextNode counter to a unique number
-        if (!(id < nextNode)) {
+        if (id >= nextNode) {
             nextNode = id + 1L;
         }
+    }
+
+    private boolean isNewNode(Long id) {
+        return id >= nextNode;
     }
 }
