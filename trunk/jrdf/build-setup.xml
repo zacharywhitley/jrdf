@@ -9,6 +9,7 @@
     <property name="version-status" value=""/>
     <property name="project.version.full" value="${project.version.major}.${project.version.minor}${version-status}"/>
     <property name="project.jar" value="${project.shortname}-${project.version.full}.jar"/>
+    <property name="project.src.jar" value="${project.shortname}-${project.version.full}-src.jar"/>
     <property name="gui.jar" value="jrdf-gui-${gui.version}.jar"/>
     <property name="build.dir" value="build"/>
     <property name="conf.dir" value="conf"/>
