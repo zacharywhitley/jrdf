@@ -85,11 +85,8 @@ import java.util.SortedSet;
  * (1). If a triple being added is related to the local triple, add it as a submolecule.
  * (2). If a triple being added is not related to the local triple, then add it at the same level as a root triple.
  *
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: 2008-5-12
- * Time: 17:33:17
- * To change this template use File | Settings | File Templates.
+ * @author Yuan-Fang Li
+ * @version $Revision:$
  */
 public class AltNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private final NewMoleculeFactory moleculeFactory;
