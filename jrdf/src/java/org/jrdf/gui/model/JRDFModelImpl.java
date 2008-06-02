@@ -84,6 +84,7 @@ public class JRDFModelImpl implements JRDFModel {
     public Graph loadModel(URL url) {
         try {
             graph = graphFactory.getGraph();
+            graph.clear();
             Parser graphRdfXmlParser = new GraphRdfXmlParser(graph);
             graphRdfXmlParser.parse(url.openStream(), EscapeURL.toEscapedString(url));
             return graph;
