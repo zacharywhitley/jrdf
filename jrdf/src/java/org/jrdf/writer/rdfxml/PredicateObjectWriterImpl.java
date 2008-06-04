@@ -69,6 +69,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
+import org.jrdf.writer.RdfWriter;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -80,7 +81,6 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Andrew Newman
  */
 public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
-    private static final String NEW_LINE = System.getProperty("line.separator");
     private final RdfNamespaceMap names;
     private final BlankNodeRegistry registry;
     private XMLStreamWriter xmlStreamWriter;
@@ -100,7 +100,7 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
             writePredicate(predicate);
             writeObject(object);
             xmlStreamWriter.writeEndElement();
-            xmlStreamWriter.writeCharacters(NEW_LINE);
+            xmlStreamWriter.writeCharacters(RdfWriter.NEW_LINE);
             xmlStreamWriter.flush();
         } catch (Exception e) {
             exception = null;

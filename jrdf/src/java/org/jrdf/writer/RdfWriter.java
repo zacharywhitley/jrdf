@@ -72,6 +72,10 @@ import java.io.Writer;
  * @author TurnerRX
  */
 public interface RdfWriter {
+    /**
+     * XML's new line character (LF).
+     */
+    String NEW_LINE = "\n";
 
     /**
      * Writes the Graph contents to the OutputStream.
