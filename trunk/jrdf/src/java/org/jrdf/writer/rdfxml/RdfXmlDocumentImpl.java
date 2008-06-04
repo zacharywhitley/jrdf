@@ -61,6 +61,7 @@ package org.jrdf.writer.rdfxml;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
+import org.jrdf.writer.RdfWriter;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -74,10 +75,9 @@ import java.util.Set;
  * @author TurnerRX
  */
 public class RdfXmlDocumentImpl implements RdfXmlDocument {
-    private static final String NEW_LINE = System.getProperty("line.separator");
     private static final String XML_VERSION = "1.0";
-    private static final String DOC_TYPE = "<!DOCTYPE rdf:RDF[" + NEW_LINE + " ${entities} ]>";
-    private static final String XML_ENTITY = "    <!ENTITY ${name} '${uri}'>" + NEW_LINE;
+    private static final String DOC_TYPE = "<!DOCTYPE rdf:RDF[" + RdfWriter.NEW_LINE + " ${entities} ]>";
+    private static final String XML_ENTITY = "    <!ENTITY ${name} '${uri}'>" + RdfWriter.NEW_LINE;
 
     /**
      * Character set to be used when writing header
@@ -117,7 +117,7 @@ public class RdfXmlDocumentImpl implements RdfXmlDocument {
             for (final Entry<String, String> entry : names.getNameEntries()) {
                 xmlStreamWriter.writeNamespace(entry.getKey(), entry.getValue());
             }
-            xmlStreamWriter.writeCharacters(NEW_LINE + "    ");
+            xmlStreamWriter.writeCharacters(RdfWriter.NEW_LINE + "    ");
         } catch (XMLStreamException e) {
             throw new WriteException(e);
         }

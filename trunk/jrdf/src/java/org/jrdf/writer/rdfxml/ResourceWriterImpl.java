@@ -70,6 +70,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
+import org.jrdf.writer.RdfWriter;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -81,7 +82,6 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Andrew Newman
  */
 public class ResourceWriterImpl implements ResourceWriter {
-    private static final String NEW_LINE = System.getProperty("line.separator");
     private final BlankNodeRegistry registry;
     private final XMLStreamWriter xmlStreamWriter;
     private final PredicateObjectWriter statement;
@@ -104,7 +104,7 @@ public class ResourceWriterImpl implements ResourceWriter {
         try {
             xmlStreamWriter.writeStartElement("rdf:Description");
             currentTriple.getSubject().accept(this);
-            xmlStreamWriter.writeCharacters(NEW_LINE + "    ");
+            xmlStreamWriter.writeCharacters(RdfWriter.NEW_LINE + "    ");
             xmlStreamWriter.flush();
             if (exception != null) {
                 throw exception;
@@ -133,7 +133,7 @@ public class ResourceWriterImpl implements ResourceWriter {
     public void writeEnd() throws WriteException {
         try {
             xmlStreamWriter.writeEndElement();
-            xmlStreamWriter.writeCharacters(NEW_LINE);
+            xmlStreamWriter.writeCharacters(RdfWriter.NEW_LINE);
             xmlStreamWriter.flush();
         } catch (XMLStreamException e) {
             throw new WriteException(e);
