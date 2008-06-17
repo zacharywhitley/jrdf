@@ -152,6 +152,11 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
     public void componentFocusLost() {
     }
 
+    @Override
+    public String getDisplayName() {
+        return "";
+    }
+
     public void componentOpened() {
     }
 }

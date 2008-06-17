@@ -94,8 +94,7 @@
         </property>
     </bean>
 
-    <bean id="queryView"
-          class="org.springframework.richclient.application.support.DefaultViewDescriptor">
+    <bean id="queryView" class="org.springframework.richclient.application.support.DefaultViewDescriptor">
         <property name="viewClass" value="org.jrdf.gui.view.QueryViewImpl"/>
         <property name="viewProperties">
             <map>
