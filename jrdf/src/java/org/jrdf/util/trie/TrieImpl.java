@@ -61,7 +61,13 @@ package org.jrdf.util.trie;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.AbstractMap;
+import java.util.Set;
 
-public class TrieImpl implements Trie {
+public class TrieImpl<K, V> extends AbstractMap<K, V> implements Trie {
     private SortedMap<Character, Trie> nodes = new TreeMap<Character, Trie>();
+
+    public Set<Entry<K, V>> entrySet() {
+        return null;
+    }
 }

@@ -476,17 +476,6 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="spring-rcp">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/swingx-0.2005-06-02.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/spring-binding-1.0-rc3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/spring-richclient-full-0.2.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/forms-1.0.7.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/looks-2.0.4.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="easymock">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/easymock/cglib-nodep-2.1_3.jar!/" />
@@ -521,6 +510,17 @@
     <library name="je">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/je/je-3.2.68.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="spring-rcp">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/spring-binding-1.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/looks-2.0.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/swingx-0.9.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/forms-1.0.7.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/spring-richclient-full-1.0.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
