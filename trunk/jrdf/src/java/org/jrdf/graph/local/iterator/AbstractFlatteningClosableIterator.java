@@ -57,32 +57,78 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.local.index.AbstractIndex;
-import org.jrdf.graph.local.iterator.*;
-import org.jrdf.graph.Node;
-import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
+import org.jrdf.util.ClosableMap;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class GlobalIndex extends AbstractIndex<Node> {
-    private static final long serialVersionUID = -1640256337194767517L;
+public abstract class AbstractFlatteningClosableIterator<T> implements ClosableIterator<T[]> {
+    protected ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> iterator;
+    protected Iterator<Map.Entry<T, Set<T>>> subIterator;
+    protected Iterator<T> itemIterator;
+    protected Map.Entry<T, ClosableMap<T, Set<T>>> firstEntry;
+    protected Map.Entry<T, Set<T>> secondEntry;
 
-    public GlobalIndex() {
-        super();
+    public AbstractFlatteningClosableIterator(ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> entryIterator) {
+        this.iterator = entryIterator;
     }
 
-    public ClosableIterator<Node[]> iterator() {
-        ClosableIterator<Map.Entry<Node, ClosableMap<Node, Set<Node>>>> iterator =
-            new ClosableIteratorImpl<Map.Entry<Node, ClosableMap<Node, Set<Node>>>>(index.entrySet().iterator());
-        return new FlatteningNodeClosableIterator(iterator);
+    public boolean close() {
+        return iterator.close();
     }
 
-    public GlobalIndex(Map<Node, ClosableMap<Node, Set<Node>>> newIndex) {
-        super(newIndex);
+    public boolean hasNext() {
+        return (itemIteratorHasNext() || (subIteratorHasNext()) || (iteratorHasNext()));
+    }
+
+    private boolean itemIteratorHasNext() {
+        return (null != itemIterator && itemIterator.hasNext());
+    }
+
+    private boolean subIteratorHasNext() {
+        return null != subIterator && subIterator.hasNext();
+    }
+
+    private boolean iteratorHasNext() {
+        return null != iterator && iterator.hasNext();
+    }
+
+    public abstract T[] next();
+
+    /**
+     * Helper method to move the iterators on to the next position.
+     * If there is no next position then {@link #itemIterator itemIterator}
+     * will be set to null, telling {@link #hasNext() hasNext} to return
+     * <code>false</code>.
+     */
+    protected void updatePosition() {
+        // progress to the next item if needed
+        if (null == itemIterator || !itemIterator.hasNext()) {
+            // the current iterator been exhausted
+            if (null == subIterator || !subIterator.hasNext()) {
+                // the subiterator has been exhausted
+                if (!iterator.hasNext()) {
+                    // the main iterator has been exhausted
+                    // tell the iterator to finish
+                    iterator = null;
+                    return;
+                }
+                // move on the main iterator
+                firstEntry = iterator.next();
+
+                // now get an iterator to the sub index map
+                subIterator = firstEntry.getValue().entrySet().iterator();
+            }
+            // get the next entry of the sub index
+            secondEntry = subIterator.next();
+            // get an interator to the next set from the sub index
+            itemIterator = secondEntry.getValue().iterator();
+        }
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }

@@ -83,7 +83,7 @@ public class GlobalIndexImplUnitTest extends TestCase {
         ref4 = new URIReferenceImpl(URI.create("urn:foo2"));
         ref5 = new URIReferenceImpl(URI.create("urn:bar2"));
         ref6 = new URIReferenceImpl(URI.create("urn:baz2"));
-        index = new GlobalIndex<Node>();
+        index = new GlobalIndex();
     }
 
     public void testAddition() throws Exception {

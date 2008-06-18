@@ -57,32 +57,33 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.local.index.AbstractIndex;
-import org.jrdf.graph.local.iterator.*;
-import org.jrdf.graph.Node;
-import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
+import org.jrdf.util.ClosableMap;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class GlobalIndex extends AbstractIndex<Node> {
-    private static final long serialVersionUID = -1640256337194767517L;
+public class FlatteningLongClosableIterator extends AbstractFlatteningClosableIterator<Long> {
 
-    public GlobalIndex() {
-        super();
+    public FlatteningLongClosableIterator(ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entryIterator) {
+        super(entryIterator);
     }
 
-    public ClosableIterator<Node[]> iterator() {
-        ClosableIterator<Map.Entry<Node, ClosableMap<Node, Set<Node>>>> iterator =
-            new ClosableIteratorImpl<Map.Entry<Node, ClosableMap<Node, Set<Node>>>>(index.entrySet().iterator());
-        return new FlatteningNodeClosableIterator(iterator);
-    }
+    public Long[] next() {
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
 
-    public GlobalIndex(Map<Node, ClosableMap<Node, Set<Node>>> newIndex) {
-        super(newIndex);
+        // move to the next position
+        updatePosition();
+
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
+        final Long third = itemIterator.next();
+        final Long second = secondEntry.getKey();
+        final Long first = firstEntry.getKey();
+        return new Long[]{first, second, third};
     }
 }

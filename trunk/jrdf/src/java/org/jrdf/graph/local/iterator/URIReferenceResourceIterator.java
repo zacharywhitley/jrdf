@@ -84,9 +84,7 @@ public class URIReferenceResourceIterator extends ResourceIterator<URIReference>
     protected long getNextNodeId(final ClosableIterator<Long[]> iterator) {
         long nextKey = currentValue;
         while (iterator.hasNext() && nextKey == currentValue) {
-            // TODO Fix generics problem!!
-            Object[] obj = iterator.next();
-            final long id = (Long) obj[0];
+            final long id = iterator.next()[0];
             if (id != currentValue) {
                 final Node node = nodePool.getNodeById(id);
                 if (URIReference.class.isAssignableFrom(node.getClass())) {

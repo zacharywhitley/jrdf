@@ -96,7 +96,7 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
         if (nextPredicate == null) {
             throw new NoSuchElementException();
         }
-        Long currentPredicate = nextPredicate;
+        final Long currentPredicate = nextPredicate;
         nextPredicate();
         return graphHandler012.createPredicateNode(currentPredicate);
     }
@@ -125,10 +125,9 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
         Long newPredicate = null;
         boolean foundNextPredicate = false;
         while (!foundNextPredicate && posIterator.hasNext()) {
-            Object[] pos = posIterator.next();
-            // TODO Fix generics problem!!
-            Long predicate = (Long) pos[0];
-            Long object = (Long) pos[1];
+            Long[] pos = posIterator.next();
+            Long predicate = pos[0];
+            Long object = pos[1];
             if (!predicate.equals(previousPredicate) && object.equals(resource) && !spoPredicates.contains(predicate)) {
                 newPredicate = predicate;
                 previousPredicate = newPredicate;
