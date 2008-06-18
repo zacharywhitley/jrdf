@@ -62,11 +62,14 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
-import java.util.*;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.Map;
 
 public class FlatteningLongClosableIterator extends AbstractFlatteningClosableIterator<Long> {
 
-    public FlatteningLongClosableIterator(ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entryIterator) {
+    public FlatteningLongClosableIterator(ClosableIterator<Map.Entry<Long, ClosableMap<Long,
+            Set<Long>>>> entryIterator) {
         super(entryIterator);
     }
 

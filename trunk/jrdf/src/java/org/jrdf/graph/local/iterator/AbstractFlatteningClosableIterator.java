@@ -62,7 +62,9 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
-import java.util.*;
+import java.util.Set;
+import java.util.Map;
+import java.util.Iterator;
 
 public abstract class AbstractFlatteningClosableIterator<T> implements ClosableIterator<T[]> {
     protected ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> iterator;
