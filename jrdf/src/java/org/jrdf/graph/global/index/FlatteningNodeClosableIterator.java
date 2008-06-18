@@ -64,11 +64,14 @@ import org.jrdf.util.ClosableMap;
 import org.jrdf.graph.local.iterator.AbstractFlatteningClosableIterator;
 import org.jrdf.graph.Node;
 
-import java.util.*;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.Map;
 
 public class FlatteningNodeClosableIterator extends AbstractFlatteningClosableIterator<Node> {
 
-    public FlatteningNodeClosableIterator(ClosableIterator<Map.Entry<Node, ClosableMap<Node, Set<Node>>>> entryIterator) {
+    public FlatteningNodeClosableIterator(ClosableIterator<Map.Entry<Node, ClosableMap<Node,
+            Set<Node>>>> entryIterator) {
         super(entryIterator);
     }
 
@@ -83,9 +86,9 @@ public class FlatteningNodeClosableIterator extends AbstractFlatteningClosableIt
         if (null == iterator) {
             throw new NoSuchElementException();
         }
-        Node third = itemIterator.next();
-        Node second = secondEntry.getKey();
-        Node first = firstEntry.getKey();
+        final Node third = itemIterator.next();
+        final Node second = secondEntry.getKey();
+        final Node first = firstEntry.getKey();
         return new Node[]{first, second, third};
     }
 }

@@ -60,7 +60,6 @@
 package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.local.index.AbstractIndex;
-import org.jrdf.graph.local.iterator.*;
 import org.jrdf.graph.Node;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableIterator;
