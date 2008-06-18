@@ -106,6 +106,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class MoleculeGraphImplIntegrationTest extends TestCase {
+    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
     private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
     private final LocalizedNodeComparator localNodeComparator = new LocalizedNodeComparatorImpl();
     private final BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localNodeComparator);
@@ -114,9 +116,18 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
     private final NewMoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
     private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
-    private final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
-    private final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
-    private final NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, 0);
+    private NodePoolFactory nodePoolFactory;
+
+    @Override
+    public void setUp() {
+        HANDLER.removeDir();
+        nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, 0);
+    }
+
+    @Override
+    public void tearDown() {
+        nodePoolFactory.close();
+    }
 
     public void testSimpleAddRemove() throws Exception {
         ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map1 =

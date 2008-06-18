@@ -101,6 +101,7 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
     public Environment setUpEnvironment() throws DatabaseException {
         File dir = handler.makeDir();
         EnvironmentConfig env = new EnvironmentConfig();
+        env.setSharedCache(true);
         env.setTransactional(true);
         env.setAllowCreate(true);
         return new Environment(dir, env);
