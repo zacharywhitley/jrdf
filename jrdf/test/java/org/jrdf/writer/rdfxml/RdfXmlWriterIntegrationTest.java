@@ -118,7 +118,6 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         // re-read
         Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
         // compare
-        System.err.println("Got: " + graph.toString());
         assertTrue("Output graph should be grounded", comparison.isGrounded(read));
         assertEquals("Output graph and input graph should have the same number of statements.",
             graph.getNumberOfTriples(), read.getNumberOfTriples());

@@ -61,7 +61,6 @@ package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.molecule.mem.template.MoleculeTemplate;
 
 import java.util.Set;
 
@@ -81,6 +80,4 @@ public interface NewGraphDecomposer {
      * @throws GraphException
      */
     Set<NewMolecule> decompose(Graph graph) throws GraphException;
-
-    Set<NewMolecule> decompose(Graph graph, Set<MoleculeTemplate> templates) throws GraphException;
 }
