@@ -101,10 +101,10 @@
         <include name="${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar"/>
         <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/je/je-3.2.68.jar"/>
+        <include name="${lib.dir}/je/je-3.3.62.jar"/>
         <include name="${lib.dir}/db4o/db4o-6.3-java5.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
-        <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
+        <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
     </patternset>
 
     <patternset id="test.classpath.pattern">
@@ -123,10 +123,10 @@
         <include name="${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar"/>
         <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/je/je-3.2.68.jar"/>
+        <include name="${lib.dir}/je/je-3.3.62.jar"/>
         <include name="${lib.dir}/db4o/db4o-6.3-java5.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
-        <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
+        <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
         <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
    </patternset>
