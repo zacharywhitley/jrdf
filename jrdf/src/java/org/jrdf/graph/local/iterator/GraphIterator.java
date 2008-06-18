@@ -126,9 +126,7 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
             throw new NoSuchElementException();
         }
         nextCalled = true;
-        // TODO Fix generics problem!!
-        Object[] obj = iterator.next();
-        currentNodes = new Long[]{(Long) obj[0], (Long) obj[1], (Long) obj[2]};
+        currentNodes = iterator.next();
         return handler.createTriple(currentNodes);
     }
 

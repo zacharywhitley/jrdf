@@ -79,9 +79,7 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
     public boolean hasNext() {
         long newNode = currentValue;
         while (iterator.hasNext() && newNode == currentValue) {
-            // TODO Fix generics problem!!
-            Object[] objs = iterator.next();
-            newNode = (Long) objs[0];
+            newNode = iterator.next()[0];
         }
         hasNext = newNode != currentValue;
         currentValue = newNode;
