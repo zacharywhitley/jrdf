@@ -57,55 +57,23 @@
  *
  */
 
-package org.jrdf.graph.global.iterator;
+package org.jrdf.graph.global.index.adapter;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.global.index.MoleculeIndex;
-import org.jrdf.graph.global.molecule.Molecule;
-import org.jrdf.util.ClosableIterator;
-
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
- * Globalized Graph iterator where 2 nodes are fixed.
- *
- * User: imrank
- * Date: 14/09/2007
- * Time: 12:57:13
- */
-public class TwoFixedIterator implements ClosableIterator<Molecule> {
-    private Iterator<Molecule> moleculeIterator;
-    private boolean hasNext;
-
-    public TwoFixedIterator(Node first, Node second, MoleculeIndex[] indexes, int searchIndex) {
-        Map<Node, Map<Node, Molecule>> subIndex = indexes[searchIndex].getSubIndex(first);
-
-        if (null != subIndex) {
-            Map<Node, Molecule> subGroup = subIndex.get(second);
-            if (null != subGroup) {
-                moleculeIterator = subGroup.values().iterator();
-                hasNext = moleculeIterator.hasNext();
-            }
-        }
-    }
-
-    public boolean close() {
-        return true;
-    }
-
+public class EmptyIteratorMapEntry implements Iterator<Map.Entry<Long, Set<Long>>> {
     public boolean hasNext() {
-        return hasNext;
+        return false;
     }
 
-    public Molecule next() throws NoSuchElementException {
-        Molecule currentMolecule = moleculeIterator.next();
-        hasNext = moleculeIterator.hasNext();
-        return currentMolecule;
+    public Map.Entry<Long, Set<Long>> next() {
+        throw new NoSuchElementException();
     }
 
     public void remove() {
-        throw new UnsupportedOperationException("Remove is unsupported.");
+        throw new UnsupportedOperationException();
     }
 }

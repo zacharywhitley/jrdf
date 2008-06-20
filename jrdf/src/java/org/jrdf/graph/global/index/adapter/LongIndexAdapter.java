@@ -60,8 +60,7 @@
 package org.jrdf.graph.global.index.adapter;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.index.TripleFilterClosableIterator;
-import org.jrdf.graph.global.index.longindex.NewMoleculeIndex;
+import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
@@ -73,9 +72,9 @@ import java.util.Set;
  * calls where the Molecule ID is 0.
  */
 public class LongIndexAdapter implements LongIndex {
-    private final NewMoleculeIndex<Long> index;
+    private final MoleculeIndex<Long> index;
 
-    public LongIndexAdapter(NewMoleculeIndex<Long> newIndex) {
+    public LongIndexAdapter(MoleculeIndex<Long> newIndex) {
         this.index = newIndex;
     }
 

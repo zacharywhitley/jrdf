@@ -64,8 +64,8 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
-import org.jrdf.graph.global.index.longindex.NewMoleculeIndex;
-import org.jrdf.graph.global.index.longindex.mem.NewMoleculeIndexMem;
+import org.jrdf.graph.global.index.longindex.MoleculeIndex;
+import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
@@ -154,9 +154,9 @@ public final class SortedDiskGlobalJRDFFactory implements JRDFFactory {
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
         ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map3 =
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        NewMoleculeIndex<Long> spom = new NewMoleculeIndexMem(map1);
-        NewMoleculeIndex<Long> posm = new NewMoleculeIndexMem(map2);
-        NewMoleculeIndex<Long> ospm = new NewMoleculeIndexMem(map3);
+        MoleculeIndex<Long> spom = new MoleculeIndexMem(map1);
+        MoleculeIndex<Long> posm = new MoleculeIndexMem(map2);
+        MoleculeIndex<Long> ospm = new MoleculeIndexMem(map3);
         LongIndex[] indexes = new LongIndex[]{new LongIndexAdapter(spom), new LongIndexAdapter(posm),
             new LongIndexAdapter(ospm)};
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();

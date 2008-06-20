@@ -59,29 +59,34 @@
 
 package org.jrdf.graph.global.index;
 
+import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
 
-public class TripleFilterClosableIterator implements ClosableIterator<Long[]> {
-    private final ClosableIterator<Long[]> iterator;
+import java.util.Map;
+import java.util.Set;
 
-    public TripleFilterClosableIterator(ClosableIterator<Long[]> newIterator) {
-        this.iterator = newIterator;
-    }
+/**
+ * The generic interface for storing indexed global molecules.
+ */
+public interface MoleculeStructureIndex<T> {
 
-    public boolean close() {
-        return iterator.close();
-    }
+    void add(T... quin) throws GraphException;
 
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
+    void remove(T... quin) throws GraphException;
 
-    public Long[] next() {
-        Long[] longs = iterator.next();
-        return new Long[]{longs[0], longs[1], longs[2]};
-    }
+    void clear();
 
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
+    ClosableIterator<Map.Entry<T, Map<T, Map<T, Map<T, Set<T>>>>>> iterator();
+
+    Map<T, Map<T, Map<T, Set<T>>>> getSubIndex(T first);
+
+    boolean contains(T first);
+
+    boolean removeSubIndex(T first);
+
+    long getSize();
+
+    void close();
+
+    boolean keyExists(Long node);
 }

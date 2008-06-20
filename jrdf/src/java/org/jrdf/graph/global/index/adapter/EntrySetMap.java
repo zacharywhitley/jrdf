@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.global.index.adapter;
 
-import org.jrdf.graph.global.index.EmptyIteratorMapEntry;
 import org.jrdf.util.ClosableMap;
 
 import java.util.Collection;

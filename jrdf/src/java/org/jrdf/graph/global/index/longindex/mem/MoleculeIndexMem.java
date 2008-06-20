@@ -60,7 +60,7 @@
 package org.jrdf.graph.global.index.longindex.mem;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.index.longindex.NewMoleculeIndex;
+import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
@@ -71,14 +71,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class NewMoleculeIndexMem implements NewMoleculeIndex<Long> {
+public class MoleculeIndexMem implements MoleculeIndex<Long> {
     protected Map<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> index;
 
-    public NewMoleculeIndexMem(ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> newIndex) {
+    public MoleculeIndexMem(ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> newIndex) {
         index = newIndex;
     }
 
-    public NewMoleculeIndexMem() {
+    public MoleculeIndexMem() {
         index = new HashMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
     }
 

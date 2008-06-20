@@ -68,8 +68,8 @@ import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.MoleculeGraphImpl;
 import org.jrdf.graph.global.MoleculeLocalizer;
 import org.jrdf.graph.global.MoleculeLocalizerImpl;
-import org.jrdf.graph.global.index.longindex.NewMoleculeIndex;
-import org.jrdf.graph.global.index.longindex.mem.NewMoleculeIndexMem;
+import org.jrdf.graph.global.index.longindex.MoleculeIndex;
+import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
@@ -142,12 +142,12 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
         ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map3 =
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        NewMoleculeIndex<Long> spom = new NewMoleculeIndexMem(map1);
-        NewMoleculeIndex<Long> posm = new NewMoleculeIndexMem(map2);
-        NewMoleculeIndex<Long> ospm = new NewMoleculeIndexMem(map3);
-        NewMoleculeIndex<Long>[] indexes = new NewMoleculeIndexMem[]{(NewMoleculeIndexMem) spom,
-                (NewMoleculeIndexMem) posm, (NewMoleculeIndexMem) ospm};
-        NewMoleculeStructureIndex<Long> structureIndex = new NewMoleculeStructureIndexImpl(
+        MoleculeIndex<Long> spom = new MoleculeIndexMem(map1);
+        MoleculeIndex<Long> posm = new MoleculeIndexMem(map2);
+        MoleculeIndex<Long> ospm = new MoleculeIndexMem(map3);
+        MoleculeIndex<Long>[] indexes = new MoleculeIndexMem[]{(MoleculeIndexMem) spom,
+                (MoleculeIndexMem) posm, (MoleculeIndexMem) ospm};
+        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexImpl(
             new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
         NodePool nodePool = nodePoolFactory.createNodePool();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
