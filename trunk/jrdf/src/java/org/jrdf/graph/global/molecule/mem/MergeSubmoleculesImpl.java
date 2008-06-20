@@ -69,11 +69,11 @@ import java.util.TreeSet;
 
 public class MergeSubmoleculesImpl implements MergeSubmolecules {
     private final TripleComparator comparator;
-    private final NewMoleculeComparator moleculeComparator;
+    private final MoleculeComparator moleculeComparator;
     private final NewMoleculeFactory moleculeFactory;
     private final MoleculeSubsumption subsumption;
 
-    public MergeSubmoleculesImpl(TripleComparator newComparator, NewMoleculeComparator newMoleculeComparator,
+    public MergeSubmoleculesImpl(TripleComparator newComparator, MoleculeComparator newMoleculeComparator,
         NewMoleculeFactory newMoleculeFactory, MoleculeSubsumption newSubsumption) {
         this.comparator = newComparator;
         this.moleculeComparator = newMoleculeComparator;

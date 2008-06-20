@@ -81,11 +81,11 @@ public class NewMoleculeImpl implements NewMolecule {
     private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     // This should be a set of molecules for the values.
     private final SortedMap<Triple, SortedSet<NewMolecule>> subMolecules;
-    private final NewMoleculeComparator moleculeComparator;
+    private final MoleculeComparator moleculeComparator;
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
     protected boolean isTopLevel;
 
-    private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<Triple,
+    private NewMoleculeImpl(MoleculeComparator newComparator, SortedMap<Triple,
         SortedSet<NewMolecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
@@ -93,14 +93,14 @@ public class NewMoleculeImpl implements NewMolecule {
         isTopLevel = true;
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator) {
+    public NewMoleculeImpl(MoleculeComparator newComparator) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
         isTopLevel = true;
         subMolecules = new TreeMap<Triple, SortedSet<NewMolecule>>(tripleComparator);
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, Triple... rootTriples) {
+    public NewMoleculeImpl(MoleculeComparator newComparator, Triple... rootTriples) {
         this(newComparator);
         for (Triple rootTriple : rootTriples) {
             subMolecules.put(rootTriple, new TreeSet<NewMolecule>(moleculeComparator));
@@ -108,7 +108,7 @@ public class NewMoleculeImpl implements NewMolecule {
 
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, NewMolecule... childMolecules) {
+    public NewMoleculeImpl(MoleculeComparator newComparator, NewMolecule... childMolecules) {
         this(newComparator);
         for (NewMolecule molecule : childMolecules) {
             Triple headTriple = molecule.getHeadTriple();
@@ -297,7 +297,7 @@ public class NewMoleculeImpl implements NewMolecule {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        traverser.traverse(this, new NewMoleculeToString(builder));
+        traverser.traverse(this, new MoleculeToString(builder));
         return builder.toString();
     }
 

@@ -76,13 +76,13 @@ import org.jrdf.graph.global.molecule.mem.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.mem.MergeSubmoleculesImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeSubsumptionImpl;
 import org.jrdf.graph.global.molecule.mem.BlankNodeMapperImpl;
-import org.jrdf.graph.global.molecule.mem.NewGraphDecomposer;
+import org.jrdf.graph.global.molecule.mem.GraphDecomposer;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
+import org.jrdf.graph.global.molecule.mem.MoleculeComparator;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeHeadTripleComparatorImpl;
-import org.jrdf.graph.global.molecule.mem.NewNaiveGraphDecomposerImpl;
+import org.jrdf.graph.global.molecule.mem.NaiveGraphDecomposerImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
@@ -112,10 +112,10 @@ public class DecomposerPerformance {
     private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
     private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
-    private final NewMoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
+    private final MoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
     private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
     private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
-    private final NewGraphDecomposer decomposer = new NewNaiveGraphDecomposerImpl(setFactory, moleculeFactory,
+    private final GraphDecomposer decomposer = new NaiveGraphDecomposerImpl(setFactory, moleculeFactory,
         moleculeComparator, comparator);
     private final BlankNodeMapper mapper = new BlankNodeMapperImpl();
     private final MergeSubmolecules globalMerger = new MergeSubmoleculesImpl(comparator, moleculeComparator,

@@ -73,7 +73,7 @@ import java.util.Set;
 
 public class NewMoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private final NewMoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
+    private final MoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
     private NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
     private MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
     private MergeSubmoleculesImpl merger;
