@@ -64,9 +64,9 @@ import org.jrdf.graph.Triple;
 import java.util.Set;
 
 public class NewMoleculeFactoryImpl implements NewMoleculeFactory {
-    private final NewMoleculeComparator moleculeComparator;
+    private final MoleculeComparator moleculeComparator;
 
-    public NewMoleculeFactoryImpl(NewMoleculeComparator newMoleculeComparator) {
+    public NewMoleculeFactoryImpl(MoleculeComparator newMoleculeComparator) {
         moleculeComparator = newMoleculeComparator;
     }
 

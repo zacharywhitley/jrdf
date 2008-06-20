@@ -68,29 +68,30 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeHeadTripleComparatorImpl;
-import org.jrdf.graph.global.molecule.mem.BlankNodeMapper;
-import org.jrdf.graph.global.molecule.mem.BlankNodeMapperImpl;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.REF1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.REF2;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: 6/05/2008
- * Time: 15:17:17
- * To change this template use File | Settings | File Templates.
- */
-public class NewBlankNodeMapperImplUnitTest extends TestCase {
+public class BlankNodeMapperImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private final NewMoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
+    private final MoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
     private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
     private BlankNodeMapper mapper;
     private BlankNode BNODE4;

@@ -63,14 +63,14 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 
 // TODO AN Fix this comparison or use a different comparator in NewNaiveGraphDecomposerImpl.
-public class NewMoleculeComparatorImpl implements NewMoleculeComparator {
+public class MoleculeComparatorImpl implements MoleculeComparator {
     private static final long serialVersionUID = 3376402602482439640L;
     private TripleComparator tripleComparator;
 
-    private NewMoleculeComparatorImpl() {
+    private MoleculeComparatorImpl() {
     }
 
-    public NewMoleculeComparatorImpl(TripleComparator newTripleComparator) {
+    public MoleculeComparatorImpl(TripleComparator newTripleComparator) {
         tripleComparator = newTripleComparator;
     }
 

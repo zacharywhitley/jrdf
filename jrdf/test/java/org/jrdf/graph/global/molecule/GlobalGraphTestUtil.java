@@ -71,8 +71,8 @@ import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeComparatorImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeComparator;
+import org.jrdf.graph.global.molecule.mem.MoleculeComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
@@ -124,7 +124,7 @@ public class GlobalGraphTestUtil {
     public static final Triple b3r1r3 = new TripleImpl(BNODE3, REF1, REF3);
     public static final Triple b3r2r3 = new TripleImpl(BNODE3, REF2, REF3);
     public static final Triple b3r3r3 = new TripleImpl(BNODE3, REF3, REF3);
-    public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeComparatorImpl(COMPARATOR);
+    public static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeComparatorImpl(COMPARATOR);
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY =
         new GroundedTripleComparatorFactoryImpl();
     private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
