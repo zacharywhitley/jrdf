@@ -57,31 +57,31 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global.index.adapter;
 
-import org.jrdf.graph.local.index.AbstractIndex;
-import org.jrdf.graph.Node;
-import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
 
-import java.util.Map;
-import java.util.Set;
+public class TripleFilterClosableIterator implements ClosableIterator<Long[]> {
+    private final ClosableIterator<Long[]> iterator;
 
-public class GlobalIndex extends AbstractIndex<Node> {
-    private static final long serialVersionUID = -1640256337194767517L;
-
-    public GlobalIndex() {
-        super();
+    public TripleFilterClosableIterator(ClosableIterator<Long[]> newIterator) {
+        this.iterator = newIterator;
     }
 
-    public ClosableIterator<Node[]> iterator() {
-        ClosableIterator<Map.Entry<Node, ClosableMap<Node, Set<Node>>>> iterator =
-            new ClosableIteratorImpl<Map.Entry<Node, ClosableMap<Node, Set<Node>>>>(index.entrySet().iterator());
-        return new FlatteningNodeClosableIterator(iterator);
+    public boolean close() {
+        return iterator.close();
     }
 
-    public GlobalIndex(Map<Node, ClosableMap<Node, Set<Node>>> newIndex) {
-        super(newIndex);
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
+
+    public Long[] next() {
+        Long[] longs = iterator.next();
+        return new Long[]{longs[0], longs[1], longs[2]};
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }

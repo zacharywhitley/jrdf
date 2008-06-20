@@ -57,77 +57,36 @@
  *
  */
 
-package org.jrdf.graph.global.iterator;
+package org.jrdf.graph.global.index.longindex;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.global.index.MoleculeIndex;
-import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
- * Iterator over molecules in a globalized graph, where one of the nodes in a triple is fixed.
- * User: imrank
- * Date: 14/09/2007
- * Time: 15:34:50
+ * The generic interface for storing indexed global molecules.
  */
-public class OneFixedIterator implements ClosableIterator<Molecule> {
-    private Iterator<Map.Entry<Node, Map<Node, Molecule>>> secondIndexIterator;
-    private Iterator<Molecule> thirdIndexIterator;
-    private Molecule currentMolecule;
+public interface MoleculeIndex<T> {
 
-    public OneFixedIterator(Node newFirst, MoleculeIndex[] newIndexes, int newSearchIndex) {
-        MoleculeIndex index = newIndexes[newSearchIndex];
-        Map<Node, Map<Node, Molecule>> subIndex = index.getSubIndex(newFirst);
+    void add(T... quad) throws GraphException;
 
-        if (null != subIndex) {
-            secondIndexIterator = subIndex.entrySet().iterator();
-            assert secondIndexIterator.hasNext();
-        }
-    }
+    void remove(T... quad) throws GraphException;
 
-    public boolean close() {
-        return true;
-    }
+    void clear();
 
-    public boolean hasNext() {
-        // confirm we still have an item iterator, and that it has data available
-        return null != thirdIndexIterator && thirdIndexIterator.hasNext() ||
-            null != secondIndexIterator && secondIndexIterator.hasNext();
-    }
+    ClosableIterator<T[]> iterator();
 
-    public Molecule next() {
-        if (null == secondIndexIterator) {
-            throw new NoSuchElementException();
-        }
-        updatePosition();
+    ClosableMap<T, ClosableMap<T, Set<T>>> getSubIndex(T first);
 
-        return currentMolecule;
-    }
+    boolean contains(T first);
 
-    public void remove() {
-        throw new UnsupportedOperationException("Remove is unsupported.");
-    }
+    boolean removeSubIndex(T first);
 
-    private void updatePosition() {
-        if (null == thirdIndexIterator || !thirdIndexIterator.hasNext()) {
-            if (null == secondIndexIterator || !secondIndexIterator.hasNext()) {
-                secondIndexIterator = null;
-                return;
-            }
-            Map.Entry<Node, Map<Node, Molecule>> secondEntry = secondIndexIterator.next();
-            thirdIndexIterator = secondEntry.getValue().values().iterator();
-            assert thirdIndexIterator.hasNext();
+    long getSize();
 
-            Molecule tempMolecule = currentMolecule;
-            currentMolecule = thirdIndexIterator.next();
+    void close();
 
-            if (currentMolecule.equals(tempMolecule)) {
-                updatePosition();
-            }
-        }
-    }
+    boolean keyExists(Long node);
 }

@@ -68,14 +68,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class NewMoleculeStructureIndexImpl implements NewMoleculeStructureIndex<Long> {
+public class MoleculeStructureIndexImpl implements MoleculeStructureIndex<Long> {
     private Map<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>> index;
 
-    protected NewMoleculeStructureIndexImpl(Map<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>> newIndex) {
+    protected MoleculeStructureIndexImpl(Map<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>> newIndex) {
         index = newIndex;
     }
 
-    protected NewMoleculeStructureIndexImpl() {
+    protected MoleculeStructureIndexImpl() {
         index = new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>();
     }
 

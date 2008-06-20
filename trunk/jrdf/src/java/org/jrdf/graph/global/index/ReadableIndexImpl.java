@@ -60,7 +60,7 @@
 package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.index.longindex.NewMoleculeIndex;
+import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.util.ClosableMap;
 
 import java.util.HashSet;
@@ -68,10 +68,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class ReadableIndexImpl implements ReadableIndex<Long> {
-    private final NewMoleculeIndex<Long>[] indexes;
-    private final NewMoleculeStructureIndex<Long> structureIndex;
+    private final MoleculeIndex<Long>[] indexes;
+    private final MoleculeStructureIndex<Long> structureIndex;
 
-    public ReadableIndexImpl(NewMoleculeIndex<Long>[] newIndexes, NewMoleculeStructureIndex<Long> newStructureIndex) {
+    public ReadableIndexImpl(MoleculeIndex<Long>[] newIndexes, MoleculeStructureIndex<Long> newStructureIndex) {
         this.indexes = newIndexes;
         this.structureIndex = newStructureIndex;
     }
