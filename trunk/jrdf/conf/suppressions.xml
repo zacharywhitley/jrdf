@@ -52,7 +52,7 @@
     <suppress checks="MagicNumber" files="MoleculeIndex"/>
     <suppress checks="MagicNumber" files="MoleculeStructureIndex"/>
     <suppress checks="MagicNumber" files="WritableIndexImpl"/>
-    <suppress checks="ReturnCount" files="NewBlankNodeMapperImpl"/>
+    <suppress checks="ReturnCount" files="BlankNodeMapperImpl"/>
     <suppress checks="JavaNCSS" files="AltNaiveGraphDecomposterImpl" />
 
     <!-- Import -->
