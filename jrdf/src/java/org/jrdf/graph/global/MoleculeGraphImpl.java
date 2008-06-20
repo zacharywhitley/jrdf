@@ -111,7 +111,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
             // TODO Recursively reconstruct molecule.
             // Delete all triples in the molecule.
             for (Long[] triple : triplesForMid) {
-                writableIndex.remove(new Long[] {triple[0], triple[1], triple[2], mid, 0L});
+                writableIndex.remove(triple[0], triple[1], triple[2], mid, 0L);
             }
         } catch (GraphException e) {
             throw new RuntimeException(e);

@@ -75,7 +75,7 @@ import org.jrdf.graph.global.molecule.mem.LocalMergeSubmoleculesImpl;
 import org.jrdf.graph.global.molecule.mem.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.mem.MergeSubmoleculesImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeSubsumptionImpl;
-import org.jrdf.graph.global.molecule.mem.NewBlankNodeMapperImpl;
+import org.jrdf.graph.global.molecule.mem.BlankNodeMapperImpl;
 import org.jrdf.graph.global.molecule.mem.NewGraphDecomposer;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
@@ -117,7 +117,7 @@ public class DecomposerPerformance {
     private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
     private final NewGraphDecomposer decomposer = new NewNaiveGraphDecomposerImpl(setFactory, moleculeFactory,
         moleculeComparator, comparator);
-    private final BlankNodeMapper mapper = new NewBlankNodeMapperImpl();
+    private final BlankNodeMapper mapper = new BlankNodeMapperImpl();
     private final MergeSubmolecules globalMerger = new MergeSubmoleculesImpl(comparator, moleculeComparator,
         moleculeFactory, new MoleculeSubsumptionImpl());
     private final LocalMergeSubmolecules localMerger = new LocalMergeSubmoleculesImpl(globalMerger, moleculeFactory);

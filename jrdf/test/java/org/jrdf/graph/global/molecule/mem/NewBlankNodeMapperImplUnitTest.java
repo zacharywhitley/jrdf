@@ -75,7 +75,7 @@ import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.BlankNodeMapper;
-import org.jrdf.graph.global.molecule.mem.NewBlankNodeMapperImpl;
+import org.jrdf.graph.global.molecule.mem.BlankNodeMapperImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.Collections;
@@ -102,7 +102,7 @@ public class NewBlankNodeMapperImplUnitTest extends TestCase {
     private TripleFactory tFac;
 
     public void setUp() throws Exception {
-        mapper = new NewBlankNodeMapperImpl();
+        mapper = new BlankNodeMapperImpl();
         fac = GRAPH.getElementFactory();
         tFac = GRAPH.getTripleFactory();
         BNODE4 = fac.createBlankNode();

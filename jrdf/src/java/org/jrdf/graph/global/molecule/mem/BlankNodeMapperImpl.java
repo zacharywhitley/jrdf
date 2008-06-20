@@ -71,13 +71,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: 6/05/2008
- * Time: 09:22:09
- * To change this template use File | Settings | File Templates.
+ * Finds the mapping of blank nodes between two molecules.
+ *
+ * @author Andrew Newman
+ * @author Yuan-Fang Li
+ * @version $Revision: 1226 $
  */
-public class NewBlankNodeMapperImpl implements BlankNodeMapper {
+public class BlankNodeMapperImpl implements BlankNodeMapper {
     private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private Map<BlankNode, BlankNode> map;
 
