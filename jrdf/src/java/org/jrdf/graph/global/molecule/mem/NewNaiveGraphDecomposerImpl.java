@@ -73,7 +73,6 @@ import org.jrdf.set.SortedSetFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.Set;
 import java.util.SortedSet;
 

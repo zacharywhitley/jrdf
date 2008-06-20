@@ -62,6 +62,7 @@ package org.jrdf.graph.global.index;
 import junit.framework.TestCase;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.graph.global.index.longindex.NewMoleculeIndex;
 
 import java.net.URI;
 

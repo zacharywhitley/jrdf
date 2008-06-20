@@ -57,14 +57,15 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global.index.adapter;
 
+import org.jrdf.graph.global.index.EmptyIteratorMapEntry;
 import org.jrdf.util.ClosableMap;
 
-import java.util.Set;
-import java.util.Map;
-import java.util.Iterator;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class EntrySetMap implements Set<Map.Entry<Long, Set<Long>>> {
     private final ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap;

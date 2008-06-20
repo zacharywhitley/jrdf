@@ -77,6 +77,7 @@ import org.jrdf.graph.global.molecule.mem.MoleculeHandler;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverser;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.MoleculeLocalizer;
 import org.jrdf.util.test.MockFactory;
 import static org.jrdf.util.test.SetUtil.asSet;
 

@@ -8,9 +8,9 @@
     <!-- Localized in memory, graph classes -->
 
     <bean id="memIndex" class="org.jrdf.graph.local.index.longindex.mem.LongIndexMem" singleton="false"/>
-    <bean id="moleculeIndex" class="org.jrdf.graph.global.index.LongIndexAdapter" singleton="false">
+    <bean id="moleculeIndex" class="org.jrdf.graph.global.index.adapter.LongIndexAdapter" singleton="false">
         <constructor-arg>
-            <bean class="org.jrdf.graph.global.index.NewMoleculeIndexImpl" singleton="false"/>
+            <bean class="org.jrdf.graph.global.index.longindex.mem.NewMoleculeIndexMem" singleton="false"/>
         </constructor-arg>
     </bean>
 
