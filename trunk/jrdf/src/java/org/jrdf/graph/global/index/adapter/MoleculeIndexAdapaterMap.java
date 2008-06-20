@@ -57,60 +57,25 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.index.adapter;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.AnySubjectNode;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.GlobalizedGraph;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
-import org.jrdf.util.test.GlobalizedGraphTestUtil;
+import org.jrdf.util.ClosableMap;
 
-import java.util.List;
+import java.util.AbstractMap;
+import java.util.Set;
 
-/**
- * @author Imran Khan (not the cricketer)
- * @version $Revision: 1317 $
- */
-public class MoleculeIteratorFactoryImplUnitTest extends TestCase {
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private GlobalizedGraph globalizedGraph;
+public class MoleculeIndexAdapaterMap extends AbstractMap<Long, Set<Long>> implements ClosableMap<Long, Set<Long>> {
+    private final ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap;
 
-    public void setUp() throws Exception {
-        globalizedGraph = new GlobalizedGraphMemFactoryImpl(comparator).getNewGlobalizedGraph();
+    public MoleculeIndexAdapaterMap(ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap) {
+        this.mapClosableMap = mapClosableMap;
     }
 
-    public void testFind() throws Exception {
-        // Goes through all 8 possibilities and checks contains.
-        for (int i = 0; i < 8; i++) {
-            // 4 falses then 4 trues.
-            boolean findAnySubject = (i & 4) != 0;
-            // 2 falses then 2 trues.
-            boolean findAnyPredicate = (i & 2) != 0;
-            // true then false
-            boolean findAnyObject = (i & 1) != 0;
-            checkFind(findAnySubject, findAnyPredicate, findAnyObject);
-        }
+    public Set<Entry<Long, Set<Long>>> entrySet() {
+        return new EntrySetMap(mapClosableMap);
     }
 
-    private void checkFind(boolean findAnySubject, boolean findAnyPredicate, boolean findAnyObject) {
-        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
-        for (int i = 0; i < GlobalizedGraphTestUtil.NUMBER_OF_MOLECULES; i++) {
-            Triple headTriple = headTriples.get(i);
-            SubjectNode subject = findAnySubject ? AnySubjectNode.ANY_SUBJECT_NODE : headTriple.getSubject();
-            PredicateNode predicate =
-                findAnyPredicate ? AnyPredicateNode.ANY_PREDICATE_NODE : headTriple.getPredicate();
-            ObjectNode object = findAnyObject ? AnyObjectNode.ANY_OBJECT_NODE : headTriple.getObject();
-            GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
-
-            assertTrue(globalizedGraph.find(subject, predicate, object).hasNext());
-        }
+    public boolean close() {
+        return mapClosableMap != null && mapClosableMap.close();
     }
 }

@@ -57,25 +57,47 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global.index.adapter;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.util.ClosableMap;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.Iterator;
 
-public class OSPMoleculeIndexMem extends AbstractMoleculeIndexMem {
-    private static final long serialVersionUID = 3867278009197842100L;
+public class IteratorMapEntry implements Iterator<Map.Entry<Long, Set<Long>>> {
+    private Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator;
 
-    public OSPMoleculeIndexMem() {
+    public IteratorMapEntry(Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entryIterator) {
+        this.iterator = entryIterator;
     }
 
-    public OSPMoleculeIndexMem(Map<Node, Map<Node, Map<Node, Molecule>>> newIndex) {
-        super(newIndex);
+    public boolean hasNext() {
+        return (iteratorHasNext());
     }
 
-    protected Node[] getNodes(Triple triple) {
-        return new Node[]{triple.getObject(), triple.getSubject(), triple.getPredicate()};
+    private boolean iteratorHasNext() {
+        return (null != iterator && iterator.hasNext());
+    }
+
+    public Map.Entry<Long, Set<Long>> next() {
+        final Map.Entry<Long, ClosableMap<Long, Set<Long>>> mapEntry = iterator.next();
+        return new Map.Entry<Long, Set<Long>>() {
+            public Long getKey() {
+                return mapEntry.getKey();
+            }
+
+            public Set<Long> getValue() {
+                return mapEntry.getValue().keySet();
+            }
+
+            public Set<Long> setValue(Set<Long> value) {
+                throw new UnsupportedOperationException("Cannot call this method");
+            }
+        };
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot call this method");
     }
 }

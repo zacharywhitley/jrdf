@@ -99,13 +99,14 @@ public class BdbSortedSetFactory implements SortedSetFactory {
         }
     }
 
+    @SuppressWarnings({ "RawUseOfParameterizedType", "RedundantCast", "unchecked" })
     public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
         try {
             setNumber++;
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
             dbConfig.setOverrideBtreeComparator(true);
-            dbConfig.setBtreeComparator(comparator);
+            dbConfig.setBtreeComparator((Comparator) comparator);
             Database database = handler.setupDatabase(env, databaseName + setNumber, dbConfig);
             databases.add(database);
             final SortedSet<T> set = handler.createSet(database, clazz);

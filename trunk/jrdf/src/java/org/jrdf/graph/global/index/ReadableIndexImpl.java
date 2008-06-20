@@ -60,6 +60,7 @@
 package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.global.index.longindex.NewMoleculeIndex;
 import org.jrdf.util.ClosableMap;
 
 import java.util.HashSet;

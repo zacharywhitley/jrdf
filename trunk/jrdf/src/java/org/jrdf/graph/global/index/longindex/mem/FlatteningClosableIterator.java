@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global.index.longindex.mem;
 
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;

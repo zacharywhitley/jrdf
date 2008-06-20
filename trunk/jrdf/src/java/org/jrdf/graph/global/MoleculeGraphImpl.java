@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -69,6 +69,9 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.global.index.AddNewMoleculeToIndex;
+import org.jrdf.graph.global.index.ReadableIndex;
+import org.jrdf.graph.global.index.WritableIndex;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverser;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;

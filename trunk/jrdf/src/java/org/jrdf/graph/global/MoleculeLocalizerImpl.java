@@ -57,47 +57,25 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global;
 
-import org.jrdf.util.ClosableMap;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
+public class MoleculeLocalizerImpl implements MoleculeLocalizer {
+    private long moleculeId = 1;
+    private final Localizer localizer;
 
-public class IteratorMapEntry implements Iterator<Map.Entry<Long, Set<Long>>> {
-    private Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator;
-
-    public IteratorMapEntry(Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entryIterator) {
-        this.iterator = entryIterator;
+    public MoleculeLocalizerImpl(Localizer localizer) {
+        this.localizer = localizer;
     }
 
-    public boolean hasNext() {
-        return (iteratorHasNext());
+    public Long getNextMoleculeId() {
+        return moleculeId++;
     }
 
-    private boolean iteratorHasNext() {
-        return (null != iterator && iterator.hasNext());
-    }
-
-    public Map.Entry<Long, Set<Long>> next() {
-        final Map.Entry<Long, ClosableMap<Long, Set<Long>>> mapEntry = iterator.next();
-        return new Map.Entry<Long, Set<Long>>() {
-            public Long getKey() {
-                return mapEntry.getKey();
-            }
-
-            public Set<Long> getValue() {
-                return mapEntry.getValue().keySet();
-            }
-
-            public Set<Long> setValue(Set<Long> value) {
-                throw new UnsupportedOperationException("Cannot call this method");
-            }
-        };
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot call this method");
+    public Long[] localizeTriple(Triple triple) throws GraphException {
+        return localizer.localize(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 }

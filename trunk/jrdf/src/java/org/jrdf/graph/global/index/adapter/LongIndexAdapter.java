@@ -57,19 +57,63 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.index.adapter;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.GlobalizedGraph;
-import org.jrdf.parser.Parser;
+import org.jrdf.graph.global.index.TripleFilterClosableIterator;
+import org.jrdf.graph.global.index.longindex.NewMoleculeIndex;
+import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
+
+import java.util.Set;
 
 /**
- * Parser for parsing RDF/XML which then allows you to load a GlobalizedGraph.
- *
- * @author Imran Khan
- * @version $Revision: 1226 $
+ * Wraps a MolecueIndex around the LongIndex interface.  All normal LongIndex calls are translated into MoleculeIndex
+ * calls where the Molecule ID is 0.
  */
-public interface MoleculeParser extends Parser {
+public class LongIndexAdapter implements LongIndex {
+    private final NewMoleculeIndex<Long> index;
 
-    GlobalizedGraph getGlobalizedGraph() throws GraphException;
+    public LongIndexAdapter(NewMoleculeIndex<Long> newIndex) {
+        this.index = newIndex;
+    }
+
+    public void add(Long... node) throws GraphException {
+        index.add(node[0], node[1], node[2], 0L);
+    }
+
+    public void remove(Long... node) throws GraphException {
+        index.remove(node[0], node[1], node[2], 0L);
+    }
+
+    public void clear() {
+        index.clear();
+    }
+
+    public ClosableIterator<Long[]> iterator() {
+        return new TripleFilterClosableIterator(index.iterator());
+    }
+
+    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap = index.getSubIndex(first);
+        return new MoleculeIndexAdapaterMap(mapClosableMap);
+    }
+
+    public boolean contains(Long first) {
+        return index.contains(first);
+    }
+
+    // TODO Fix this.
+    public boolean removeSubIndex(Long first) {
+        return false;
+    }
+
+    public long getSize() {
+        return index.getSize();
+    }
+
+    public void close() {
+        index.close();
+    }
 }

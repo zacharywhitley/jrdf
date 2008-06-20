@@ -57,61 +57,36 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global.index.longindex;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 
 import java.util.Set;
 
 /**
- * Wraps a MolecueIndex around the LongIndex interface.  All normal LongIndex calls are translated into MoleculeIndex
- * calls where the Molecule ID is 0.
+ * The generic interface for storing indexed global molecules.
  */
-public class LongIndexAdapter implements LongIndex {
-    private final NewMoleculeIndex<Long> index;
+public interface NewMoleculeIndex<T> {
 
-    public LongIndexAdapter(NewMoleculeIndex<Long> newIndex) {
-        this.index = newIndex;
-    }
+    void add(T... quad) throws GraphException;
 
-    public void add(Long... node) throws GraphException {
-        index.add(node[0], node[1], node[2], 0L);
-    }
+    void remove(T... quad) throws GraphException;
 
-    public void remove(Long... node) throws GraphException {
-        index.remove(node[0], node[1], node[2], 0L);
-    }
+    void clear();
 
-    public void clear() {
-        index.clear();
-    }
+    ClosableIterator<T[]> iterator();
 
-    public ClosableIterator<Long[]> iterator() {
-        return new TripleFilterClosableIterator(index.iterator());
-    }
+    ClosableMap<T, ClosableMap<T, Set<T>>> getSubIndex(T first);
 
-    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap = index.getSubIndex(first);
-        return new MoleculeIndexAdapaterMap(mapClosableMap);
-    }
+    boolean contains(T first);
 
-    public boolean contains(Long first) {
-        return index.contains(first);
-    }
+    boolean removeSubIndex(T first);
 
-    // TODO Fix this.
-    public boolean removeSubIndex(Long first) {
-        return false;
-    }
+    long getSize();
 
-    public long getSize() {
-        return index.getSize();
-    }
+    void close();
 
-    public void close() {
-        index.close();
-    }
+    boolean keyExists(Long node);
 }

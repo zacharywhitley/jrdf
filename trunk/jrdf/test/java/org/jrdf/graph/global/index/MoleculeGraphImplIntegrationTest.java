@@ -64,6 +64,12 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
+import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.graph.global.MoleculeGraphImpl;
+import org.jrdf.graph.global.MoleculeLocalizer;
+import org.jrdf.graph.global.MoleculeLocalizerImpl;
+import org.jrdf.graph.global.index.longindex.NewMoleculeIndex;
+import org.jrdf.graph.global.index.longindex.mem.NewMoleculeIndexMem;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
@@ -136,11 +142,11 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
         ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map3 =
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        NewMoleculeIndex<Long> spom = new NewMoleculeIndexImpl(map1);
-        NewMoleculeIndex<Long> posm = new NewMoleculeIndexImpl(map2);
-        NewMoleculeIndex<Long> ospm = new NewMoleculeIndexImpl(map3);
-        NewMoleculeIndex<Long>[] indexes = new NewMoleculeIndexImpl[]{(NewMoleculeIndexImpl) spom,
-                (NewMoleculeIndexImpl) posm, (NewMoleculeIndexImpl) ospm};
+        NewMoleculeIndex<Long> spom = new NewMoleculeIndexMem(map1);
+        NewMoleculeIndex<Long> posm = new NewMoleculeIndexMem(map2);
+        NewMoleculeIndex<Long> ospm = new NewMoleculeIndexMem(map3);
+        NewMoleculeIndex<Long>[] indexes = new NewMoleculeIndexMem[]{(NewMoleculeIndexMem) spom,
+                (NewMoleculeIndexMem) posm, (NewMoleculeIndexMem) ospm};
         NewMoleculeStructureIndex<Long> structureIndex = new NewMoleculeStructureIndexImpl(
             new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
         NodePool nodePool = nodePoolFactory.createNodePool();

@@ -57,29 +57,13 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global;
 
-import org.jrdf.util.ClosableMap;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.GraphException;
 
-import java.util.AbstractMap;
-import java.util.Set;
+public interface MoleculeLocalizer {
+    Long getNextMoleculeId();
 
-public class MoleculeIndexAdapaterMap extends AbstractMap<Long, Set<Long>> implements ClosableMap<Long, Set<Long>> {
-    private final ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap;
-
-    public MoleculeIndexAdapaterMap(ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap) {
-        this.mapClosableMap = mapClosableMap;
-    }
-
-    public Set<Entry<Long, Set<Long>>> entrySet() {
-        return new EntrySetMap(mapClosableMap);
-    }
-
-    public boolean close() {
-        if (mapClosableMap != null) {
-            return mapClosableMap.close();
-        } else {
-            return false;
-        }
-    }
+    Long[] localizeTriple(Triple triple) throws GraphException;
 }

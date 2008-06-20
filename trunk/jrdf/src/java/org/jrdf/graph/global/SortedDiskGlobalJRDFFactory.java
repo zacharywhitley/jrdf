@@ -116,7 +116,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
-public final class SortedMemoryGlobalJRDFFactory implements JRDFFactory {
+public final class SortedDiskGlobalJRDFFactory implements JRDFFactory {
     private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
     private static final TypeComparator TYPE_COMPARATOR = new TypeComparatorImpl(NODE_TYPE_COMPARATOR);
     private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR = new AttributeNameComparatorImpl();
@@ -137,22 +137,22 @@ public final class SortedMemoryGlobalJRDFFactory implements JRDFFactory {
     private static final QueryEngine QUERY_ENGINE = new QueryFactoryImpl().createQueryEngine();
     private GraphFactory orderedGraphFactory;
 
-    private SortedMemoryGlobalJRDFFactory() {
+    private SortedDiskGlobalJRDFFactory() {
     }
 
     public static JRDFFactory getFactory() {
-        return new SortedMemoryGlobalJRDFFactory();
+        return SortedMemoryGlobalJRDFFactory.getFactory();
     }
 
     public void refresh() {
     }
 
     public Graph getNewGraph() {
-        ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map1 =
+        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map1 =
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map2 =
+        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map2 =
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map3 =
+        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map3 =
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
         NewMoleculeIndex<Long> spom = new NewMoleculeIndexMem(map1);
         NewMoleculeIndex<Long> posm = new NewMoleculeIndexMem(map2);

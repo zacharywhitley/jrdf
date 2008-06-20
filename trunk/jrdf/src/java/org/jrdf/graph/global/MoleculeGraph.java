@@ -57,36 +57,14 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
-import java.util.Set;
-
-/**
- * The generic interface for storing indexed global molecules.
- */
-public interface NewMoleculeIndex<T> {
-
-    void add(T... quad) throws GraphException;
-
-    void remove(T... quad) throws GraphException;
-
-    void clear();
-
-    ClosableIterator<T[]> iterator();
-
-    ClosableMap<T, ClosableMap<T, Set<T>>> getSubIndex(T first);
-
-    boolean contains(T first);
-
-    boolean removeSubIndex(T first);
-
-    long getSize();
-
-    void close();
-
-    boolean keyExists(Long node);
+public interface MoleculeGraph extends Graph {
+    void add(NewMolecule molecule);
+    void delete(NewMolecule molecule);
+    // TODO
+    //Set<NewMolecule> findMolecules(Triple triple);
 }
