@@ -59,4 +59,8 @@ class Att {
     public String getValue() {
         return value;
     }
+
+    public String toString() {
+        return "Namespace: " + namespace + ", locaName: " + localName + ", qName: " + qName + ", value: " + value;
+    }
 }
