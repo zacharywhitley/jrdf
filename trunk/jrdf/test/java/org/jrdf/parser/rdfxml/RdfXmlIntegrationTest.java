@@ -76,7 +76,6 @@ import java.util.Map;
 import java.util.Set;
 
 // TODO 1 AN Doesn't do graph equality for blank nodes.
-
 // TODO 2 AN Doesn't test for correctly created graphs - li's by themselves.
 public class RdfXmlIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
@@ -87,27 +86,23 @@ public class RdfXmlIntegrationTest extends TestCase {
             put("rdf-tests/amp-in-url/test001.nt", new String[]{"rdf-tests/amp-in-url/test001.rdf"});
             put("rdf-tests/datatypes/test001.nt", new String[]{"rdf-tests/datatypes/test001.rdf"});
             put("rdf-tests/datatypes/test002.nt", new String[]{"rdf-tests/datatypes/test002.rdf"});
-            //1 put("rdf-tests/rdf-charmod-literals/test001.nt", "rdf-tests/rdf-charmod-literals/test001.rdf");
+            put("rdf-tests/rdf-charmod-literals/test001.nt", new String[]{"rdf-tests/rdf-charmod-literals/test001.rdf"});
             put("rdf-tests/rdf-charmod-uris/test001.nt", new String[]{"rdf-tests/rdf-charmod-uris/test001.rdf"});
             put("rdf-tests/rdf-charmod-uris/test002.nt", new String[]{"rdf-tests/rdf-charmod-uris/test002.rdf"});
-            //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test001.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test001.rdf");
+            //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test001.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001.rdf"});
             //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test002.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test002.rdf");
-            //2 put("rdf-tests/rdf-containers-syntax-vs-schema/test001-8.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test001-8.rdf");
-            //1 put("rdf-tests/rdf-element-not-mandatory/test001.nt", "rdf-tests/rdf-element-not-mandatory/test001.rdf");
-            put("rdf-tests/rdfms-difference-between-ID-and-about/test1.nt",
-                new String[]{
-                    "rdf-tests/rdfms-difference-between-ID-and-about/test1.rdf",
+            //2 put("rdf-tests/rdf-containers-syntax-vs-schema/test001-8.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001-8.rdf"});
+            put("rdf-tests/rdf-element-not-mandatory/test001.nt", new String[]{"rdf-tests/rdf-element-not-mandatory/test001.rdf"});
+            put("rdf-tests/rdfms-difference-between-ID-and-about/test1.nt", new String[]{
+                "rdf-tests/rdfms-difference-between-ID-and-about/test1.rdf",
                     "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf"});
-            put("rdf-tests/rdfms-difference-between-ID-and-about/test2.nt",
-                new String[]{
-                    "rdf-tests/rdfms-difference-between-ID-and-about/test2.rdf",
+            put("rdf-tests/rdfms-difference-between-ID-and-about/test2.nt", new String[]{
+                "rdf-tests/rdfms-difference-between-ID-and-about/test2.rdf",
                     "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test2.rdf"});
-            put("rdf-tests/rdfms-difference-between-ID-and-about/test3.nt",
-                new String[]{
-                    "rdf-tests/rdfms-difference-between-ID-and-about/test3.rdf",
+            put("rdf-tests/rdfms-difference-between-ID-and-about/test3.nt", new String[]{
+                "rdf-tests/rdfms-difference-between-ID-and-about/test3.rdf",
                     "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test3.rdf"});
-            put("rdf-tests/rdfms-duplicate-member-props/test001.nt",
-                new String[]{"rdf-tests/rdfms-duplicate-member-props/test001.rdf"});
+            put("rdf-tests/rdfms-duplicate-member-props/test001.nt", new String[]{"rdf-tests/rdfms-duplicate-member-props/test001.rdf"});
         }
     };
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {

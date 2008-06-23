@@ -59,13 +59,20 @@
 
 package org.jrdf.parser;
 
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertEquals;
 import org.jrdf.TestJRDFFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.datatype.LexicalComparator;
+import org.jrdf.graph.datatype.LexicalComparatorImpl;
+import org.jrdf.graph.datatype.SemanticComparator;
+import org.jrdf.graph.datatype.SemanticComparatorImpl;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
@@ -79,6 +86,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Iterator;
+import java.io.IOException;
 
 public class ParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
@@ -86,6 +95,8 @@ public class ParserTestUtil {
     private static final MapFactory CREATOR = new MemMapFactory();
     private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(CREATOR,
         NEW_GRAPH.getElementFactory());
+    public static final LexicalComparator LEX_COMPARATOR = new LexicalComparatorImpl();
+    public static final SemanticComparator SEM_COMPARATOR = new SemanticComparatorImpl(LEX_COMPARATOR);
 
     private ParserTestUtil() {
     }
@@ -94,19 +105,43 @@ public class ParserTestUtil {
         ParserBlankNodeFactory blankNodeFactory) throws Exception {
         checkNotNull(expectedFile, actualFile, baseURI, actualGraph, blankNodeFactory);
         RDFInputFactory factory = newInstance();
-        RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create(baseURI),
-            NEW_GRAPH, BLANK_NODE_FACTORY);
+        Set<Triple> resultTriples = getRdfXmlResult(actualFile, baseURI, actualGraph, blankNodeFactory);
+        Set<Triple> expectedTriples = getExpectedResult(expectedFile, baseURI, factory);
+        assertEquals("Wrong number of triples returned: Expected: " + expectedFile + ", Result " + actualFile,
+            expectedTriples.size(), resultTriples.size());
+        int noTriples = findNumberOfEqualTriples(expectedTriples, resultTriples);
+        assertEquals("Invalid result for positive test.  Should contain: " + expectedTriples + " but was: " +
+            resultTriples, expectedTriples.size(), noTriples);
+    }
+
+    private static Set<Triple> getRdfXmlResult(URL actualFile, String baseURI, Graph actualGraph,
+        ParserBlankNodeFactory blankNodeFactory)
+        throws GraphException, IOException, ParseException, StatementHandlerException {
         Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, blankNodeFactory);
         rdfXmlParser.parse(actualFile.openStream(), baseURI);
-        ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Set<Triple> resultTriples = new HashSet<Triple>();
-        while (results.hasNext()) {
-            resultTriples.add(results.next());
+        ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        try {
+            while (results.hasNext()) {
+                Triple o = results.next();
+                resultTriples.add(o);
+            }
+        } finally {
+            results.close();
         }
+        return resultTriples;
+    }
+
+    private static Set<Triple> getExpectedResult(URL expectedFile, String baseURI, RDFInputFactory factory)
+        throws IOException {
+        RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create(baseURI),
+            NEW_GRAPH, BLANK_NODE_FACTORY);
+        Set<Triple> expectedTriples = new HashSet<Triple>();
         while (eventReader.hasNext()) {
-            Triple triple = eventReader.next();
-            assertTrue("Invalid result for positive test.  Should contain: " + triple, resultTriples.contains(triple));
+            Triple o = eventReader.next();
+            expectedTriples.add(o);
         }
+        return expectedTriples;
     }
 
     public static void checkNegativeRdfTestParseException(final URL errorFile, Graph actualGraph,
@@ -117,5 +152,49 @@ public class ParserTestUtil {
                 rdfXmlParser.parse(errorFile.openStream(), "http://example.org/");
             }
         });
+    }
+
+    /**
+     * This only works where there is one blank node in the set of triples - multiple blank nodes will give false
+     * positive results.
+     *
+     * @param actualTriples the triples produced.
+     * @param expectedTriples the expected triples.
+     * @throws Exception if anything goes wrong.
+     */
+    public static void checkGraph(Set<Triple> actualTriples, Set<Triple> expectedTriples) throws Exception {
+        int numberFound = findNumberOfEqualTriples(actualTriples, expectedTriples);
+        assertEquals(expectedTriples.size(), numberFound);
+    }
+
+    public static int findNumberOfEqualTriples(Set<Triple> actualTriples, Set<Triple> expectedTriples) {
+        assertEquals("Wrong number of triples returned", expectedTriples.size(), actualTriples.size());
+        int numberFound = 0;
+        for (Triple tripleToFind : expectedTriples) {
+            boolean found = false;
+            Iterator<Triple> it = actualTriples.iterator();
+            while (it.hasNext() && !found) {
+                Triple triple = it.next();
+                if ((nodesAreBlankOrEqual(tripleToFind.getSubject(), triple.getSubject())) &&
+                    tripleToFind.getPredicate().equals(triple.getPredicate())) {
+                    if (org.jrdf.util.EqualsUtil.hasSuperClassOrInterface(Literal.class, tripleToFind.getObject())) {
+                        Literal literal1 = (Literal) tripleToFind.getObject();
+                        Literal literal2 = (Literal) triple.getObject();
+                        found = SEM_COMPARATOR.compare(literal1, literal2) == 0;
+                    } else {
+                        found = nodesAreBlankOrEqual(tripleToFind.getObject(), triple.getObject());
+                    }
+                }
+                if (found) {
+                    numberFound++;
+                }
+            }
+        }
+        return numberFound;
+    }
+
+    public static boolean nodesAreBlankOrEqual(Node nodeToFind, Node currentNode) {
+        return org.jrdf.graph.AbstractBlankNode.isBlankNode(nodeToFind) && (org.jrdf.graph.AbstractBlankNode.isBlankNode(currentNode)) ||
+            nodeToFind.equals(currentNode);
     }
 }

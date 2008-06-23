@@ -59,27 +59,18 @@
 
 package org.jrdf.parser.ntriples;
 
-import static junit.framework.Assert.assertEquals;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.Literal;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.datatype.LexicalComparator;
-import org.jrdf.graph.datatype.LexicalComparatorImpl;
-import org.jrdf.graph.datatype.SemanticComparator;
-import org.jrdf.graph.datatype.SemanticComparatorImpl;
-import static org.jrdf.graph.local.BlankNodeImpl.isBlankNode;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,13 +78,10 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 public class NTriplesParserTestUtil {
-    private static final LexicalComparator LEX_COMPARATOR = new LexicalComparatorImpl();
-    private static final SemanticComparator SEM_COMPARATOR = new SemanticComparatorImpl(LEX_COMPARATOR);
 
     private NTriplesParserTestUtil() {
     }
@@ -115,45 +103,6 @@ public class NTriplesParserTestUtil {
             actualResults.add(iterator.next());
         }
         return actualResults;
-    }
-
-    /**
-     * This only works where there is one blank node in the set of triples - multiple blank nodes will give false
-     * positive results.
-     *
-     * @param actualTriples the triples produced.
-     * @param expectedTriples the expected triples.
-     * @throws Exception if anything goes wrong.
-     */
-    public static void checkGraph(Set<Triple> actualTriples, Set<Triple> expectedTriples) throws Exception {
-        assertEquals("Wrong number of triples returned", expectedTriples.size(), actualTriples.size());
-        int numberFound = 0;
-        for (Triple tripleToFind : expectedTriples) {
-            boolean found = false;
-            Iterator<Triple> it = actualTriples.iterator();
-            while (it.hasNext() && !found) {
-                Triple triple = it.next();
-                if ((nodesAreBlankOrEqual(tripleToFind.getSubject(), triple.getSubject())) &&
-                    tripleToFind.getPredicate().equals(triple.getPredicate())) {
-                    if (hasSuperClassOrInterface(Literal.class, tripleToFind.getObject())) {
-                        Literal literal1 = (Literal) tripleToFind.getObject();
-                        Literal literal2 = (Literal) triple.getObject();
-                        found = SEM_COMPARATOR.compare(literal1, literal2) == 0;
-                    } else {
-                        found = nodesAreBlankOrEqual(tripleToFind.getObject(), triple.getObject());
-                    }
-                }
-                if (found) {
-                    numberFound++;
-                }
-            }
-        }
-        assertEquals(expectedTriples.size(), numberFound);
-    }
-
-    private static boolean nodesAreBlankOrEqual(Node nodeToFind, Node currentNode) {
-        return isBlankNode(nodeToFind) && (isBlankNode(currentNode)) ||
-            nodeToFind.equals(currentNode);
     }
 
     public static Set<Triple> standardTest(Graph newGraph, ParserBlankNodeFactory blankNodeFactory) throws Exception {

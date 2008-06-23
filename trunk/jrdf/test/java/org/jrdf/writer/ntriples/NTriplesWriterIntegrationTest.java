@@ -68,8 +68,8 @@ import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFInputFactory;
+import org.jrdf.parser.ParserTestUtil;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
@@ -125,7 +125,7 @@ public class NTriplesWriterIntegrationTest extends TestCase {
         BLANK_NODE_FACTORY.clear();
         InputStream in = getSampleData(this.getClass(), TEST_DATA);
         Set<Triple> expectedResults = parseNTriplesFile(in, NEW_GRAPH, BLANK_NODE_FACTORY);
-        checkGraph(expectedResults, actualResults);
+        ParserTestUtil.checkGraph(expectedResults, actualResults);
     }
 
     private Set<String> getTriplesAsStrings() throws Exception {

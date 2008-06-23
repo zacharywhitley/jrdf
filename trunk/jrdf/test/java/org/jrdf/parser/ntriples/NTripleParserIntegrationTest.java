@@ -67,8 +67,8 @@ import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.ParserTestUtil;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
@@ -112,7 +112,7 @@ public class NTripleParserIntegrationTest extends TestCase {
         InputStream in = getSampleData(this.getClass(), TEST_DATA);
         Set<Triple> actualResults = parseNTriplesFile(in, newGraph, factory);
         Set<Triple> expectedResults = standardTest(newGraph, factory);
-        checkGraph(actualResults, expectedResults);
+        ParserTestUtil.checkGraph(actualResults, expectedResults);
     }
 
     public void testPositiveTests() throws Exception {
@@ -123,7 +123,7 @@ public class NTripleParserIntegrationTest extends TestCase {
             Set<Triple> actualResults = getResults(fileName, newGraph, factory);
             newGraph = TEST_JRDF_FACTORY.getNewGraph();
             Set<Triple> expectedResults = getResults(POSITIVE_TESTS.get(fileName), newGraph, factory);
-            checkGraph(actualResults, expectedResults);
+            ParserTestUtil.checkGraph(actualResults, expectedResults);
         }
     }
 
