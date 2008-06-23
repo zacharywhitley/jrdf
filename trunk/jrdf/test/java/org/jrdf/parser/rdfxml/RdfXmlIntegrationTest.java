@@ -101,8 +101,12 @@ public class RdfXmlIntegrationTest extends TestCase {
                 "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test006.rdf"});
             put("rdf-tests/rdf-containers-syntax-vs-schema/test007.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test007.rdf"});
             put("rdf-tests/rdf-containers-syntax-vs-schema/test008.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test008.rdf"});
-            //2 put("rdf-tests/rdf-containers-syntax-vs-schema/test001-8.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001-8.rdf"});
             put("rdf-tests/rdf-element-not-mandatory/test001.nt", new String[]{"rdf-tests/rdf-element-not-mandatory/test001.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0001.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0001.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0003.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0003.rdf"});
+            //put("rdf-tests/rdf-ns-prefix-confusion/test0004.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0004.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0005.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0005.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0006.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0006.rdf"});
             put("rdf-tests/rdfms-difference-between-ID-and-about/test1.nt", new String[]{
                 "rdf-tests/rdfms-difference-between-ID-and-about/test1.rdf",
                 "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf"});
