@@ -1030,7 +1030,7 @@ public final class RdfXmlParser implements ConfigurableParser {
                 // These are OK
                 ;
             } else if (
-                "LI".equals(localName) ||
+                "li".equals(localName) ||
                     "RDF".equals(localName) ||
                     "ID".equals(localName) ||
                     "about".equals(localName) ||
@@ -1060,7 +1060,7 @@ public final class RdfXmlParser implements ConfigurableParser {
     private void checkPropertyEltName(String namespaceURI, String localName, String qName) throws SAXException {
         if (BASE_URI_STR.equals(namespaceURI)) {
 
-            if ("LI".equals(localName) ||
+            if ("li".equals(localName) ||
                 "Seq".equals(localName) ||
                 "Bag".equals(localName) ||
                 "Alt".equals(localName) ||
@@ -1133,7 +1133,7 @@ public final class RdfXmlParser implements ConfigurableParser {
                     ;
                 } else if (
                     "Description".equals(localName) ||
-                        "LI".equals(localName) ||
+                        "li".equals(localName) ||
                         "RDF".equals(localName) ||
                         "ID".equals(localName) ||
                         "about".equals(localName) ||
