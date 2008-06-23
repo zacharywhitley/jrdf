@@ -180,7 +180,7 @@ public class RDF extends Vocabulary {
             LIST = new URI(BASE_URI + "List");
             NIL = new URI(BASE_URI + "nil");
 
-            LI = new URI(BASE_URI + "LI");
+            LI = new URI(BASE_URI + "li");
 
             // Properties
             SUBJECT = new URI(BASE_URI + "subject");

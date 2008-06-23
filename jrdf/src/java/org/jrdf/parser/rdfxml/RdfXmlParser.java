@@ -1057,8 +1057,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      * generated. If the name is not defined in the RDF namespace, but it claims that it
      * is from this namespace, a warning is generated.
      */
-    private void checkPropertyEltName(String namespaceURI, String localName,
-        String qName) throws SAXException {
+    private void checkPropertyEltName(String namespaceURI, String localName, String qName) throws SAXException {
         if (BASE_URI_STR.equals(namespaceURI)) {
 
             if ("LI".equals(localName) ||

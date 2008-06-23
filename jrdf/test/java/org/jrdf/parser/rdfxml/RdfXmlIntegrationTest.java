@@ -89,7 +89,7 @@ public class RdfXmlIntegrationTest extends TestCase {
             put("rdf-tests/rdf-charmod-literals/test001.nt", new String[]{"rdf-tests/rdf-charmod-literals/test001.rdf"});
             put("rdf-tests/rdf-charmod-uris/test001.nt", new String[]{"rdf-tests/rdf-charmod-uris/test001.rdf"});
             put("rdf-tests/rdf-charmod-uris/test002.nt", new String[]{"rdf-tests/rdf-charmod-uris/test002.rdf"});
-            //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test001.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001.rdf"});
+            put("rdf-tests/rdf-containers-syntax-vs-schema/test001.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001.rdf"});
             //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test002.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test002.rdf");
             //2 put("rdf-tests/rdf-containers-syntax-vs-schema/test001-8.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001-8.rdf"});
             put("rdf-tests/rdf-element-not-mandatory/test001.nt", new String[]{"rdf-tests/rdf-element-not-mandatory/test001.rdf"});
