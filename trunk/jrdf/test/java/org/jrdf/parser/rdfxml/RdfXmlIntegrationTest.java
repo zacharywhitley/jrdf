@@ -92,17 +92,26 @@ public class RdfXmlIntegrationTest extends TestCase {
             put("rdf-tests/rdf-charmod-uris/test002.nt", new String[]{"rdf-tests/rdf-charmod-uris/test002.rdf"});
             put("rdf-tests/rdf-containers-syntax-vs-schema/test001.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001.rdf"});
             put("rdf-tests/rdf-containers-syntax-vs-schema/test002.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test002.rdf"});
+            put("rdf-tests/rdf-containers-syntax-vs-schema/test003.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test003.rdf"});
+            put("rdf-tests/rdf-containers-syntax-vs-schema/test004.nt", new String[]{
+                "rdf-tests/rdf-containers-syntax-vs-schema/test004.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test004.rdf"});
+            put("rdf-tests/rdf-containers-syntax-vs-schema/test006.nt", new String[]{
+                "rdf-tests/rdf-containers-syntax-vs-schema/test006.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test006.rdf"});
+            put("rdf-tests/rdf-containers-syntax-vs-schema/test007.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test007.rdf"});
+            put("rdf-tests/rdf-containers-syntax-vs-schema/test008.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test008.rdf"});
             //2 put("rdf-tests/rdf-containers-syntax-vs-schema/test001-8.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001-8.rdf"});
             put("rdf-tests/rdf-element-not-mandatory/test001.nt", new String[]{"rdf-tests/rdf-element-not-mandatory/test001.rdf"});
             put("rdf-tests/rdfms-difference-between-ID-and-about/test1.nt", new String[]{
                 "rdf-tests/rdfms-difference-between-ID-and-about/test1.rdf",
-                    "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf"});
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf"});
             put("rdf-tests/rdfms-difference-between-ID-and-about/test2.nt", new String[]{
                 "rdf-tests/rdfms-difference-between-ID-and-about/test2.rdf",
-                    "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test2.rdf"});
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test2.rdf"});
             put("rdf-tests/rdfms-difference-between-ID-and-about/test3.nt", new String[]{
                 "rdf-tests/rdfms-difference-between-ID-and-about/test3.rdf",
-                    "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test3.rdf"});
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test3.rdf"});
             put("rdf-tests/rdfms-duplicate-member-props/test001.nt", new String[]{"rdf-tests/rdfms-duplicate-member-props/test001.rdf"});
         }
     };
@@ -113,6 +122,7 @@ public class RdfXmlIntegrationTest extends TestCase {
             put("rdf-tests/datatypes/test003b.nt", "rdf-tests/datatypes/test003a.nt");
             put("rdf-tests/datatypes/test005a.nt", "rdf-tests/datatypes/test005b.nt");
             put("rdf-tests/datatypes/test008a.nt", "rdf-tests/datatypes/test008b.nt");
+            put("rdf-tests/datatypes/test011a.nt", "rdf-tests/datatypes/test011b.nt");
         }
     };
 
