@@ -132,8 +132,8 @@ public class RdfXmlIntegrationTest extends TestCase {
 
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
         {
-            //2 add("rdf-tests/rdf-containers-syntax-vs-schema/error001.rdf");
-            //2 add("rdf-tests/rdf-containers-syntax-vs-schema/error002.rdf");
+            add("rdf-tests/rdf-containers-syntax-vs-schema/error001.rdf");
+            add("rdf-tests/rdf-containers-syntax-vs-schema/error002.rdf");
             add("rdf-tests/rdfms-abouteach/error001.rdf");
             add("rdf-tests/rdfms-abouteach/error002.rdf");
             add("rdf-tests/rdfms-difference-between-ID-and-about/error1.rdf");
