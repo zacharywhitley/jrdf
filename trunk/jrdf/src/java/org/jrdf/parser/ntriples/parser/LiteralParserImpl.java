@@ -82,7 +82,7 @@ public final class LiteralParserImpl implements LiteralParser {
         checkNotEmptyString("s", s);
         String[] matches = literalMatcher.parse(s);
         if (matches[0] == null && matches[1] == null && matches[2] == null) {
-            throw new ParseException("Didn't find a matching literal", 1);
+            throw new ParseException("Didn't find a matching literal: [" + s + "]", 1);
         }
         return createLiteral(matches[0], matches[1], matches[2], s);
     }

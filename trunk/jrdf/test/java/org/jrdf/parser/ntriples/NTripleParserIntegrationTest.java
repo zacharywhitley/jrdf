@@ -106,10 +106,10 @@ public class NTripleParserIntegrationTest extends TestCase {
     };
 
     public void testStandardTest() throws Exception {
-        InputStream in = getSampleData(this.getClass(), TEST_DATA);
         Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
         MapFactory creator = new MemMapFactory();
         ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, newGraph.getElementFactory());
+        InputStream in = getSampleData(this.getClass(), TEST_DATA);
         Set<Triple> actualResults = parseNTriplesFile(in, newGraph, factory);
         Set<Triple> expectedResults = standardTest(newGraph, factory);
         checkGraph(actualResults, expectedResults);
