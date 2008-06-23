@@ -117,6 +117,14 @@ public class NTriplesParserTestUtil {
         return actualResults;
     }
 
+    /**
+     * This only works where there is one blank node in the set of triples - multiple blank nodes will give false
+     * positive results.
+     *
+     * @param actualTriples the triples produced.
+     * @param expectedTriples the expected triples.
+     * @throws Exception if anything goes wrong.
+     */
     public static void checkGraph(Set<Triple> actualTriples, Set<Triple> expectedTriples) throws Exception {
         assertEquals("Wrong number of triples returned", expectedTriples.size(), actualTriples.size());
         int numberFound = 0;
