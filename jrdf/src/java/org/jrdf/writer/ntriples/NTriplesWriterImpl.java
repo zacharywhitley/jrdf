@@ -134,7 +134,7 @@ public class NTriplesWriterImpl implements NTriplesWriter {
     }
 
     public void visitBlankNode(BlankNode blankNode) {
-        printWriter.write(":_" + blankNode.toString());
+        printWriter.write("_:a" + blankNode.toString().replace("#", "").replace("-", ""));
     }
 
     public void visitURIReference(URIReference uriReference) {

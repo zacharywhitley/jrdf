@@ -106,7 +106,7 @@ public class LiteralParserImplUnitTest extends TestCase {
     public void testParseLiteralWithException() throws Exception {
         expect(literalMatcher.parse(LINE)).andReturn(new String[3]);
         mockFactory.replay();
-        checkThrowsParseException(LINE, "Didn't find a matching literal");
+        checkThrowsParseException(LINE, "Didn't find a matching literal: [" + LINE + "]");
         mockFactory.verify();
     }
 
