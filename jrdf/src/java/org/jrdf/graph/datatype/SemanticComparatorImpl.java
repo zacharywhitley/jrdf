@@ -60,6 +60,8 @@
 package org.jrdf.graph.datatype;
 
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.local.BlankNodeImpl;
 import org.jrdf.vocabulary.XSD;
 
 public final class SemanticComparatorImpl implements SemanticComparator {
@@ -106,5 +108,13 @@ public final class SemanticComparatorImpl implements SemanticComparator {
 
     private int compareDatatypes(final Literal o1, final Literal o2) {
         return o1.getDatatypeValue().equivCompareTo(o2.getDatatypeValue());
+    }
+
+    public int compare(Literal literal1, Node node) {
+        if (BlankNodeImpl.isBlankNode(node)) {
+            return 0;
+        } else {
+            return compare(literal1, (Literal) node);
+        }
     }
 }

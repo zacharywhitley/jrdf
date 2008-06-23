@@ -66,6 +66,7 @@ import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.parser.ParserTestUtil.checkNegativeRdfTestParseException;
+import static org.jrdf.parser.ParserTestUtil.checkPositiveNtNtTest;
 import static org.jrdf.parser.ParserTestUtil.checkPositiveNtRdfTest;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 
@@ -80,7 +81,7 @@ import java.util.Set;
 public class RdfXmlIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
 
-    private static final Map<String, String[]> POSITIVE_TESTS = new HashMap<String, String[]>() {
+    private static final Map<String, String[]> POSITIVE_RDFXML_TESTS = new HashMap<String, String[]>() {
         {
             put("rdf-tests/jrdf/test001.nt", new String[]{"rdf-tests/jrdf/test001.rdf"});
             put("rdf-tests/amp-in-url/test001.nt", new String[]{"rdf-tests/amp-in-url/test001.rdf"});
@@ -90,7 +91,7 @@ public class RdfXmlIntegrationTest extends TestCase {
             put("rdf-tests/rdf-charmod-uris/test001.nt", new String[]{"rdf-tests/rdf-charmod-uris/test001.rdf"});
             put("rdf-tests/rdf-charmod-uris/test002.nt", new String[]{"rdf-tests/rdf-charmod-uris/test002.rdf"});
             put("rdf-tests/rdf-containers-syntax-vs-schema/test001.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001.rdf"});
-            //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test002.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test002.rdf");
+            put("rdf-tests/rdf-containers-syntax-vs-schema/test002.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test002.rdf"});
             //2 put("rdf-tests/rdf-containers-syntax-vs-schema/test001-8.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001-8.rdf"});
             put("rdf-tests/rdf-element-not-mandatory/test001.nt", new String[]{"rdf-tests/rdf-element-not-mandatory/test001.rdf"});
             put("rdf-tests/rdfms-difference-between-ID-and-about/test1.nt", new String[]{
@@ -105,6 +106,16 @@ public class RdfXmlIntegrationTest extends TestCase {
             put("rdf-tests/rdfms-duplicate-member-props/test001.nt", new String[]{"rdf-tests/rdfms-duplicate-member-props/test001.rdf"});
         }
     };
+
+    private static final Map<String, String> POSITIVE_NTRIPLE_TESTS = new HashMap<String, String>() {
+        {
+            put("rdf-tests/datatypes/test003a.nt", "rdf-tests/datatypes/test003b.nt");
+            put("rdf-tests/datatypes/test003b.nt", "rdf-tests/datatypes/test003a.nt");
+            put("rdf-tests/datatypes/test005a.nt", "rdf-tests/datatypes/test005b.nt");
+            put("rdf-tests/datatypes/test008a.nt", "rdf-tests/datatypes/test008b.nt");
+        }
+    };
+
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
         {
             //2 add("rdf-tests/rdf-containers-syntax-vs-schema/error001.rdf");
@@ -115,9 +126,9 @@ public class RdfXmlIntegrationTest extends TestCase {
         }
     };
 
-    public void testPositiveTests() throws Exception {
-        for (String ntriplesFile : POSITIVE_TESTS.keySet()) {
-            final String[] data = POSITIVE_TESTS.get(ntriplesFile);
+    public void testPositiveRdfXmlTests() throws Exception {
+        for (String ntriplesFile : POSITIVE_RDFXML_TESTS.keySet()) {
+            final String[] data = POSITIVE_RDFXML_TESTS.get(ntriplesFile);
             final String rdfFile = data[0];
             final URL expectedFile = getClass().getClassLoader().getResource(ntriplesFile);
             final URL actualFile = getClass().getClassLoader().getResource(rdfFile);
@@ -129,6 +140,18 @@ public class RdfXmlIntegrationTest extends TestCase {
             } else {
                 checkPositiveNtRdfTest(expectedFile, actualFile, "http://example.org/", graph, nodeFactory);
             }
+        }
+    }
+
+    public void testPositiveNTriplesTests() throws Exception {
+        for (String actualName :  POSITIVE_NTRIPLE_TESTS.keySet()) {
+            final URL actualFile = getClass().getClassLoader().getResource(actualName);
+            final String expectedName = POSITIVE_NTRIPLE_TESTS.get(actualName);
+            final URL expectedFile = getClass().getClassLoader().getResource(expectedName);
+            Graph graph = TEST_JRDF_FACTORY.getNewGraph();
+            MapFactory creator = new MemMapFactory();
+            ParserBlankNodeFactory nodeFactory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
+            checkPositiveNtNtTest(expectedFile,  actualFile, "http://example.org", graph, nodeFactory);
         }
     }
 

@@ -101,17 +101,29 @@ public class ParserTestUtil {
     private ParserTestUtil() {
     }
 
+    public static void checkPositiveNtNtTest(URL expectedFile, URL actualFile, String baseURI, Graph actualGraph,
+        ParserBlankNodeFactory blankNodeFactory) throws Exception {
+        checkNotNull(expectedFile, actualFile, baseURI, actualGraph, blankNodeFactory);
+        Set<Triple> resultTriples = getNTripleResult(actualFile, baseURI, newInstance());
+        Set<Triple> expectedTriples = getNTripleResult(expectedFile, baseURI, newInstance());
+        checkResults(expectedFile, actualFile, resultTriples, expectedTriples);
+    }
+
     public static void checkPositiveNtRdfTest(URL expectedFile, URL actualFile, String baseURI, Graph actualGraph,
         ParserBlankNodeFactory blankNodeFactory) throws Exception {
         checkNotNull(expectedFile, actualFile, baseURI, actualGraph, blankNodeFactory);
-        RDFInputFactory factory = newInstance();
         Set<Triple> resultTriples = getRdfXmlResult(actualFile, baseURI, actualGraph, blankNodeFactory);
-        Set<Triple> expectedTriples = getExpectedResult(expectedFile, baseURI, factory);
+        Set<Triple> expectedTriples = getNTripleResult(expectedFile, baseURI, newInstance());
+        checkResults(expectedFile, actualFile, resultTriples, expectedTriples);
+    }
+
+    private static void checkResults(URL expectedFile, URL actualFile, Set<Triple> resultTriples,
+        Set<Triple> expectedTriples) {
         assertEquals("Wrong number of triples returned: Expected: " + expectedFile + ", Result " + actualFile,
             expectedTriples.size(), resultTriples.size());
         int noTriples = findNumberOfEqualTriples(expectedTriples, resultTriples);
-        assertEquals("Invalid result for positive test.  Should contain: " + expectedTriples + " but was: " +
-            resultTriples, expectedTriples.size(), noTriples);
+        assertEquals("Invalid result for positive test.  Expected: " + expectedFile + ", Result " + actualFile + ". " +
+            "Should contain: " + expectedTriples + " but was: " + resultTriples, expectedTriples.size(), noTriples);
     }
 
     private static Set<Triple> getRdfXmlResult(URL actualFile, String baseURI, Graph actualGraph,
@@ -132,7 +144,7 @@ public class ParserTestUtil {
         return resultTriples;
     }
 
-    private static Set<Triple> getExpectedResult(URL expectedFile, String baseURI, RDFInputFactory factory)
+    private static Set<Triple> getNTripleResult(URL expectedFile, String baseURI, RDFInputFactory factory)
         throws IOException {
         RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create(baseURI),
             NEW_GRAPH, BLANK_NODE_FACTORY);
@@ -179,8 +191,8 @@ public class ParserTestUtil {
                     tripleToFind.getPredicate().equals(triple.getPredicate())) {
                     if (org.jrdf.util.EqualsUtil.hasSuperClassOrInterface(Literal.class, tripleToFind.getObject())) {
                         Literal literal1 = (Literal) tripleToFind.getObject();
-                        Literal literal2 = (Literal) triple.getObject();
-                        found = SEM_COMPARATOR.compare(literal1, literal2) == 0;
+                        Node node = triple.getObject();
+                        found = SEM_COMPARATOR.compare(literal1, node) == 0;
                     } else {
                         found = nodesAreBlankOrEqual(tripleToFind.getObject(), triple.getObject());
                     }
