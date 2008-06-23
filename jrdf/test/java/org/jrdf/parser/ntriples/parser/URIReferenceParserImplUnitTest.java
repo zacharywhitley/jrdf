@@ -76,7 +76,7 @@ import java.net.URI;
 public class URIReferenceParserImplUnitTest extends TestCase {
     private static final Class<URIReferenceParser> TARGET_INTERFACE = URIReferenceParser.class;
     private static final Class<URIReferenceParserImpl> TEST_CLASS = URIReferenceParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[]{GraphElementFactory.class, NTripleUtil.class};
+    private static final Class<?>[] PARAM_TYPES = new Class[]{GraphElementFactory.class, NTripleUtil.class};
     private static final String[] PARAMETER_NAMES = new String[]{"graphElementFactory", "nTripleUtil"};
     private static final String LINE = "string" + Math.random();
     private static final String ESCAPED_LINE = "escaped" + Math.random();

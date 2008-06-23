@@ -115,7 +115,6 @@ public class MoleculeImpl implements Molecule {
         SortedSet<Triple> newTriples = new TreeSet<Triple>(comparator);
         newTriples.addAll(triples);
         newTriples.remove(triple);
-
         return new MoleculeImpl(newTriples, comparator);
     }
 

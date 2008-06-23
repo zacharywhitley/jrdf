@@ -116,6 +116,7 @@ public interface Triple extends Serializable {
      * @param obj the reference object with which to compare.
      * @return true if this object is the same as the obj argument; false otherwise.
      */
+    @Override
     boolean equals(Object obj);
 
     /**
@@ -125,5 +126,6 @@ public interface Triple extends Serializable {
      *
      * @return a hash-code value for this triple.
      */
+    @Override
     int hashCode();
 }
