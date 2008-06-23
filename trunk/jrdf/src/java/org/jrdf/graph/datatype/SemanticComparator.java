@@ -60,6 +60,7 @@
 package org.jrdf.graph.datatype;
 
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -69,4 +70,5 @@ import java.util.Comparator;
  * comparable types (such as decimal and integer) and the values are the same.
  */
 public interface SemanticComparator extends Comparator<Literal>, Serializable {
+    int compare(Literal literal1, Node node);
 }
