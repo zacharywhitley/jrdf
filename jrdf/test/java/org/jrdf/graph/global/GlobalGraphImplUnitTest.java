@@ -70,7 +70,7 @@ import org.jrdf.graph.Graph;
  * @version $Revision: 1499 $
  */
 public class GlobalGraphImplUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SortedMemoryGlobalJRDFFactory.getFactory();
+    private static final JRDFFactory FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
 
     /**
      * Create a graph implementation.
