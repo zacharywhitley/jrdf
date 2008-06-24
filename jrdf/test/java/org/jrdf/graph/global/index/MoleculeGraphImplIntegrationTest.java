@@ -60,6 +60,7 @@
 package org.jrdf.graph.global.index;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.TripleComparator;
@@ -69,9 +70,10 @@ import org.jrdf.graph.global.MoleculeGraphImpl;
 import org.jrdf.graph.global.MoleculeLocalizer;
 import org.jrdf.graph.global.MoleculeLocalizerImpl;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
+import org.jrdf.graph.global.index.longindex.bdb.MoleculeIndexBdb;
 import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.global.molecule.mem.MoleculeComparator;
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeHeadTripleComparatorImpl;
@@ -97,6 +99,8 @@ import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.graph.local.iterator.LocalIteratorFactory;
+import org.jrdf.map.BdbMapFactory;
+import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
@@ -175,6 +179,46 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
 //        System.err.println("Entry: " + mapEntry);
 //        System.err.println("Entry: " + iterator.next());
 //        System.err.println("Got: " + iterator1.next());
+        moleculeGraph.delete(molecule);
+        assertEquals(spom.getSize(), 1);
+        moleculeGraph.delete(molecule2);
+        assertEquals(spom.getSize(), 0);
+        iterator = spom.iterator();
+        assertFalse(iterator.hasNext());
+    }
+
+    public void testMoleculeBdbIndex() throws GraphException {
+        MapFactory factory = new BdbMapFactory(BDB_HANDLER, "molMap");
+        MoleculeIndex<Long> spom = new MoleculeIndexBdb(factory);
+        MoleculeIndex<Long> posm = new MoleculeIndexBdb(factory);
+        MoleculeIndex<Long> ospm = new MoleculeIndexBdb(factory);
+        MoleculeIndex<Long>[] indexes = new MoleculeIndexBdb[]{(MoleculeIndexBdb) spom,
+                (MoleculeIndexBdb) posm, (MoleculeIndexBdb) ospm};
+        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexImpl(
+            new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
+        NodePool nodePool = nodePoolFactory.createNodePool();
+        ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
+        WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
+        Localizer localizer = new LocalizerImpl(nodePool, stringMapper());
+        MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
+        LongIndex[] longIndexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+        GraphHandler[] graphHandlers = new GraphHandler[]{new GraphHandler012(longIndexes, nodePool),
+            new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
+        MoleculeGraph moleculeGraph = new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer,
+            new GraphImpl(longIndexes, nodePool, new ReadWriteGraphImpl(longIndexes, nodePool,
+            new LocalIteratorFactory(longIndexes, graphHandlers, nodePool))));
+
+        Resource b1 = moleculeGraph.getElementFactory().createResource();
+        Resource r1 = moleculeGraph.getElementFactory().createResource(create("urn:foo"));
+        NewMolecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
+        moleculeGraph.add(molecule);
+        assertEquals(1, spom.getSize());
+        Resource b2 = moleculeGraph.getElementFactory().createResource();
+        NewMolecule molecule2 = moleculeFactory.createMolecule(b2.asTriple(r1, b2));
+        moleculeGraph.add(molecule2);
+        assertEquals(2, spom.getSize());
+        ClosableIterator<Long[]> iterator = spom.iterator();
+        assertTrue(iterator.hasNext());
         moleculeGraph.delete(molecule);
         assertEquals(spom.getSize(), 1);
         moleculeGraph.delete(molecule2);
