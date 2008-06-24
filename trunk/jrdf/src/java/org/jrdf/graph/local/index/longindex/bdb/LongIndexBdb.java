@@ -98,6 +98,7 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         for (Long[] grp : subIndex) {
             if (grp[0].equals(triple[1]) && grp[1].equals(triple[2])) {
                 found = true;
+                break;
             }
         }
         if (!found) {
