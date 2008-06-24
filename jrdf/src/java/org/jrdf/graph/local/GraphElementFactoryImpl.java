@@ -66,6 +66,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
@@ -184,5 +185,15 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
             newLiteral = localizer.createLocalLiteral(escapedForm);
         }
         return newLiteral;
+    }
+
+    public Resource createResource(Node node) throws GraphElementFactoryException {
+        if (node.getClass().isAssignableFrom(BlankNode.class)) {
+            return resourceFactory.createResource((BlankNode) node);
+        } else if (node.getClass().isAssignableFrom(URIReference.class)) {
+            return resourceFactory.createResource((URIReference) node);
+        } else {
+            throw new GraphElementFactoryException("Resource cannot be created from: " + node);
+        }
     }
 }

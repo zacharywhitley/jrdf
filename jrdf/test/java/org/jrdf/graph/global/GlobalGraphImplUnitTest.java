@@ -80,4 +80,9 @@ public class GlobalGraphImplUnitTest extends AbstractGraphUnitTest {
     public Graph newGraph() throws Exception {
         return FACTORY.getNewGraph();
     }
+
+    @Override
+    public void tearDown() {
+        FACTORY.close();
+    }
 }

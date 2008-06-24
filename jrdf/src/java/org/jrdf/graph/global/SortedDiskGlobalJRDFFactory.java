@@ -65,7 +65,7 @@ import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
-import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
+import org.jrdf.graph.global.index.longindex.bdb.MoleculeIndexBdb;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
@@ -75,6 +75,8 @@ import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
+import org.jrdf.map.BdbMapFactory;
+import org.jrdf.map.MapFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
@@ -103,12 +105,11 @@ import org.jrdf.urql.parser.ParserFactory;
 import org.jrdf.urql.parser.ParserFactoryImpl;
 import org.jrdf.urql.parser.SableCcSparqllParser;
 import org.jrdf.urql.parser.SparqlParser;
-import org.jrdf.util.ClosableMap;
-import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
-
-import java.util.Set;
+import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -117,6 +118,10 @@ import java.util.Set;
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
 public final class SortedDiskGlobalJRDFFactory implements JRDFFactory {
+    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
+    private static final MapFactory FACTORY = new BdbMapFactory(BDB_HANDLER, "moleculeIndexMaps");
+
     private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
     private static final TypeComparator TYPE_COMPARATOR = new TypeComparatorImpl(NODE_TYPE_COMPARATOR);
     private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR = new AttributeNameComparatorImpl();
@@ -141,22 +146,16 @@ public final class SortedDiskGlobalJRDFFactory implements JRDFFactory {
     }
 
     public static JRDFFactory getFactory() {
-        return SortedMemoryGlobalJRDFFactory.getFactory();
+        return new SortedDiskGlobalJRDFFactory();
     }
 
     public void refresh() {
     }
 
     public Graph getNewGraph() {
-        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map1 =
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map2 =
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map3 =
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        MoleculeIndex<Long> spom = new MoleculeIndexMem(map1);
-        MoleculeIndex<Long> posm = new MoleculeIndexMem(map2);
-        MoleculeIndex<Long> ospm = new MoleculeIndexMem(map3);
+        MoleculeIndex<Long> spom = new MoleculeIndexBdb(FACTORY);
+        MoleculeIndex<Long> posm = new MoleculeIndexBdb(FACTORY);
+        MoleculeIndex<Long> ospm = new MoleculeIndexBdb(FACTORY);
         LongIndex[] indexes = new LongIndex[]{new LongIndexAdapter(spom), new LongIndexAdapter(posm),
             new LongIndexAdapter(ospm)};
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
@@ -169,6 +168,7 @@ public final class SortedDiskGlobalJRDFFactory implements JRDFFactory {
     }
 
     public void close() {
+        FACTORY.close();
     }
 
     private static QueryBuilder createQueryBuilder() {
