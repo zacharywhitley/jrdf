@@ -39,6 +39,7 @@ Tokens
   {def}                where       = ('WHERE' | 'where');
   {def}                union       = ('UNION' | 'union');
   {def}                optional    = ('OPTIONAL' | 'optional');
+  {def}                filter      = ('FILTER' | 'filter');
 
   {def, var->def}             identifier     = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                       blank          = whitespace+;
@@ -106,7 +107,11 @@ Productions
     triple period? ;
 
   operation_pattern =
-    graph_pattern_not_triples period? graph_pattern ;
+     {graph_pattern_or_filter_graph_pattern} graph_pattern_or_filter period? graph_pattern ;
+
+  graph_pattern_or_filter =
+    {graph_pattern_not_triples} graph_pattern_not_triples |
+    {filter_pattern} filter_pattern;
 
   graph_pattern_not_triples =
     {optional_graph_pattern} optional_graph_pattern |
@@ -120,6 +125,9 @@ Productions
 
   union_graph_pattern =
     union group_graph_pattern ;
+
+  filter_pattern =
+    filter;
 
   triple =
     [subject]:resource_triple_element [predicate]:resource_triple_element [object]:object_triple_element ;
