@@ -104,9 +104,20 @@ public class RdfXmlIntegrationTest extends TestCase {
             put("rdf-tests/rdf-element-not-mandatory/test001.nt", new String[]{"rdf-tests/rdf-element-not-mandatory/test001.rdf"});
             put("rdf-tests/rdf-ns-prefix-confusion/test0001.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0001.rdf"});
             put("rdf-tests/rdf-ns-prefix-confusion/test0003.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0003.rdf"});
-            //put("rdf-tests/rdf-ns-prefix-confusion/test0004.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0004.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0004.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0004.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0004.rdf"});
             put("rdf-tests/rdf-ns-prefix-confusion/test0005.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0005.rdf"});
             put("rdf-tests/rdf-ns-prefix-confusion/test0006.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0006.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0009.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0009.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0010.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0010.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0011.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0011.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0011.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0012.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0012.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0012.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0013.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0013.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0013.rdf"});
+            put("rdf-tests/rdf-ns-prefix-confusion/test0014.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0014.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0014.rdf"});
             put("rdf-tests/rdfms-difference-between-ID-and-about/test1.nt", new String[]{
                 "rdf-tests/rdfms-difference-between-ID-and-about/test1.rdf",
                 "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf"});
