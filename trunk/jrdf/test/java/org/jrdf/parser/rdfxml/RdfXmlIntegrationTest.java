@@ -128,6 +128,34 @@ public class RdfXmlIntegrationTest extends TestCase {
                 "rdf-tests/rdfms-difference-between-ID-and-about/test3.rdf",
                 "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test3.rdf"});
             put("rdf-tests/rdfms-duplicate-member-props/test001.nt", new String[]{"rdf-tests/rdfms-duplicate-member-props/test001.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test001.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test001.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test002.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test002.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test003.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test003.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test004.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test004.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test005.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test005.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test005.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test006.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test006.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test006.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test007.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test007.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test008.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test008.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test009.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test009.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test010.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test010.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test011.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test011.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test011.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test012.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test012.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test012.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test013.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test013.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test014.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test014.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test015.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test015.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test016.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test016.rdf"});
+            put("rdf-tests/rdfms-empty-property-elements/test017.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test017.rdf"});
+            put("rdf-tests/rdfms-identity-anon-resources/test001.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test001.rdf"});
+            put("rdf-tests/rdfms-identity-anon-resources/test002.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test002.rdf"});
+            put("rdf-tests/rdfms-identity-anon-resources/test003.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test003.rdf"});
+            put("rdf-tests/rdfms-identity-anon-resources/test004.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test004.rdf"});
+            put("rdf-tests/rdfms-identity-anon-resources/test005.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test005.rdf"});
+            put("rdf-tests/rdfms-not-id-and-resource-attr/test001.nt", new String[]{"rdf-tests/rdfms-not-id-and-resource-attr/test001.rdf",
+                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-not-id-and-resource-attr/test001.rdf"});
         }
     };
 
@@ -163,7 +191,7 @@ public class RdfXmlIntegrationTest extends TestCase {
             if (data.length == 2) {
                 checkPositiveNtRdfTest(expectedFile, actualFile, data[1], graph, nodeFactory);
             } else {
-                checkPositiveNtRdfTest(expectedFile, actualFile, "http://example.org/", graph, nodeFactory);
+                checkPositiveNtRdfTest(expectedFile, actualFile, "http://www.w3.org/2000/10/", graph, nodeFactory);
             }
         }
     }
