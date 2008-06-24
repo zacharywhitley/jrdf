@@ -187,4 +187,6 @@ public interface GraphElementFactory {
      * @throws GraphElementFactoryException If the literal failed to be created.
      */
     Literal createLiteral(String lexicalValue, URI datatypeURI) throws GraphElementFactoryException;
+
+    Resource createResource(Node node) throws GraphElementFactoryException;
 }

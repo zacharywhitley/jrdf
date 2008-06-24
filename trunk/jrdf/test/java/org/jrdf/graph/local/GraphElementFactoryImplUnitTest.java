@@ -61,9 +61,14 @@ package org.jrdf.graph.local;
 
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Literal;
 import static org.jrdf.graph.NullURI.NULL_URI;
+import org.jrdf.graph.Resource;
 
 import java.net.URI;
 
@@ -104,4 +109,19 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
         return "";
     }
 
+    public void testCreateResource() throws GraphException {
+        final Graph graph = newGraph();
+        GraphElementFactory factory = graph.getElementFactory();
+        Literal lit = factory.createLiteral("abc");
+        try {
+            Resource res = factory.createResource(lit);
+        } catch (GraphElementFactoryException e) {
+            System.err.println("Exception thrown");
+        }
+        BlankNode bn = factory.createBlankNode();
+        Resource res = factory.createResource(bn);
+        Resource res1 = factory.createResource(bn);
+        assertEquals("same blank node", bn, res.getUnderlyingNode());
+        assertEquals("same blank node", bn, res1.getUnderlyingNode());
+    }
 }
