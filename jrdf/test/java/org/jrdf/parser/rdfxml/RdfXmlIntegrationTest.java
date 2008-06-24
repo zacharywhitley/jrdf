@@ -83,99 +83,79 @@ public class RdfXmlIntegrationTest extends TestCase {
 
     private static final Map<String, String[]> POSITIVE_RDFXML_TESTS = new HashMap<String, String[]>() {
         {
-            put("rdf-tests/jrdf/test001.nt", new String[]{"rdf-tests/jrdf/test001.rdf"});
-            put("rdf-tests/amp-in-url/test001.nt", new String[]{"rdf-tests/amp-in-url/test001.rdf"});
-            put("rdf-tests/datatypes/test001.nt", new String[]{"rdf-tests/datatypes/test001.rdf"});
-            put("rdf-tests/datatypes/test002.nt", new String[]{"rdf-tests/datatypes/test002.rdf"});
-            put("rdf-tests/rdf-charmod-literals/test001.nt", new String[]{"rdf-tests/rdf-charmod-literals/test001.rdf"});
-            put("rdf-tests/rdf-charmod-uris/test001.nt", new String[]{"rdf-tests/rdf-charmod-uris/test001.rdf"});
-            put("rdf-tests/rdf-charmod-uris/test002.nt", new String[]{"rdf-tests/rdf-charmod-uris/test002.rdf"});
-            put("rdf-tests/rdf-containers-syntax-vs-schema/test001.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test001.rdf"});
-            put("rdf-tests/rdf-containers-syntax-vs-schema/test002.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test002.rdf"});
-            put("rdf-tests/rdf-containers-syntax-vs-schema/test003.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test003.rdf"});
-            put("rdf-tests/rdf-containers-syntax-vs-schema/test004.nt", new String[]{
-                "rdf-tests/rdf-containers-syntax-vs-schema/test004.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test004.rdf"});
-            put("rdf-tests/rdf-containers-syntax-vs-schema/test006.nt", new String[]{
-                "rdf-tests/rdf-containers-syntax-vs-schema/test006.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test006.rdf"});
-            put("rdf-tests/rdf-containers-syntax-vs-schema/test007.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test007.rdf"});
-            put("rdf-tests/rdf-containers-syntax-vs-schema/test008.nt", new String[]{"rdf-tests/rdf-containers-syntax-vs-schema/test008.rdf"});
-            put("rdf-tests/rdf-element-not-mandatory/test001.nt", new String[]{"rdf-tests/rdf-element-not-mandatory/test001.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0001.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0001.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0003.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0003.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0004.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0004.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0004.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0005.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0005.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0006.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0006.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0009.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0009.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0010.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0010.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0011.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0011.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0011.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0012.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0012.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0012.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0013.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0013.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0013.rdf"});
-            put("rdf-tests/rdf-ns-prefix-confusion/test0014.nt", new String[]{"rdf-tests/rdf-ns-prefix-confusion/test0014.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0014.rdf"});
-            put("rdf-tests/rdfms-difference-between-ID-and-about/test1.nt", new String[]{
-                "rdf-tests/rdfms-difference-between-ID-and-about/test1.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf"});
-            put("rdf-tests/rdfms-difference-between-ID-and-about/test2.nt", new String[]{
-                "rdf-tests/rdfms-difference-between-ID-and-about/test2.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test2.rdf"});
-            put("rdf-tests/rdfms-difference-between-ID-and-about/test3.nt", new String[]{
-                "rdf-tests/rdfms-difference-between-ID-and-about/test3.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test3.rdf"});
-            put("rdf-tests/rdfms-duplicate-member-props/test001.nt", new String[]{"rdf-tests/rdfms-duplicate-member-props/test001.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test001.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test001.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test002.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test002.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test003.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test003.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test004.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test004.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test005.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test005.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test005.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test006.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test006.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test006.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test007.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test007.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test008.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test008.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test009.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test009.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test010.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test010.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test011.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test011.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test011.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test012.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test012.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test012.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test013.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test013.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test014.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test014.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test015.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test015.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test016.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test016.rdf"});
-            put("rdf-tests/rdfms-empty-property-elements/test017.nt", new String[]{"rdf-tests/rdfms-empty-property-elements/test017.rdf"});
-            put("rdf-tests/rdfms-identity-anon-resources/test001.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test001.rdf"});
-            put("rdf-tests/rdfms-identity-anon-resources/test002.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test002.rdf"});
-            put("rdf-tests/rdfms-identity-anon-resources/test003.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test003.rdf"});
-            put("rdf-tests/rdfms-identity-anon-resources/test004.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test004.rdf"});
-            put("rdf-tests/rdfms-identity-anon-resources/test005.nt", new String[]{"rdf-tests/rdfms-identity-anon-resources/test005.rdf"});
-            put("rdf-tests/rdfms-not-id-and-resource-attr/test001.nt", new String[]{"rdf-tests/rdfms-not-id-and-resource-attr/test001.rdf",
-                "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-not-id-and-resource-attr/test001.rdf"});
+            put("jrdf/test001.nt", new String[]{"jrdf/test001.rdf"});
+            put("rdfcore/amp-in-url/test001.nt", new String[]{"rdfcore/amp-in-url/test001.rdf"});
+            put("rdfcore/datatypes/test001.nt", new String[]{"rdfcore/datatypes/test001.rdf"});
+            put("rdfcore/datatypes/test002.nt", new String[]{"rdfcore/datatypes/test002.rdf"});
+            put("rdfcore/rdf-charmod-literals/test001.nt", new String[]{"rdfcore/rdf-charmod-literals/test001.rdf"});
+            put("rdfcore/rdf-charmod-uris/test001.nt", new String[]{"rdfcore/rdf-charmod-uris/test001.rdf"});
+            put("rdfcore/rdf-charmod-uris/test002.nt", new String[]{"rdfcore/rdf-charmod-uris/test002.rdf"});
+            put("rdfcore/rdf-containers-syntax-vs-schema/test001.nt", new String[]{"rdfcore/rdf-containers-syntax-vs-schema/test001.rdf"});
+            put("rdfcore/rdf-containers-syntax-vs-schema/test002.nt", new String[]{"rdfcore/rdf-containers-syntax-vs-schema/test002.rdf"});
+            put("rdfcore/rdf-containers-syntax-vs-schema/test003.nt", new String[]{"rdfcore/rdf-containers-syntax-vs-schema/test003.rdf"});
+            put("rdfcore/rdf-containers-syntax-vs-schema/test004.nt", new String[]{"rdfcore/rdf-containers-syntax-vs-schema/test004.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test004.rdf"});
+            put("rdfcore/rdf-containers-syntax-vs-schema/test006.nt", new String[]{"rdfcore/rdf-containers-syntax-vs-schema/test006.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test006.rdf"});
+            put("rdfcore/rdf-containers-syntax-vs-schema/test007.nt", new String[]{"rdfcore/rdf-containers-syntax-vs-schema/test007.rdf"});
+            put("rdfcore/rdf-containers-syntax-vs-schema/test008.nt", new String[]{"rdfcore/rdf-containers-syntax-vs-schema/test008.rdf"});
+            put("rdfcore/rdf-element-not-mandatory/test001.nt", new String[]{"rdfcore/rdf-element-not-mandatory/test001.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0001.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0001.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0003.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0003.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0004.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0004.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0004.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0005.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0005.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0006.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0006.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0009.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0009.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0010.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0010.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0011.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0011.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0011.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0012.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0012.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0012.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0013.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0013.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0013.rdf"});
+            put("rdfcore/rdf-ns-prefix-confusion/test0014.nt", new String[]{"rdfcore/rdf-ns-prefix-confusion/test0014.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0014.rdf"});
+            put("rdfcore/rdfms-difference-between-ID-and-about/test1.nt", new String[]{"rdfcore/rdfms-difference-between-ID-and-about/test1.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf"});
+            put("rdfcore/rdfms-difference-between-ID-and-about/test2.nt", new String[]{"rdfcore/rdfms-difference-between-ID-and-about/test2.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test2.rdf"});
+            put("rdfcore/rdfms-difference-between-ID-and-about/test3.nt", new String[]{"rdfcore/rdfms-difference-between-ID-and-about/test3.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test3.rdf"});
+            put("rdfcore/rdfms-duplicate-member-props/test001.nt", new String[]{"rdfcore/rdfms-duplicate-member-props/test001.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test001.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test001.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test002.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test002.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test003.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test003.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test004.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test004.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test005.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test005.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test005.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test006.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test006.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test006.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test007.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test007.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test008.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test008.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test009.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test009.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test010.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test010.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test011.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test011.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test011.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test012.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test012.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test012.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test013.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test013.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test014.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test014.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test015.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test015.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test016.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test016.rdf"});
+            put("rdfcore/rdfms-empty-property-elements/test017.nt", new String[]{"rdfcore/rdfms-empty-property-elements/test017.rdf"});
+            put("rdfcore/rdfms-identity-anon-resources/test001.nt", new String[]{"rdfcore/rdfms-identity-anon-resources/test001.rdf"});
+            put("rdfcore/rdfms-identity-anon-resources/test002.nt", new String[]{"rdfcore/rdfms-identity-anon-resources/test002.rdf"});
+            put("rdfcore/rdfms-identity-anon-resources/test003.nt", new String[]{"rdfcore/rdfms-identity-anon-resources/test003.rdf"});
+            put("rdfcore/rdfms-identity-anon-resources/test004.nt", new String[]{"rdfcore/rdfms-identity-anon-resources/test004.rdf"});
+            put("rdfcore/rdfms-identity-anon-resources/test005.nt", new String[]{"rdfcore/rdfms-identity-anon-resources/test005.rdf"});
+            put("rdfcore/rdfms-not-id-and-resource-attr/test001.nt", new String[]{"rdfcore/rdfms-not-id-and-resource-attr/test001.rdf", "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-not-id-and-resource-attr/test001.rdf"});
         }
     };
 
     private static final Map<String, String> POSITIVE_NTRIPLE_TESTS = new HashMap<String, String>() {
         {
-            put("rdf-tests/datatypes/test003a.nt", "rdf-tests/datatypes/test003b.nt");
-            put("rdf-tests/datatypes/test003b.nt", "rdf-tests/datatypes/test003a.nt");
-            put("rdf-tests/datatypes/test005a.nt", "rdf-tests/datatypes/test005b.nt");
-            put("rdf-tests/datatypes/test008a.nt", "rdf-tests/datatypes/test008b.nt");
-            put("rdf-tests/datatypes/test011a.nt", "rdf-tests/datatypes/test011b.nt");
+            put("rdfcore/datatypes/test003a.nt", "rdfcore/datatypes/test003b.nt");
+            put("rdfcore/datatypes/test003b.nt", "rdfcore/datatypes/test003a.nt");
+            put("rdfcore/datatypes/test005a.nt", "rdfcore/datatypes/test005b.nt");
+            put("rdfcore/datatypes/test008a.nt", "rdfcore/datatypes/test008b.nt");
+            put("rdfcore/datatypes/test011a.nt", "rdfcore/datatypes/test011b.nt");
         }
     };
 
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
         {
-            add("rdf-tests/rdf-containers-syntax-vs-schema/error001.rdf");
-            add("rdf-tests/rdf-containers-syntax-vs-schema/error002.rdf");
-            add("rdf-tests/rdfms-abouteach/error001.rdf");
-            add("rdf-tests/rdfms-abouteach/error002.rdf");
-            add("rdf-tests/rdfms-difference-between-ID-and-about/error1.rdf");
+            add("rdfcore/rdf-containers-syntax-vs-schema/error001.rdf");
+            add("rdfcore/rdf-containers-syntax-vs-schema/error002.rdf");
+            add("rdfcore/rdfms-abouteach/error001.rdf");
+            add("rdfcore/rdfms-abouteach/error002.rdf");
+            add("rdfcore/rdfms-difference-between-ID-and-about/error1.rdf");
         }
     };
 
@@ -183,8 +163,8 @@ public class RdfXmlIntegrationTest extends TestCase {
         for (String ntriplesFile : POSITIVE_RDFXML_TESTS.keySet()) {
             final String[] data = POSITIVE_RDFXML_TESTS.get(ntriplesFile);
             final String rdfFile = data[0];
-            final URL expectedFile = getClass().getClassLoader().getResource(ntriplesFile);
-            final URL actualFile = getClass().getClassLoader().getResource(rdfFile);
+            final URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/" + ntriplesFile);
+            final URL actualFile = getClass().getClassLoader().getResource("rdf-tests/" + rdfFile);
             Graph graph = TEST_JRDF_FACTORY.getNewGraph();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory nodeFactory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
@@ -198,9 +178,9 @@ public class RdfXmlIntegrationTest extends TestCase {
 
     public void testPositiveNTriplesTests() throws Exception {
         for (String actualName :  POSITIVE_NTRIPLE_TESTS.keySet()) {
-            final URL actualFile = getClass().getClassLoader().getResource(actualName);
+            final URL actualFile = getClass().getClassLoader().getResource("rdf-tests/" + actualName);
             final String expectedName = POSITIVE_NTRIPLE_TESTS.get(actualName);
-            final URL expectedFile = getClass().getClassLoader().getResource(expectedName);
+            final URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/" + expectedName);
             Graph graph = TEST_JRDF_FACTORY.getNewGraph();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory nodeFactory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
@@ -210,7 +190,7 @@ public class RdfXmlIntegrationTest extends TestCase {
 
     public void testNegativeTests() throws Exception {
         for (String rdfFile : NEGATIVE_TESTS) {
-            final URL errorFile = getClass().getClassLoader().getResource(rdfFile);
+            final URL errorFile = getClass().getClassLoader().getResource("rdf-tests/" + rdfFile);
             Graph graph = TEST_JRDF_FACTORY.getNewGraph();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory nodeFactory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
