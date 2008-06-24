@@ -62,18 +62,19 @@ package org.jrdf.urql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
+import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Union;
-import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.urql.builder.TripleBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABlockOfTriples;
 import org.jrdf.urql.parser.node.AFilteredBasicGraphPatternGraphPattern;
+import org.jrdf.urql.parser.node.AGraphPatternNotTriplesGraphPatternOrFilter;
+import org.jrdf.urql.parser.node.AGraphPatternOrFilterGraphPatternOperationPattern;
 import org.jrdf.urql.parser.node.AGroupOrUnionGraphPattern;
-import org.jrdf.urql.parser.node.AOperationPattern;
 import org.jrdf.urql.parser.node.AOptionalGraphPattern;
 import org.jrdf.urql.parser.node.ATriple;
 import org.jrdf.urql.parser.node.Node;
@@ -170,8 +171,12 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     }
 
     @Override
-    public void caseAOperationPattern(AOperationPattern node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getGraphPatternNotTriples().clone());
+    public void caseAGraphPatternOrFilterGraphPatternOperationPattern(
+        AGraphPatternOrFilterGraphPatternOperationPattern node) {
+        AGraphPatternNotTriplesGraphPatternOrFilter pGraphPatternOrFilter =
+            (AGraphPatternNotTriplesGraphPatternOrFilter) node.getGraphPatternOrFilter();
+        Expression<ExpressionVisitor> lhs = getExpression((Node)
+            pGraphPatternOrFilter.getGraphPatternNotTriples().clone());
         Expression<ExpressionVisitor> rhs = getExpression((Node) node.getGraphPattern().clone());
         if (lhs != null && rhs != null) {
             expression = handleExistingLhsRhs(lhs, rhs);
