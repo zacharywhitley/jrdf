@@ -64,6 +64,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.TempDirectoryHandler;
@@ -128,5 +129,46 @@ public class MoleculeIndexBdbUnitTest extends TestCase {
         subMap.put(2L, set);
         goodMap.put(1L, subMap);
         assertEquals("Same map", goodMap, map);
+    }
+
+    public void testIterator() throws GraphException {
+        index.add(0L, 1L, 2L, 3L);
+        index.add(0L, 1L, 2L, 4L);
+        index.add(0L, 1L, 2L, 5L);
+        index.add(1L, 4L, 5L, 6L);
+        ClosableIterator<Long[]> iterator = index.iterator();
+        assertTrue("Has element", iterator.hasNext());
+        Set<Long[]> set = addLongsToSet(new Long[]{0L, 1L, 2L, 3L}, new Long[]{0L, 1L, 2L, 4L},
+                new Long[]{0L, 1L, 2L, 5L}, new Long[]{1L, 4L, 5L, 6L});
+        int length = 0;
+        while (iterator.hasNext()) {
+            final Long[] longs = iterator.next();
+            length++;
+            /*System.err.print(longs[0] + " " + longs[1] + " " + longs[2] + " " + longs[3] +
+                    System.getProperty("line.separator"));*/
+            assertTrue("Contains longs", setContainsLongArray(set, longs));
+        }
+        iterator.close();
+        assertEquals("Same length", set.size(), length);
+    }
+
+    private Set<Long[]> addLongsToSet(Long[]... longs) {
+        Set<Long[]> set = new HashSet<Long[]>();
+        for (Long[] array : longs) {
+            set.add(array);
+        }
+        return set;
+    }
+
+    private boolean setContainsLongArray(Set<Long[]> set, Long[] longs) {
+        boolean found;
+        for (Long[] item : set) {
+            found = (item[0] == longs[0] && item[1] == longs[1] &&
+                    item[2] == longs[2] && item[3] == longs[3]);
+            if (found) {
+                return true;
+            }
+        }
+        return false;
     }
 }

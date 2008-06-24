@@ -61,16 +61,13 @@ package org.jrdf.graph.global.index.longindex.bdb;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
-import org.jrdf.graph.global.index.longindex.mem.FlatteningClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -143,16 +140,7 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long>, Serializable {
     }
 
     public ClosableIterator<Long[]> iterator() {
-        //return new FlatteningEntrySetClosableIterator<Long[]>(index.entrySet());
-        Map<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map =
-                new HashMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        for (Long key : index.keySet()) {
-            map.put(key, getSubIndex(key));
-        }
-        ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator =
-            new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>(
-                map.entrySet().iterator());
-        return new FlatteningClosableIterator(iterator);
+        return new MoleculeFlatteningEntrySetClosableIterator(index.entrySet());
     }
 
     public boolean removeSubIndex(Long first) {
