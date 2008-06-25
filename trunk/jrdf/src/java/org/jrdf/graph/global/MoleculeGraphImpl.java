@@ -69,7 +69,7 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.global.index.AddNewMoleculeToIndex;
+import org.jrdf.graph.global.index.AddMoleculeToIndex;
 import org.jrdf.graph.global.index.ReadableIndex;
 import org.jrdf.graph.global.index.WritableIndex;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
@@ -98,7 +98,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public void add(Molecule molecule) {
         MoleculeTraverser traverser = new MoleculeTraverserImpl();
-        traverser.traverse(molecule, new AddNewMoleculeToIndex(writableIndex, localizer));
+        traverser.traverse(molecule, new AddMoleculeToIndex(writableIndex, localizer));
     }
 
     public void delete(Molecule molecule) {
