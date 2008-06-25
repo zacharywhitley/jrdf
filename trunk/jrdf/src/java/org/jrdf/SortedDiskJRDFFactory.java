@@ -60,15 +60,11 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphFactory;
+import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.btree.BTreeFactory;
-import org.jrdf.util.btree.BTreeFactoryImpl;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
-import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
-import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
@@ -78,6 +74,9 @@ import org.jrdf.urql.builder.QueryBuilder;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.btree.BTreeFactory;
+import org.jrdf.util.btree.BTreeFactoryImpl;
+import org.jrdf.util.btree.TripleBTree;
 
 import static java.util.Arrays.asList;
 import java.util.HashSet;
@@ -99,7 +98,6 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
-    private GraphFactory orderedGraphFactory;
 
     private SortedDiskJRDFFactory() {
     }
@@ -113,13 +111,11 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        TripleBTree[] bTrees = createBTrees();
-        LongIndex[] indexes = createIndexes(bTrees);
+        LongIndex[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);
         openIndexes.addAll(asList(indexes));
         openFactories.add(nodePoolFactory);
-        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory);
-        return orderedGraphFactory.getGraph();
+        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory).getGraph();
     }
 
     public UrqlConnection getNewUrqlConnection() {
@@ -137,14 +133,15 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
         openFactories.clear();
     }
 
-    private TripleBTree[] createBTrees() {
-        return new TripleBTree[]{btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
-            btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
-            btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
+    private LongIndex[] createIndexes() {
+        TripleBTree[] bTrees = createBTrees();
+        return new LongIndex[]{new LongIndexSesame(bTrees[0]), new LongIndexSesame(bTrees[1]),
+            new LongIndexSesame(bTrees[2])};
     }
 
-    private LongIndex[] createIndexes(TripleBTree... btrees) {
-        return new LongIndex[]{new LongIndexSesame(btrees[0]), new LongIndexSesame(btrees[1]),
-            new LongIndexSesame(btrees[2])};
+    private TripleBTree[] createBTrees() {
+        return new TripleBTree[]{btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
+                btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
+                btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
     }
 }

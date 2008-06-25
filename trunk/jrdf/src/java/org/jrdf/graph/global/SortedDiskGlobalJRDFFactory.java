@@ -61,55 +61,27 @@ package org.jrdf.graph.global;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
-import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.bdb.MoleculeIndexBdb;
-import org.jrdf.graph.local.BlankNodeComparator;
-import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.LocalizedNodeComparator;
-import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
+import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.attributename.AttributeNameComparator;
-import org.jrdf.query.relation.attributename.AttributeNameComparatorImpl;
-import org.jrdf.query.relation.mem.AttributeComparatorImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairHelper;
-import org.jrdf.query.relation.mem.AttributeValuePairHelperImpl;
-import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.relation.mem.GraphRelationFactoryImpl;
-import org.jrdf.query.relation.mem.SortedAttributeFactory;
-import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
-import org.jrdf.query.relation.mem.TupleComparatorImpl;
-import org.jrdf.query.relation.mem.TupleFactoryImpl;
-import org.jrdf.query.relation.type.TypeComparator;
-import org.jrdf.query.relation.type.TypeComparatorImpl;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
-import org.jrdf.urql.builder.UrqlQueryBuilder;
-import org.jrdf.urql.parser.ParserFactory;
-import org.jrdf.urql.parser.ParserFactoryImpl;
-import org.jrdf.urql.parser.SableCcSparqllParser;
-import org.jrdf.urql.parser.SparqlParser;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+
+import static java.util.Arrays.asList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -118,29 +90,15 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
 public final class SortedDiskGlobalJRDFFactory implements JRDFFactory {
+    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
+    private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
+    private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
-    private static final MapFactory FACTORY = new BdbMapFactory(BDB_HANDLER, "moleculeIndexMaps");
-
-    private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
-    private static final TypeComparator TYPE_COMPARATOR = new TypeComparatorImpl(NODE_TYPE_COMPARATOR);
-    private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR = new AttributeNameComparatorImpl();
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = new AttributeComparatorImpl(TYPE_COMPARATOR,
-        ATTRIBUTE_NAME_COMPARATOR);
-    private static final SortedAttributeFactory ATTRIBUTE_FACTORY = new SortedAttributeFactoryImpl(
-        ATTRIBUTE_COMPARATOR, 0L);
-    private static final LocalizedNodeComparator LOCALIZED_NODE_COMPARATOR = new LocalizedNodeComparatorImpl();
-    private static final BlankNodeComparator BLANK_NODE_COMPARATOR = new LocalizedBlankNodeComparatorImpl(
-        LOCALIZED_NODE_COMPARATOR);
-    private static final NodeComparator NODE_COMPARATOR = new NodeComparatorImpl(NODE_TYPE_COMPARATOR,
-        BLANK_NODE_COMPARATOR);
-    private static final AttributeValuePairComparator ATTRIBUTE_VALUE_PAIR_COMPARATOR =
-        new AttributeValuePairComparatorImpl(ATTRIBUTE_COMPARATOR, NODE_COMPARATOR);
-    private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
-    private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
-    private static final QueryBuilder BUILDER = createQueryBuilder();
-    private static final QueryEngine QUERY_ENGINE = new QueryFactoryImpl().createQueryEngine();
-    private GraphFactory orderedGraphFactory;
+    private static long graphNumber;
+    private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
+    private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
+    private Set<MapFactory> openMapFactories = new HashSet<MapFactory>();
 
     private SortedDiskGlobalJRDFFactory() {
     }
@@ -153,14 +111,15 @@ public final class SortedDiskGlobalJRDFFactory implements JRDFFactory {
     }
 
     public Graph getNewGraph() {
-        MoleculeIndex<Long> spom = new MoleculeIndexBdb(FACTORY);
-        MoleculeIndex<Long> posm = new MoleculeIndexBdb(FACTORY);
-        MoleculeIndex<Long> ospm = new MoleculeIndexBdb(FACTORY);
-        LongIndex[] indexes = new LongIndex[]{new LongIndexAdapter(spom), new LongIndexAdapter(posm),
-            new LongIndexAdapter(ospm)};
-        NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
-        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory);
-        return orderedGraphFactory.getGraph();
+        graphNumber++;
+        MapFactory factory = new BdbMapFactory(BDB_HANDLER, "database" + graphNumber);
+        LongIndex[] indexes = createIndexes(factory);
+        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(
+                new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()), graphNumber);
+        openIndexes.addAll(asList(indexes));
+        openMapFactories.add(factory);
+        openFactories.add(nodePoolFactory);
+        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory).getGraph();
     }
 
     public UrqlConnection getNewUrqlConnection() {
@@ -168,16 +127,23 @@ public final class SortedDiskGlobalJRDFFactory implements JRDFFactory {
     }
 
     public void close() {
-        FACTORY.close();
+        for (LongIndex index : openIndexes) {
+            index.close();
+        }
+        for (MapFactory factory : openMapFactories) {
+            factory.close();
+        }
+        for (NodePoolFactory openFactory : openFactories) {
+            openFactory.close();
+        }
+        openIndexes.clear();
+        openFactories.clear();
+        openMapFactories.clear();
     }
 
-    private static QueryBuilder createQueryBuilder() {
-        AttributeValuePairHelper avpHelper = new AttributeValuePairHelperImpl(ATTRIBUTE_FACTORY);
-        GraphRelationFactory graphRelationFactory = new GraphRelationFactoryImpl(ATTRIBUTE_FACTORY, avpHelper,
-            TUPLE_COMPARATOR, TUPLE_FACTORY);
-        ParserFactory parserFactory = new ParserFactoryImpl();
-        SparqlParser sparqlParser = new SableCcSparqllParser(parserFactory, graphRelationFactory, avpHelper,
-            ATTRIBUTE_FACTORY);
-        return new UrqlQueryBuilder(sparqlParser);
+    private LongIndex[] createIndexes(MapFactory factory) {
+        return new LongIndex[]{new LongIndexAdapter(new MoleculeIndexBdb(factory)),
+            new LongIndexAdapter(new MoleculeIndexBdb(factory)),
+            new LongIndexAdapter(new MoleculeIndexBdb(factory))};
     }
 }
