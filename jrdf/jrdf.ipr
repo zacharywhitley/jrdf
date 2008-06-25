@@ -6,6 +6,10 @@
       <additionalClassPath>
         <entry path="file://$PROJECT_DIR$/lib/junit-3.8.1.jar" />
         <entry path="file://$PROJECT_DIR$/lib/sablecc-3.2.jar" />
+        <entry path="file://$PROJECT_DIR$/lib/emma/emma-2.0.5312.jar" />
+        <entry path="file://$PROJECT_DIR$/lib/emma/emma_ant-2.0.5312.jar" />
+        <entry path="file://$PROJECT_DIR$/lib/scala/scala-compiler-2.7.1.jar" />
+        <entry path="file://$PROJECT_DIR$/lib/scala/scala-library-2.7.1.jar" />
       </additionalClassPath>
       <antReference projectDefault="true" />
       <customJdkName value="" />
@@ -485,13 +489,6 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="junit-3.8.1">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/junit-3.8.1.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="gsbase-2.0.1">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/gsbase-2.0.1.jar!/" />
@@ -521,6 +518,27 @@
         <root url="jar://$PROJECT_DIR$/lib/spring-rcp/swingx-0.9.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/spring-rcp/forms-1.0.7.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/spring-rcp/spring-richclient-full-1.0.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="junit">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/junit-3.8.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="scala">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/scala/scala-decoder-2.7.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/scala/sbaz-tests-2.7.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/scala/scala-library-2.7.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/scala/scala-compiler-2.7.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/scala/scala-dbc-2.7.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/scala/sbaz-2.7.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/emma/emma_ant-2.0.5312.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/emma/emma-2.0.5312.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
