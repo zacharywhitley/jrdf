@@ -61,14 +61,25 @@ package org.jrdf.graph.local.index.longindex.sesame;
 
 import org.jrdf.graph.local.index.longindex.AbstractLongIndexIntegrationTest;
 import org.jrdf.util.TempDirectoryHandler;
-import org.jrdf.util.btree.TripleBTree;
+import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
+import org.jrdf.util.btree.TripleBTree;
+
+import java.io.File;
 
 public class LongIndexSesameIntegrationTest extends AbstractLongIndexIntegrationTest {
+    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final String INDEX_FILE_NAME = "sesTestDb";
 
     public void setUp() {
-        TripleBTree tree = new BTreeFactoryImpl().createBTree(new TempDirectoryHandler(), "sesTestDb");
+        BTreeFactory bTreeFactory = new BTreeFactoryImpl();
+        TripleBTree tree = bTreeFactory.createBTree(HANDLER, INDEX_FILE_NAME);
         longIndex = new LongIndexSesame(tree);
         longIndex.clear();
+    }
+
+    public void tearDown() {
+        longIndex.close();
+        new File(HANDLER.getDir(), INDEX_FILE_NAME).delete();
     }
 }
