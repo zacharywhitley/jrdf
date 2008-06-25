@@ -71,6 +71,7 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
@@ -92,7 +93,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
     private static long graphNumber;
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
