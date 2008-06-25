@@ -133,7 +133,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
         moleculeIndex.add(QUAD_1);
         expectLastCall();
         factory.replay();
-        handler = new AddNewMoleculeToIndex(moleculeIndex, localizer);
+        handler = new AddMoleculeToIndex(moleculeIndex, localizer);
         traverser.traverse(molecule, handler);
         factory.verify();
     }
@@ -152,7 +152,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
         moleculeIndex.add(QUAD_3);
         expectLastCall();
         factory.replay();
-        handler = new AddNewMoleculeToIndex(moleculeIndex, localizer);
+        handler = new AddMoleculeToIndex(moleculeIndex, localizer);
         traverser.traverse(molecule, handler);
         factory.verify();
     }
@@ -188,7 +188,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
         moleculeIndex.add(QUAD_3);
         expectLastCall();
         factory.replay();
-        handler = new AddNewMoleculeToIndex(moleculeIndex, localizer);
+        handler = new AddMoleculeToIndex(moleculeIndex, localizer);
         traverser.traverse(molecule, handler);
         factory.verify();
     }

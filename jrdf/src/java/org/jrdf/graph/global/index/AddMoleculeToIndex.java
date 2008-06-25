@@ -68,7 +68,7 @@ import org.jrdf.graph.global.MoleculeLocalizer;
 import java.util.Set;
 import java.util.Stack;
 
-public class AddNewMoleculeToIndex implements MoleculeHandler {
+public class AddMoleculeToIndex implements MoleculeHandler {
     private static final int QUIN_SIZE = 5;
     private static final int MOLECULE_ID_INDEX = 3;
     private static final int PARENT_ID_INDEX = 4;
@@ -78,7 +78,7 @@ public class AddNewMoleculeToIndex implements MoleculeHandler {
     private Long moleculeId = 0L;
     private Stack<Long> parentIds;
 
-    public AddNewMoleculeToIndex(WritableIndex<Long> newIndex, MoleculeLocalizer newLocalizer) {
+    public AddMoleculeToIndex(WritableIndex<Long> newIndex, MoleculeLocalizer newLocalizer) {
         this.index = newIndex;
         this.localizer = newLocalizer;
         this.parentIds = new Stack<Long>();

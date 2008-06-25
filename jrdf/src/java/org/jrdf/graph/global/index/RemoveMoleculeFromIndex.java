@@ -9,14 +9,7 @@ import org.jrdf.graph.global.molecule.Molecule;
 import java.util.Set;
 import java.util.Stack;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Apr 11, 2008
- * Time: 11:35:59 AM
- * To change this template use File | Settings | File Templates.
- */
-public class RemoveNewMoleculeFromIndex implements MoleculeHandler {
+public class RemoveMoleculeFromIndex implements MoleculeHandler {
     private static final int QUIN_SIZE = 5;
     private static final int MOLECULE_ID_INDEX = 3;
     private static final int PARENT_ID_INDEX = 4;
@@ -26,7 +19,7 @@ public class RemoveNewMoleculeFromIndex implements MoleculeHandler {
     private Long moleculeId = 0L;
     private Stack<Long> parentIds;
 
-    public RemoveNewMoleculeFromIndex(WritableIndex<Long> newIndex, MoleculeLocalizer newLocalizer) {
+    public RemoveMoleculeFromIndex(WritableIndex<Long> newIndex, MoleculeLocalizer newLocalizer) {
         this.index = newIndex;
         this.localizer = newLocalizer;
         this.parentIds = new Stack<Long>();
