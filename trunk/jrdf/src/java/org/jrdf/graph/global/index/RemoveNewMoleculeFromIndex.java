@@ -4,7 +4,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.MoleculeLocalizer;
 import org.jrdf.graph.global.molecule.mem.MoleculeHandler;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 
 import java.util.Set;
 import java.util.Stack;
@@ -37,13 +37,13 @@ public class RemoveNewMoleculeFromIndex implements MoleculeHandler {
     public void handleEmptyMolecules() {
     }
 
-    public void handleStartContainsMolecules(Set<NewMolecule> newMolecules) {
+    public void handleStartContainsMolecules(Set<Molecule> newMolecules) {
         parentId = moleculeId;
         moleculeId = localizer.getNextMoleculeId();
         parentIds.push(moleculeId);
     }
 
-    public void handleEndContainsMolecules(Set<NewMolecule> newMolecules) {
+    public void handleEndContainsMolecules(Set<Molecule> newMolecules) {
         Long tmpId = parentIds.pop();
         // Check to see if we have come to the deepest level of the molecule - that is we've not pushed on a new
         // molecule id and we've come to the end.  If we have then we need to pop that id off and get the next level

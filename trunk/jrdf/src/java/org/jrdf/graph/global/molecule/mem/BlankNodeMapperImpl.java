@@ -98,13 +98,13 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
      * @param m2
      * @return
      */
-    public Map<BlankNode, BlankNode> createMap(NewMolecule m1, NewMolecule m2) {
+    public Map<BlankNode, BlankNode> createMap(Molecule m1, Molecule m2) {
         map = new HashMap<BlankNode, BlankNode>();
         map = populateMap(m1, m2, map);
         return map;
     }
 
-    private Map<BlankNode, BlankNode> populateMap(NewMolecule m1, NewMolecule m2, Map<BlankNode, BlankNode> map) {
+    private Map<BlankNode, BlankNode> populateMap(Molecule m1, Molecule m2, Map<BlankNode, BlankNode> map) {
         Set<Triple> m1RootTriples = m1.getRootTriplesAsSet();
         Set<Triple> m2RootTriples = m2.getRootTriplesAsSet();
         if (m1RootTriples.size() < m2RootTriples.size()) {
@@ -118,12 +118,12 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
                 return new HashMap<BlankNode, BlankNode>();
             }
             findCorrespondingTriple(m1Roots, m2RootTriple, map);
-            Set<NewMolecule> sm1s = m1.getSubMolecules(m2RootTriple);
-            Set<NewMolecule> sm2s = m2.getSubMolecules(m2RootTriple);
+            Set<Molecule> sm1s = m1.getSubMolecules(m2RootTriple);
+            Set<Molecule> sm2s = m2.getSubMolecules(m2RootTriple);
             if (!sm1s.isEmpty() && !sm2s.isEmpty()) {
                 if (sm1s.size() == 1 && sm2s.size() == 1) {
-                    NewMolecule sm1 = sm1s.iterator().next();
-                    NewMolecule sm2 = sm2s.iterator().next();
+                    Molecule sm1 = sm1s.iterator().next();
+                    Molecule sm2 = sm2s.iterator().next();
                     Map<BlankNode, BlankNode> curMap = populateMap(sm1, sm2, new HashMap<BlankNode, BlankNode>());
                     if (curMap.size() == 0) {
                         return curMap;

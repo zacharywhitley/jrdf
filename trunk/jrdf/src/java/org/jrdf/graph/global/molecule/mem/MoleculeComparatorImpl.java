@@ -74,7 +74,7 @@ public class MoleculeComparatorImpl implements MoleculeComparator {
         tripleComparator = newTripleComparator;
     }
 
-    public int compare(NewMolecule molecule, NewMolecule molecule1) {
+    public int compare(Molecule molecule, Molecule molecule1) {
         if (molecule == NullNewMolecule.NULL_MOLECULE) {
             return -1;
         } else if (molecule1 == NullNewMolecule.NULL_MOLECULE) {

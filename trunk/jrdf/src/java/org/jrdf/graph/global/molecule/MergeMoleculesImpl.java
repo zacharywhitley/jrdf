@@ -61,12 +61,12 @@ package org.jrdf.graph.global.molecule;
 
 import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 
 import java.util.Iterator;
 
 public class MergeMoleculesImpl implements MergeMolecules {
-    public NewMolecule merge(NewMolecule m1, NewMolecule m2) {
+    public Molecule merge(Molecule m1, Molecule m2) {
         Iterator<Triple> m1RootTriples = m1.getRootTriples();
         while (m1RootTriples.hasNext()) {
             Triple m1Triple = m1RootTriples.next();
@@ -76,8 +76,7 @@ public class MergeMoleculesImpl implements MergeMolecules {
         return m1;
     }
 
-    private void mergeRootTriples(Iterator<Triple> m2RootTriples, Triple m1Triple, NewMolecule m1, NewMolecule m2
-    ) {
+    private void mergeRootTriples(Iterator<Triple> m2RootTriples, Triple m1Triple, Molecule m1, Molecule m2) {
         while (m2RootTriples.hasNext()) {
             Triple m2Triple = m2RootTriples.next();
             if (isBlankNode(m2Triple.getSubject()) && m1Triple.getObject().equals(m2Triple.getSubject()) ||

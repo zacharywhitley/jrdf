@@ -114,38 +114,38 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     }
 
     public void testIncompatibleMolecules() {
-        NewMolecule m1 = moleculeFactory.createMolecule(B1R1R1);
-        NewMolecule m2 = moleculeFactory.createMolecule(B2R2B3);
+        Molecule m1 = moleculeFactory.createMolecule(B1R1R1);
+        Molecule m2 = moleculeFactory.createMolecule(B2R2B3);
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertTrue(blankNodeMap.isEmpty());
     }
 
     public void testLevelOneMapping1() {
-        NewMolecule m1 = moleculeFactory.createMolecule(B1R1R1);
-        NewMolecule m2 = moleculeFactory.createMolecule(B2R1R1);
+        Molecule m1 = moleculeFactory.createMolecule(B1R1R1);
+        Molecule m2 = moleculeFactory.createMolecule(B2R1R1);
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertFalse(blankNodeMap.isEmpty());
         assertEquals(BNODE1, blankNodeMap.get(BNODE2));
     }
 
     public void testLevelOneMapping2() {
-        NewMolecule m1 = moleculeFactory.createMolecule(R1R2B1);
-        NewMolecule m2 = moleculeFactory.createMolecule(R1R2B2);
+        Molecule m1 = moleculeFactory.createMolecule(R1R2B1);
+        Molecule m2 = moleculeFactory.createMolecule(R1R2B2);
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertFalse(blankNodeMap.isEmpty());
         assertEquals(BNODE1, blankNodeMap.get(BNODE2));
     }
 
     public void testConflictingNestedNodes() {
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
-        NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R3), Collections.<Triple>emptySet());
+        Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
+        Molecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R3), Collections.<Triple>emptySet());
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertTrue(blankNodeMap.isEmpty());
     }
 
     public void testNestedNodes() {
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
-        NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R2), Collections.<Triple>emptySet());
+        Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
+        Molecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R2), Collections.<Triple>emptySet());
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertFalse(blankNodeMap.isEmpty());
         assertEquals(BNODE2, blankNodeMap.get(BNODE3));
@@ -154,11 +154,11 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     public void test3LvlNodes() throws GraphException {
         Triple B2R1B3 = tFac.createTriple(BNODE2, REF1, BNODE3);
         Triple B3R1B4 = tFac.createTriple(BNODE3, REF1, BNODE4);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
+        Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
         Triple B5R1B6 = tFac.createTriple(BNODE5, REF1, BNODE6);
         Triple B6R1B7 = tFac.createTriple(BNODE6, REF1, BNODE7);
         Triple B7R1B8 = tFac.createTriple(BNODE7, REF1, BNODE8);
-        NewMolecule m2 = createMultiLevelMolecule(asSet(B5R1B6), asSet(B6R1B7), asSet(B7R1B8));
+        Molecule m2 = createMultiLevelMolecule(asSet(B5R1B6), asSet(B6R1B7), asSet(B7R1B8));
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertFalse(blankNodeMap.isEmpty());
         assertEquals("size of map", 4, blankNodeMap.size());
@@ -171,11 +171,11 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     public void testConflicting3Lvl() {
         Triple B2R1B3 = tFac.createTriple(BNODE2, REF1, BNODE3);
         Triple B3R1B4 = tFac.createTriple(BNODE3, REF1, BNODE4);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
+        Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
         Triple B5R1B6 = tFac.createTriple(BNODE5, REF1, BNODE6);
         Triple B6R1B7 = tFac.createTriple(BNODE6, REF1, BNODE7);
         Triple B7R2B8 = tFac.createTriple(BNODE7, REF2, BNODE8);
-        NewMolecule m2 = createMultiLevelMolecule(asSet(B5R1B6), asSet(B6R1B7), asSet(B7R2B8));
+        Molecule m2 = createMultiLevelMolecule(asSet(B5R1B6), asSet(B6R1B7), asSet(B7R2B8));
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertTrue(blankNodeMap.isEmpty());
     }
@@ -183,10 +183,10 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     public void testSubsumingDirections() {
         Triple B2R1B3 = tFac.createTriple(BNODE2, REF1, BNODE3);
         Triple B3R1B4 = tFac.createTriple(BNODE3, REF1, BNODE4);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
+        Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
         Triple B5R1B6 = tFac.createTriple(BNODE5, REF1, BNODE6);
         Triple B6R1B7 = tFac.createTriple(BNODE6, REF1, BNODE7);
-        NewMolecule m2 = createMultiLevelMolecule(asSet(B5R1B6), asSet(B6R1B7), Collections.<Triple>emptySet());
+        Molecule m2 = createMultiLevelMolecule(asSet(B5R1B6), asSet(B6R1B7), Collections.<Triple>emptySet());
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m2, m1);
         assertTrue(blankNodeMap.isEmpty());
         blankNodeMap = mapper.createMap(m1, m2);

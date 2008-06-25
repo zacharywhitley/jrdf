@@ -112,54 +112,54 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
 
     public void testEmptyGraph() throws Exception {
         assertEquals(0, GRAPH.getNumberOfTriples());
-        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
+        Set<Molecule> molecules = decomposer.decompose(GRAPH);
         assertEquals("Unexpected size of molecules", 0, molecules.size());
     }
 
     public void testGroundedGraph() throws Exception {
         GRAPH.add(R1R1R1, R2R1R1, R2R1R2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = moleculeFactory.createMolecule(R1R1R1);
-        NewMolecule m2 = moleculeFactory.createMolecule(R2R1R1);
-        NewMolecule m3 = moleculeFactory.createMolecule(R2R1R2);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = moleculeFactory.createMolecule(R1R1R1);
+        Molecule m2 = moleculeFactory.createMolecule(R2R1R1);
+        Molecule m3 = moleculeFactory.createMolecule(R2R1R2);
         checkMolecules(actualMolecules, m1, m2, m3);
     }
 
     public void testSimpleDecompose() throws Exception {
         GRAPH.add(R1R1B1, B1R1B2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = moleculeFactory.createMolecule(R1R1B1, B1R1B2);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = moleculeFactory.createMolecule(R1R1B1, B1R1B2);
         checkMolecules(actualMolecules, m1);
     }
 
     public void testLinkingTriple() throws GraphException {
         GRAPH.add(B1R1R1, B2R1B1);
-        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B2R1B1), asSet(B1R1R1), Collections.<Triple>emptySet());
+        Set<Molecule> molecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMultiLevelMolecule(asSet(B2R1B1), asSet(B1R1R1), Collections.<Triple>emptySet());
         checkMolecules(molecules, m1);
     }
 
     public void testOrderingSingleMolecule() throws Exception {
         GRAPH.add(R2R2B2, R2R1B1, B1R1B2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(R2R2B2, R2R1B1, B1R1B2), Collections.<Triple>emptySet(),
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMultiLevelMolecule(asSet(R2R2B2, R2R1B1, B1R1B2), Collections.<Triple>emptySet(),
             Collections.<Triple>emptySet());
         checkMolecules(actualMolecules, m1);
     }
 
     public void testOrderingMultiMolecule() throws Exception {
         GRAPH.add(R2R2B1, R2R1B2, B1R1B2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(R2R2B1, B1R1B2), asSet(R2R1B2), Collections.<Triple>emptySet());
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMultiLevelMolecule(asSet(R2R2B1, B1R1B2), asSet(R2R1B2), Collections.<Triple>emptySet());
         checkMolecules(actualMolecules, m1);
     }
 
     public void testOrderingMultiMolecule2() throws Exception {
         GRAPH.add(R2R2B1, R2R1B2, B1R1B2, B3R3B2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule leaf1 = moleculeFactory.createMolecule(R2R1B2);
-        NewMolecule leaf2 = moleculeFactory.createMolecule(B3R3B2);
-        NewMolecule root = moleculeFactory.createMolecule(R2R2B1, B1R1B2);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule leaf1 = moleculeFactory.createMolecule(R2R1B2);
+        Molecule leaf2 = moleculeFactory.createMolecule(B3R3B2);
+        Molecule root = moleculeFactory.createMolecule(R2R2B1, B1R1B2);
         root.add(B1R1B2, leaf1);
         root.add(B1R1B2, leaf2);
         checkMolecules(actualMolecules, root);
@@ -167,11 +167,11 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
 
     public void testOrderingMultiMolecule3() throws Exception {
         GRAPH.add(R2R2B1, R2R1B2, B1R1B2, B3R3B2, R1R1B2, B4R2B2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule leaf1 = moleculeFactory.createMolecule(R2R1B2, R1R1B2);
-        NewMolecule leaf2 = moleculeFactory.createMolecule(B3R3B2);
-        NewMolecule leaf3 = moleculeFactory.createMolecule(B4R2B2);
-        NewMolecule root = moleculeFactory.createMolecule(R2R2B1, B1R1B2);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule leaf1 = moleculeFactory.createMolecule(R2R1B2, R1R1B2);
+        Molecule leaf2 = moleculeFactory.createMolecule(B3R3B2);
+        Molecule leaf3 = moleculeFactory.createMolecule(B4R2B2);
+        Molecule root = moleculeFactory.createMolecule(R2R2B1, B1R1B2);
         leaf2.add(B3R3B2, leaf3);
         root.add(B1R1B2, leaf1);
         root.add(B1R1B2, leaf2);
@@ -180,26 +180,26 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
 
     public void testNestedBlankNodeDecompose() throws Exception {
         GRAPH.add(B1R1B2, B1R1B3, B2R2R2, B3R2R3);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
         //System.err.println(actualMolecules.iterator().next().toString());
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
-        NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R3), Collections.<Triple>emptySet());
+        Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
+        Molecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R3), Collections.<Triple>emptySet());
         checkMolecules(actualMolecules, m1, m2);
     }
 
     public void testCircularBlankNodes() throws Exception {
         GRAPH.add(B1R1B2, B2R2B3, B3R3B1);
-        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2B3), asSet(B3R3B1));
+        Set<Molecule> molecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2B3), asSet(B3R3B1));
         checkMolecules(molecules, m1);
     }
 
     public void testNoSimpleLeanification() throws Exception {
         GRAPH.add(B1R1R1, B2R1R1, B3R1R1);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMolecule(B1R1R1);
-        NewMolecule m2 = createMolecule(B2R1R1);
-        NewMolecule m3 = createMolecule(B3R1R1);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMolecule(B1R1R1);
+        Molecule m2 = createMolecule(B2R1R1);
+        Molecule m3 = createMolecule(B3R1R1);
         checkMolecules(actualMolecules, m1, m2, m3);
     }
 
@@ -220,14 +220,14 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         b3.addValue(u3, u4);
         b2.addValue(u2, b4);
         b4.addValue(u3, u5);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule branch1 = moleculeFactory.createMolecule(tfac.createTriple(b2, u2, b3));
-        NewMolecule leaf1 = moleculeFactory.createMolecule(tfac.createTriple(b3, u3, u4));
-        NewMolecule branch2 = moleculeFactory.createMolecule(tfac.createTriple(b2, u2, b4));
-        NewMolecule leaf2 = moleculeFactory.createMolecule(tfac.createTriple(b4, u3, u5));
-        NewMolecule m1 = mergeMolecules(branch1, leaf1);
-        NewMolecule m2 = mergeMolecules(branch2, leaf2);
-        NewMolecule expectedMolecules = moleculeFactory.createMolecule(tfac.createTriple(b1, u1, b2));
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule branch1 = moleculeFactory.createMolecule(tfac.createTriple(b2, u2, b3));
+        Molecule leaf1 = moleculeFactory.createMolecule(tfac.createTriple(b3, u3, u4));
+        Molecule branch2 = moleculeFactory.createMolecule(tfac.createTriple(b2, u2, b4));
+        Molecule leaf2 = moleculeFactory.createMolecule(tfac.createTriple(b4, u3, u5));
+        Molecule m1 = mergeMolecules(branch1, leaf1);
+        Molecule m2 = mergeMolecules(branch2, leaf2);
+        Molecule expectedMolecules = moleculeFactory.createMolecule(tfac.createTriple(b1, u1, b2));
         expectedMolecules.add(tfac.createTriple(b1, u1, b2), m1);
         expectedMolecules.add(tfac.createTriple(b1, u1, b2), m2);
         assertEquals(1, actualMolecules.size());
@@ -246,14 +246,14 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         b3.addValue(create("urn:hasUniprotID"), "foo");
         b2.addValue(create("urn:participant"), b4);
         b4.addValue(create("urn:hasUniprotID"), "bar");
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule expectedMolecule = moleculeFactory.createMolecule(
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule expectedMolecule = moleculeFactory.createMolecule(
             b1.asTriple(RDF.TYPE, create("urn:experimentObservation")),
             b1.asTriple(create("urn:observedInteraction"), b2));
-        NewMolecule sm1 = moleculeFactory.createMolecule(b2.asTriple(create("urn:participant"), b3));
-        NewMolecule sm2 = moleculeFactory.createMolecule(b2.asTriple(create("urn:participant"), b4));
-        NewMolecule ssm1 = moleculeFactory.createMolecule(b3.asTriple(create("urn:hasUniprotID"), "foo"));
-        NewMolecule ssm2 = moleculeFactory.createMolecule(b4.asTriple(create("urn:hasUniprotID"), "bar"));
+        Molecule sm1 = moleculeFactory.createMolecule(b2.asTriple(create("urn:participant"), b3));
+        Molecule sm2 = moleculeFactory.createMolecule(b2.asTriple(create("urn:participant"), b4));
+        Molecule ssm1 = moleculeFactory.createMolecule(b3.asTriple(create("urn:hasUniprotID"), "foo"));
+        Molecule ssm2 = moleculeFactory.createMolecule(b4.asTriple(create("urn:hasUniprotID"), "bar"));
         sm1.add(b2.asTriple(create("urn:participant"), b3), ssm1);
         sm2.add(b2.asTriple(create("urn:participant"), b4), ssm2);
         expectedMolecule.add(b1.asTriple(create("urn:observedInteraction"), b2), sm1);
@@ -263,56 +263,56 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
 
     public void testSingleNestingSubjects() throws Exception {
         GRAPH.add(B1R1R1, B1R2R2, B2R2R1, B2R2R2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMolecule(B1R1R1, B1R2R2);
-        NewMolecule m2 = createMolecule(B2R2R1, B2R2R2);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMolecule(B1R1R1, B1R2R2);
+        Molecule m2 = createMolecule(B2R2R1, B2R2R2);
         checkMolecules(actualMolecules, m1, m2);
     }
 
     public void testSingleNestingSubjectsExtraTriples() throws Exception {
         GRAPH.add(B1R1R1, B1R2R2, B2R2R1, B2R2R2, R1R1R1, R2R1R1, R2R1R2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMolecule(B1R1R1, B1R2R2);
-        NewMolecule m2 = createMolecule(B2R2R1, B2R2R2);
-        NewMolecule m3 = createMolecule(R1R1R1);
-        NewMolecule m4 = createMolecule(R2R1R1);
-        NewMolecule m5 = createMolecule(R2R1R2);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMolecule(B1R1R1, B1R2R2);
+        Molecule m2 = createMolecule(B2R2R1, B2R2R2);
+        Molecule m3 = createMolecule(R1R1R1);
+        Molecule m4 = createMolecule(R2R1R1);
+        Molecule m5 = createMolecule(R2R1R2);
         checkMolecules(actualMolecules, m1, m2, m3, m4, m5);
     }
 
     public void testSingleNestingObjects() throws Exception {
         GRAPH.add(R1R1B1, R2R1B1, R1R2B2, R2R2B2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMolecule(R1R1B1, R2R1B1);
-        NewMolecule m2 = createMolecule(R1R2B2, R2R2B2);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMolecule(R1R1B1, R2R1B1);
+        Molecule m2 = createMolecule(R1R2B2, R2R2B2);
         checkMolecules(actualMolecules, m1, m2);
     }
 
     public void testSingleNestingObjectsExtraTriples() throws Exception {
         GRAPH.add(R1R1B1, R2R1B1, R1R2B2, R2R2B2, R1R1R1, R2R1R1, R2R1R2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMolecule(R1R1B1, R2R1B1);
-        NewMolecule m2 = createMolecule(R1R2B2, R2R2B2);
-        NewMolecule m3 = createMolecule(R1R1R1);
-        NewMolecule m4 = createMolecule(R2R1R1);
-        NewMolecule m5 = createMolecule(R2R1R2);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMolecule(R1R1B1, R2R1B1);
+        Molecule m2 = createMolecule(R1R2B2, R2R2B2);
+        Molecule m3 = createMolecule(R1R1R1);
+        Molecule m4 = createMolecule(R2R1R1);
+        Molecule m5 = createMolecule(R2R1R2);
         checkMolecules(actualMolecules, m1, m2, m3, m4, m5);
     }
 
     public void testSingleNestingBothSides() throws Exception {
         GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMolecule(R1R1B1, R2R1B1, B1R1R1, B1R2R2);
-        NewMolecule m2 = createMolecule(R1R2B2, R2R2B2, B2R2R1);
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMolecule(R1R1B1, R2R1B1, B1R1R1, B1R2R2);
+        Molecule m2 = createMolecule(R1R2B2, R2R2B2, B2R2R1);
         checkMolecules(actualMolecules, m1, m2);
     }
 
     public void testLinkTwoGroups() throws Exception {
         GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1, B1R1B2);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
             asSet(R1R2B2, R2R2B2, B2R2R1), Collections.<Triple>emptySet());
-        NewMolecule actual1 = actualMolecules.iterator().next();
+        Molecule actual1 = actualMolecules.iterator().next();
         assertEquals(m1.getRootTriplesAsSet(), actual1.getRootTriplesAsSet());
         assertEquals(m1.getSubMolecules(B1R1B2), actual1.getSubMolecules(B1R1B2));
         checkMolecules(actualMolecules, m1);
@@ -320,17 +320,17 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
 
     public void testLinkThreeGroups() throws Exception {
         GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1, B1R1B2, B2R2B3, B3R2R3);
-        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
+        Set<Molecule> actualMolecules = decomposer.decompose(GRAPH);
+        Molecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
             asSet(B2R2B3), asSet(B3R2R3));
         m1.add(B1R1B2, createMolecule(R1R2B2, R2R2B2, B2R2R1));
-        NewMolecule actualSubmolecule = actualMolecules.iterator().next();
+        Molecule actualSubmolecule = actualMolecules.iterator().next();
         assertEquals(m1.getRootTriplesAsSet(), actualSubmolecule.getRootTriplesAsSet());
         assertEquals(m1.getSubMolecules(B1R1B2), actualSubmolecule.getSubMolecules(B1R1B2));
         checkMolecules(actualMolecules, m1);
     }
 
-    private void checkMolecules(Set<NewMolecule> actualMolecules, NewMolecule... expectedMolecules) {
+    private void checkMolecules(Set<Molecule> actualMolecules, Molecule... expectedMolecules) {
         assertEquals("Unexpected size of molecules", expectedMolecules.length, actualMolecules.size());
         assertEquals(asSet(expectedMolecules), actualMolecules);
     }

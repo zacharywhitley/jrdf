@@ -73,7 +73,7 @@ import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.bdb.MoleculeIndexBdb;
 import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
 import org.jrdf.graph.global.molecule.mem.MoleculeComparator;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeHeadTripleComparatorImpl;
@@ -167,11 +167,11 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
 
         Resource b1 = moleculeGraph.getElementFactory().createResource();
         Resource r1 = moleculeGraph.getElementFactory().createResource(create("urn:foo"));
-        NewMolecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
+        Molecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
         moleculeGraph.add(molecule);
         assertEquals(1, spom.getSize());
         Resource b2 = moleculeGraph.getElementFactory().createResource();
-        NewMolecule molecule2 = moleculeFactory.createMolecule(b2.asTriple(r1, b2));
+        Molecule molecule2 = moleculeFactory.createMolecule(b2.asTriple(r1, b2));
         moleculeGraph.add(molecule2);
         assertEquals(2, spom.getSize());
         ClosableIterator<Long[]> iterator = spom.iterator();
@@ -210,11 +210,11 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
 
         Resource b1 = moleculeGraph.getElementFactory().createResource();
         Resource r1 = moleculeGraph.getElementFactory().createResource(create("urn:foo"));
-        NewMolecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
+        Molecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
         moleculeGraph.add(molecule);
         assertEquals(1, spom.getSize());
         Resource b2 = moleculeGraph.getElementFactory().createResource();
-        NewMolecule molecule2 = moleculeFactory.createMolecule(b2.asTriple(r1, b2));
+        Molecule molecule2 = moleculeFactory.createMolecule(b2.asTriple(r1, b2));
         moleculeGraph.add(molecule2);
         assertEquals(2, spom.getSize());
         ClosableIterator<Long[]> iterator = spom.iterator();

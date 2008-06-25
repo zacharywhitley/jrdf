@@ -59,8 +59,8 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 
 public interface MergeMolecules {
-    NewMolecule merge(NewMolecule m1, NewMolecule m2);
+    Molecule merge(Molecule m1, Molecule m2);
 }

@@ -83,12 +83,12 @@ public class NewMoleculeImplUnitTest extends TestCase {
     }
 
     public void testMoleculeCreation() {
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(r1r1r1, r2r1r1, r3r1r1, r1r1b1);
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule(r1r1r1, r2r1r1, r3r1r1, r1r1b1);
         assertEquals(r1r1r1, newMolecule.getHeadTriple());
     }
 
     public void testMoleculeCreation2() {
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule();
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule();
         newMolecule = newMolecule.add(r2r1r1);
         newMolecule = newMolecule.add(r3r1r1);
         newMolecule = newMolecule.add(r1r1r1);
@@ -97,18 +97,18 @@ public class NewMoleculeImplUnitTest extends TestCase {
     }
 
     public void testAddVsConstructor() {
-        NewMolecule newMolecule1 = MOLECULE_FACTORY.createMolecule();
+        Molecule newMolecule1 = MOLECULE_FACTORY.createMolecule();
         newMolecule1.add(r1r1r1);
         newMolecule1.add(r2r1r1);
         newMolecule1.add(r3r1r1);
         newMolecule1.add(r1r1b1);
-        NewMolecule newMolecule2 = MOLECULE_FACTORY.createMolecule(r1r1r1, r2r1r1, r3r1r1, r1r1b1);
+        Molecule newMolecule2 = MOLECULE_FACTORY.createMolecule(r1r1r1, r2r1r1, r3r1r1, r1r1b1);
         assertEquals(newMolecule1, newMolecule2);
     }
 
     public void testMergeHeadMolecules() {
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3);
-        NewMolecule internalMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3, b2r2b1);
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3);
+        Molecule internalMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3, b2r2b1);
         assertEquals(b1r3r3, newMolecule.getHeadTriple());
         assertEquals(b1r3r3, internalMolecule.getHeadTriple());
         newMolecule = newMolecule.add(merger, internalMolecule);
@@ -118,24 +118,24 @@ public class NewMoleculeImplUnitTest extends TestCase {
     }
 
     public void testCombineSubMolecules() {
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(r1r1b1);
-        NewMolecule internalMolecule = MOLECULE_FACTORY.createMolecule(b2r2b1, b1r3r3);
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule(r1r1b1);
+        Molecule internalMolecule = MOLECULE_FACTORY.createMolecule(b2r2b1, b1r3r3);
         newMolecule = newMolecule.add(merger, internalMolecule);
         assertEquals(r1r1b1, newMolecule.getHeadTriple());
         assertEquals(3, newMolecule.size());
-        HashMap<Triple, NewMolecule> expectedSubMolecules = new HashMap<Triple, NewMolecule>();
+        HashMap<Triple, Molecule> expectedSubMolecules = new HashMap<Triple, Molecule>();
         expectedSubMolecules.put(r1r1b1, internalMolecule);
         checkHasSubMolecule(newMolecule, expectedSubMolecules);
     }
 
     public void testAddSubMolecules() {
-        NewMolecule internalMolecule = MOLECULE_FACTORY.createMolecule(r1r1r1);
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3, b1r2b2);
+        Molecule internalMolecule = MOLECULE_FACTORY.createMolecule(r1r1r1);
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3, b1r2b2);
         newMolecule.add(b1r2b2, internalMolecule);
         Set<Triple> triples = newMolecule.getRootTriplesAsSet();
         assertTrue(triples.contains(b1r3r3));
         assertTrue(triples.contains(b1r2b2));
-        Set<NewMolecule> molecules = newMolecule.getSubMolecules(b1r2b2);
+        Set<Molecule> molecules = newMolecule.getSubMolecules(b1r2b2);
         assertTrue(molecules.size() == 1);
         Set<Triple> triplesAsSet = molecules.iterator().next().getRootTriplesAsSet();
         assertTrue(triplesAsSet.size() == 1);
@@ -143,14 +143,14 @@ public class NewMoleculeImplUnitTest extends TestCase {
     }
 
     public void testSimpleTopLevel() {
-        NewMolecule molecule = MOLECULE_FACTORY.createMolecule(r1r1r1);
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3, b1r2b2);
+        Molecule molecule = MOLECULE_FACTORY.createMolecule(r1r1r1);
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3, b1r2b2);
         molecule.add(b1r2b2, newMolecule);
         assertTrue("Is top level", molecule.isTopLevelMolecule());
         assertTrue("Is top level", !newMolecule.isTopLevelMolecule());
     }
 
-    private void checkHasHeadMolecules(NewMolecule actualMolecule, Triple... triples) {
+    private void checkHasHeadMolecules(Molecule actualMolecule, Triple... triples) {
         Set<Triple> moleculeContents = new HashSet<Triple>();
         for (Triple triple : triples) {
             moleculeContents.add(triple);
@@ -163,10 +163,10 @@ public class NewMoleculeImplUnitTest extends TestCase {
         }
     }
 
-    private void checkHasSubMolecule(NewMolecule actualMolecule, HashMap<Triple, NewMolecule> expectedSubMolecules) {
-        for (Map.Entry<Triple, NewMolecule> entry : expectedSubMolecules.entrySet()) {
-            Set<NewMolecule> newMolecule = actualMolecule.getSubMolecules(entry.getKey());
-            HashSet<NewMolecule> actualMolecules = new HashSet<NewMolecule>();
+    private void checkHasSubMolecule(Molecule actualMolecule, HashMap<Triple, Molecule> expectedSubMolecules) {
+        for (Map.Entry<Triple, Molecule> entry : expectedSubMolecules.entrySet()) {
+            Set<Molecule> newMolecule = actualMolecule.getSubMolecules(entry.getKey());
+            HashSet<Molecule> actualMolecules = new HashSet<Molecule>();
             actualMolecules.add(entry.getValue());
             assertEquals("Trying to find molecule for triple: " + entry.getKey(), actualMolecules, newMolecule);
         }

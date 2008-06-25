@@ -79,5 +79,5 @@ public interface GraphDecomposer {
      * @return set of molecules (subgraphs) which make up the graph
      * @throws GraphException
      */
-    Set<NewMolecule> decompose(Graph graph) throws GraphException;
+    Set<Molecule> decompose(Graph graph) throws GraphException;
 }

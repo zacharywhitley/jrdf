@@ -74,7 +74,7 @@ import org.jrdf.graph.global.index.ReadableIndex;
 import org.jrdf.graph.global.index.WritableIndex;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverser;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
@@ -96,12 +96,12 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         this.graph = newGraph;
     }
 
-    public void add(NewMolecule molecule) {
+    public void add(Molecule molecule) {
         MoleculeTraverser traverser = new MoleculeTraverserImpl();
         traverser.traverse(molecule, new AddNewMoleculeToIndex(writableIndex, localizer));
     }
 
-    public void delete(NewMolecule molecule) {
+    public void delete(Molecule molecule) {
         try {
             Long[] longs = localizer.localizeTriple(molecule.getHeadTriple());
             // find mid based on molecule head triple and subsequent triples.

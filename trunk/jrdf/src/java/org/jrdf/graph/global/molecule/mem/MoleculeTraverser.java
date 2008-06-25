@@ -71,5 +71,5 @@ package org.jrdf.graph.global.molecule.mem;
  * handleContainsMolecules method is the way to do this.
  */
 public interface MoleculeTraverser {
-    void traverse(NewMolecule molecule, MoleculeHandler handler);
+    void traverse(Molecule molecule, MoleculeHandler handler);
 }

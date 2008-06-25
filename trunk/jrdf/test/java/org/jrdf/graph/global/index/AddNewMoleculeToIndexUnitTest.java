@@ -76,7 +76,7 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
 import org.jrdf.graph.global.molecule.mem.MoleculeHandler;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverser;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 import org.jrdf.graph.global.MoleculeLocalizer;
 import org.jrdf.util.test.MockFactory;
 import static org.jrdf.util.test.SetUtil.asSet;
@@ -126,7 +126,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
     }
 
     public void testSingleMolcule() throws GraphException {
-        NewMolecule molecule = createMultiLevelMolecule(asSet(B1R1R1), Collections.<Triple>emptySet(),
+        Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1), Collections.<Triple>emptySet(),
             Collections.<Triple>emptySet());
         expect(localizer.getNextMoleculeId()).andReturn(MID_1);
         expect(localizer.localizeTriple(B1R1R1)).andReturn(TRIPLE_1);
@@ -139,7 +139,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
     }
 
     public void testMultipleTriplesMolcule() throws GraphException {
-        NewMolecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2), Collections.<Triple>emptySet(),
+        Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2), Collections.<Triple>emptySet(),
             Collections.<Triple>emptySet());
         expect(localizer.getNextMoleculeId()).andReturn(MID_1);
         expect(localizer.localizeTriple(B1R1B2)).andReturn(TRIPLE_3);
@@ -158,7 +158,7 @@ public class AddNewMoleculeToIndexUnitTest extends TestCase {
     }
 
     public void testManyLevelMolecule() throws GraphException {
-        NewMolecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
+        Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
             asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
         expect(localizer.getNextMoleculeId()).andReturn(MID_1);
         expect(localizer.localizeTriple(B1R1B2)).andReturn(TRIPLE_3);

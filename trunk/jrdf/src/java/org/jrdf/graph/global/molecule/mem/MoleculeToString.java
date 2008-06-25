@@ -83,11 +83,11 @@ public class MoleculeToString implements MoleculeHandler {
         builder.append("{}");
     }
 
-    public void handleStartContainsMolecules(Set<NewMolecule> newMolecules) {
+    public void handleStartContainsMolecules(Set<Molecule> newMolecules) {
         level++;
     }
 
-    public void handleEndContainsMolecules(Set<NewMolecule> newMolecules) {
+    public void handleEndContainsMolecules(Set<Molecule> newMolecules) {
         level--;
     }
 }

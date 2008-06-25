@@ -77,16 +77,16 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class NewMoleculeImpl implements NewMolecule {
+public class NewMoleculeImpl implements Molecule {
     private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     // This should be a set of molecules for the values.
-    private final SortedMap<Triple, SortedSet<NewMolecule>> subMolecules;
+    private final SortedMap<Triple, SortedSet<Molecule>> subMolecules;
     private final MoleculeComparator moleculeComparator;
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
     protected boolean isTopLevel;
 
     private NewMoleculeImpl(MoleculeComparator newComparator, SortedMap<Triple,
-        SortedSet<NewMolecule>> newSubMolecules) {
+        SortedSet<Molecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
         subMolecules = newSubMolecules;
@@ -97,22 +97,22 @@ public class NewMoleculeImpl implements NewMolecule {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
         isTopLevel = true;
-        subMolecules = new TreeMap<Triple, SortedSet<NewMolecule>>(tripleComparator);
+        subMolecules = new TreeMap<Triple, SortedSet<Molecule>>(tripleComparator);
     }
 
     public NewMoleculeImpl(MoleculeComparator newComparator, Triple... rootTriples) {
         this(newComparator);
         for (Triple rootTriple : rootTriples) {
-            subMolecules.put(rootTriple, new TreeSet<NewMolecule>(moleculeComparator));
+            subMolecules.put(rootTriple, new TreeSet<Molecule>(moleculeComparator));
         }
 
     }
 
-    public NewMoleculeImpl(MoleculeComparator newComparator, NewMolecule... childMolecules) {
+    public NewMoleculeImpl(MoleculeComparator newComparator, Molecule... childMolecules) {
         this(newComparator);
-        for (NewMolecule molecule : childMolecules) {
+        for (Molecule molecule : childMolecules) {
             Triple headTriple = molecule.getHeadTriple();
-            SortedSet<NewMolecule> submolecules = new TreeSet<NewMolecule>(moleculeComparator);
+            SortedSet<Molecule> submolecules = new TreeSet<Molecule>(moleculeComparator);
             submolecules.add(molecule);
             ((NewMoleculeImpl) molecule).isTopLevel = false;
             subMolecules.put(headTriple, submolecules);
@@ -127,17 +127,17 @@ public class NewMoleculeImpl implements NewMolecule {
         subMolecules.remove(triple);
     }
 
-    public NewMolecule add(Triple triple) {
+    public Molecule add(Triple triple) {
         if (!subMolecules.keySet().contains(triple)) {
-            subMolecules.put(triple, new TreeSet<NewMolecule>(moleculeComparator));
+            subMolecules.put(triple, new TreeSet<Molecule>(moleculeComparator));
         }
         return new NewMoleculeImpl(moleculeComparator, subMolecules);
     }
 
-    public NewMolecule add(Triple triple, NewMolecule newMolecule) {
-        SortedSet<NewMolecule> moleculeSet = subMolecules.get(triple);
+    public Molecule add(Triple triple, Molecule newMolecule) {
+        SortedSet<Molecule> moleculeSet = subMolecules.get(triple);
         if (moleculeSet == null) {
-            moleculeSet = new TreeSet<NewMolecule>(moleculeComparator);
+            moleculeSet = new TreeSet<Molecule>(moleculeComparator);
         }
         if (newMolecule.size() > 0) {
             moleculeSet.add(newMolecule);
@@ -147,19 +147,19 @@ public class NewMoleculeImpl implements NewMolecule {
         return new NewMoleculeImpl(moleculeComparator, subMolecules);
     }
 
-    public NewMolecule add(Triple triple, Triple newTriple) {
-        SortedSet<NewMolecule> moleculeSet = subMolecules.get(triple);
+    public Molecule add(Triple triple, Triple newTriple) {
+        SortedSet<Molecule> moleculeSet = subMolecules.get(triple);
         if (moleculeSet == null) {
-            moleculeSet = new TreeSet<NewMolecule>(moleculeComparator);
+            moleculeSet = new TreeSet<Molecule>(moleculeComparator);
         }
         if (isDoubleLinkedTriple(newTriple)) {
-            NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
+            Molecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
             moleculeSet.add(newMolecule);
             ((NewMoleculeImpl) newMolecule).isTopLevel = false;
             subMolecules.put(triple, moleculeSet);
         } else {
             if (moleculeSet.isEmpty()) {
-                NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
+                Molecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
                 ((NewMoleculeImpl) newMolecule).isTopLevel = false;
                 moleculeSet.add(newMolecule);
                 subMolecules.put(triple, moleculeSet);
@@ -174,19 +174,19 @@ public class NewMoleculeImpl implements NewMolecule {
         return isBlankNode(triple.getSubject()) && isBlankNode(triple.getObject());
     }
 
-    public void specialAdd(NewMolecule molecule) {
+    public void specialAdd(Molecule molecule) {
         Iterator<Triple> rootTriples = molecule.getRootTriples();
         while (rootTriples.hasNext()) {
             Triple currentTriple = rootTriples.next();
-            final SortedSet<NewMolecule> newMolecules = molecule.getSubMolecules(currentTriple);
-            for (NewMolecule newMolecule : newMolecules) {
+            final SortedSet<Molecule> newMolecules = molecule.getSubMolecules(currentTriple);
+            for (Molecule newMolecule : newMolecules) {
                 ((NewMoleculeImpl) newMolecule).isTopLevel = false;
             }
             subMolecules.put(currentTriple, newMolecules);
         }
     }
 
-    public NewMolecule add(MergeSubmolecules merger, NewMolecule childMolecule) {
+    public Molecule add(MergeSubmolecules merger, Molecule childMolecule) {
         Triple headTriple = getHeadTriple();
         Triple childHeadTriple = childMolecule.getHeadTriple();
         if (childHeadTriple.equals(headTriple)) {
@@ -197,7 +197,7 @@ public class NewMoleculeImpl implements NewMolecule {
             // a child molecule onto the head triple.
             // Also we can currently on store one submolecule off of any single triple.
             subMolecules.remove(headTriple);
-            SortedSet<NewMolecule> containedMolecules = new TreeSet<NewMolecule>(moleculeComparator);
+            SortedSet<Molecule> containedMolecules = new TreeSet<Molecule>(moleculeComparator);
             containedMolecules.add(childMolecule);
             ((NewMoleculeImpl) childMolecule).isTopLevel = false;
             subMolecules.put(headTriple, containedMolecules);
@@ -217,10 +217,10 @@ public class NewMoleculeImpl implements NewMolecule {
         return subMolecules.keySet();
     }
 
-    public SortedSet<NewMolecule> getSubMolecules(Triple rootTriple) {
-        SortedSet<NewMolecule> molecules = subMolecules.get(rootTriple);
+    public SortedSet<Molecule> getSubMolecules(Triple rootTriple) {
+        SortedSet<Molecule> molecules = subMolecules.get(rootTriple);
         if (molecules == null) {
-            molecules = Collections.unmodifiableSortedSet(new TreeSet<NewMolecule>());
+            molecules = Collections.unmodifiableSortedSet(new TreeSet<Molecule>());
         }
         return molecules;
     }
@@ -237,7 +237,7 @@ public class NewMoleculeImpl implements NewMolecule {
         return null;
     }
 
-    public NewMolecule add(Set<Triple> set) {
+    public Molecule add(Set<Triple> set) {
         List<Triple> newMolecules = new ArrayList<Triple>();
         for (Triple triple : set) {
             newMolecules.add(triple);
@@ -247,17 +247,17 @@ public class NewMoleculeImpl implements NewMolecule {
 
     public int size() {
         int size = this.subMolecules.keySet().size();
-        Collection<SortedSet<NewMolecule>> collectionOfMoleculeSets = subMolecules.values();
-        for (Set<NewMolecule> molecules : collectionOfMoleculeSets) {
+        Collection<SortedSet<Molecule>> collectionOfMoleculeSets = subMolecules.values();
+        for (Set<Molecule> molecules : collectionOfMoleculeSets) {
             size += calcSize(molecules);
         }
         return size;
     }
 
-    private int calcSize(Set<NewMolecule> molecules) {
+    private int calcSize(Set<Molecule> molecules) {
         int size = 0;
         if (molecules != null) {
-            for (NewMolecule molecule : molecules) {
+            for (Molecule molecule : molecules) {
                 Iterator<Triple> rootTriples = molecule.getRootTriples();
                 while (rootTriples.hasNext()) {
                     size += calcSize(molecule.getSubMolecules(rootTriples.next()));

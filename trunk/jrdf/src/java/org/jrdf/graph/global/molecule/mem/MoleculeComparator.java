@@ -62,5 +62,5 @@ package org.jrdf.graph.global.molecule.mem;
 import java.io.Serializable;
 import java.util.Comparator;
 
-public interface MoleculeComparator extends Comparator<NewMolecule>, Serializable {
+public interface MoleculeComparator extends Comparator<Molecule>, Serializable {
 }
