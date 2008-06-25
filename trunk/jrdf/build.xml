@@ -16,12 +16,7 @@
         </checkstyle>
     </target>
 
-    <target name="compile" depends="checkstyle, -compile, -compile-scala"/>
-
-    <target name="-compile-scala">
-        <!--<scalac>-->
-        <!--</scalac>-->
-    </target>
+    <target name="compile" depends="checkstyle, -compile"/>
 
     <target name="-compile" depends="gen-src">
         <compile.macro src.dir="${gen.src.dir}" classpath.ref="gen.class.path" output.dir="${prod.classes.dir}"
