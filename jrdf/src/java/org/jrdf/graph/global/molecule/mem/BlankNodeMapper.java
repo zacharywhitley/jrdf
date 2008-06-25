@@ -64,5 +64,5 @@ import org.jrdf.graph.BlankNode;
 import java.util.Map;
 
 public interface BlankNodeMapper {
-    Map<BlankNode, BlankNode> createMap(NewMolecule m1, NewMolecule m2);
+    Map<BlankNode, BlankNode> createMap(Molecule m1, Molecule m2);
 }

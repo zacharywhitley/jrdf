@@ -81,7 +81,7 @@ public class LocalMergeSubmoleculesImpl implements LocalMergeSubmolecules {
         this.moleculeFactory = moleculeFactory;
     }
 
-    public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2, Map<BlankNode, BlankNode> map) {
+    public Molecule merge(Molecule molecule1, Molecule molecule2, Map<BlankNode, BlankNode> map) {
         if (!map.isEmpty()) {
             this.map = map;
             return merger.merge(convertMolecule(molecule1), convertMolecule(molecule2));
@@ -90,21 +90,21 @@ public class LocalMergeSubmoleculesImpl implements LocalMergeSubmolecules {
         }
     }
 
-    private NewMolecule convertMolecule(NewMolecule molecule) {
-        final NewMolecule newMolecule = convertRootTriples(molecule);
+    private Molecule convertMolecule(Molecule molecule) {
+        final Molecule newMolecule = convertRootTriples(molecule);
         final Iterator<Triple> triples = molecule.getRootTriples();
         while (triples.hasNext()) {
             final Triple triple = triples.next();
-            final Set<NewMolecule> moleculeSet = molecule.getSubMolecules(triple);
-            for (final NewMolecule subMolecule : moleculeSet) {
-                final NewMolecule convertedSubMolecule = convertMolecule(subMolecule);
+            final Set<Molecule> moleculeSet = molecule.getSubMolecules(triple);
+            for (final Molecule subMolecule : moleculeSet) {
+                final Molecule convertedSubMolecule = convertMolecule(subMolecule);
                 newMolecule.add(convertTriple(triple), convertedSubMolecule);
             }
         }
         return newMolecule;
     }
 
-    private NewMolecule convertRootTriples(NewMolecule molecule) {
+    private Molecule convertRootTriples(Molecule molecule) {
         Set<Triple> triples = new HashSet<Triple>();
         final Iterator<Triple> iterator = molecule.getRootTriples();
         while (iterator.hasNext()) {

@@ -68,7 +68,7 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r2r3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkMoluculeContainsRootTriples;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkSubmoleculesContainsHeadTriples;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 
 import java.util.Set;
 
@@ -76,11 +76,11 @@ public class MergeMoleculesImplUnitTest extends TestCase {
     private MergeMolecules mergeMolecules = new MergeMoleculesImpl();
 
     public void testMerge() {
-        NewMolecule m1 = createMolecule(b2r1r2, b2r2r2, b2r3b3);
-        NewMolecule m2 = createMolecule(b3r1r3, b3r2r3);
-        NewMolecule newMolecule = mergeMolecules.merge(m1, m2);
+        Molecule m1 = createMolecule(b2r1r2, b2r2r2, b2r3b3);
+        org.jrdf.graph.global.molecule.mem.Molecule m2 = createMolecule(b3r1r3, b3r2r3);
+        Molecule newMolecule = mergeMolecules.merge(m1, m2);
         checkMoluculeContainsRootTriples(newMolecule, b2r1r2, b2r2r2, b2r3b3);
-        Set<NewMolecule> subMolecules = newMolecule.getSubMolecules(b2r3b3);
+        Set<Molecule> subMolecules = newMolecule.getSubMolecules(b2r3b3);
         assertEquals(1, subMolecules.size());
         checkSubmoleculesContainsHeadTriples(subMolecules, b3r1r3);
     }

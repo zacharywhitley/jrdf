@@ -89,12 +89,12 @@ public interface MoleculeHandler {
      *
      * @param newMolecules the submolecules belonging to the top level triple.
      */
-    void handleStartContainsMolecules(Set<NewMolecule> newMolecules);
+    void handleStartContainsMolecules(Set<Molecule> newMolecules);
 
     /**
      * This is called when the top level triple's submolecules have all been visited.
      *
      * @param newMolecules the submolecules belonging to the top level triple.
      */
-    void handleEndContainsMolecules(Set<NewMolecule> newMolecules);
+    void handleEndContainsMolecules(Set<Molecule> newMolecules);
 }

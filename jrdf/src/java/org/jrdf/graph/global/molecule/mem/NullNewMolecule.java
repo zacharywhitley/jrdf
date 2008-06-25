@@ -65,11 +65,11 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 
-public final class NullNewMolecule implements NewMolecule {
+public final class NullNewMolecule implements Molecule {
     /**
      * Null object for molecule.
      */
-    public static final NewMolecule NULL_MOLECULE = new NullNewMolecule();
+    public static final Molecule NULL_MOLECULE = new NullNewMolecule();
 
     private NullNewMolecule() {
     }
@@ -78,7 +78,7 @@ public final class NullNewMolecule implements NewMolecule {
         throw new UnsupportedOperationException();
     }
 
-    public boolean contains(NewMolecule molecule) {
+    public boolean contains(Molecule molecule) {
         return false;
     }
 
@@ -86,11 +86,11 @@ public final class NullNewMolecule implements NewMolecule {
         return 0;
     }
 
-    public NewMolecule add(Triple triple) {
+    public Molecule add(Triple triple) {
         throw new UnsupportedOperationException();
     }
 
-    public NewMolecule add(MergeSubmolecules merger, NewMolecule childMolecule) {
+    public Molecule add(MergeSubmolecules merger, Molecule childMolecule) {
         throw new UnsupportedOperationException();
     }
 
@@ -102,15 +102,15 @@ public final class NullNewMolecule implements NewMolecule {
         throw new UnsupportedOperationException();
     }
 
-    public SortedSet<NewMolecule> getSubMolecules(Triple rootTriple) {
+    public SortedSet<Molecule> getSubMolecules(Triple rootTriple) {
         throw new UnsupportedOperationException();
     }
 
-    public NewMolecule add(Triple triple, NewMolecule newMolecule) {
+    public Molecule add(Triple triple, Molecule newMolecule) {
         throw new UnsupportedOperationException();
     }
 
-    public NewMolecule add(Triple triple, Triple newTriple) {
+    public Molecule add(Triple triple, Triple newTriple) {
         throw new UnsupportedOperationException();
     }
 
@@ -121,7 +121,7 @@ public final class NullNewMolecule implements NewMolecule {
     public void remove(Triple triple) {
     }
 
-    public void specialAdd(NewMolecule molecule) {
+    public void specialAdd(Molecule molecule) {
     }
 
     @Override

@@ -79,7 +79,7 @@ import java.util.SortedSet;
 public class NaiveGraphDecomposerImpl implements GraphDecomposer {
     private final NewMoleculeFactory moleculeFactory;
     private final SortedSet<Triple> triplesChecked;
-    private final SortedSet<NewMolecule> molecules;
+    private final SortedSet<Molecule> molecules;
     private TripleComparator tripleComparator;
     private Graph graph;
 
@@ -87,12 +87,12 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         MoleculeComparator comparator, TripleComparator newTripleComparator) {
         checkNotNull(newSetFactory, newMoleculeFactory);
         this.triplesChecked = newSetFactory.createSet(Triple.class, newTripleComparator);
-        this.molecules = newSetFactory.createSet(NewMolecule.class, comparator);
+        this.molecules = newSetFactory.createSet(Molecule.class, comparator);
         this.moleculeFactory = newMoleculeFactory;
         this.tripleComparator = newTripleComparator;
     }
 
-    public SortedSet<NewMolecule> decompose(Graph newGraph) throws GraphException {
+    public SortedSet<Molecule> decompose(Graph newGraph) throws GraphException {
         triplesChecked.clear();
         molecules.clear();
         graph = newGraph;
@@ -104,7 +104,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
                 if (tripleComparator.compare(newStartingPoint, currentTriple) < 0) {
                     currentTriple = newStartingPoint;
                 }
-                NewMolecule molecule = moleculeFactory.createMolecule();
+                Molecule molecule = moleculeFactory.createMolecule();
                 molecule = molecule.add(currentTriple);
                 triplesChecked.add(currentTriple);
                 molecule = convertTripleToMolecule(molecule);
@@ -115,7 +115,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         return molecules;
     }
 
-    private NewMolecule convertTripleToMolecule(NewMolecule molecule) throws GraphException {
+    private Molecule convertTripleToMolecule(Molecule molecule) throws GraphException {
         Triple currentTriple = molecule.getHeadTriple();
         boolean blankSubject = isBlankNode(currentTriple.getSubject());
         boolean blankObject = isBlankNode(currentTriple.getObject());
@@ -134,7 +134,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         return molecule;
     }
 
-    private NewMolecule findEnclosedTriples(NewMolecule molecule, ClosableIterator<Triple> closableIterator)
+    private Molecule findEnclosedTriples(Molecule molecule, ClosableIterator<Triple> closableIterator)
         throws GraphException {
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
@@ -159,8 +159,8 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         return molecule;
     }
 
-    private NewMolecule addLinkedTriple(NewMolecule molecule, Triple triple) throws GraphException {
-        NewMolecule subMolecule = moleculeFactory.createMolecule();
+    private Molecule addLinkedTriple(Molecule molecule, Triple triple) throws GraphException {
+        Molecule subMolecule = moleculeFactory.createMolecule();
         subMolecule.add(triple);
         triplesChecked.add(triple);
         // Put submolecule inside molecule's head triple
@@ -176,8 +176,8 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         } else {
             getSubMolecule(subMolecule, triple);
             if (isDoubleLinkedTriple(triple)) {
-                Set<NewMolecule> subMolecules = subMolecule.getSubMolecules(triple);
-                for (NewMolecule newMole : subMolecules) {
+                Set<Molecule> subMolecules = subMolecule.getSubMolecules(triple);
+                for (Molecule newMole : subMolecules) {
                     molecule.add(triple, newMole);
                 }
             }
@@ -191,12 +191,12 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         return isBlankNode(triple.getSubject()) && isBlankNode(triple.getObject());
     }
 
-    private void getNewRootTriples(NewMolecule molecule, Triple triple) throws GraphException {
+    private void getNewRootTriples(Molecule molecule, Triple triple) throws GraphException {
         addTriplesToMolecule(molecule, triple.getSubject(), ANY_OBJECT_NODE);
         addTriplesToMolecule(molecule, ANY_SUBJECT_NODE, (ObjectNode) triple.getSubject());
     }
 
-    private void addTriplesToMolecule(NewMolecule molecule, SubjectNode subject, ObjectNode object)
+    private void addTriplesToMolecule(Molecule molecule, SubjectNode subject, ObjectNode object)
         throws GraphException {
         ClosableIterator<Triple> tripleClosableIterator = graph.find(subject, ANY_PREDICATE_NODE, object);
         while (tripleClosableIterator.hasNext()) {
@@ -209,7 +209,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         tripleClosableIterator.close();
     }
 
-    private void getSubMolecule(NewMolecule subMolecule, Triple triple) throws GraphException {
+    private void getSubMolecule(Molecule subMolecule, Triple triple) throws GraphException {
         findEnclosedTriples(subMolecule, graph.find((SubjectNode) triple.getObject(), ANY_PREDICATE_NODE,
             ANY_OBJECT_NODE));
         findEnclosedTriples(subMolecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, triple.getObject()));

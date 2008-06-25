@@ -70,7 +70,7 @@ import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 import org.jrdf.graph.global.molecule.mem.MoleculeComparator;
 import org.jrdf.graph.global.molecule.mem.MoleculeComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
@@ -138,39 +138,39 @@ public class GlobalGraphTestUtil {
         return asSet(TRIPLE_COMPARATOR, triples);
     }
 
-    public static NewMolecule createMolecule(Triple... triples) {
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule();
+    public static Molecule createMolecule(Triple... triples) {
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule();
         for (Triple triple : triples) {
             newMolecule.add(triple);
         }
         return newMolecule;
     }
 
-    public static NewMolecule createMultiLevelMolecule(Set<Triple> level1Triples, Set<Triple> level2Triples,
+    public static Molecule createMultiLevelMolecule(Set<Triple> level1Triples, Set<Triple> level2Triples,
         Set<Triple> level3Triples) {
-        NewMolecule level3 = createMolecule(level3Triples.toArray(new Triple[level3Triples.size()]));
-        NewMolecule level2 = createMolecule(level2Triples.toArray(new Triple[level2Triples.size()]));
-        NewMolecule level1 = createMolecule(level1Triples.toArray(new Triple[level1Triples.size()]));
-        NewMolecule level2And3 = mergeMolecules(level2, level3);
+        Molecule level3 = createMolecule(level3Triples.toArray(new Triple[level3Triples.size()]));
+        Molecule level2 = createMolecule(level2Triples.toArray(new Triple[level2Triples.size()]));
+        Molecule level1 = createMolecule(level1Triples.toArray(new Triple[level1Triples.size()]));
+        Molecule level2And3 = mergeMolecules(level2, level3);
         return mergeMolecules(level1, level2And3);
     }
 
-    public static NewMolecule mergeMolecules(NewMolecule m1, NewMolecule m2) {
+    public static Molecule mergeMolecules(Molecule m1, Molecule m2) {
         return MERGE_MOLECULES.merge(m1, m2);
     }
 
-    public static NewMolecule createMolecule(Triple rootTriple, NewMolecule molecule) {
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule();
+    public static Molecule createMolecule(Triple rootTriple, Molecule molecule) {
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule();
         newMolecule.add(rootTriple, molecule);
         return newMolecule;
     }
 
-    public static NewMolecule createMoleculeWithSubmolecule(Triple headTriple, Triple submoleculeTriple) {
-        NewMolecule submolecule = createMolecule(submoleculeTriple);
+    public static Molecule createMoleculeWithSubmolecule(Triple headTriple, Triple submoleculeTriple) {
+        Molecule submolecule = createMolecule(submoleculeTriple);
         return createMolecule(headTriple, submolecule);
     }
 
-    public static void checkMoluculeContainsRootTriples(NewMolecule molecule, Triple... expectedTriples) {
+    public static void checkMoluculeContainsRootTriples(Molecule molecule, Triple... expectedTriples) {
         Iterator<Triple> actualRootTriplesIterator = molecule.getRootTriples();
         int count = 0;
         while (actualRootTriplesIterator.hasNext()) {
@@ -189,12 +189,12 @@ public class GlobalGraphTestUtil {
         }
     }
 
-    public static void checkSubmoleculesContainsHeadTriples(Set<NewMolecule> subMolecules, Triple... expectedTriples) {
+    public static void checkSubmoleculesContainsHeadTriples(Set<Molecule> subMolecules, Triple... expectedTriples) {
         assertEquals("Expected submolecules", expectedTriples.length, subMolecules.size());
-        Iterator<NewMolecule> iter = subMolecules.iterator();
+        Iterator<Molecule> iter = subMolecules.iterator();
         Set<Triple> headTriples = new HashSet<Triple>();
         while (iter.hasNext()) {
-            NewMolecule tmpMolecule = iter.next();
+            Molecule tmpMolecule = iter.next();
             headTriples.add(tmpMolecule.getHeadTriple());
         }
         for (Triple headTriple : expectedTriples) {

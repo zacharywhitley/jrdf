@@ -60,11 +60,11 @@
 package org.jrdf.graph.global;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 
 public interface MoleculeGraph extends Graph {
-    void add(NewMolecule molecule);
-    void delete(NewMolecule molecule);
+    void add(Molecule molecule);
+    void delete(Molecule molecule);
     // TODO
-    //Set<NewMolecule> findMolecules(Triple triple);
+    //Set<Molecule> findMolecules(Triple triple);
 }

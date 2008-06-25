@@ -70,15 +70,15 @@ public class NewMoleculeFactoryImpl implements NewMoleculeFactory {
         moleculeComparator = newMoleculeComparator;
     }
 
-    public NewMolecule createMolecule() {
+    public Molecule createMolecule() {
         return new NewMoleculeImpl(moleculeComparator);
     }
 
-    public NewMolecule createMolecule(Triple... rootTriples) {
+    public Molecule createMolecule(Triple... rootTriples) {
         return new NewMoleculeImpl(moleculeComparator, rootTriples);
     }
 
-    public NewMolecule createMolecule(Set<Triple> triples) {
+    public Molecule createMolecule(Set<Triple> triples) {
         return createMolecule(triples.toArray(new Triple[triples.size()]));
     }
 }

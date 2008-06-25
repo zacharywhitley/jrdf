@@ -77,7 +77,7 @@ import org.jrdf.graph.global.molecule.mem.MergeSubmoleculesImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeSubsumptionImpl;
 import org.jrdf.graph.global.molecule.mem.BlankNodeMapperImpl;
 import org.jrdf.graph.global.molecule.mem.GraphDecomposer;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.Molecule;
 import org.jrdf.graph.global.molecule.mem.MoleculeComparator;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
@@ -129,20 +129,20 @@ public class DecomposerPerformance {
         System.err.println("Graph size = " + graph.getNumberOfTriples());
         NewMoleculeHeadTripleComparatorImpl tripleComparator = new NewMoleculeHeadTripleComparatorImpl(
             new GroundedTripleComparatorFactoryImpl().newComparator());
-        Set<NewMolecule> results = new TreeSet<NewMolecule>(tripleComparator);
+        Set<Molecule> results = new TreeSet<Molecule>(tripleComparator);
         long startTime = System.currentTimeMillis();
-        Set<NewMolecule> moleculeSet = decomposer.decompose(graph);
-        NewMolecule[] molecules = moleculeSet.toArray(new NewMolecule[]{});
+        Set<Molecule> moleculeSet = decomposer.decompose(graph);
+        Molecule[] molecules = moleculeSet.toArray(new Molecule[]{});
         results.add(molecules[0]);
         int count = mergeMolecules(results, moleculeSet);
         System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + ", comparisons: " + count +
             ", no: of triples = " + results.iterator().next().size());
     }
 
-    private int mergeMolecules(Set<NewMolecule> results, Set<NewMolecule> molecules) {
+    private int mergeMolecules(Set<Molecule> results, Set<Molecule> molecules) {
         int count = 0;
         int length = molecules.size();
-        Vector<NewMolecule> moleculeArray = new Vector<NewMolecule>(molecules);
+        Vector<Molecule> moleculeArray = new Vector<Molecule>(molecules);
         System.err.println("vec size = " + length);
         System.err.println("");
         boolean skip = false;
@@ -150,10 +150,10 @@ public class DecomposerPerformance {
         while (i1 < length && length > 1) {
             i2 = i1 + 1;
             while (i2 < length) {
-                NewMolecule m1 = moleculeArray.get(i1);
-                NewMolecule m2 = moleculeArray.get(i2);
+                Molecule m1 = moleculeArray.get(i1);
+                Molecule m2 = moleculeArray.get(i2);
                 Map<BlankNode, BlankNode> map = mapper.createMap(m1, m2);
-                NewMolecule molecule = localMerger.merge(m1, m2, map);
+                Molecule molecule = localMerger.merge(m1, m2, map);
                 //map.clear();
                 if (molecule != null) {
                     moleculeArray.remove(m1);
@@ -179,7 +179,7 @@ public class DecomposerPerformance {
         return count;
     }
 
-    private void addResult(Set<NewMolecule> results, NewMolecule molecule) {
+    private void addResult(Set<Molecule> results, Molecule molecule) {
         results.add(molecule);
     }
 

@@ -69,20 +69,20 @@ import java.util.Set;
 public class MoleculeTraverserImpl implements MoleculeTraverser {
     private MoleculeHandler handler;
 
-    public void traverse(NewMolecule newMolecule, MoleculeHandler newHandler) {
+    public void traverse(Molecule newMolecule, MoleculeHandler newHandler) {
         checkNotNull(newHandler);
         handler = newHandler;
         // The initial molecule is a set of one molecule.
-        Set<NewMolecule> molecules = new HashSet<NewMolecule>();
+        Set<Molecule> molecules = new HashSet<Molecule>();
         molecules.add(newMolecule);
         iterateOverMolecules(molecules);
     }
 
-    private void iterateOverTriples(NewMolecule molecule, Iterator<Triple> rootTriples) {
+    private void iterateOverTriples(Molecule molecule, Iterator<Triple> rootTriples) {
         while (rootTriples.hasNext()) {
             Triple triple = rootTriples.next();
             handler.handleTriple(triple);
-            Set<NewMolecule> newMolecules = molecule.getSubMolecules(triple);
+            Set<Molecule> newMolecules = molecule.getSubMolecules(triple);
             if (newMolecules.isEmpty()) {
                 handler.handleEmptyMolecules();
             } else {
@@ -91,9 +91,9 @@ public class MoleculeTraverserImpl implements MoleculeTraverser {
         }
     }
 
-    private void iterateOverMolecules(Set<NewMolecule> newMolecules) {
+    private void iterateOverMolecules(Set<Molecule> newMolecules) {
         handler.handleStartContainsMolecules(newMolecules);
-        for (NewMolecule molecule : newMolecules) {
+        for (Molecule molecule : newMolecules) {
             iterateOverTriples(molecule, molecule.getRootTriples());
         }
         handler.handleEndContainsMolecules(newMolecules);
