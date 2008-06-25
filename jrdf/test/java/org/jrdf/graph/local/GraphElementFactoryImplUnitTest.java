@@ -60,6 +60,8 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.*;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
@@ -111,13 +113,15 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
 
     public void testCreateResource() throws GraphException {
         final Graph graph = newGraph();
-        GraphElementFactory factory = graph.getElementFactory();
-        Literal lit = factory.createLiteral("abc");
-        try {
-            Resource res = factory.createResource(lit);
-        } catch (GraphElementFactoryException e) {
-            System.err.println("Exception thrown");
-        }
+        final GraphElementFactory factory = graph.getElementFactory();
+        String literal = "abc";
+        String expectedMessage = "Resource cannot be created from: \"" + literal + "\"";
+        final Literal lit = factory.createLiteral(literal);
+        assertThrows(GraphElementFactoryException.class, expectedMessage, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                factory.createResource(lit);
+            }
+        });
         BlankNode bn = factory.createBlankNode();
         Resource res = factory.createResource(bn);
         Resource res1 = factory.createResource(bn);
