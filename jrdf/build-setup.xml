@@ -222,12 +222,4 @@
             </sablecc>
         </sequential>
     </macrodef>
-
-    <taskdef resource="scala/tools/ant/antlib.xml">
-        <classpath>
-            <pathelement location="${lib.dir}/scala/scala-compiler-2.7.1.jar"/>
-            <pathelement location="${lib.dir}/scala/scala-library-2.7.1.jar"/>
-        </classpath>
-    </taskdef>
-
 </project>
