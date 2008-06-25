@@ -61,28 +61,26 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.LocalizedNodeComparator;
-import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeComparatorImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.LocalizedNodeComparator;
+import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorImpl;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
-import org.jrdf.graph.global.molecule.mem.MoleculeComparator;
-import org.jrdf.graph.global.molecule.mem.MoleculeComparatorImpl;
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
 
@@ -98,7 +96,7 @@ public class LocalGraphTestUtil {
     private static final NodeComparator NODE_COMPARATOR = new NodeComparatorImpl(TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
     private static final TripleComparator TRIPLE_COMPARATOR_2 = new TripleComparatorImpl(NODE_COMPARATOR);
     private static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeComparatorImpl(TRIPLE_COMPARATOR_2);
-    public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(MOLECULE_COMPARATOR);
+    public static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
     public static final URIReference REF1;
     public static final URIReference REF2;
     public static final URIReference REF3;

@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.BlankNode;
 

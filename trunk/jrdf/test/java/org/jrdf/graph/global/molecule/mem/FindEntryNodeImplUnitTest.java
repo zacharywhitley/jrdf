@@ -65,6 +65,7 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.molecule.FindEntryNode;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;

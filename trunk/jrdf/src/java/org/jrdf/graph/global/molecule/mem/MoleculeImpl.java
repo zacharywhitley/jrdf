@@ -63,6 +63,11 @@ import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
+import org.jrdf.graph.global.molecule.MoleculeToString;
+import org.jrdf.graph.global.molecule.MoleculeTraverser;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -77,7 +82,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class NewMoleculeImpl implements Molecule {
+public class MoleculeImpl implements Molecule {
     private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     // This should be a set of molecules for the values.
     private final SortedMap<Triple, SortedSet<Molecule>> subMolecules;
@@ -85,7 +90,7 @@ public class NewMoleculeImpl implements Molecule {
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
     protected boolean isTopLevel;
 
-    private NewMoleculeImpl(MoleculeComparator newComparator, SortedMap<Triple,
+    private MoleculeImpl(MoleculeComparator newComparator, SortedMap<Triple,
         SortedSet<Molecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
@@ -93,14 +98,14 @@ public class NewMoleculeImpl implements Molecule {
         isTopLevel = true;
     }
 
-    public NewMoleculeImpl(MoleculeComparator newComparator) {
+    public MoleculeImpl(MoleculeComparator newComparator) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
         isTopLevel = true;
         subMolecules = new TreeMap<Triple, SortedSet<Molecule>>(tripleComparator);
     }
 
-    public NewMoleculeImpl(MoleculeComparator newComparator, Triple... rootTriples) {
+    public MoleculeImpl(MoleculeComparator newComparator, Triple... rootTriples) {
         this(newComparator);
         for (Triple rootTriple : rootTriples) {
             subMolecules.put(rootTriple, new TreeSet<Molecule>(moleculeComparator));
@@ -108,13 +113,13 @@ public class NewMoleculeImpl implements Molecule {
 
     }
 
-    public NewMoleculeImpl(MoleculeComparator newComparator, Molecule... childMolecules) {
+    public MoleculeImpl(MoleculeComparator newComparator, Molecule... childMolecules) {
         this(newComparator);
         for (Molecule molecule : childMolecules) {
             Triple headTriple = molecule.getHeadTriple();
             SortedSet<Molecule> submolecules = new TreeSet<Molecule>(moleculeComparator);
             submolecules.add(molecule);
-            ((NewMoleculeImpl) molecule).isTopLevel = false;
+            ((MoleculeImpl) molecule).isTopLevel = false;
             subMolecules.put(headTriple, submolecules);
         }
     }
@@ -131,7 +136,7 @@ public class NewMoleculeImpl implements Molecule {
         if (!subMolecules.keySet().contains(triple)) {
             subMolecules.put(triple, new TreeSet<Molecule>(moleculeComparator));
         }
-        return new NewMoleculeImpl(moleculeComparator, subMolecules);
+        return new MoleculeImpl(moleculeComparator, subMolecules);
     }
 
     public Molecule add(Triple triple, Molecule newMolecule) {
@@ -141,10 +146,10 @@ public class NewMoleculeImpl implements Molecule {
         }
         if (newMolecule.size() > 0) {
             moleculeSet.add(newMolecule);
-            ((NewMoleculeImpl) newMolecule).isTopLevel = false;
+            ((MoleculeImpl) newMolecule).isTopLevel = false;
         }
         subMolecules.put(triple, moleculeSet);
-        return new NewMoleculeImpl(moleculeComparator, subMolecules);
+        return new MoleculeImpl(moleculeComparator, subMolecules);
     }
 
     public Molecule add(Triple triple, Triple newTriple) {
@@ -153,21 +158,21 @@ public class NewMoleculeImpl implements Molecule {
             moleculeSet = new TreeSet<Molecule>(moleculeComparator);
         }
         if (isDoubleLinkedTriple(newTriple)) {
-            Molecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
+            Molecule newMolecule = new MoleculeImpl(moleculeComparator, newTriple);
             moleculeSet.add(newMolecule);
-            ((NewMoleculeImpl) newMolecule).isTopLevel = false;
+            ((MoleculeImpl) newMolecule).isTopLevel = false;
             subMolecules.put(triple, moleculeSet);
         } else {
             if (moleculeSet.isEmpty()) {
-                Molecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
-                ((NewMoleculeImpl) newMolecule).isTopLevel = false;
+                Molecule newMolecule = new MoleculeImpl(moleculeComparator, newTriple);
+                ((MoleculeImpl) newMolecule).isTopLevel = false;
                 moleculeSet.add(newMolecule);
                 subMolecules.put(triple, moleculeSet);
             } else {
                 moleculeSet.last().add(newTriple);
             }
         }
-        return new NewMoleculeImpl(moleculeComparator, subMolecules);
+        return new MoleculeImpl(moleculeComparator, subMolecules);
     }
 
     private boolean isDoubleLinkedTriple(Triple triple) {
@@ -180,7 +185,7 @@ public class NewMoleculeImpl implements Molecule {
             Triple currentTriple = rootTriples.next();
             final SortedSet<Molecule> newMolecules = molecule.getSubMolecules(currentTriple);
             for (Molecule newMolecule : newMolecules) {
-                ((NewMoleculeImpl) newMolecule).isTopLevel = false;
+                ((MoleculeImpl) newMolecule).isTopLevel = false;
             }
             subMolecules.put(currentTriple, newMolecules);
         }
@@ -199,9 +204,9 @@ public class NewMoleculeImpl implements Molecule {
             subMolecules.remove(headTriple);
             SortedSet<Molecule> containedMolecules = new TreeSet<Molecule>(moleculeComparator);
             containedMolecules.add(childMolecule);
-            ((NewMoleculeImpl) childMolecule).isTopLevel = false;
+            ((MoleculeImpl) childMolecule).isTopLevel = false;
             subMolecules.put(headTriple, containedMolecules);
-            return new NewMoleculeImpl(moleculeComparator, subMolecules);
+            return new MoleculeImpl(moleculeComparator, subMolecules);
         }
     }
 
@@ -242,7 +247,7 @@ public class NewMoleculeImpl implements Molecule {
         for (Triple triple : set) {
             newMolecules.add(triple);
         }
-        return new NewMoleculeImpl(moleculeComparator, newMolecules.toArray(new Triple[newMolecules.size()]));
+        return new MoleculeImpl(moleculeComparator, newMolecules.toArray(new Triple[newMolecules.size()]));
     }
 
     public int size() {
@@ -282,7 +287,7 @@ public class NewMoleculeImpl implements Molecule {
 
         // Cast and check for equality by value. (same class)
         try {
-            NewMoleculeImpl tmpMolecule = (NewMoleculeImpl) obj;
+            MoleculeImpl tmpMolecule = (MoleculeImpl) obj;
             return tmpMolecule.subMolecules.equals(subMolecules);
         } catch (ClassCastException cce) {
             return false;

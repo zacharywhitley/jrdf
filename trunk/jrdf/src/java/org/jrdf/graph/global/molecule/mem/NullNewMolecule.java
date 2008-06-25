@@ -60,6 +60,8 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
+import org.jrdf.graph.global.molecule.Molecule;
 
 import java.util.Iterator;
 import java.util.Set;

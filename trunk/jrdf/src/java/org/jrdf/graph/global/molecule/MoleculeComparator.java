@@ -57,8 +57,10 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule;
 
-public interface MoleculeSubsumption {
-    boolean subsumes(Molecule molecule1, Molecule molecule2);
+import java.io.Serializable;
+import java.util.Comparator;
+
+public interface MoleculeComparator extends Comparator<Molecule>, Serializable {
 }

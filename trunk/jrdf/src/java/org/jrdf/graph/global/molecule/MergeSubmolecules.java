@@ -57,19 +57,12 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule;
 
-/**
- * This recursively traverses a Molecule calling methods on the handler class.  It will call
- * {@link MoleculeHandler#handleStartContainsMolecules(java.util.Set)} and
- * {@link MoleculeHandler#handleEndContainsMolecules(java.util.Set)} if the molecule (or sub-molecule) contains any
- * submolecules.  If not it will call {@link MoleculeHandler#handleEmptyMolecules()}.   It
- * will then iterate over the root triples in the molecule calling {@link MoleculeHandler#handleTriple
- * (org.jrdf.graph.Triple)}, it will then attempt to get the submolecule for each triple.
- *
- * Implementations may want to track the level of the molecule that they are currently in.  So having a depth to the
- * handleContainsMolecules method is the way to do this.
- */
-public interface MoleculeTraverser {
-    void traverse(Molecule molecule, MoleculeHandler handler);
+import org.jrdf.graph.Triple;
+
+public interface MergeSubmolecules {
+    Molecule merge(Molecule molecule1, Molecule molecule2);
+
+    Molecule merge(Triple currentTriple, Molecule molecule1, Molecule molecule2);
 }
