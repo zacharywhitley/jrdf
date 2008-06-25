@@ -57,34 +57,37 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 
-/**
- * Given a graph and a starting triple recursively find the starting triple in the chain.  The triple must have a
- * blank subject and must be pointed to by triples with blank subjects and objects.  These blank nodes form a
- * chain that can be traversed backwards in the chain.
- *
- * For example: _:1 p _:2, _:2 p _:3, _:3 p _:4.  If you start from _:3 p _:4 you end at _:1 p _2.  If you start at
- * _:1 p _:2 you remain at the same point.
- *
- * Code using this can make the decision whether the found triple is a better candidate than the starting triple.
- *
- * @author Andrew Newman
- * @version $Revision: 1226 $
- */
-public interface FindEntryNode {
+import java.util.Set;
 
-    /**
-     * Find the entry point into the graph following a chain of triples starting from the triple given.
-     *
-     * @param newGraph the graph to search.
-     * @param startingTriple the starting point in the chain of triples.
-     * @return the top most triple in the chain.
-     * @throws GraphException if there is an issue searching through the graph.
-     */
-    Triple find(Graph newGraph, Triple startingTriple) throws GraphException;
+public class MoleculeToString implements MoleculeHandler {
+    private StringBuilder builder;
+    private int level;
+
+    public MoleculeToString(StringBuilder newBuilder) {
+        this.builder = newBuilder;
+    }
+
+    public void handleTriple(Triple triple) {
+        builder.append("\n");
+        for (int index = 0; index < level; index++) {
+            builder.append("--");
+        }
+        builder.append("> ").append(triple).append(" = ");
+    }
+
+    public void handleEmptyMolecules() {
+        builder.append("{}");
+    }
+
+    public void handleStartContainsMolecules(Set<Molecule> newMolecules) {
+        level++;
+    }
+
+    public void handleEndContainsMolecules(Set<Molecule> newMolecules) {
+        level--;
+    }
 }

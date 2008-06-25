@@ -66,6 +66,11 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.molecule.GlobalGraphTestUtil;
 import org.jrdf.graph.global.molecule.LocalGraphTestUtil;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
+import org.jrdf.graph.global.molecule.MoleculeFactory;
+import org.jrdf.graph.global.molecule.MoleculeSubsumption;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparator;
@@ -92,7 +97,7 @@ public class LocalMergeSubmoleculesImplUnitTest extends TestCase {
     public void setUp() {
         MoleculeComparator moleculeComparator = new MoleculeComparatorImpl(tripleComparator);
         MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
-        NewMoleculeFactory factory = new NewMoleculeFactoryImpl(moleculeComparator);
+        MoleculeFactory factory = new MoleculeFactoryImpl(moleculeComparator);
         MergeSubmolecules globalMerger = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory,
             subsumption);
         mergeSubmolecules = new LocalMergeSubmoleculesImpl(globalMerger, factory);

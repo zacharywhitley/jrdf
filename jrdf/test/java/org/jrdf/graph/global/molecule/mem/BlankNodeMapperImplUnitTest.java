@@ -67,6 +67,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.global.molecule.BlankNodeMapper;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
@@ -84,6 +85,9 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.REF1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.REF2;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
+import org.jrdf.graph.global.molecule.MoleculeFactory;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.Collections;
@@ -92,7 +96,7 @@ import java.util.Map;
 public class BlankNodeMapperImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private final MoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
-    private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
+    private final MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private BlankNodeMapper mapper;
     private BlankNode BNODE4;
     private BlankNode BNODE5;

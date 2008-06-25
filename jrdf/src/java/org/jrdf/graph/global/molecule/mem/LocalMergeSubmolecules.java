@@ -60,6 +60,7 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.global.molecule.Molecule;
 
 import java.util.Map;
 

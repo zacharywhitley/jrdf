@@ -60,7 +60,7 @@
 package org.jrdf.graph.global;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.global.molecule.mem.Molecule;
+import org.jrdf.graph.global.molecule.Molecule;
 
 public interface MoleculeGraph extends Graph {
     void add(Molecule molecule);

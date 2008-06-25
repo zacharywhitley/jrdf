@@ -57,28 +57,8 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.Triple;
-
-import java.util.Set;
-
-public class NewMoleculeFactoryImpl implements NewMoleculeFactory {
-    private final MoleculeComparator moleculeComparator;
-
-    public NewMoleculeFactoryImpl(MoleculeComparator newMoleculeComparator) {
-        moleculeComparator = newMoleculeComparator;
-    }
-
-    public Molecule createMolecule() {
-        return new NewMoleculeImpl(moleculeComparator);
-    }
-
-    public Molecule createMolecule(Triple... rootTriples) {
-        return new NewMoleculeImpl(moleculeComparator, rootTriples);
-    }
-
-    public Molecule createMolecule(Set<Triple> triples) {
-        return createMolecule(triples.toArray(new Triple[triples.size()]));
-    }
+public interface MoleculeSubsumption {
+    boolean subsumes(Molecule molecule1, Molecule molecule2);
 }

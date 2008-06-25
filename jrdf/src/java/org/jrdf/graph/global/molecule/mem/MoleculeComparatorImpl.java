@@ -61,6 +61,8 @@ package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
 
 // TODO AN Fix this comparison or use a different comparator in NewNaiveGraphDecomposerImpl.
 public class MoleculeComparatorImpl implements MoleculeComparator {

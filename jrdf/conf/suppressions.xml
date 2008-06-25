@@ -32,26 +32,24 @@
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
 
     <!-- Cleanup molecule implementation -->
-    <suppress checks="ClassDataAbstractionCoupling" files="NewMoleculeImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DecomposerPerformance"/>
-    <suppress checks="CyclomaticComplexity" files="MoleculeIndex"/>
+    <suppress checks="CyclomaticComplexity" files="MoleculeIndexBdb"/>
+    <suppress checks="CyclomaticComplexity" files="MoleculeIndexMem"/>
     <suppress checks="CyclomaticComplexity" files="MoleculeStructureIndex"/>
-    <suppress checks="CyclomaticComplexity" files="NaiveGraphDecomposerImpl"/>
-    <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem" />
-    <suppress checks="CyclomaticComplexity" files="AbstractNewMoleculeIndexMem" />
     <suppress checks="CyclomaticComplexity" files="BlankNodeMapperImpl" />
-    <suppress checks="JavaNCSS" files="MoleculeIndex"/>
-    <suppress checks="JavaNCSS" files="MoleculeStructureIndex"/>
+    <suppress checks="CyclomaticComplexity" files="NaiveGraphDecomposerImpl"/>
     <suppress checks="JavaNCSS" files="DecomposerPerformance"/>
-    <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>
+    <suppress checks="JavaNCSS" files="MoleculeStructureIndexImpl"/>
+    <suppress checks="JavaNCSS" files="MoleculeIndexMem"/>
     <suppress checks="JavaNCSS" files="BlankNodeMapperImpl"/>
     <suppress checks="JavaNCSS" files="MergeSubmoleculesImpl" />
-    <suppress checks="JavaNCSS" files="MergeLocalSubmoleculesImpl" />
+    <suppress checks="JavaNCSS" files="MoleculeImpl"/>
     <suppress checks="JavaNCSS" files="NaiveGraphDecomposerImpl" />
-    <suppress checks="MagicNumber" files="MoleculeIndex"/>
     <suppress checks="MagicNumber" files="MoleculeStructureIndex"/>
     <suppress checks="MagicNumber" files="WritableIndexImpl"/>
+    <suppress checks="MagicNumber" files="MoleculeIndexBdb"/>
+    <suppress checks="MagicNumber" files="MoleculeIndexMem"/>
     <suppress checks="ReturnCount" files="BlankNodeMapperImpl"/>
 
     <!-- Import -->

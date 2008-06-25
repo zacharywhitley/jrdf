@@ -61,7 +61,6 @@ package org.jrdf.graph.global.molecule;
 
 import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.mem.Molecule;
 
 import java.util.Iterator;
 

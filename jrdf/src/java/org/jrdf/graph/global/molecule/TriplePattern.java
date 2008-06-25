@@ -68,13 +68,6 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: May 27, 2008
- * Time: 4:17:04 PM
- * To change this template use File | Settings | File Templates.
- */
 public class TriplePattern extends AbstractTriple {
     private static final long serialVersionUID = -1930410091981788384L;
 

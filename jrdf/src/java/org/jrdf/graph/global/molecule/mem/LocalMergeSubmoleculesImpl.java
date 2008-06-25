@@ -65,6 +65,9 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeFactory;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -73,10 +76,10 @@ import java.util.Set;
 
 public class LocalMergeSubmoleculesImpl implements LocalMergeSubmolecules {
     private final MergeSubmolecules merger;
-    private final NewMoleculeFactory moleculeFactory;
+    private final MoleculeFactory moleculeFactory;
     private Map<BlankNode, BlankNode> map;
 
-    public LocalMergeSubmoleculesImpl(MergeSubmolecules merger, NewMoleculeFactory moleculeFactory) {
+    public LocalMergeSubmoleculesImpl(MergeSubmolecules merger, MoleculeFactory moleculeFactory) {
         this.merger = merger;
         this.moleculeFactory = moleculeFactory;
     }

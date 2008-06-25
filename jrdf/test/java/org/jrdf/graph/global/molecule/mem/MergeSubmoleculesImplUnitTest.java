@@ -86,6 +86,11 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkSubmolecul
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMoleculeWithSubmolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
+import org.jrdf.graph.global.molecule.MoleculeFactory;
+import org.jrdf.graph.global.molecule.MoleculeSubsumption;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.SetUtil.asSet;
@@ -102,7 +107,7 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         TripleComparator tripleComparator = TRIPLE_COMPARATOR_FACTORY.newComparator();
         MoleculeComparator moleculeComparator = new MoleculeComparatorImpl(tripleComparator);
         MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
-        NewMoleculeFactory factory = new NewMoleculeFactoryImpl(moleculeComparator);
+        MoleculeFactory factory = new MoleculeFactoryImpl(moleculeComparator);
         mergeSubmolecules = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory, subsumption);
     }
 

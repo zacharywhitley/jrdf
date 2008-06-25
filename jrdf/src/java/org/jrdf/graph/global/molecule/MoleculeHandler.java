@@ -57,38 +57,44 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
 
-import java.util.Iterator;
 import java.util.Set;
-import java.util.SortedSet;
 
-public interface Molecule {
-    Molecule add(Triple triple);
+/**
+ * These methods are called as the {@link MoleculeTraverser} traverses a molecule.  For a given molecule:
+ * _1 p _2, _1 p _3, _2 p o.  First handleTriple is called with both the first triple (_1 p _2).  Next,
+ * handleStartContainsMolecules is called which has the set of molecules (one molecule that contains _1 p _3).  Then,
+ * handleTriple is called with _1 p _3.  Then handleEndContainsMolecules is called with the same set of molecules.  And
+ * so on...
+ */
+public interface MoleculeHandler {
+    /**
+     * A triple in the root set of triples is found.
+     *
+     * @param triple the triple found.
+     */
+    void handleTriple(Triple triple);
 
-    Molecule add(Triple triple, Molecule newMolecule);
+    /**
+     * The is called instead of handleStart/End contains molecules when the triple visited does not contain any
+     * submolecules.
+     */
+    void handleEmptyMolecules();
 
-    Molecule add(Triple triple, Triple newTriple);
+    /**
+     * This is called when the current top level triple contains a set of submolecules.
+     *
+     * @param newMolecules the submolecules belonging to the top level triple.
+     */
+    void handleStartContainsMolecules(Set<Molecule> newMolecules);
 
-    Molecule add(MergeSubmolecules merger, Molecule childMolecule);
-
-    boolean contains(Triple triple);
-
-    Triple getHeadTriple();
-
-    Iterator<Triple> getRootTriples();
-
-    SortedSet<Molecule> getSubMolecules(Triple rootTriple);
-
-    void specialAdd(Molecule molecule);
-
-    void remove(Triple triple);
-
-    int size();
-
-    Set<Triple> getRootTriplesAsSet();
-
-    boolean isTopLevelMolecule();
+    /**
+     * This is called when the top level triple's submolecules have all been visited.
+     *
+     * @param newMolecules the submolecules belonging to the top level triple.
+     */
+    void handleEndContainsMolecules(Set<Molecule> newMolecules);
 }

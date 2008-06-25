@@ -61,6 +61,11 @@ package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
+import org.jrdf.graph.global.molecule.MoleculeFactory;
+import org.jrdf.graph.global.molecule.MoleculeSubsumption;
 import static org.jrdf.graph.global.molecule.mem.NullNewMolecule.NULL_MOLECULE;
 
 import java.util.Iterator;
@@ -70,11 +75,11 @@ import java.util.TreeSet;
 public class MergeSubmoleculesImpl implements MergeSubmolecules {
     private final TripleComparator comparator;
     private final MoleculeComparator moleculeComparator;
-    private final NewMoleculeFactory moleculeFactory;
+    private final MoleculeFactory moleculeFactory;
     private final MoleculeSubsumption subsumption;
 
     public MergeSubmoleculesImpl(TripleComparator newComparator, MoleculeComparator newMoleculeComparator,
-        NewMoleculeFactory newMoleculeFactory, MoleculeSubsumption newSubsumption) {
+        MoleculeFactory newMoleculeFactory, MoleculeSubsumption newSubsumption) {
         this.comparator = newComparator;
         this.moleculeComparator = newMoleculeComparator;
         this.moleculeFactory = newMoleculeFactory;

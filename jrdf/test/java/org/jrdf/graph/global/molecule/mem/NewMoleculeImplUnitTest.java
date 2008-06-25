@@ -63,7 +63,18 @@ import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.MOLECULE_FACTORY;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2b2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2b1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r3r1r1;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
+import org.jrdf.graph.global.molecule.MoleculeFactory;
+import org.jrdf.graph.global.molecule.MoleculeSubsumption;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -74,7 +85,7 @@ import java.util.Set;
 public class NewMoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private final MoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
-    private NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(moleculeComparator);
+    private MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
     private MergeSubmoleculesImpl merger;
 

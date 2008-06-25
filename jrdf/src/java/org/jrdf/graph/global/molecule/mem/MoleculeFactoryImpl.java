@@ -60,13 +60,28 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
+import org.jrdf.graph.global.molecule.MoleculeFactory;
 
 import java.util.Set;
 
-public interface NewMoleculeFactory {
-    Molecule createMolecule();
+public class MoleculeFactoryImpl implements MoleculeFactory {
+    private final MoleculeComparator moleculeComparator;
 
-    Molecule createMolecule(Triple... triples);
+    public MoleculeFactoryImpl(MoleculeComparator newMoleculeComparator) {
+        moleculeComparator = newMoleculeComparator;
+    }
 
-    Molecule createMolecule(Set<Triple> triples);
+    public Molecule createMolecule() {
+        return new MoleculeImpl(moleculeComparator);
+    }
+
+    public Molecule createMolecule(Triple... rootTriples) {
+        return new MoleculeImpl(moleculeComparator, rootTriples);
+    }
+
+    public Molecule createMolecule(Set<Triple> triples) {
+        return createMolecule(triples.toArray(new Triple[triples.size()]));
+    }
 }

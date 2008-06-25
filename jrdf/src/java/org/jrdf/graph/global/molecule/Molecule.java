@@ -57,27 +57,38 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
 
+import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
 
-/**
- * Decompose a local graph into a global graph (set of Molecules).
- *
- * @author Andrew Newman
- * @version $Revision: 1226 $
- */
-public interface GraphDecomposer {
+public interface Molecule {
+    Molecule add(Triple triple);
 
-    /**
-     * Given the graph, this method returns the graph as a set of Molecules conataining the Most Self Contained Graph.
-     *
-     * @param graph to decompose
-     * @return set of molecules (subgraphs) which make up the graph
-     * @throws GraphException
-     */
-    Set<Molecule> decompose(Graph graph) throws GraphException;
+    Molecule add(Triple triple, Molecule newMolecule);
+
+    Molecule add(Triple triple, Triple newTriple);
+
+    Molecule add(MergeSubmolecules merger, Molecule childMolecule);
+
+    boolean contains(Triple triple);
+
+    Triple getHeadTriple();
+
+    Iterator<Triple> getRootTriples();
+
+    SortedSet<Molecule> getSubMolecules(Triple rootTriple);
+
+    void specialAdd(Molecule molecule);
+
+    void remove(Triple triple);
+
+    int size();
+
+    Set<Triple> getRootTriplesAsSet();
+
+    boolean isTopLevelMolecule();
 }

@@ -60,6 +60,9 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeHandler;
+import org.jrdf.graph.global.molecule.MoleculeTraverser;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.HashSet;

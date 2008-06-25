@@ -70,11 +70,8 @@ import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
-import org.jrdf.graph.global.molecule.mem.Molecule;
-import org.jrdf.graph.global.molecule.mem.MoleculeComparator;
 import org.jrdf.graph.global.molecule.mem.MoleculeComparatorImpl;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.HashSet;
@@ -128,7 +125,7 @@ public class GlobalGraphTestUtil {
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY =
         new GroundedTripleComparatorFactoryImpl();
     private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
-    public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(MOLECULE_COMPARATOR);
+    public static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
     private static final MergeMolecules MERGE_MOLECULES = new MergeMoleculesImpl();
 
     private GlobalGraphTestUtil() {

@@ -67,6 +67,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.molecule.FindEntryNode;
 import static org.jrdf.graph.local.BlankNodeImpl.isBlankNode;
 import org.jrdf.util.ClosableIterator;
 
