@@ -1,3 +1,16 @@
+JRDF Release 0.5.5
+==================
+* On disk and in memory molecule store (Features 2002186, 1909228,
+Bug 1801786).
+* NTriples writer added (Feature 2000374).
+* asTriple added to Resource interface (Feature 1959980).
+* RDF/XML bugs fixed (Bugs 2001304, 2000473, 1984052, 1781970, 1748821).
+* Triple factory missed Resource creation method (Bug 1887286).
+* SPARQL renamed URQL and supports empty graph pattern following
+relational algebra (Feature 1944565, 1944576).
+* Jars upgraded for BDB JE, Spring RCP and Woodstox (Feature 1996596).
+* db4o is removed due to OutOfMemory exceptions (Feature 1944567).
+
 JRDF Release 0.5.4
 ==================
 * Added easy to use methods on Resource to allow properties to be added/
