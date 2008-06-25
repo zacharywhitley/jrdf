@@ -46,11 +46,11 @@
     <property name="integration.test.results" value="${integration.test.results.dir}/Integration-Tests.xml"/>
 
     <!-- EMMA coverage data output directory: -->
-    <property name="coverage.dir" value="${build.dir}/coverage" />
+    <property name="coverage.dir" value="${build.dir}/coverage"/>
     <!-- EMMA instrumented classes output directory: -->
-    <property name="out.instr.dir" value="${build.dir}/outinstr" />
+    <property name="out.instr.dir" value="${build.dir}/outinstr"/>
     <!-- Filter for classes to instrument -->
-    <property name="emma.filter" value="org.jrdf.*" />
+    <property name="emma.filter" value="org.jrdf.*"/>
 
     <patternset id="production.code.pattern">
         <include name="**/*.java"/>
@@ -129,7 +129,7 @@
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
         <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
-   </patternset>
+    </patternset>
 
     <fileset id="production.code.fileset" dir="${prod.src.dir}">
         <patternset refid="production.code.pattern"/>
@@ -196,10 +196,10 @@
         <path refid="test.class.path"/>
     </path>
 
-    <taskdef resource="emma_ant.properties" classpathref="test.class.path" />
+    <taskdef resource="emma_ant.properties" classpathref="test.class.path"/>
 
     <taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask"
-        classpath="${one-jar.lib.dir}/one-jar-ant-task-0.96.jar" onerror="report"/>
+             classpath="${one-jar.lib.dir}/one-jar-ant-task-0.96.jar" onerror="report"/>
 
     <taskdef resource="checkstyletask.properties"
              classpath="${checkstyle.lib.dir}/checkstyle-all-4.2.jar"/>
@@ -222,5 +222,12 @@
             </sablecc>
         </sequential>
     </macrodef>
+
+    <taskdef resource="scala/tools/ant/antlib.xml">
+        <classpath>
+            <pathelement location="${lib.dir}/scala/scala-compiler-2.7.1.jar"/>
+            <pathelement location="${lib.dir}/scala/scala-library-2.7.1.jar"/>
+        </classpath>
+    </taskdef>
 
 </project>

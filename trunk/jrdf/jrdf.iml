@@ -32,6 +32,7 @@
     <orderEntry type="library" name="je" level="project" />
     <orderEntry type="library" name="spring-rcp" level="project" />
     <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="library" name="scala" level="project" />
     <orderEntryProperties />
   </component>
   <component name="copyright">
