@@ -82,9 +82,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class NewMoleculeImplUnitTest extends TestCase {
+public class MoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private final MoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
+    private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
     private MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
     private MergeSubmoleculesImpl merger;
