@@ -68,14 +68,14 @@ import org.jrdf.graph.global.molecule.MoleculeComparator;
 // Level X must exist in RHS and so on recursively.  Possibly -1 and 1 values record if RHS is subsumed by LHS and
 
 // RHS subsumed LHS.
-public class NewMoleculeHeadTripleComparatorImpl implements MoleculeComparator {
+public class MoleculeHeadTripleComparatorImpl implements MoleculeComparator {
     private static final long serialVersionUID = 3376402602482439640L;
     private TripleComparator tripleComparator;
 
-    private NewMoleculeHeadTripleComparatorImpl() {
+    private MoleculeHeadTripleComparatorImpl() {
     }
 
-    public NewMoleculeHeadTripleComparatorImpl(TripleComparator newTripleComparator) {
+    public MoleculeHeadTripleComparatorImpl(TripleComparator newTripleComparator) {
         tripleComparator = newTripleComparator;
     }
 

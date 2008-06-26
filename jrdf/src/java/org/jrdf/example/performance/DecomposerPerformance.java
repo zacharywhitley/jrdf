@@ -81,7 +81,7 @@ import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeHeadTripleComparatorImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.NaiveGraphDecomposerImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
@@ -112,7 +112,7 @@ public class DecomposerPerformance {
     private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
     private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
-    private final MoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
+    private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
     private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
     private final MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private final GraphDecomposer decomposer = new NaiveGraphDecomposerImpl(setFactory, moleculeFactory,
@@ -127,7 +127,7 @@ public class DecomposerPerformance {
             addChain("urn:foo");
         }
         System.err.println("Graph size = " + graph.getNumberOfTriples());
-        NewMoleculeHeadTripleComparatorImpl tripleComparator = new NewMoleculeHeadTripleComparatorImpl(
+        MoleculeHeadTripleComparatorImpl tripleComparator = new MoleculeHeadTripleComparatorImpl(
             new GroundedTripleComparatorFactoryImpl().newComparator());
         Set<Molecule> results = new TreeSet<Molecule>(tripleComparator);
         long startTime = System.currentTimeMillis();

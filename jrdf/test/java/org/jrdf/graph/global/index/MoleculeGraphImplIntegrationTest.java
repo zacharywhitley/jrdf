@@ -76,7 +76,7 @@ import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
-import org.jrdf.graph.global.molecule.mem.NewMoleculeHeadTripleComparatorImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.GraphImpl;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
@@ -124,7 +124,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
     private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
-    private final MoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
+    private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
     private final MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private NodePoolFactory nodePoolFactory;
 

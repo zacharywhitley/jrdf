@@ -121,14 +121,14 @@ import static java.net.URI.create;
 import java.util.Collections;
 import java.util.Set;
 
-public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
+public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
     private final LocalizedNodeComparator localNodeComparator = new LocalizedNodeComparatorImpl();
     private final BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localNodeComparator);
     private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
     private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
-    private final MoleculeComparator moleculeComparator = new NewMoleculeHeadTripleComparatorImpl(comparator);
+    private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
     private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
     private final MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private final GraphDecomposer decomposer = new NaiveGraphDecomposerImpl(setFactory, moleculeFactory,
