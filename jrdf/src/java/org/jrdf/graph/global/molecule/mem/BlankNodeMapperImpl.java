@@ -98,7 +98,7 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
      *
      * @param m1
      * @param m2
-     * @return
+     * @return the populated map or empty map if there is no mapping.
      */
     public Map<BlankNode, BlankNode> createMap(Molecule m1, Molecule m2) {
         map = new HashMap<BlankNode, BlankNode>();
