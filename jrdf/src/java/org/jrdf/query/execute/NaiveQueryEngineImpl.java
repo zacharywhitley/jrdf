@@ -60,7 +60,7 @@
 package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.Conjunction;
-import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.ConstraintImpl;
 import org.jrdf.query.expression.EmptyConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -135,7 +135,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
+    public <V extends ExpressionVisitor> void visitConstraint(ConstraintImpl<V> constraint) {
         List<AttributeValuePair> singleAvp = constraint.getAvp(allVariables);
         result = restrict.restrict(result, singleAvp);
     }
