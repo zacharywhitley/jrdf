@@ -1,0 +1,163 @@
+Package org.jrdf.urql.parser;
+
+/*
+ * SPARQL Query Language for RDF SableCC grammar.
+ * $Id$
+ */
+
+Helpers
+  character  = [0..0xFFFF];
+  letter     = ['a'..'z'] | ['A'..'Z'];
+  digit      = ['0'..'9'];
+  tab        = 9;
+  lf         = 10;
+  cr         = 13;
+  dbquote    = 34;
+  quote      = 39;
+  sl         = 47;
+  whitespace = ' ' | tab | lf | cr;
+  nonblank   = [33..126];
+  nonquote   = [character - [quote + '\']];
+  nondbquote = [character - [dbquote + '\']];
+  nonslash   = [[33..126] - sl];
+  urlchar    = [character - '>'];
+  echar      = 't' | 'b' | 'n' | 'r' | 'f' | '\' | dbquote | quote; 
+
+States
+  def,      /* default state */
+  com,      /* comment */
+  qesc,     /* escaping character in quoted literal with '\' */
+  dbqesc,   /* escaping character in double quoted literal with '\' */
+  qlit,     /* quoted literal */
+  dbqlit,   /* double quoted literal */
+  res,      /* tagged resource */
+  var;      /* escaping variable name with '?' or '$' */
+
+Tokens
+  {def}                prefix      = ('PREFIX' | 'prefix');
+  {def}                select      = ('SELECT' | 'select');
+  {def}                where       = ('WHERE' | 'where');
+  {def}                union       = ('UNION' | 'union');
+  {def}                optional    = ('OPTIONAL' | 'optional');
+  {def}                filter      = ('FILTER' | 'filter');
+
+  {def, var->def}             identifier     = letter (letter | digit | '_' | '$' | '?' )*;
+  {def}                       blank          = whitespace+;
+  {def->com}                  hash           = '#';
+  {com}                       comment        = [character - [lf + cr]];
+  {com->def}                  endcomment     = (lf | cr)+;
+  {def}                       terminator     = ';';
+  {def}                       colon          = ':';
+  {def}                       lpar           = '{';
+  {def}                       rpar           = '}';
+  {def->res}                  url            = '<';
+  {res->def}                  endurl         = '>';
+  {def}                       datatypeprefix = '^^';
+  {def->var}                  variableprefix = ('?' | '$');
+  {def}                       period         = '.';
+  {def}                       number         = digit+;
+  {def}                       float          = digit+ ('.' digit*) | ('.' digit+);
+  {def}                       asterisk       = '*';
+
+  {res}                       resource       = urlchar*;
+
+  {def->qlit, qlit->def}      quote          = quote;
+  {qlit}                      qtext          = nonquote+;
+  {qlit->qesc}                qescape        = '\';
+  {qesc->qlit}                qescapedtext   = character;
+
+  {def->dbqlit, dbqlit->def}  dbquote        = dbquote;
+  {dbqlit}                    dbqtext        = nondbquote+;
+  {dbqlit->dbqesc}            dbqescape      = '\';
+  {dbqesc->dbqlit}            dbqescapedtext = character;
+
+Ignored Tokens
+  blank, comment, qescape, dbqescape, endcomment, endurl, hash, url;
+
+Productions
+  start =
+    {query} prolog select_clause where_clause?;
+
+  prolog =
+    {prefixdecl} prefixdecl* ;
+
+  prefixdecl =
+    {prefix} prefix identifier? colon resource ;
+
+  select_clause =
+    {variable_list} select variable+ |
+    {wildcard} select asterisk ;
+
+  where_clause =
+    where? group_graph_pattern;
+
+  group_graph_pattern =
+    lpar graph_pattern rpar ;
+
+  graph_pattern =
+    {filtered_basic_graph_pattern} filtered_basic_graph_pattern operation_pattern? ;
+
+  filtered_basic_graph_pattern =
+    {block_of_triples} block_of_triples? ;
+
+  block_of_triples =
+    triple period? more_triples* ;
+
+  more_triples =
+    triple period? ;
+
+  operation_pattern =
+     {graph_pattern_or_filter_graph_pattern} graph_pattern_or_filter period? graph_pattern ;
+
+  graph_pattern_or_filter =
+    {graph_pattern_not_triples} graph_pattern_not_triples |
+    {filter_pattern} filter_pattern;
+
+  graph_pattern_not_triples =
+    {optional_graph_pattern} optional_graph_pattern |
+    {group_or_union_graph_pattern} group_or_union_graph_pattern ;
+
+  optional_graph_pattern =
+    optional group_graph_pattern ;
+
+  group_or_union_graph_pattern =
+    group_graph_pattern union_graph_pattern* ;
+
+  union_graph_pattern =
+    union group_graph_pattern ;
+
+  filter_pattern =
+    filter;
+
+  triple =
+    [subject]:resource_triple_element [predicate]:resource_triple_element [object]:object_triple_element ;
+
+  resource_triple_element =
+    {resource} resource |
+    {qname} [ncname_prefix]:identifier colon [nc_name]:identifier |
+    {variable} variable ;
+
+  object_triple_element =
+    {resource} resource |
+    {qname} [ncname_prefix]:identifier colon [nc_name]:identifier |
+    {variable} variable |
+    {literal} literal  ;
+
+  literal =
+    {quoted_literal} [opening_quote]:quote quoted_strand* [closing_quote]:quote |
+    {db_quoted_literal} [opening_db_quote]:dbquote db_quoted_strand* [closing_db_quote]:dbquote;
+
+  quoted_strand =
+    {quoted_unescaped} qtext |
+    {quoted_escaped} qescapedtext;
+
+  db_quoted_strand =
+    {db_quoted_unescaped} dbqtext |
+    {db_quoted_escaped} dbqescapedtext;
+
+  datatype =
+    datatypeprefix resource;
+
+  variable =
+    variableprefix identifier;
+
