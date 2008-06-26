@@ -62,6 +62,7 @@ package org.jrdf.urql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.ConstraintImpl;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -123,13 +124,13 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
 
     private void handleExpressions(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
         if (lhs != null) {
-            if (rhs.getClass().isAssignableFrom(Optional.class)) {
+            if (Optional.class.isAssignableFrom(rhs.getClass())) {
                 handleOptional(lhs, rhs);
-            } else if (rhs.getClass().isAssignableFrom(Conjunction.class)) {
+            } else if (Conjunction.class.isAssignableFrom(rhs.getClass())) {
                 ((Conjunction<ExpressionVisitor>) rhs).setLhs(lhs);
                 expression = rhs;
-            } else if (rhs.getClass().isAssignableFrom(Constraint.class) &&
-                (lhs.getClass().isAssignableFrom(Constraint.class))) {
+            } else if (Constraint.class.isAssignableFrom(rhs.getClass()) &&
+                (Constraint.class.isAssignableFrom(lhs.getClass()))) {
                 expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
             }
         } else {
@@ -144,7 +145,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             node.apply(tripleBuilder);
             List<AttributeValuePair> attributeValuePairs = tripleBuilder.getTriples();
             collector.addConstraints(attributeValuePairs);
-            expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
+            expression = new ConstraintImpl<ExpressionVisitor>(attributeValuePairs);
         } catch (ParserException e) {
             exception = e;
         }

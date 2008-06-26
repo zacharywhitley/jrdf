@@ -188,9 +188,9 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     }
 
     public Resource createResource(Node node) throws GraphElementFactoryException {
-        if (node.getClass().isAssignableFrom(BlankNode.class)) {
+        if (BlankNode.class.isAssignableFrom(node.getClass())) {
             return resourceFactory.createResource((BlankNode) node);
-        } else if (node.getClass().isAssignableFrom(URIReference.class)) {
+        } else if (URIReference.class.isAssignableFrom(node.getClass())) {
             return resourceFactory.createResource((URIReference) node);
         } else {
             throw new GraphElementFactoryException("Resource cannot be created from: " + node);

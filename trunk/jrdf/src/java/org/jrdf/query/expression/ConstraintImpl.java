@@ -59,38 +59,52 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import static java.util.Collections.emptyList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * A expression expression comprising an empty expression.
+ * A expression expression comprising a single expression.
  *
- * @author Andrew Newman
+ * @author Tom Adams
  * @version $Revision$
  */
-public final class EmptyConstraint<V extends ExpressionVisitor> implements Constraint<V> {
-    /**
-     * Represents the EMPTY GRAPH PATTERN - or empty constraint.
-     */
-    public static final EmptyConstraint<ExpressionVisitor> EMPTY_CONSTRAINT = new EmptyConstraint<ExpressionVisitor>();
+public final class ConstraintImpl<V extends ExpressionVisitor> implements Constraint<V> {
+    private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
-    private static final long serialVersionUID = 8277006464668938996L;
+    private List<AttributeValuePair> singleAvp;
 
-    private EmptyConstraint() {
+    public ConstraintImpl(List<AttributeValuePair> singleAvp) {
+        checkNotNull(singleAvp);
+        this.singleAvp = singleAvp;
     }
 
     public List<AttributeValuePair> getAvp(Map<AttributeName, ? extends NodeType> allVariables) {
-        return emptyList();
+        List<AttributeValuePair> newAvps = new ArrayList<AttributeValuePair>();
+        for (AttributeValuePair avp : singleAvp) {
+            Attribute existingAttribute = avp.getAttribute();
+            Attribute newAttribute;
+            if (allVariables != null) {
+                newAttribute = createNewAttribute(existingAttribute, allVariables);
+            } else {
+                newAttribute = existingAttribute;
+            }
+            newAvps.add(new AttributeValuePairImpl(newAttribute, avp.getValue()));
+        }
+        return newAvps;
     }
 
     public void accept(V v) {
-        v.visitEmptyConstraint(this);
+        v.visitConstraint(this);
     }
 
     public boolean equals(Object obj) {
@@ -103,7 +117,7 @@ public final class EmptyConstraint<V extends ExpressionVisitor> implements Const
         if (EqualsUtil.differentClasses(this, obj)) {
             return false;
         }
-        return false;
+        return determineEqualityFromFields(this, (ConstraintImpl) obj);
     }
 
     public int hashCode() {
@@ -115,6 +129,22 @@ public final class EmptyConstraint<V extends ExpressionVisitor> implements Const
      * Delegates to <code>getAvp().toString()</code>.
      */
     public String toString() {
-        return "EMPTY";
+        return singleAvp.toString();
+    }
+
+    private boolean determineEqualityFromFields(ConstraintImpl o1, ConstraintImpl o2) {
+        return o1.singleAvp.equals(o2.singleAvp);
+    }
+
+    private Attribute createNewAttribute(Attribute existingAttribute, Map<AttributeName,
+        ? extends NodeType> allVariables) {
+        Attribute newAttribute;
+        AttributeName existingAttributeName = existingAttribute.getAttributeName();
+        NodeType newNodeType = allVariables.get(existingAttributeName);
+        if (newNodeType == null) {
+            newNodeType = existingAttribute.getType();
+        }
+        newAttribute = new AttributeImpl(existingAttributeName, newNodeType);
+        return newAttribute;
     }
 }

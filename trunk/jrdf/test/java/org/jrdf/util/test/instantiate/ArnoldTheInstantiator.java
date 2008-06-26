@@ -68,7 +68,7 @@ import org.jrdf.graph.local.BlankNodeImpl;
 import org.jrdf.graph.local.LiteralImpl;
 import org.jrdf.graph.local.URIReferenceImpl;
 import org.jrdf.query.AnswerImpl;
-import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.ConstraintImpl;
 import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.urql.parser.node.ATriple;
 import org.jrdf.util.test.ReflectTestUtil;
@@ -118,7 +118,7 @@ public final class ArnoldTheInstantiator {
         instantiators.put(AnyPredicateNode.class, new AnyPredicateNodeInstantiator());
         instantiators.put(AnyObjectNode.class, new AnyObjectNodeInstantiator());
         instantiators.put(AnswerImpl.class, new AnswerInstantiator());
-        instantiators.put(Constraint.class, new ConstraintTripleInstantiator());
+        instantiators.put(ConstraintImpl.class, new ConstraintTripleInstantiator());
         instantiators.put(URL.class, new URLInstantiator());
         instantiators.put(URI.class, new URIInstantiator());
         instantiators.put(String.class, new StringInstantiator());

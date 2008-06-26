@@ -121,7 +121,7 @@ public final class ConstraintsAnalyserImplUnitTest extends TestCase {
 //    public void testParsingSingleTripleReturnsCorrectQuery() {
 //        SparqlAnalyser analyser = createAnalyser(GRAPH);
 //        ATriple expectedTriple = createTripleNodeWithVariable();
-//        Constraint<ExpressionVisitor> actual = parseATripleOnce(analyser, expectedTriple);
+//        ConstraintImpl<ExpressionVisitor> actual = parseATripleOnce(analyser, expectedTriple);
 //        checkAnalysedTriple(expectedTriple, actual);
 //    }
 //
@@ -146,24 +146,24 @@ public final class ConstraintsAnalyserImplUnitTest extends TestCase {
 //    }
 //
 //    private void checkAnalysedTriple(SparqlAnalyser analyser, ATriple expectedTriple) {
-//        Constraint<ExpressionVisitor> actual = parseTriple(analyser, expectedTriple);
+//        ConstraintImpl<ExpressionVisitor> actual = parseTriple(analyser, expectedTriple);
 //        checkAnalysedTriple(expectedTriple, actual);
 //    }
 //
-//    private void checkAnalysedTriple(ATriple expectedTriple, Constraint<ExpressionVisitor> actual) {
+//    private void checkAnalysedTriple(ATriple expectedTriple, ConstraintImpl<ExpressionVisitor> actual) {
 //        checkSubject(expectedTriple, actual);
 //        checkPredicate(expectedTriple, actual);
 //        checkObject(actual);
 //    }
 //
-//    private void checkSubject(ATriple expectedTriple, Constraint<ExpressionVisitor> actual) {
+//    private void checkSubject(ATriple expectedTriple, ConstraintImpl<ExpressionVisitor> actual) {
 //        AResourceResourceTripleElement expectedSubject = (AResourceResourceTripleElement) expectedTriple.getSubject();
 //        Triple triple = AVP_HELPER.createTriple(actual.getAvp());
 //        URIReference actualSubject = (URIReference) triple.getSubject();
 //        checkResource(expectedSubject.getResource(), actualSubject.getURI());
 //    }
 //
-//    private void checkPredicate(ATriple expectedTriple, Constraint<ExpressionVisitor> actual) {
+//    private void checkPredicate(ATriple expectedTriple, ConstraintImpl<ExpressionVisitor> actual) {
 //        AResourceResourceTripleElement expectedPredicate =
 //                (AResourceResourceTripleElement) expectedTriple.getPredicate();
 //        Triple triple = AVP_HELPER.createTriple(actual.getAvp());
@@ -171,7 +171,7 @@ public final class ConstraintsAnalyserImplUnitTest extends TestCase {
 //        checkResource(expectedPredicate.getResource(), actualPredicate.getURI());
 //    }
 //
-//    private void checkObject(Constraint<ExpressionVisitor> actual) {
+//    private void checkObject(ConstraintImpl<ExpressionVisitor> actual) {
 //        Triple triple = AVP_HELPER.createTriple(actual.getAvp());
 //        checkObject(triple.getObject());
 //    }
@@ -194,18 +194,18 @@ public final class ConstraintsAnalyserImplUnitTest extends TestCase {
 //        assertEquals(expectedResource.getText(), actualUri.toString());
 //    }
 //
-//    private Constraint<ExpressionVisitor> parseATripleOnce(SparqlAnalyser analyser, ATriple tripleToParse) {
+//    private ConstraintImpl<ExpressionVisitor> parseATripleOnce(SparqlAnalyser analyser, ATriple tripleToParse) {
 //        checkFirstGetQueryReturnsNoQuery(analyser);
 //        return parseTriple(analyser, tripleToParse);
 //    }
 //
-//    private Constraint<ExpressionVisitor> parseTriple(SparqlAnalyser analyser, ATriple tripleToParse) {
+//    private ConstraintImpl<ExpressionVisitor> parseTriple(SparqlAnalyser analyser, ATriple tripleToParse) {
 //        return analyseTriple(analyser, tripleToParse);
 //    }
 //
-//    private Constraint<ExpressionVisitor> analyseTriple(SparqlAnalyser analyser, ATriple triple) {
+//    private ConstraintImpl<ExpressionVisitor> analyseTriple(SparqlAnalyser analyser, ATriple triple) {
 //        Query query = analyseQuery(analyser, triple);
-//        return (Constraint<ExpressionVisitor>) query.getConstraintExpression();
+//        return (ConstraintImpl<ExpressionVisitor>) query.getConstraintExpression();
 //    }
 //
 //    private Query analyseQuery(SparqlAnalyser analyser, ATriple expectedTriple) {

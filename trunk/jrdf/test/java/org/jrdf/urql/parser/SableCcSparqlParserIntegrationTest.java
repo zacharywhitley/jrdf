@@ -78,6 +78,7 @@ import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.SparqlQueryTestUtil.ANY_SPO;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_2;
@@ -131,6 +132,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final Expression<ExpressionVisitor> EMPTY_AND_BOOK1_AND_2_UNION
         = new Union<ExpressionVisitor>(new Union<ExpressionVisitor>(EMPTY_CONSTRAINT, BOOK_1_DC_TITLE_ID_1),
         BOOK_2_DC_TITLE_ID_2);
+    private static final Expression<ExpressionVisitor> ALL_AND_EMPTY = new Conjunction<ExpressionVisitor>(ANY_SPO,
+            EMPTY_CONSTRAINT);
     private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
         "name", 1);
     private static final Expression<ExpressionVisitor> FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK,
@@ -146,6 +149,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX,
         "mbox", 4);
     private static final Expression<ExpressionVisitor> TITLE_EXP_1 = createConstraintExpression("s", "p", LITERAL, 1);
+    private static final String SELECT_WHERE_S_P_O_AND_EMPTY = "SELECT * WHERE { ?s ?p ?o . {} } ";
     private QueryParser parser;
 
     public void setUp() throws Exception {
@@ -169,6 +173,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testTwoConstraints() {
         checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_CONJUNCTION);
+    }
+
+    public void testTwoConstraints2() {
+        checkConstraintExpression(SELECT_WHERE_S_P_O_AND_EMPTY, ALL_AND_EMPTY);
     }
 
     public void testTwoNestConstraintsInnerRight() {
