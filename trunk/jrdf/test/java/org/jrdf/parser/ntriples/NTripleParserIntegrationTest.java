@@ -87,6 +87,7 @@ public class NTripleParserIntegrationTest extends TestCase {
     // Commented out tests are due to the lack of inferencing for types and blank node equivalence.
 
     private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
         {
             put("rdf-tests/rdfcore/datatypes/test002.nt", "rdf-tests/rdfcore/datatypes/test002.nt");
             //put("rdf-tests/datatypes/test002.nt", "rdf-tests/datatypes/test002b.nt");
@@ -100,6 +101,7 @@ public class NTripleParserIntegrationTest extends TestCase {
         }
     };
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
+        private static final long serialVersionUID = 1L;
         {
             //add("rdf-tests/datatypes/test006.nt");
         }

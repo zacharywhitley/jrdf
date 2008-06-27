@@ -74,8 +74,13 @@ public class QuadLongListBinding extends TupleBinding {
     public Object entryToObject(TupleInput tupleInput) {
         ArrayList<Long[]> list = new ArrayList<Long[]>();
         long size = tupleInput.readLong();
+        int arrayLength = tupleInput.readInt();
         for (int i = 0; i < size; i++) {
-            list.add(new Long[]{tupleInput.readLong(), tupleInput.readLong(), tupleInput.readLong()});
+            Long[] values = new Long[arrayLength];
+            for (int j = 0; j < arrayLength; j++) {
+                values[j] = tupleInput.readLong();
+            }
+            list.add(values);
         }
         return list;
     }
@@ -84,11 +89,16 @@ public class QuadLongListBinding extends TupleBinding {
     public void objectToEntry(Object object, TupleOutput tupleOutput) {
         ArrayList<Long[]> list = (ArrayList<Long[]>) object;
         tupleOutput.writeLong(list.size());
+        int arrayLength = 0;
+        if (list.size() != 0) {
+            arrayLength = list.get(0).length;
+        }
+        tupleOutput.writeInt(arrayLength);
         for (int i = 0; i < list.size(); i++) {
             Long[] longs = list.get(i);
-            tupleOutput.writeLong(longs[0]);
-            tupleOutput.writeLong(longs[1]);
-            tupleOutput.writeLong(longs[2]);
+            for (int j = 0; j < arrayLength; j++) {
+                tupleOutput.writeLong(longs[j]);
+            }
         }
     }
 }

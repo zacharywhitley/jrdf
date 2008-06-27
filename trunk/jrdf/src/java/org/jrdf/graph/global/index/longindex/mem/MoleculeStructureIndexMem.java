@@ -72,11 +72,11 @@ import java.util.Set;
 public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
     private Map<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>> index;
 
-    protected MoleculeStructureIndexMem(Map<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>> newIndex) {
+    public MoleculeStructureIndexMem(Map<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>> newIndex) {
         index = newIndex;
     }
 
-    protected MoleculeStructureIndexMem() {
+    public MoleculeStructureIndexMem() {
         index = new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>();
     }
 

@@ -93,7 +93,7 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         this.handler = handler;
         binding.put(String.class, new StringBinding());
         binding.put(Long.class, new LongBinding());
-        binding.put(LinkedList.class, new LongListBinding());
+        binding.put(LinkedList.class, new org.jrdf.util.bdb.LongListBinding());
         binding.put(BlankNode.class, new BlankNodeBinding());
         binding.put(Node.class, new NodeBinding());
         binding.put(PredicateNode.class, new NodeBinding());

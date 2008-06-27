@@ -81,6 +81,7 @@ public class TripleBinding extends TupleBinding implements Serializable {
         return new TripleImpl(subject, predicate, object);
     }
 
+    @SuppressWarnings({ "unchecked" })
     public void objectToEntry(Object object, TupleOutput output) {
         Triple triple = (Triple) object;
         nodeBinding.objectToEntry(triple.getSubject(), output);
