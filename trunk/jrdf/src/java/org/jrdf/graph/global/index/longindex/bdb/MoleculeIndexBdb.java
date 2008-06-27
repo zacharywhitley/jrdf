@@ -192,8 +192,4 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long> {
 
     public void close() {
     }
-
-    public boolean keyExists(Long node) {
-        return index.containsKey(node);
-    }
 }

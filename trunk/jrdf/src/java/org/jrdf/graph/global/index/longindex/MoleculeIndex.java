@@ -78,6 +78,7 @@ public interface MoleculeIndex<T> {
 
     ClosableIterator<T[]> iterator();
 
+    // TODO Change this to be array.    
     ClosableMap<T, ClosableMap<T, Set<T>>> getSubIndex(T first);
 
     boolean contains(T first);
@@ -87,6 +88,4 @@ public interface MoleculeIndex<T> {
     long getSize();
 
     void close();
-
-    boolean keyExists(Long node);
 }

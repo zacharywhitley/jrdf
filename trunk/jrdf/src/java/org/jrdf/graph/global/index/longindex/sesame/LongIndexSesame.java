@@ -57,77 +57,99 @@
  *
  */
 
-package org.jrdf.graph.local.index;
+package org.jrdf.graph.global.index.longindex.sesame;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
+import static org.jrdf.util.btree.ByteHandler.*;
+import org.jrdf.util.btree.EntryIterator;
+import org.jrdf.util.btree.RecordIteratorHelper;
+import org.jrdf.util.btree.TripleBTree;
 
+import java.io.IOException;
 import java.util.Set;
 
-public interface Index<T> {
+public final class LongIndexSesame implements MoleculeIndex<Long> {
+    private TripleBTree btree;
 
-    /**
-     * Adds a triple to a single index.  This method defines the internal structure.
-     *
-     * @param node The nodes to add.
-     * @throws GraphException If there was an error adding the statement.
-     */
-    void add(T... node) throws GraphException;
+    public LongIndexSesame(TripleBTree newBtree) {
+        this.btree = newBtree;
+    }
 
-    /**
-     * Removes a triple from a single index.
-     *
-     * @param node the nodes to remove.
-     * @throws GraphException If there was an error revoking the statement, for example if it didn't exist.
-     */
-    void remove(T... node) throws GraphException;
+    public void add(Long... node) throws GraphException {
+        try {
+            btree.insert(toBytes(node));
+        } catch (IOException e) {
+            throw new GraphException(e);
+        }
+    }
 
-    /**
-     * Removes all triples from this index.
-     */
-    void clear();
+    public void remove(Long... node) throws GraphException {
+        try {
+            boolean changed = RecordIteratorHelper.remove(btree, node);
+            if (!changed) {
+                throw new GraphException("Unable to remove nonexistent statement");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    /**
-     * Returns an iterator which contains all the elements in the graph as a collections of distinct longs.
-     *
-     * @return an iterator which contains all the elements in the graph as a collections of distinct longs.
-     */
-    ClosableIterator<T[]> iterator();
+    public void clear() {
+        try {
+            btree.clear();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    /**
-     * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id
-     * is given and it returns a map of predicates to objects.
-     *
-     * @param first the entry set to find.
-     * @return a map containing the list of longs to set of longs.
-     */
-    // TODO Change this to be array.
-    ClosableMap<T, Set<T>> getSubIndex(T first);
+    public ClosableIterator<Long[]> iterator() {
+        return new EntryIterator(btree);
+    }
 
-    /**
-     * Returns true if the value given exists in the index.
-     *
-     * @param first the key to search for.
-     * @return true if the key exsts.
-     */
-    boolean contains(T first);
+    public boolean keyExists(Long first) {
+        try {
+            return RecordIteratorHelper.contains(btree, first);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    /**
-     * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is
-     * given and it will remove all the associated predicate and objects for that subject.
-     *
-     * @param first the entry set to remove.
-     * @return true if the entry set was non-null.
-     */
-    boolean removeSubIndex(T first);
+    public ClosableMap<Long, ClosableMap<Long, Set<Long>>> getSubIndex(Long first) {
+        throw new UnsupportedOperationException();
+    }
 
-    /**
-     * Returns the number of triples in the index.
-     *
-     * @return the number of triples in the index.
-     */
-    long getSize();
+    public boolean contains(Long first) {
+        try {
+            return RecordIteratorHelper.contains(btree, first);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    void close();
+    public boolean removeSubIndex(Long first) {
+        try {
+            return RecordIteratorHelper.removeSubIndex(btree, first);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public long getSize() {
+        try {
+            return RecordIteratorHelper.getSize(btree);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void close() {
+        try {
+            btree.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

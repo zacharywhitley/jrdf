@@ -96,9 +96,9 @@ public class MoleculeIndexBdbUnitTest extends TestCase {
     }
 
     public void testBasicOps() throws GraphException {
-        assertFalse("No keys", index.keyExists(0L));
+        assertFalse("No keys", index.contains(0L));
         index.add(0L, 1L, 2L, 3L);
-        assertTrue("0L exists", index.keyExists(0L));
+        assertTrue("0L exists", index.contains(0L));
         assertEquals("size = 1", 1, index.getSize());
         index.add(0L, 1L, 2L, 3L);
         assertEquals("size = 1", 1, index.getSize());

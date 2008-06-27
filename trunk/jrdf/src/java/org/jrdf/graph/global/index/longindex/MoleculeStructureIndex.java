@@ -76,8 +76,10 @@ public interface MoleculeStructureIndex<T> {
 
     void clear();
 
+    // TODO Change this to be array.
     ClosableIterator<Map.Entry<T, Map<T, Map<T, Map<T, Set<T>>>>>> iterator();
 
+    // TODO Change this to be array.
     Map<T, Map<T, Map<T, Set<T>>>> getSubIndex(T first);
 
     boolean contains(T first);
