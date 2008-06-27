@@ -65,6 +65,7 @@ import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
+import org.jrdf.util.FlatteningEntrySetClosableIterator;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -135,7 +136,7 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long> {
     }
 
     public ClosableIterator<Long[]> iterator() {
-        return new MoleculeFlatteningEntrySetClosableIterator(index.entrySet());
+        return new FlatteningEntrySetClosableIterator(index.entrySet());
     }
 
     public boolean removeSubIndex(Long first) {

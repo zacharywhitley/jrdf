@@ -57,17 +57,15 @@
  *
  */
 
-package org.jrdf.graph.local.iterator;
+package org.jrdf.util;
 
-import org.jrdf.util.ClosableIterator;
-
-import java.util.Map;
-import java.util.LinkedList;
-import java.util.Set;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
-public class FlatteningEntrySetClosableIterator<T> implements ClosableIterator<Long[]> {
+public class FlatteningEntrySetClosableIterator implements ClosableIterator<Long[]> {
     private Iterator<Long[]> itemIterator;
     private Iterator<Map.Entry<Long, LinkedList<Long[]>>> iterator;
     private Map.Entry<Long, LinkedList<Long[]>> firstEntry;
@@ -101,7 +99,10 @@ public class FlatteningEntrySetClosableIterator<T> implements ClosableIterator<L
         if (null == iterator) {
             throw new NoSuchElementException();
         }
-        return new Long[]{firstEntry.getKey(), secondEntry[0], secondEntry[1]};
+        final Long[] newEntry = new Long[secondEntry.length + 1];
+        newEntry[0] = firstEntry.getKey();
+        System.arraycopy(secondEntry, 0, newEntry, 1, secondEntry.length);
+        return newEntry;
     }
 
     public void remove() {
