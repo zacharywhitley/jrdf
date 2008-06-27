@@ -72,6 +72,7 @@ import org.jrdf.graph.global.MoleculeLocalizerImpl;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.bdb.MoleculeIndexBdb;
 import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
+import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
@@ -151,7 +152,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         MoleculeIndex<Long> ospm = new MoleculeIndexMem(map3);
         MoleculeIndex<Long>[] indexes = new MoleculeIndexMem[]{(MoleculeIndexMem) spom,
                 (MoleculeIndexMem) posm, (MoleculeIndexMem) ospm};
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexImpl(
+        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
             new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
         NodePool nodePool = nodePoolFactory.createNodePool();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
@@ -194,7 +195,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         MoleculeIndex<Long> ospm = new MoleculeIndexBdb(factory);
         MoleculeIndex<Long>[] indexes = new MoleculeIndexBdb[]{(MoleculeIndexBdb) spom,
                 (MoleculeIndexBdb) posm, (MoleculeIndexBdb) ospm};
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexImpl(
+        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
             new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
         NodePool nodePool = nodePoolFactory.createNodePool();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
