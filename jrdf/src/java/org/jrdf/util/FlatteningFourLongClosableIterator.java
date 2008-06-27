@@ -57,17 +57,14 @@
  *
  */
 
-package org.jrdf.graph.global.index.longindex.mem;
-
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
+package org.jrdf.util;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-public class FlatteningClosableIterator implements ClosableIterator<Long[]> {
+public class FlatteningFourLongClosableIterator implements ClosableIterator<Long[]> {
     private ClosableIterator<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator;
     private Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> subIterator;
     private Iterator<Map.Entry<Long, Set<Long>>> subSubIterator;
@@ -76,7 +73,7 @@ public class FlatteningClosableIterator implements ClosableIterator<Long[]> {
     private Map.Entry<Long, ClosableMap<Long, Set<Long>>> secondEntry;
     private Map.Entry<Long, Set<Long>> thirdEntry;
 
-    public FlatteningClosableIterator(ClosableIterator<Map.Entry<Long, ClosableMap<Long,
+    public FlatteningFourLongClosableIterator(ClosableIterator<Map.Entry<Long, ClosableMap<Long,
         ClosableMap<Long, Set<Long>>>>> newIterator) {
         this.iterator = newIterator;
     }

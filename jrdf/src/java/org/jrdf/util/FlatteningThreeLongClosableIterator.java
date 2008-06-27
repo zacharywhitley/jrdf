@@ -57,23 +57,22 @@
  *
  */
 
-package org.jrdf.graph.local.iterator;
+package org.jrdf.util;
 
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
-
-import java.util.Set;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
-public abstract class AbstractFlatteningClosableIterator<T> implements ClosableIterator<T[]> {
-    protected ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> iterator;
-    protected Iterator<Map.Entry<T, Set<T>>> subIterator;
-    protected Iterator<T> itemIterator;
-    protected Map.Entry<T, ClosableMap<T, Set<T>>> firstEntry;
-    protected Map.Entry<T, Set<T>> secondEntry;
+public class FlatteningThreeLongClosableIterator implements ClosableIterator<Long[]> {
+    protected ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator;
+    protected Iterator<Map.Entry<Long, Set<Long>>> subIterator;
+    protected Iterator<Long> itemIterator;
+    protected Map.Entry<Long, ClosableMap<Long, Set<Long>>> firstEntry;
+    protected Map.Entry<Long, Set<Long>> secondEntry;
 
-    public AbstractFlatteningClosableIterator(ClosableIterator<Map.Entry<T, ClosableMap<T, Set<T>>>> entryIterator) {
+    public FlatteningThreeLongClosableIterator(ClosableIterator<Map.Entry<Long,
+            ClosableMap<Long, Set<Long>>>> entryIterator) {
         this.iterator = entryIterator;
     }
 
@@ -97,7 +96,22 @@ public abstract class AbstractFlatteningClosableIterator<T> implements ClosableI
         return null != iterator && iterator.hasNext();
     }
 
-    public abstract T[] next();
+    public Long[] next() {
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
+
+        // move to the next position
+        updatePosition();
+
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
+        final Long third = itemIterator.next();
+        final Long second = secondEntry.getKey();
+        final Long first = firstEntry.getKey();
+        return new Long[]{first, second, third};
+    }
 
     /**
      * Helper method to move the iterators on to the next position.
