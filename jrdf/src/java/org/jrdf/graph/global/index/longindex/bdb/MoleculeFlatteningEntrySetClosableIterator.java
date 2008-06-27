@@ -61,8 +61,8 @@ package org.jrdf.graph.global.index.longindex.bdb;
 
 import org.jrdf.util.ClosableIterator;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -73,12 +73,12 @@ import java.util.Set;
  */
 
 public class MoleculeFlatteningEntrySetClosableIterator implements ClosableIterator<Long []> {
-    private Iterator<Map.Entry<Long, ArrayList<Long[]>>> iterator;
-    private Map.Entry<Long, ArrayList<Long[]>> firstEntry;
+    private Iterator<Map.Entry<Long, LinkedList<Long[]>>> iterator;
+    private Map.Entry<Long, LinkedList<Long[]>> firstEntry;
     private Iterator<Long[]> itemIterator;
     private Long[] secondEntry;
 
-    public MoleculeFlatteningEntrySetClosableIterator(Set<Map.Entry<Long, ArrayList<Long[]>>> entries) {
+    public MoleculeFlatteningEntrySetClosableIterator(Set<Map.Entry<Long, LinkedList<Long[]>>> entries) {
         this.iterator = entries.iterator();
     }
 

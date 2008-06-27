@@ -67,16 +67,13 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-// TODO Abdul How is this Serializable?
-public final class LongIndexBdb implements LongIndex, Serializable {
-    private static final long serialVersionUID = 6044200669651883129L;
+public final class LongIndexBdb implements LongIndex {
     private Map<Long, LinkedList<Long[]>> index;
 
     private LongIndexBdb() {

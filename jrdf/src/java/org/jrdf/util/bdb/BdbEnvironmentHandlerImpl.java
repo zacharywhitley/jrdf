@@ -75,11 +75,9 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.index.longindex.bdb.QuadLongListBinding;
 import org.jrdf.util.DirectoryHandler;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -98,7 +96,6 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         binding.put(Node.class, new NodeBinding());
         binding.put(PredicateNode.class, new NodeBinding());
         binding.put(Triple.class, new TripleBinding());
-        binding.put(ArrayList.class, new QuadLongListBinding());
     }
 
     public Environment setUpEnvironment() throws DatabaseException {
