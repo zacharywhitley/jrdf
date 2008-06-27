@@ -66,33 +66,28 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class MoleculeIndexBdb implements MoleculeIndex<Long>, Serializable {
-    private static final long serialVersionUID = 3900194360118641252L;
-
-    protected Map<Long, ArrayList<Long[]>> index;
-
-    private MoleculeIndexBdb() {
-    }
+public class MoleculeIndexBdb implements MoleculeIndex<Long> {
+    protected Map<Long, LinkedList<Long[]>> index;
 
     public MoleculeIndexBdb(MapFactory newCreator) {
-        index = newCreator.createMap(Long.class, ArrayList.class);
+        index = newCreator.createMap(Long.class, LinkedList.class);
     }
 
     public void add(Long... quad) throws GraphException {
-        ArrayList<Long[]> subIndex = index.get(quad[0]);
+        LinkedList<Long[]> subIndex = index.get(quad[0]);
         if (subIndex == null) {
-            subIndex = new ArrayList<Long[]>();
+            subIndex = new LinkedList<Long[]>();
         }
         boolean found = false;
         for (Long[] grp : subIndex) {
@@ -109,7 +104,7 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long>, Serializable {
     }
 
     public void remove(Long... quad) throws GraphException {
-        ArrayList<Long[]> subIndx = index.get(quad[0]);
+        LinkedList<Long[]> subIndx = index.get(quad[0]);
         if (null == subIndx) {
             throw new GraphException("Unable to remove nonexistent molecule");
         }
@@ -123,7 +118,7 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long>, Serializable {
         removeTriple(subIndx, groupToRemove, quad[0]);
     }
 
-    private void removeTriple(ArrayList<Long[]> subIndex, Long[] groupToRemove, Long first) {
+    private void removeTriple(LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {
         subIndex.remove(groupToRemove);
         index.remove(first);
         if (!subIndex.isEmpty()) {
@@ -154,7 +149,7 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long>, Serializable {
     public long getSize() {
         int size = 0;
         // go over the index map
-        for (ArrayList<Long[]> list : index.values()) {
+        for (LinkedList<Long[]> list : index.values()) {
             // go over the sub indexes
             size += list.size();
         }
@@ -166,7 +161,7 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long>, Serializable {
             ClosableMap<Long, ClosableMap<Long, Set<Long>>> resultMap =
                     new ClosableMapImpl<Long, ClosableMap<Long, Set<Long>>>();
             // a triple in Long array
-            final ArrayList<Long[]> list = index.get(first);
+            final LinkedList<Long[]> list = index.get(first);
             for (Long[] triple : list) {
                 ClosableMap<Long, Set<Long>> poMap;
                 if (resultMap.containsKey(triple[0])) {
