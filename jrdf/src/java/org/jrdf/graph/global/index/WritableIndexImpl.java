@@ -61,6 +61,7 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
+import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 
 public class WritableIndexImpl implements WritableIndex<Long> {
     private final MoleculeIndex<Long>[] indexes;

@@ -70,6 +70,7 @@ import org.jrdf.graph.global.MoleculeGraphImpl;
 import org.jrdf.graph.global.MoleculeLocalizer;
 import org.jrdf.graph.global.MoleculeLocalizerImpl;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
+import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.graph.global.index.longindex.bdb.MoleculeIndexBdb;
 import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
 import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
