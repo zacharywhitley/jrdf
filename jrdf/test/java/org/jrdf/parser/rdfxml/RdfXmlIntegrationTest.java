@@ -82,6 +82,7 @@ public class RdfXmlIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
 
     private static final Map<String, String> POSITIVE_RDFXML_TESTS = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
         {
             put("jrdf/test001.nt", "jrdf/test001.rdf");
             put("rdfcore/amp-in-url/test001.nt", "rdfcore/amp-in-url/test001.rdf");
@@ -140,6 +141,7 @@ public class RdfXmlIntegrationTest extends TestCase {
     };
 
     private static final Map<String, String> POSITIVE_NTRIPLE_TESTS = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
         {
             put("rdfcore/datatypes/test003a.nt", "rdfcore/datatypes/test003b.nt");
             put("rdfcore/datatypes/test003b.nt", "rdfcore/datatypes/test003a.nt");
@@ -150,6 +152,7 @@ public class RdfXmlIntegrationTest extends TestCase {
     };
 
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
+        private static final long serialVersionUID = 1L;
         {
             add("rdfcore/rdf-containers-syntax-vs-schema/error001.rdf");
             add("rdfcore/rdf-containers-syntax-vs-schema/error002.rdf");
