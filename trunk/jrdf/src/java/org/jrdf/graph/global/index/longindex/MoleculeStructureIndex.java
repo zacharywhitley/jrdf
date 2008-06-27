@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global.index.longindex;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;

@@ -60,7 +60,7 @@
 package org.jrdf.graph.global.index.longindex.mem;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.index.MoleculeStructureIndex;
+import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 
