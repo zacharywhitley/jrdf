@@ -65,6 +65,7 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
+import org.jrdf.util.FlatteningFourLongClosableIterator;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -109,7 +110,7 @@ public class MoleculeIndexMem implements MoleculeIndex<Long> {
         ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> iterator =
             new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>(
                 index.entrySet().iterator());
-        return new FlatteningClosableIterator(iterator);
+        return new FlatteningFourLongClosableIterator(iterator);
     }
 
     public void remove(Long... node) throws GraphException {
