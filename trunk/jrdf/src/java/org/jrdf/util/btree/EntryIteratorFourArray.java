@@ -59,34 +59,55 @@
 
 package org.jrdf.util.btree;
 
+import org.jrdf.util.ClosableIterator;
+
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.NoSuchElementException;
 
-public class SubIndexEntry implements Map.Entry<Long, Set<Long>> {
-    private final Long first;
-    private final Long second;
-    private final TripleBTree bTree;
+public class EntryIteratorFourArray implements ClosableIterator<Long[]> {
+    private static final int QUADS = 4;
+    private RecordIterator iterator;
+    private byte[] currentValues;
 
-    public SubIndexEntry(Long first, Long second, TripleBTree bTree) {
-        this.first = first;
-        this.second = second;
-        this.bTree = bTree;
+    public EntryIteratorFourArray(TripleBTree btree) {
+        this.iterator = btree.iterateAll();
+        getNextValues();
     }
 
-    public Long getKey() {
-        return second;
+    public boolean hasNext() {
+        return currentValues != null;
     }
 
-    public Set<Long> getValue() {
+    public Long[] next() {
+        // Current values null then we are at the end.
+        if (currentValues == null) {
+            throw new NoSuchElementException();
+        }
+        // Create entry for current key - as it is already the next one.
+        Long[] returnValues = ByteHandler.fromBytes(currentValues, QUADS);
+        // Attempt to get next values.
+        getNextValues();
+        return returnValues;
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot set values - read only");
+    }
+
+    public boolean close() {
         try {
-            return RecordIteratorHelper.getSubSubIndex(bTree, first, second);
+            iterator.close();
+            return true;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
-    public Set<Long> setValue(Set<Long> value) {
-        throw new UnsupportedOperationException("Cannot set values - read only");
+    private void getNextValues() {
+        try {
+            currentValues = iterator.next();
+        } catch (IOException e) {
+            currentValues = null;
+        }
     }
 }

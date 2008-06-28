@@ -57,87 +57,31 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.graph.global.index.longindex.bdb;
 
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.global.index.longindex.AbstractMoleculeIndexIntegrationTest;
+import org.jrdf.map.BdbMapFactory;
+import org.jrdf.map.MapFactory;
+import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
 
-public class IteratorBTreeSet implements Set<Map.Entry<Long, Set<Long>>> {
-    private final long first;
-    private final TripleBTree bTree;
-    private final Set<ClosableIterator<Map.Entry<Long, Set<Long>>>> iterators;
+public class MoleculeIndexBdbIntegrationTest extends AbstractMoleculeIndexIntegrationTest {
+    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
+    private static final MapFactory FACTORY = new BdbMapFactory(BDB_HANDLER, "molMaps");
 
-    public IteratorBTreeSet(long first, TripleBTree bTree,
-        Set<ClosableIterator<Map.Entry<Long, Set<Long>>>> iterators) {
-        this.first = first;
-        this.bTree = bTree;
-        this.iterators = iterators;
+    public void setUp() throws Exception {
+        index = new MoleculeIndexBdb(FACTORY);
     }
 
-    public int size() {
-        int size = 0;
-        IteratorBTree tree = new IteratorBTree(first, bTree);
-        try {
-            while (tree.hasNext()) {
-                Map.Entry<Long, Set<Long>> setEntry = tree.next();
-                size += setEntry.getValue().size();
-            }
-            return size;
-        } finally {
-            tree.close();
-        }
-    }
-
-    public boolean isEmpty() {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public ClosableIterator<Map.Entry<Long, Set<Long>>> iterator() {
-        ClosableIterator<Map.Entry<Long, Set<Long>>> iteratorBTree = new IteratorBTree(first, bTree);
-        iterators.add(iteratorBTree);
-        return iteratorBTree;
-    }
-
-    public Object[] toArray() {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public <T> T[] toArray(T[] a) {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public boolean add(Map.Entry<Long, Set<Long>> o) {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public boolean addAll(Collection<? extends Map.Entry<Long, Set<Long>>> c) {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Cannot call this method");
-    }
-
-    public void clear() {
-        throw new UnsupportedOperationException("Cannot call this method");
+    public void tearDown() {
+        index.clear();
+        index.close();
     }
 }

@@ -62,27 +62,17 @@ package org.jrdf.util.btree;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
-public class IteratorBTree implements ClosableIterator<Map.Entry<Long, Set<Long>>> {
-    private static final int TRIPLES = 3;
-    private final TripleBTree bTree;
-    private final long first;
-    private long second;
+public class EntryIteratorOneFixedThreeArray implements ClosableIterator<Long[]> {
+    private static final int QUADS = 4;
     private RecordIterator iterator;
     private byte[] currentValues;
 
-    public IteratorBTree(long newFirst, TripleBTree newBTree) {
+    public EntryIteratorOneFixedThreeArray(long newFirst, TripleBTree newBTree) {
         try {
-            this.first = newFirst;
-            this.bTree = newBTree;
-            this.iterator = bTree.getIterator(first, 0L, 0L);
+            this.iterator = newBTree.getIterator(newFirst, 0L, 0L);
             this.currentValues = iterator.next();
-            if (currentValues != null) {
-                this.second = ByteHandler.fromBytes(currentValues, TRIPLES)[1];
-            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -92,38 +82,22 @@ public class IteratorBTree implements ClosableIterator<Map.Entry<Long, Set<Long>
         return currentValues != null;
     }
 
-    public Map.Entry<Long, Set<Long>> next() {
+    public Long[] next() {
         // Current values null then we are at the end.
         if (currentValues == null) {
             throw new NoSuchElementException();
         }
-        SubIndexEntry indexEntry = new SubIndexEntry(first, second, bTree);
-        second = getNextValue();
-        return indexEntry;
+        Long[] returnValues = ByteHandler.fromBytes(currentValues, QUADS);
+        getNextValues();
+        return new Long[]{returnValues[1], returnValues[2], returnValues[QUADS - 1]};
     }
 
     public void remove() {
-        try {
-            bTree.remove(currentValues);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
-    private long getNextValue() {
-        long currentValue = second;
-        while (currentValues != null && currentValue == second) {
-            currentValues = getNextValues();
-            if (currentValues != null) {
-                currentValue = ByteHandler.fromBytes(currentValues, TRIPLES)[1];
-            }
-        }
-        return currentValue;
-    }
-
-    private byte[] getNextValues() {
+    private void getNextValues() {
         try {
-            return iterator.next();
+            currentValues = iterator.next();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

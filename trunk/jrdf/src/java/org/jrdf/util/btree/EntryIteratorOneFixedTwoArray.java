@@ -64,12 +64,12 @@ import org.jrdf.util.ClosableIterator;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
-public class EntryIteratorTwoArray implements ClosableIterator<Long[]> {
+public class EntryIteratorOneFixedTwoArray implements ClosableIterator<Long[]> {
     private static final int TRIPLES = 3;
     private RecordIterator iterator;
     private byte[] currentValues;
 
-    public EntryIteratorTwoArray(long newFirst, TripleBTree newBTree) {
+    public EntryIteratorOneFixedTwoArray(long newFirst, TripleBTree newBTree) {
         try {
             this.iterator = newBTree.getIterator(newFirst, 0L, 0L);
             this.currentValues = iterator.next();

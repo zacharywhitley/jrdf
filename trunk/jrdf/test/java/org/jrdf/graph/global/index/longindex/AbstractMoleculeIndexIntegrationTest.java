@@ -57,39 +57,29 @@
  *
  */
 
-package org.jrdf.graph.global.index.longindex.bdb;
+package org.jrdf.graph.global.index.longindex;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.index.longindex.MoleculeIndex;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.TempDirectoryHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
 import java.util.Arrays;
 import static java.util.Arrays.*;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class MoleculeIndexBdbUnitTest extends TestCase {
-    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
-    private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
-    private static final MapFactory FACTORY = new BdbMapFactory(BDB_HANDLER, "molMaps");
-    private MoleculeIndex<Long> index;
+public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
+    protected MoleculeIndex<Long> index;
 
     public void setUp() throws Exception {
         super.setUp();
-        index = new MoleculeIndexBdb(FACTORY);
     }
 
     public void tearDown() {
@@ -142,8 +132,6 @@ public class MoleculeIndexBdbUnitTest extends TestCase {
         while (iterator.hasNext()) {
             final Long[] longs = iterator.next();
             length++;
-            /*System.err.print(longs[0] + " " + longs[1] + " " + longs[2] + " " + longs[3] +
-                    System.getProperty("line.separator"));*/
             assertTrue("Contains longs", setContainsLongArray(set, longs));
         }
         iterator.close();
