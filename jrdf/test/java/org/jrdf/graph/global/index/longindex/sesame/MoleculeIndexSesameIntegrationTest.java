@@ -57,46 +57,34 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.graph.global.index.longindex.sesame;
 
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
+import junit.framework.TestCase;
 
-import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
 
-public class FixedFirstBTreeMap extends AbstractMap<Long, Set<Long>> implements ClosableMap<Long, Set<Long>> {
-    private final long first;
-    private final TripleBTree bTree;
-    private final Set<ClosableIterator<Entry<Long, Set<Long>>>> openEntrySets =
-        new HashSet<ClosableIterator<Map.Entry<Long, Set<Long>>>>();
+//public class MoleculeIndexSesameIntegrationTest extends AbstractMoleculeIndexIntegrationTest {
+//    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
+//    private static final String INDEX_FILE_NAME = "sesTestDb";
+//
+//    public void setUp() {
+//        BTreeFactory bTreeFactory = new BTreeFactoryImpl();
+//        TripleBTree tree = bTreeFactory.createBTree(HANDLER, INDEX_FILE_NAME);
+//        index = new LongIndexSesame(tree);
+//        index.clear();
+//    }
+//
+//    public void tearDown() {
+//        index.close();
+//        new File(HANDLER.getDir(), INDEX_FILE_NAME).delete();
+//    }
+//}
 
-    public FixedFirstBTreeMap(long newFirst, TripleBTree newBTree) {
-        this.first = newFirst;
-        this.bTree = newBTree;
-    }
-
-    @Override
-    public boolean containsKey(Object key) {
-        try {
-            return RecordIteratorHelper.contains(bTree, first, (Long) key);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Set<Entry<Long, Set<Long>>> entrySet() {
-        return new IteratorBTreeSet(first, bTree, openEntrySets);
-    }
-
-    public boolean close() {
-        for (ClosableIterator<Entry<Long, Set<Long>>> openEntrySet : openEntrySets) {
-            openEntrySet.close();
-        }
-        return true;
+public class MoleculeIndexSesameIntegrationTest extends TestCase {
+    public void testFoo() {
+        assertTrue(true);
     }
 }

@@ -63,7 +63,8 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.btree.ByteHandler.*;
-import org.jrdf.util.btree.EntryIteratorThreeArray;
+import org.jrdf.util.btree.EntryIteratorFourArray;
+import org.jrdf.util.btree.EntryIteratorOneFixedThreeArray;
 import org.jrdf.util.btree.RecordIteratorHelper;
 import org.jrdf.util.btree.TripleBTree;
 
@@ -104,7 +105,7 @@ public final class LongIndexSesame implements MoleculeIndex<Long> {
     }
 
     public ClosableIterator<Long[]> iterator() {
-        return new EntryIteratorThreeArray(btree);
+        return new EntryIteratorFourArray(btree);
     }
 
     public boolean keyExists(Long first) {
@@ -116,7 +117,7 @@ public final class LongIndexSesame implements MoleculeIndex<Long> {
     }
 
     public ClosableIterator<Long[]> getSubIndex(Long first) {
-        throw new UnsupportedOperationException();
+        return new EntryIteratorOneFixedThreeArray(first, btree);
     }
 
     public boolean contains(Long first) {

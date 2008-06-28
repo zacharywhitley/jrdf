@@ -60,55 +60,15 @@
 package org.jrdf.util.btree;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
 
 public final class RecordIteratorHelper {
-    private static final int TRIPLES = 3;
-
     private RecordIteratorHelper() {
-    }
-
-    public static Map<Long, Set<Long>> getSubIndex(TripleBTree btree, Long first) throws IOException {
-        Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
-        RecordIterator iterator = btree.getIterator(first, 0L, 0L);
-        try {
-            byte[] bytes = getNextBytes(iterator);
-            while (bytes != null) {
-                Long[] longs = ByteHandler.fromBytes(bytes, TRIPLES);
-                Set<Long> longSet = getLongSet(longs, resultMap);
-                longSet.add(longs[2]);
-                resultMap.put(longs[1], longSet);
-                bytes = getNextBytes(iterator);
-            }
-            return resultMap.isEmpty() ? null : resultMap;
-        } finally {
-            iterator.close();
-        }
-    }
-
-    public static Set<Long> getSubSubIndex(TripleBTree btree, Long first, Long second) throws IOException {
-        Set<Long> resultSet = new HashSet<Long>();
-        RecordIterator iterator = btree.getIterator(first, second, 0L);
-        try {
-            byte[] bytes = getNextBytes(iterator);
-            while (bytes != null) {
-                Long[] longs = ByteHandler.fromBytes(bytes, TRIPLES);
-                resultSet.add(longs[2]);
-                bytes = getNextBytes(iterator);
-            }
-            return resultSet;
-        } finally {
-            iterator.close();
-        }
     }
 
     public static boolean contains(TripleBTree btree, Long first) throws IOException {
         RecordIterator iterator = btree.getIterator(first, 0L, 0L);
         try {
-            byte[] bytes = getNextBytes(iterator);
+            byte[] bytes = iterator.next();
             return bytes != null;
         } finally {
             iterator.close();
@@ -118,7 +78,7 @@ public final class RecordIteratorHelper {
     public static boolean contains(TripleBTree btree, Long first, Long second) throws IOException {
         RecordIterator iterator = btree.getIterator(first, second, 0L);
         try {
-            byte[] bytes = getNextBytes(iterator);
+            byte[] bytes = iterator.next();
             return bytes != null;
         } finally {
             iterator.close();
@@ -128,10 +88,10 @@ public final class RecordIteratorHelper {
     public static boolean remove(TripleBTree btree, Long... node) throws IOException {
         RecordIterator iterator = btree.getIterator(node);
         try {
-            if (getNextBytes(iterator) == null) {
+            if (iterator.next() == null) {
                 return false;
             }
-            removeBytes(btree, ByteHandler.toBytes(node));
+            btree.remove(ByteHandler.toBytes(node));
             return true;
         } finally {
             iterator.close();
@@ -141,11 +101,11 @@ public final class RecordIteratorHelper {
     public static boolean removeSubIndex(TripleBTree btree, Long first) throws IOException {
         RecordIterator iterator = btree.getIterator(first, 0L, 0L);
         try {
-            byte[] bytes = getNextBytes(iterator);
+            byte[] bytes = iterator.next();
             boolean changed = bytes != null;
             while (bytes != null) {
-                removeBytes(btree, bytes);
-                bytes = getNextBytes(iterator);
+                btree.remove(bytes);
+                bytes = iterator.next();
             }
             return changed;
         } finally {
@@ -158,30 +118,12 @@ public final class RecordIteratorHelper {
         RecordIterator recordIterator = btree.iterateAll();
         try {
             long counter = 0;
-            while (getNextBytes(recordIterator) != null) {
+            while (recordIterator.next() != null) {
                 counter++;
             }
             return counter;
         } finally {
             recordIterator.close();
         }
-    }
-
-    private static Set<Long> getLongSet(Long[] longs, Map<Long, Set<Long>> resultMap) {
-        Set<Long> longSet;
-        if (resultMap.containsKey(longs[1])) {
-            longSet = resultMap.get(longs[1]);
-        } else {
-            longSet = new HashSet<Long>();
-        }
-        return longSet;
-    }
-
-    private static void removeBytes(TripleBTree btree, byte[] bytes) throws IOException {
-        btree.remove(bytes);
-    }
-
-    private static byte[] getNextBytes(RecordIterator bTreeIterator) throws IOException {
-        return bTreeIterator.next();
     }
 }
