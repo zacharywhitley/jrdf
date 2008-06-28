@@ -59,14 +59,12 @@
 
 package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 /**
  * An iterator that iterates over a group with a two fixed nodes.
@@ -96,17 +94,7 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
     /**
      * The subIndex of this iterator.  Only needed for initialization and the remove method.
      */
-    private ClosableMap<Long, Set<Long>> subIndex;
-
-    /**
-     * The subSubIndex of this iterator.  Only needed for initialization and the remove method.
-     */
-    private Set<Long> subGroup;
-
-    /**
-     * The iterator for the third index.
-     */
-    private Iterator<Long> thirdIndexIterator;
+    private ClosableIterator<Long[]> subIndex;
 
     /**
      * Handles the removal of nodes
@@ -119,77 +107,43 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
     private Long[] currentNodes;
 
     /**
-     * If there are anymore items left
-     */
-    private boolean hasNext;
-
-    /**
      * Constructor.  Sets up the internal iterators.
      */
     public TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, GraphHandler newHandler) {
-
         // store the node factory and other starting data
         first = fixedFirstNode;
         second = fixedSecondNode;
-
         handler = newHandler;
 
         // find the subIndex from the main index
         subIndex = handler.getSubIndex(first);
-
-        // check that data exists
-        if (null != subIndex) {
-            // now find the set from the sub index map
-            subGroup = subIndex.get(second);
-            if (null != subGroup) {
-                // get an iterator for the set
-                thirdIndexIterator = subGroup.iterator();
-                hasNext = thirdIndexIterator.hasNext();
-            }
-        }
+        getNextValues();
     }
-
 
     public boolean hasNext() {
-        return hasNext;
+        return currentNodes != null;
     }
-
 
     public Triple next() throws NoSuchElementException {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-
-        // Get next node.
-        Long third = thirdIndexIterator.next();
-        hasNext = thirdIndexIterator.hasNext();
-        currentNodes = new Long[]{first, second, third};
-        return handler.createTriple(first, second, third);
+        final Triple triple = handler.createTriple(currentNodes);
+        getNextValues();
+        return triple;
     }
 
     public void remove() {
-        if (null != currentNodes && null != currentNodes[2]) {
+        if (currentNodes != null) {
             try {
                 handler.remove(currentNodes);
-                cleanIndex();
             } catch (GraphException ge) {
-                throw new IllegalStateException(ge.getMessage());
+                IllegalStateException illegalStateException = new IllegalStateException();
+                illegalStateException.setStackTrace(ge.getStackTrace());
+                throw illegalStateException;
             }
         } else {
             throw new IllegalStateException("Next not called or beyond end of data");
-        }
-    }
-
-    private void cleanIndex() {
-        // check if a set was cleaned out
-        if (subGroup.isEmpty()) {
-            // remove the entry for the set
-            subIndex.remove(second);
-            // check if a subindex was cleaned out
-            if (subIndex.isEmpty()) {
-                // remove the subindex
-                handler.removeSubIndex(first);
-            }
         }
     }
 
@@ -198,5 +152,16 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
             subIndex.close();
         }
         return true;
+    }
+
+    private void getNextValues() {
+        while (subIndex.hasNext()) {
+            final Long[] longs = subIndex.next();
+            if (longs[0].equals(second)) {
+                currentNodes = new Long[]{first, second, longs[1]};
+                return;
+            }
+        }
+        currentNodes = null;
     }
 }

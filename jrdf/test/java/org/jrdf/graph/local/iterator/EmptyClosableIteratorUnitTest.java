@@ -68,7 +68,7 @@ import static java.lang.reflect.Modifier.PUBLIC;
 public class EmptyClosableIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(ClosableIterator.class, EmptyClosableIterator.class);
-        checkConstructor(EmptyClosableIterator.class, PUBLIC);
+        checkImplementationOfInterfaceAndFinal(ClosableIterator.class, TripleEmptyClosableIterator.class);
+        checkConstructor(TripleEmptyClosableIterator.class, PUBLIC);
     }
 }

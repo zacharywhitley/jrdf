@@ -61,9 +61,6 @@ package org.jrdf.graph.local.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
-
-import java.util.Set;
 
 public interface Index<T> {
 
@@ -102,8 +99,7 @@ public interface Index<T> {
      * @param first the entry set to find.
      * @return a map containing the list of longs to set of longs.
      */
-    // TODO Change this to be array.
-    ClosableMap<T, Set<T>> getSubIndex(T first);
+    ClosableIterator<T[]> getSubIndex(T first);
 
     /**
      * Returns true if the value given exists in the index.

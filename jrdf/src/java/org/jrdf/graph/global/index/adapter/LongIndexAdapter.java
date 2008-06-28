@@ -63,9 +63,6 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
-
-import java.util.Set;
 
 /**
  * Wraps a MolecueIndex around the LongIndex interface.  All normal LongIndex calls are translated into MoleculeIndex
@@ -94,9 +91,8 @@ public class LongIndexAdapter implements LongIndex {
         return new TripleFilterClosableIterator(index.iterator());
     }
 
-    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap = index.getSubIndex(first);
-        return new MoleculeIndexAdapaterMap(mapClosableMap);
+    public ClosableIterator<Long[]> getSubIndex(Long first) {
+        return index.getSubIndex(first);
     }
 
     public boolean contains(Long first) {

@@ -61,17 +61,16 @@ package org.jrdf.graph.local.index.longindex.bdb;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.FlatteningEntrySetClosableIterator;
+import org.jrdf.graph.local.iterator.LongArrayEmptyClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
-import org.jrdf.util.ClosableMapImpl;
+import org.jrdf.util.ClosableIteratorImpl;
+import org.jrdf.util.FlatteningEntrySetClosableIterator;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public final class LongIndexBdb implements LongIndex {
     private Map<Long, LinkedList<Long[]>> index;
@@ -139,22 +138,12 @@ public final class LongIndexBdb implements LongIndex {
         return new FlatteningEntrySetClosableIterator(index.entrySet());
     }
 
-    public ClosableMap<Long, Set<Long>> getSubIndex(Long first) {
-        if (index.containsKey(first)) {
-            ClosableMap<Long, Set<Long>> resultMap = new ClosableMapImpl<Long, Set<Long>>();
-            for (Long[] elements : index.get(first)) {
-                Set<Long> longs;
-                if (resultMap.containsKey(elements[0])) {
-                    longs = resultMap.remove(elements[0]);
-                } else {
-                    longs = new HashSet<Long>();
-                }
-                longs.add(elements[1]);
-                resultMap.put(elements[0], longs);
-            }
-            return resultMap;
+    public ClosableIterator<Long[]> getSubIndex(Long first) {
+        final List<Long[]> list = index.get(first);
+        if (list == null) {
+            return new LongArrayEmptyClosableIterator();
         } else {
-            return null;
+            return new ClosableIteratorImpl<Long[]>(list.iterator());
         }
     }
 

@@ -57,59 +57,53 @@
  *
  */
 
-package org.jrdf.graph.local.index.graphhandler;
+package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleImpl;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
 
+import java.util.NoSuchElementException;
+
 /**
- * Handles operations on 201 index.
+ * An iterator that returns no triples.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphHandler201 extends AbstractGraphHandler {
-    private LongIndex index012;
-    private LongIndex index120;
-    private LongIndex index201;
+public final class TripleEmptyClosableIterator implements ClosableIterator<Triple> {
 
-    public GraphHandler201(LongIndex[] indexes, NodePool nodePool) {
-        this.index012 = indexes[0];
-        this.index120 = indexes[1];
-        this.index201 = indexes[2];
-        this.nodePool = nodePool;
+    public TripleEmptyClosableIterator() {
     }
 
-    public ClosableIterator<Long[]> getSubIndex(Long first) {
-        return index201.getSubIndex(first);
+    /**
+     * Returns false.
+     *
+     * @return <code>false</code>.
+     */
+    public boolean hasNext() {
+        return false;
     }
 
-    public boolean removeSubIndex(Long first) {
-        return index201.removeSubIndex(first);
+    /**
+     * Never returns anything.  A call to this will throw NoSuchElementException.
+     *
+     * @return will not return.
+     * @throws NoSuchElementException always.
+     */
+    public Triple next() throws NoSuchElementException {
+        throw new NoSuchElementException();
     }
 
-    public ClosableIterator<Long[]> getEntries() {
-        return index201.iterator();
+    /**
+     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
+     *
+     * @throws UnsupportedOperationException always.
+     */
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 
-    // TODO AN Not tested - can change first and last values and tests still pass.
-    public Triple createTriple(Long... nodes) {
-        SubjectNode subject = (SubjectNode) nodePool.getNodeById(nodes[1]);
-        PredicateNode predicate = (PredicateNode) nodePool.getNodeById(nodes[2]);
-        ObjectNode object = (ObjectNode) nodePool.getNodeById(nodes[0]);
-        return new TripleImpl(subject, predicate, object);
-    }
-
-    public void remove(Long... currentNodes) throws GraphException {
-        index201.remove(currentNodes[0], currentNodes[1], currentNodes[2]);
-        index012.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
-        index120.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
+    public boolean close() {
+        return true;
     }
 }

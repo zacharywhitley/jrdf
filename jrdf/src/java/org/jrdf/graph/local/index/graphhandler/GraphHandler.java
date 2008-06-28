@@ -63,9 +63,6 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
-
-import java.util.Set;
 
 /**
  * An interface used to make modifications on the internal indexes (012, 120 and 201) of a graph.
@@ -82,7 +79,7 @@ public interface GraphHandler {
      * @param first the entry set to find.
      * @return a map containing the list of longs to set of longs.
      */
-    ClosableMap<Long, Set<Long>> getSubIndex(Long first);
+    ClosableIterator<Long[]> getSubIndex(Long first);
 
     /**
      * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is

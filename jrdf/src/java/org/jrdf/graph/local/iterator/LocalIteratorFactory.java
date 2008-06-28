@@ -82,7 +82,7 @@ public final class LocalIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
-        return new EmptyClosableIterator();
+        return new TripleEmptyClosableIterator();
     }
 
     public ClosableIterator<Triple> newGraphIterator() {

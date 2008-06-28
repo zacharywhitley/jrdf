@@ -59,9 +59,9 @@
 
 package org.jrdf.graph.local;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -72,11 +72,7 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
-import java.util.Map;
-import java.util.Set;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 public class ReadableGraphImpl implements ReadableGraph {
     private Localizer localizer;
@@ -155,21 +151,24 @@ public class ReadableGraphImpl implements ReadableGraph {
     }
 
     private boolean containsFixedSubjectFixedPredicate(Long[] values, ObjectNode object) {
-        ClosableMap<Long, Set<Long>> subjIndex = longIndexes[0].getSubIndex(values[0]);
+        final ClosableIterator<Long[]> subjIndex = longIndexes[0].getSubIndex(values[0]);
         try {
-            Set<Long> subjPredIndex = subjIndex.get(values[1]);
-            if (null != subjPredIndex) {
-                if (ANY_OBJECT_NODE != object) {
-                    // Must be subj, pred, obj.
-                    return subjPredIndex.contains(values[2]);
-                } else {
+            while (subjIndex.hasNext()) {
+                final Long[] longs = subjIndex.next();
+                if (longs[0].equals(values[1])) {
                     // Was subj, pred, AnyObjectNode - must be true if we get this far.
-                    return true;
+                    if (ANY_OBJECT_NODE.equals(object)) {
+                        return true;
+                    } else {
+                        // Must be subj, pred, obj.
+                        if (longs[1].equals(values[2])) {
+                            return true;
+                        }
+                    }
                 }
-            } else {
-                // subj, pred not found.
-                return false;
             }
+            // subj, pred not found.
+            return false;
         } finally {
             subjIndex.close();
         }
@@ -179,13 +178,17 @@ public class ReadableGraphImpl implements ReadableGraph {
         if (ANY_OBJECT_NODE != object) {
             // Was subj, AnyPredicateNode, obj
             // Use 201 index to find object and then subject.
-            ClosableMap<Long, Set<Long>> objIndex = longIndexes[2].getSubIndex(values[2]);
+            final ClosableIterator<Long[]> objIndex = longIndexes[2].getSubIndex(values[2]);
             try {
-                return null != objIndex && null != objIndex.get(values[0]);
-            } finally {
-                if (objIndex != null) {
-                    objIndex.close();
+                while (objIndex.hasNext()) {
+                    final Long[] longs = objIndex.next();
+                    if (longs[0].equals(values[0])) {
+                        return true;
+                    }
                 }
+                return false;
+            } finally {
+                objIndex.close();
             }
         } else {
             // Was subj, AnyPredicate, AnyObject
@@ -204,13 +207,21 @@ public class ReadableGraphImpl implements ReadableGraph {
     }
 
     private boolean containsAnySubjectFixedPredicate(Long[] values, ObjectNode object) {
-        Map<Long, Set<Long>> predIndex = longIndexes[1].getSubIndex(values[1]);
-        if (null != predIndex) {
+        final ClosableIterator<Long[]> predIndex = longIndexes[1].getSubIndex(values[1]);
+        try {
             // AnySubjectNode, pred, AnyObjectNode or AnySubjectNode, pred, obj.
-            return ANY_OBJECT_NODE == object || null != predIndex.get(values[2]);
-        } else {
-            // If predicate not found return false.
+            if (predIndex.hasNext() && ANY_OBJECT_NODE == object) {
+                return true;
+            }
+            while (predIndex.hasNext()) {
+                final Long[] longs = predIndex.next();
+                if (longs[0].equals(values[2])) {
+                    return true;
+                }
+            }
             return false;
+        } finally {
+            predIndex.close();
         }
     }
 

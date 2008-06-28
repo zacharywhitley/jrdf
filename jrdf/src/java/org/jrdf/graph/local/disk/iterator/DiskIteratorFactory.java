@@ -65,7 +65,7 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.EmptyClosableIterator;
+import org.jrdf.graph.local.iterator.TripleEmptyClosableIterator;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.FixedResourcePredicateIterator;
 import org.jrdf.util.ClosableIterator;
@@ -89,7 +89,7 @@ public final class DiskIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
-        return new EmptyClosableIterator();
+        return new TripleEmptyClosableIterator();
     }
 
     public ClosableIterator<Triple> newGraphIterator() {

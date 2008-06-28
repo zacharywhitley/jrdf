@@ -62,13 +62,10 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableIterator;
 
-import static java.util.Arrays.asList;
-import java.util.Iterator;
-import java.util.Map;
+import static java.util.Arrays.*;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 /**
  * An iterator that iterates over a group with a single fixed node.
@@ -92,22 +89,7 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
     /**
      * The subIndex of this iterator.  Only needed for initialization and the remove method.
      */
-    private ClosableMap<Long, Set<Long>> subIndex;
-
-    /**
-     * The iterator for the second index.
-     */
-    private Iterator<Map.Entry<Long, Set<Long>>> secondIndexIterator;
-
-    /**
-     * The current element for the iterator on the second index.
-     */
-    private Map.Entry<Long, Set<Long>> secondEntry;
-
-    /**
-     * The iterator for the third index.
-     */
-    private Iterator<Long> thirdIndexIterator;
+    private ClosableIterator<Long[]> subIndex;
 
     /**
      * Handles the removal of nodes
@@ -128,78 +110,29 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
         // store the node factory and other starting data
         handler = newHandler;
         first = fixedFirstNode;
-        // initialise the iterators to empty
-        thirdIndexIterator = null;
-        secondIndexIterator = null;
         // find the subIndex from the main index
         subIndex = handler.getSubIndex(first);
-        // check that data exists
-        if (null != subIndex) {
-            // now get an iterator to the sub index map
-            secondIndexIterator = subIndex.entrySet().iterator();
-            // check if there is data available - structural constraints say there should be
-            assert secondIndexIterator.hasNext();
-        }
     }
 
 
     public boolean hasNext() {
-        // confirm we still have an item iterator, and that it has data available
-        return null != thirdIndexIterator && thirdIndexIterator.hasNext() ||
-            null != secondIndexIterator && secondIndexIterator.hasNext();
+        return subIndex != null && subIndex.hasNext();
     }
 
 
     public Triple next() throws NoSuchElementException {
-        if (null == secondIndexIterator) {
+        if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        // move to the next position
-        updatePosition();
-        if (null == secondIndexIterator) {
-            throw new NoSuchElementException();
-        }
-        // get the next item
-        Long third = thirdIndexIterator.next();
-        // construct the triple
-        Long second = secondEntry.getKey();
         // get back the nodes for these IDs and build the triple
-        currentNodes = new Long[]{first, second, third};
-        return handler.createTriple(first, second, third);
+        currentNodes = subIndex.next();
+        return handler.createTriple(first, currentNodes[0], currentNodes[1]);
     }
-
-
-    /**
-     * Helper method to move the iterators on to the next position.
-     * If there is no next position then {@link #thirdIndexIterator thirdIndexIterator}
-     * will be set to null, telling {@link #hasNext() hasNext} to return
-     * <code>false</code>.
-     */
-    private void updatePosition() {
-        // progress to the next item if needed
-        if (null == thirdIndexIterator || !thirdIndexIterator.hasNext()) {
-            // the current iterator been exhausted
-            if (!secondIndexIterator.hasNext()) {
-                // the subiterator has been exhausted
-                // tell the secondIndexIterator to finish
-                secondIndexIterator = null;
-                return;
-            }
-            // get the next entry of the sub index
-            secondEntry = secondIndexIterator.next();
-            // get an iterator to the next set from the sub index
-            thirdIndexIterator = secondEntry.getValue().iterator();
-            assert thirdIndexIterator.hasNext();
-        }
-    }
-
 
     public void remove() {
-        if (null != thirdIndexIterator) {
-            // now remove from the other 2 indexes
+        if (currentNodes != null) {
             try {
-                handler.remove(currentNodes);
-                cleanIndex();
+                handler.remove(first, currentNodes[0], currentNodes[1]);
             } catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage() + " triple: " + asList(currentNodes));
             }
@@ -207,21 +140,6 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
             throw new IllegalStateException("Next not called or beyond end of data");
         }
     }
-
-    private void cleanIndex() {
-        // check if a set was cleaned out
-        Set<Long> subGroup = secondEntry.getValue();
-        if (subGroup.isEmpty()) {
-            // remove the entry for the set
-            secondIndexIterator.remove();
-            // check if a subindex was cleaned out
-            if (subIndex.isEmpty()) {
-                // remove the subindex
-                handler.removeSubIndex(first);
-            }
-        }
-    }
-
 
     public boolean close() {
         if (subIndex != null) {

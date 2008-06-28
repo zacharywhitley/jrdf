@@ -65,14 +65,16 @@ import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
-import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
+import java.util.Arrays;
+import static java.util.Arrays.*;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.List;
 
 /**
  * @author Yuan-Fang Li
@@ -117,18 +119,14 @@ public class MoleculeIndexBdbUnitTest extends TestCase {
         index.add(0L, 1L, 2L, 5L);
         index.add(1L, 4L, 5L, 6L);
         assertEquals("size  = 4", 4, index.getSize());
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> map = index.getSubIndex(0L);
-        assertEquals("subindex = 1", 1, map.size());
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> goodMap =
-                new ClosableMapImpl<Long, ClosableMap<Long, Set<Long>>>();
-        ClosableMap<Long, Set<Long>> subMap = new ClosableMapImpl<Long, Set<Long>>();
-        final HashSet<Long> set = new HashSet<Long>();
-        set.add(3L);
-        set.add(4L);
-        set.add(5L);
-        subMap.put(2L, set);
-        goodMap.put(1L, subMap);
-        assertEquals("Same map", goodMap, map);
+        final ClosableIterator<Long[]> results = index.getSubIndex(0L);
+        final Iterator<Long[]> expectedResults = asList(new Long[]{1L, 2L, 3L}, new Long[]{1L, 2L, 4L},
+                new Long[]{1L, 2L, 5L}).iterator();
+        while (results.hasNext()) {
+            final List<Long> actualResults = Arrays.asList(results.next());
+            final List<Long> expectedLongs = Arrays.asList(expectedResults.next());
+            assertEquals("Same list", expectedLongs, actualResults);
+        }
     }
 
     public void testIterator() throws GraphException {
