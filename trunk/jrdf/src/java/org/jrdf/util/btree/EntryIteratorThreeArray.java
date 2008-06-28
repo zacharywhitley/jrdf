@@ -69,7 +69,7 @@ public class EntryIteratorThreeArray implements ClosableIterator<Long[]> {
     private RecordIterator iterator;
     private byte[] currentValues;
 
-    public EntryIteratorThreeArray(TripleBTree btree) {
+    public EntryIteratorThreeArray(BTree btree) {
         this.iterator = btree.iterateAll();
         getNextValues();
     }

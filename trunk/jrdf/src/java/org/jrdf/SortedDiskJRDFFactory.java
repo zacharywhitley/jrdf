@@ -75,11 +75,11 @@ import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
-import org.jrdf.util.btree.TripleBTree;
 
-import static java.util.Arrays.asList;
+import static java.util.Arrays.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -135,13 +135,13 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     }
 
     private LongIndex[] createIndexes() {
-        TripleBTree[] bTrees = createBTrees();
+        BTree[] bTrees = createBTrees();
         return new LongIndex[]{new LongIndexSesame(bTrees[0]), new LongIndexSesame(bTrees[1]),
             new LongIndexSesame(bTrees[2])};
     }
 
-    private TripleBTree[] createBTrees() {
-        return new TripleBTree[]{btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
+    private BTree[] createBTrees() {
+        return new BTree[]{btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
                 btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
                 btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
     }

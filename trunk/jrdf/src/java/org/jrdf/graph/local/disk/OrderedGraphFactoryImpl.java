@@ -69,7 +69,6 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
@@ -80,6 +79,7 @@ import org.jrdf.graph.local.iterator.OrderedIteratorFactoryImpl;
 import org.jrdf.set.BdbSortedSetFactory;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.btree.BTree;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -95,7 +95,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private ReadWriteGraph readWriteGraph;
     private Localizer localizer;
 
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, TripleBTree[] trees,
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, BTree[] trees,
         long graphNumber) {
         this.longIndexes = newLongIndexes;
         nodePool = newNodePoolFactory.createNodePool();

@@ -61,10 +61,11 @@ package org.jrdf.graph.local.disk.iterator;
 
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.util.btree.RecordIterator;
-import static org.jrdf.util.btree.ByteHandler.fromBytes;
-import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.btree.BTree;
+import static org.jrdf.util.btree.ByteHandler.*;
+import org.jrdf.util.btree.RecordIterator;
+import static org.jrdf.util.btree.RecordIteratorHelper.*;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
@@ -76,8 +77,8 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
     private byte[] currentBytes;
     private PredicateNode currentPredicate;
 
-    public AnyResourcePredicateIterator(final TripleBTree newBTree, final GraphHandler newHandler) {
-        bTreeIterator = newBTree.getIterator(0L, 0L, 0L);
+    public AnyResourcePredicateIterator(final BTree newBTree, final GraphHandler newHandler) {
+        bTreeIterator = getIterator(newBTree, 0L, 0L, 0L);
         this.handler = newHandler;
         currentPredicate = getNextPredicate();
     }
