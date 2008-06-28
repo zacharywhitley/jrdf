@@ -57,90 +57,65 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.util;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.btree.ByteHandler.*;
-import org.jrdf.util.btree.EntryIteratorThreeArray;
-import org.jrdf.util.btree.EntryIteratorTwoArray;
-import org.jrdf.util.btree.RecordIteratorHelper;
-import org.jrdf.util.btree.TripleBTree;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
-import java.io.IOException;
+public class FlatteningTwoLongClosableIterator implements ClosableIterator<Long[]> {
+    private final ClosableMap<Long, Set<Long>> map;
+    private Iterator<Map.Entry<Long, Set<Long>>> iterator;
+    private Iterator<Long> itemIterator;
+    private Map.Entry<Long, Set<Long>> firstEntry;
 
-public final class LongIndexSesame implements LongIndex {
-    private TripleBTree btree;
-
-    public LongIndexSesame(TripleBTree newBtree) {
-        this.btree = newBtree;
+    public FlatteningTwoLongClosableIterator(ClosableMap<Long, Set<Long>> newMap) {
+        this.map = newMap;
+        this.iterator = newMap.entrySet().iterator();
     }
 
-    public void add(Long... node) throws GraphException {
-        try {
-            btree.insert(toBytes(node));
-        } catch (IOException e) {
-            throw new GraphException(e);
+    public boolean close() {
+        return map.close();
+    }
+
+    public boolean hasNext() {
+        return (itemIteratorHasNext() || (iteratorHasNext()));
+    }
+
+    private boolean itemIteratorHasNext() {
+        return (null != itemIterator && itemIterator.hasNext());
+    }
+
+    private boolean iteratorHasNext() {
+        return null != iterator && iterator.hasNext();
+    }
+
+    public Long[] next() {
+        if (null == iterator) {
+            throw new NoSuchElementException();
         }
+        updatePosition();
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
+        final Long first = firstEntry.getKey();
+        final Long second = itemIterator.next();
+        return new Long[]{first, second};
     }
 
-    public void remove(Long... node) throws GraphException {
-        try {
-            boolean changed = RecordIteratorHelper.remove(btree, node);
-            if (!changed) {
-                throw new GraphException("Unable to remove nonexistent statement");
+    protected void updatePosition() {
+        if (null == itemIterator || !itemIterator.hasNext()) {
+            if (!iterator.hasNext()) {
+                iterator = null;
+                return;
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            firstEntry = iterator.next();
+            itemIterator = firstEntry.getValue().iterator();
         }
     }
 
-    public void clear() {
-        try {
-            btree.clear();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ClosableIterator<Long[]> iterator() {
-        return new EntryIteratorThreeArray(btree);
-    }
-
-    public ClosableIterator<Long[]> getSubIndex(Long first) {
-        return new EntryIteratorTwoArray(first, btree);
-    }
-
-    public boolean contains(Long first) {
-        try {
-            return RecordIteratorHelper.contains(btree, first);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean removeSubIndex(Long first) {
-        try {
-            return RecordIteratorHelper.removeSubIndex(btree, first);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public long getSize() {
-        try {
-            return RecordIteratorHelper.getSize(btree);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void close() {
-        try {
-            btree.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }

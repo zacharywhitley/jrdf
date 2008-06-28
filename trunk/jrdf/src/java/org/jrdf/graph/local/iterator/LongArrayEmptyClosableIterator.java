@@ -57,58 +57,52 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.graph.local.iterator;
 
 import org.jrdf.util.ClosableIterator;
 
-import java.io.IOException;
 import java.util.NoSuchElementException;
 
-public class EntryIterator implements ClosableIterator<Long[]> {
-    private static final int TRIPLES = 3;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-    private long key;
+/**
+ * An iterator that returns no triples.
+ *
+ * @author Andrew Newman
+ * @version $Revision: 1806 $
+ */
+public final class LongArrayEmptyClosableIterator implements ClosableIterator<Long[]> {
 
-    public EntryIterator(TripleBTree btree) {
-        this.iterator = btree.iterateAll();
-        getNextValues();
+    public LongArrayEmptyClosableIterator() {
     }
 
+    /**
+     * Returns false.
+     *
+     * @return <code>false</code>.
+     */
     public boolean hasNext() {
-        return currentValues != null;
+        return false;
     }
 
-    public Long[] next() {
-        // Current values null then we are at the end.
-        if (currentValues == null) {
-            throw new NoSuchElementException();
-        }
-        // Create entry for current key - as it is already the next one.
-        Long[] returnValues = ByteHandler.fromBytes(currentValues, TRIPLES);
-        // Attempt to get next values.
-        getNextValues();
-        return returnValues;
+    /**
+     * Never returns anything.  A call to this will throw NoSuchElementException.
+     *
+     * @return will not return.
+     * @throws java.util.NoSuchElementException always.
+     */
+    public Long[] next() throws NoSuchElementException {
+        throw new NoSuchElementException();
     }
 
+    /**
+     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
+     *
+     * @throws UnsupportedOperationException always.
+     */
     public void remove() {
-        throw new UnsupportedOperationException("Cannot set values - read only");
+        throw new UnsupportedOperationException();
     }
 
     public boolean close() {
-        try {
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    private void getNextValues() {
-        try {
-            currentValues = iterator.next();
-        } catch (IOException e) {
-            currentValues = null;
-        }
+        return true;
     }
 }

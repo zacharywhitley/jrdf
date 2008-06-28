@@ -62,14 +62,12 @@ package org.jrdf.graph.global.index.longindex.sesame;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
 import static org.jrdf.util.btree.ByteHandler.*;
-import org.jrdf.util.btree.EntryIterator;
+import org.jrdf.util.btree.EntryIteratorThreeArray;
 import org.jrdf.util.btree.RecordIteratorHelper;
 import org.jrdf.util.btree.TripleBTree;
 
 import java.io.IOException;
-import java.util.Set;
 
 public final class LongIndexSesame implements MoleculeIndex<Long> {
     private TripleBTree btree;
@@ -106,7 +104,7 @@ public final class LongIndexSesame implements MoleculeIndex<Long> {
     }
 
     public ClosableIterator<Long[]> iterator() {
-        return new EntryIterator(btree);
+        return new EntryIteratorThreeArray(btree);
     }
 
     public boolean keyExists(Long first) {
@@ -117,7 +115,7 @@ public final class LongIndexSesame implements MoleculeIndex<Long> {
         }
     }
 
-    public ClosableMap<Long, ClosableMap<Long, Set<Long>>> getSubIndex(Long first) {
+    public ClosableIterator<Long[]> getSubIndex(Long first) {
         throw new UnsupportedOperationException();
     }
 

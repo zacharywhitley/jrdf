@@ -994,7 +994,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         for (int i = 0; i < expectedFoundTriples; i++) {
             // remove the element
             assertTrue("Expected to delete: " + expectedFoundTriples + " but only deleted: " + i, ci.hasNext());
-            Triple triple = ci.next();
+            ci.next();
             ci.remove();
             assertEquals(--numberOfTriplesInGraph, graph.getNumberOfTriples());
         }

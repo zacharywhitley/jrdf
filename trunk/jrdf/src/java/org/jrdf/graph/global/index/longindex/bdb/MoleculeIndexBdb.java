@@ -61,14 +61,16 @@ package org.jrdf.graph.global.index.longindex.bdb;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
+import org.jrdf.graph.local.iterator.LongArrayEmptyClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
-import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.FlatteningEntrySetClosableIterator;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -157,25 +159,12 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long> {
         return size;
     }
 
-    public ClosableMap<Long, ClosableMap<Long, Set<Long>>> getSubIndex(Long first) {
-        if (index.containsKey(first)) {
-            ClosableMap<Long, ClosableMap<Long, Set<Long>>> resultMap =
-                    new ClosableMapImpl<Long, ClosableMap<Long, Set<Long>>>();
-            // a triple in Long array
-            final LinkedList<Long[]> list = index.get(first);
-            for (Long[] triple : list) {
-                ClosableMap<Long, Set<Long>> poMap;
-                if (resultMap.containsKey(triple[0])) {
-                    poMap = resultMap.remove(triple[0]);
-                } else {
-                    poMap = new ClosableMapImpl<Long, Set<Long>>();
-                }
-                poMap.put(triple[1], createSubSubIndex(triple, poMap));
-                resultMap.put(triple[0], poMap);
-            }
-            return resultMap;
+    public ClosableIterator<Long[]> getSubIndex(Long first) {
+        final List<Long[]> list = index.get(first);
+        if (list == null) {
+            return new LongArrayEmptyClosableIterator();
         } else {
-            return null;
+            return new ClosableIteratorImpl<Long[]>(list.iterator());
         }
     }
 

@@ -63,28 +63,23 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final Long resource;
     private final GraphHandler graphHandler012;
-    private final ClosableIterator<Long[]> posIterator;
-    private Iterator<Long> predicateIterator;
+    private final GraphHandler graphHandler120;
+    private final ClosableIterator<Long[]> posPredicateIterator;
+    private ClosableIterator<Long[]> spoPredicateIterator;
     private Long nextPredicate;
-    private Set<Long> spoPredicates;
-    private Long previousPredicate;
 
     public FixedResourcePredicateIterator(final Long newResource, final GraphHandler newGraphHandler012,
         final GraphHandler newGraphHandler120) {
         this.resource = newResource;
         this.graphHandler012 = newGraphHandler012;
-        this.posIterator = newGraphHandler120.getEntries();
-        this.spoPredicates = graphHandler012.getSubIndex(resource).keySet();
-        if (spoPredicates != null) {
-            predicateIterator = spoPredicates.iterator();
-        }
+        this.graphHandler120 = newGraphHandler120;
+        this.spoPredicateIterator = graphHandler012.getSubIndex(resource);
+        this.posPredicateIterator = newGraphHandler120.getEntries();
         nextPredicate();
     }
 
@@ -110,31 +105,38 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
     }
 
     private Long nextPredicateFromSPO() {
-        Long newPredicate = null;
-        if (predicateIterator != null) {
-            if (predicateIterator.hasNext()) {
-                newPredicate = predicateIterator.next();
-            } else {
-                predicateIterator = null;
+        if (spoPredicateIterator != null) {
+            while (spoPredicateIterator.hasNext()) {
+                final Long[] longs = spoPredicateIterator.next();
+                if (!longs[0].equals(nextPredicate)) {
+                    return longs[0];
+                }
             }
         }
-        return newPredicate;
+        return null;
     }
 
     private Long nextPredicateFromPOS() {
-        Long newPredicate = null;
-        boolean foundNextPredicate = false;
-        while (!foundNextPredicate && posIterator.hasNext()) {
-            Long[] pos = posIterator.next();
+        while (posPredicateIterator.hasNext()) {
+            Long[] pos = posPredicateIterator.next();
             Long predicate = pos[0];
             Long object = pos[1];
-            if (!predicate.equals(previousPredicate) && object.equals(resource) && !spoPredicates.contains(predicate)) {
-                newPredicate = predicate;
-                previousPredicate = newPredicate;
-                foundNextPredicate = true;
+            if (!predicate.equals(nextPredicate) && object.equals(resource) &&
+                    !containsPredicate(resource, predicate)) {
+                return predicate;
             }
         }
-        return newPredicate;
+        return null;
+    }
+
+    private boolean containsPredicate(Long resource, Long predicate) {
+        final ClosableIterator<Long[]> index = graphHandler012.getSubIndex(resource);
+        while (index.hasNext()) {
+            if (index.next()[1].equals(predicate)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void remove() {
@@ -142,8 +144,8 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
     }
 
     public boolean close() {
-        if (posIterator != null) {
-            posIterator.close();
+        if (posPredicateIterator != null) {
+            posPredicateIterator.close();
         }
         return true;
     }

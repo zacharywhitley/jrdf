@@ -62,10 +62,8 @@ package org.jrdf.graph.local.index.longindex;
 import junit.framework.TestCase;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.test.SetUtil.asSet;
+import static org.jrdf.util.test.SetUtil.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractLongIndexIntegrationTest extends TestCase {
@@ -85,10 +83,8 @@ public abstract class AbstractLongIndexIntegrationTest extends TestCase {
         longIndex.add(1L, 2L, 4L);
         longIndex.add(2L, 2L, 4L);
         longIndex.add(2L, 2L, 5L);
-        Set<Long> set1 = asSet(3L, 4L);
-        Set<Long> set2 = asSet(4L, 5L);
-        checkSubIndexResult(1L, 2L, set1);
-        checkSubIndexResult(2L, 2L, set2);
+        checkSubIndexResult(1L, 2L, asSet(3L, 4L));
+        checkSubIndexResult(2L, 2L, asSet(4L, 5L));
     }
 
     public void testAddAndRemoveSubIndex() throws Exception {
@@ -136,10 +132,12 @@ public abstract class AbstractLongIndexIntegrationTest extends TestCase {
     }
 
     private void checkSubIndexResult(long subject, long predicate, Set<Long> objects) {
-        Map<Long, Set<Long>> result = new HashMap<Long, Set<Long>>(longIndex.getSubIndex(subject));
-        Map<Long, Set<Long>> expectedResult = new HashMap<Long, Set<Long>>();
-        expectedResult.put(predicate, objects);
-        assertEquals(expectedResult, result);
+        final ClosableIterator<Long[]> index = longIndex.getSubIndex(subject);
+        while (index.hasNext()) {
+            Long[] result = index.next();
+            assertEquals(predicate, result[0].longValue());
+            assertTrue(objects.contains(result[1]));
+        }
     }
 
     private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {

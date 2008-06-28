@@ -62,7 +62,7 @@ package org.jrdf.graph.global.index;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -78,10 +78,8 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     }
 
     public Long findMid(Long... quin) throws GraphException {
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> pomMap = indexes[0].getSubIndex(quin[0]);
-        Map<Long, Set<Long>> omMap = pomMap.get(quin[1]);
-        Set<Long> mSet = omMap.get(quin[2]);
-        return mSet.iterator().next();
+        final ClosableIterator<Long[]> index = indexes[0].getSubIndex(quin[0]);
+        return index.next()[2];
     }
 
     public Set<Long[]> findTriplesForMid(Long mid) {

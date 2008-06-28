@@ -61,10 +61,12 @@ package org.jrdf.graph.local.index.longindex.mem;
 
 import org.jrdf.graph.local.index.AbstractIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.FlatteningThreeLongClosableIterator;
+import org.jrdf.graph.local.iterator.LongArrayEmptyClosableIterator;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
+import org.jrdf.util.FlatteningThreeLongClosableIterator;
+import org.jrdf.util.FlatteningTwoLongClosableIterator;
 
 import java.util.Map;
 import java.util.Set;
@@ -82,13 +84,22 @@ public final class LongIndexMem extends AbstractIndex<Long> implements LongIndex
         super();
     }
 
+    public LongIndexMem(Map<Long, ClosableMap<Long, Set<Long>>> newIndex) {
+        super(newIndex);
+    }
+
     public ClosableIterator<Long[]> iterator() {
         ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator =
             new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, Set<Long>>>>(index.entrySet().iterator());
         return new FlatteningThreeLongClosableIterator(iterator);
     }
 
-    public LongIndexMem(Map<Long, ClosableMap<Long, Set<Long>>> newIndex) {
-        super(newIndex);
+    public ClosableIterator<Long[]> getSubIndex(Long first) {
+        final ClosableMap<Long, Set<Long>> longSetClosableMap = index.get(first);
+        if (longSetClosableMap == null) {
+            return new LongArrayEmptyClosableIterator();
+        } else {
+            return new FlatteningTwoLongClosableIterator(longSetClosableMap);
+        }
     }
 }

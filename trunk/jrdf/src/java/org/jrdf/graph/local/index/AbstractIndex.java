@@ -111,6 +111,8 @@ public abstract class AbstractIndex<T> implements Index<T>, Serializable {
 
     public abstract ClosableIterator<T[]> iterator();
 
+    public abstract ClosableIterator<T[]> getSubIndex(T first);
+
     public void remove(T... node) throws GraphException {
         // find the sub index
         Map<T, Set<T>> subIndex = index.get(node[0]);
@@ -139,10 +141,6 @@ public abstract class AbstractIndex<T> implements Index<T>, Serializable {
 
     public boolean keyExists(T node) {
         return index.containsKey(node);
-    }
-
-    public ClosableMap<T, Set<T>> getSubIndex(T first) {
-        return index.get(first);
     }
 
     public boolean removeSubIndex(T first) {

@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,53 +57,57 @@
  *
  */
 
-package org.jrdf.graph.local.iterator;
+package org.jrdf.util.btree;
 
-import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 
-/**
- * An iterator that returns no triples.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public final class EmptyClosableIterator implements ClosableIterator<Triple> {
+public class EntryIteratorThreeArray implements ClosableIterator<Long[]> {
+    private static final int TRIPLES = 3;
+    private RecordIterator iterator;
+    private byte[] currentValues;
 
-    public EmptyClosableIterator() {
+    public EntryIteratorThreeArray(TripleBTree btree) {
+        this.iterator = btree.iterateAll();
+        getNextValues();
     }
 
-    /**
-     * Returns false.
-     *
-     * @return <code>false</code>.
-     */
     public boolean hasNext() {
-        return false;
+        return currentValues != null;
     }
 
-    /**
-     * Never returns anything.  A call to this will throw NoSuchElementException.
-     *
-     * @return will not return.
-     * @throws NoSuchElementException always.
-     */
-    public Triple next() throws NoSuchElementException {
-        throw new NoSuchElementException();
+    public Long[] next() {
+        // Current values null then we are at the end.
+        if (currentValues == null) {
+            throw new NoSuchElementException();
+        }
+        // Create entry for current key - as it is already the next one.
+        Long[] returnValues = ByteHandler.fromBytes(currentValues, TRIPLES);
+        // Attempt to get next values.
+        getNextValues();
+        return returnValues;
     }
 
-    /**
-     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
-     *
-     * @throws UnsupportedOperationException always.
-     */
     public void remove() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Cannot set values - read only");
     }
 
     public boolean close() {
-        return true;
+        try {
+            iterator.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private void getNextValues() {
+        try {
+            currentValues = iterator.next();
+        } catch (IOException e) {
+            currentValues = null;
+        }
     }
 }
