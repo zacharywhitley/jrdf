@@ -62,11 +62,47 @@ package org.jrdf.util.btree;
 import java.io.IOException;
 
 public final class RecordIteratorHelper {
+    private static final int OFFSET = 8;
+    private static final long ON_MASK = 0xffffffffffffffffL;
+
     private RecordIteratorHelper() {
     }
 
-    public static boolean contains(TripleBTree btree, Long first) throws IOException {
-        RecordIterator iterator = btree.getIterator(first, 0L, 0L);
+    public static RecordIterator getIterator(BTree btree, Long... node) {
+        int indexSize = node.length;
+        int valueSize = indexSize * OFFSET;
+        byte[] key = ByteHandler.toBytes(node);
+        byte[] filter = new byte[valueSize];
+        byte[] minValue = new byte[valueSize];
+        byte[] maxValue = new byte[valueSize];
+        for (int i = 0; i < indexSize; i++) {
+            addToFilter(filter, i, node);
+            addToMinValue(minValue, i, node);
+            addToMaxValue(maxValue, i, node);
+        }
+        return btree.iterateRangedValues(key, filter, minValue, maxValue);
+    }
+
+    private static void addToFilter(byte[] filter, int index, Long... node) {
+        if (node[index] != 0) {
+            ByteArrayUtil.putLong(ON_MASK, filter, index * OFFSET);
+        }
+    }
+
+    private static void addToMinValue(byte[] minValue, int index, Long... node) {
+        ByteArrayUtil.putLong(node[index], minValue, index * OFFSET);
+    }
+
+    private static void addToMaxValue(byte[] maxValue, int index, Long... node) {
+        if (node[index] == 0) {
+            ByteArrayUtil.putLong(ON_MASK, maxValue, index * OFFSET);
+        } else {
+            ByteArrayUtil.putLong(node[index], maxValue, index * OFFSET);
+        }
+    }
+
+    public static boolean contains(BTree btree, Long first) throws IOException {
+        RecordIterator iterator = getIterator(btree, first, 0L, 0L);
         try {
             byte[] bytes = iterator.next();
             return bytes != null;
@@ -75,8 +111,8 @@ public final class RecordIteratorHelper {
         }
     }
 
-    public static boolean contains(TripleBTree btree, Long first, Long second) throws IOException {
-        RecordIterator iterator = btree.getIterator(first, second, 0L);
+    public static boolean contains(BTree btree, Long first, Long second) throws IOException {
+        RecordIterator iterator = getIterator(btree, first, second, 0L);
         try {
             byte[] bytes = iterator.next();
             return bytes != null;
@@ -85,8 +121,8 @@ public final class RecordIteratorHelper {
         }
     }
 
-    public static boolean remove(TripleBTree btree, Long... node) throws IOException {
-        RecordIterator iterator = btree.getIterator(node);
+    public static boolean remove(BTree btree, Long... node) throws IOException {
+        RecordIterator iterator = getIterator(btree, node);
         try {
             if (iterator.next() == null) {
                 return false;
@@ -98,8 +134,8 @@ public final class RecordIteratorHelper {
         }
     }
 
-    public static boolean removeSubIndex(TripleBTree btree, Long first) throws IOException {
-        RecordIterator iterator = btree.getIterator(first, 0L, 0L);
+    public static boolean removeSubIndex(BTree btree, Long first) throws IOException {
+        RecordIterator iterator = getIterator(btree, first, 0L, 0L);
         try {
             byte[] bytes = iterator.next();
             boolean changed = bytes != null;
@@ -114,7 +150,7 @@ public final class RecordIteratorHelper {
 
     }
 
-    public static long getSize(TripleBTree btree) throws IOException {
+    public static long getSize(BTree btree) throws IOException {
         RecordIterator recordIterator = btree.iterateAll();
         try {
             long counter = 0;

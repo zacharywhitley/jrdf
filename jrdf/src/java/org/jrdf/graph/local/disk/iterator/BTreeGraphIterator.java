@@ -62,27 +62,28 @@ package org.jrdf.graph.local.disk.iterator;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.util.btree.RecordIterator;
-import org.jrdf.util.btree.TripleBTree;
-import static org.jrdf.util.btree.ByteHandler.fromBytes;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.btree.BTree;
+import static org.jrdf.util.btree.ByteHandler.*;
+import org.jrdf.util.btree.RecordIterator;
+import static org.jrdf.util.btree.RecordIteratorHelper.*;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
 public class BTreeGraphIterator implements ClosableIterator<Triple> {
     private static final int TRIPLES = 3;
-    private final TripleBTree btree;
+    private final BTree btree;
     private final GraphHandler handler;
     private RecordIterator bTreeIterator;
     private byte[] bytesToRemove;
     private byte[] currentBytes;
     private boolean nextCalled;
 
-    public BTreeGraphIterator(TripleBTree newBTree, GraphHandler newHandler, Long... nodes) {
+    public BTreeGraphIterator(BTree newBTree, GraphHandler newHandler, Long... nodes) {
         this.btree = newBTree;
         this.handler = newHandler;
-        bTreeIterator = btree.getIterator(nodes);
+        bTreeIterator = getIterator(btree, nodes);
         getNextBytes();
     }
 

@@ -62,5 +62,5 @@ package org.jrdf.util.btree;
 import org.jrdf.util.DirectoryHandler;
 
 public interface BTreeFactory {
-    TripleBTree createBTree(DirectoryHandler handler, String fileName);
+    BTree createBTree(DirectoryHandler handler, String fileName);
 }

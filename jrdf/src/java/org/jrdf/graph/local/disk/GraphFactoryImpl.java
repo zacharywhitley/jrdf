@@ -69,12 +69,12 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.util.btree.BTree;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -90,7 +90,7 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
     private ReadWriteGraph readWriteGraph;
     private Localizer localizer;
 
-    public GraphFactoryImpl(LongIndex[] newLongIndexes, TripleBTree[] trees, NodePool newNodePool) {
+    public GraphFactoryImpl(LongIndex[] newLongIndexes, BTree[] trees, NodePool newNodePool) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePool;
         this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());

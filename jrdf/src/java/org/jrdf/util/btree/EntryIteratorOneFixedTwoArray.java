@@ -60,6 +60,7 @@
 package org.jrdf.util.btree;
 
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.btree.RecordIteratorHelper.*;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
@@ -69,9 +70,9 @@ public class EntryIteratorOneFixedTwoArray implements ClosableIterator<Long[]> {
     private RecordIterator iterator;
     private byte[] currentValues;
 
-    public EntryIteratorOneFixedTwoArray(long newFirst, TripleBTree newBTree) {
+    public EntryIteratorOneFixedTwoArray(long newFirst, BTree newBTree) {
         try {
-            this.iterator = newBTree.getIterator(newFirst, 0L, 0L);
+            this.iterator = getIterator(newBTree, newFirst, 0L, 0L);
             this.currentValues = iterator.next();
         } catch (IOException e) {
             throw new RuntimeException(e);

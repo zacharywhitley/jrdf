@@ -62,14 +62,14 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.btree.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.TripleEmptyClosableIterator;
-import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.FixedResourcePredicateIterator;
+import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.graph.local.iterator.TripleEmptyClosableIterator;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.util.btree.BTree;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
@@ -79,10 +79,10 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  */
 public final class DiskIteratorFactory implements IteratorFactory {
     private final GraphHandler[] graphHandlers;
-    private final TripleBTree[] trees;
+    private final BTree[] trees;
 
     public DiskIteratorFactory(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
-        final NodePool newNodePool, final Localizer newLocalizer, final TripleBTree[] newTrees) {
+        final NodePool newNodePool, final Localizer newLocalizer, final BTree[] newTrees) {
         checkNotNull(newLongIndexes, newGraphHandlers, newNodePool, newLocalizer, newTrees);
         this.graphHandlers = newGraphHandlers;
         this.trees = newTrees;

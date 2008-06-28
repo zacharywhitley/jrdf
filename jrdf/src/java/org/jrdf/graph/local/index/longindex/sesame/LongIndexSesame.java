@@ -62,18 +62,18 @@ package org.jrdf.graph.local.index.longindex.sesame;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.btree.BTree;
 import static org.jrdf.util.btree.ByteHandler.*;
-import org.jrdf.util.btree.EntryIteratorThreeArray;
 import org.jrdf.util.btree.EntryIteratorOneFixedTwoArray;
+import org.jrdf.util.btree.EntryIteratorThreeArray;
 import org.jrdf.util.btree.RecordIteratorHelper;
-import org.jrdf.util.btree.TripleBTree;
 
 import java.io.IOException;
 
 public final class LongIndexSesame implements LongIndex {
-    private TripleBTree btree;
+    private BTree btree;
 
-    public LongIndexSesame(TripleBTree newBtree) {
+    public LongIndexSesame(BTree newBtree) {
         this.btree = newBtree;
     }
 
