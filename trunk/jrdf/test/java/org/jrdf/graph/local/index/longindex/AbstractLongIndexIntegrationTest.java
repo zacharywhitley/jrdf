@@ -60,8 +60,11 @@
 package org.jrdf.graph.local.index.longindex;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.GraphException;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.*;
 import static org.jrdf.util.test.SetUtil.*;
 
 import java.util.Set;
@@ -114,9 +117,15 @@ public abstract class AbstractLongIndexIntegrationTest extends TestCase {
         checkNumberOfTriples(2, longIndex.getSize());
     }
 
+    // TODO Missing one removing a non-existent triple.
     public void testRemove() throws Exception {
         longIndex.add(1L, 2L, 3L);
         longIndex.add(3L, 4L, 3L);
+        assertThrows(GraphException.class, new AssertThrows.Block(){
+            public void execute() throws Throwable {
+                longIndex.remove(1L, 1L, 1L);
+            }
+        });
         checkNumberOfTriples(2, longIndex.getSize());
         longIndex.remove(1L, 2L, 3L);
         checkNumberOfTriples(1, longIndex.getSize());

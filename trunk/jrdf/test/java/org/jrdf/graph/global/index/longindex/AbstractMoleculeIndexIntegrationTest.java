@@ -62,6 +62,7 @@ package org.jrdf.graph.global.index.longindex;
 import junit.framework.TestCase;
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.test.AssertThrows;
 
 import java.util.Arrays;
 import static java.util.Arrays.*;
@@ -88,28 +89,33 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
     }
 
     public void testBasicOps() throws GraphException {
-        assertFalse("No keys", index.contains(0L));
-        index.add(0L, 1L, 2L, 3L);
-        assertTrue("0L exists", index.contains(0L));
+        assertFalse("No keys", index.contains(1L));
+        index.add(1L, 2L, 3L, 4L);
+        assertTrue("0L exists", index.contains(1L));
         assertEquals("size = 1", 1, index.getSize());
-        index.add(0L, 1L, 2L, 3L);
+        index.add(1L, 2L, 3L, 4L);
         assertEquals("size = 1", 1, index.getSize());
-        index.remove(0L, 0L, 0L, 0L);
+        AssertThrows.assertThrows(GraphException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                index.remove(1L, 1L, 1L, 1L);
+            }
+        });
         assertEquals("size = 1", 1, index.getSize());
-        assertTrue("Contains 0L", index.contains(0L));
-        index.remove(0L, 1L, 2L, 3L);
-        assertFalse("Not contains 0L", index.contains(0L));
+        assertTrue("Contains 1L", index.contains(1L));
+        index.remove(1L, 2L, 3L, 4L);
+        assertFalse("Not contains 1L", index.contains(1L));
         assertEquals("size = 0", 0, index.getSize());
-        assertFalse("Not contains 0L", index.removeSubIndex(0L));
+        assertFalse("Not contains 1L", index.removeSubIndex(1L));
     }
 
     public void testComplexOps() throws GraphException {
-        index.add(0L, 1L, 2L, 3L);
-        index.add(0L, 1L, 2L, 4L);
-        index.add(0L, 1L, 2L, 5L);
-        index.add(1L, 4L, 5L, 6L);
+        assertEquals(0, index.getSize());
+        index.add(1L, 1L, 2L, 3L);
+        index.add(1L, 1L, 2L, 4L);
+        index.add(1L, 1L, 2L, 5L);
+        index.add(2L, 4L, 5L, 6L);
         assertEquals("size  = 4", 4, index.getSize());
-        final ClosableIterator<Long[]> results = index.getSubIndex(0L);
+        final ClosableIterator<Long[]> results = index.getSubIndex(1L);
         final Iterator<Long[]> expectedResults = asList(new Long[]{1L, 2L, 3L}, new Long[]{1L, 2L, 4L},
                 new Long[]{1L, 2L, 5L}).iterator();
         while (results.hasNext()) {
@@ -120,14 +126,14 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
     }
 
     public void testIterator() throws GraphException {
-        index.add(0L, 1L, 2L, 3L);
-        index.add(0L, 1L, 2L, 4L);
-        index.add(0L, 1L, 2L, 5L);
-        index.add(1L, 4L, 5L, 6L);
+        index.add(1L, 1L, 2L, 3L);
+        index.add(1L, 1L, 2L, 4L);
+        index.add(1L, 1L, 2L, 5L);
+        index.add(2L, 4L, 5L, 6L);
         ClosableIterator<Long[]> iterator = index.iterator();
         assertTrue("Has element", iterator.hasNext());
-        Set<Long[]> set = addLongsToSet(new Long[]{0L, 1L, 2L, 3L}, new Long[]{0L, 1L, 2L, 4L},
-                new Long[]{0L, 1L, 2L, 5L}, new Long[]{1L, 4L, 5L, 6L});
+        Set<Long[]> set = addLongsToSet(new Long[]{1L, 1L, 2L, 3L}, new Long[]{1L, 1L, 2L, 4L},
+                new Long[]{1L, 1L, 2L, 5L}, new Long[]{2L, 4L, 5L, 6L});
         int length = 0;
         while (iterator.hasNext()) {
             final Long[] longs = iterator.next();

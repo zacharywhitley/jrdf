@@ -78,7 +78,7 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
     private PredicateNode currentPredicate;
 
     public AnyResourcePredicateIterator(final BTree newBTree, final GraphHandler newHandler) {
-        bTreeIterator = getIterator(newBTree, 0L, 0L, 0L);
+        bTreeIterator = getIterator(newBTree, 0L, 0L, 0L, 0L);
         this.handler = newHandler;
         currentPredicate = getNextPredicate();
     }

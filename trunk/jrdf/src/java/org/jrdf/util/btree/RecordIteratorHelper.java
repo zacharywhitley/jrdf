@@ -102,7 +102,7 @@ public final class RecordIteratorHelper {
     }
 
     public static boolean contains(BTree btree, Long first) throws IOException {
-        RecordIterator iterator = getIterator(btree, first, 0L, 0L);
+        RecordIterator iterator = getIterator(btree, first, 0L, 0L, 0L);
         try {
             byte[] bytes = iterator.next();
             return bytes != null;
@@ -112,7 +112,7 @@ public final class RecordIteratorHelper {
     }
 
     public static boolean contains(BTree btree, Long first, Long second) throws IOException {
-        RecordIterator iterator = getIterator(btree, first, second, 0L);
+        RecordIterator iterator = getIterator(btree, first, second, 0L, 0L);
         try {
             byte[] bytes = iterator.next();
             return bytes != null;
@@ -135,7 +135,7 @@ public final class RecordIteratorHelper {
     }
 
     public static boolean removeSubIndex(BTree btree, Long first) throws IOException {
-        RecordIterator iterator = getIterator(btree, first, 0L, 0L);
+        RecordIterator iterator = getIterator(btree, first, 0L, 0L, 0L);
         try {
             byte[] bytes = iterator.next();
             boolean changed = bytes != null;
