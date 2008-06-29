@@ -96,6 +96,5 @@ public class MoleculeToTextUnitTest extends TestCase {
         StringBuilder builder = new StringBuilder();
         handler = new MoleculeToText(builder);
         traverser.traverse(molecule, handler);
-//        System.err.println("Got: " + builder);
     }
 }
