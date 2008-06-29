@@ -105,21 +105,16 @@ public final class LongIndexBdb implements LongIndex {
     }
 
     public void remove(Long... node) throws GraphException {
-        // find the sub index
         LinkedList<Long[]> subIndex = index.get(node[0]);
-        // check that the subindex exists
-        if (null == subIndex) {
-            throw new GraphException("Unable to remove nonexistent statement");
-        }
-        // find the group
-        Long[] groupToRemove = null;
-        for (Long[] group : subIndex) {
-            if (node[1].equals(group[0]) && node[2].equals(group[1])) {
-                groupToRemove = group;
-                break;
+        if (subIndex != null) {
+            for (Long[] group : subIndex) {
+                if (node[1].equals(group[0]) && node[2].equals(group[1])) {
+                    removeTriple(subIndex, group, node[0]);
+                    return;
+                }
             }
         }
-        removeTriple(subIndex, groupToRemove, node[0]);
+        throw new GraphException("Unable to remove nonexistent molecule");
     }
 
     private void removeTriple(LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {

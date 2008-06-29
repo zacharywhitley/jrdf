@@ -107,18 +107,16 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long> {
     }
 
     public void remove(Long... quad) throws GraphException {
-        LinkedList<Long[]> subIndx = index.get(quad[0]);
-        if (null == subIndx) {
-            throw new GraphException("Unable to remove nonexistent molecule");
-        }
-        Long[] groupToRemove = null;
-        for (Long[] group : subIndx) {
-            if (group[0].equals(quad[1]) && group[1].equals(quad[2]) && group[2].equals(quad[3])) {
-                groupToRemove = group;
-                break;
+        LinkedList<Long[]> subIndex = index.get(quad[0]);
+        if (subIndex != null) {
+            for (Long[] group : subIndex) {
+                if (group[0].equals(quad[1]) && group[1].equals(quad[2]) && group[2].equals(quad[3])) {
+                    removeTriple(subIndex, group, quad[0]);
+                    return;
+                }
             }
         }
-        removeTriple(subIndx, groupToRemove, quad[0]);
+        throw new GraphException("Unable to remove nonexistent molecule");
     }
 
     private void removeTriple(LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {

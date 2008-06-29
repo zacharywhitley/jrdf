@@ -68,6 +68,4 @@ public class LongIndexMemIntegrationTest extends AbstractLongIndexIntegrationTes
         longIndex = new LongIndexMem();
         longIndex.clear();
     }
-
-
 }

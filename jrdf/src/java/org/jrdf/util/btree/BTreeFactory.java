@@ -63,4 +63,6 @@ import org.jrdf.util.DirectoryHandler;
 
 public interface BTreeFactory {
     BTree createBTree(DirectoryHandler handler, String fileName);
+
+    BTree createQuadBTree(DirectoryHandler handler, String fileName);
 }

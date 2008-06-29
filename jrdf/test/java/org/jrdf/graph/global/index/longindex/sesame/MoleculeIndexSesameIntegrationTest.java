@@ -59,32 +59,31 @@
 
 package org.jrdf.graph.global.index.longindex.sesame;
 
-import junit.framework.TestCase;
+import org.jrdf.graph.global.index.longindex.AbstractMoleculeIndexIntegrationTest;
+import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.btree.BTree;
+import org.jrdf.util.btree.BTreeFactory;
+import org.jrdf.util.btree.BTreeFactoryImpl;
+
+import java.io.File;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
+public class MoleculeIndexSesameIntegrationTest extends AbstractMoleculeIndexIntegrationTest {
+    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final String INDEX_FILE_NAME = "sesTestDb";
 
-//public class MoleculeIndexSesameIntegrationTest extends AbstractMoleculeIndexIntegrationTest {
-//    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
-//    private static final String INDEX_FILE_NAME = "sesTestDb";
-//
-//    public void setUp() {
-//        BTreeFactory bTreeFactory = new BTreeFactoryImpl();
-//        TripleBTree tree = bTreeFactory.createBTree(HANDLER, INDEX_FILE_NAME);
-//        index = new LongIndexSesame(tree);
-//        index.clear();
-//    }
-//
-//    public void tearDown() {
-//        index.close();
-//        new File(HANDLER.getDir(), INDEX_FILE_NAME).delete();
-//    }
-//}
+    public void setUp() {
+        BTreeFactory bTreeFactory = new BTreeFactoryImpl();
+        BTree tree = bTreeFactory.createQuadBTree(HANDLER, INDEX_FILE_NAME);
+        index = new MoleculeIndexSesame(tree);
+        index.clear();
+    }
 
-public class MoleculeIndexSesameIntegrationTest extends TestCase {
-    public void testFoo() {
-        assertTrue(true);
+    public void tearDown() {
+        index.close();
+        new File(HANDLER.getDir(), INDEX_FILE_NAME).delete();
     }
 }

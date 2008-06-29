@@ -72,7 +72,7 @@ public class EntryIteratorOneFixedThreeArray implements ClosableIterator<Long[]>
 
     public EntryIteratorOneFixedThreeArray(long newFirst, BTree newBTree) {
         try {
-            this.iterator = getIterator(newBTree, newFirst, 0L, 0L);
+            this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L);
             this.currentValues = iterator.next();
         } catch (IOException e) {
             throw new RuntimeException(e);
