@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableMap;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -83,8 +84,8 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     }
 
     public Set<Long[]> findTriplesForMid(Long mid) {
-        Map<Long, Map<Long, Map<Long, Set<Long>>>> midSPOMap = structureIndex.getSubIndex(0L);
-        Map<Long, Map<Long, Set<Long>>> triplesInMid = midSPOMap.get(mid);
+        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> midSPOMap = structureIndex.getSubIndex(0L);
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> triplesInMid = midSPOMap.get(mid);
         Set<Long[]> triples = new HashSet<Long[]>();
         for (Long subject : triplesInMid.keySet()) {
             Map<Long, Set<Long>> poMap = triplesInMid.get(subject);

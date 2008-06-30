@@ -32,6 +32,7 @@
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
 
     <!-- Cleanup molecule implementation -->
+    <suppress checks="BooleanExpressionComplexity" files="FlatteningFiveLongClosableIterator"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DecomposerPerformance"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexMem"/>
@@ -40,6 +41,7 @@
     <suppress checks="CyclomaticComplexity" files="MoleculeStructureIndexMem"/>
     <suppress checks="CyclomaticComplexity" files="BlankNodeMapperImpl" />
     <suppress checks="CyclomaticComplexity" files="NaiveGraphDecomposerImpl"/>
+    <suppress checks="CyclomaticComplexity" files="FlatteningFiveLongClosableIterator"/>
     <suppress checks="JavaNCSS" files="DecomposerPerformance"/>
     <suppress checks="JavaNCSS" files="MoleculeStructureIndexMem"/>
     <suppress checks="JavaNCSS" files="MoleculeIndexMem"/>
