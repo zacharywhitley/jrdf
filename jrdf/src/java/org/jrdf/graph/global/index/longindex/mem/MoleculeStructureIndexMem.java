@@ -63,37 +63,40 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
+import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableMapImpl;
+import org.jrdf.util.FlatteningFiveLongClosableIterator;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
-    private Map<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>> index;
+    private ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> index;
 
-    public MoleculeStructureIndexMem(Map<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>> newIndex) {
+    public MoleculeStructureIndexMem(ClosableMap<Long, ClosableMap<Long, ClosableMap<Long,
+            ClosableMap<Long, Set<Long>>>>> newIndex) {
         index = newIndex;
     }
 
     public MoleculeStructureIndexMem() {
-        index = new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>();
+        index = new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>();
     }
 
     public void add(Long... quin) throws GraphException {
-        Map<Long, Map<Long, Map<Long, Set<Long>>>> mids = index.get(quin[0]);
+        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> mids = index.get(quin[0]);
         if (null == mids) {
-            mids = new HashMap<Long, Map<Long, Map<Long, Set<Long>>>>();
+            mids = new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
             index.put(quin[0], mids);
         }
-        Map<Long, Map<Long, Set<Long>>> subjectIndex = mids.get(quin[1]);
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> subjectIndex = mids.get(quin[1]);
         if (null == subjectIndex) {
-            subjectIndex = new HashMap<Long, Map<Long, Set<Long>>>();
+            subjectIndex = new ClosableMapImpl<Long, ClosableMap<Long, Set<Long>>>();
             mids.put(quin[1], subjectIndex);
         }
-        Map<Long, Set<Long>> predicateIndex = subjectIndex.get(quin[2]);
+        ClosableMap<Long, Set<Long>> predicateIndex = subjectIndex.get(quin[2]);
         if (null == predicateIndex) {
-            predicateIndex = new HashMap<Long, Set<Long>>();
+            predicateIndex = new ClosableMapImpl<Long, Set<Long>>();
             subjectIndex.put(quin[2], predicateIndex);
         }
         Set<Long> objectIndex = predicateIndex.get(quin[3]);
@@ -108,17 +111,19 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
         return index.containsKey(node);
     }
 
-    public ClosableIterator<Map.Entry<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>> iterator() {
-        return new ClosableIteratorImpl<Map.Entry<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>>(
-            index.entrySet().iterator());
+    public ClosableIterator<Long[]> iterator() {
+        ClosableIterator<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>> iterator =
+            new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long,
+                Set<Long>>>>>>(index.entrySet().iterator());
+        return new FlatteningFiveLongClosableIterator(iterator);
     }
 
     public void remove(Long... quin) throws GraphException {
-        Map<Long, Map<Long, Map<Long, Set<Long>>>> mids = index.get(quin[0]);
+        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> mids = index.get(quin[0]);
         if (null == mids) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
-        Map<Long, Map<Long, Set<Long>>> subjectIndex = mids.get(quin[1]);
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> subjectIndex = mids.get(quin[1]);
         if (null == subjectIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
@@ -151,7 +156,7 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
         return index.containsKey(node);
     }
 
-    public Map<Long, Map<Long, Map<Long, Set<Long>>>> getSubIndex(Long first) {
+    public ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> getSubIndex(Long first) {
         return index.get(first);
     }
 
@@ -170,9 +175,9 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
 
     public long getSize() {
         long size = 0;
-        for (Map<Long, Map<Long, Map<Long, Set<Long>>>> subIndex : index.values()) {
-            for (Map<Long, Map<Long, Set<Long>>> subSubIndex : subIndex.values()) {
-                for (Map<Long, Set<Long>> subSubSubIndex : subSubIndex.values()) {
+        for (ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> subIndex : index.values()) {
+            for (ClosableMap<Long, ClosableMap<Long, Set<Long>>> subSubIndex : subIndex.values()) {
+                for (ClosableMap<Long, Set<Long>> subSubSubIndex : subSubIndex.values()) {
                     for (Set<Long> subSubSubSubIndex : subSubSubIndex.values()) {
                         size += subSubSubSubIndex.size();
                     }

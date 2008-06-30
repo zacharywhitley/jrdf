@@ -74,8 +74,8 @@ import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.graph.global.index.longindex.bdb.MoleculeIndexBdb;
 import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
 import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
-import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
@@ -113,8 +113,6 @@ import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
 import static java.net.URI.create;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class MoleculeGraphImplIntegrationTest extends TestCase {
@@ -154,7 +152,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         MoleculeIndex<Long>[] indexes = new MoleculeIndexMem[]{(MoleculeIndexMem) spom,
                 (MoleculeIndexMem) posm, (MoleculeIndexMem) ospm};
         MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
-            new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
+            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
         NodePool nodePool = nodePoolFactory.createNodePool();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
@@ -197,7 +195,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         MoleculeIndex<Long>[] indexes = new MoleculeIndexBdb[]{(MoleculeIndexBdb) spom,
                 (MoleculeIndexBdb) posm, (MoleculeIndexBdb) ospm};
         MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
-            new HashMap<Long, Map<Long, Map<Long, Map<Long, Set<Long>>>>>());
+            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
         NodePool nodePool = nodePoolFactory.createNodePool();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
