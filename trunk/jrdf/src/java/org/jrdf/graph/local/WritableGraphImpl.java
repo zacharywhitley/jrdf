@@ -140,9 +140,13 @@ public class WritableGraphImpl implements WritableGraph {
 
     private void localIteratorRemove(Iterator<Triple> triples) {
         ClosableLocalIterator<Triple> localIterator = (ClosableLocalIterator<Triple>) triples;
-        while (localIterator.hasNext()) {
-            localIterator.next();
-            localIterator.remove();
+        try {
+            while (localIterator.hasNext()) {
+                localIterator.next();
+                localIterator.remove();
+            }
+        } finally {
+            localIterator.close();
         }
     }
 

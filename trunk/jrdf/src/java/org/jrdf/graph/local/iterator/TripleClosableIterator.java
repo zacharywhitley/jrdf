@@ -60,7 +60,6 @@ package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 
 import java.util.Iterator;
@@ -75,15 +74,12 @@ import java.util.Iterator;
 public class TripleClosableIterator implements ClosableLocalIterator<Triple> {
     private Iterator<Triple> iter;
     private Localizer localizer;
-    private LongIndex longIndex;
     private GraphHandler handler;
     private Triple triple;
 
-    public TripleClosableIterator(Iterator<Triple> newIter, Localizer newLocalizer, LongIndex newLongIndex,
-        GraphHandler newHandler) {
+    public TripleClosableIterator(Iterator<Triple> newIter, Localizer newLocalizer, GraphHandler newHandler) {
         this.iter = newIter;
         this.localizer = newLocalizer;
-        this.longIndex = newLongIndex;
         this.handler = newHandler;
     }
 

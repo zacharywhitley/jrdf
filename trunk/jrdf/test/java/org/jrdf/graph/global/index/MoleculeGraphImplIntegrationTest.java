@@ -106,6 +106,8 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import static java.net.URI.create;
 import java.util.Set;
 
+// TODO Write a test to check that writing triples and getting molecules synchronise.  Especially with creating
+// new URIs across data structures.  e.g. create a triple with a new molecule and then do a find on it.
 public class MoleculeGraphImplIntegrationTest extends TestCase {
     private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
