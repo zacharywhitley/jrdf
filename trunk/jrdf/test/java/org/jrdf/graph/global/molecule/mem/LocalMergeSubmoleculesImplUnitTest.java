@@ -61,7 +61,6 @@ package org.jrdf.graph.global.molecule.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.molecule.GlobalGraphTestUtil;
@@ -71,14 +70,7 @@ import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.global.molecule.MoleculeSubsumption;
-import org.jrdf.graph.local.BlankNodeComparator;
-import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.LocalizedNodeComparator;
-import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.NodeComparatorImpl;
-import org.jrdf.graph.local.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.util.test.SetUtil;
 
 import java.util.Collections;
@@ -86,11 +78,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LocalMergeSubmoleculesImplUnitTest extends TestCase {
-    private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
-    private final LocalizedNodeComparator localNodeComparator = new LocalizedNodeComparatorImpl();
-    private final BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localNodeComparator);
-    private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
-    private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
+    private final TripleComparator tripleComparator = new TripleComparatorFactoryImpl().newComparator();
     private LocalMergeSubmolecules mergeSubmolecules;
     private Map<BlankNode, BlankNode> map;
 
