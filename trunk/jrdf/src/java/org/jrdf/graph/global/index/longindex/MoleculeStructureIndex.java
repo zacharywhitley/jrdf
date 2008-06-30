@@ -61,9 +61,6 @@ package org.jrdf.graph.global.index.longindex;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableMap;
-
-import java.util.Set;
 
 /**
  * The generic interface for storing indexed global molecules.
@@ -78,8 +75,9 @@ public interface MoleculeStructureIndex<T> {
 
     ClosableIterator<T[]>iterator();
 
-    // TODO Change this to be array.
-    ClosableMap<T, ClosableMap<T, ClosableMap<T, Set<T>>>> getSubIndex(T first);
+    ClosableIterator<T[]> getSubIndex(T first);
+
+    ClosableIterator<T[]> getSubSubIndex(T first, T second);
 
     boolean contains(T first);
 

@@ -36,6 +36,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DecomposerPerformance"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexMem"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeStructureIndexMem"/>
     <suppress checks="CyclomaticComplexity" files="MoleculeIndexBdb"/>
     <suppress checks="CyclomaticComplexity" files="MoleculeIndexMem"/>
     <suppress checks="CyclomaticComplexity" files="MoleculeStructureIndexMem"/>
