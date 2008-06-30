@@ -88,17 +88,17 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private ReadWriteGraph readWriteGraph;
     private Localizer localizer;
 
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePool newNodePool) {
+        this.longIndexes = newLongIndexes;
+        this.nodePool = newNodePool;
+        init(newLongIndexes);
+    }
+
     public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
         this.longIndexes = newLongIndexes;
-        nodePool = newNodePoolFactory.createNodePool();
+        this.nodePool = newNodePoolFactory.createNodePool();
         this.nodePool.clear();
-        this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
-        this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
-            new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
-        IteratorFactory tmpIteratorFactory = new LocalIteratorFactory(newLongIndexes, graphHandlers, nodePool);
-        this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, localizer, newLongIndexes[0],
-            graphHandlers[0], new MemSortedSetFactory());
-        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
+        init(newLongIndexes);
     }
 
     public Graph getGraph() {
@@ -111,5 +111,15 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
 
     public IteratorFactory getIteratorFactory() {
         return iteratorFactory;
+    }
+
+    private void init(LongIndex[] newLongIndexes) {
+        this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
+        this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
+            new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
+        IteratorFactory tmpIteratorFactory = new LocalIteratorFactory(newLongIndexes, graphHandlers, nodePool);
+        this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, localizer, newLongIndexes[0],
+            graphHandlers[0], new MemSortedSetFactory());
+        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
     }
 }

@@ -123,7 +123,7 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
             orderedSet.add(closableIterator.next());
         }
         closableIterator.close();
-        return new TripleClosableIterator(orderedSet.iterator(), localizer, longIndex, graphHandler);
+        return new TripleClosableIterator(orderedSet.iterator(), localizer, graphHandler);
     }
 
     private ClosableIterator<PredicateNode> sortPredicates(ClosableIterator<PredicateNode> closableIterator) {
