@@ -65,7 +65,6 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
@@ -104,16 +103,9 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
-import org.jrdf.graph.local.BlankNodeComparator;
-import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.LocalizedNodeComparator;
-import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.NodeComparatorImpl;
-import org.jrdf.graph.local.TripleComparatorImpl;
+import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.set.MemSortedSetFactory;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
 import org.jrdf.vocabulary.RDF;
 
@@ -122,11 +114,7 @@ import java.util.Collections;
 import java.util.Set;
 
 public class NaiveGraphDecomposerImplUnitTest extends TestCase {
-    private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
-    private final LocalizedNodeComparator localNodeComparator = new LocalizedNodeComparatorImpl();
-    private final BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localNodeComparator);
-    private final NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
-    private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
+    private final TripleComparator tripleComparator = new TripleComparatorFactoryImpl().newComparator();
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
     private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
     private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
