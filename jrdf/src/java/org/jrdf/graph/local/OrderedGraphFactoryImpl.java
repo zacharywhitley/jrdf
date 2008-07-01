@@ -58,6 +58,7 @@
  */
 package org.jrdf.graph.local;
 
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
@@ -71,7 +72,6 @@ import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.OrderedIteratorFactoryImpl;
-import org.jrdf.collection.MemCollectionFactory;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -84,19 +84,24 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private GraphHandler[] graphHandlers;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
+    private CollectionFactory collectionFactory;
     private ReadWriteGraph readWriteGraph;
     private Localizer localizer;
 
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePool newNodePool) {
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePool newNodePool,
+        CollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePool;
+        this.collectionFactory = newCollectionFactory;
         init(newLongIndexes);
     }
 
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
+        CollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNodePool();
         this.nodePool.clear();
+        this.collectionFactory = newCollectionFactory;
         init(newLongIndexes);
     }
 
@@ -116,7 +121,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
-        this.iteratorFactory = new OrderedIteratorFactoryImpl(localizer, graphHandlers, new MemCollectionFactory());
+        this.iteratorFactory = new OrderedIteratorFactoryImpl(localizer, graphHandlers, collectionFactory);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
     }
 }

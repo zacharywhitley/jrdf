@@ -59,6 +59,7 @@
 
 package org.jrdf;
 
+import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
@@ -95,7 +96,7 @@ public final class SortedMemoryJRDFFactory implements JRDFFactory {
     public Graph getNewGraph() {
         LongIndex[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
-        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory).getGraph();
+        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory, new MemCollectionFactory()).getGraph();
     }
 
     public UrqlConnection getNewUrqlConnection() {
