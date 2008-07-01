@@ -68,22 +68,23 @@ import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.FlatteningFourLongClosableIterator;
 import org.jrdf.util.FlatteningThreeLongClosableIterator;
+import org.jrdf.util.FlatteningTwoLongClosableIterator;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 
 public class MoleculeIndexMem implements MoleculeIndex<Long> {
     protected Map<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> index;
 
-    public MoleculeIndexMem(ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> newIndex) {
-        index = newIndex;
-    }
-
     public MoleculeIndexMem() {
         index = new HashMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
+    }
+
+    public MoleculeIndexMem(ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> newIndex) {
+        index = newIndex;
     }
 
     public void add(Long... quad) {
@@ -159,7 +160,12 @@ public class MoleculeIndexMem implements MoleculeIndex<Long> {
     }
 
     public ClosableIterator<Long[]> getSubSubIndex(Long first, Long second) {
-        return null;
+        ClosableMap<Long, Set<Long>> map = index.get(first).get(second);
+        if (map == null) {
+            return new LongArrayEmptyClosableIterator();
+        } else {
+            return new FlatteningTwoLongClosableIterator(map);
+        }
     }
 
     public boolean removeSubIndex(Long first) {

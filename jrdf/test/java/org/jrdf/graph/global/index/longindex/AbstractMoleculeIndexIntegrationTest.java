@@ -63,12 +63,8 @@ import junit.framework.TestCase;
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.SetUtil.asSet;
 
-import java.util.Arrays;
-import static java.util.Arrays.*;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -115,14 +111,9 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
         index.add(1L, 1L, 2L, 5L);
         index.add(2L, 4L, 5L, 6L);
         assertEquals("size  = 4", 4, index.getSize());
-        final ClosableIterator<Long[]> results = index.getSubIndex(1L);
-        final Iterator<Long[]> expectedResults = asList(new Long[]{1L, 2L, 3L}, new Long[]{1L, 2L, 4L},
-                new Long[]{1L, 2L, 5L}).iterator();
-        while (results.hasNext()) {
-            final List<Long> actualResults = Arrays.asList(results.next());
-            final List<Long> expectedLongs = Arrays.asList(expectedResults.next());
-            assertEquals("Same list", expectedLongs, actualResults);
-        }
+        final ClosableIterator<Long[]> iterator = index.getSubIndex(1L);
+        Set<Long[]> results = asSet(new Long[]{1L, 2L, 3L}, new Long[]{1L, 2L, 4L}, new Long[]{1L, 2L, 5L});
+        checkResults(iterator, results);
     }
 
     public void testIterator() throws GraphException {
@@ -132,31 +123,40 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
         index.add(2L, 4L, 5L, 6L);
         ClosableIterator<Long[]> iterator = index.iterator();
         assertTrue("Has element", iterator.hasNext());
-        Set<Long[]> set = addLongsToSet(new Long[]{1L, 1L, 2L, 3L}, new Long[]{1L, 1L, 2L, 4L},
+        Set<Long[]> results = asSet(new Long[]{1L, 1L, 2L, 3L}, new Long[]{1L, 1L, 2L, 4L},
                 new Long[]{1L, 1L, 2L, 5L}, new Long[]{2L, 4L, 5L, 6L});
+        checkResults(iterator, results);
+    }
+
+//    public void testGetSubSubIndex() throws GraphException {
+//        index.add(1L, 1L, 2L, 3L);
+//        index.add(1L, 1L, 2L, 4L);
+//        index.add(1L, 1L, 2L, 5L);
+//        index.add(1L, 1L, 3L, 3L);
+//        index.add(2L, 2L, 2L, 5L);
+//        index.add(2L, 4L, 5L, 6L);
+//        ClosableIterator<Long[]> subIndex = index.getSubSubIndex(1L, 1L);
+//        Set<Long[]> results = asSet(new Long[]{2L, 3L}, new Long[]{2L, 4L}, new Long[]{2L, 5L}, new Long[]{3L, 3L});
+//        checkResults(subIndex, results);
+//    }
+
+    private void checkResults(ClosableIterator<Long[]> iterator, Set<Long[]> results) {
         int length = 0;
         while (iterator.hasNext()) {
             final Long[] longs = iterator.next();
             length++;
-            assertTrue("Contains longs", setContainsLongArray(set, longs));
+            assertTrue("Does not contain expected results.", setContainsLongArray(results, longs));
         }
         iterator.close();
-        assertEquals("Same length", set.size(), length);
-    }
-
-    private Set<Long[]> addLongsToSet(Long[]... longs) {
-        Set<Long[]> set = new HashSet<Long[]>();
-        for (Long[] array : longs) {
-            set.add(array);
-        }
-        return set;
+        assertEquals("Same length", results.size(), length);
     }
 
     private boolean setContainsLongArray(Set<Long[]> set, Long[] longs) {
-        boolean found;
         for (Long[] item : set) {
-            found = (item[0] == longs[0] && item[1] == longs[1] &&
-                    item[2] == longs[2] && item[3] == longs[3]);
+            boolean found = true;
+            for (int i = 0; i < item.length; i++) {
+                found &= item[i].equals(longs[i]);
+            }
             if (found) {
                 return true;
             }
