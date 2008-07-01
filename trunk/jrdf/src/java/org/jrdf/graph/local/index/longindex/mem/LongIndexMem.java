@@ -105,11 +105,13 @@ public final class LongIndexMem extends AbstractIndex<Long> implements LongIndex
     }
 
     public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
-        final Set<Long> longSetClosableMap = index.get(first).get(second);
-        if (longSetClosableMap == null) {
-            return new LongEmptyClosableIterator();
-        } else {
-            return new ClosableIteratorImpl<Long>(longSetClosableMap.iterator());
+        ClosableMap<Long, Set<Long>> firstMap = index.get(first);
+        if (firstMap != null) {
+            final Set<Long> secondMap = firstMap.get(second);
+            if (secondMap != null) {
+                return new ClosableIteratorImpl<Long>(secondMap.iterator());
+            }
         }
+        return new LongEmptyClosableIterator();
     }
 }

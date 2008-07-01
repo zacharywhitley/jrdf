@@ -94,7 +94,7 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
     /**
      * The subIndex of this iterator.  Only needed for initialization and the remove method.
      */
-    private ClosableIterator<Long[]> subIndex;
+    private ClosableIterator<Long> subSubIndex;
 
     /**
      * Handles the removal of nodes
@@ -115,8 +115,8 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
         second = fixedSecondNode;
         handler = newHandler;
 
-        // find the subIndex from the main index
-        subIndex = handler.getSubIndex(first);
+        // find the subSubIndex from the main index
+        subSubIndex = handler.getSubSubIndex(first, second);
         getNextValues();
     }
 
@@ -148,20 +148,18 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
     }
 
     public boolean close() {
-        if (subIndex != null) {
-            subIndex.close();
+        if (subSubIndex != null) {
+            subSubIndex.close();
         }
         return true;
     }
 
     private void getNextValues() {
-        while (subIndex.hasNext()) {
-            final Long[] longs = subIndex.next();
-            if (longs[0].equals(second)) {
-                currentNodes = new Long[]{first, second, longs[1]};
-                return;
-            }
+        if (subSubIndex.hasNext()) {
+            final Long third = subSubIndex.next();
+            currentNodes = new Long[]{first, second, third};
+        } else {
+            currentNodes = null;
         }
-        currentNodes = null;
     }
 }
