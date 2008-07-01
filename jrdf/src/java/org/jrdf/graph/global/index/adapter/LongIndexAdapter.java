@@ -103,9 +103,8 @@ public class LongIndexAdapter implements LongIndex {
         return index.contains(first);
     }
 
-    // TODO Fix this.
     public boolean removeSubIndex(Long first) {
-        return false;
+        return index.removeSubIndex(first);
     }
 
     public long getSize() {
