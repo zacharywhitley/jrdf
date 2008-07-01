@@ -91,6 +91,10 @@ public class GraphHandler012 extends AbstractGraphHandler {
         return index012.getSubIndex(first);
     }
 
+    public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
+        return index012.getSubSubIndex(first, second);
+    }
+
     public boolean removeSubIndex(Long first) {
         return index012.removeSubIndex(first);
     }

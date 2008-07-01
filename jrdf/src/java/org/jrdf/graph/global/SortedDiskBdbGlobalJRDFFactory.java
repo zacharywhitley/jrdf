@@ -103,7 +103,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
-public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
+public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
@@ -115,11 +115,11 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private Set<MapFactory> openMapFactories = new HashSet<MapFactory>();
 
-    private SortedDiskGlobalJRDFFactory() {
+    private SortedDiskBdbGlobalJRDFFactory() {
     }
 
     public static MoleculeJRDFFactory getFactory() {
-        return new SortedDiskGlobalJRDFFactory();
+        return new SortedDiskBdbGlobalJRDFFactory();
     }
 
     public void refresh() {
@@ -170,17 +170,4 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
         return new MoleculeIndexBdb[]{new MoleculeIndexBdb(factory), new MoleculeIndexBdb(factory),
             new MoleculeIndexBdb(factory)};
     }
-
-    // TODO Use sesame btrees when finished.
-//    private MoleculeIndex<Long>[] createIndexes() {
-//        BTree[] bTrees = createBTrees();
-//        return new MoleculeIndexSesame[]{new MoleculeIndexSesame(bTrees[0]), new MoleculeIndexSesame(bTrees[1]),
-//            new MoleculeIndexSesame(bTrees[2])};
-//    }
-//
-//    private BTree[] createBTrees() {
-//        return new BTree[]{btreeFactory.createBTree(HANDLER, "spom" + graphNumber),
-//                btreeFactory.createBTree(HANDLER, "posm" + graphNumber),
-//                btreeFactory.createBTree(HANDLER, "ospm" + graphNumber)};
-//    }
 }

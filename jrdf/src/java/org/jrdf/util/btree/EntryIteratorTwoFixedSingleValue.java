@@ -57,95 +57,59 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.util.btree;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.btree.BTree;
-import static org.jrdf.util.btree.ByteHandler.toBytes;
-import org.jrdf.util.btree.EntryIteratorOneFixedTwoArray;
-import org.jrdf.util.btree.EntryIteratorThreeArray;
-import org.jrdf.util.btree.EntryIteratorTwoFixedSingleValue;
-import org.jrdf.util.btree.RecordIteratorHelper;
+import static org.jrdf.util.btree.RecordIteratorHelper.*;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
-public final class LongIndexSesame implements LongIndex {
-    private BTree btree;
+public class EntryIteratorTwoFixedSingleValue implements ClosableIterator<Long> {
+    private static final int TRIPLES = 3;
+    private RecordIterator iterator;
+    private byte[] currentValues;
 
-    public LongIndexSesame(BTree newBtree) {
-        this.btree = newBtree;
-    }
-
-    public void add(Long... node) throws GraphException {
+    public EntryIteratorTwoFixedSingleValue(long newFirst, long newSecond, BTree newBTree) {
         try {
-            btree.insert(toBytes(node));
-        } catch (IOException e) {
-            throw new GraphException(e);
-        }
-    }
-
-    public void remove(Long... node) throws GraphException {
-        try {
-            boolean changed = RecordIteratorHelper.remove(btree, node);
-            if (!changed) {
-                throw new GraphException("Unable to remove nonexistent statement");
-            }
+            this.iterator = getIterator(newBTree, newFirst, newSecond, 0L);
+            this.currentValues = iterator.next();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void clear() {
+    public boolean hasNext() {
+        return currentValues != null;
+    }
+
+    public Long next() {
+        // Current values null then we are at the end.
+        if (currentValues == null) {
+            throw new NoSuchElementException();
+        }
+        Long[] returnValues = ByteHandler.fromBytes(currentValues, TRIPLES);
+        getNextValues();
+        return returnValues[2];
+    }
+
+    public void remove() {
+    }
+
+    private void getNextValues() {
         try {
-            btree.clear();
+            currentValues = iterator.next();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ClosableIterator<Long[]> iterator() {
-        return new EntryIteratorThreeArray(btree);
-    }
-
-    public ClosableIterator<Long[]> getSubIndex(Long first) {
-        return new EntryIteratorOneFixedTwoArray(first, btree);
-    }
-
-    public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
-        return new EntryIteratorTwoFixedSingleValue(first, second, btree);
-    }
-
-    public boolean contains(Long first) {
+    public boolean close() {
         try {
-            return RecordIteratorHelper.contains(btree, first);
+            iterator.close();
+            return true;
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean removeSubIndex(Long first) {
-        try {
-            return RecordIteratorHelper.removeSubIndex(btree, first);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public long getSize() {
-        try {
-            return RecordIteratorHelper.getSize(btree);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void close() {
-        try {
-            btree.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 }

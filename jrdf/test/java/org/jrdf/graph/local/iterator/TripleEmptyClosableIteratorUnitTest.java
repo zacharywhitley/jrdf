@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -56,60 +56,19 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+package org.jrdf.graph.local.iterator;
 
-package org.jrdf.graph.local.index.longindex.mem;
-
-import org.jrdf.graph.local.index.AbstractIndex;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.iterator.LongArrayEmptyClosableIterator;
-import org.jrdf.graph.local.iterator.LongEmptyClosableIterator;
+import junit.framework.TestCase;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
-import org.jrdf.util.ClosableMap;
-import org.jrdf.util.FlatteningThreeLongClosableIterator;
-import org.jrdf.util.FlatteningTwoLongClosableIterator;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-import java.util.Map;
-import java.util.Set;
+import static java.lang.reflect.Modifier.PUBLIC;
 
-/**
- * An in memory version of ${@link LongIndex}.
- *
- * @author Andrew Newman
- * @version $Revision: 1247 $
- */
-public final class LongIndexMem extends AbstractIndex<Long> implements LongIndex {
-    private static final long serialVersionUID = -5048829267886339451L;
+public class TripleEmptyClosableIteratorUnitTest extends TestCase {
 
-    public LongIndexMem() {
-        super();
-    }
-
-    public LongIndexMem(Map<Long, ClosableMap<Long, Set<Long>>> newIndex) {
-        super(newIndex);
-    }
-
-    public ClosableIterator<Long[]> iterator() {
-        ClosableIterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> iterator =
-            new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, Set<Long>>>>(index.entrySet().iterator());
-        return new FlatteningThreeLongClosableIterator(iterator);
-    }
-
-    public ClosableIterator<Long[]> getSubIndex(Long first) {
-        final ClosableMap<Long, Set<Long>> longSetClosableMap = index.get(first);
-        if (longSetClosableMap == null) {
-            return new LongArrayEmptyClosableIterator();
-        } else {
-            return new FlatteningTwoLongClosableIterator(longSetClosableMap);
-        }
-    }
-
-    public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
-        final Set<Long> longSetClosableMap = index.get(first).get(second);
-        if (longSetClosableMap == null) {
-            return new LongEmptyClosableIterator();
-        } else {
-            return new ClosableIteratorImpl<Long>(longSetClosableMap.iterator());
-        }
+    public void testClassProperties() throws Exception {
+        checkImplementationOfInterfaceAndFinal(ClosableIterator.class, TripleEmptyClosableIterator.class);
+        checkConstructor(TripleEmptyClosableIterator.class, PUBLIC);
     }
 }

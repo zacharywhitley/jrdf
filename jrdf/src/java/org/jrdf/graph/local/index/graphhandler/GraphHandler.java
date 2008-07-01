@@ -70,17 +70,26 @@ import org.jrdf.util.ClosableIterator;
  * @author Andrew Newman
  * @version $Revision$
  */
-// TODO Add a getSubSubIndex on this interface.
 public interface GraphHandler {
 
     /**
-     * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id
-     * is given and it returns a map of predicates to objects.
+     * Returns an array of results from the index.  For example, a given subject id is given and the array of predicates
+     * and objects.
      *
-     * @param first the entry set to find.
-     * @return a map containing the list of longs to set of longs.
+     * @param first the entry to find.
+     * @return an array containing the results.
      */
     ClosableIterator<Long[]> getSubIndex(Long first);
+
+    /**
+     * Returns an array of results from the index.  For example, a given subject and predicate ids  the array of
+     * objects is returned.
+     *
+     * @param first the entry to find.
+     * @param second the entry to find.
+     * @return an array containing the results.
+     */
+    ClosableIterator<Long> getSubSubIndex(Long first, Long second);
 
     /**
      * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is

@@ -95,6 +95,10 @@ public class LongIndexAdapter implements LongIndex {
         return index.getSubIndex(first);
     }
 
+    public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
+        return null;
+    }
+
     public boolean contains(Long first) {
         return index.contains(first);
     }

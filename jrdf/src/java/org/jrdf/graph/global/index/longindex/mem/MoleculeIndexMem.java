@@ -158,6 +158,10 @@ public class MoleculeIndexMem implements MoleculeIndex<Long> {
         }
     }
 
+    public ClosableIterator<Long[]> getSubSubIndex(Long first, Long second) {
+        return null;
+    }
+
     public boolean removeSubIndex(Long first) {
         final boolean containsKey = index.containsKey(first);
         index.remove(first);
