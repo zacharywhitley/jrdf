@@ -70,6 +70,7 @@ import org.jrdf.util.ClosableIterator;
  * @author Andrew Newman
  * @version $Revision$
  */
+// TODO Add a getSubSubIndex on this interface.
 public interface GraphHandler {
 
     /**

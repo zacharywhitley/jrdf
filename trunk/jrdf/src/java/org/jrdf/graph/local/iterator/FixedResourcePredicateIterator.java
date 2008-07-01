@@ -65,10 +65,11 @@ import org.jrdf.util.ClosableIterator;
 
 import java.util.NoSuchElementException;
 
+// TODO Write tests for me.
+// TODO Add a getSubSubIndex on GraphHandler to speed this up.
 public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final Long resource;
     private final GraphHandler graphHandler012;
-    private final GraphHandler graphHandler120;
     private final ClosableIterator<Long[]> posPredicateIterator;
     private ClosableIterator<Long[]> spoPredicateIterator;
     private Long nextPredicate;
@@ -77,7 +78,6 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
         final GraphHandler newGraphHandler120) {
         this.resource = newResource;
         this.graphHandler012 = newGraphHandler012;
-        this.graphHandler120 = newGraphHandler120;
         this.spoPredicateIterator = graphHandler012.getSubIndex(resource);
         this.posPredicateIterator = newGraphHandler120.getEntries();
         nextPredicate();
@@ -122,17 +122,18 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
             Long predicate = pos[0];
             Long object = pos[1];
             if (!predicate.equals(nextPredicate) && object.equals(resource) &&
-                    !containsPredicate(resource, predicate)) {
+                    !containsPredicate(predicate)) {
                 return predicate;
             }
         }
         return null;
     }
 
-    private boolean containsPredicate(Long resource, Long predicate) {
+    private boolean containsPredicate(Long predicate) {
         final ClosableIterator<Long[]> index = graphHandler012.getSubIndex(resource);
         while (index.hasNext()) {
-            if (index.next()[1].equals(predicate)) {
+            Long foundPredicate = index.next()[0];
+            if (foundPredicate.equals(predicate)) {
                 return true;
             }
         }
