@@ -266,7 +266,7 @@ class SAXFilter implements ContentHandler {
         throws SAXException {
 
         if (null != deferredElement) {
-            // The next call could set parseLiteralMode to true!
+            // The next call could collection parseLiteralMode to true!
             reportDeferredStartElement();
         }
 
@@ -435,7 +435,7 @@ class SAXFilter implements ContentHandler {
             if (parseLiteralMode) {
                 // Characters like '<', '>', and '&' must be escaped to
                 // prevent breaking the XML text.
-                // Send new set of characters to transformerhandler to escape xml.
+                // Send new collection of characters to transformerhandler to escape xml.
                 escapeXml(ch, start, length, charBuf);
             } else {
                 charBuf.append(ch, start, length);

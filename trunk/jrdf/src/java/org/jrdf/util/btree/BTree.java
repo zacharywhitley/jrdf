@@ -1529,7 +1529,7 @@ public class BTree {
     // return null;
     // }
     //
-    // public void set(byte[] value) {
+    // public void collection(byte[] value) {
     // if (currentNode == null || currentIdx > currentNode.getValueCount()) {
     // throw new IllegalStateException();
     // }

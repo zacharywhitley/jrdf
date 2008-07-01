@@ -101,6 +101,8 @@ public interface Index<T> {
      */
     ClosableIterator<T[]> getSubIndex(T first);
 
+    // TODO AN Write getSubSubIndex too.
+
     /**
      * Returns true if the value given exists in the index.
      *

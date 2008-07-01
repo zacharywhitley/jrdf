@@ -77,7 +77,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
 import org.jrdf.map.MapFactory;
-import org.jrdf.set.SortedSetFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
@@ -91,9 +91,9 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     private Map<Long, BlankNode> newBNodeMap;
     private Set<Triple> triplesToRemove;
     private Set<Triple> triplesToAdd;
-    private SortedSetFactory setFactory;
+    private CollectionFactory setFactory;
 
-    public GraphToGraphMapperImpl(Graph newGraph, MapFactory mapFactory, SortedSetFactory sFac) {
+    public GraphToGraphMapperImpl(Graph newGraph, MapFactory mapFactory, CollectionFactory sFac) {
         graph = newGraph;
         elementFactory = graph.getElementFactory();
         tripleFactory = graph.getTripleFactory();

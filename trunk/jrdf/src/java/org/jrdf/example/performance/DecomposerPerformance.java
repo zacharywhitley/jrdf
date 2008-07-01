@@ -82,7 +82,7 @@ import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeSubsumptionImpl;
 import org.jrdf.graph.global.molecule.mem.NaiveGraphDecomposerImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
-import org.jrdf.set.MemSortedSetFactory;
+import org.jrdf.collection.MemCollectionFactory;
 
 import java.net.URI;
 import java.util.Map;
@@ -99,7 +99,7 @@ public class DecomposerPerformance {
     private final GraphElementFactory elementFactory = graph.getElementFactory();
     private final TripleComparator comparator = new TripleComparatorFactoryImpl().newComparator();
     private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
-    private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
+    private final MemCollectionFactory setFactory = new MemCollectionFactory();
     private final MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private final GraphDecomposer decomposer = new NaiveGraphDecomposerImpl(setFactory, moleculeFactory,
         moleculeComparator, comparator);

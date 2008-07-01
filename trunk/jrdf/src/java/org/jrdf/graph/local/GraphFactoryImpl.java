@@ -64,10 +64,14 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.Localizer;
+import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.LocalIteratorFactory;
+import org.jrdf.collection.CollectionFactory;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -82,13 +86,15 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
 
-    public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
+    public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
+        CollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNodePool();
         this.nodePool.clear();
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
-        this.iteratorFactory = new LocalIteratorFactory(longIndexes, graphHandlers, nodePool);
+        Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
+        this.iteratorFactory = new LocalIteratorFactory(graphHandlers, localizer, newCollectionFactory);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
     }
 

@@ -57,38 +57,20 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf;
 
-import org.jrdf.JRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.global.index.ReadableIndex;
-import org.jrdf.graph.global.index.ReadableIndexImpl;
-import org.jrdf.graph.global.index.WritableIndex;
-import org.jrdf.graph.global.index.WritableIndexImpl;
-import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
-import org.jrdf.graph.global.index.longindex.MoleculeIndex;
-import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
-import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
-import org.jrdf.graph.local.OrderedGraphFactoryImpl;
+import org.jrdf.graph.local.GraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
+import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
-import org.jrdf.util.ClosableMap;
-import org.jrdf.util.ClosableMapImpl;
-
-import java.util.Set;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -96,36 +78,26 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
-public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory {
-    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
+public final class MemoryJRDFFactory implements JRDFFactory {
+    private static final QueryFactoryImpl QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
-    private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
 
-    private SortedMemoryGlobalJRDFFactory() {
+    private MemoryJRDFFactory() {
     }
 
     public static JRDFFactory getFactory() {
-        return new SortedMemoryGlobalJRDFFactory();
+        return new MemoryJRDFFactory();
     }
 
     public void refresh() {
     }
 
-    public MoleculeGraph getNewGraph() {
-        MoleculeIndex<Long>[] indexes = createIndexes();
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
-        ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
-        WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
+    public Graph getNewGraph() {
+        LongIndex[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
-        NodePool nodePool = nodePoolFactory.createNodePool();
-        Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);
-        MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
-        LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
-            new LongIndexAdapter(indexes[1]), new LongIndexAdapter(indexes[2])};
-        Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool).getGraph();
-        return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph);
+        MemCollectionFactory collectionFactory = new MemCollectionFactory();
+        return new GraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
     }
 
     public UrqlConnection getNewUrqlConnection() {
@@ -135,16 +107,7 @@ public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory 
     public void close() {
     }
 
-    private MoleculeIndex<Long>[] createIndexes() {
-        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map1 =
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map2 =
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map3 =
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        MoleculeIndex<Long> spom = new MoleculeIndexMem(map1);
-        MoleculeIndex<Long> posm = new MoleculeIndexMem(map2);
-        MoleculeIndex<Long> ospm = new MoleculeIndexMem(map3);
-        return new MoleculeIndexMem[]{(MoleculeIndexMem) spom, (MoleculeIndexMem) posm, (MoleculeIndexMem) ospm};
+    private LongIndex[] createIndexes() {
+        return new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
     }
 }

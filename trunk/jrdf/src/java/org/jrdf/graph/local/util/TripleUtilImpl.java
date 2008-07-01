@@ -72,23 +72,23 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.set.SortedSetFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Set;
 
 public class TripleUtilImpl implements TripleUtil {
-    private final SortedSetFactory setFactory;
+    private final CollectionFactory setFactory;
     private Set<Triple> triplesWithNode;
     private Set<BlankNode> blankNodes;
     private Graph graph;
     private TripleComparator tripleComparator;
 
-    public TripleUtilImpl(SortedSetFactory newSetFactory) {
+    public TripleUtilImpl(CollectionFactory newSetFactory) {
         this.setFactory = newSetFactory;
     }
 
-    public TripleUtilImpl(SortedSetFactory newSetFactory, TripleComparator comparator) {
+    public TripleUtilImpl(CollectionFactory newSetFactory, TripleComparator comparator) {
         this.setFactory = newSetFactory;
         this.tripleComparator = comparator;
     }

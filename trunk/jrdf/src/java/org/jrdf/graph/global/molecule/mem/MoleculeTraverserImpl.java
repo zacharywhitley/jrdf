@@ -75,7 +75,7 @@ public class MoleculeTraverserImpl implements MoleculeTraverser {
     public void traverse(Molecule newMolecule, MoleculeHandler newHandler) {
         checkNotNull(newHandler);
         handler = newHandler;
-        // The initial molecule is a set of one molecule.
+        // The initial molecule is a collection of one molecule.
         Set<Molecule> molecules = new HashSet<Molecule>();
         molecules.add(newMolecule);
         iterateOverMolecules(molecules);

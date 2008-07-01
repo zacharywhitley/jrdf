@@ -91,7 +91,7 @@ public class EntryIteratorFourArray implements ClosableIterator<Long[]> {
     }
 
     public void remove() {
-        throw new UnsupportedOperationException("Cannot set values - read only");
+        throw new UnsupportedOperationException("Cannot collection values - read only");
     }
 
     public boolean close() {

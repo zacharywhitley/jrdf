@@ -60,19 +60,19 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactory;
+import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
 
 /**
- * Implementation of {@link AbstractGraphUnitTest} test case.
+ * Implementation of {@link org.jrdf.graph.AbstractGraphUnitTest} test case.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  * @version $Revision: 1499 $
  */
 public class GraphImplUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
+    private static final JRDFFactory FACTORY = MemoryJRDFFactory.getFactory();
 
     /**
      * Create a graph implementation.
@@ -82,48 +82,4 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
     public Graph newGraph() throws Exception {
         return FACTORY.getNewGraph();
     }
-
-//    /**
-//     * Implementation method for testing serialization of the graph.
-//     *
-//     * @throws Exception When a problem is found.
-//     */
-//    public void testSerializing() throws Exception {
-//        // populate the graph
-//        graph.add(blank1, ref1, blank2);
-//        graph.add(blank1, ref2, blank2);
-//        graph.add(blank1, ref1, l1);
-//        graph.add(blank1, ref1, l2);
-//        graph.add(blank2, ref1, blank2);
-//        graph.add(blank2, ref2, blank2);
-//        graph.add(blank2, ref1, l1);
-//        graph.add(blank2, ref1, l2);
-//        graph.add(blank2, ref1, l2);
-//        graph.add(ref1, ref1, ref1);
-//
-//        // check that the graph is as expected
-//        assertEquals(9, graph.getNumberOfTriples());
-//
-//        Graph graph2 = (Graph) TestUtil.copyBySerialization(graph);
-//
-//        ref3 = graph2.getElementFactory().createURIReference(ref1.getURI());
-//        Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
-//
-//        // test that the graphs are equivalent
-//        assertEquals(graph.getNumberOfTriples(), graph2.getNumberOfTriples());
-//        assertTrue(graph2.contains(blank1, ref1, blank2));
-//        assertTrue(graph2.contains(blank1, ref2, blank2));
-//        assertTrue(graph2.contains(blank1, ref1, l1));
-//        assertTrue(graph2.contains(blank1, ref1, l2));
-//        assertTrue(graph2.contains(blank2, ref1, blank2));
-//        assertTrue(graph2.contains(blank2, ref2, blank2));
-//        assertTrue(graph2.contains(blank2, ref1, l1));
-//        assertTrue(graph2.contains(blank2, ref3, l2));
-//        assertTrue(graph2.contains(blank1, ref3, l3));
-//        assertTrue(graph2.contains(ref1, ref1, ref1));
-//        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref1, AnyObjectNode.ANY_OBJECT_NODE));
-//        assertTrue(graph2.contains(ref3, ref3, ref3));
-//        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref3, AnyObjectNode.ANY_OBJECT_NODE));
-//        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref3, l3));
-//    }
 }

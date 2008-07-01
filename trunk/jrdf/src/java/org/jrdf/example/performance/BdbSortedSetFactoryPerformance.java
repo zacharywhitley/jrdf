@@ -60,8 +60,8 @@
 package org.jrdf.example.performance;
 
 import junit.framework.TestCase;
-import org.jrdf.set.BdbSortedSetFactory;
-import org.jrdf.set.SortedSetFactory;
+import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
@@ -75,7 +75,7 @@ public class BdbSortedSetFactoryPerformance extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private BdbEnvironmentHandler storedSetHandler;
     private String databaseName = "dbName" + System.currentTimeMillis();
-    private SortedSetFactory factory;
+    private CollectionFactory factory;
     private Set<String> strSet;
 
     public void setUp() throws Exception {
@@ -85,7 +85,7 @@ public class BdbSortedSetFactoryPerformance extends TestCase {
     }
 
     public void testInitialAddingToSet() {
-        factory = new BdbSortedSetFactory(storedSetHandler, databaseName);
+        factory = new BdbCollectionFactory(storedSetHandler, databaseName);
         strSet = factory.createSet(String.class);
         long start = System.currentTimeMillis();
         for (int i = 0; i < RUNS; i++) {
@@ -98,13 +98,13 @@ public class BdbSortedSetFactoryPerformance extends TestCase {
     }
 
     public void testAddDuplicates() {
-        factory = new BdbSortedSetFactory(storedSetHandler, databaseName);
+        factory = new BdbCollectionFactory(storedSetHandler, databaseName);
         strSet = factory.createSet(String.class);
         strSet.clear();
         strSet.add("triples");
         strSet.add("triples");
-        assertEquals("set only has 1 entry", 1, strSet.size());
-        assertEquals("set only contains \"triples\"", "triples", strSet.iterator().next());
+        assertEquals("collection only has 1 entry", 1, strSet.size());
+        assertEquals("collection only contains \"triples\"", "triples", strSet.iterator().next());
         factory.close();
     }
 }

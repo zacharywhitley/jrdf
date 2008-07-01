@@ -57,59 +57,32 @@
  *
  */
 
-package org.jrdf.set;
+package org.jrdf.graph.global;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.ReverseGroundedTripleComparatorImpl;
-import org.jrdf.graph.local.BlankNodeComparator;
-import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.NodeComparatorImpl;
-import org.jrdf.graph.local.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
-
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import org.jrdf.JRDFFactory;
+import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.Graph;
 
 /**
- * An in memory implementation that uses TreeSets and a small number of known types: Triples and PredicateNodes.
+ * Implementation of {@link org.jrdf.graph.AbstractGraphUnitTest} test case.
+ *
+ * @author Andrew Newman
+ * @version $Revision: 1499 $
  */
-public class MemSortedSetFactory implements SortedSetFactory {
-    private Map<Class<?>, Comparator<?>> defaultComparators = new HashMap<Class<?>, Comparator<?>>();
+public class GlobalGraphDiskUnitTest extends AbstractGraphUnitTest {
+    private static final JRDFFactory FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
 
-    public MemSortedSetFactory() {
-        NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
-        BlankNodeComparator comparator = new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl());
-        NodeComparator newNodeComparator = new NodeComparatorImpl(nodeTypeComparator,
-            comparator);
-        TripleComparatorImpl tripleComparator = new TripleComparatorImpl(newNodeComparator);
-        defaultComparators.put(Triple.class, new ReverseGroundedTripleComparatorImpl(tripleComparator));
-        defaultComparators.put(PredicateNode.class, newNodeComparator);
-        defaultComparators.put(BlankNode.class, comparator);
+    /**
+     * Create a graph implementation.
+     *
+     * @return A new GraphImplUnitTest.
+     */
+    public Graph newGraph() throws Exception {
+        return FACTORY.getNewGraph();
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T> SortedSet<T> createSet(Class<T> clazz) {
-        if (defaultComparators.containsKey(clazz)) {
-            Comparator<T> comparator = (Comparator<T>) defaultComparators.get(clazz);
-            return new TreeSet<T>(comparator);
-        } else {
-            return new TreeSet<T>();
-        }
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
-        return new TreeSet<T>((Comparator<? super T>) comparator);
-    }
-
-    public void close() {
+    @Override
+    public void tearDown() {
+        FACTORY.close();
     }
 }

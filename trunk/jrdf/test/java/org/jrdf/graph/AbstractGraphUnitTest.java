@@ -736,7 +736,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             graph.add(triple);
         }
 
-        //query them and put contents of iterator in a set for checking
+        //query them and put contents of iterator in a collection for checking
         //(iterator may return results in a different order)
         Set<Triple> statements = new HashSet<Triple>();
         ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -750,7 +750,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         //check that the iterator contained the correct number of statements
         assertEquals("ClosableIterator is incomplete.", graph.getNumberOfTriples(), statements.size());
 
-        //check the the set contains all the original triples
+        //check the the collection contains all the original triples
         for (Triple triple1 : triples) {
             if (!statements.contains(triple1)) {
                 fail("Iterator did not contain triple: " + triple1 + ".");
@@ -932,19 +932,19 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         graph.add(t3);
     }
 
-    private void checkFixedUniquePredicateIterator(Resource resource, PredicateNode... predicates)
-        throws Exception {
-        int counter = 0;
-        ClosableIterator<PredicateNode> resourcePredicates = graph.findPredicates(resource);
-        Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
-        while (resourcePredicates.hasNext()) {
-            PredicateNode predicateNode = resourcePredicates.next();
-            assertTrue("Results should not have: " + predicateNode + " expected: " + expectedPredicates,
-                expectedPredicates.contains(predicateNode));
-            counter++;
-        }
-        assertEquals("Wrong number of unique predicates", expectedPredicates.size(), counter);
-    }
+//    private void checkFixedUniquePredicateIterator(Resource resource, PredicateNode... predicates)
+//        throws Exception {
+//        int counter = 0;
+//        ClosableIterator<PredicateNode> resourcePredicates = graph.findPredicates(resource);
+//        Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
+//        while (resourcePredicates.hasNext()) {
+//            PredicateNode predicateNode = resourcePredicates.next();
+//            assertTrue("Results should not have: " + predicateNode + " expected: " + expectedPredicates,
+//                expectedPredicates.contains(predicateNode));
+//            counter++;
+//        }
+//        assertEquals("Wrong number of unique predicates", expectedPredicates.size(), counter);
+//    }
 
     private void addTestNodes() throws GraphException {
         graph.add(blank1, ref1, blank2);

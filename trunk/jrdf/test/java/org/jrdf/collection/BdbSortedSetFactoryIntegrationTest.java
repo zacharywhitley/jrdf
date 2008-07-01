@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.set;
+package org.jrdf.collection;
 
 import junit.framework.TestCase;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
@@ -90,13 +90,13 @@ public class BdbSortedSetFactoryIntegrationTest extends TestCase {
     private TripleImpl triple2;
     private SortedSet<Triple> triples1;
     private SortedSet<Triple> triples2;
-    private BdbSortedSetFactory factory;
+    private BdbCollectionFactory factory;
 
     public void setUp() throws Exception {
         HANDLER.removeDir();
         HANDLER.makeDir();
         BdbEnvironmentHandler handler = new BdbEnvironmentHandlerImpl(HANDLER);
-        factory = new BdbSortedSetFactory(handler, "bdbsortedset");
+        factory = new BdbCollectionFactory(handler, "bdbsortedset");
         tc1 = new ByteTripleComparatorFactoryImpl(new GroundedTripleComparatorFactoryImpl()).newComparator();
         tc2 = new ByteTripleComparatorFactoryImpl(new ReverseGroundedTripleComparatorFactoryImpl()).newComparator();
         triples1 = factory.createSet(Triple.class, tc1);

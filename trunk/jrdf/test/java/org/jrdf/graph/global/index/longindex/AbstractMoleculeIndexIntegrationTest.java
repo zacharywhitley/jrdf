@@ -91,7 +91,7 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
     public void testBasicOps() throws GraphException {
         assertFalse("No keys", index.contains(1L));
         index.add(1L, 2L, 3L, 4L);
-        assertTrue("0L exists", index.contains(1L));
+        assertTrue("1L exists", index.contains(1L));
         assertEquals("size = 1", 1, index.getSize());
         index.add(1L, 2L, 3L, 4L);
         assertEquals("size = 1", 1, index.getSize());

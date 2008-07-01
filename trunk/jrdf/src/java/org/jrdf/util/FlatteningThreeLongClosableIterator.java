@@ -139,7 +139,7 @@ public class FlatteningThreeLongClosableIterator implements ClosableIterator<Lon
             }
             // get the next entry of the sub index
             secondEntry = subIterator.next();
-            // get an interator to the next set from the sub index
+            // get an interator to the next collection from the sub index
             itemIterator = secondEntry.getValue().iterator();
         }
     }

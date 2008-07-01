@@ -79,8 +79,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
-import org.jrdf.set.BdbSortedSetFactory;
-import org.jrdf.set.SortedSetFactory;
+import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
@@ -99,7 +99,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
     private BdbEnvironmentHandler handler1;
     private BdbEnvironmentHandler handler2;
     private MapFactory mapFactory;
-    private SortedSetFactory setFactory;
+    private CollectionFactory setFactory;
     private CopyGraphUtil cgUtil;
 
     private String url1 = "http://www.example.com/1#";
@@ -161,7 +161,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         handler1 = new BdbEnvironmentHandlerImpl(DIR_HANDLER);
         handler2 = new BdbEnvironmentHandlerImpl(DIR_HANDLER);
         mapFactory = new BdbMapFactory(handler1, "testDb");
-        setFactory = new BdbSortedSetFactory(handler2, "foo");
+        setFactory = new BdbCollectionFactory(handler2, "foo");
         cgUtil = new CopyGraphUtilImpl(mapFactory, setFactory);
     }
 
