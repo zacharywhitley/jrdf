@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,21 +57,19 @@
  *
  */
 
-package org.jrdf.graph.local.iterator;
-
-import org.jrdf.util.ClosableIterator;
+package org.jrdf.util;
 
 import java.util.NoSuchElementException;
 
 /**
- * An iterator that returns no triples.
+ * An iterator that returns no long values.
  *
  * @author Andrew Newman
- * @version $Revision: 1806 $
+ * @version $Revision$
  */
-public final class LongArrayEmptyClosableIterator implements ClosableIterator<Long[]> {
+public final class LongEmptyClosableIterator implements ClosableIterator<Long> {
 
-    public LongArrayEmptyClosableIterator() {
+    public LongEmptyClosableIterator() {
     }
 
     /**
@@ -89,7 +87,7 @@ public final class LongArrayEmptyClosableIterator implements ClosableIterator<Lo
      * @return will not return.
      * @throws java.util.NoSuchElementException always.
      */
-    public Long[] next() throws NoSuchElementException {
+    public Long next() throws NoSuchElementException {
         throw new NoSuchElementException();
     }
 

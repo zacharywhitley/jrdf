@@ -65,6 +65,7 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.SetUtil.asSet;
 
+import static java.util.Arrays.asList;
 import java.util.Set;
 
 /**
@@ -145,7 +146,7 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
         while (iterator.hasNext()) {
             final Long[] longs = iterator.next();
             length++;
-            assertTrue("Does not contain expected results.", setContainsLongArray(results, longs));
+            assertTrue("Does not contain expected results: " + asList(longs), setContainsLongArray(results, longs));
         }
         iterator.close();
         assertEquals("Same length", results.size(), length);
