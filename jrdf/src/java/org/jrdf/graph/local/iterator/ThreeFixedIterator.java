@@ -111,12 +111,12 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
     }
 
     private boolean contains(Long[] longNodes) {
-        final ClosableIterator<Long[]> subIndex = handler.getSubIndex(longNodes[0]);
+        final ClosableIterator<Long> subIndex = handler.getSubSubIndex(longNodes[0], longNodes[1]);
         try {
             if (subIndex != null) {
                 while (subIndex.hasNext()) {
-                    final Long[] longs = subIndex.next();
-                    if (longs[0].equals(longNodes[1]) && longs[1].equals(longNodes[2])) {
+                    final Long newLong = subIndex.next();
+                    if (newLong.equals(longNodes[2])) {
                         return true;
                     }
                 }

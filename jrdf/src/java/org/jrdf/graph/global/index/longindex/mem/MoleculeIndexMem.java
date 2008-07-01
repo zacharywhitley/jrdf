@@ -61,7 +61,6 @@ package org.jrdf.graph.global.index.longindex.mem;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
-import org.jrdf.util.LongArrayEmptyClosableIterator;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
@@ -69,6 +68,7 @@ import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.FlatteningFourLongClosableIterator;
 import org.jrdf.util.FlatteningThreeLongClosableIterator;
 import org.jrdf.util.FlatteningTwoLongClosableIterator;
+import org.jrdf.util.LongArrayEmptyClosableIterator;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -160,12 +160,14 @@ public class MoleculeIndexMem implements MoleculeIndex<Long> {
     }
 
     public ClosableIterator<Long[]> getSubSubIndex(Long first, Long second) {
-        ClosableMap<Long, Set<Long>> map = index.get(first).get(second);
-        if (map == null) {
-            return new LongArrayEmptyClosableIterator();
-        } else {
-            return new FlatteningTwoLongClosableIterator(map);
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> firstMap = index.get(first);
+        if (firstMap != null) {
+            ClosableMap<Long, Set<Long>> secondMap = firstMap.get(second);
+            if (secondMap != null) {
+                return new FlatteningTwoLongClosableIterator(secondMap);
+            }
         }
+        return new LongArrayEmptyClosableIterator();
     }
 
     public boolean removeSubIndex(Long first) {
