@@ -57,95 +57,32 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.sesame;
+package org.jrdf.graph.global;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.btree.BTree;
-import static org.jrdf.util.btree.ByteHandler.toBytes;
-import org.jrdf.util.btree.EntryIteratorOneFixedTwoArray;
-import org.jrdf.util.btree.EntryIteratorThreeArray;
-import org.jrdf.util.btree.EntryIteratorTwoFixedSingleValue;
-import org.jrdf.util.btree.RecordIteratorHelper;
+import org.jrdf.JRDFFactory;
+import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.Graph;
 
-import java.io.IOException;
+/**
+ * Implementation of {@link org.jrdf.graph.AbstractGraphUnitTest} test case.
+ *
+ * @author Andrew Newman
+ * @version $Revision: 1499 $
+ */
+public class GlobalGraphDiskBdbUnitTest extends AbstractGraphUnitTest {
+    private static final JRDFFactory FACTORY = SortedDiskBdbGlobalJRDFFactory.getFactory();
 
-public final class LongIndexSesame implements LongIndex {
-    private BTree btree;
-
-    public LongIndexSesame(BTree newBtree) {
-        this.btree = newBtree;
+    /**
+     * Create a graph implementation.
+     *
+     * @return A new GraphImplUnitTest.
+     */
+    public Graph newGraph() throws Exception {
+        return FACTORY.getNewGraph();
     }
 
-    public void add(Long... node) throws GraphException {
-        try {
-            btree.insert(toBytes(node));
-        } catch (IOException e) {
-            throw new GraphException(e);
-        }
-    }
-
-    public void remove(Long... node) throws GraphException {
-        try {
-            boolean changed = RecordIteratorHelper.remove(btree, node);
-            if (!changed) {
-                throw new GraphException("Unable to remove nonexistent statement");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void clear() {
-        try {
-            btree.clear();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ClosableIterator<Long[]> iterator() {
-        return new EntryIteratorThreeArray(btree);
-    }
-
-    public ClosableIterator<Long[]> getSubIndex(Long first) {
-        return new EntryIteratorOneFixedTwoArray(first, btree);
-    }
-
-    public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
-        return new EntryIteratorTwoFixedSingleValue(first, second, btree);
-    }
-
-    public boolean contains(Long first) {
-        try {
-            return RecordIteratorHelper.contains(btree, first);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean removeSubIndex(Long first) {
-        try {
-            return RecordIteratorHelper.removeSubIndex(btree, first);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public long getSize() {
-        try {
-            return RecordIteratorHelper.getSize(btree);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void close() {
-        try {
-            btree.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public void tearDown() {
+        FACTORY.close();
     }
 }

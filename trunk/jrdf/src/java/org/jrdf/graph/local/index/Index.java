@@ -101,15 +101,15 @@ public interface Index<T> {
      */
     ClosableIterator<T[]> getSubIndex(T first);
 
-//    /**
-//     * Returns an array of results from the index.  For example, a given subject and predicate ids  the array of
-//     * objects is returned.
-//     *
-//     * @param first the entry to find.
-//     * @param second the entry to find.
-//     * @return an array containing the results.
-//     */
-//    ClosableIterator<T[]> getSubSubIndex(T first, T second);
+    /**
+     * Returns an array of results from the index.  For example, a given subject and predicate ids  the array of
+     * objects is returned.
+     *
+     * @param first the entry to find.
+     * @param second the entry to find.
+     * @return an array containing the results.
+     */
+    ClosableIterator<T> getSubSubIndex(T first, T second);
 
     /**
      * Returns true if the value given exists in the index.

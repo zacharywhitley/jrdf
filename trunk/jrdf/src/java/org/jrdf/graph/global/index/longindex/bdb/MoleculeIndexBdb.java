@@ -65,14 +65,11 @@ import org.jrdf.graph.local.iterator.LongArrayEmptyClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
-import org.jrdf.util.ClosableMap;
 import org.jrdf.util.FlatteningEntrySetClosableIterator;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -166,15 +163,8 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long> {
         }
     }
 
-    private Set<Long> createSubSubIndex(Long[] triple, ClosableMap<Long, Set<Long>> poMap) {
-        Set<Long> objects;
-        if (poMap.containsKey(triple[1])) {
-            objects = poMap.remove(triple[1]);
-        } else {
-            objects = new HashSet<Long>();
-        }
-        objects.add(triple[2]);
-        return objects;
+    public ClosableIterator<Long[]> getSubSubIndex(Long first, Long second) {
+        return null;
     }
 
     public void close() {

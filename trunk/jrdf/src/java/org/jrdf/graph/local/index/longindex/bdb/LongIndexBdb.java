@@ -62,10 +62,12 @@ package org.jrdf.graph.local.index.longindex.bdb;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.iterator.LongArrayEmptyClosableIterator;
+import org.jrdf.graph.local.iterator.LongEmptyClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.FlatteningEntrySetClosableIterator;
+import org.jrdf.util.ListToSingleValueClosableIterator;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -139,6 +141,15 @@ public final class LongIndexBdb implements LongIndex {
             return new LongArrayEmptyClosableIterator();
         } else {
             return new ClosableIteratorImpl<Long[]>(list.iterator());
+        }
+    }
+
+    public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
+        final List<Long[]> list = index.get(first);
+        if (list == null) {
+            return new LongEmptyClosableIterator();
+        } else {
+            return new ListToSingleValueClosableIterator(second, list.iterator());
         }
     }
 

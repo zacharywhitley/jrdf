@@ -56,19 +56,53 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+
 package org.jrdf.graph.local.iterator;
 
-import junit.framework.TestCase;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-import static java.lang.reflect.Modifier.PUBLIC;
+import java.util.NoSuchElementException;
 
-public class EmptyClosableIteratorUnitTest extends TestCase {
+/**
+ * An iterator that returns no long values.
+ *
+ * @author Andrew Newman
+ * @version $Revision$
+ */
+public final class LongEmptyClosableIterator implements ClosableIterator<Long> {
 
-    public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(ClosableIterator.class, TripleEmptyClosableIterator.class);
-        checkConstructor(TripleEmptyClosableIterator.class, PUBLIC);
+    public LongEmptyClosableIterator() {
+    }
+
+    /**
+     * Returns false.
+     *
+     * @return <code>false</code>.
+     */
+    public boolean hasNext() {
+        return false;
+    }
+
+    /**
+     * Never returns anything.  A call to this will throw NoSuchElementException.
+     *
+     * @return will not return.
+     * @throws java.util.NoSuchElementException always.
+     */
+    public Long next() throws NoSuchElementException {
+        throw new NoSuchElementException();
+    }
+
+    /**
+     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
+     *
+     * @throws UnsupportedOperationException always.
+     */
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean close() {
+        return true;
     }
 }

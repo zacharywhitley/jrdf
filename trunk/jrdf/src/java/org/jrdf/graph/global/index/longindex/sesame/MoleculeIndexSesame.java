@@ -120,6 +120,10 @@ public final class MoleculeIndexSesame implements MoleculeIndex<Long> {
         return new EntryIteratorOneFixedThreeArray(first, btree);
     }
 
+    public ClosableIterator<Long[]> getSubSubIndex(Long first, Long second) {
+        return null;
+    }
+
     public boolean contains(Long first) {
         try {
             return RecordIteratorHelper.contains(btree, first);

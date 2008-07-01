@@ -129,6 +129,17 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
         return null;
     }
 
+//  TODO AN Comeback and use this when the implementations are correct.
+//    private boolean containsPredicate(Long predicate) {
+//        final ClosableIterator<Long> index = graphHandler012.getSubSubIndex(resource, predicate);
+//        try {
+//            return index.hasNext();
+//        } finally {
+//            index.close();
+//        }
+//    }
+
+
     private boolean containsPredicate(Long predicate) {
         final ClosableIterator<Long[]> index = graphHandler012.getSubIndex(resource);
         while (index.hasNext()) {

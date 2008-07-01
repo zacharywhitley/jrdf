@@ -76,7 +76,7 @@ public class FlatteningEntrySetClosableIterator implements ClosableIterator<Long
     }
 
     public boolean close() {
-        return false;
+        return true;
     }
 
     public boolean hasNext() {

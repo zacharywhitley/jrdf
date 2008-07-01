@@ -77,6 +77,8 @@ public interface MoleculeIndex<T> {
 
     ClosableIterator<T[]>getSubIndex(T first);
 
+    ClosableIterator<T[]>getSubSubIndex(T first, T second);
+
     boolean contains(T first);
 
     boolean removeSubIndex(T first);

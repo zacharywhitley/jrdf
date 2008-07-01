@@ -22,6 +22,8 @@
     <suppress checks="ClassDataAbstractionCoupling" files="MemCollectionFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryGlobalJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskGlobalJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskBdbGlobalJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="LongIndexBdb"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
