@@ -72,9 +72,9 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.index.AddMoleculeToIndex;
 import org.jrdf.graph.global.index.ReadableIndex;
 import org.jrdf.graph.global.index.WritableIndex;
+import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
-import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
@@ -111,7 +111,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
             // TODO Recursively reconstruct molecule.
             // Delete all triples in the molecule.
             for (Long[] triple : triplesForMid) {
-                writableIndex.remove(triple[0], triple[1], triple[2], mid, 0L);
+                writableIndex.remove(triple[0], triple[1], triple[2], mid, 1L);
             }
         } catch (GraphException e) {
             throw new RuntimeException(e);

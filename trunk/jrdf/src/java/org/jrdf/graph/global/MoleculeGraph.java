@@ -65,6 +65,6 @@ import org.jrdf.graph.global.molecule.Molecule;
 public interface MoleculeGraph extends Graph {
     void add(Molecule molecule);
     void delete(Molecule molecule);
-    // TODO
-    //Set<Molecule> findMolecules(Triple triple);
+    // TODO YF
+    //Molecule findMolecule(Triple triple);
 }

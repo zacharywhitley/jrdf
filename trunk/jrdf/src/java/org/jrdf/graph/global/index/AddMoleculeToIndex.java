@@ -61,9 +61,9 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.MoleculeHandler;
-import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.MoleculeLocalizer;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeHandler;
 
 import java.util.Set;
 import java.util.Stack;
@@ -74,16 +74,16 @@ public class AddMoleculeToIndex implements MoleculeHandler {
     private static final int PARENT_ID_INDEX = 4;
     private final WritableIndex<Long> index;
     private final MoleculeLocalizer localizer;
-    private Long parentId = 0L;
-    private Long moleculeId = 0L;
+    private Long parentId = 1L;
+    private Long moleculeId = 1L;
     private Stack<Long> parentIds;
 
     public AddMoleculeToIndex(WritableIndex<Long> newIndex, MoleculeLocalizer newLocalizer) {
         this.index = newIndex;
         this.localizer = newLocalizer;
         this.parentIds = new Stack<Long>();
-        parentIds.push(0L);
-        parentIds.push(0L);
+        parentIds.push(moleculeId);
+        parentIds.push(parentId);
     }
 
     public void handleTriple(Triple triple) {

@@ -64,6 +64,7 @@ import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
 
+import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -76,13 +77,19 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         this.structureIndex = newStructureIndex;
     }
 
-    public Long findMid(Long... quin) throws GraphException {
-        final ClosableIterator<Long[]> index = indexes[0].getSubIndex(quin[0]);
-        return index.next()[2];
+    public Long findMid(Long... triple) throws GraphException {
+        final ClosableIterator<Long[]> index = indexes[0].getSubSubIndex(triple[0], triple[1]);
+        while (index.hasNext()) {
+            Long[] oAndMid = index.next();
+            if (oAndMid[0].equals(triple[2])) {
+                return oAndMid[1];
+            }
+        }
+        throw new GraphException("Cannot find triple:  " + asList(triple));
     }
 
     public Set<Long[]> findTriplesForMid(Long mid) {
-        ClosableIterator<Long[]> subSubIndex = structureIndex.getSubSubIndex(0L, mid);
+        ClosableIterator<Long[]> subSubIndex = structureIndex.getSubSubIndex(1L, mid);
         Set<Long[]> triples = new HashSet<Long[]>();
         while (subSubIndex.hasNext()) {
             triples.add(subSubIndex.next());

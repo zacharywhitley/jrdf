@@ -95,6 +95,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
 
     public void testSimpleAddRemove() throws Exception {
         MoleculeGraph moleculeGraph = FACTORY.getNewGraph();
+        moleculeGraph.clear();
         Resource b1 = moleculeGraph.getElementFactory().createResource();
         Resource r1 = moleculeGraph.getElementFactory().createResource(create("urn:foo"));
         Molecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
@@ -107,15 +108,16 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         ClosableIterator<Triple> iterator = moleculeGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue(iterator.hasNext());
         moleculeGraph.delete(molecule);
-        assertEquals(moleculeGraph.getNumberOfTriples(), 1);
+        assertEquals(1, moleculeGraph.getNumberOfTriples());
         moleculeGraph.delete(molecule2);
-        assertEquals(moleculeGraph.getNumberOfTriples(), 0);
+        assertEquals(0, moleculeGraph.getNumberOfTriples());
         iterator = moleculeGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertFalse(iterator.hasNext());
     }
 
     public void testMoleculeBdbIndex() throws GraphException {
         MoleculeGraph moleculeGraph = FACTORY.getNewGraph();
+        moleculeGraph.clear();
         Resource b1 = moleculeGraph.getElementFactory().createResource();
         Resource r1 = moleculeGraph.getElementFactory().createResource(create("urn:foo"));
         Molecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
@@ -128,9 +130,9 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         ClosableIterator<Triple> iterator = moleculeGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue(iterator.hasNext());
         moleculeGraph.delete(molecule);
-        assertEquals(moleculeGraph.getNumberOfTriples(), 1);
+        assertEquals(1, moleculeGraph.getNumberOfTriples());
         moleculeGraph.delete(molecule2);
-        assertEquals(moleculeGraph.getNumberOfTriples(), 0);
+        assertEquals(0, moleculeGraph.getNumberOfTriples());
         iterator = moleculeGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertFalse(iterator.hasNext());
     }

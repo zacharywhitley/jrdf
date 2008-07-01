@@ -83,11 +83,11 @@ import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.Collections;
 
-public class AddNewMoleculeToIndexUnitTest extends TestCase {
-    private static final Long MID_0 = 0L;
-    private static final Long MID_1 = 1L;
-    private static final Long MID_2 = 2L;
-    private static final Long MID_3 = 3L;
+public class AddMoleculeToIndexUnitTest extends TestCase {
+    private static final Long MID_0 = 1L;
+    private static final Long MID_1 = 2L;
+    private static final Long MID_2 = 3L;
+    private static final Long MID_3 = 4L;
     // B1R1R1
     private static final Long[] TRIPLE_1 = new Long[]{1L, 2L, 2L};
     // B1R2R2
