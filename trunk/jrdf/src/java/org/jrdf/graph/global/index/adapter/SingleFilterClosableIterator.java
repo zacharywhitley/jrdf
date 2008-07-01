@@ -57,94 +57,31 @@
  *
  */
 
-package org.jrdf.graph.local.iterator;
+package org.jrdf.graph.global.index.adapter;
 
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
 
-import java.util.NoSuchElementException;
+public class SingleFilterClosableIterator implements ClosableIterator<Long> {
+    private final ClosableIterator<Long[]> iterator;
 
-// TODO Write tests for me.
-public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
-    private final Long resource;
-    private final GraphHandler graphHandler012;
-    private final ClosableIterator<Long[]> posPredicateIterator;
-    private ClosableIterator<Long[]> spoPredicateIterator;
-    private Long nextPredicate;
+    public SingleFilterClosableIterator(ClosableIterator<Long[]> newIterator) {
+        this.iterator = newIterator;
+    }
 
-    public FixedResourcePredicateIterator(final Long newResource, final GraphHandler newGraphHandler012,
-        final GraphHandler newGraphHandler120) {
-        this.resource = newResource;
-        this.graphHandler012 = newGraphHandler012;
-        this.spoPredicateIterator = graphHandler012.getSubIndex(resource);
-        this.posPredicateIterator = newGraphHandler120.getEntries();
-        nextPredicate();
+    public boolean close() {
+        return iterator.close();
     }
 
     public boolean hasNext() {
-        return nextPredicate != null;
+        return iterator.hasNext();
     }
 
-    public PredicateNode next() {
-        if (nextPredicate == null) {
-            throw new NoSuchElementException();
-        }
-        final Long currentPredicate = nextPredicate;
-        nextPredicate();
-        return graphHandler012.createPredicateNode(currentPredicate);
-    }
-
-    private void nextPredicate() {
-        Long newPredicate = nextPredicateFromSPO();
-        if (newPredicate == null) {
-            newPredicate = nextPredicateFromPOS();
-        }
-        this.nextPredicate = newPredicate;
-    }
-
-    private Long nextPredicateFromSPO() {
-        if (spoPredicateIterator != null) {
-            while (spoPredicateIterator.hasNext()) {
-                final Long[] longs = spoPredicateIterator.next();
-                if (!longs[0].equals(nextPredicate)) {
-                    return longs[0];
-                }
-            }
-        }
-        return null;
-    }
-
-    private Long nextPredicateFromPOS() {
-        while (posPredicateIterator.hasNext()) {
-            Long[] pos = posPredicateIterator.next();
-            Long predicate = pos[0];
-            Long object = pos[1];
-            if (!predicate.equals(nextPredicate) && object.equals(resource) &&
-                    !containsPredicate(predicate)) {
-                return predicate;
-            }
-        }
-        return null;
-    }
-
-    private boolean containsPredicate(Long predicate) {
-        final ClosableIterator<Long> index = graphHandler012.getSubSubIndex(resource, predicate);
-        try {
-            return index.hasNext();
-        } finally {
-            index.close();
-        }
+    public Long next() {
+        Long[] longs = iterator.next();
+        return longs[0];
     }
 
     public void remove() {
         throw new UnsupportedOperationException();
-    }
-
-    public boolean close() {
-        if (posPredicateIterator != null) {
-            posPredicateIterator.close();
-        }
-        return true;
     }
 }

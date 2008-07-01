@@ -96,7 +96,7 @@ public class LongIndexAdapter implements LongIndex {
     }
 
     public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
-        return null;
+        return new SingleFilterClosableIterator(index.getSubSubIndex(first, second));
     }
 
     public boolean contains(Long first) {

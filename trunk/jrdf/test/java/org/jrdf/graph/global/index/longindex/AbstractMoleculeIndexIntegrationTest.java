@@ -129,17 +129,17 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
         checkResults(iterator, results);
     }
 
-//    public void testGetSubSubIndex() throws GraphException {
-//        index.add(1L, 1L, 2L, 3L);
-//        index.add(1L, 1L, 2L, 4L);
-//        index.add(1L, 1L, 2L, 5L);
-//        index.add(1L, 1L, 3L, 3L);
-//        index.add(2L, 2L, 2L, 5L);
-//        index.add(2L, 4L, 5L, 6L);
-//        ClosableIterator<Long[]> subIndex = index.getSubSubIndex(1L, 1L);
-//        Set<Long[]> results = asSet(new Long[]{2L, 3L}, new Long[]{2L, 4L}, new Long[]{2L, 5L}, new Long[]{3L, 3L});
-//        checkResults(subIndex, results);
-//    }
+    public void testGetSubSubIndex() throws GraphException {
+        index.add(1L, 1L, 2L, 3L);
+        index.add(1L, 1L, 2L, 4L);
+        index.add(1L, 1L, 2L, 5L);
+        index.add(1L, 1L, 3L, 3L);
+        index.add(2L, 2L, 2L, 5L);
+        index.add(2L, 4L, 5L, 6L);
+        ClosableIterator<Long[]> subIndex = index.getSubSubIndex(1L, 1L);
+        Set<Long[]> results = asSet(new Long[]{2L, 3L}, new Long[]{2L, 4L}, new Long[]{2L, 5L}, new Long[]{3L, 3L});
+        checkResults(subIndex, results);
+    }
 
     private void checkResults(ClosableIterator<Long[]> iterator, Set<Long[]> results) {
         int length = 0;
