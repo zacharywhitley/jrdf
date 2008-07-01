@@ -67,13 +67,13 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 
-public final class NullNewMolecule implements Molecule {
+public final class NullMolecule implements Molecule {
     /**
      * Null object for molecule.
      */
-    public static final Molecule NULL_MOLECULE = new NullNewMolecule();
+    public static final Molecule NULL_MOLECULE = new NullMolecule();
 
-    private NullNewMolecule() {
+    private NullMolecule() {
     }
 
     public Triple getHeadTriple() {

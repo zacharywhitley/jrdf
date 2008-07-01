@@ -174,14 +174,15 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
 
     public ClosableIterator<Long[]> getSubSubIndex(Long first, Long second) {
         ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> subIndex = index.get(first);
-        ClosableMap<Long, ClosableMap<Long, Set<Long>>> map = subIndex.get(second);
-        if (map == null) {
-            return new LongArrayEmptyClosableIterator();
-        } else {
-            Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entryIterator = map.entrySet().iterator();
-            return new FlatteningThreeLongClosableIterator(
-                    new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, Set<Long>>>>(entryIterator));
+        if (subIndex != null) {
+            ClosableMap<Long, ClosableMap<Long, Set<Long>>> map = subIndex.get(second);
+            if (map != null) {
+                Iterator<Map.Entry<Long, ClosableMap<Long, Set<Long>>>> entryIterator = map.entrySet().iterator();
+                return new FlatteningThreeLongClosableIterator(
+                        new ClosableIteratorImpl<Map.Entry<Long, ClosableMap<Long, Set<Long>>>>(entryIterator));
+            }
         }
+        return new LongArrayEmptyClosableIterator();
     }
 
     public boolean removeSubIndex(Long first) {

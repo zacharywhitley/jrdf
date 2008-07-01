@@ -80,9 +80,9 @@ public class MoleculeHeadTripleComparatorImpl implements MoleculeComparator {
     }
 
     public int compare(Molecule newMolecule1, Molecule newMolecule2) {
-        if (newMolecule1 == NullNewMolecule.NULL_MOLECULE) {
+        if (newMolecule1 == NullMolecule.NULL_MOLECULE) {
             return -1;
-        } else if (newMolecule2 == NullNewMolecule.NULL_MOLECULE) {
+        } else if (newMolecule2 == NullMolecule.NULL_MOLECULE) {
             return 1;
         } else {
             Triple headTriple1 = newMolecule1.getHeadTriple();

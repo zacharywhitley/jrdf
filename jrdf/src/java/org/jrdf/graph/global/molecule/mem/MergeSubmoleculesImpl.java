@@ -66,7 +66,7 @@ import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.global.molecule.MoleculeSubsumption;
-import static org.jrdf.graph.global.molecule.mem.NullNewMolecule.NULL_MOLECULE;
+import static org.jrdf.graph.global.molecule.mem.NullMolecule.NULL_MOLECULE;
 
 import java.util.Iterator;
 import java.util.SortedSet;

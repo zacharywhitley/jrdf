@@ -77,9 +77,9 @@ public class MoleculeComparatorImpl implements MoleculeComparator {
     }
 
     public int compare(Molecule molecule, Molecule molecule1) {
-        if (molecule == NullNewMolecule.NULL_MOLECULE) {
+        if (molecule == NullMolecule.NULL_MOLECULE) {
             return -1;
-        } else if (molecule1 == NullNewMolecule.NULL_MOLECULE) {
+        } else if (molecule1 == NullMolecule.NULL_MOLECULE) {
             return 1;
         } else {
             Triple headTriple = molecule.getHeadTriple();
