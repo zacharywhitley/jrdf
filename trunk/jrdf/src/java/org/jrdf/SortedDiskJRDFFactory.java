@@ -78,6 +78,8 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
+import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.CollectionFactory;
 
 import static java.util.Arrays.*;
 import java.util.HashSet;
@@ -99,6 +101,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
+    private CollectionFactory collectionFactory;
 
     private SortedDiskJRDFFactory() {
     }
@@ -116,7 +119,8 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);
         openIndexes.addAll(asList(indexes));
         openFactories.add(nodePoolFactory);
-        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory).getGraph();
+        collectionFactory = new BdbCollectionFactory(BDB_HANDLER, "collection" + graphNumber);
+        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
     }
 
     public UrqlConnection getNewUrqlConnection() {
@@ -124,6 +128,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     }
 
     public void close() {
+        collectionFactory.close();
         for (LongIndex index : openIndexes) {
             index.close();
         }

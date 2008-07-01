@@ -92,6 +92,8 @@ import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.CollectionFactory;
 
 import static java.util.Arrays.asList;
 import java.util.HashSet;
@@ -114,6 +116,7 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
     private Set<MoleculeIndex<Long>> openIndexes = new HashSet<MoleculeIndex<Long>>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private Set<MapFactory> openMapFactories = new HashSet<MapFactory>();
+    private CollectionFactory collectionFactory;
 
     private SortedDiskBdbGlobalJRDFFactory() {
     }
@@ -140,7 +143,8 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
             new LongIndexAdapter(indexes[1]), new LongIndexAdapter(indexes[2])};
-        Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool).getGraph();
+        collectionFactory = new BdbCollectionFactory(BDB_HANDLER, "collection" + graphNumber);
+        Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
         openIndexes.addAll(asList(indexes));
         openMapFactories.add(factory);
         openFactories.add(nodePoolFactory);
@@ -152,6 +156,7 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
     }
 
     public void close() {
+        collectionFactory.close();
         for (MoleculeIndex<Long> index : openIndexes) {
             index.close();
         }

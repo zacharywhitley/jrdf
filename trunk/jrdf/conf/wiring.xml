@@ -14,6 +14,8 @@
         </constructor-arg>
     </bean>
 
+    <bean class="org.jrdf.collection.MemCollectionFactory" singleton="true"/>
+
     <bean class="org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory" singleton="true"/>
 
     <bean id="graphFactory" class="org.jrdf.graph.local.OrderedGraphFactoryImpl" singleton="false">
@@ -25,6 +27,7 @@
             </list>
         </constructor-arg>
         <constructor-arg ref="org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory"/>
+        <constructor-arg ref="org.jrdf.collection.MemCollectionFactory"/>
     </bean>
 
     <!-- Relational Classes -->
