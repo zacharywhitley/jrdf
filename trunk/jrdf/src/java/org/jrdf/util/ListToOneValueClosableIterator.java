@@ -62,13 +62,13 @@ package org.jrdf.util;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ListToSingleValueClosableIterator implements ClosableIterator<Long> {
-    private Long second;
+public class ListToOneValueClosableIterator implements ClosableIterator<Long> {
+    private Long first;
     private Iterator<Long[]> itemIterator;
     private Long currentValue;
 
-    public ListToSingleValueClosableIterator(Long newSecond, Iterator<Long[]> newItemIterator) {
-        this.second = newSecond;
+    public ListToOneValueClosableIterator(Long newFirst, Iterator<Long[]> newItemIterator) {
+        this.first = newFirst;
         this.itemIterator = newItemIterator;
         updatePosition();
     }
@@ -97,10 +97,11 @@ public class ListToSingleValueClosableIterator implements ClosableIterator<Long>
     private void updatePosition() {
         while (itemIterator.hasNext()) {
             Long[] longs = itemIterator.next();
-            if (longs[0].equals(second)) {
+            if (longs[0].equals(first)) {
                 currentValue = longs[1];
                 return;
             }
         }
+        currentValue = null;
     }
 }

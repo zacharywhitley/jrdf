@@ -61,8 +61,8 @@ package org.jrdf.graph.local.index.longindex.mem;
 
 import org.jrdf.graph.local.index.AbstractIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.iterator.LongArrayEmptyClosableIterator;
-import org.jrdf.graph.local.iterator.LongEmptyClosableIterator;
+import org.jrdf.util.LongArrayEmptyClosableIterator;
+import org.jrdf.util.LongEmptyClosableIterator;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
