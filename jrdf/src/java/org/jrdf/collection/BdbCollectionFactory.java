@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.set;
+package org.jrdf.collection;
 
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
@@ -71,14 +71,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 
-public class BdbSortedSetFactory implements SortedSetFactory {
+public class BdbCollectionFactory implements CollectionFactory {
     private final BdbEnvironmentHandler handler;
     private final String databaseName;
     private Environment env;
     private List<Database> databases = new ArrayList<Database>();
-    private long setNumber;
+    private long collectionNumber;
 
-    public BdbSortedSetFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
+    public BdbCollectionFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
         checkNotNull(newHandler, newDatabaseName);
         this.handler = newHandler;
         this.databaseName = newDatabaseName;
@@ -86,10 +86,10 @@ public class BdbSortedSetFactory implements SortedSetFactory {
 
     public <T> SortedSet<T> createSet(Class<T> clazz) {
         try {
-            setNumber++;
+            collectionNumber++;
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            Database database = handler.setupDatabase(env, databaseName + setNumber, dbConfig);
+            Database database = handler.setupDatabase(env, databaseName + collectionNumber, dbConfig);
             databases.add(database);
             final SortedSet<T> set = handler.createSet(database, clazz);
             set.clear();
@@ -102,12 +102,12 @@ public class BdbSortedSetFactory implements SortedSetFactory {
     @SuppressWarnings({ "RawUseOfParameterizedType", "RedundantCast", "unchecked" })
     public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
         try {
-            setNumber++;
+            collectionNumber++;
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
             dbConfig.setOverrideBtreeComparator(true);
             dbConfig.setBtreeComparator((Comparator) comparator);
-            Database database = handler.setupDatabase(env, databaseName + setNumber, dbConfig);
+            Database database = handler.setupDatabase(env, databaseName + collectionNumber, dbConfig);
             databases.add(database);
             final SortedSet<T> set = handler.createSet(database, clazz);
             set.clear();
@@ -117,9 +117,24 @@ public class BdbSortedSetFactory implements SortedSetFactory {
         }
     }
 
+    public <T> List<T> createList(Class<T> clazz) {
+        try {
+            collectionNumber++;
+            env = handler.setUpEnvironment();
+            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
+            Database database = handler.setupDatabase(env, databaseName + collectionNumber, dbConfig);
+            databases.add(database);
+            List<T> list = handler.createList(database, clazz);
+            list.clear();
+            return list;
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void close() {
         try {
-            setNumber = 0;
+            collectionNumber = 0;
             closeDatabase();
         } finally {
             closeEnvironment();

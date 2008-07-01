@@ -6,6 +6,8 @@
     <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="OrderedIteratorFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="LocalIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
@@ -17,7 +19,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskBdbJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="AbstractGraphPerformance"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="MemSortedSetFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MemCollectionFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryGlobalJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskGlobalJRDFFactory"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>

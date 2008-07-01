@@ -93,7 +93,7 @@ public final class NadicJoinImpl implements NadicJoin {
 
     private Relation isDeeDumOrSingle(Set<Relation> relations) {
         Relation relation = null;
-        // Is it the empty set return DEE.
+        // Is it the empty collection return DEE.
         if (relations.equals(Collections.<Relation>emptySet())) {
             relation = RELATION_DEE;
         }

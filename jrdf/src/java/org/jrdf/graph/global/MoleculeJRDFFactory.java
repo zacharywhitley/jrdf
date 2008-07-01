@@ -57,60 +57,10 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.graph.global;
 
-import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.btree.RecordIteratorHelper.*;
+import org.jrdf.JRDFFactory;
 
-import java.io.IOException;
-import java.util.NoSuchElementException;
-
-public class EntryIteratorOneFixedFourArray implements ClosableIterator<Long[]> {
-    private static final int QUINS = 5;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-
-    public EntryIteratorOneFixedFourArray(long newFirst, BTree newBTree) {
-        try {
-            this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
-            this.currentValues = iterator.next();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean hasNext() {
-        return currentValues != null;
-    }
-
-    public Long[] next() {
-        // Current values null then we are at the end.
-        if (currentValues == null) {
-            throw new NoSuchElementException();
-        }
-        Long[] returnValues = ByteHandler.fromBytes(currentValues, QUINS);
-        getNextValues();
-        return new Long[]{returnValues[1], returnValues[2], returnValues[QUINS - 2], returnValues[QUINS - 1]};
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot collection values - read only");
-    }
-
-    private void getNextValues() {
-        try {
-            currentValues = iterator.next();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean close() {
-        try {
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
+public interface MoleculeJRDFFactory extends JRDFFactory {
+    MoleculeGraph getNewGraph();
 }

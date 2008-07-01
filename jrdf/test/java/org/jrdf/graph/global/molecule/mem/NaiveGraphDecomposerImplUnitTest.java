@@ -104,7 +104,7 @@ import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
-import org.jrdf.set.MemSortedSetFactory;
+import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.test.SetUtil.asSet;
 import org.jrdf.vocabulary.RDF;
@@ -117,7 +117,7 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     private final TripleComparator tripleComparator = new TripleComparatorFactoryImpl().newComparator();
     private final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
     private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
-    private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
+    private final MemCollectionFactory setFactory = new MemCollectionFactory();
     private final MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private final GraphDecomposer decomposer = new NaiveGraphDecomposerImpl(setFactory, moleculeFactory,
         moleculeComparator, comparator);

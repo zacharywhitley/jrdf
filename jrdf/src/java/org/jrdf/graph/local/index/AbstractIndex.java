@@ -113,6 +113,7 @@ public abstract class AbstractIndex<T> implements Index<T>, Serializable {
 
     public abstract ClosableIterator<T[]> getSubIndex(T first);
 
+    // TODO AN Make it clean like LongIndexBdb
     public void remove(T... node) throws GraphException {
         // find the sub index
         Map<T, Set<T>> subIndex = index.get(node[0]);

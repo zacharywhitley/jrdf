@@ -114,7 +114,7 @@ public final class LongIndexBdb implements LongIndex {
                 }
             }
         }
-        throw new GraphException("Unable to remove nonexistent molecule");
+        throw new GraphException("Unable to remove nonexistent triple");
     }
 
     private void removeTriple(LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {

@@ -84,7 +84,7 @@ import java.util.TreeSet;
 
 public class MoleculeImpl implements Molecule {
     private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    // This should be a set of molecules for the values.
+    // This should be a collection of molecules for the values.
     private final SortedMap<Triple, SortedSet<Molecule>> subMolecules;
     private final MoleculeComparator moleculeComparator;
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();

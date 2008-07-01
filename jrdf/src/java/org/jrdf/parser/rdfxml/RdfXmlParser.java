@@ -890,7 +890,7 @@ public final class RdfXmlParser implements ConfigurableParser {
             // uriString should be unique in the current document
 
             if (!usedIDs.add(uri)) {
-                // uriString was not added because the set already contained
+                // uriString was not added because the collection already contained
                 // an equal string.
                 sendError("'" + id + "' already used as ID value, values of rdf:ID attributes should be unique");
             }

@@ -108,7 +108,7 @@ public class GraphImpl implements Graph {
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
 
     // indexes are mapped as:
-    // s -> {p -> {set of o}}
+    // s -> {p -> {collection of o}}
     // This is defined in the private add() method
 
     /**

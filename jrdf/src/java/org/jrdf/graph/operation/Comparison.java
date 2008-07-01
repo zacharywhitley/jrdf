@@ -69,7 +69,8 @@ import org.jrdf.graph.GraphException;
  * @version $Revision$
  */
 public interface Comparison {
-    // TODO AN Extend set operation and modify the API to change how this is used - perhaps by setting "setGrounded".
+    // TODO AN Extend collection operation and modify the API to change how this is used - perhaps by setting
+    // "setGrounded".
     // TODO AN Add the ability to test isomorphism and equality.
 
     /**

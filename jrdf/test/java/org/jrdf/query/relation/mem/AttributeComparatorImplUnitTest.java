@@ -93,7 +93,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     public void setUp() {
     }
 
-    // TODO (AN) Ensure that it's Serializable - as the set won't be if the Comparator isn't.
+    // TODO (AN) Ensure that it's Serializable - as the collection won't be if the Comparator isn't.
     // TODO (AN) These next three methods could become some sort of comparator test util.
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(AttributeComparator.class, AttributeComparatorImpl.class);

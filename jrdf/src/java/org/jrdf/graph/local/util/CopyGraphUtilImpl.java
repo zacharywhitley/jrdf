@@ -74,7 +74,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.map.MapFactory;
-import org.jrdf.set.SortedSetFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
@@ -82,11 +82,11 @@ import java.util.Set;
 
 public class CopyGraphUtilImpl implements CopyGraphUtil {
     private final MapFactory mapFactory;
-    private final SortedSetFactory setFactory;
+    private final CollectionFactory setFactory;
     private GraphToGraphMapper mapper;
     private TripleUtil tripleUtil;
 
-    public CopyGraphUtilImpl(MapFactory newMapFactory, SortedSetFactory newSetFactory) {
+    public CopyGraphUtilImpl(MapFactory newMapFactory, CollectionFactory newSetFactory) {
         this.mapFactory = newMapFactory;
         this.setFactory = newSetFactory;
         mapper = null;

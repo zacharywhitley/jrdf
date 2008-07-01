@@ -57,39 +57,65 @@
  *
  */
 
-package org.jrdf.set;
+package org.jrdf.collection;
+
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.ReverseGroundedTripleComparatorImpl;
+import org.jrdf.graph.local.BlankNodeComparator;
+import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.local.NodeComparatorImpl;
+import org.jrdf.graph.local.TripleComparatorImpl;
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
- * An abstract from specifically knowing how to create Sorted Sets.  This allows different implementations to be
- * swapped more easily (for example from memory bound to disk based).
+ * An in memory implementation that uses TreeSets and a small number of known types: Triples and PredicateNodes.
  */
-public interface SortedSetFactory {
-    /**
-     * Creates a sorted set for known type.  The supported types depend on the implementation - current implementations
-     * support types such as Triple and PredicateNode.  Otherwise, it will produce a sorted set without a comparator -
-     * which will need to be added later.
-     *
-     * @param clazz The type of set to create.
-     * @return A sorted set.
-     */
-    <T> SortedSet<T> createSet(Class<T> clazz);
+public class MemCollectionFactory implements CollectionFactory {
+    private Map<Class<?>, Comparator<?>> defaultComparators = new HashMap<Class<?>, Comparator<?>>();
 
-    /**
-     * Creates a sorted set for a known type with a given comparator.  This allows non-supported types to be added.
-     * This is optional and may not be supported by all implementations.
-     *
-     * @param clazz The type of set to create.
-     * @param comparator The comparator to use to determine the sort order.
-     * @return A sorted set.
-     */
-    <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator);
+    public MemCollectionFactory() {
+        NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
+        BlankNodeComparator comparator = new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl());
+        NodeComparator newNodeComparator = new NodeComparatorImpl(nodeTypeComparator,
+            comparator);
+        TripleComparatorImpl tripleComparator = new TripleComparatorImpl(newNodeComparator);
+        defaultComparators.put(Triple.class, new ReverseGroundedTripleComparatorImpl(tripleComparator));
+        defaultComparators.put(PredicateNode.class, newNodeComparator);
+        defaultComparators.put(BlankNode.class, comparator);
+    }
 
-    /**
-     * Close any resources used by the factory - possibly database connections, file handles and the like.  It is
-     * expected that a factory used that is not close may cause resource leaks.
-     */
-    void close();
+    @SuppressWarnings({ "unchecked" })
+    public <T> SortedSet<T> createSet(Class<T> clazz) {
+        if (defaultComparators.containsKey(clazz)) {
+            Comparator<T> comparator = (Comparator<T>) defaultComparators.get(clazz);
+            return new TreeSet<T>(comparator);
+        } else {
+            return new TreeSet<T>();
+        }
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
+        return new TreeSet<T>((Comparator<? super T>) comparator);
+    }
+
+    public <T> List<T> createList(Class<T> clazz) {
+        return new LinkedList<T>();
+    }
+
+    public void close() {
+    }
 }

@@ -73,7 +73,7 @@ import org.jrdf.graph.global.molecule.GraphDecomposer;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
-import org.jrdf.set.SortedSetFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -87,7 +87,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
     private TripleComparator tripleComparator;
     private Graph graph;
 
-    public NaiveGraphDecomposerImpl(SortedSetFactory newSetFactory, MoleculeFactory newMoleculeFactory,
+    public NaiveGraphDecomposerImpl(CollectionFactory newSetFactory, MoleculeFactory newMoleculeFactory,
         MoleculeComparator comparator, TripleComparator newTripleComparator) {
         checkNotNull(newSetFactory, newMoleculeFactory);
         this.triplesChecked = newSetFactory.createSet(Triple.class, newTripleComparator);

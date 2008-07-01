@@ -113,7 +113,7 @@ public class SubsumptionEngine implements TupleEngine {
     public int subsumes(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
         SortedSet<AttributeValuePair> avps2) {
 
-        // Don't subsume if all the values are set.
+        // Don't subsume if all the values are collection.
         int noHeadings = headings.size();
         if (avps1.size() == noHeadings && avps2.size() == noHeadings) {
             return 0;
