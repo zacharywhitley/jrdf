@@ -86,22 +86,30 @@ public interface Index<T> {
     void clear();
 
     /**
-     * Returns an iterator which contains all the elements in the graph as a collections of distinct longs.
+     * Returns an iterator which contains all the elements in the graph as an array of distinct longs.
      *
-     * @return an iterator which contains all the elements in the graph as a collections of distinct longs.
+     * @return an iterator which contains all the elements in the graph as an array of distinct longs.
      */
     ClosableIterator<T[]> iterator();
 
     /**
-     * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id
-     * is given and it returns a map of predicates to objects.
+     * Returns an array of results from the index.  For example, a given subject id is given and the array of predicates
+     * and objects.
      *
-     * @param first the entry set to find.
-     * @return a map containing the list of longs to set of longs.
+     * @param first the entry to find.
+     * @return an array containing the results.
      */
     ClosableIterator<T[]> getSubIndex(T first);
 
-    // TODO AN Write getSubSubIndex too.
+//    /**
+//     * Returns an array of results from the index.  For example, a given subject and predicate ids  the array of
+//     * objects is returned.
+//     *
+//     * @param first the entry to find.
+//     * @param second the entry to find.
+//     * @return an array containing the results.
+//     */
+//    ClosableIterator<T[]> getSubSubIndex(T first, T second);
 
     /**
      * Returns true if the value given exists in the index.
