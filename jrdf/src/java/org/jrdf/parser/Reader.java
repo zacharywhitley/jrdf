@@ -59,14 +59,53 @@
 
 package org.jrdf.parser;
 
-import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.parser.ntriples.GraphNtriplesParser;
+import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
-public class ParseFileUnitTest extends TestCase {
-    public void testNoFile() throws Exception {
-        Graph graph = ParseFile.parseNTriples(new File(""));
-        assertTrue(graph.getNumberOfTriples() == 0);
+public final class Reader {
+    private Reader() {
+    }
+
+    public static Graph parseNTriples(File file) {
+        JRDFFactory factory = MemoryJRDFFactory.getFactory();
+        Graph newGraph = factory.getNewGraph();
+        Parser parser = new GraphNtriplesParser(newGraph);
+        InputStream stream = getInputStream(file);
+        tryParse(parser, stream);
+        return newGraph;
+    }
+
+    public static Graph parseRdfXml(File file) {
+        JRDFFactory factory = MemoryJRDFFactory.getFactory();
+        Graph newGraph = factory.getNewGraph();
+        Parser parser = new GraphRdfXmlParser(newGraph);
+        InputStream stream = getInputStream(file);
+        tryParse(parser, stream);
+        return newGraph;
+    }
+
+    private static InputStream getInputStream(File file) {
+        try {
+            return new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            return new ByteArrayInputStream("".getBytes());
+        }
+    }
+
+    private static void tryParse(Parser parser, InputStream stream) {
+        try {
+            parser.parse(stream, "http://jrdf.sf.net/");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

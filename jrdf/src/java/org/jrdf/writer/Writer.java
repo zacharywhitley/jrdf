@@ -57,53 +57,37 @@
  *
  */
 
-package org.jrdf.parser;
+package org.jrdf.writer;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.parser.ntriples.GraphNtriplesParser;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
+import org.jrdf.writer.mem.RdfNamespaceMapImpl;
+import org.jrdf.writer.ntriples.NTriplesWriterImpl;
+import org.jrdf.writer.rdfxml.RdfXmlWriter;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.FileOutputStream;
 
-public final class ParseFile {
-    private ParseFile() {
+public final class Writer {
+    private Writer() {
     }
 
-    public static Graph parseNTriples(File file) {
-        JRDFFactory factory = MemoryJRDFFactory.getFactory();
-        Graph newGraph = factory.getNewGraph();
-        Parser parser = new GraphNtriplesParser(newGraph);
-        InputStream stream = getInputStream(file);
-        tryParse(parser, stream);
-        return newGraph;
-    }
-
-    public static Graph parseRdfXml(File file) {
-        JRDFFactory factory = MemoryJRDFFactory.getFactory();
-        Graph newGraph = factory.getNewGraph();
-        Parser parser = new GraphRdfXmlParser(newGraph);
-        InputStream stream = getInputStream(file);
-        tryParse(parser, stream);
-        return newGraph;
-    }
-
-    private static InputStream getInputStream(File file) {
+    public static void writeNTriples(File file, Graph graph) {
         try {
-            return new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            return new ByteArrayInputStream("".getBytes());
+            RdfWriter writer = new NTriplesWriterImpl();
+            writer.write(graph, new FileOutputStream(file));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private static void tryParse(Parser parser, InputStream stream) {
+    public static void writeRdfXml(File file, Graph graph) {
         try {
-            parser.parse(stream, "http://jrdf.sf.net/");
+            BlankNodeRegistry nodeRegistry = new MemBlankNodeRegistryImpl();
+            nodeRegistry.clear();
+            RdfNamespaceMap map = new RdfNamespaceMapImpl();
+            RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
+            writer.write(graph, new FileOutputStream(file));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
