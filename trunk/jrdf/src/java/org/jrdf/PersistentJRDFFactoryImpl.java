@@ -67,7 +67,7 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
-import static org.jrdf.parser.ParseFile.parseNTriples;
+import static org.jrdf.parser.Reader.parseNTriples;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
@@ -82,12 +82,9 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
-import org.jrdf.writer.ntriples.NTriplesWriter;
-import org.jrdf.writer.ntriples.NTriplesWriterImpl;
+import static org.jrdf.writer.Writer.*;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
@@ -111,14 +108,14 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     private CollectionFactory collectionFactory;
     private Models models;
     private Graph graph;
-    private File dir;
+    private File file;
 
     private PersistentJRDFFactoryImpl(DirectoryHandler handler) {
         this.handler = handler;
         this.bdbHandler = new BdbEnvironmentHandlerImpl(handler);
         handler.makeDir();
-        dir = handler.getDir();
-        graph = parseNTriples(new File(dir, "graphs.nt"));
+        file = new File(handler.getDir(), "graphs.nt");
+        graph = parseNTriples(file);
         models = new ModelsImpl(graph);
         currentGraphNumber = models.highestId();
     }
@@ -145,7 +142,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     public Graph getNewGraph(String name) {
         currentGraphNumber++;
         models.addGraph(name, currentGraphNumber);
-        updateGraph();
+        writeNTriples(file, graph);
         return getGraph(currentGraphNumber);
     }
 
@@ -184,16 +181,5 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         return new BTree[]{btreeFactory.createBTree(handler, "spo" + graphNumber),
                 btreeFactory.createBTree(handler, "pos" + graphNumber),
                 btreeFactory.createBTree(handler, "osp" + graphNumber)};
-    }
-
-    private void updateGraph() {
-        try {
-            NTriplesWriter writer = new NTriplesWriterImpl();
-            File file = new File(dir, "graphs.nt");
-            OutputStream out = new FileOutputStream(file);
-            writer.write(graph, out);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
