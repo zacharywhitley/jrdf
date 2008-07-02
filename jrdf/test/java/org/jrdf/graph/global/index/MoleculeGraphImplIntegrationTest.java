@@ -193,14 +193,19 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         Triple B3R2R3 = tripleFactory.createTriple(BNODE3, REF2, REF3);
         Triple B3R2R2 = tripleFactory.createTriple(BNODE3, REF2, REF2);
 
+        Triple[] triples = new Triple[] {B1R1R1, B1R2R2, B1R1B2, R1R2B2,
+                B2R2R1, B2R2B3, B3R2R3, B3R2R2};
+
         Molecule molecule = moleculeFactory.createMolecule(B1R1R1, B1R2R2, B1R1B2);
         Molecule sm1 = moleculeFactory.createMolecule(R1R2B2, B2R2R1, B2R2B3);
         Molecule sm2 = moleculeFactory.createMolecule(B3R2R3, B3R2R2);
         molecule.add(B1R1B2, sm1);
         sm1.add(B2R2B3, sm2);
         moleculeGraph.add(molecule);
-        assertEquals("# triples", 8, moleculeGraph.getNumberOfTriples());
-        Molecule actualMolecule = moleculeGraph.findMolecule(B3R2R2);
-        assertEquals("Equal molecules", molecule, actualMolecule);
+        assertEquals("# triples", triples.length, moleculeGraph.getNumberOfTriples());
+        for (Triple triple : triples) {
+            Molecule actualMolecule = moleculeGraph.findMolecule(triple);
+            assertEquals("Equal molecules", molecule, actualMolecule);
+        }
     }
 }
