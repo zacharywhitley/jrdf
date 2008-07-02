@@ -68,7 +68,7 @@ import java.util.Set;
  * A set of constants for the standard XSD vocabulary.
  *
  * @author Andrew Newman
- * @version $Revision: 1045 $
+ * @version $Id$
  */
 public class XSD extends Vocabulary {
 
