@@ -77,7 +77,7 @@ import org.jrdf.urql.builder.QueryBuilder;
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
  *
  * @author Andrew Newman
- * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
+ * @version $Id$
  */
 public final class SortedMemoryJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
