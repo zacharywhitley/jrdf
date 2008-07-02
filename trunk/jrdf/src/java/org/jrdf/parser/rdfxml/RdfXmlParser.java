@@ -394,7 +394,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @throws IllegalArgumentException  If the supplied reader or base URI
      *                                   is <tt>null</tt>.
      */
-    public synchronized void parse(Reader reader, String baseURI) throws IOException, ParseException, 
+    public synchronized void parse(Reader reader, String baseURI) throws IOException, ParseException,
         StatementHandlerException {
         if (null == reader) {
             throw new IllegalArgumentException("Reader cannot be 'null'");
