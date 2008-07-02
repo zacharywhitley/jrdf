@@ -59,15 +59,16 @@
 
 package org.jrdf;
 
+import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.GraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
+import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
@@ -79,7 +80,7 @@ import org.jrdf.urql.builder.QueryBuilder;
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
 public final class MemoryJRDFFactory implements JRDFFactory {
-    private static final QueryFactoryImpl QUERY_FACTORY = new QueryFactoryImpl();
+    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
 
