@@ -73,8 +73,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.MoleculeJRDFFactory;
-import org.jrdf.graph.global.SortedDiskGlobalJRDFFactory;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
+import org.jrdf.graph.global.SortedMemoryGlobalJRDFFactory;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
@@ -82,7 +81,6 @@ import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.net.URI;
 import static java.net.URI.create;
@@ -90,7 +88,7 @@ import static java.net.URI.create;
 // TODO Write a test to check that writing triples and getting molecules synchronise.  Especially with creating
 // new URIs across data structures.  e.g. create a triple with a new molecule and then do a find on it.
 public class MoleculeGraphImplIntegrationTest extends TestCase {
-    private static final MoleculeJRDFFactory FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
+    private static final MoleculeJRDFFactory FACTORY = SortedMemoryGlobalJRDFFactory.getFactory();
     private static final TripleComparator COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
 
     private URIReference REF1;
@@ -99,9 +97,6 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     private BlankNode BNODE1;
     private BlankNode BNODE2;
     private BlankNode BNODE3;
-    private BlankNode BNODE4;
-    private BlankNode BNODE5;
-    private BlankNode BNODE6;
 
     private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(COMPARATOR);
     private final MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
@@ -114,15 +109,12 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         moleculeGraph = FACTORY.getNewGraph();
         element_factory = moleculeGraph.getElementFactory();
         tripleFactory = moleculeGraph.getTripleFactory();
-        REF1 = element_factory.createURIReference(URI.create("urn:foo"));
-        REF2 = element_factory.createURIReference(URI.create("urn:bar"));
-        REF3 = element_factory.createURIReference(URI.create("urn:baz"));
+        REF1 = element_factory.createURIReference(URI.create("urn:ref1"));
+        REF2 = element_factory.createURIReference(URI.create("urn:ref2"));
+        REF3 = element_factory.createURIReference(URI.create("urn:ref3"));
         BNODE1 = element_factory.createBlankNode();
         BNODE2 = element_factory.createBlankNode();
         BNODE3 = element_factory.createBlankNode();
-        BNODE4 = element_factory.createBlankNode();
-        BNODE5 = element_factory.createBlankNode();
-        BNODE6 = element_factory.createBlankNode();
     }
 
     @Override
@@ -201,10 +193,14 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         Triple B3R2R3 = tripleFactory.createTriple(BNODE3, REF2, REF3);
         Triple B3R2R2 = tripleFactory.createTriple(BNODE3, REF2, REF2);
 
-        Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
-                asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
+        Molecule molecule = moleculeFactory.createMolecule(B1R1R1, B1R2R2, B1R1B2);
+        Molecule sm1 = moleculeFactory.createMolecule(R1R2B2, B2R2R1, B2R2B3);
+        Molecule sm2 = moleculeFactory.createMolecule(B3R2R3, B3R2R2);
+        molecule.add(B1R1B2, sm1);
+        sm1.add(B2R2B3, sm2);
         moleculeGraph.add(molecule);
-        Molecule actualMolecule = moleculeGraph.findMolecule(B1R1R1);
+        assertEquals("# triples", 8, moleculeGraph.getNumberOfTriples());
+        Molecule actualMolecule = moleculeGraph.findMolecule(B3R2R2);
         assertEquals("Equal molecules", molecule, actualMolecule);
     }
 }
