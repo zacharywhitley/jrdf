@@ -75,6 +75,8 @@ import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
 import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.Models;
+import org.jrdf.util.ModelsImpl;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
@@ -92,41 +94,48 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class PersistentJRDFFactory implements JRDFFactory {
+public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static long graphNumber;
+    private long currentGraphNumber;
     private final DirectoryHandler handler;
     private final BdbEnvironmentHandler bdbHandler;
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private CollectionFactory collectionFactory;
+    private Models models;
 
-    private PersistentJRDFFactory(DirectoryHandler handler) {
+    private PersistentJRDFFactoryImpl(DirectoryHandler handler) {
         this.handler = handler;
         this.bdbHandler = new BdbEnvironmentHandlerImpl(handler);
         handler.makeDir();
         File dir = handler.getDir();
         Graph graph = parseNTriples(new File(dir, "graphs.nt"));
+        models = new ModelsImpl(graph);
+        currentGraphNumber = models.highestId();
     }
 
-    public static JRDFFactory getFactory(DirectoryHandler handler) {
-        return new PersistentJRDFFactory(handler);
+    public static PersistentJRDFFactory getFactory(DirectoryHandler handler) {
+        return new PersistentJRDFFactoryImpl(handler);
     }
 
     public void refresh() {
     }
 
-    public Graph getNewGraph() {
-        graphNumber++;
-        LongIndex[] indexes = createIndexes();
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(bdbHandler, graphNumber);
-        openIndexes.addAll(asList(indexes));
-        openFactories.add(nodePoolFactory);
-        collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
-        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
+    public Graph getExistingGraph(String name) throws IllegalArgumentException {
+        if (models.getId(name) == 0) {
+            throw new IllegalArgumentException("Cannot get graph named: " + name);
+        } else {
+            return getGraph(models.getId(name));
+        }
+    }
+
+    public Graph getNewGraph(String name) {
+        currentGraphNumber++;
+        models.addGraph(name, currentGraphNumber);
+        return getGraph(currentGraphNumber);
     }
 
     public UrqlConnection getNewUrqlConnection() {
@@ -145,13 +154,22 @@ public final class PersistentJRDFFactory implements JRDFFactory {
         openFactories.clear();
     }
 
-    private LongIndex[] createIndexes() {
-        BTree[] bTrees = createBTrees();
+    private Graph getGraph(long graphNumber) {
+        LongIndex[] indexes = createIndexes(graphNumber);
+        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(bdbHandler, graphNumber);
+        openIndexes.addAll(asList(indexes));
+        openFactories.add(nodePoolFactory);
+        collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
+        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
+    }
+
+    private LongIndex[] createIndexes(long graphNumber) {
+        BTree[] bTrees = createBTrees(graphNumber);
         return new LongIndex[]{new LongIndexSesame(bTrees[0]), new LongIndexSesame(bTrees[1]),
             new LongIndexSesame(bTrees[2])};
     }
 
-    private BTree[] createBTrees() {
+    private BTree[] createBTrees(long graphNumber) {
         return new BTree[]{btreeFactory.createBTree(handler, "spo" + graphNumber),
                 btreeFactory.createBTree(handler, "pos" + graphNumber),
                 btreeFactory.createBTree(handler, "osp" + graphNumber)};
