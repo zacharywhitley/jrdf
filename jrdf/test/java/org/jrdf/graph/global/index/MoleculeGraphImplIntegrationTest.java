@@ -63,14 +63,18 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.MoleculeJRDFFactory;
 import org.jrdf.graph.global.SortedDiskGlobalJRDFFactory;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
@@ -78,7 +82,9 @@ import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.test.SetUtil.asSet;
 
+import java.net.URI;
 import static java.net.URI.create;
 
 // TODO Write a test to check that writing triples and getting molecules synchronise.  Especially with creating
@@ -86,17 +92,46 @@ import static java.net.URI.create;
 public class MoleculeGraphImplIntegrationTest extends TestCase {
     private static final MoleculeJRDFFactory FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
     private static final TripleComparator COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
+
+    private URIReference REF1;
+    private URIReference REF2;
+    private URIReference REF3;
+    private BlankNode BNODE1;
+    private BlankNode BNODE2;
+    private BlankNode BNODE3;
+    private BlankNode BNODE4;
+    private BlankNode BNODE5;
+    private BlankNode BNODE6;
+
     private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(COMPARATOR);
     private final MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
+    private MoleculeGraph moleculeGraph;
+    private TripleFactory tripleFactory;
+    private GraphElementFactory element_factory;
+
+    public void setUp() throws Exception {
+        super.setUp();
+        moleculeGraph = FACTORY.getNewGraph();
+        element_factory = moleculeGraph.getElementFactory();
+        tripleFactory = moleculeGraph.getTripleFactory();
+        REF1 = element_factory.createURIReference(URI.create("urn:foo"));
+        REF2 = element_factory.createURIReference(URI.create("urn:bar"));
+        REF3 = element_factory.createURIReference(URI.create("urn:baz"));
+        BNODE1 = element_factory.createBlankNode();
+        BNODE2 = element_factory.createBlankNode();
+        BNODE3 = element_factory.createBlankNode();
+        BNODE4 = element_factory.createBlankNode();
+        BNODE5 = element_factory.createBlankNode();
+        BNODE6 = element_factory.createBlankNode();
+    }
 
     @Override
     public void tearDown() {
-        FACTORY.close();
+        moleculeGraph.clear();
+        moleculeGraph.close();
     }
 
     public void testSimpleAddRemove() throws Exception {
-        MoleculeGraph moleculeGraph = FACTORY.getNewGraph();
-        moleculeGraph.clear();
         Resource b1 = moleculeGraph.getElementFactory().createResource();
         Resource r1 = moleculeGraph.getElementFactory().createResource(create("urn:foo"));
         Molecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
@@ -117,8 +152,6 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     }
 
     public void testMoleculeBdbIndex() throws GraphException {
-        MoleculeGraph moleculeGraph = FACTORY.getNewGraph();
-        moleculeGraph.clear();
         Resource b1 = moleculeGraph.getElementFactory().createResource();
         Resource r1 = moleculeGraph.getElementFactory().createResource(create("urn:foo"));
         Molecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));
@@ -139,8 +172,6 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     }
 
     public void testMoleuleIndexToMolecule() throws GraphException {
-        MoleculeGraph moleculeGraph = FACTORY.getNewGraph();
-        moleculeGraph.clear();
         final GraphElementFactory graphElementFactory = moleculeGraph.getElementFactory();
         Resource r1 = graphElementFactory.createResource(create("urn:foo"));
         Resource b0 = graphElementFactory.createResource();
@@ -157,6 +188,23 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         m1.add(triple1, m2);
         moleculeGraph.add(molecule);
         Molecule actualMolecule = moleculeGraph.findMolecule(triple2);
+        assertEquals("Equal molecules", molecule, actualMolecule);
+    }
+
+    public void testMoleculeIndexComplex() throws GraphException {
+        Triple B1R1R1 = tripleFactory.createTriple(BNODE1, REF1, REF1);
+        Triple B1R2R2 = tripleFactory.createTriple(BNODE1, REF2, REF2);
+        Triple B1R1B2 = tripleFactory.createTriple(BNODE1, REF1, BNODE2);
+        Triple R1R2B2 = tripleFactory.createTriple(REF1, REF2, BNODE2);
+        Triple B2R2R1 = tripleFactory.createTriple(BNODE2, REF2, REF1);
+        Triple B2R2B3 = tripleFactory.createTriple(BNODE2, REF2, BNODE3);
+        Triple B3R2R3 = tripleFactory.createTriple(BNODE3, REF2, REF3);
+        Triple B3R2R2 = tripleFactory.createTriple(BNODE3, REF2, REF2);
+
+        Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
+                asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
+        moleculeGraph.add(molecule);
+        Molecule actualMolecule = moleculeGraph.findMolecule(B1R1R1);
         assertEquals("Equal molecules", molecule, actualMolecule);
     }
 }
