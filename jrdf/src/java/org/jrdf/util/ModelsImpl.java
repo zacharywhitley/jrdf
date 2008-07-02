@@ -83,13 +83,13 @@ public class ModelsImpl implements Models {
      * Default name space for triples.
      */
     public static final String JRDF_NAMESPACE = "http://jrdf.sf.net/";
+    private static final URI GRAPH = create(JRDF_NAMESPACE + "graph");
+    private static final URI NAME = create(JRDF_NAMESPACE + "name");
+    private static final URI ID = create(JRDF_NAMESPACE + "id");
     private Set<Resource> graphs = new HashSet<Resource>();
     private Map<String, Long> graphNameToId = new HashMap<String, Long>();
     private long highestId;
     private Graph graph;
-    private static final URI GRAPH = create(JRDF_NAMESPACE + "graph");
-    private static final URI NAME = create(JRDF_NAMESPACE + "name");
-    private static final URI ID = create(JRDF_NAMESPACE + "id");
 
     public ModelsImpl(Graph newGraph) {
         this.graph = newGraph;
@@ -123,6 +123,10 @@ public class ModelsImpl implements Models {
         if (id > highestId) {
             highestId = id;
         }
+    }
+
+    public boolean hasGraph(String name) {
+        return graphNameToId.keySet().contains(name);
     }
 
     public Set<Resource> getResources() {

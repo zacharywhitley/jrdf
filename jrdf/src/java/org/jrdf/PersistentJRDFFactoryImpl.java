@@ -82,8 +82,12 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
+import org.jrdf.writer.ntriples.NTriplesWriter;
+import org.jrdf.writer.ntriples.NTriplesWriterImpl;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
@@ -106,13 +110,15 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private CollectionFactory collectionFactory;
     private Models models;
+    private Graph graph;
+    private File dir;
 
     private PersistentJRDFFactoryImpl(DirectoryHandler handler) {
         this.handler = handler;
         this.bdbHandler = new BdbEnvironmentHandlerImpl(handler);
         handler.makeDir();
-        File dir = handler.getDir();
-        Graph graph = parseNTriples(new File(dir, "graphs.nt"));
+        dir = handler.getDir();
+        graph = parseNTriples(new File(dir, "graphs.nt"));
         models = new ModelsImpl(graph);
         currentGraphNumber = models.highestId();
     }
@@ -122,6 +128,10 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     }
 
     public void refresh() {
+    }
+
+    public boolean hasGraph(String name) {
+        return models.hasGraph(name);
     }
 
     public Graph getExistingGraph(String name) throws IllegalArgumentException {
@@ -135,6 +145,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     public Graph getNewGraph(String name) {
         currentGraphNumber++;
         models.addGraph(name, currentGraphNumber);
+        updateGraph();
         return getGraph(currentGraphNumber);
     }
 
@@ -173,5 +184,16 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         return new BTree[]{btreeFactory.createBTree(handler, "spo" + graphNumber),
                 btreeFactory.createBTree(handler, "pos" + graphNumber),
                 btreeFactory.createBTree(handler, "osp" + graphNumber)};
+    }
+
+    private void updateGraph() {
+        try {
+            NTriplesWriter writer = new NTriplesWriterImpl();
+            File file = new File(dir, "graphs.nt");
+            OutputStream out = new FileOutputStream(file);
+            writer.write(graph, out);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

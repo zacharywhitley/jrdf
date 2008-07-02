@@ -76,4 +76,6 @@ public interface Models {
     long getId(String graphName);
 
     void addGraph(String name, Long id);
+
+    boolean hasGraph(String name);
 }
