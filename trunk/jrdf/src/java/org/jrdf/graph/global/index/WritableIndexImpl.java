@@ -74,7 +74,7 @@ public class WritableIndexImpl implements WritableIndex<Long> {
 
     public void add(Long... quin) throws GraphException {
         // spo, mid
-        indexes[0].add(quin);
+        indexes[0].add(quin[0], quin[1], quin[2], quin[3]);
         // pos, mid
         indexes[1].add(quin[1], quin[2], quin[0], quin[3]);
         // osp, mid
@@ -85,7 +85,7 @@ public class WritableIndexImpl implements WritableIndex<Long> {
 
     public void remove(Long... quin) throws GraphException {
         // spo, mid
-        indexes[0].remove(quin);
+        indexes[0].remove(quin[0], quin[1], quin[2], quin[3]);
         // pos, mid
         indexes[1].remove(quin[1], quin[2], quin[0], quin[3]);
         // osp, mid

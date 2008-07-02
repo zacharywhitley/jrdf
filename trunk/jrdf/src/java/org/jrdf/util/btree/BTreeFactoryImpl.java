@@ -89,4 +89,15 @@ public class BTreeFactoryImpl implements BTreeFactory {
             throw new RuntimeException(e);
         }
     }
+
+    public BTree createQuinBTree(DirectoryHandler handler, String fileName) {
+        RecordComparator comparator = new DefaultRecordComparator();
+        try {
+            File parent = handler.makeDir();
+            File file = new File(parent, fileName);
+            return new BTree(file, BLOCK_SIZE, 40, comparator);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

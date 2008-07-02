@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.global;
 
+import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.global.index.ReadableIndex;
 import org.jrdf.graph.global.index.ReadableIndexImpl;
@@ -67,8 +69,8 @@ import org.jrdf.graph.global.index.WritableIndexImpl;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
 import org.jrdf.graph.global.index.longindex.sesame.MoleculeIndexSesame;
+import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesame;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
@@ -86,8 +88,6 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
-import org.jrdf.util.ClosableMap;
-import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
@@ -95,8 +95,6 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
-import org.jrdf.collection.CollectionFactory;
-import org.jrdf.collection.BdbCollectionFactory;
 
 import static java.util.Arrays.asList;
 import java.util.HashSet;
@@ -138,8 +136,8 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
         MoleculeIndex<Long>[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(
                 new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()), graphNumber);
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
+        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexSesame(
+                btreeFactory.createQuinBTree(HANDLER, "spomm" + graphNumber));
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
         NodePool nodePool = nodePoolFactory.createNodePool();
