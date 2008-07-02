@@ -63,8 +63,8 @@ import org.jrdf.JRDFFactory;
 import org.jrdf.SortedDiskBdbJRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
-import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 
 public class BdbGraphImplIntegrationTest extends AbstractGraphUnitTest {
     private static final JRDFFactory FACTORY = SortedDiskBdbJRDFFactory.getFactory();

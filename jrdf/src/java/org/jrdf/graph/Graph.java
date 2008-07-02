@@ -265,4 +265,6 @@ public interface Graph {
      * @throws GraphException If the statements number of statements in the graph fails to be found.
      */
     boolean isEmpty() throws GraphException;
+
+    Triple getTriple(Long... index);
 }

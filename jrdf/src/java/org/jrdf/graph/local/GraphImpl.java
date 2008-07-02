@@ -72,6 +72,7 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
@@ -301,5 +302,12 @@ public class GraphImpl implements Graph {
             throw new RuntimeException("Unable to get String representation of graph", e);
         }
         return sw.toString();
+    }
+
+    public Triple getTriple(Long... index) {
+        SubjectNode sub = (SubjectNode) nodePool.getNodeById(index[0]);
+        PredicateNode pre = (PredicateNode) nodePool.getNodeById(index[1]);
+        ObjectNode obj = (ObjectNode) nodePool.getNodeById(index[2]);
+        return new TripleImpl(sub, pre, obj);
     }
 }

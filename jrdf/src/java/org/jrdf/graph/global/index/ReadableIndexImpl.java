@@ -88,12 +88,59 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         throw new GraphException("Cannot find triple:  " + asList(triple));
     }
 
-    public Set<Long[]> findTriplesForMid(Long mid) {
-        ClosableIterator<Long[]> subSubIndex = structureIndex.getSubSubIndex(1L, mid);
+    public Set<Long[]> findTriplesForMid(Long pid, Long mid) {
+        ClosableIterator<Long[]> subSubIndex = structureIndex.getSubSubIndex(pid, mid);
         Set<Long[]> triples = new HashSet<Long[]>();
         while (subSubIndex.hasNext()) {
             triples.add(subSubIndex.next());
         }
         return triples;
+    }
+
+    public Long findEnclosingMoleculeID(Long mid) throws GraphException {
+        ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(1L);
+        Long pid;
+        while (subIndex.hasNext()) {
+            Long[] quad = subIndex.next();
+            if (quad[0] == mid) {
+                return 1L;
+            }
+        }
+        subIndex = structureIndex.getSubIndex(1L);
+        while (subIndex.hasNext()) {
+            Long[] quad = subIndex.next();
+            pid = quad[0];
+            if (findParentMoleculeID(pid, mid) != 0L) {
+                return pid;
+            }
+        }
+        throw new GraphException("Cannot find parent molecule id for: " + mid);
+    }
+
+    /**
+     * Search for the parent ID in a width-first search.
+     * @param parentID
+     * @param mid
+     * @return
+     */
+    private Long findParentMoleculeID(Long parentID, Long mid) {
+        final ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(parentID);
+        while (subIndex.hasNext()) {
+            Long[] quad = subIndex.next();
+            if (quad[0] == mid) {
+                return parentID;
+            }
+            return findParentMoleculeID(quad[0], mid);
+        }
+        return 0L;
+    }
+
+    public Set<Long> findChildIDs(Long mid) {
+        final ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(mid);
+        Set<Long> set = new HashSet<Long>();
+        while (subIndex.hasNext()) {
+            set.add(subIndex.next()[0]);
+        }
+        return set;
     }
 }
