@@ -88,7 +88,7 @@ import java.util.Set;
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
  *
  * @author Andrew Newman
- * @version $Id: $
+ * @version $Id: $ $Revision: $
  */
 public final class PersistentJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
