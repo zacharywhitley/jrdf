@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 2062 $
+ * $Date: 2008-05-27 11:57:23 +1000 (Tue, 27 May 2008) $
  *
  * ====================================================================
  *
@@ -66,7 +66,7 @@ import java.net.URISyntaxException;
  * A set of constants for the standard RDFS vocabulary.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id$
  */
 public class OWL extends Vocabulary {
 

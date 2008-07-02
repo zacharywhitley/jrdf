@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 2097 $
+ * $Date: 2008-06-23 15:07:25 +1000 (Mon, 23 Jun 2008) $
  *
  * ====================================================================
  *
@@ -66,7 +66,7 @@ import java.net.URISyntaxException;
  * A set of constants for the standard RDF vocabulary.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id$
  */
 public class RDF extends Vocabulary {
 

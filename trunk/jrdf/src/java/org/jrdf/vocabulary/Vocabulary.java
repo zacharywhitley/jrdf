@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -68,7 +68,7 @@ import java.util.Set;
  * A representation of a known vocabulary.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id$
  */
 public class Vocabulary implements Serializable {
 
