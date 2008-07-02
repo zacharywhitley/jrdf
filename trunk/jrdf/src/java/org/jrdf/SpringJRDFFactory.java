@@ -68,7 +68,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
  *
  * @author Andrew Newman
- * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
+ * @version $Id$
  */
 public final class SpringJRDFFactory implements JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";

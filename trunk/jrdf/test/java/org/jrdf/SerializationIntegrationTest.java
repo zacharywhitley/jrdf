@@ -83,7 +83,7 @@ import java.util.Collection;
  * <code>static final long serialVersionUID</code> field.
  *
  * @author Tom Adams
- * @version $Id: SerializationIntegrationTest.java 1970 2008-04-17 04:56:24Z newmana $
+ * @version $Id$
  */
 public final class SerializationIntegrationTest extends TestCase {
     private static final String PATH_ROOT = "/";
