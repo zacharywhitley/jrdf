@@ -70,7 +70,7 @@ import static org.jrdf.util.test.ExceptionTestUtil.testThrowableConstructor;
  * Test properties of an exception.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Id$
  */
 public class NamespaceExceptionUnitTest extends TestCase {
     private static final Class<NamespaceException> CLASS = NamespaceException.class;

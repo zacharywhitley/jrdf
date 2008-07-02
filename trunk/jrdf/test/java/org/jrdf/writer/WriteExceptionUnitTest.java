@@ -69,7 +69,7 @@ import static org.jrdf.util.test.ExceptionTestUtil.testThrowableConstructor;
  * Test properties of an exception.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Id$
  */
 public class WriteExceptionUnitTest extends TestCase {
     private static final Class<WriteException> CLASS = WriteException.class;

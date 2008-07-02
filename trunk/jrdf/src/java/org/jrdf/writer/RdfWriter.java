@@ -70,6 +70,7 @@ import java.io.Writer;
  * General interface for RDF Writer.
  *
  * @author TurnerRX
+ * @version $Id$
  */
 public interface RdfWriter {
     /**

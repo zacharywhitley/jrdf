@@ -62,6 +62,7 @@ package org.jrdf.writer;
  * Indicates an exception occurred within RDF Writer.
  *
  * @author TurnerRX
+ * @version $Id$
  */
 public class WriteException extends Exception {
     private static final long serialVersionUID = 2419814921997551107L;
