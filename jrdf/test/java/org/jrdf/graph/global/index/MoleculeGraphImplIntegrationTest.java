@@ -73,7 +73,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.MoleculeJRDFFactory;
-import org.jrdf.graph.global.SortedMemoryGlobalJRDFFactory;
+import org.jrdf.graph.global.SortedDiskGlobalJRDFFactory;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
@@ -88,7 +88,7 @@ import static java.net.URI.create;
 // TODO Write a test to check that writing triples and getting molecules synchronise.  Especially with creating
 // new URIs across data structures.  e.g. create a triple with a new molecule and then do a find on it.
 public class MoleculeGraphImplIntegrationTest extends TestCase {
-    private static final MoleculeJRDFFactory FACTORY = SortedMemoryGlobalJRDFFactory.getFactory();
+    private static final MoleculeJRDFFactory FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
     private static final TripleComparator COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
 
     private URIReference REF1;

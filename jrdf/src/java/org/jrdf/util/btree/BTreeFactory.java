@@ -65,4 +65,6 @@ public interface BTreeFactory {
     BTree createBTree(DirectoryHandler handler, String fileName);
 
     BTree createQuadBTree(DirectoryHandler handler, String fileName);
+
+    BTree createQuinBTree(DirectoryHandler handler, String fileName);
 }
