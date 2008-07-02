@@ -57,15 +57,27 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.example;
 
+import org.jrdf.PersistentJRDFFactory;
+import org.jrdf.PersistentJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Resource;
+import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 
-public interface MoleculeGraph extends Graph {
-    void add(Molecule molecule);
-    void delete(Molecule molecule);
-    Molecule findMolecule(Triple triple) throws GraphException;
+import java.net.URI;
+
+public class PersistanceExample {
+    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final PersistentJRDFFactory JRDF_FACTORY = PersistentJRDFFactoryImpl.getFactory(HANDLER);
+
+    public static void main(String[] args) throws Exception {
+        Graph newGraph = JRDF_FACTORY.getNewGraph("foo");
+        GraphElementFactory elementFactory = newGraph.getElementFactory();
+        URI uri = URI.create("urn:hello");
+        Resource resource = elementFactory.createResource(uri);
+        resource.addValue(uri, uri);
+    }
 }
