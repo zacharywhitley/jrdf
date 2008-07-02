@@ -57,22 +57,52 @@
  *
  */
 
-package org.jrdf.parser;
+package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.RDFEventReader;
+import org.jrdf.parser.RDFInputFactory;
+import org.jrdf.parser.StatementHandlerException;
 
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 
-public interface RDFInputFactory {
-    RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph);
+/**
+ * An NTriples parser that adds every triple encountered to a JRDF Graph.  Use the default parser configuration.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
+public class GraphNtriplesParser implements Parser {
+    private static final RDFInputFactory TRIPLES_RDF_INPUT_FACTORY = new NTriplesRDFInputFactoryImpl();
+    private final Graph graph;
 
-    RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph);
+    public GraphNtriplesParser(Graph newGraph) {
+        this.graph = newGraph;
+    }
 
-    RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph, ParserBlankNodeFactory factory);
+    public void parse(InputStream in, String baseURI) throws StatementHandlerException {
+        RDFEventReader eventReader = TRIPLES_RDF_INPUT_FACTORY.createRDFEventReader(in, URI.create(baseURI), graph);
+        addTriples(eventReader);
+    }
 
-    RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph, ParserBlankNodeFactory factory);
+    public void parse(Reader reader, String baseURI) throws StatementHandlerException {
+        RDFEventReader eventReader = TRIPLES_RDF_INPUT_FACTORY.createRDFEventReader(reader, URI.create(baseURI), graph);
+        addTriples(eventReader);
+    }
 
-    ParseErrorListener getRDFReporter();
+    private void addTriples(RDFEventReader eventReader) throws StatementHandlerException {
+        try {
+            while (eventReader.hasNext()) {
+                graph.add(eventReader.next());
+            }
+        } catch (GraphException e) {
+            throw new StatementHandlerException(e);
+        } finally {
+            eventReader.close();
+        }
+    }
 }

@@ -394,8 +394,8 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @throws IllegalArgumentException  If the supplied reader or base URI
      *                                   is <tt>null</tt>.
      */
-    public synchronized void parse(Reader reader, String baseURI) throws
-        IOException, ParseException, StatementHandlerException {
+    public synchronized void parse(Reader reader, String baseURI) throws IOException, ParseException, 
+        StatementHandlerException {
         if (null == reader) {
             throw new IllegalArgumentException("Reader cannot be 'null'");
         }
@@ -409,8 +409,7 @@ public final class RdfXmlParser implements ConfigurableParser {
         parse(inputSource);
     }
 
-    private void parse(InputSource inputSource) throws IOException,
-        ParseException, StatementHandlerException {
+    private void parse(InputSource inputSource) throws IOException, ParseException, StatementHandlerException {
         try {
             //saxFilter.clear();
             saxFilter.setDocumentURI(inputSource.getSystemId());
@@ -1179,8 +1178,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @throws SAXException If the configured StatementHandler throws a
      *                      StatementHandlerException, which will be wrapped in a SAXException.
      */
-    private void reportStatement(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws SAXException {
+    private void reportStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws SAXException {
         try {
             statementHandler.handleStatement(subject, predicate, object);
         } catch (StatementHandlerException e) {

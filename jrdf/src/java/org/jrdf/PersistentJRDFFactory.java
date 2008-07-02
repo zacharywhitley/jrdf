@@ -83,6 +83,7 @@ import org.jrdf.collection.CollectionFactory;
 import static java.util.Arrays.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.File;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -105,6 +106,10 @@ public final class PersistentJRDFFactory implements JRDFFactory {
     private PersistentJRDFFactory(DirectoryHandler handler) {
         this.handler = handler;
         this.bdbHandler = new BdbEnvironmentHandlerImpl(handler);
+        handler.makeDir();
+        File dir = handler.getDir();
+        JRDFFactory factory = MemoryJRDFFactory.getFactory();
+        Graph newGraph = factory.getNewGraph();
     }
 
     public static JRDFFactory getFactory(DirectoryHandler handler) {
