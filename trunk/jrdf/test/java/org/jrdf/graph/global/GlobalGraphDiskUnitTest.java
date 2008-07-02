@@ -83,6 +83,7 @@ public class GlobalGraphDiskUnitTest extends AbstractGraphUnitTest {
 
     @Override
     public void tearDown() {
+        graph.clear();
         FACTORY.close();
     }
 }

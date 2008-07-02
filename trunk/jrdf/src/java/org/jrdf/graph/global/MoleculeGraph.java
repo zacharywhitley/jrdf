@@ -60,6 +60,8 @@
 package org.jrdf.graph.global;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.molecule.Molecule;
 
 public interface MoleculeGraph extends Graph {
@@ -67,4 +69,5 @@ public interface MoleculeGraph extends Graph {
     void delete(Molecule molecule);
     // TODO YF
     //Molecule findMolecule(Triple triple);
+    Molecule findMolecule(Triple triple) throws GraphException;
 }

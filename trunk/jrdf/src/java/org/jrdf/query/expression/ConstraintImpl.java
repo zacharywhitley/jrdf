@@ -83,6 +83,9 @@ public final class ConstraintImpl<V extends ExpressionVisitor> implements Constr
     private static final int DUMMY_HASHCODE = 47;
     private List<AttributeValuePair> singleAvp;
 
+    private ConstraintImpl() {
+    }
+
     public ConstraintImpl(List<AttributeValuePair> singleAvp) {
         checkNotNull(singleAvp);
         this.singleAvp = singleAvp;

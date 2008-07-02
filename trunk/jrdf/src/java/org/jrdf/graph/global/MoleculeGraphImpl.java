@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.global;
 
+import org.jrdf.graph.AbstractBlankNode;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -68,18 +70,25 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.index.AddMoleculeToIndex;
 import org.jrdf.graph.global.index.ReadableIndex;
 import org.jrdf.graph.global.index.WritableIndex;
 import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
+import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
+import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 public class MoleculeGraphImpl implements MoleculeGraph {
@@ -87,13 +96,17 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     private final ReadableIndex<Long> readableIndex;
     private final MoleculeLocalizer localizer;
     private final Graph graph;
+    private TripleComparator comparator;
+    private MoleculeComparator moleculeComparator;
 
     public MoleculeGraphImpl(WritableIndex<Long> newWriteIndex, ReadableIndex<Long> newReadIndex,
-        MoleculeLocalizer newLocalizer, Graph newGraph) {
+                             MoleculeLocalizer newLocalizer, Graph newGraph) {
         this.writableIndex = newWriteIndex;
         this.readableIndex = newReadIndex;
         this.localizer = newLocalizer;
         this.graph = newGraph;
+        comparator = new TripleComparatorFactoryImpl().newComparator();
+        moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
     }
 
     public void add(Molecule molecule) {
@@ -107,7 +120,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
             // find mid based on molecule head triple and subsequent triples.
             Long mid = readableIndex.findMid(longs);
             // Find the triple that matches in the structureIndex where it is 1, mid, *, *, *
-            Set<Long[]> triplesForMid = readableIndex.findTriplesForMid(mid);
+            Set<Long[]> triplesForMid = readableIndex.findTriplesForMid(1L, mid);
             // TODO Recursively reconstruct molecule.
             // Delete all triples in the molecule.
             for (Long[] triple : triplesForMid) {
@@ -116,6 +129,89 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         } catch (GraphException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Molecule findMolecule(Triple triple) throws GraphException {
+        Long[] localizedTriple = localizer.localizeTriple(triple);
+        Long mid = readableIndex.findMid(localizedTriple);
+        Long pid = readableIndex.findEnclosingMoleculeID(mid);
+        Long topMoleculeID = (pid == 1L) ? mid : pid;
+
+        return createSubMolecule(null, 1L, topMoleculeID);
+    }
+
+    private Molecule reconstructMolecule(Molecule parentMolecule, Long pid, Long mid) throws GraphException {
+        Triple[] triples = asTriples(readableIndex.findTriplesForMid(pid, mid));
+        Molecule molecule = new MoleculeImpl(moleculeComparator, triples);
+        Map<BlankNode, Triple> rootTripleMap = getBNodeToRootMap(parentMolecule);
+
+        Set<Long> childIDs = readableIndex.findChildIDs(mid);
+        for (Long childID : childIDs) {
+            molecule = createSubMolecule(molecule, mid, childID);
+        }
+
+        return molecule;
+    }
+
+    private Triple[] asTriples(Set<Long[]> tIndexes) {
+        Triple[] triples = new Triple[tIndexes.size()];
+        int i = 0;
+        for (Long[] index : tIndexes) {
+            triples[i++] = graph.getTriple(index);
+        }
+        return triples;
+    }
+
+    private Map<BlankNode, Triple> getBNodeToRootMap(Molecule molecule) {
+        if (null == molecule) {
+            return null;
+        }
+        final Iterator<Triple> triples = molecule.getRootTriples();
+        Map<BlankNode, Triple> rootTripleMap = new HashMap<BlankNode, Triple>();
+        while (triples.hasNext()) {
+            Triple triple = triples.next();
+            ObjectNode obj = triple.getObject();
+            if (AbstractBlankNode.class.isAssignableFrom(obj.getClass())) {
+                rootTripleMap.put((BlankNode) obj, triple);
+            }
+        }
+        return rootTripleMap;
+    }
+
+    private Molecule createSubMolecule(Molecule parentMolecule, Long pid, Long mid) throws GraphException {
+        Triple[] roots = asTriples(readableIndex.findTriplesForMid(pid, mid));
+        Map<BlankNode, Triple> rootTripleMap = getBNodeToRootMap(parentMolecule);
+        Molecule molecule = new MoleculeImpl(moleculeComparator, roots);
+        Triple linkingTriple = null;
+        if (null != parentMolecule) {
+            linkingTriple = findLinkingTriple(parentMolecule, roots, rootTripleMap);
+        }
+        Set<Long> childIDs = readableIndex.findChildIDs(mid);
+        for (Long childID : childIDs) {
+            molecule = createSubMolecule(molecule, mid, childID);
+        }
+        if (null == parentMolecule) {
+            return molecule;
+        } else {
+            parentMolecule.add(linkingTriple, molecule);
+            return parentMolecule;
+        }
+    }
+
+    private Triple findLinkingTriple(Molecule parentMolecule, Triple[] roots, Map<BlankNode, Triple> rootTripleMap)
+        throws GraphException {
+        for (Triple triple : roots) {
+            SubjectNode sub = triple.getSubject();
+            if (AbstractBlankNode.class.isAssignableFrom(sub.getClass()) &&
+                    mapContainsBNode(rootTripleMap, sub)) {
+                return rootTripleMap.get(sub);
+            }
+        }
+        throw new GraphException("Cannot find the linking triple for molecule: " + parentMolecule);
+    }
+
+    private boolean mapContainsBNode(Map<BlankNode, Triple> nodeTripleMap, SubjectNode sub) {
+        return nodeTripleMap != null && nodeTripleMap.containsKey(sub);
     }
 
     // TODO Add more stuff here to handle molecule indexes
@@ -202,5 +298,9 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public boolean isEmpty() throws GraphException {
         return graph.isEmpty();
+    }
+
+    public Triple getTriple(Long... index) {
+        return graph.getTriple(index);
     }
 }

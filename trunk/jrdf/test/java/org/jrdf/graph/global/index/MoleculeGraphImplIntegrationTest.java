@@ -67,6 +67,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.MoleculeJRDFFactory;
 import org.jrdf.graph.global.SortedDiskGlobalJRDFFactory;
@@ -135,5 +136,27 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         assertEquals(0, moleculeGraph.getNumberOfTriples());
         iterator = moleculeGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertFalse(iterator.hasNext());
+    }
+
+    public void testMoleuleIndexToMolecule() throws GraphException {
+        MoleculeGraph moleculeGraph = FACTORY.getNewGraph();
+        moleculeGraph.clear();
+        final GraphElementFactory graphElementFactory = moleculeGraph.getElementFactory();
+        Resource r1 = graphElementFactory.createResource(create("urn:foo"));
+        Resource b0 = graphElementFactory.createResource();
+        Resource b1 = graphElementFactory.createResource();
+        final Triple triple = b0.asTriple(r1, b1);
+        Molecule molecule = moleculeFactory.createMolecule(triple);
+        Resource b2 = graphElementFactory.createResource();
+        Resource b3 = graphElementFactory.createResource();
+        final Triple triple1 = b1.asTriple(r1, b2);
+        Molecule m1 = moleculeFactory.createMolecule(triple1);
+        molecule.add(triple, m1);
+        final Triple triple2 = b2.asTriple(r1, b3);
+        Molecule m2 = moleculeFactory.createMolecule(triple2);
+        m1.add(triple1, m2);
+        moleculeGraph.add(molecule);
+        Molecule actualMolecule = moleculeGraph.findMolecule(triple2);
+        assertEquals("Equal molecules", molecule, actualMolecule);
     }
 }
