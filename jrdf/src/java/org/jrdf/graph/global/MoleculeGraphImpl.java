@@ -137,20 +137,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         Long pid = readableIndex.findEnclosingMoleculeID(mid);
         Long topMoleculeID = (pid == 1L) ? mid : pid;
 
-        return createSubMolecule(null, 1L, topMoleculeID);
-    }
-
-    private Molecule reconstructMolecule(Molecule parentMolecule, Long pid, Long mid) throws GraphException {
-        Triple[] triples = asTriples(readableIndex.findTriplesForMid(pid, mid));
-        Molecule molecule = new MoleculeImpl(moleculeComparator, triples);
-        Map<BlankNode, Triple> rootTripleMap = getBNodeToRootMap(parentMolecule);
-
-        Set<Long> childIDs = readableIndex.findChildIDs(mid);
-        for (Long childID : childIDs) {
-            molecule = createSubMolecule(molecule, mid, childID);
-        }
-
-        return molecule;
+        return reconstructMolecule(null, 1L, topMoleculeID);
     }
 
     private Triple[] asTriples(Set<Long[]> tIndexes) {
@@ -178,24 +165,26 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         return rootTripleMap;
     }
 
-    private Molecule createSubMolecule(Molecule parentMolecule, Long pid, Long mid) throws GraphException {
+    private Molecule reconstructMolecule(Molecule parentMolecule, Long pid, Long mid) throws GraphException {
         Triple[] roots = asTriples(readableIndex.findTriplesForMid(pid, mid));
         Map<BlankNode, Triple> rootTripleMap = getBNodeToRootMap(parentMolecule);
         Molecule molecule = new MoleculeImpl(moleculeComparator, roots);
-        Triple linkingTriple = null;
-        if (null != parentMolecule) {
-            linkingTriple = findLinkingTriple(parentMolecule, roots, rootTripleMap);
-        }
-        Set<Long> childIDs = readableIndex.findChildIDs(mid);
-        for (Long childID : childIDs) {
-            molecule = createSubMolecule(molecule, mid, childID);
-        }
+        molecule = createSubMolecules(mid, molecule);
         if (null == parentMolecule) {
             return molecule;
         } else {
+            Triple linkingTriple = findLinkingTriple(parentMolecule, roots, rootTripleMap);
             parentMolecule.add(linkingTriple, molecule);
             return parentMolecule;
         }
+    }
+
+    private Molecule createSubMolecules(Long mid, Molecule molecule) throws GraphException {
+        Set<Long> childIDs = readableIndex.findChildIDs(mid);
+        for (Long childID : childIDs) {
+            molecule = reconstructMolecule(molecule, mid, childID);
+        }
+        return molecule;
     }
 
     private Triple findLinkingTriple(Molecule parentMolecule, Triple[] roots, Map<BlankNode, Triple> rootTripleMap)
