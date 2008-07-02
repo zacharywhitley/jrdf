@@ -66,7 +66,7 @@ import org.jrdf.urql.UrqlConnection;
  * A simple wrapper around Spring wiring to return types objects.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Id$
  */
 public interface JRDFFactory {
 

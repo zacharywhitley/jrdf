@@ -65,7 +65,7 @@ import junit.framework.TestCase;
  * Test that the Wiring is correct.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Id$
  */
 public class JrdfFactoryImplIntegrationTest extends TestCase {
     public void testWiring() {
