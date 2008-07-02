@@ -149,8 +149,8 @@ public class FlatteningFiveLongClosableIterator implements ClosableIterator<Long
         if (null == subSubSubIterator || !subSubSubIterator.hasNext()) {
             if (null == subSubIterator || !subSubIterator.hasNext()) {
                 if (null == subIterator || !subIterator.hasNext()) {
-                    if (!subIterator.hasNext()) {
-                        subIterator = null;
+                    if (!iterator.hasNext()) {
+                        iterator = null;
                         return false;
                     }
                     // move on the main subIterator
