@@ -160,7 +160,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         openIndexes.addAll(asList(indexes));
         openFactories.add(nodePoolFactory);
         collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
-        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
+        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory.createNodePool(), collectionFactory).getGraph();
     }
 
     private LongIndex[] createIndexes(long graphNumber) {
