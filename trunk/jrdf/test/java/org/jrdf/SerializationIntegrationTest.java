@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 1970 $
+ * $Date: 2008-04-17 14:56:24 +1000 (Thu, 17 Apr 2008) $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import java.util.Collection;
  * <code>static final long serialVersionUID</code> field.
  *
  * @author Tom Adams
- * @version $Id$
+ * @version $Id: SerializationIntegrationTest.java 1970 2008-04-17 04:56:24Z newmana $
  */
 public final class SerializationIntegrationTest extends TestCase {
     private static final String PATH_ROOT = "/";

@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 1970 $
+ * $Date: 2008-04-17 14:56:24 +1000 (Thu, 17 Apr 2008) $
  *
  * ====================================================================
  *
@@ -89,7 +89,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
  *
  * @author Andrew Newman
- * @version $Id$
+ * @version $Id: TestJRDFFactory.java 1970 2008-04-17 04:56:24Z newmana $
  */
 public final class TestJRDFFactory implements JRDFFactory {
     private static final TestJRDFFactory SELF = new TestJRDFFactory();
