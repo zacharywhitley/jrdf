@@ -70,4 +70,10 @@ public interface Models {
     String getName(Resource resource) throws GraphException;
 
     long getId(Resource resource);
+
+    long highestId();
+
+    long getId(String graphName);
+
+    void addGraph(String name, Long id);
 }

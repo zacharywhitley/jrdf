@@ -68,11 +68,14 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
 import static java.net.URI.create;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class ModelsImpl implements Models {
@@ -81,18 +84,28 @@ public class ModelsImpl implements Models {
      */
     public static final String JRDF_NAMESPACE = "http://jrdf.sf.net/";
     private Set<Resource> graphs = new HashSet<Resource>();
+    private Map<String, Long> graphNameToId = new HashMap<String, Long>();
+    private long highestId;
+    private Graph graph;
+    private static final URI GRAPH = create(JRDF_NAMESPACE + "graph");
+    private static final URI NAME = create(JRDF_NAMESPACE + "name");
+    private static final URI ID = create(JRDF_NAMESPACE + "id");
 
-    public ModelsImpl(Graph graph) {
+    public ModelsImpl(Graph newGraph) {
+        this.graph = newGraph;
+        init(newGraph);
+    }
+
+    private void init(Graph newGraph) {
         try {
-            GraphElementFactory elementFactory = graph.getElementFactory();
+            GraphElementFactory elementFactory = newGraph.getElementFactory();
             PredicateNode type = elementFactory.createURIReference(RDF.TYPE);
-            ObjectNode graphName = elementFactory.createURIReference(create(JRDF_NAMESPACE + "graph"));
-            ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, type, graphName);
+            ObjectNode graphName = elementFactory.createURIReference(GRAPH);
+            ClosableIterator<Triple> iterator = newGraph.find(ANY_SUBJECT_NODE, type, graphName);
             try {
                 while (iterator.hasNext()) {
                     Triple triple = iterator.next();
-                    Resource resource = elementFactory.createResource(triple.getSubject());
-                    graphs.add(resource);
+                    addResource(elementFactory, triple);
                 }
             } finally {
                 iterator.close();
@@ -102,12 +115,28 @@ public class ModelsImpl implements Models {
         }
     }
 
+    private void addResource(GraphElementFactory elementFactory, Triple triple) throws GraphElementFactoryException {
+        Resource resource = elementFactory.createResource(triple.getSubject());
+        graphs.add(resource);
+        long id = getId(resource);
+        graphNameToId.put(getName(resource), id);
+        if (id > highestId) {
+            highestId = id;
+        }
+    }
+
     public Set<Resource> getResources() {
         return graphs;
     }
 
+    public void addGraph(String name, Long id) {
+        GraphElementFactory graphElementFactory = graph.getElementFactory();
+        Resource resource = tryAddGraph(name, id, graphElementFactory);
+        graphs.add(resource);
+    }
+
     public String getName(Resource resource) {
-        ClosableIterator<ObjectNode> nodeClosableIterator = tryGetObjects(resource, "name");
+        ClosableIterator<ObjectNode> nodeClosableIterator = tryGetObjects(resource, NAME);
         if (nodeClosableIterator.hasNext()) {
             return (String) ((Literal) nodeClosableIterator.next()).getValue();
         } else {
@@ -115,8 +144,17 @@ public class ModelsImpl implements Models {
         }
     }
 
+    public long getId(String graphName) {
+        Long id = graphNameToId.get(graphName);
+        if (id != null) {
+            return id;
+        } else {
+            return 0;
+        }
+    }
+
     public long getId(Resource resource) {
-        ClosableIterator<ObjectNode> nodeClosableIterator = tryGetObjects(resource, "id");
+        ClosableIterator<ObjectNode> nodeClosableIterator = tryGetObjects(resource, ID);
         if (nodeClosableIterator.hasNext()) {
             return (Long) ((Literal) nodeClosableIterator.next()).getValue();
         } else {
@@ -124,11 +162,28 @@ public class ModelsImpl implements Models {
         }
     }
 
-    private ClosableIterator<ObjectNode> tryGetObjects(Resource resource, String predicate) {
+    public long highestId() {
+        return highestId;
+    }
+
+    private ClosableIterator<ObjectNode> tryGetObjects(Resource resource, URI predicate) {
         try {
-            return resource.getObjects(URI.create(JRDF_NAMESPACE + predicate));
+            return resource.getObjects(predicate);
         } catch (GraphException e) {
             return new ObjectNodeEmptyClosableIterator();
+        }
+    }
+
+    private Resource tryAddGraph(String name, Long id, GraphElementFactory graphElementFactory) {
+        try {
+            Resource resource = graphElementFactory.createResource();
+            resource.addValue(RDF.TYPE, GRAPH);
+            resource.addValue(NAME, name);
+            resource.addValue(ID, id);
+            graphNameToId.put(name, id);
+            return resource;
+        } catch (GraphException e) {
+            throw new RuntimeException(e);
         }
     }
 }

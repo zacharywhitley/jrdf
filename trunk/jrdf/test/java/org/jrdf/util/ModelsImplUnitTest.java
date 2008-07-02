@@ -74,15 +74,33 @@ public class ModelsImplUnitTest extends TestCase {
     private static final JRDFFactory FACTORY = MemoryJRDFFactory.getFactory();
     private static final URI NAME = URI.create(JRDF_NAMESPACE + "name");
     private static final URI ID = URI.create(JRDF_NAMESPACE + "id");
+    private static final URI GRAPH = URI.create(JRDF_NAMESPACE + "graph");
+    private Graph newGraph = FACTORY.getNewGraph();
+    private Models models;
+
+    @Override
+    public void setUp() {
+        newGraph.clear();
+    }
 
     public void testGetOneModel() throws Exception {
-        Graph newGraph = FACTORY.getNewGraph();
         Resource inputResource = newGraph.getElementFactory().createResource();
-        inputResource.addValue(TYPE, URI.create(JRDF_NAMESPACE + "graph"));
+        inputResource.addValue(TYPE, GRAPH);
         inputResource.addValue(NAME, "experts");
         inputResource.addValue(ID, 1L);
         assertEquals(3, newGraph.getNumberOfTriples());
-        Models models = new ModelsImpl(newGraph);
+        models = new ModelsImpl(newGraph);
+        Set<Resource> resources = models.getResources();
+        assertEquals(1, resources.size());
+        Resource resource = resources.iterator().next();
+        assertEquals("experts", models.getName(resource));
+        assertEquals(1L, models.getId(resource));
+    }
+
+    public void testRoundTrip() throws Exception {
+        models = new ModelsImpl(newGraph);
+        models.addGraph("experts", 1L);
+        assertEquals(3, newGraph.getNumberOfTriples());
         Set<Resource> resources = models.getResources();
         assertEquals(1, resources.size());
         Resource resource = resources.iterator().next();
