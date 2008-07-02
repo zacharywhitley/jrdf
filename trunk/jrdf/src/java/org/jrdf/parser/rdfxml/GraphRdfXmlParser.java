@@ -20,7 +20,6 @@
 package org.jrdf.parser.rdfxml;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
 import org.jrdf.parser.ConfigurableParser;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParseException;
@@ -44,7 +43,7 @@ import java.io.Reader;
 public class GraphRdfXmlParser implements Parser {
     private ConfigurableParser parser;
 
-    public GraphRdfXmlParser(Graph graph) throws GraphException {
+    public GraphRdfXmlParser(Graph graph) {
         parser = new RdfXmlParser(graph.getElementFactory());
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.setParseStandAloneDocuments(true);
@@ -52,7 +51,7 @@ public class GraphRdfXmlParser implements Parser {
         parser.setDatatypeHandling(DT_IGNORE);
     }
 
-    public GraphRdfXmlParser(Graph graph, ParserBlankNodeFactory blankNodeFactory) throws GraphException {
+    public GraphRdfXmlParser(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
         parser = new RdfXmlParser(graph.getElementFactory(), blankNodeFactory);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.setParseStandAloneDocuments(true);

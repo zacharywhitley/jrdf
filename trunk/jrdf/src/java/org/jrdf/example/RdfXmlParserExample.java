@@ -123,7 +123,7 @@ public final class RdfXmlParserExample {
         urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
         urlConnection.connect();
         String encoding = urlConnection.getContentEncoding();
-        InputStream in = null;
+        InputStream in;
         if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
             in = new GZIPInputStream(urlConnection.getInputStream());
         } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {

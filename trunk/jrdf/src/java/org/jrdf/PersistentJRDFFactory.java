@@ -59,12 +59,15 @@
 
 package org.jrdf;
 
+import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
+import static org.jrdf.parser.ParseFile.parseNTriples;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
@@ -77,13 +80,11 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
-import org.jrdf.collection.BdbCollectionFactory;
-import org.jrdf.collection.CollectionFactory;
 
-import static java.util.Arrays.*;
+import java.io.File;
+import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
-import java.io.File;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -108,8 +109,7 @@ public final class PersistentJRDFFactory implements JRDFFactory {
         this.bdbHandler = new BdbEnvironmentHandlerImpl(handler);
         handler.makeDir();
         File dir = handler.getDir();
-        JRDFFactory factory = MemoryJRDFFactory.getFactory();
-        Graph newGraph = factory.getNewGraph();
+        Graph graph = parseNTriples(new File(dir, "graphs.nt"));
     }
 
     public static JRDFFactory getFactory(DirectoryHandler handler) {

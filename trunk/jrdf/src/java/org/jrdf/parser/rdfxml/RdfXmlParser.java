@@ -22,7 +22,6 @@ package org.jrdf.parser.rdfxml;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -232,7 +231,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      *
      * @param graphElementFactory A GraphElementFactory.
      */
-    public RdfXmlParser(GraphElementFactory graphElementFactory) throws GraphException {
+    public RdfXmlParser(GraphElementFactory graphElementFactory) {
         this(graphElementFactory, new MemMapFactory());
     }
 
@@ -244,7 +243,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @param creator A BlankNodeFactoryCreator.
      * @throws GraphException
      */
-    public RdfXmlParser(GraphElementFactory graphElementFactory, MapFactory creator) throws GraphException {
+    public RdfXmlParser(GraphElementFactory graphElementFactory, MapFactory creator) {
         this(graphElementFactory, new ParserBlankNodeFactoryImpl(creator, graphElementFactory));
     }
 
@@ -255,8 +254,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @param valueFactory           A GraphElementFactory.
      * @param parserBlankNodeFactory A ParserBlankNodeFactory.
      */
-    public RdfXmlParser(GraphElementFactory valueFactory, ParserBlankNodeFactory parserBlankNodeFactory)
-        throws GraphException {
+    public RdfXmlParser(GraphElementFactory valueFactory, ParserBlankNodeFactory parserBlankNodeFactory) {
         try {
             init(valueFactory, parserBlankNodeFactory);
 
@@ -266,30 +264,27 @@ public final class RdfXmlParser implements ConfigurableParser {
                 }
             });
         } catch (TransformerConfigurationException tce) {
-            throw new GraphException(tce);
+            throw new RuntimeException(tce);
+        } catch (GraphElementFactoryException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void init(GraphElementFactory valueFactory, ParserBlankNodeFactory parserBlankNodeFactory) throws
-        TransformerConfigurationException, GraphException {
+    private void init(GraphElementFactory valueFactory, ParserBlankNodeFactory parserBlankNodeFactory)
+        throws TransformerConfigurationException, GraphElementFactoryException {
         this.valueFactory = valueFactory;
         bNodeFactory = parserBlankNodeFactory;
-
         datatypeHandling = DT_VERIFY;
 
-        try {
-            RDF_TYPE = this.valueFactory.createURIReference(RDF.TYPE);
-            RDF_SUBJECT = this.valueFactory.createURIReference(RDF.SUBJECT);
-            RDF_PREDICATE = this.valueFactory.createURIReference(RDF.PREDICATE);
-            RDF_OBJECT = this.valueFactory.createURIReference(RDF.OBJECT);
-            RDF_STATEMENT = this.valueFactory.createURIReference(RDF.STATEMENT);
-            RDF_LI = this.valueFactory.createURIReference(RDF.LI);
-            RDF_FIRST = this.valueFactory.createURIReference(RDF.FIRST);
-            RDF_REST = this.valueFactory.createURIReference(RDF.REST);
-            RDF_NIL = this.valueFactory.createURIReference(RDF.NIL);
-        } catch (GraphElementFactoryException ex) {
-            throw new GraphException(ex);
-        }
+        RDF_TYPE = this.valueFactory.createURIReference(RDF.TYPE);
+        RDF_SUBJECT = this.valueFactory.createURIReference(RDF.SUBJECT);
+        RDF_PREDICATE = this.valueFactory.createURIReference(RDF.PREDICATE);
+        RDF_OBJECT = this.valueFactory.createURIReference(RDF.OBJECT);
+        RDF_STATEMENT = this.valueFactory.createURIReference(RDF.STATEMENT);
+        RDF_LI = this.valueFactory.createURIReference(RDF.LI);
+        RDF_FIRST = this.valueFactory.createURIReference(RDF.FIRST);
+        RDF_REST = this.valueFactory.createURIReference(RDF.REST);
+        RDF_NIL = this.valueFactory.createURIReference(RDF.NIL);
 
         // SAXFilter does some filtering and verifying of SAX events
         saxFilter = new SAXFilter(this);
