@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.global;
 
-import org.jrdf.JRDFFactory;
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.graph.Graph;
@@ -107,7 +106,7 @@ public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory 
     private SortedMemoryGlobalJRDFFactory() {
     }
 
-    public static JRDFFactory getFactory() {
+    public static MoleculeJRDFFactory getFactory() {
         return new SortedMemoryGlobalJRDFFactory();
     }
 
