@@ -70,6 +70,7 @@ import java.util.Set;
  * Contains mappings between namespaces and partial URIs.
  *
  * @author TurnerRX
+ * @version $Id$
  */
 public interface RdfNamespaceMap {
     /**

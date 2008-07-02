@@ -62,6 +62,7 @@ package org.jrdf.writer;
  * indicates that an exception occurred whilt evaluating namespaces.
  *
  * @author TurnerRX
+ * @version $Id$
  */
 public final class NamespaceException extends WriteException {
     private static final long serialVersionUID = -8872295650275746473L;

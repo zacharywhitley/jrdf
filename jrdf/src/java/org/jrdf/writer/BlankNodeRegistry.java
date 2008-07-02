@@ -67,6 +67,7 @@ import org.jrdf.graph.BlankNode;
  *
  * @author Andrew Newman
  * @author TurnerRX
+ * @version $Id$
  */
 public interface BlankNodeRegistry {
     /**
