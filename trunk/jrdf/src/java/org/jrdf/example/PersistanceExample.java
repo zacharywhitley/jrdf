@@ -74,10 +74,17 @@ public class PersistanceExample {
     private static final PersistentJRDFFactory JRDF_FACTORY = PersistentJRDFFactoryImpl.getFactory(HANDLER);
 
     public static void main(String[] args) throws Exception {
-        Graph newGraph = JRDF_FACTORY.getNewGraph("foo");
-        GraphElementFactory elementFactory = newGraph.getElementFactory();
-        URI uri = URI.create("urn:hello");
-        Resource resource = elementFactory.createResource(uri);
-        resource.addValue(uri, uri);
+        if (JRDF_FACTORY.hasGraph("foo")) {
+            long triples = JRDF_FACTORY.getExistingGraph("foo").getNumberOfTriples();
+            System.err.println("Existing graph recovered, found " + triples);
+        } else {
+            System.err.println("Creating new graph");
+            Graph newGraph = JRDF_FACTORY.getNewGraph("foo");
+            GraphElementFactory elementFactory = newGraph.getElementFactory();
+            URI uri = URI.create("urn:hello");
+            Resource resource = elementFactory.createResource(uri);
+            resource.addValue(uri, uri);
+        }
+        JRDF_FACTORY.close();
     }
 }
