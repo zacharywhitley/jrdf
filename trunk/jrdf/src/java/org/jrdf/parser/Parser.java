@@ -28,7 +28,7 @@ import java.io.Reader;
  * The two parser methods for parsing RDF.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id$
  */
 public interface Parser {
 

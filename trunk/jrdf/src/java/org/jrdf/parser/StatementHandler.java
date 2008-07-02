@@ -29,7 +29,7 @@ import org.jrdf.graph.SubjectNode;
  * parser.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id$
  */
 public interface StatementHandler {
 

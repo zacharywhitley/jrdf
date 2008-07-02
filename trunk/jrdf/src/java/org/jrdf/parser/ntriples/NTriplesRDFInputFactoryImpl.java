@@ -64,6 +64,7 @@ import org.jrdf.parser.ParseErrorListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFInputFactory;
+import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
@@ -84,6 +85,7 @@ import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.map.MemMapFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -95,6 +97,18 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     private SubjectParser subjectParser;
     private PredicateParser predicateParser;
     private ObjectParser objectParser;
+
+    public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph) {
+        ParserBlankNodeFactoryImpl parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
+                graph.getElementFactory());
+        return createRDFEventReader(stream, baseURI, graph, parserBlankNodeFactory);
+    }
+
+    public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph) {
+        ParserBlankNodeFactoryImpl parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
+                graph.getElementFactory());
+        return createRDFEventReader(reader, baseURI, graph, parserBlankNodeFactory);
+    }
 
     public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph,
         ParserBlankNodeFactory blankNodeFactory) {

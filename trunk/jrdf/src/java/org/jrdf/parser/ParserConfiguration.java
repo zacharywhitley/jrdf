@@ -63,7 +63,7 @@ package org.jrdf.parser;
  * The interface to configure RDF parsers.
  *
  * @author Andrew Newman
- * @version $Revision: 363 $
+ * @version $Id$
  */
 public interface ParserConfiguration extends StatementHandlerConfiguration {
 

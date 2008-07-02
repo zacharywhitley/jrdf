@@ -60,7 +60,6 @@
 package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerConfiguration;
@@ -97,22 +96,26 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
         this.sh = statementHandler;
     }
 
-    public void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException {
+    public void parse(InputStream in, String baseURI) throws IOException, StatementHandlerException {
         parse(new InputStreamReader(in), baseURI);
     }
 
-    public void parse(Reader reader, String baseURI) throws IOException, ParseException, StatementHandlerException {
+    public void parse(Reader reader, String baseURI) throws IOException, StatementHandlerException {
         LineNumberReader bufferedReader = new LineNumberReader(reader);
-        String line;
-        RegexMatcher tripleRegexMatcher;
-        while ((line = bufferedReader.readLine()) != null) {
-            RegexMatcher commentMatcher = regexMatcherFactory.createMatcher(COMMENT_REGEX, line);
-            if (!commentMatcher.matches()) {
-                tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
-                if (tripleRegexMatcher.matches()) {
-                    parseTriple(tripleRegexMatcher);
+        try {
+            String line;
+            RegexMatcher tripleRegexMatcher;
+            while ((line = bufferedReader.readLine()) != null) {
+                RegexMatcher commentMatcher = regexMatcherFactory.createMatcher(COMMENT_REGEX, line);
+                if (!commentMatcher.matches()) {
+                    tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
+                    if (tripleRegexMatcher.matches()) {
+                        parseTriple(tripleRegexMatcher);
+                    }
                 }
             }
+        } finally {
+            bufferedReader.close();
         }
     }
 

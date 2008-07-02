@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -76,7 +76,7 @@ import org.jrdf.graph.GraphElementFactoryException;
  * <code>nodeID</code>.
  *
  * @author David Makepeace
- * @version $Revision$
+ * @version $Id$
  */
 public interface ParserBlankNodeFactory {
 
