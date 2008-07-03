@@ -161,6 +161,28 @@ public class MoleculeImplUnitTest extends TestCase {
         assertTrue("Is top level", !newMolecule.isTopLevelMolecule());
     }
 
+    public void testIterator() {
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule();
+        newMolecule = newMolecule.add(r2r1r1);
+        newMolecule = newMolecule.add(r3r1r1);
+        newMolecule = newMolecule.add(r1r1r1);
+        newMolecule = newMolecule.add(r1r1b1);
+        Set<Triple> set = new HashSet<Triple>();
+        set.add(r2r1r1);
+        set.add(r3r1r1);
+        set.add(r1r1r1);
+        set.add(r1r1b1);
+        Iterator<Triple> iterator = newMolecule.iterator();
+        int size = 0;
+        while (iterator.hasNext()) {
+            size++;
+            Triple triple = iterator.next();
+            assertTrue(set.contains(triple));
+        }
+        assertEquals(set.size(), size);
+    }
+
+
     private void checkHasHeadMolecules(Molecule actualMolecule, Triple... triples) {
         Set<Triple> moleculeContents = new HashSet<Triple>();
         for (Triple triple : triples) {

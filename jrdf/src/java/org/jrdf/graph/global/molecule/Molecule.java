@@ -93,4 +93,6 @@ public interface Molecule {
     boolean isTopLevelMolecule();
 
     boolean removeMolecule(Triple triple, Molecule molecule);
+
+    Iterator<Triple> iterator();
 }
