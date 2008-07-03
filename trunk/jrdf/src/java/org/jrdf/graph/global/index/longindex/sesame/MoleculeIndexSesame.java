@@ -64,7 +64,7 @@ import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.btree.BTree;
 import static org.jrdf.util.btree.ByteHandler.toBytes;
-import org.jrdf.util.btree.EntryIteratorFourArray;
+import org.jrdf.util.btree.EntryIteratorArray;
 import org.jrdf.util.btree.EntryIteratorOneFixedThreeArray;
 import org.jrdf.util.btree.EntryIteratorTwoFixedTwoArray;
 import org.jrdf.util.btree.RecordIteratorHelper;
@@ -73,6 +73,7 @@ import java.io.IOException;
 
 public final class MoleculeIndexSesame implements MoleculeIndex<Long> {
     private BTree btree;
+    private static final int QUAD = 4;
 
     public MoleculeIndexSesame(BTree newBtree) {
         this.btree = newBtree;
@@ -106,12 +107,12 @@ public final class MoleculeIndexSesame implements MoleculeIndex<Long> {
     }
 
     public ClosableIterator<Long[]> iterator() {
-        return new EntryIteratorFourArray(btree);
+        return new EntryIteratorArray(btree, QUAD);
     }
 
     public boolean keyExists(Long first) {
         try {
-            return RecordIteratorHelper.contains(btree, first);
+            return RecordIteratorHelper.contains(btree, first, QUAD);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -127,7 +128,7 @@ public final class MoleculeIndexSesame implements MoleculeIndex<Long> {
 
     public boolean contains(Long first) {
         try {
-            return RecordIteratorHelper.contains(btree, first);
+            return RecordIteratorHelper.contains(btree, first, QUAD);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

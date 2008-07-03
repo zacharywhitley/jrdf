@@ -64,8 +64,8 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.btree.BTree;
 import static org.jrdf.util.btree.ByteHandler.toBytes;
+import org.jrdf.util.btree.EntryIteratorArray;
 import org.jrdf.util.btree.EntryIteratorOneFixedTwoArray;
-import org.jrdf.util.btree.EntryIteratorThreeArray;
 import org.jrdf.util.btree.EntryIteratorTwoFixedSingleValue;
 import org.jrdf.util.btree.RecordIteratorHelper;
 
@@ -73,6 +73,7 @@ import java.io.IOException;
 
 public final class LongIndexSesame implements LongIndex {
     private BTree btree;
+    private static final int TRIPLE = 3;
 
     public LongIndexSesame(BTree newBtree) {
         this.btree = newBtree;
@@ -106,7 +107,7 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public ClosableIterator<Long[]> iterator() {
-        return new EntryIteratorThreeArray(btree);
+        return new EntryIteratorArray(btree, TRIPLE);
     }
 
     public ClosableIterator<Long[]> getSubIndex(Long first) {
@@ -119,7 +120,7 @@ public final class LongIndexSesame implements LongIndex {
 
     public boolean contains(Long first) {
         try {
-            return RecordIteratorHelper.contains(btree, first);
+            return RecordIteratorHelper.contains(btree, first, TRIPLE);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

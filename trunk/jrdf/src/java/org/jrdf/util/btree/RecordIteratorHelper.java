@@ -101,8 +101,13 @@ public final class RecordIteratorHelper {
         }
     }
 
-    public static boolean contains(BTree btree, Long first) throws IOException {
-        RecordIterator iterator = getIterator(btree, first, 0L, 0L, 0L);
+    public static boolean contains(BTree btree, Long first, int length) throws IOException {
+        Long[] longs = new Long[length];
+        longs[0] = first;
+        for (int i = 1; i < length; i++) {
+            longs[i] = 0L;
+        }
+        RecordIterator iterator = getIterator(btree, longs);
         try {
             byte[] bytes = iterator.next();
             return bytes != null;
@@ -111,8 +116,14 @@ public final class RecordIteratorHelper {
         }
     }
 
-    public static boolean contains(BTree btree, Long first, Long second) throws IOException {
-        RecordIterator iterator = getIterator(btree, first, second, 0L, 0L);
+    public static boolean contains(BTree btree, Long first, Long second, int length) throws IOException {
+        Long[] longs = new Long[length];
+        longs[0] = first;
+        longs[1] = second;
+        for (int i = 2; i < length; i++) {
+            longs[i] = 0L;
+        }
+        RecordIterator iterator = getIterator(btree, longs);
         try {
             byte[] bytes = iterator.next();
             return bytes != null;
