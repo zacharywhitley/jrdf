@@ -62,11 +62,26 @@ package org.jrdf;
 import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.graph.global.MoleculeGraphImpl;
+import org.jrdf.graph.global.MoleculeLocalizer;
+import org.jrdf.graph.global.MoleculeLocalizerImpl;
+import org.jrdf.graph.global.index.ReadableIndex;
+import org.jrdf.graph.global.index.ReadableIndexImpl;
+import org.jrdf.graph.global.index.WritableIndex;
+import org.jrdf.graph.global.index.WritableIndexImpl;
+import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
+import org.jrdf.graph.global.index.longindex.MoleculeIndex;
+import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
+import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
+import org.jrdf.graph.global.index.longindex.sesame.MoleculeIndexSesame;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesameSync;
+import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import static org.jrdf.parser.Reader.parseNTriples;
 import org.jrdf.query.QueryFactory;
@@ -75,6 +90,8 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.util.ClosableMap;
+import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
 import org.jrdf.util.ModelsImpl;
@@ -96,13 +113,14 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
+public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
+    private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
     private final DirectoryHandler handler;
     private final BdbEnvironmentHandler bdbHandler;
-    private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
+    private Set<MoleculeIndex<Long>> openIndexes = new HashSet<MoleculeIndex<Long>>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private long currentGraphNumber;
@@ -111,7 +129,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     private Graph modelsGraph;
     private File file;
 
-    private PersistentJRDFFactoryImpl(DirectoryHandler handler) {
+    private PersistentGlobalJRDFFactoryImpl(DirectoryHandler handler) {
         this.handler = handler;
         this.bdbHandler = new BdbEnvironmentHandlerImpl(handler);
         handler.makeDir();
@@ -121,8 +139,8 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         currentGraphNumber = models.highestId();
     }
 
-    public static PersistentJRDFFactory getFactory(DirectoryHandler handler) {
-        return new PersistentJRDFFactoryImpl(handler);
+    public static PersistentGlobalJRDFFactory getFactory(DirectoryHandler handler) {
+        return new PersistentGlobalJRDFFactoryImpl(handler);
     }
 
     public void refresh() {
@@ -132,7 +150,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         return models.hasGraph(name);
     }
 
-    public Graph getExistingGraph(String name) throws IllegalArgumentException {
+    public MoleculeGraph getExistingGraph(String name) throws IllegalArgumentException {
         if (models.getId(name) == 0) {
             throw new IllegalArgumentException("Cannot get graph named: " + name);
         } else {
@@ -140,7 +158,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         }
     }
 
-    public Graph getNewGraph(String name) {
+    public MoleculeGraph getNewGraph(String name) {
         currentGraphNumber++;
         models.addGraph(name, currentGraphNumber);
         writeNTriples(file, modelsGraph);
@@ -153,7 +171,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
 
     public void close() {
         collectionFactory.close();
-        for (LongIndex index : openIndexes) {
+        for (MoleculeIndex<Long> index : openIndexes) {
             index.close();
         }
         for (NodePoolFactory openFactory : openFactories) {
@@ -163,11 +181,19 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         openFactories.clear();
     }
 
-    private Graph getGraph(long graphNumber) {
-        LongIndex[] indexes = createIndexes(graphNumber);
-        final NodePool nodePool = getNodePool(graphNumber);
+    private MoleculeGraph getGraph(long graphNumber) {
         collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
-        return new OrderedGraphFactoryImpl(indexes, nodePool, collectionFactory).getGraph();
+        final NodePool nodePool = getNodePool(graphNumber);
+        MoleculeIndex<Long>[] indexes = createMoleculeIndexes(graphNumber);
+        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
+            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
+        ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
+        WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
+        LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
+            new LongIndexAdapter(indexes[1]), new LongIndexAdapter(indexes[2])};
+        Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
+        MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(new LocalizerImpl(nodePool, STRING_MAPPER));
+        return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph);
     }
 
     private NodePool getNodePool(long graphNumber) {
@@ -177,10 +203,10 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         return nodePool;
     }
 
-    private LongIndex[] createIndexes(long graphNumber) {
+    private MoleculeIndex<Long>[] createMoleculeIndexes(long graphNumber) {
         BTree[] bTrees = createBTrees(graphNumber);
-        final LongIndex[] indexes = {new LongIndexSesameSync(bTrees[0]), new LongIndexSesameSync(bTrees[1]),
-            new LongIndexSesameSync(bTrees[2])};
+        final MoleculeIndex<Long>[] indexes = new MoleculeIndexSesame[] {new MoleculeIndexSesame(bTrees[0]),
+            new MoleculeIndexSesame(bTrees[1]), new MoleculeIndexSesame(bTrees[2])};
         openIndexes.addAll(asList(indexes));
         return indexes;
     }
