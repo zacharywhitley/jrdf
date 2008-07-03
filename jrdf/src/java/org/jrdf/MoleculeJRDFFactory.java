@@ -57,9 +57,9 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf;
 
-import org.jrdf.JRDFFactory;
+import org.jrdf.graph.global.MoleculeGraph;
 
 public interface MoleculeJRDFFactory extends JRDFFactory {
     MoleculeGraph getNewGraph();

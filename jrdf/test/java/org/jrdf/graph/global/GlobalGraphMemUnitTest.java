@@ -60,6 +60,7 @@
 package org.jrdf.graph.global;
 
 import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryGlobalJRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
 
