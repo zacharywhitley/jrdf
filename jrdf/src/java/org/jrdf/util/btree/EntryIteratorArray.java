@@ -57,104 +57,64 @@
  *
  */
 
-package org.jrdf.graph.global.index.longindex.sesame;
+package org.jrdf.util.btree;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.btree.BTree;
-import static org.jrdf.util.btree.ByteHandler.toBytes;
-import org.jrdf.util.btree.EntryIteratorArray;
-import org.jrdf.util.btree.EntryIteratorOneFixedFourArray;
-import org.jrdf.util.btree.EntryIteratorTwoFixedThreeArray;
-import org.jrdf.util.btree.RecordIteratorHelper;
 
+import java.util.NoSuchElementException;
 import java.io.IOException;
 
-public final class MoleculeStructureIndexSesame implements MoleculeStructureIndex<Long> {
-    private BTree btree;
-    private static final int QUIN = 5;
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
 
-    public MoleculeStructureIndexSesame(BTree newBtree) {
-        this.btree = newBtree;
+public class EntryIteratorArray implements ClosableIterator<Long[]> {
+    private int length;
+    private RecordIterator iterator;
+    private byte[] currentValues;
+
+    public EntryIteratorArray(BTree btree, int length) {
+        this.length = length;
+        this.iterator = btree.iterateAll();
+        getNextValues();
     }
 
-    public void add(Long... node) throws GraphException {
+    public boolean hasNext() {
+        return currentValues != null;
+    }
+
+    public Long[] next() {
+        // Current values null then we are at the end.
+        if (currentValues == null) {
+            throw new NoSuchElementException();
+        }
+        // Create entry for current key - as it is already the next one.
+        Long[] returnValues = ByteHandler.fromBytes(currentValues, length);
+        // Attempt to get next values.
+        getNextValues();
+        return returnValues;
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot collection values - read only");
+    }
+
+    public boolean close() {
         try {
-            btree.insert(toBytes(node));
+            iterator.close();
+            return true;
         } catch (IOException e) {
-            throw new GraphException(e);
+            return false;
         }
     }
 
-    public void remove(Long... node) throws GraphException {
+    private void getNextValues() {
         try {
-            boolean changed = RecordIteratorHelper.remove(btree, node);
-            if (!changed) {
-                throw new GraphException("Unable to remove nonexistent statement");
-            }
+            currentValues = iterator.next();
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void clear() {
-        try {
-            btree.clear();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ClosableIterator<Long[]> iterator() {
-        return new EntryIteratorArray(btree, QUIN);
-    }
-
-    public boolean keyExists(Long first) {
-        try {
-            return RecordIteratorHelper.contains(btree, first, QUIN);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ClosableIterator<Long[]> getSubIndex(Long first) {
-        return new EntryIteratorOneFixedFourArray(first, btree);
-    }
-
-    public ClosableIterator<Long[]> getSubSubIndex(Long first, Long second) {
-        return new EntryIteratorTwoFixedThreeArray(first, second, btree);
-    }
-
-    public boolean contains(Long first) {
-        try {
-            return RecordIteratorHelper.contains(btree, first, QUIN);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean removeSubIndex(Long first) {
-        try {
-            return RecordIteratorHelper.removeSubIndex(btree, first);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public long getSize() {
-        try {
-            return RecordIteratorHelper.getSize(btree);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void close() {
-        try {
-            btree.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            currentValues = null;
         }
     }
 }
+

@@ -154,4 +154,16 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
                 new Long[]{1L, 1L, 2L, 5L, 6L}, new Long[]{2L, 4L, 5L, 6L, 7L});
         checkResults(iterator, results);
     }
+
+    public void testGetSubSubIndex() throws GraphException {
+        index.add(1L, 1L, 2L, 3L, 4L);
+        index.add(1L, 1L, 2L, 4L, 5L);
+        index.add(1L, 1L, 2L, 5L, 6L);
+        index.add(1L, 1L, 3L, 3L, 4L);
+        index.add(2L, 2L, 2L, 5L, 6L);
+        index.add(2L, 4L, 5L, 6L, 7L);
+        ClosableIterator<Long[]> subIndex = index.getSubSubIndex(1L, 1L);
+        Set<Long[]> results = asSet(new Long[]{2L, 3L, 4L}, new Long[]{2L, 4L, 5L}, new Long[]{2L, 5L, 6L}, new Long[]{3L, 3L, 4L});
+        checkResults(subIndex, results);
+    }
 }
