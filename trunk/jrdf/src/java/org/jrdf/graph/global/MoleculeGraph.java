@@ -69,4 +69,6 @@ public interface MoleculeGraph extends Graph {
     void delete(Molecule molecule) throws GraphException;
     Molecule findTopLevelMolecule(Triple triple) throws GraphException;
     Molecule findEnclosingMolecule(Triple triple) throws GraphException;
+    // TODO Add an append operation which gets the head triples mid and allows the user to specify more submolecule to
+    // add.
 }
