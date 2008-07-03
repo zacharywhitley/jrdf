@@ -89,7 +89,7 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
         CollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
-        this.nodePool = newNodePoolFactory.createNodePool();
+        this.nodePool = newNodePoolFactory.createNewNodePool();
         this.nodePool.clear();
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};

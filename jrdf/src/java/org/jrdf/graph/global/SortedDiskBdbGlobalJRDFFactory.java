@@ -138,7 +138,7 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
             new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
-        NodePool nodePool = nodePoolFactory.createNodePool();
+        NodePool nodePool = nodePoolFactory.createNewNodePool();
         Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
