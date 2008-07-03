@@ -64,7 +64,7 @@ import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
+import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesameSync;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
@@ -86,9 +86,9 @@ import org.jrdf.util.btree.BTreeFactoryImpl;
 import static org.jrdf.writer.Writer.writeNTriples;
 
 import java.io.File;
+import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
-import static java.util.Arrays.asList;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -179,8 +179,8 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
 
     private LongIndex[] createIndexes(long graphNumber) {
         BTree[] bTrees = createBTrees(graphNumber);
-        final LongIndex[] indexes = {new LongIndexSesame(bTrees[0]), new LongIndexSesame(bTrees[1]),
-            new LongIndexSesame(bTrees[2])};
+        final LongIndex[] indexes = {new LongIndexSesameSync(bTrees[0]), new LongIndexSesameSync(bTrees[1]),
+            new LongIndexSesameSync(bTrees[2])};
         openIndexes.addAll(asList(indexes));
         return indexes;
     }

@@ -63,98 +63,59 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.btree.BTree;
-import static org.jrdf.util.btree.ByteHandler.toBytes;
-import org.jrdf.util.btree.EntryIteratorArray;
-import org.jrdf.util.btree.EntryIteratorOneFixedTwoArray;
-import org.jrdf.util.btree.EntryIteratorTwoFixedSingleValue;
-import org.jrdf.util.btree.RecordIteratorHelper;
 
-import java.io.IOException;
+public final class LongIndexSesameSync implements LongIndex {
+    private LongIndexSesame index;
 
-public final class LongIndexSesame implements LongIndex {
-    private BTree btree;
-    private static final int TRIPLE = 3;
-
-    public LongIndexSesame(BTree newBtree) {
-        this.btree = newBtree;
+    public LongIndexSesameSync(BTree newBtree) {
+        this.index = new LongIndexSesame(newBtree);
     }
 
     public void add(Long... node) throws GraphException {
         try {
-            btree.insert(toBytes(node));
-        } catch (IOException e) {
-            throw new GraphException(e);
+            index.add(node);
+        } finally {
+            index.sync();
         }
     }
 
     public void remove(Long... node) throws GraphException {
         try {
-            boolean changed = RecordIteratorHelper.remove(btree, node);
-            if (!changed) {
-                throw new GraphException("Unable to remove nonexistent statement");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            index.remove(node);
+        } finally {
+            index.sync();
         }
     }
 
     public void clear() {
-        try {
-            btree.clear();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        index.clear();
     }
 
     public ClosableIterator<Long[]> iterator() {
-        return new EntryIteratorArray(btree, TRIPLE);
+        return index.iterator();
     }
 
     public ClosableIterator<Long[]> getSubIndex(Long first) {
-        return new EntryIteratorOneFixedTwoArray(first, btree);
+        return index.getSubIndex(first);
     }
 
     public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
-        return new EntryIteratorTwoFixedSingleValue(first, second, btree);
+        return index.getSubSubIndex(first, second);
     }
 
     public boolean contains(Long first) {
-        try {
-            return RecordIteratorHelper.contains(btree, first, TRIPLE);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return index.contains(first);
     }
 
     public boolean removeSubIndex(Long first) {
-        try {
-            return RecordIteratorHelper.removeSubIndex(btree, first);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return index.removeSubIndex(first);
     }
 
     public long getSize() {
-        try {
-            return RecordIteratorHelper.getSize(btree);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void sync() {
-        try {
-            btree.sync();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return index.getSize();
     }
 
     public void close() {
-        try {
-            btree.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        index.close();
     }
 }
