@@ -57,9 +57,15 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf;
 
+import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.graph.global.MoleculeGraphImpl;
+import org.jrdf.graph.global.MoleculeLocalizer;
+import org.jrdf.graph.global.MoleculeLocalizerImpl;
 import org.jrdf.graph.global.index.ReadableIndex;
 import org.jrdf.graph.global.index.ReadableIndexImpl;
 import org.jrdf.graph.global.index.WritableIndex;
@@ -67,8 +73,8 @@ import org.jrdf.graph.global.index.WritableIndexImpl;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.graph.global.index.longindex.bdb.MoleculeIndexBdb;
-import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
+import org.jrdf.graph.global.index.longindex.sesame.MoleculeIndexSesame;
+import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesame;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
@@ -86,14 +92,13 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
-import org.jrdf.util.ClosableMap;
-import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
-import org.jrdf.collection.BdbCollectionFactory;
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.util.btree.BTree;
+import org.jrdf.util.btree.BTreeFactory;
+import org.jrdf.util.btree.BTreeFactoryImpl;
 
 import static java.util.Arrays.asList;
 import java.util.HashSet;
@@ -105,7 +110,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
-public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory {
+public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
@@ -116,13 +121,14 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
     private Set<MoleculeIndex<Long>> openIndexes = new HashSet<MoleculeIndex<Long>>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private Set<MapFactory> openMapFactories = new HashSet<MapFactory>();
+    private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private CollectionFactory collectionFactory;
 
-    private SortedDiskBdbGlobalJRDFFactory() {
+    private SortedDiskGlobalJRDFFactory() {
     }
 
     public static MoleculeJRDFFactory getFactory() {
-        return new SortedDiskBdbGlobalJRDFFactory();
+        return new SortedDiskGlobalJRDFFactory();
     }
 
     public void refresh() {
@@ -131,11 +137,11 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
     public MoleculeGraph getNewGraph() {
         graphNumber++;
         MapFactory factory = new BdbMapFactory(BDB_HANDLER, "database" + graphNumber);
-        MoleculeIndex<Long>[] indexes = createIndexes(factory);
+        MoleculeIndex<Long>[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(
                 new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()), graphNumber);
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
+        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexSesame(
+                btreeFactory.createQuinBTree(HANDLER, "spomm" + graphNumber));
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
         NodePool nodePool = nodePoolFactory.createNewNodePool();
@@ -171,8 +177,15 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
         openMapFactories.clear();
     }
 
-    private MoleculeIndex<Long>[] createIndexes(MapFactory factory) {
-        return new MoleculeIndexBdb[]{new MoleculeIndexBdb(factory), new MoleculeIndexBdb(factory),
-            new MoleculeIndexBdb(factory)};
+    private MoleculeIndex<Long>[] createIndexes() {
+        BTree[] bTrees = createBTrees();
+        return new MoleculeIndexSesame[]{new MoleculeIndexSesame(bTrees[0]), new MoleculeIndexSesame(bTrees[1]),
+            new MoleculeIndexSesame(bTrees[2])};
+    }
+
+    private BTree[] createBTrees() {
+        return new BTree[]{btreeFactory.createQuadBTree(HANDLER, "spom" + graphNumber),
+                btreeFactory.createQuadBTree(HANDLER, "posm" + graphNumber),
+                btreeFactory.createQuadBTree(HANDLER, "ospm" + graphNumber)};
     }
 }
