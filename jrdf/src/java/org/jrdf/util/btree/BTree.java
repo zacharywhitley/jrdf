@@ -358,8 +358,7 @@ public class BTree {
      *
      * @throws IOException
      */
-    public void sync()
-        throws IOException {
+    public void sync() throws IOException {
         // Write any changed nodes that still reside in the cache to disk
         synchronized (nodesInUse) {
             for (Node node : nodesInUse) {
@@ -1346,18 +1345,15 @@ public class BTree {
             }
         }
 
-        public void read()
-            throws IOException {
+        public void read() throws IOException {
             ByteBuffer buf = ByteBuffer.wrap(data);
             // Don't fill the spare slot in data:
             buf.limit(nodeSize);
             fileChannel.read(buf, offset);
-
             valueCount = ByteArrayUtil.getInt(data, 0);
         }
 
-        public void write()
-            throws IOException {
+        public void write() throws IOException {
             ByteBuffer buf = ByteBuffer.wrap(data);
             // Don't write the spare slot in data to the file:
             buf.limit(nodeSize);
