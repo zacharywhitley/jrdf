@@ -77,6 +77,8 @@ public class PersistanceExample {
     public static void main(String[] args) throws Exception {
         try {
             if (!JRDF_FACTORY.hasGraph("foo") || !JRDF_FACTORY.hasGraph("bar")) {
+                HANDLER.removeDir();
+                HANDLER.makeDir();
                 createNewTriples();
             }
             getExistingTriples();
