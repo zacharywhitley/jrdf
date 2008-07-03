@@ -126,7 +126,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         return triples;
     }
 
-    public Long findEnclosingMoleculeID(Long mid) throws GraphException {
+    public Long findEnclosingMoleculeId(Long mid) throws GraphException {
         ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(1L);
         Long pid;
         while (subIndex.hasNext()) {

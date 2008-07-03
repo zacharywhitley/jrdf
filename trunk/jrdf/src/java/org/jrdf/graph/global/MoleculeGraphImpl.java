@@ -151,7 +151,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     public Molecule findTopLevelMolecule(Triple triple) throws GraphException {
         Long[] localizedTriple = localizer.localizeTriple(triple);
         Long mid = readableIndex.findMid(localizedTriple);
-        Long pid = readableIndex.findEnclosingMoleculeID(mid);
+        Long pid = readableIndex.findEnclosingMoleculeId(mid);
         Long topMoleculeID = (pid == 1L) ? mid : pid;
         return reconstructMolecule(null, 1L, topMoleculeID);
     }
@@ -159,7 +159,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     public Molecule findEnclosingMolecule(Triple triple) throws GraphException {
         Long[] localizedTriple = localizer.localizeTriple(triple);
         Long mid = readableIndex.findMid(localizedTriple);
-        Long pid = readableIndex.findEnclosingMoleculeID(mid);
+        Long pid = readableIndex.findEnclosingMoleculeId(mid);
         return reconstructMolecule(null, pid, mid);
     }
 

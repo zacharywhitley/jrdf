@@ -71,7 +71,7 @@ public interface ReadableIndex<T> {
 
     Set<Long[]> findTriplesForMid(T pid, T mid);
 
-    Long findEnclosingMoleculeID(Long mid) throws GraphException;
+    Long findEnclosingMoleculeId(Long mid) throws GraphException;
 
     Set<Long> findChildIDs(Long mid);
 
