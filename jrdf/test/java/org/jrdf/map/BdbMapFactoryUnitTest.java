@@ -121,6 +121,8 @@ public class BdbMapFactoryUnitTest extends TestCase {
 
     public void testClose() throws Exception {
         creatMapExpectations();
+        environment.sync();
+        expectLastCall();
         environment.close();
         expectLastCall();
         database.close();
@@ -134,6 +136,8 @@ public class BdbMapFactoryUnitTest extends TestCase {
 
     public void testCloseCatalogEvenWithExceptionInEnvironment() throws Exception {
         creatMapExpectations();
+        environment.sync();
+        expectLastCall();
         environment.close();
         expectLastCall().andThrow(new DatabaseException());
         database.close();
@@ -151,6 +155,8 @@ public class BdbMapFactoryUnitTest extends TestCase {
 
     public void testCloseBothExceptions() throws Exception {
         creatMapExpectations();
+        environment.sync();
+        expectLastCall();
         environment.close();
         expectLastCall().andThrow(new DatabaseException());
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {

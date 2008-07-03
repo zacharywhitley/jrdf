@@ -98,11 +98,24 @@ public class BdbNodePoolFactory implements NodePoolFactory {
         return new NodePoolImpl(nodeTypePool, stringPool);
     }
 
+    @SuppressWarnings({ "unchecked" })
+    public NodePool openExistingNodePool() {
+        nodePoolMapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
+        stringPoolMapFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
+        StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
+        final Map<Long, String> blankNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "bnp");
+        final Map<Long, String> uriNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "npm");
+        final Map<Long, String> literalNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "lnp");
+        final Map<String, Long> stringPool = stringPoolMapFactory.openExistingMap(String.class, Long.class, "sp");
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
+        return new NodePoolImpl(nodeTypePool, stringPool);
+    }
+
     public void close() {
         try {
-            nodePoolMapFactory.close();
-        } finally {
             stringPoolMapFactory.close();
+        } finally {
+            nodePoolMapFactory.close();
         }
     }
 }

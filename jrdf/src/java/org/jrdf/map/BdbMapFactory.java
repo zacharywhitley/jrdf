@@ -70,7 +70,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class BdbMapFactory implements MapFactory {
+public final class BdbMapFactory<A, T, U extends A> implements MapFactory<A, T, U> {
     private final BdbEnvironmentHandler handler;
     private final String databaseName;
     private Environment env;
@@ -83,14 +83,12 @@ public final class BdbMapFactory implements MapFactory {
         this.databaseName = newDatabaseName;
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
+    public Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
         mapNumber++;
         return createMap(clazz1, clazz2, Long.toString(mapNumber));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
+    public Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
         try {
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
@@ -99,6 +97,18 @@ public final class BdbMapFactory implements MapFactory {
             final Map<T, U> map = handler.createMap(database, clazz1, clazz2);
             map.clear();
             return map;
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name) {
+        try {
+            env = handler.setUpEnvironment();
+            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
+            Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
+            databases.add(database);
+            return handler.createMap(database, clazz1, clazz2);
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
@@ -130,6 +140,7 @@ public final class BdbMapFactory implements MapFactory {
     private void closeEnvironment() {
         try {
             if (env != null) {
+                env.sync();
                 env.close();
                 env = null;
             }

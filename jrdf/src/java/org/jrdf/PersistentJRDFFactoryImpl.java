@@ -65,6 +65,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import static org.jrdf.parser.Reader.parseNTriples;
@@ -82,12 +83,12 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
-import static org.jrdf.writer.Writer.*;
+import static org.jrdf.writer.Writer.writeNTriples;
 
 import java.io.File;
-import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
+import static java.util.Arrays.asList;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -99,12 +100,12 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private long currentGraphNumber;
     private final DirectoryHandler handler;
     private final BdbEnvironmentHandler bdbHandler;
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
+    private long currentGraphNumber;
     private CollectionFactory collectionFactory;
     private Models models;
     private Graph graph;
@@ -164,17 +165,24 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
 
     private Graph getGraph(long graphNumber) {
         LongIndex[] indexes = createIndexes(graphNumber);
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(bdbHandler, graphNumber);
-        openIndexes.addAll(asList(indexes));
-        openFactories.add(nodePoolFactory);
+        final NodePool nodePool = getNodePool(graphNumber);
         collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
-        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory.createNewNodePool(), collectionFactory).getGraph();
+        return new OrderedGraphFactoryImpl(indexes, nodePool, collectionFactory).getGraph();
+    }
+
+    private NodePool getNodePool(long graphNumber) {
+        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(bdbHandler, graphNumber);
+        final NodePool nodePool = nodePoolFactory.openExistingNodePool();
+        openFactories.add(nodePoolFactory);
+        return nodePool;
     }
 
     private LongIndex[] createIndexes(long graphNumber) {
         BTree[] bTrees = createBTrees(graphNumber);
-        return new LongIndex[]{new LongIndexSesame(bTrees[0]), new LongIndexSesame(bTrees[1]),
+        final LongIndex[] indexes = {new LongIndexSesame(bTrees[0]), new LongIndexSesame(bTrees[1]),
             new LongIndexSesame(bTrees[2])};
+        openIndexes.addAll(asList(indexes));
+        return indexes;
     }
 
     private BTree[] createBTrees(long graphNumber) {

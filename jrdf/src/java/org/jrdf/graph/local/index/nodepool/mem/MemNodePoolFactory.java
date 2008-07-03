@@ -72,13 +72,24 @@ import org.jrdf.map.MemMapFactory;
 import java.util.Map;
 
 public class MemNodePoolFactory implements NodePoolFactory {
+    private static final MapFactory MAP_FACTORY = new MemMapFactory();
+
     public NodePool createNewNodePool() {
-        MapFactory mapFactory = new MemMapFactory();
         StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
-        final Map<Long, String> blankNodePool = mapFactory.createMap(Long.class, String.class);
-        final Map<Long, String> uriNodePool = mapFactory.createMap(Long.class, String.class);
-        final Map<Long, String> literalNodePool = mapFactory.createMap(Long.class, String.class);
-        final Map<String, Long> stringPool = mapFactory.createMap(String.class, Long.class);
+        final Map<Long, String> blankNodePool = MAP_FACTORY.createMap(Long.class, String.class);
+        final Map<Long, String> uriNodePool = MAP_FACTORY.createMap(Long.class, String.class);
+        final Map<Long, String> literalNodePool = MAP_FACTORY.createMap(Long.class, String.class);
+        final Map<String, Long> stringPool = MAP_FACTORY.createMap(String.class, Long.class);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
+        return new NodePoolImpl(nodeTypePool, stringPool);
+    }
+
+    public NodePool openExistingNodePool() {
+        StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
+        final Map<Long, String> blankNodePool = MAP_FACTORY.createMap(Long.class, String.class, "bnp");
+        final Map<Long, String> uriNodePool = MAP_FACTORY.createMap(Long.class, String.class, "unp");
+        final Map<Long, String> literalNodePool = MAP_FACTORY.createMap(Long.class, String.class, "lnp");
+        final Map<String, Long> stringPool = MAP_FACTORY.createMap(String.class, Long.class, "sp");
         final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
         return new NodePoolImpl(nodeTypePool, stringPool);
     }

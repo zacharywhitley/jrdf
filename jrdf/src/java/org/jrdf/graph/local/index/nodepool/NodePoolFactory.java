@@ -74,4 +74,7 @@ public interface NodePoolFactory {
      * Close any resources related to creating node pools.
      */
     void close();
+
+    @SuppressWarnings({ "unchecked" })
+    NodePool openExistingNodePool();
 }
