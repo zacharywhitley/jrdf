@@ -61,6 +61,8 @@
     <suppress checks="MagicNumber" files="WritableIndexImpl"/>
     <suppress checks="MagicNumber" files="MoleculeIndexBdb"/>
     <suppress checks="MagicNumber" files="MoleculeIndexMem"/>
+    <suppress checks="MagicNumber" files="MoleculeGraphImpl"/>
+    <suppress checks="MagicNumber" files="ReadableIndexImpl"/>
     <suppress checks="ReturnCount" files="BlankNodeMapperImpl"/>
 
     <!-- Import -->

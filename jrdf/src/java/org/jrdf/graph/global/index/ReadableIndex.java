@@ -66,9 +66,16 @@ import java.util.Set;
 public interface ReadableIndex<T> {
     Long findMid(T... triple) throws GraphException;
 
+    // TODO
+//    Long findMid(Long[]... triple) throws GraphException;
+
     Set<Long[]> findTriplesForMid(T pid, T mid);
 
     Long findEnclosingMoleculeID(Long mid) throws GraphException;
 
     Set<Long> findChildIDs(Long mid);
+
+    Long findHeadTripleMid(Long PID, Long... triple) throws GraphException;
+
+    Set<Long[]> findTriplesForPid(Long pid);
 }

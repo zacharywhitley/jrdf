@@ -70,7 +70,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class BdbMapFactory<A, T, U extends A> implements MapFactory<A, T, U> {
+public final class BdbMapFactory implements MapFactory {
     private final BdbEnvironmentHandler handler;
     private final String databaseName;
     private Environment env;
@@ -83,12 +83,12 @@ public final class BdbMapFactory<A, T, U extends A> implements MapFactory<A, T, 
         this.databaseName = newDatabaseName;
     }
 
-    public Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
+    public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
         mapNumber++;
         return createMap(clazz1, clazz2, Long.toString(mapNumber));
     }
 
-    public Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
+    public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
         try {
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
@@ -102,7 +102,7 @@ public final class BdbMapFactory<A, T, U extends A> implements MapFactory<A, T, 
         }
     }
 
-    public Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name) {
+    public <A, T, U extends A> Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name) {
         try {
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);

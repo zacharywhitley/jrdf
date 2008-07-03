@@ -74,7 +74,6 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.index.AddMoleculeToIndex;
 import org.jrdf.graph.global.index.ReadableIndex;
-import org.jrdf.graph.global.index.RemoveMoleculeFromIndex;
 import org.jrdf.graph.global.index.WritableIndex;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
@@ -88,6 +87,7 @@ import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -115,20 +115,36 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         traverser.traverse(molecule, new AddMoleculeToIndex(writableIndex, localizer));
     }
 
-    public void delete(Molecule molecule) {
-        try {
-            Long[] longs = localizer.localizeTriple(molecule.getHeadTriple());
-            // find mid based on molecule head triple and subsequent triples.
-            Long mid = readableIndex.findMid(longs);
-            // Find the triple that matches in the structureIndex where it is 1, mid, *, *, *
-            Set<Long[]> triplesForMid = readableIndex.findTriplesForMid(1L, mid);
-            // TODO Recursively reconstruct molecule.
-            // Delete all triples in the molecule.
-            for (Long[] triple : triplesForMid) {
-                writableIndex.remove(triple[0], triple[1], triple[2], mid, 1L);
+    public void delete(Molecule molecule) throws GraphException {
+        final Long[] longsForTriple = localizer.localizeTriple(molecule.getHeadTriple());
+        final Long headTripleMid = readableIndex.findHeadTripleMid(1L, longsForTriple);
+        Set<Long> mids = new HashSet<Long>();
+        mids.add(headTripleMid);
+        deleteChildMolecules(mids);
+        final Set<Long[]> spos = readableIndex.findTriplesForMid(1L, headTripleMid);
+        for (Long[] spo : spos) {
+            Long[] quin = new Long[5];
+            System.arraycopy(spo, 0, quin, 0, 3);
+            quin[3] = headTripleMid;
+            quin[4] = 1L;
+            writableIndex.remove(quin);
+        }
+    }
+
+    private void deleteChildMolecules(Set<Long> mids) throws GraphException {
+        Set<Long> newMids = new HashSet<Long>();
+        for (Long pid : mids) {
+            final Set<Long[]> spoms = readableIndex.findTriplesForPid(pid);
+            for (Long[] spom : spoms) {
+                newMids.add(spom[3]);
+                Long[] quin = new Long[5];
+                System.arraycopy(spom, 0, quin, 0, 4);
+                quin[4] = pid;
+                writableIndex.remove(quin);
             }
-        } catch (GraphException e) {
-            throw new RuntimeException(e);
+        }
+        if (!newMids.isEmpty()) {
+            deleteChildMolecules(newMids);
         }
     }
 
@@ -298,10 +314,5 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public Triple getTriple(Long... index) {
         return graph.getTriple(index);
-    }
-
-    public void removeMolecule(Molecule molecule) {
-        MoleculeTraverser traverser = new MoleculeTraverserImpl();
-        traverser.traverse(molecule, new RemoveMoleculeFromIndex(writableIndex, localizer));
     }
 }
