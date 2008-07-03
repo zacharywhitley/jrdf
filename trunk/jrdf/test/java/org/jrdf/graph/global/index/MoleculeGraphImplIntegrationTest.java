@@ -215,7 +215,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         Triple tempTriple = tripleFactory.createTriple(REF1, REF1, REF1);
         mol.add(tempTriple);
         final Molecule molecule1 = molecule.getSubMolecules(B1R1B2).iterator().next();
-        moleculeGraph.removeMolecule(molecule);
+        moleculeGraph.delete(molecule);
         System.err.println("# graph = " + moleculeGraph.getNumberOfTriples());
         assertEquals("# of submolecules", 1, molecule.getSubMolecules(B1R1B2).size());
         assertTrue(molecule.removeMolecule(B1R1B2, sm1));

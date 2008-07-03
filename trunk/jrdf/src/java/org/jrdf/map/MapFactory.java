@@ -61,12 +61,12 @@ package org.jrdf.map;
 
 import java.util.Map;
 
-public interface MapFactory<A, T, U extends A> {
-    Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2);
+public interface MapFactory {
+    <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2);
 
-    Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name);
+    <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name);
 
-    Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name);
+    <A, T, U extends A> Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name);
 
     void close();
 }

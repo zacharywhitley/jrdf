@@ -77,11 +77,24 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         this.structureIndex = newStructureIndex;
     }
 
+    public Long findHeadTripleMid(Long PID, Long... triple) throws GraphException {
+        final ClosableIterator<Long[]> index = structureIndex.getSubIndex(PID);
+        while (index.hasNext()) {
+            Long[] midSPO = index.next();
+            // Make sure object equals required value and mid is not 1L (not in a molecule).
+            if (midSPO[1].equals(triple[0]) && midSPO[2].equals(triple[1]) && midSPO[3].equals(triple[2])) {
+                return midSPO[0];
+            }
+        }
+        throw new GraphException("Cannot find triple:  " + asList(triple));
+    }
+
     public Long findMid(Long... triple) throws GraphException {
         final ClosableIterator<Long[]> index = indexes[0].getSubSubIndex(triple[0], triple[1]);
         while (index.hasNext()) {
             Long[] oAndMid = index.next();
-            if (oAndMid[0].equals(triple[2])) {
+            // Make sure object equals required value and mid is not 1L (not in a molecule).
+            if (oAndMid[0].equals(triple[2]) && !oAndMid[1].equals(1L)) {
                 return oAndMid[1];
             }
         }
@@ -92,7 +105,23 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         ClosableIterator<Long[]> subSubIndex = structureIndex.getSubSubIndex(pid, mid);
         Set<Long[]> triples = new HashSet<Long[]>();
         while (subSubIndex.hasNext()) {
-            triples.add(subSubIndex.next());
+            final Long[] longs = new Long[4];
+            System.arraycopy(subSubIndex.next(), 0, longs, 0, 3);
+            longs[3] = mid;
+            triples.add(longs);
+        }
+        return triples;
+    }
+
+    public Set<Long[]> findTriplesForPid(Long pid) {
+        ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(pid);
+        Set<Long[]> triples = new HashSet<Long[]>();
+        while (subIndex.hasNext()) {
+            final Long[] longs = new Long[4];
+            final Long[] result = subIndex.next();
+            System.arraycopy(result, 1, longs, 0, 3);
+            longs[3] = result[0];
+            triples.add(longs);
         }
         return triples;
     }

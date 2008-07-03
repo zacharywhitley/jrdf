@@ -117,7 +117,7 @@ public class LoadRdfCommand extends ApplicationWindowAwareCommand {
 
     private URL tryGetURL(File file) {
         try {
-            return file.toURL();
+            return file.toURI().toURL();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
