@@ -80,7 +80,7 @@ public final class LongIndexBdb implements LongIndex {
     private LongIndexBdb() {
     }
 
-    public LongIndexBdb(MapFactory newCreator) {
+    public LongIndexBdb(MapFactory<LinkedList, Long, LinkedList<Long[]>> newCreator) {
         index = newCreator.createMap(Long.class, LinkedList.class);
     }
 
