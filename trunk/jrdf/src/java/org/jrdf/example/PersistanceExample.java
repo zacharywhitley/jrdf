@@ -95,12 +95,12 @@ public class PersistanceExample {
     private static void printOutTriples(String name) throws GraphException {
         Graph existingGraph = JRDF_FACTORY.getExistingGraph(name);
         long noTriples = existingGraph.getNumberOfTriples();
-        System.err.println("Existing graph recovered " + name + ", found " + noTriples);
-        System.err.println("Got: " + existingGraph);
+        System.out.println("Existing graph recovered " + name + ", found " + noTriples);
+        System.out.println("Got: " + existingGraph);
     }
 
     private static void createNewTriples() throws GraphException {
-        System.err.println("Creating new graphs");
+        System.out.println("Creating new graphs");
         Graph fooGraph = JRDF_FACTORY.getNewGraph("foo");
         Graph barGraph = JRDF_FACTORY.getNewGraph("bar");
         GraphElementFactory barElementFactory = barGraph.getElementFactory();
