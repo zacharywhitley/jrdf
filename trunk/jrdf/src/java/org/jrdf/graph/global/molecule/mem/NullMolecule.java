@@ -117,7 +117,7 @@ public final class NullMolecule implements Molecule {
     }
 
     public boolean contains(Triple triple) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     public void remove(Triple triple) {
@@ -137,5 +137,9 @@ public final class NullMolecule implements Molecule {
 
     public boolean removeMolecule(Triple triple, Molecule molecule) {
         return false;
+    }
+
+    public Iterator<Triple> iterator() {
+        return null;
     }
 }

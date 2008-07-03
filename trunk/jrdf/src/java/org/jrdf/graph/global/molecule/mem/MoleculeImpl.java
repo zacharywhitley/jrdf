@@ -67,6 +67,7 @@ import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeToString;
+import org.jrdf.graph.global.molecule.MoleculeToTripleIterator;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -74,6 +75,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -238,7 +240,11 @@ public class MoleculeImpl implements Molecule {
     }
 
     public Iterator<Triple> iterator() {
-        return null;
+        HashSet<Triple> set = new HashSet<Triple>();
+        MoleculeToTripleIterator mtti = new MoleculeToTripleIterator(set);
+        MoleculeTraverser traverser = new MoleculeTraverserImpl();
+        traverser.traverse(this, mtti);
+        return set.iterator();
     }
 
     public Molecule add(Set<Triple> set) {
