@@ -92,6 +92,7 @@ public class AddMoleculeToIndex implements MoleculeHandler {
             System.arraycopy(localizer.localizeTriple(triple), 0, quin, 0, MOLECULE_ID_INDEX);
             quin[MOLECULE_ID_INDEX] = moleculeId;
             quin[PARENT_ID_INDEX] = parentId;
+            System.err.println("quin size = " + quin.length + " " + quin[MOLECULE_ID_INDEX] + " " + quin[PARENT_ID_INDEX]);
             index.add(quin);
         } catch (GraphException e) {
             throw new RuntimeException(e);

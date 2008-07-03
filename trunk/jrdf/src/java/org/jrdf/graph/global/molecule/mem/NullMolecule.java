@@ -134,4 +134,8 @@ public final class NullMolecule implements Molecule {
     public boolean isTopLevelMolecule() {
         return true;
     }
+
+    public boolean removeMolecule(Triple triple, Molecule molecule) {
+        return false;
+    }
 }

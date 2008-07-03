@@ -74,6 +74,7 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.index.AddMoleculeToIndex;
 import org.jrdf.graph.global.index.ReadableIndex;
+import org.jrdf.graph.global.index.RemoveMoleculeFromIndex;
 import org.jrdf.graph.global.index.WritableIndex;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
@@ -131,13 +132,19 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         }
     }
 
-    public Molecule findMolecule(Triple triple) throws GraphException {
+    public Molecule findTopLevelMolecule(Triple triple) throws GraphException {
         Long[] localizedTriple = localizer.localizeTriple(triple);
         Long mid = readableIndex.findMid(localizedTriple);
         Long pid = readableIndex.findEnclosingMoleculeID(mid);
         Long topMoleculeID = (pid == 1L) ? mid : pid;
-
         return reconstructMolecule(null, 1L, topMoleculeID);
+    }
+
+    public Molecule findEnclosingMolecule(Triple triple) throws GraphException {
+        Long[] localizedTriple = localizer.localizeTriple(triple);
+        Long mid = readableIndex.findMid(localizedTriple);
+        Long pid = readableIndex.findEnclosingMoleculeID(mid);
+        return reconstructMolecule(null, pid, mid);
     }
 
     private Triple[] asTriples(Set<Long[]> tIndexes) {
@@ -291,5 +298,10 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public Triple getTriple(Long... index) {
         return graph.getTriple(index);
+    }
+
+    public void removeMolecule(Molecule molecule) {
+        MoleculeTraverser traverser = new MoleculeTraverserImpl();
+        traverser.traverse(molecule, new RemoveMoleculeFromIndex(writableIndex, localizer));
     }
 }

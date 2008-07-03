@@ -110,7 +110,6 @@ public class MoleculeImpl implements Molecule {
         for (Triple rootTriple : rootTriples) {
             subMolecules.put(rootTriple, new TreeSet<Molecule>(moleculeComparator));
         }
-
     }
 
     public MoleculeImpl(MoleculeComparator newComparator, Molecule... childMolecules) {
@@ -308,5 +307,20 @@ public class MoleculeImpl implements Molecule {
 
     public boolean isTopLevelMolecule() {
         return isTopLevel;
+    }
+
+    public boolean removeMolecule(Triple triple, Molecule molecule) {
+        if (!subMolecules.keySet().contains(triple)) {
+            return false;
+        }
+        SortedSet<Molecule> subs = this.getSubMolecules(triple);
+        for (Molecule sub : subs) {
+            if (sub.equals(molecule)) {
+                subs.remove(sub);
+                break;
+            }
+        }
+        subMolecules.put(triple, subs);
+        return true;
     }
 }
