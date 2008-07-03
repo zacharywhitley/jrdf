@@ -67,5 +67,9 @@ import org.jrdf.graph.global.molecule.Molecule;
 public interface MoleculeGraph extends Graph {
     void add(Molecule molecule);
     void delete(Molecule molecule);
-    Molecule findMolecule(Triple triple) throws GraphException;
+    Molecule findTopLevelMolecule(Triple triple) throws GraphException;
+
+    Molecule findEnclosingMolecule(Triple triple) throws GraphException;
+
+    void removeMolecule(Molecule molecule);
 }

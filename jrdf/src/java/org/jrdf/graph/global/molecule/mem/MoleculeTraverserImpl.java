@@ -84,6 +84,7 @@ public class MoleculeTraverserImpl implements MoleculeTraverser {
     private void iterateOverTriples(Molecule molecule, Iterator<Triple> rootTriples) {
         while (rootTriples.hasNext()) {
             Triple triple = rootTriples.next();
+            System.err.println("Removing triple: " + triple.toString());
             handler.handleTriple(triple);
             Set<Molecule> newMolecules = molecule.getSubMolecules(triple);
             if (newMolecules.isEmpty()) {

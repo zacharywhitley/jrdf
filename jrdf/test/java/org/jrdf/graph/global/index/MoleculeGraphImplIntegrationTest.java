@@ -179,11 +179,11 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         Molecule m2 = moleculeFactory.createMolecule(triple2);
         m1.add(triple1, m2);
         moleculeGraph.add(molecule);
-        Molecule actualMolecule = moleculeGraph.findMolecule(triple2);
+        Molecule actualMolecule = moleculeGraph.findTopLevelMolecule(triple2);
         assertEquals("Equal molecules", molecule, actualMolecule);
     }
 
-    public void testMoleculeIndexComplex() throws GraphException {
+    public void testMoleculeIndexComplex() throws GraphException, InterruptedException {
         Triple B1R1R1 = tripleFactory.createTriple(BNODE1, REF1, REF1);
         Triple B1R2R2 = tripleFactory.createTriple(BNODE1, REF2, REF2);
         Triple B1R1B2 = tripleFactory.createTriple(BNODE1, REF1, BNODE2);
@@ -202,10 +202,25 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         molecule.add(B1R1B2, sm1);
         sm1.add(B2R2B3, sm2);
         moleculeGraph.add(molecule);
+        System.err.println("Molecule added");
+        
         assertEquals("# triples", triples.length, moleculeGraph.getNumberOfTriples());
         for (Triple triple : triples) {
-            Molecule actualMolecule = moleculeGraph.findMolecule(triple);
+            Molecule actualMolecule = moleculeGraph.findTopLevelMolecule(triple);
             assertEquals("Equal molecules", molecule, actualMolecule);
         }
+        System.err.println("# graph = " + moleculeGraph.getNumberOfTriples());
+        Molecule mol = moleculeGraph.findEnclosingMolecule(B2R2B3);
+        assertEquals("Same molecule", sm1, mol);
+        Triple tempTriple = tripleFactory.createTriple(REF1, REF1, REF1);
+        mol.add(tempTriple);
+        final Molecule molecule1 = molecule.getSubMolecules(B1R1B2).iterator().next();
+        moleculeGraph.removeMolecule(molecule);
+        System.err.println("# graph = " + moleculeGraph.getNumberOfTriples());
+        assertEquals("# of submolecules", 1, molecule.getSubMolecules(B1R1B2).size());
+        assertTrue(molecule.removeMolecule(B1R1B2, sm1));
+        assertEquals("# of submolecules", 0, molecule.getSubMolecules(B1R1B2).size());
+        molecule.add(B1R1B2, mol);
+        assertEquals("# of triples", triples.length + 1, molecule.size());
     }
 }

@@ -91,4 +91,6 @@ public interface Molecule {
     Set<Triple> getRootTriplesAsSet();
 
     boolean isTopLevelMolecule();
+
+    boolean removeMolecule(Triple triple, Molecule molecule);
 }
