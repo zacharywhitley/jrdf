@@ -65,4 +65,7 @@ public interface MapFactory {
     <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2);
 
     void close();
+
+    @SuppressWarnings({ "unchecked" })
+            <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name);
 }

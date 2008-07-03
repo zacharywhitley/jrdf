@@ -67,6 +67,11 @@ public final class MemMapFactory implements MapFactory {
         return new HashMap<T, U>();
     }
 
+    @SuppressWarnings({ "unchecked" })
+    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
+        return new HashMap<T, U>();
+    }
+
     public void close() {
     }
 }

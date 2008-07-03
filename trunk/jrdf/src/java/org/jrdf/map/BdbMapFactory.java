@@ -85,11 +85,16 @@ public final class BdbMapFactory implements MapFactory {
 
     @SuppressWarnings({ "unchecked" })
     public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
+        mapNumber++;
+        return createMap(clazz1, clazz2, Long.toString(mapNumber));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
         try {
-            mapNumber++;
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            Database database = handler.setupDatabase(env, databaseName + mapNumber, dbConfig);
+            Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
             databases.add(database);
             final Map<T, U> map = handler.createMap(database, clazz1, clazz2);
             map.clear();
@@ -98,6 +103,7 @@ public final class BdbMapFactory implements MapFactory {
             throw new RuntimeException(e);
         }
     }
+
 
     public void close() {
         try {

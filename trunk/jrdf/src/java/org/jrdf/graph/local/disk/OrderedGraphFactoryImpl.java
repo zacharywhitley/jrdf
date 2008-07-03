@@ -98,7 +98,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, BTree[] trees,
         long graphNumber) {
         this.longIndexes = newLongIndexes;
-        nodePool = newNodePoolFactory.createNodePool();
+        nodePool = newNodePoolFactory.createNewNodePool();
         this.nodePool.clear();
         this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),

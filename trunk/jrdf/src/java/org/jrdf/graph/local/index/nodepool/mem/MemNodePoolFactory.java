@@ -69,12 +69,18 @@ import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
 
+import java.util.Map;
+
 public class MemNodePoolFactory implements NodePoolFactory {
-    public NodePool createNodePool() {
+    public NodePool createNewNodePool() {
         MapFactory mapFactory = new MemMapFactory();
         StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapFactory, mapper);
-        return new NodePoolImpl(nodeTypePool, mapFactory);
+        final Map<Long, String> blankNodePool = mapFactory.createMap(Long.class, String.class);
+        final Map<Long, String> uriNodePool = mapFactory.createMap(Long.class, String.class);
+        final Map<Long, String> literalNodePool = mapFactory.createMap(Long.class, String.class);
+        final Map<String, Long> stringPool = mapFactory.createMap(String.class, Long.class);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
+        return new NodePoolImpl(nodeTypePool, stringPool);
     }
 
     public void close() {

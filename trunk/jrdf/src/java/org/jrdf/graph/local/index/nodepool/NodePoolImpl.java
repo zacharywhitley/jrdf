@@ -64,7 +64,6 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.LocalizedNode;
 import org.jrdf.graph.local.iterator.NodeTypeIterator;
-import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -89,10 +88,10 @@ public final class NodePoolImpl implements NodePool {
      */
     private long nextNode = 1L;
 
-    public NodePoolImpl(NodeTypePool newNodeTypePool, MapFactory newMapFactory) {
-        checkNotNull(newNodeTypePool, newMapFactory);
-        nodeTypePool = newNodeTypePool;
-        stringPool = newMapFactory.createMap(String.class, Long.class);
+    public NodePoolImpl(NodeTypePool newNodeTypePool, Map<String, Long> newStringPool) {
+        checkNotNull(newNodeTypePool, newStringPool);
+        this.nodeTypePool = newNodeTypePool;
+        this.stringPool = newStringPool;
     }
 
     public boolean nodeExists(Long id) {

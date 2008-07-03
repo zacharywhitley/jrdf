@@ -140,7 +140,7 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
                 btreeFactory.createQuinBTree(HANDLER, "spomm" + graphNumber));
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
-        NodePool nodePool = nodePoolFactory.createNodePool();
+        NodePool nodePool = nodePoolFactory.createNewNodePool();
         Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),

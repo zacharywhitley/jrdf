@@ -68,7 +68,7 @@ public interface NodePoolFactory {
      *
      * @return a new node pool.
      */
-    NodePool createNodePool();
+    NodePool createNewNodePool();
 
     /**
      * Close any resources related to creating node pools.

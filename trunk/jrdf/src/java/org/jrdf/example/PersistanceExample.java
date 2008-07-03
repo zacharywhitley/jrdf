@@ -64,6 +64,7 @@ import org.jrdf.PersistentJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
+import org.jrdf.graph.GraphException;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 
@@ -75,19 +76,41 @@ public class PersistanceExample {
 
     public static void main(String[] args) throws Exception {
         try {
-            if (JRDF_FACTORY.hasGraph("foo")) {
-                long triples = JRDF_FACTORY.getExistingGraph("foo").getNumberOfTriples();
-                System.err.println("Existing graph recovered, found " + triples);
-            } else {
-                System.err.println("Creating new graph");
-                Graph newGraph = JRDF_FACTORY.getNewGraph("foo");
-                GraphElementFactory elementFactory = newGraph.getElementFactory();
-                URI uri = URI.create("urn:hello");
-                Resource resource = elementFactory.createResource(uri);
-                resource.addValue(uri, uri);
+            if (!JRDF_FACTORY.hasGraph("foo") || !JRDF_FACTORY.hasGraph("bar")) {
+                createNewTriples();
             }
+            getExistingTriples();
         } finally {
             JRDF_FACTORY.close();
         }
+    }
+
+    private static void getExistingTriples() throws GraphException {
+        printOutTriples("foo");
+        printOutTriples("bar");
+    }
+
+    private static void printOutTriples(String name) throws GraphException {
+        Graph existingGraph = JRDF_FACTORY.getExistingGraph(name);
+        long noTriples = existingGraph.getNumberOfTriples();
+        System.err.println("Existing graph recovered " + name + ", found " + noTriples);
+        System.err.println("Got: " + existingGraph);
+    }
+
+    private static void createNewTriples() throws GraphException {
+        System.err.println("Creating new graphs");
+        Graph fooGraph = JRDF_FACTORY.getNewGraph("foo");
+        Graph barGraph = JRDF_FACTORY.getNewGraph("bar");
+        GraphElementFactory barElementFactory = barGraph.getElementFactory();
+        URI uri1 = URI.create("urn:hello");
+        URI uri2 = URI.create("urn:there");
+        Resource resource = barElementFactory.createResource(uri1);
+        resource.addValue(uri1, uri2);
+        resource.addValue(uri2, uri2);
+        GraphElementFactory fooElementFactory = fooGraph.getElementFactory();
+        Resource blankResource = fooElementFactory.createResource();
+        blankResource.addValue(uri1, uri2);
+        blankResource.addValue(uri1, uri1);
+        blankResource.addValue(uri2, uri2);
     }
 }

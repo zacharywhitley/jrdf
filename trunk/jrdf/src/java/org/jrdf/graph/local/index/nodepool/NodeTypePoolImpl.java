@@ -64,7 +64,6 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.LocalizedNode;
-import org.jrdf.map.MapFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -78,10 +77,11 @@ public class NodeTypePoolImpl implements NodeTypePool {
     private Map<Long, String> literalNodePool;
     private StringNodeMapper mapper;
 
-    public NodeTypePoolImpl(MapFactory mapFactory, StringNodeMapper newMapper) {
-        blankNodePool = mapFactory.createMap(Long.class, String.class);
-        uriNodePool = mapFactory.createMap(Long.class, String.class);
-        literalNodePool = mapFactory.createMap(Long.class, String.class);
+    public NodeTypePoolImpl(StringNodeMapper newMapper, Map<Long, String> blankNodePool,
+        Map<Long, String> uriNodePool, Map<Long, String> literalNodePool) {
+        this.blankNodePool = blankNodePool;
+        this.uriNodePool = uriNodePool;
+        this.literalNodePool = literalNodePool;
         mapper = newMapper;
     }
 

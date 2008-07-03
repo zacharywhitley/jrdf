@@ -99,7 +99,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
         CollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
-        this.nodePool = newNodePoolFactory.createNodePool();
+        this.nodePool = newNodePoolFactory.createNewNodePool();
         this.nodePool.clear();
         this.collectionFactory = newCollectionFactory;
         init(newLongIndexes);

@@ -70,6 +70,8 @@ import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 
+import java.util.Map;
+
 public class BdbNodePoolFactory implements NodePoolFactory {
     private static final String DB_NAME_NODEPOOL = "nodePool";
     private static final String DB_NAME_STRINGPOOL = "stringPool";
@@ -78,19 +80,22 @@ public class BdbNodePoolFactory implements NodePoolFactory {
     private MapFactory nodePoolMapFactory;
     private MapFactory stringPoolMapFactory;
 
-
     public BdbNodePoolFactory(final BdbEnvironmentHandler newHandler, final long newGraphNumber) {
         this.handler = newHandler;
         this.graphNumber = newGraphNumber;
     }
 
     @SuppressWarnings({ "unchecked" })
-    public NodePool createNodePool() {
+    public NodePool createNewNodePool() {
         nodePoolMapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
         stringPoolMapFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
         StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(nodePoolMapFactory, mapper);
-        return new NodePoolImpl(nodeTypePool, stringPoolMapFactory);
+        final Map<Long, String> blankNodePool = nodePoolMapFactory.createMap(Long.class, String.class, "bnp");
+        final Map<Long, String> uriNodePool = nodePoolMapFactory.createMap(Long.class, String.class, "npm");
+        final Map<Long, String> literalNodePool = nodePoolMapFactory.createMap(Long.class, String.class, "lnp");
+        final Map<String, Long> stringPool = stringPoolMapFactory.createMap(String.class, Long.class, "sp");
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
+        return new NodePoolImpl(nodeTypePool, stringPool);
     }
 
     public void close() {
