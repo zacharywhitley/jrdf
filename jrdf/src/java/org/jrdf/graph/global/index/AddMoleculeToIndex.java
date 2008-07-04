@@ -105,7 +105,6 @@ public class AddMoleculeToIndex implements MoleculeHandler {
     public void handleStartContainsMolecules(Set<Molecule> newMolecules) {
         parentId = moleculeId;
         moleculeId = localizer.getNextMoleculeId();
-        //System.err.println("start mid pid = " + moleculeId + " " + parentId);
         parentIds.push(moleculeId);
     }
 
@@ -117,6 +116,5 @@ public class AddMoleculeToIndex implements MoleculeHandler {
         moleculeId = parentIds.pop();
         parentId = parentIds.peek();
         parentIds.push(moleculeId);
-        //System.err.println("new end mid pid = " + moleculeId + " " + parentId);
     }
 }
