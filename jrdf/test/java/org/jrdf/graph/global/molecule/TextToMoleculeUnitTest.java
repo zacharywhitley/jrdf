@@ -62,6 +62,8 @@ package org.jrdf.graph.global.molecule;
 import junit.framework.TestCase;
 import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
@@ -71,7 +73,10 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
+import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorImpl;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
@@ -106,6 +111,7 @@ public class TextToMoleculeUnitTest extends TestCase {
     public void testOneLevelMolecule() {
         Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
             asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
+        System.err.println("Parsing: " + molecule);
         final StringBuilder result = new StringBuilder();
         final MoleculeHandler moleculeToText = new MoleculeToText(result);
         TRAVERSER.traverse(molecule, moleculeToText);
@@ -123,7 +129,12 @@ public class TextToMoleculeUnitTest extends TestCase {
         final ObjectParser objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
         final TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
                 graph.getTripleFactory());
-        final TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser);
-        textToMolecule.parse(new StringReader(toParse));
+        final TripleComparator tripleComparator = new TripleComparatorFactoryImpl().newComparator();
+        final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
+        final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
+        final MoleculeFactoryImpl factory = new MoleculeFactoryImpl(moleculeComparator);
+        final TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, factory);
+        final Molecule molecule1 = textToMolecule.parse(new StringReader(toParse));
+        System.err.println("Got: " + molecule1);
     }
 }
