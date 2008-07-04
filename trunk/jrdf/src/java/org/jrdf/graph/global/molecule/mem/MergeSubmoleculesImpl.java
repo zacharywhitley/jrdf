@@ -103,11 +103,11 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
         }
     }
 
-    public Molecule merge(Triple currentTriple, Molecule molecule1, Molecule molecule2) {
+    public Molecule merge(Triple triple, Molecule molecule1, Molecule molecule2) {
         Molecule newMolecule = moleculeFactory.createMolecule();
-        Iterator<Molecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
-        Iterator<Molecule> curr2Iterator = molecule2.getSubMolecules(currentTriple).iterator();
-        iterateAndMergeMolecules(newMolecule, currentTriple, curr1Iterator, curr2Iterator);
+        Iterator<Molecule> curr1Iterator = molecule1.getSubMolecules(triple).iterator();
+        Iterator<Molecule> curr2Iterator = molecule2.getSubMolecules(triple).iterator();
+        iterateAndMergeMolecules(newMolecule, triple, curr1Iterator, curr2Iterator);
         return newMolecule;
     }
 

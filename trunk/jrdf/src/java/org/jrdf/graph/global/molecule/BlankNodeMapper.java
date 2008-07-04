@@ -63,6 +63,29 @@ import org.jrdf.graph.BlankNode;
 
 import java.util.Map;
 
+/**
+ * Creates a map of blank nodes from one molecule to another.  There must be at least as many blank nodes in the
+ * first molecule as in the second one in order for a map to be created.  Used in conjunection with
+ * {@see org.jrdf.graph.global.molecule.GraphDecomposer}
+ *
+ * @author Andrew Newman
+ * @author Yuan-Fang Li
+ * @version $Id$
+ */
 public interface BlankNodeMapper {
+
+    /**
+     * Given molecules m1 and m2, try to find a blank node map for m2 inside m1, so this method isn't symmetrical.
+     * If m1's root triple size is smaller than m2's root triple size (m1 doesn't subsumes m2),
+     * an empty map is returned.
+     * <p/>
+     * Potential optimizations:
+     * 1. By recording no. of unique blank nodes on each level, the non-subsumption may be detected faster.
+     * 2. By recording no. of levels of submolecules, the non-subsumption may be detected faster.
+     *
+     * @param m1
+     * @param m2
+     * @return the populated map or empty map if there is no mapping.
+     */
     Map<BlankNode, BlankNode> createMap(Molecule m1, Molecule m2);
 }

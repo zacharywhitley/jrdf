@@ -61,8 +61,32 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
 
+/**
+ * This takes two molecules and merges them.  This assumes that they are within a molecule each and the merging is
+ * usually done bottom-up (nodes first) and that the first molecule subsumes the second.  Molecule subsumption does
+ * not require all properties to be subsumed but merely that there are the same or greater number of unique blank
+ * nodes as subjects.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public interface MergeSubmolecules {
+    /**
+     * Merge two molecules together.
+     *
+     * @param molecule1 this is the molecule which subsumes the second.
+     * @param molecule2 the molecule to be merged (it may contain additional properties).
+     * @return the merged molecule.
+     */
     Molecule merge(Molecule molecule1, Molecule molecule2);
 
-    Molecule merge(Triple currentTriple, Molecule molecule1, Molecule molecule2);
+    /**
+     * Merge two molecules together which share a head triple.
+     *
+     * @param triple the shared triple across both molecules.
+     * @param molecule1 this is the molecule which subsumes the second.
+     * @param molecule2 the molecule to be merged (it may contain additional properties).
+     * @return the merged molecule.
+     */
+    Molecule merge(Triple triple, Molecule molecule1, Molecule molecule2);
 }

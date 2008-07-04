@@ -201,7 +201,7 @@ public class MoleculeImpl implements Molecule {
         } else {
             // For now assume there is a match with the least grounded to the head triple and therefore we are adding
             // a child molecule onto the head triple.
-            // Also we can currently on store one submolecule off of any single triple.
+            // Also we can currently only store one submolecule off of any single triple.
             subMolecules.remove(headTriple);
             SortedSet<Molecule> containedMolecules = new TreeSet<Molecule>(moleculeComparator);
             containedMolecules.add(childMolecule);

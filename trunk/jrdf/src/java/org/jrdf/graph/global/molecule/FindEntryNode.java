@@ -74,7 +74,7 @@ import org.jrdf.graph.Triple;
  * Code using this can make the decision whether the found triple is a better candidate than the starting triple.
  *
  * @author Andrew Newman
- * @version $Revision: 1226 $
+ * @version $Id$
  */
 public interface FindEntryNode {
 

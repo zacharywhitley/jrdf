@@ -75,8 +75,6 @@ import java.util.Set;
 /**
  * Finds the mapping of blank nodes between two molecules.
  *
- * @author Andrew Newman
- * @author Yuan-Fang Li
  * @version $Revision: 1226 $
  */
 public class BlankNodeMapperImpl implements BlankNodeMapper {
@@ -87,19 +85,6 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
         return map;
     }
 
-    /**
-     * Given molecules m1 and m2, try to find a blank node map for m2 inside m1, so this method isn't symmetrical.
-     * If m1's root triple size is smaller than m2's root triple size (m1 doesn't subsumes m2),
-     * an empty map is returned.
-     * <p/>
-     * Potential optimizations:
-     * 1. By recording no. of unique blank nodes on each level, the non-subsumption may be detected faster.
-     * 2. By recording no. of levels of submolecules, the non-subsumption may be detected faster.
-     *
-     * @param m1
-     * @param m2
-     * @return the populated map or empty map if there is no mapping.
-     */
     public Map<BlankNode, BlankNode> createMap(Molecule m1, Molecule m2) {
         map = new HashMap<BlankNode, BlankNode>();
         map = populateMap(m1, m2, map);
