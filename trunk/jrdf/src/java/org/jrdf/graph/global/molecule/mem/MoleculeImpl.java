@@ -61,8 +61,6 @@ package org.jrdf.graph.global.molecule.mem;
 
 import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
@@ -85,7 +83,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class MoleculeImpl implements Molecule {
-    private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     // This should be a collection of molecules for the values.
     private final SortedMap<Triple, SortedSet<Molecule>> subMolecules;
     private final MoleculeComparator moleculeComparator;
@@ -103,7 +100,7 @@ public class MoleculeImpl implements Molecule {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
         isTopLevel = true;
-        subMolecules = new TreeMap<Triple, SortedSet<Molecule>>(tripleComparator);
+        subMolecules = new TreeMap<Triple, SortedSet<Molecule>>(moleculeComparator.getTripleComparator());
     }
 
     public MoleculeImpl(MoleculeComparator newComparator, Triple... rootTriples) {
