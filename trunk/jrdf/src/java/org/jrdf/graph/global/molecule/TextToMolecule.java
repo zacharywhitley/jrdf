@@ -59,17 +59,18 @@
 
 package org.jrdf.graph.global.molecule;
 
+import org.jrdf.graph.Triple;
 import static org.jrdf.parser.ntriples.NTriplesEventReader.TRIPLE_REGEX;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.util.Stack;
 import java.util.regex.Pattern;
 
 /**
@@ -82,15 +83,22 @@ import java.util.regex.Pattern;
 public class TextToMolecule {
     private static final Pattern START_MOLECULE = Pattern.compile("\\p{Blank}*\\[\\p{Blank}*");
     private static final Pattern END_MOLECULE = Pattern.compile("\\p{Blank}*\\]\\p{Blank}*");
-    private static final MoleculeTraverser TRAVERSER = new MoleculeTraverserImpl();
+    private final RegexMatcherFactory regexMatcherFactory;
+    private final TripleParser tripleParser;
+    private final MoleculeFactory moleculeFactory;
     private LineNumberReader bufferedReader;
-    private RegexMatcherFactory regexMatcherFactory;
-    private TripleParser tripleParser;
-    private MoleculeHandler handler;
+    private Molecule currentMolecule;
+    private Triple currentTriple;
+    private Stack<Molecule> parentMolecules;
+    private Stack<Triple> parentTriples;
 
-    public TextToMolecule(final RegexMatcherFactory newRegexFactory, final TripleParser newTripleParser) {
+    public TextToMolecule(final RegexMatcherFactory newRegexFactory, final TripleParser newTripleParser,
+        final MoleculeFactory moleculeFactory) {
         this.regexMatcherFactory = newRegexFactory;
         this.tripleParser = newTripleParser;
+        this.moleculeFactory = moleculeFactory;
+        this.parentMolecules = new Stack<Molecule>();
+        this.parentTriples = new Stack<Triple>();
     }
 
     public Molecule parse(InputStream in) {
@@ -100,7 +108,7 @@ public class TextToMolecule {
     public Molecule parse(Reader reader) {
         this.bufferedReader = new LineNumberReader(reader);
         parseNext();
-        return null;
+        return currentMolecule;
     }
 
     private void parseNext() {
@@ -122,21 +130,40 @@ public class TextToMolecule {
     public void parseLine(String line) {
         final RegexMatcher startMolecule = regexMatcherFactory.createMatcher(START_MOLECULE, line);
         if (startMolecule.matches()) {
-            // create molecule
-            new String();
-//            System.err.println("New molecule: " + line);
+            handleStartMolecule();
         } else {
             final RegexMatcher tripleMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
             if (tripleMatcher.matches()) {
-                new String();
-//                System.err.println("New triple: " + line);
+                handleTriple(tripleMatcher);
             } else {
                 final RegexMatcher endMolecule = regexMatcherFactory.createMatcher(END_MOLECULE, line);
-                if (startMolecule.matches()) {
-                    new String();
-//                    System.err.println("End molecule " + line);
+                if (endMolecule.matches()) {
+                    handleEndMolecule();
                 }
             }
+        }
+    }
+
+    private void handleStartMolecule() {
+        if (currentMolecule != null) {
+            parentMolecules.push(currentMolecule);
+        }
+        if (currentTriple != null) {
+            parentTriples.push(currentTriple);
+        }
+        currentMolecule = moleculeFactory.createMolecule();
+    }
+
+    private void handleTriple(RegexMatcher tripleMatcher) {
+        currentTriple = tripleParser.parseTriple(tripleMatcher);
+        currentMolecule.add(currentTriple);
+    }
+
+    private void handleEndMolecule() {
+        Molecule subMolecule = currentMolecule;
+        if (!parentMolecules.isEmpty()) {
+            currentMolecule = parentMolecules.pop();
+            currentMolecule.add(currentTriple, subMolecule);
         }
     }
 }
