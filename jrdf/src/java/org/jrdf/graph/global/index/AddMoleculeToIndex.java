@@ -109,26 +109,8 @@ public class AddMoleculeToIndex implements MoleculeHandler {
         parentIds.push(moleculeId);
     }
 
-    /*public void handleEndContainsMolecules(Set<Molecule> newMolecules) {
-        System.err.println("end mid pid = " + moleculeId + " " + parentId);
-        Long tmpId = parentIds.pop();
-        // Check to see if we have come to the deepest level of the molecule - that is we've not pushed on a new
-        // molecule id and we've come to the end.  If we have then we need to pop that id off and get the next level
-        // up.
-        if (tmpId.equals(moleculeId) && !parentIds.isEmpty()) {
-            tmpId = parentIds.pop();
-        }
-        moleculeId = tmpId;
-        if (moleculeId == 1L) {
-            parentId = 1L;
-            parentIds.push(1L);
-        }
-        System.err.println("new end mid pid = " + moleculeId + " " + parentId);
-    }*/
-
     public void handleEndContainsMolecules(Set<Molecule> newMolecules) {
-        //System.err.println("end mid pid = " + moleculeId + " " + parentId);
-        Long tmpId = parentIds.pop();
+        parentIds.pop();
         // Check to see if we have come to the deepest level of the molecule - that is we've not pushed on a new
         // molecule id and we've come to the end.  If we have then we need to pop that id off and get the next level
         // up.
