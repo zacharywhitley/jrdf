@@ -73,8 +73,8 @@ import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
-import org.jrdf.graph.global.molecule.mem.MoleculeComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.vocabulary.RDF;
 import org.jrdf.vocabulary.XSD;
@@ -88,7 +88,7 @@ import java.net.URI;
 
 public class AddMoleculeToIndexIntegrationTest extends TestCase {
     private static final TripleComparator TRIPLE_COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
-    private static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeComparatorImpl(TRIPLE_COMPARATOR);
+    private static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(TRIPLE_COMPARATOR);
     private MoleculeJRDFFactory factory = SortedDiskGlobalJRDFFactory.getFactory();
     private MoleculeFactory molFactory = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
     private MoleculeGraph graph;
