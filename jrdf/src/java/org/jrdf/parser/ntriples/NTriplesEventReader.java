@@ -75,12 +75,15 @@ import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
 public class NTriplesEventReader implements RDFEventReader {
+    /**
+     * A regular expression for NTriples.
+     */
+    public static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
+            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
+            "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
+            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
+            "\\.\\p{Blank}*");
     private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
-    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
-        "\\.\\p{Blank}*");
 
     private final LineNumberReader bufferedReader;
     private final URI baseURI;

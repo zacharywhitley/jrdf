@@ -99,13 +99,13 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     private ObjectParser objectParser;
 
     public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph) {
-        ParserBlankNodeFactoryImpl parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
+        ParserBlankNodeFactory parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
                 graph.getElementFactory());
         return createRDFEventReader(stream, baseURI, graph, parserBlankNodeFactory);
     }
 
     public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph) {
-        ParserBlankNodeFactoryImpl parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
+        ParserBlankNodeFactory parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
                 graph.getElementFactory());
         return createRDFEventReader(reader, baseURI, graph, parserBlankNodeFactory);
     }
