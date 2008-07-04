@@ -88,7 +88,6 @@ public class AddMoleculeToIndex implements MoleculeHandler {
 
     public void handleTriple(Triple triple) {
         try {
-            //System.err.println("Adding triple: " + triple);
             Long[] quin = new Long[QUIN_SIZE];
             System.arraycopy(localizer.localizeTriple(triple), 0, quin, 0, MOLECULE_ID_INDEX);
             quin[MOLECULE_ID_INDEX] = moleculeId;
