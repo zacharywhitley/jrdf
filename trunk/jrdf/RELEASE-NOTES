@@ -1,3 +1,16 @@
+JRDF Release 0.5.5.1
+====================
+* Permanent graph support (Feature 2002188).
+* Text based serialization for RDF Molecules (Feature 2008522).
+* Helper classes to make reading and writing RDF/XML and NTriples
+ easier and made a GraphNTriplesParser (Feature 2008521, 2008398).
+* Indexes now use arrays of longs instead of maps (Feature 2007260).
+* IllegalArgumentException being thrown for empty graph pattern
+ (Bug 2002895).
+* Non-sorted graph does not pass all graph tests (Bug 2006458).
+* MoleculeStructureIndexSesame was writing incorrect number of values
+to the index (Bug 2008520).
+
 JRDF Release 0.5.5
 ==================
 * On disk and in memory molecule store (Features 2002186, 1909228,
