@@ -75,12 +75,12 @@ public class MoleculeStructureIndexSesameIntegrationTest extends AbstractMolecul
     private BTreeFactory btreeFactory;
 
     public void setUp() throws Exception {
-        super.setUp();
         btreeFactory = new BTreeFactoryImpl();
-        index = new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(HANDLER, "spomm" + 0));
+        index = new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(HANDLER, "testStructure"));
+        index.clear();
     }
 
     public void tearDown() {
-        super.tearDown();
+        index.close();
     }
 }
