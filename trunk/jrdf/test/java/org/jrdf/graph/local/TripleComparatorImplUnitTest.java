@@ -60,12 +60,20 @@
 package org.jrdf.graph.local;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 
 /**
  * TripleComparator unit test
@@ -74,10 +82,34 @@ import java.lang.reflect.Modifier;
  * @version $Revision:$
  */
 public class TripleComparatorImplUnitTest extends TestCase {
+    private JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
+    private Graph newGraph = factory.getNewGraph();
+    private GraphElementFactory elementFactory = newGraph.getElementFactory();
+    private TripleFactory tripleFactory = newGraph.getTripleFactory();
+    private TripleComparator comparator = new TripleComparatorFactoryImpl().newComparator();
+    private URIReference ref1;
+    private URIReference ref2;
+
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleComparator.class,
             TripleComparatorImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, TripleComparator.class);
         ClassPropertiesTestUtil.checkConstructor(TripleComparatorImpl.class, Modifier.PUBLIC, NodeComparator.class);
+    }
+
+    public void testComparison() throws Exception {
+        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
+        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
+        Triple triple1 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
+        Triple triple2 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1,
+            elementFactory.createBlankNode());
+        Triple triple3 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2);
+        Triple triple4 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
+        assertEquals(-1, comparator.compare(triple1, triple4));
+        assertEquals(-1, comparator.compare(triple2, triple4));
+        assertEquals(1, comparator.compare(triple1, triple2));
+        assertEquals(-1, comparator.compare(triple2, triple1));
+        assertEquals(1, comparator.compare(triple3, triple1));
+        assertEquals(-1, comparator.compare(triple1, triple3));
     }
 }

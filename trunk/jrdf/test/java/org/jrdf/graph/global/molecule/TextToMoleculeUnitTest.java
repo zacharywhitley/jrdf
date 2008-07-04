@@ -60,59 +60,70 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
+import org.jrdf.MemoryJRDFFactory;
+import org.jrdf.graph.Graph;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
+import org.jrdf.map.MemMapFactory;
+import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.LiteralParser;
+import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
+import org.jrdf.parser.ntriples.parser.NTripleUtil;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
+import org.jrdf.parser.ntriples.parser.ObjectParser;
+import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
+import org.jrdf.parser.ntriples.parser.PredicateParser;
+import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
+import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
+import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.ntriples.parser.TripleParserImpl;
+import org.jrdf.parser.ntriples.parser.URIReferenceParser;
+import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
 
-import java.util.Collections;
+import java.io.StringReader;
 
-public class MoleculeToTextUnitTest extends TestCase {
-    private static final String RESULT_1 = "\n[\n" +
-            "  _:a1 <urn:foo> <urn:foo> .\n" +
-            "]";
-    private static final String RESULT_2 = "\n[\n" +
-            "  _:a1 <urn:foo> _:a2 .\n" +
-            "  [\n" +
-            "    _:a2 <urn:bar> _:a3 .\n" +
-            "    [\n" +
-            "      _:a3 <urn:bar> <urn:bar> .\n" +
-            "      _:a3 <urn:bar> <urn:baz> .\n" +
-            "    ]\n" +
-            "    _:a2 <urn:bar> <urn:foo> .\n" +
-            "    <urn:foo> <urn:bar> _:a2 .\n" +
-            "  ]\n" +
-            "  _:a1 <urn:bar> <urn:bar> .\n" +
-            "  _:a1 <urn:foo> <urn:foo> .\n" +
-            "]";
+public class TextToMoleculeUnitTest extends TestCase {
     private static final MoleculeTraverser TRAVERSER = new MoleculeTraverserImpl();
-    private MoleculeHandler handler;
+    private Graph graph = MemoryJRDFFactory.getFactory().getNewGraph();
 
-    public void testSingleMolcule() throws GraphException {
-        Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1), Collections.<Triple>emptySet(),
-            Collections.<Triple>emptySet());
-        checkMolecule(molecule, RESULT_1);
-    }
-
-    public void testMultlevelMolcule() throws GraphException {
+    public void testOneLevelMolecule() {
         Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
             asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
-        checkMolecule(molecule, RESULT_2);
-    }
-
-    private void checkMolecule(Molecule molecule, String expectedResult) {
-        StringBuilder builder = new StringBuilder();
-        handler = new MoleculeToText(builder);
-        TRAVERSER.traverse(molecule, handler);
-        assertEquals(expectedResult, builder.toString());
+        final StringBuilder result = new StringBuilder();
+        final MoleculeHandler moleculeToText = new MoleculeToText(result);
+        TRAVERSER.traverse(molecule, moleculeToText);
+        String toParse = result.toString();
+        RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+        NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
+        URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory(), nTripleUtil);
+        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
+                graph.getElementFactory());
+        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
+        LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
+        LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), literalMatcher);
+        final SubjectParser subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
+        final PredicateParser predicateParser = new PredicateParserImpl(referenceParser);
+        final ObjectParser objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
+        final TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
+                graph.getTripleFactory());
+        final TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser);
+        textToMolecule.parse(new StringReader(toParse));
     }
 }

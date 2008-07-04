@@ -59,60 +59,84 @@
 
 package org.jrdf.graph.global.molecule;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R2;
+import static org.jrdf.parser.ntriples.NTriplesEventReader.TRIPLE_REGEX;
+import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
-import static org.jrdf.util.test.SetUtil.asSet;
 
-import java.util.Collections;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.Reader;
+import java.util.regex.Pattern;
 
-public class MoleculeToTextUnitTest extends TestCase {
-    private static final String RESULT_1 = "\n[\n" +
-            "  _:a1 <urn:foo> <urn:foo> .\n" +
-            "]";
-    private static final String RESULT_2 = "\n[\n" +
-            "  _:a1 <urn:foo> _:a2 .\n" +
-            "  [\n" +
-            "    _:a2 <urn:bar> _:a3 .\n" +
-            "    [\n" +
-            "      _:a3 <urn:bar> <urn:bar> .\n" +
-            "      _:a3 <urn:bar> <urn:baz> .\n" +
-            "    ]\n" +
-            "    _:a2 <urn:bar> <urn:foo> .\n" +
-            "    <urn:foo> <urn:bar> _:a2 .\n" +
-            "  ]\n" +
-            "  _:a1 <urn:bar> <urn:bar> .\n" +
-            "  _:a1 <urn:foo> <urn:foo> .\n" +
-            "]";
+/**
+ * Parses a string represetation of a molecule that follows basic NTriples escaping an turns it into a Molecule object.
+ * This is to be used primarily for serialization or similar purposes.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
+public class TextToMolecule {
+    private static final Pattern START_MOLECULE = Pattern.compile("\\p{Blank}*\\[\\p{Blank}*");
+    private static final Pattern END_MOLECULE = Pattern.compile("\\p{Blank}*\\]\\p{Blank}*");
     private static final MoleculeTraverser TRAVERSER = new MoleculeTraverserImpl();
+    private LineNumberReader bufferedReader;
+    private RegexMatcherFactory regexMatcherFactory;
+    private TripleParser tripleParser;
     private MoleculeHandler handler;
 
-    public void testSingleMolcule() throws GraphException {
-        Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1), Collections.<Triple>emptySet(),
-            Collections.<Triple>emptySet());
-        checkMolecule(molecule, RESULT_1);
+    public TextToMolecule(final RegexMatcherFactory newRegexFactory, final TripleParser newTripleParser) {
+        this.regexMatcherFactory = newRegexFactory;
+        this.tripleParser = newTripleParser;
     }
 
-    public void testMultlevelMolcule() throws GraphException {
-        Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
-            asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
-        checkMolecule(molecule, RESULT_2);
+    public Molecule parse(InputStream in) {
+        return parse(new InputStreamReader(in));
     }
 
-    private void checkMolecule(Molecule molecule, String expectedResult) {
-        StringBuilder builder = new StringBuilder();
-        handler = new MoleculeToText(builder);
-        TRAVERSER.traverse(molecule, handler);
-        assertEquals(expectedResult, builder.toString());
+    public Molecule parse(Reader reader) {
+        this.bufferedReader = new LineNumberReader(reader);
+        parseNext();
+        return null;
+    }
+
+    private void parseNext() {
+        String line = getLine();
+        while (line != null) {
+            parseLine(line);
+            line = getLine();
+        }
+    }
+
+    private String getLine() {
+        try {
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void parseLine(String line) {
+        final RegexMatcher startMolecule = regexMatcherFactory.createMatcher(START_MOLECULE, line);
+        if (startMolecule.matches()) {
+            // create molecule
+            new String();
+//            System.err.println("New molecule: " + line);
+        } else {
+            final RegexMatcher tripleMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
+            if (tripleMatcher.matches()) {
+                new String();
+//                System.err.println("New triple: " + line);
+            } else {
+                final RegexMatcher endMolecule = regexMatcherFactory.createMatcher(END_MOLECULE, line);
+                if (startMolecule.matches()) {
+                    new String();
+//                    System.err.println("End molecule " + line);
+                }
+            }
+        }
     }
 }

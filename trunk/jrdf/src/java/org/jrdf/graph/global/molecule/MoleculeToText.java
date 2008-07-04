@@ -79,10 +79,12 @@ import java.util.Set;
  * @version $Id$
  */
 public class MoleculeToText implements MoleculeHandler, TypedNodeVisitor {
+    private static final String BLANK_NODE_PREFIX = "_:";
     private static final String SPACE = " ";
     private static final String MOLECULE_START = "[";
     private static final String MOLECULE_END = "]";
     private static final String LF = "\n";
+    private static final String FULL_STOP = ".";
     private Map<BlankNode, Long> visitedBlankNodes = new HashMap<BlankNode, Long>();
     private long currentId;
     private StringBuilder builder;
@@ -101,6 +103,8 @@ public class MoleculeToText implements MoleculeHandler, TypedNodeVisitor {
         appendNode(triple.getPredicate());
         builder.append(SPACE);
         appendNode(triple.getObject());
+        builder.append(SPACE);
+        builder.append(FULL_STOP);
     }
 
     private void appendNode(Node node) {
@@ -132,13 +136,15 @@ public class MoleculeToText implements MoleculeHandler, TypedNodeVisitor {
     }
 
     public void visitBlankNode(BlankNode blankNode) {
+        long nodeId;
         if (visitedBlankNodes.keySet().contains(blankNode)) {
-            nodeAsString = "_:" + visitedBlankNodes.get(blankNode);
+            nodeId = visitedBlankNodes.get(blankNode);
         } else {
             currentId++;
             visitedBlankNodes.put(blankNode, currentId);
-            nodeAsString = "_:" + currentId;
+            nodeId = currentId;
         }
+        nodeAsString = BLANK_NODE_PREFIX + "a" + nodeId;
     }
 
     public void visitURIReference(URIReference uriReference) {

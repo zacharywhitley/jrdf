@@ -92,8 +92,7 @@ public class MoleculeImpl implements Molecule {
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
     protected boolean isTopLevel;
 
-    private MoleculeImpl(MoleculeComparator newComparator, SortedMap<Triple,
-        SortedSet<Molecule>> newSubMolecules) {
+    private MoleculeImpl(MoleculeComparator newComparator, SortedMap<Triple, SortedSet<Molecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
         subMolecules = newSubMolecules;
