@@ -88,6 +88,7 @@ public class AddMoleculeToIndex implements MoleculeHandler {
 
     public void handleTriple(Triple triple) {
         try {
+            //System.err.println("Adding triple: " + triple);
             Long[] quin = new Long[QUIN_SIZE];
             System.arraycopy(localizer.localizeTriple(triple), 0, quin, 0, MOLECULE_ID_INDEX);
             quin[MOLECULE_ID_INDEX] = moleculeId;
@@ -104,18 +105,36 @@ public class AddMoleculeToIndex implements MoleculeHandler {
     public void handleStartContainsMolecules(Set<Molecule> newMolecules) {
         parentId = moleculeId;
         moleculeId = localizer.getNextMoleculeId();
+        //System.err.println("start mid pid = " + moleculeId + " " + parentId);
         parentIds.push(moleculeId);
     }
 
-    public void handleEndContainsMolecules(Set<Molecule> newMolecules) {
+    /*public void handleEndContainsMolecules(Set<Molecule> newMolecules) {
+        System.err.println("end mid pid = " + moleculeId + " " + parentId);
         Long tmpId = parentIds.pop();
         // Check to see if we have come to the deepest level of the molecule - that is we've not pushed on a new
         // molecule id and we've come to the end.  If we have then we need to pop that id off and get the next level
         // up.
-        if (tmpId.equals(moleculeId)) {
+        if (tmpId.equals(moleculeId) && !parentIds.isEmpty()) {
             tmpId = parentIds.pop();
         }
         moleculeId = tmpId;
+        if (moleculeId == 1L) {
+            parentId = 1L;
+            parentIds.push(1L);
+        }
+        System.err.println("new end mid pid = " + moleculeId + " " + parentId);
+    }*/
+
+    public void handleEndContainsMolecules(Set<Molecule> newMolecules) {
+        //System.err.println("end mid pid = " + moleculeId + " " + parentId);
+        Long tmpId = parentIds.pop();
+        // Check to see if we have come to the deepest level of the molecule - that is we've not pushed on a new
+        // molecule id and we've come to the end.  If we have then we need to pop that id off and get the next level
+        // up.
+        moleculeId = parentIds.pop();
         parentId = parentIds.peek();
+        parentIds.push(moleculeId);
+        //System.err.println("new end mid pid = " + moleculeId + " " + parentId);
     }
 }

@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.global.molecule;
 
+import org.jrdf.graph.TripleComparator;
+
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -70,4 +72,5 @@ import java.util.Comparator;
  * @version $Id$
  */
 public interface MoleculeComparator extends Comparator<Molecule>, Serializable {
+    TripleComparator getTripleComparator();
 }

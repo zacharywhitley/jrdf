@@ -89,4 +89,8 @@ public class MoleculeHeadTripleComparatorImpl implements MoleculeComparator {
             return tripleComparator.compare(headTriple1, headTriple2);
         }
     }
+
+    public TripleComparator getTripleComparator() {
+        return tripleComparator;
+    }
 }
