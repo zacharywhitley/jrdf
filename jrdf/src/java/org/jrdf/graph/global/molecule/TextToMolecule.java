@@ -160,10 +160,11 @@ public class TextToMolecule {
     }
 
     private void handleEndMolecule() {
-        Molecule subMolecule = currentMolecule;
         if (!parentMolecules.isEmpty()) {
+            Molecule subMolecule = currentMolecule;
+            Triple subMoleculeTriple = parentTriples.pop();
             currentMolecule = parentMolecules.pop();
-            currentMolecule.add(currentTriple, subMolecule);
+            currentMolecule.add(subMoleculeTriple, subMolecule);
         }
     }
 }

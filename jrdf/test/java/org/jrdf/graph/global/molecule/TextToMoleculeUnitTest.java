@@ -77,6 +77,7 @@ import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
@@ -105,36 +106,47 @@ import static org.jrdf.util.test.SetUtil.asSet;
 import java.io.StringReader;
 
 public class TextToMoleculeUnitTest extends TestCase {
-    private static final MoleculeTraverser TRAVERSER = new MoleculeTraverserImpl();
+    private static final TripleComparator COMPARATOR = new GroundedTripleComparatorFactoryImpl().newComparator();
+    public static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(COMPARATOR);
     private Graph graph = MemoryJRDFFactory.getFactory().getNewGraph();
 
-    public void testOneLevelMolecule() {
-        Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
+    public void testManyLevelMoleculeSerialization() {
+        Molecule moleculeToWrite = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
             asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
-        System.err.println("Parsing: " + molecule);
+        String toParse = getTextOfMolecule(moleculeToWrite);
+        final TripleParser tripleParser = getTripleParser();
+        final MoleculeFactory factory = getMoleculeFactory();
+        final TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, factory);
+        final Molecule molecule = textToMolecule.parse(new StringReader(toParse));
+        assertTrue(MOLECULE_COMPARATOR.compare(moleculeToWrite, molecule) == 0);
+    }
+
+    private String getTextOfMolecule(Molecule molecule) {
         final StringBuilder result = new StringBuilder();
         final MoleculeHandler moleculeToText = new MoleculeToText(result);
-        TRAVERSER.traverse(molecule, moleculeToText);
-        String toParse = result.toString();
-        RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
-        URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory(), nTripleUtil);
-        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
+        new MoleculeTraverserImpl().traverse(molecule, moleculeToText);
+        return result.toString();
+    }
+
+    private TripleParser getTripleParser() {
+        final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+        final NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
+        final URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory(), nTripleUtil);
+        final ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
                 graph.getElementFactory());
-        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
-        LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
-        LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), literalMatcher);
+        final BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
+        final LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
+        final LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), literalMatcher);
         final SubjectParser subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
         final PredicateParser predicateParser = new PredicateParserImpl(referenceParser);
         final ObjectParser objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
-        final TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
-                graph.getTripleFactory());
+        return new TripleParserImpl(subjectParser, predicateParser, objectParser, graph.getTripleFactory());
+    }
+
+    private MoleculeFactory getMoleculeFactory() {
         final TripleComparator tripleComparator = new TripleComparatorFactoryImpl().newComparator();
         final TripleComparator comparator = new GroundedTripleComparatorImpl(tripleComparator);
         final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
-        final MoleculeFactoryImpl factory = new MoleculeFactoryImpl(moleculeComparator);
-        final TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, factory);
-        final Molecule molecule1 = textToMolecule.parse(new StringReader(toParse));
-        System.err.println("Got: " + molecule1);
+        return new MoleculeFactoryImpl(moleculeComparator);
     }
 }
