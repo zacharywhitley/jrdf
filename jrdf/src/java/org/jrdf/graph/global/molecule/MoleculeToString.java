@@ -63,6 +63,13 @@ import org.jrdf.graph.Triple;
 
 import java.util.Set;
 
+/**
+ * Creates a simple string representation of a molecule.  This is primarily for debugging or other simple purposes.
+ * For serialization {@see org.jrdf.graph.global.molecule.MoleculeToText}.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public class MoleculeToString implements MoleculeHandler {
     private StringBuilder builder;
     private int level;

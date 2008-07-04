@@ -69,8 +69,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.molecule.mem.MoleculeComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 
 import java.net.URI;
@@ -81,7 +81,8 @@ public class LocalGraphTestUtil {
     private static final GraphElementFactory ELEMENT_FACTORY = GRAPH.getElementFactory();
     private static final TripleFactory TRIPLE_FACTORY = GRAPH.getTripleFactory();
     private static final TripleComparator TRIPLE_COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
-    private static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeComparatorImpl(TRIPLE_COMPARATOR);
+    private static final MoleculeComparator MOLECULE_COMPARATOR =
+            new MoleculeHeadTripleComparatorImpl(TRIPLE_COMPARATOR);
     public static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
     public static final URIReference REF1;
     public static final URIReference REF2;

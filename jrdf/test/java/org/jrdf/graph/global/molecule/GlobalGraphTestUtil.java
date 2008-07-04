@@ -69,8 +69,8 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
-import org.jrdf.graph.global.molecule.mem.MoleculeComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
+import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.HashSet;
@@ -120,7 +120,7 @@ public class GlobalGraphTestUtil {
     public static final Triple b3r1r3 = new TripleImpl(BNODE3, REF1, REF3);
     public static final Triple b3r2r3 = new TripleImpl(BNODE3, REF2, REF3);
     public static final Triple b3r3r3 = new TripleImpl(BNODE3, REF3, REF3);
-    public static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeComparatorImpl(COMPARATOR);
+    public static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(COMPARATOR);
     private static final TripleComparator TRIPLE_COMPARATOR = new GroundedTripleComparatorFactoryImpl().newComparator();
     public static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
     private static final MergeMolecules MERGE_MOLECULES = new MergeMoleculesImpl();

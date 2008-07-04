@@ -63,10 +63,33 @@ import org.jrdf.graph.Triple;
 
 import java.util.Set;
 
+/**
+ * Allows the creation of a molecule.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public interface MoleculeFactory {
+    /**
+     * Create an empty molecule.
+     *
+     * @return an empty molecule.
+     */
     Molecule createMolecule();
 
+    /**
+     * Create a molecule with the given triples as root triples.
+     *
+     * @param triples to add to the molecule.
+     * @return the new molecule.
+     */
     Molecule createMolecule(Triple... triples);
 
+    /**
+     * Create a molecule with the given triples as root triples.
+     *
+     * @param triples to add to the molecule.
+     * @return the new molecule.
+     */
     Molecule createMolecule(Set<Triple> triples);
 }

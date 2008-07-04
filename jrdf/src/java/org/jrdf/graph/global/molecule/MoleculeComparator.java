@@ -62,5 +62,12 @@ package org.jrdf.graph.global.molecule;
 import java.io.Serializable;
 import java.util.Comparator;
 
+/**
+ * Allows molecules to be sorted.  Molecules typically have an ordering based on the head triples of the triples and
+ * submolecules they contain.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public interface MoleculeComparator extends Comparator<Molecule>, Serializable {
 }

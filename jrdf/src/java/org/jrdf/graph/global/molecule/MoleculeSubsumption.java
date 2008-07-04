@@ -59,6 +59,21 @@
 
 package org.jrdf.graph.global.molecule;
 
+/**
+ * Allows the determination of whether a molecule subsumes (has the same or greater number of submolecule with the same
+ * linking triples).
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public interface MoleculeSubsumption {
+    /**
+     * Returns true if the first molecule subsumes the second.  If true indicates that molecule 1 can be safely
+     * merged with molecule 2.
+     *
+     * @param molecule1 the first molecule to compare.
+     * @param molecule2 the second molecule to compare.
+     * @return true if molecule1 subsumes molecule2.
+     */
     boolean subsumes(Molecule molecule1, Molecule molecule2);
 }

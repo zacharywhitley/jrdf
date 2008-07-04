@@ -57,34 +57,14 @@
  *
  */
 
-package org.jrdf.graph.global.molecule.mem;
+package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.molecule.Molecule;
-import org.jrdf.graph.global.molecule.MoleculeComparator;
-
-// TODO AN Fix this comparison or use a different comparator in NewNaiveGraphDecomposerImpl.
-public class MoleculeComparatorImpl implements MoleculeComparator {
-    private static final long serialVersionUID = 3376402602482439640L;
-    private TripleComparator tripleComparator;
-
-    private MoleculeComparatorImpl() {
-    }
-
-    public MoleculeComparatorImpl(TripleComparator newTripleComparator) {
-        tripleComparator = newTripleComparator;
-    }
-
-    public int compare(Molecule molecule, Molecule molecule1) {
-        if (molecule == NullMolecule.NULL_MOLECULE) {
-            return -1;
-        } else if (molecule1 == NullMolecule.NULL_MOLECULE) {
-            return 1;
-        } else {
-            Triple headTriple = molecule.getHeadTriple();
-            Triple headTriple1 = molecule1.getHeadTriple();
-            return tripleComparator.compare(headTriple, headTriple1);
-        }
-    }
+/**
+ * Takes two molecules and merges root triples.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
+public interface MergeMolecules {
+    Molecule merge(Molecule m1, Molecule m2);
 }

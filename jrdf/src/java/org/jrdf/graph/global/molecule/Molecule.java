@@ -65,34 +65,149 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 
+/**
+ * A molecule is a container of a subgraph of RDF triples.  It contains a collection of triples that share some common
+ * chain of blank nodes.  Molecules consist of a set of root triples.  These share a blank node - typically the
+ * subject but it can be the object as well.  For example, _1 p o, s p2 _1 is a simple molecule.
+ *
+ * The highest in this set of root triples (as defined by some ordering) is the head triple.  The typical ordering is
+ * most grounded (fewest blank nodes), followed by URIs, Literals and then alphabetical ordering.
+ *
+ *  The chain of blank nodes creates a molecule that contains submolecules.  If a triple in the root has a blank node
+ * as its object it is a linking triple.  This is how the chains to submolecules are created.  From one molecule to
+ * the next the object and subject nodes are swapped.  For example, the linking triple _1 p _2 will link to a triple
+ * in a submolecule _2 p o.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public interface Molecule {
+    /**
+     * Add a triple to the root set of triples.
+     *
+     * The molecule may not be returned in future versions (and current implementations just mutate as well as return
+     * a copy).
+     *
+     * @param triple the triple to add.
+     * @return a new molecule with the added triple.
+     */
     Molecule add(Triple triple);
 
-    Molecule add(Triple triple, Molecule newMolecule);
+    /**
+     * Add a submolecule to a molecule using the given root triple.
+     *
+     * The molecule may not be returned in future versions (and current implementations just mutate as well as return
+     * a copy).
+     *
+     * @param linkingTriple the root triple to hang the submolecule off of.
+     * @param subMolecule the submolecule to add.
+     * @return a new molecule with the submolecule added.
+     */
+    Molecule add(Triple linkingTriple, Molecule subMolecule);
 
-    Molecule add(Triple triple, Triple newTriple);
+    /**
+     * Add a triple to a submolecule which has the given linking triple.
+     *
+     * The molecule may not be returned in future versions (and current implementations just mutate as well as return
+     * a copy).
+     *
+     * @param linkingTriple the linking triple.
+     * @param subMoleculeTriple the triple of the submolecule.
+     * @return a new molecule with the submolecule added.
+     */
+    Molecule add(Triple linkingTriple, Triple subMoleculeTriple);
 
-    Molecule add(MergeSubmolecules merger, Molecule childMolecule);
-
+    /**
+     * Checks for existence of a triple in the root triples.
+     *
+     * @param triple the triple to check for existance.
+     * @return if the triple exists in the root triple.
+     */
     boolean contains(Triple triple);
 
+    /**
+     * Returns the highest triple (as defined by some ordering).  Typically, this is the most grounded (least number
+     * of blank nodes) and alphabetically highest triple in the root triples.
+     *
+     * @return the highest, by order, triple.
+     */
     Triple getHeadTriple();
 
+    /**
+     * Returns an iterator of all the triples in the root set.
+     *
+     * @return an iterator of all the triples in the root set.
+     */
     Iterator<Triple> getRootTriples();
 
-    SortedSet<Molecule> getSubMolecules(Triple rootTriple);
-
-    void specialAdd(Molecule molecule);
-
-    void remove(Triple triple);
-
-    int size();
-
+    /**
+     * Creates an (usually) in memory version of the root set of triples.
+     *
+     * @return the root set of triples.
+     */
     Set<Triple> getRootTriplesAsSet();
 
+    /**
+     * Returns a set of submolecules for a given root triple.
+     *
+     * @param rootTriple the root triple to use to get the submolecules.
+     * @return a set of submolecules for a given root triple.
+     */
+    SortedSet<Molecule> getSubMolecules(Triple rootTriple);
+
+    /**
+     * Remove a triple from the root set of triples.
+     *
+     * @param triple the triple to remove.
+     */
+    void remove(Triple triple);
+
+    /**
+     * Returns the number of triples in the molecule.
+     *
+     * @return the number of triples in the molecule.
+     */
+    int size();
+
+    /**
+     * Returns true if this molecule has no parent molecule (it's not a submolecule).
+     *
+     * @return if this molecule has no parent molecule (it's not a submolecule).
+     */
     boolean isTopLevelMolecule();
 
-    boolean removeMolecule(Triple triple, Molecule molecule);
+    /**
+     * Adds a molecule based on head triple matching.  If the head triples of this molecule and the one to be added
+     * matches it takes the submolecules and adds it to the current head triple's submolecule.  Otherwise, if the head
+     * triples don't match, it just adds the submolecule to the head triple's submolecule with no merging.
+     *
+     * This maybe removed in the future.
+     *
+     * @param merger the code which merges the two submolecules together.
+     * @param subMolecule the submolecule to add.
+     * @return a new molecule with the submolecule added.
+     */
+    Molecule add(MergeSubmolecules merger, Molecule subMolecule);
+
+    /**
+     * Copies the top level (from the root triples) of the given molecule into this molecule.
+     *
+     * This maybe removed in the future.
+     *
+     * @param molecule the molecule to add to this one.
+     */
+    void specialAdd(Molecule molecule);
+
+    /**
+     * Removes the submolecule from the triple.  The set of submolecules must contain be equal to the given molecule.
+     *
+     * This maybe removed in the future.
+     *
+     * @param triple The triple which contains the submolecules.
+     * @param subMolecule The submolecule to remove.
+     * @return if the submolecule was removed.
+     */
+    boolean removeMolecule(Triple triple, Molecule subMolecule);
 
     Iterator<Triple> iterator();
 }

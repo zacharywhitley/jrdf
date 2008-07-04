@@ -71,16 +71,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Create a string represetation of a molecule that follows basic NTriples escaping.  This is to be used primarily
+ * for serialization or similar purposes.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public class MoleculeToText implements MoleculeHandler, TypedNodeVisitor {
+    private static final String SPACE = " ";
+    private static final String MOLECULE_START = "[";
+    private static final String MOLECULE_END = "]";
+    private static final String LF = "\n";
     private Map<BlankNode, Long> visitedBlankNodes = new HashMap<BlankNode, Long>();
     private long currentId;
     private StringBuilder builder;
     private String nodeAsString;
     private int level;
-    private static final String LF = "\n";
-    private static final String SPACE = " ";
-    private static final String MOLECULE_START = "[";
-    private static final String MOLECULE_END = "]";
 
     public MoleculeToText(StringBuilder newBuilder) {
         this.builder = newBuilder;

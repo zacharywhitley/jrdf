@@ -69,6 +69,9 @@ import java.util.Set;
  * handleStartContainsMolecules is called which has the set of molecules (one molecule that contains _1 p _3).  Then,
  * handleTriple is called with _1 p _3.  Then handleEndContainsMolecules is called with the same set of molecules.  And
  * so on...
+ *
+ * @author Andrew Newman
+ * @version $Id$
  */
 public interface MoleculeHandler {
     /**

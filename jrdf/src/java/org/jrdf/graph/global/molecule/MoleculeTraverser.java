@@ -69,6 +69,9 @@ package org.jrdf.graph.global.molecule;
  *
  * Implementations may want to track the level of the molecule that they are currently in.  So having a depth to the
  * handleContainsMolecules method is the way to do this.
+ *
+ * @author Andrew Newman
+ * @version $Id$
  */
 public interface MoleculeTraverser {
     void traverse(Molecule molecule, MoleculeHandler handler);

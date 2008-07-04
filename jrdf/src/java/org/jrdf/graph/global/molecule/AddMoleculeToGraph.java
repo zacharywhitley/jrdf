@@ -65,6 +65,13 @@ import org.jrdf.graph.Triple;
 
 import java.util.Set;
 
+/**
+ * This takes a molecule and adds all the triples to a normal Graph.  This is the opposite of
+ * {@see org.jrdf.graph.global.molecule.GraphDecomposer}.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public class AddMoleculeToGraph implements MoleculeHandler {
     private final Graph graph;
 
