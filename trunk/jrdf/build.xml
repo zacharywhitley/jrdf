@@ -12,7 +12,7 @@
 
     <target name="checkstyle">
         <checkstyle config="${conf.dir}/checkstyle.xml">
-            <fileset dir="${prod.src.dir}" excludes="com/**/*"/>
+            <fileset dir="${prod.src.dir}"/>
         </checkstyle>
     </target>
 
