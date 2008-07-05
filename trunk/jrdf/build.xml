@@ -109,6 +109,7 @@
                 <attribute name="Main-Class" value="org.jrdf.gui.UrqlGui"/>
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
+            <fileset dir="${prod.classes.dir}"/>
         </jar>
 
         <!-- Copy required lib jars to ./lib/* -->
