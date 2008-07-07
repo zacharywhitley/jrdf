@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.EntryIteratorOneFixedOneArray;
 
 import static java.util.Arrays.asList;
 import java.util.HashSet;
@@ -164,12 +165,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         return 0L;
     }
 
-    public Set<Long> findChildIDs(Long mid) {
-        final ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(mid);
-        Set<Long> set = new HashSet<Long>();
-        while (subIndex.hasNext()) {
-            set.add(subIndex.next()[0]);
-        }
-        return set;
+    public ClosableIterator<Long> findChildIDs(Long mid) {
+        return new EntryIteratorOneFixedOneArray(structureIndex.getSubIndex(mid));
     }
 }
