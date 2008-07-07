@@ -74,7 +74,7 @@ import java.util.Stack;
 import java.util.regex.Pattern;
 
 /**
- * Parses a string represetation of a molecule that follows basic NTriples escaping an turns it into a Molecule object.
+ * Parses a string represetation of a molecule that follows basic NTriples escaping and turns it into a Molecule object.
  * This is to be used primarily for serialization or similar purposes.
  *
  * @author Andrew Newman
@@ -97,8 +97,14 @@ public class TextToMolecule {
         this.regexMatcherFactory = newRegexFactory;
         this.tripleParser = newTripleParser;
         this.moleculeFactory = moleculeFactory;
+        reset();
+    }
+
+    public void reset() {
         this.parentMolecules = new Stack<Molecule>();
         this.parentTriples = new Stack<Triple>();
+        currentMolecule = null;
+        currentTriple = null;
     }
 
     public Molecule parse(InputStream in) {
