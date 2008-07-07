@@ -121,8 +121,9 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         Set<Long> mids = new HashSet<Long>();
         mids.add(headTripleMid);
         deleteChildMolecules(mids);
-        final Set<Long[]> spos = readableIndex.findTriplesForMid(1L, headTripleMid);
-        for (Long[] spo : spos) {
+        ClosableIterator<Long[]> iterator = readableIndex.findTriplesForMid(1L, headTripleMid);
+        while (iterator.hasNext()) {
+            Long[] spo = iterator.next();
             Long[] quin = new Long[5];
             System.arraycopy(spo, 0, quin, 0, 3);
             quin[3] = headTripleMid;
@@ -134,14 +135,16 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     private void deleteChildMolecules(Set<Long> mids) throws GraphException {
         Set<Long> newMids = new HashSet<Long>();
         for (Long pid : mids) {
-            final Set<Long[]> spoms = readableIndex.findTriplesForPid(pid);
-            for (Long[] spom : spoms) {
+            final ClosableIterator<Long[]> spoms = readableIndex.findTriplesForPid(pid);
+            while (spoms.hasNext()) {
+                Long[] spom = spoms.next();
                 newMids.add(spom[3]);
                 Long[] quin = new Long[5];
                 System.arraycopy(spom, 0, quin, 0, 4);
                 quin[4] = pid;
                 writableIndex.remove(quin);
             }
+            spoms.close();
         }
         if (!newMids.isEmpty()) {
             deleteChildMolecules(newMids);

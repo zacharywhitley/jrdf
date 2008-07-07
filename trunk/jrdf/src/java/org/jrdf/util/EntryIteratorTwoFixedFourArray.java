@@ -57,60 +57,40 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.util;
 
-import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.btree.RecordIteratorHelper.*;
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
 
-import java.io.IOException;
-import java.util.NoSuchElementException;
+public class EntryIteratorTwoFixedFourArray implements ClosableIterator<Long[]> {
+    private ClosableIterator<Long[]> subSubIndex;
+    private Long mid;
+    private static final int QUAD = 4;
+    private static final int THREE = 3;
 
-public class EntryIteratorTwoFixedThreeArray implements ClosableIterator<Long[]> {
-    private static final int QUINS = 5;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-
-    public EntryIteratorTwoFixedThreeArray(long newFirst, long newSecond, BTree newBTree) {
-        try {
-            this.iterator = getIterator(newBTree, newFirst, newSecond, 0L, 0L, 0L);
-            this.currentValues = iterator.next();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public EntryIteratorTwoFixedFourArray(ClosableIterator<Long[]> index, Long mid) {
+        this.subSubIndex = index;
+        this.mid = mid;
     }
 
     public boolean hasNext() {
-        return currentValues != null;
+        return subSubIndex.hasNext();
     }
 
     public Long[] next() {
-        // Current values null then we are at the end.
-        if (currentValues == null) {
-            throw new NoSuchElementException();
-        }
-        Long[] returnValues = ByteHandler.fromBytes(currentValues, QUINS);
-        getNextValues();
-        return new Long[]{returnValues[2], returnValues[QUINS - 2], returnValues[QUINS - 1]};
+        final Long[] longs = new Long[QUAD];
+        System.arraycopy(subSubIndex.next(), 0, longs, 0, THREE);
+        longs[THREE] = mid;
+        return longs;
     }
 
     public void remove() {
-        throw new UnsupportedOperationException("Cannot remove values - read only");
-    }
-
-    private void getNextValues() {
-        try {
-            currentValues = iterator.next();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        throw new UnsupportedOperationException("Cannot remove values from structure index, read-only.");
     }
 
     public boolean close() {
-        try {
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+        return subSubIndex.close();
     }
 }
