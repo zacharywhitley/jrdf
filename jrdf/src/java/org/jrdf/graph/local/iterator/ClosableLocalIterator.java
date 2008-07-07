@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -66,7 +66,7 @@ import org.jrdf.util.ClosableIterator;
  * An iterator that allows you to determine if an iterator comes from the in memory graph.
  *
  * @author Andrew Newman
- * @version $Revision: 1806 $
+ * @version $Revision$
  */
 public interface ClosableLocalIterator<Triple> extends ClosableIterator<Triple> {
 }
