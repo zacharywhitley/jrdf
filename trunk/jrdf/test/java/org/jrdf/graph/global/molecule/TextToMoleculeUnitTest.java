@@ -63,6 +63,7 @@ import junit.framework.TestCase;
 import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
@@ -111,6 +112,10 @@ public class TextToMoleculeUnitTest extends TestCase {
     private static final TripleComparator TRIPLE_COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
     private static final TripleComparator COMPARATOR = new GroundedTripleComparatorImpl(TRIPLE_COMPARATOR);
     private static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(COMPARATOR);
+
+    private static final TripleComparator GLOBAL_TRIPLE_COMPARATOR = new GroundedTripleComparatorFactoryImpl().newComparator();
+    private static final MoleculeComparator GLOBAL_MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(GLOBAL_TRIPLE_COMPARATOR);
+
     private static final MoleculeFactoryImpl FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
 
     public void setUp() throws Exception {
@@ -134,23 +139,21 @@ public class TextToMoleculeUnitTest extends TestCase {
     public void testOneLevelMolecule() {
         Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1, B1R2R2, B1R1B2),
                 asSet(R1R2B2, B2R2R1, B2R2B3), asSet(B3R2R3, B3R2R2));
-        System.err.println("Parsing: " + molecule);
         final StringBuilder result = new StringBuilder();
         final MoleculeHandler moleculeToText = new MoleculeToText(result);
         traverser.traverse(molecule, moleculeToText);
         String toParse = result.toString();
         final Molecule molecule1 = textToMolecule.parse(new StringReader(toParse));
-        System.err.println("Got: " + molecule1);
+        assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(molecule, molecule1));
     }
 
     public void testSimpleMolecule() {
         Molecule molecule = createMultiLevelMolecule(asSet(B1R1R1), asSet(B1R1B2), asSet(B2R2R1));
-        System.err.println("Parsing: " + molecule);
         final StringBuilder result = new StringBuilder();
         final MoleculeHandler moleculeToText = new MoleculeToText(result);
         traverser.traverse(molecule, moleculeToText);
         final String text = result.toString();
         Molecule molecule1 = textToMolecule.parse(new StringReader(text));
-        System.err.println("got: " + molecule1);
+        assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(molecule, molecule1));
     }
 }
