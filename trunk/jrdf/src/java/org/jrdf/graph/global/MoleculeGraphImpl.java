@@ -84,6 +84,7 @@ import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.LongIndexToMoleculeIterator;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -269,15 +270,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         }
     }
 
-    public Iterator<Molecule> iterator() throws GraphException {
-        ClosableIterator<Long> mids = readableIndex.findChildIDs(1L);
-        Set<Molecule> set = new HashSet<Molecule>();
-        while (mids.hasNext()) {
-            Long mid = mids.next();
-            Molecule molecule = handlerImpl.createMolecule(1L, mid);
-            set.add(molecule);
-        }
-        mids.close();
-        return set.iterator();
+    public ClosableIterator<Molecule> iterator() throws GraphException {
+        return new LongIndexToMoleculeIterator(readableIndex.findChildIDs(1L), handlerImpl);
     }
 }

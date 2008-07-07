@@ -59,24 +59,39 @@
 
 package org.jrdf.util;
 
-/**
+/** Takes a quad long array and returns the 1st index.
  * @author Yuan-Fang Li
  * @version :$
  */
 
 public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
     private ClosableIterator<Long[]> quadIterator;
+    private Long currentMid = -1L;
 
     public EntryIteratorOneFixedOneArray(ClosableIterator<Long[]> quads) {
         quadIterator = quads;
+        currentMid = -1L;
     }
 
     public boolean hasNext() {
-        return quadIterator.hasNext();
+        final boolean hasNext = quadIterator.hasNext();
+        if (hasNext) {
+            Long tmpMid = currentMid;
+            while (quadIterator.hasNext() && tmpMid == currentMid) {
+                tmpMid = quadIterator.next()[0];
+            }
+            if (tmpMid == currentMid) {
+                return false;
+            } else {
+                currentMid = tmpMid;
+                return true;
+            }
+        }
+        return hasNext;
     }
 
     public Long next() {
-        return quadIterator.next()[0];
+        return currentMid;
     }
 
     public void remove() {
