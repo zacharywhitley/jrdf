@@ -60,15 +60,16 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.global.MoleculeGraph;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R2R2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B2R2B3;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.ELEMENT_FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GLOBAL_MOLECULE_COMPARATOR;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_FACTORY;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R2R2;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
@@ -110,6 +111,7 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
     private MoleculeTraverser traverser;
 
     private TextToMoleculeGraph graphBuilder;
+    private GraphElementFactory destElementFactory;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -117,22 +119,25 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
         destGraph = FACTORY.getNewGraph();
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
-        URIReferenceParser referenceParser = new URIReferenceParserImpl(ELEMENT_FACTORY, nTripleUtil);
+        destElementFactory = destGraph.getElementFactory();
+        URIReferenceParser referenceParser = new URIReferenceParserImpl(destElementFactory, nTripleUtil);
         ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
-                GRAPH.getElementFactory());
+                destElementFactory);
         final BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         final LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
-        final LiteralParser literalParser = new LiteralParserImpl(GRAPH.getElementFactory(), literalMatcher);
+        final LiteralParser literalParser = new LiteralParserImpl(destElementFactory, literalMatcher);
         final SubjectParser subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
         final PredicateParser predicateParser = new PredicateParserImpl(referenceParser);
         final ObjectParser objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
         traverser = new MoleculeTraverserImpl();
-        tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser, GRAPH.getTripleFactory());
+        tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser, destGraph.getTripleFactory());
         textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, MOLECULE_FACTORY);
         graphBuilder = new TextToMoleculeGraph(textToMolecule);
     }
 
     public void tearDown() {
+        destGraph.clear();
+        destGraph.close();
         MoleculeGraphTestUtil.close();
     }
 
@@ -164,7 +169,7 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
         assertFalse(graphBuilder.hasNext());
     }
 
-    public void testTwoMolecules() throws IOException {
+    public void testTwoMolecules() throws IOException, GraphException {
         Molecule m1 = MOLECULE_FACTORY.createMolecule(B1R1B2);
         Molecule m2 = MOLECULE_FACTORY.createMolecule(B1R2R2);
         GRAPH.add(m1);
@@ -177,11 +182,14 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
         int size = 0;
         while (graphBuilder.hasNext()) {
             Molecule mol = graphBuilder.next();
+            destGraph.add(mol);
             System.err.println("mol = " + mol.toString());
             size++;
             assertTrue(setContainsMolecule(mols, mol));
         }
         assertEquals(mols.size(), size);
+        System.err.println("dest # " + destGraph.getNumberOfTriples());
+        System.err.println(destGraph.toString());
     }
 
     private boolean setContainsMolecule(Set<Molecule> set, Molecule molecule) {
