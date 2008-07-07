@@ -117,12 +117,12 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
         super.setUp();
         MoleculeGraphTestUtil.setUp();
         destGraph = FACTORY.getNewGraph();
+        destElementFactory = destGraph.getElementFactory();
+
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
-        destElementFactory = destGraph.getElementFactory();
         URIReferenceParser referenceParser = new URIReferenceParserImpl(destElementFactory, nTripleUtil);
-        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
-                destElementFactory);
+        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(), destElementFactory);
         final BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         final LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
         final LiteralParser literalParser = new LiteralParserImpl(destElementFactory, literalMatcher);
@@ -144,12 +144,10 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
     public void testOneMoleculeGraph() throws IOException {
         Molecule m1 = MOLECULE_FACTORY.createMolecule(B1R1B2);
         GRAPH.add(m1);
-        System.err.println("source = " + GRAPH.toString());
         graphBuilder.parse(new StringReader(GRAPH.toString()));
         assertTrue(graphBuilder.hasNext());
         Molecule mol = graphBuilder.next();
         assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(m1, mol));
-        System.err.println("mol = " + mol.toString());
         assertFalse(graphBuilder.hasNext());
     }
 
@@ -160,12 +158,10 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
         Set<Molecule> mols = new HashSet<Molecule>();
         mols.add(m1);
         GRAPH.add(m1);
-        System.err.println("source = " + GRAPH.toString());
         graphBuilder.parse(new StringReader(GRAPH.toString()));
         assertTrue(graphBuilder.hasNext());
         Molecule mol = graphBuilder.next();
         assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(m1, mol));
-        System.err.println("mol = " + mol.toString());
         assertFalse(graphBuilder.hasNext());
     }
 
@@ -177,19 +173,15 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
         Set<Molecule> mols = new HashSet<Molecule>();
         mols.add(m1);
         mols.add(m2);
-        System.err.println("source = " + GRAPH.toString());
         graphBuilder.parse(new StringReader(GRAPH.toString()));
         int size = 0;
         while (graphBuilder.hasNext()) {
             Molecule mol = graphBuilder.next();
             destGraph.add(mol);
-            System.err.println("mol = " + mol.toString());
             size++;
             assertTrue(setContainsMolecule(mols, mol));
         }
         assertEquals(mols.size(), size);
-        System.err.println("dest # " + destGraph.getNumberOfTriples());
-        System.err.println(destGraph.toString());
     }
 
     private boolean setContainsMolecule(Set<Molecule> set, Molecule molecule) {
