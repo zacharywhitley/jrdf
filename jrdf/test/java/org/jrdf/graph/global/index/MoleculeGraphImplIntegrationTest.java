@@ -248,6 +248,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         Molecule mol1 = iterator.next();
         assertEquals("Same molecule", 0, moleculeComparator.compare(molecule, mol1));
         assertFalse("Empty iterator", iterator.hasNext());
+        iterator.close();
     }
 
     public void testMultiMoleculeIterator() throws GraphException {
@@ -271,6 +272,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
                 set.add(tripleI.next());
             }
         }
+        iterator.close();
         assertEquals("# molecules", 3, size);
         assertEquals("# triples", triples.length, set.size());
         for (Triple triple : triples) {
@@ -279,9 +281,6 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     }
 
     public void testMultiLevelMoleculeIterator() throws GraphException {
-        Triple[] triples = new Triple[] {b1R1R1, b1R2R2, b1R1B2, r1R2B2,
-                b2R2R1, b2R2B3, b3R2R3, b3R2R2};
-
         Molecule molecule = moleculeFactory.createMolecule(b1R1R1, b1R2R2, b1R1B2);
         Molecule sm1 = moleculeFactory.createMolecule(r1R2B2, b2R2R1, b2R2B3);
         Molecule sm2 = moleculeFactory.createMolecule(b3R2R3, b3R2R2);
@@ -293,5 +292,6 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         Molecule mol1 = iterator.next();
         assertEquals("Same molecule", 0, moleculeComparator.compare(molecule, mol1));
         assertFalse("Empty iterator", iterator.hasNext());
+        iterator.close();
     }
 }

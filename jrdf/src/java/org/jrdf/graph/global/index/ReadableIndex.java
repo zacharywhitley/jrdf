@@ -62,15 +62,13 @@ package org.jrdf.graph.global.index;
 import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
 
-import java.util.Set;
-
 public interface ReadableIndex<T> {
     Long findMid(T... triple) throws GraphException;
 
     // TODO
 //    Long findMid(Long[]... triple) throws GraphException;
 
-    Set<Long[]> findTriplesForMid(T pid, T mid);
+    ClosableIterator<Long[]> findTriplesForMid(T pid, T mid);
 
     Long findEnclosingMoleculeId(Long mid) throws GraphException;
 
@@ -78,5 +76,5 @@ public interface ReadableIndex<T> {
 
     Long findHeadTripleMid(Long PID, Long... triple) throws GraphException;
 
-    Set<Long[]> findTriplesForPid(Long pid);
+    ClosableIterator<Long[]> findTriplesForPid(Long pid);
 }

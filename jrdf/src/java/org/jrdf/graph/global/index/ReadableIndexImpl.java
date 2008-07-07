@@ -63,11 +63,11 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.EntryIteratorOneFixedFourArray;
 import org.jrdf.util.EntryIteratorOneFixedOneArray;
+import org.jrdf.util.EntryIteratorTwoFixedFourArray;
 
 import static java.util.Arrays.asList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ReadableIndexImpl implements ReadableIndex<Long> {
     private final MoleculeIndex<Long>[] indexes;
@@ -102,29 +102,17 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         throw new GraphException("Cannot find triple:  " + asList(triple));
     }
 
-    public Set<Long[]> findTriplesForMid(Long pid, Long mid) {
-        ClosableIterator<Long[]> subSubIndex = structureIndex.getSubSubIndex(pid, mid);
-        Set<Long[]> triples = new HashSet<Long[]>();
-        while (subSubIndex.hasNext()) {
-            final Long[] longs = new Long[4];
-            System.arraycopy(subSubIndex.next(), 0, longs, 0, 3);
-            longs[3] = mid;
-            triples.add(longs);
-        }
-        return triples;
+    public ClosableIterator<Long[]> findTriplesForMid(Long pid, Long mid) {
+        return new EntryIteratorTwoFixedFourArray(structureIndex.getSubSubIndex(pid, mid), mid);
     }
 
-    public Set<Long[]> findTriplesForPid(Long pid) {
-        ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(pid);
-        Set<Long[]> triples = new HashSet<Long[]>();
-        while (subIndex.hasNext()) {
-            final Long[] longs = new Long[4];
-            final Long[] result = subIndex.next();
-            System.arraycopy(result, 1, longs, 0, 3);
-            longs[3] = result[0];
-            triples.add(longs);
-        }
-        return triples;
+    /**
+     * spo & mid.
+     * @param pid
+     * @return
+     */
+    public ClosableIterator<Long[]> findTriplesForPid(Long pid) {
+        return new EntryIteratorOneFixedFourArray(structureIndex.getSubIndex(pid));
     }
 
     public Long findEnclosingMoleculeId(Long mid) throws GraphException {
