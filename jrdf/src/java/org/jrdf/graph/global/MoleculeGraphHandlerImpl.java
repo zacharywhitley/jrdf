@@ -149,6 +149,7 @@ public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
         return molecule;
     }
 
+    // TODO YF a more robust version of findLinkingTriple is needed.
     private Triple findLinkingTriple(Molecule parentMolecule, Triple[] roots, Map<BlankNode, Triple> rootTripleMap)
         throws GraphException {
         for (Triple triple : roots) {
