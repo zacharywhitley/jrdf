@@ -57,22 +57,46 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.util;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.global.MoleculeGraphHandler;
 import org.jrdf.graph.global.molecule.Molecule;
 
-import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public interface MoleculeGraph extends Graph {
-    void add(Molecule molecule);
-    void delete(Molecule molecule) throws GraphException;
-    Molecule findTopLevelMolecule(Triple triple) throws GraphException;
-    Molecule findEnclosingMolecule(Triple triple) throws GraphException;
-    // TODO Add an append operation which gets the head triples mid and allows the user to specify more submolecule to
-    // add.
-    // TODO YF Add a toString() method to return all the molecule (as strings)
-    Iterator<Molecule> iterator() throws GraphException;
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
+
+public class LongIndexToMoleculeIterator implements ClosableIterator<Molecule> {
+    private ClosableIterator<Long> midIterator;
+    private MoleculeGraphHandler handler;
+
+    public LongIndexToMoleculeIterator(ClosableIterator<Long> iterator, MoleculeGraphHandler handler) {
+        this.midIterator = iterator;
+        this.handler = handler;
+    }
+
+    public boolean hasNext() {
+        return midIterator.hasNext();
+    }
+
+    public Molecule next() {
+        try {
+            Long mid = midIterator.next();
+            return handler.createMolecule(1L, mid);
+        } catch (GraphException e) {
+            throw new NoSuchElementException("Cannot find molecule in the graph");
+        }
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean close() {
+        return midIterator.close();
+    }
 }
