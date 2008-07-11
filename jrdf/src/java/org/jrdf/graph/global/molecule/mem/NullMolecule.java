@@ -59,10 +59,15 @@
 
 package org.jrdf.graph.global.molecule.mem;
 
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.Molecule;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
@@ -121,7 +126,11 @@ public final class NullMolecule implements Molecule {
     }
 
     public Iterator<Triple> find(Triple triple) {
-        throw new UnsupportedOperationException();
+        return Collections.unmodifiableSet(new HashSet<Triple>()).iterator();
+    }
+
+    public Iterator<Triple> find(SubjectNode subject, PredicateNode predicateNode, ObjectNode object) {
+        return Collections.unmodifiableSet(new HashSet<Triple>()).iterator();
     }
 
     public void remove(Triple triple) {

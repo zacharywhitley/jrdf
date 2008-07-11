@@ -63,8 +63,12 @@ import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.AnySubjectNode;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
@@ -246,6 +250,11 @@ public class MoleculeImpl implements Molecule {
         molecules.add(this);
         Set<Triple> set = findTriple(molecules, triple);
         return set.iterator();
+    }
+
+    public Iterator<Triple> find(SubjectNode subject, PredicateNode predicateNode, ObjectNode object) {
+        Triple triple = new TripleImpl(subject, predicateNode, object);
+        return find(triple);
     }
 
     private Set<Triple> findTriple(Set<Molecule> molecules, Triple triple) {
