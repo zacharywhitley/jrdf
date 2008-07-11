@@ -130,15 +130,6 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
             }
         }
         subIndex.close();
-        /*subIndex = structureIndex.getSubIndex(1L);
-        while (subIndex.hasNext()) {
-            Long[] quad = subIndex.next();
-            if (findParentMoleculeID(quad[0], mid) != 0L) {
-                subIndex.close();
-                return quad[0];
-            }
-        }
-        subIndex.close();*/
         throw new GraphException("Cannot find parent molecule id for: " + mid);
     }
 
