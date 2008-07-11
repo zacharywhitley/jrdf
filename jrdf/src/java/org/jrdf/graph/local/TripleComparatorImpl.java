@@ -99,4 +99,8 @@ public final class TripleComparatorImpl implements TripleComparator {
     private int compareObjects(Triple o1, Triple o2) {
         return nodeComparator.compare(o1.getObject(), o2.getObject());
     }
+
+    public NodeComparator getNodeComparator() {
+        return nodeComparator;
+    }
 }

@@ -210,4 +210,6 @@ public interface Molecule {
     boolean removeMolecule(Triple triple, Molecule subMolecule);
 
     Iterator<Triple> iterator();
+
+    Iterator<Triple> find(Triple triple);
 }

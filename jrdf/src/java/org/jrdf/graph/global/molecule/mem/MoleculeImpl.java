@@ -60,14 +60,17 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
+import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnySubjectNode;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeToString;
 import org.jrdf.graph.global.molecule.MoleculeToTripleIterator;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
-import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.ArrayList;
@@ -88,10 +91,12 @@ public class MoleculeImpl implements Molecule {
     private final MoleculeComparator moleculeComparator;
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
     protected boolean isTopLevel;
+    private TripleComparator tripleComparator;
 
     private MoleculeImpl(MoleculeComparator newComparator, SortedMap<Triple, SortedSet<Molecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
+        tripleComparator = moleculeComparator.getTripleComparator();
         subMolecules = newSubMolecules;
         isTopLevel = true;
     }
@@ -231,8 +236,46 @@ public class MoleculeImpl implements Molecule {
         return null;
     }
 
-    public ClosableIterator<Triple> find(Triple triple) {
-        throw new UnsupportedOperationException("Method not yet implemented");
+    /**
+     * Find the triple in a WFS fashion.
+     * @param triple
+     * @return
+     */
+    public Iterator<Triple> find(Triple triple) {
+        final HashSet<Molecule> molecules = new HashSet<Molecule>();
+        molecules.add(this);
+        Set<Triple> set = findTriple(molecules, triple);
+        return set.iterator();
+    }
+
+    private Set<Triple> findTriple(Set<Molecule> molecules, Triple triple) {
+        Set<Triple> set = new HashSet<Triple>();
+        for (Molecule m : molecules) {
+            final Iterator<Triple> roots = m.getRootTriples();
+            while (roots.hasNext()) {
+                Triple root = roots.next();
+                if (triplesMatch(triple, root)) {
+                    set.add(root);
+                }
+                set.addAll(findTriple(m.getSubMolecules(root), triple));
+            }
+        }
+        return set;
+    }
+
+    private boolean triplesMatch(Triple pattern, Triple triple2) {
+        return nodesMatch(pattern.getSubject(), triple2.getSubject()) &&
+                nodesMatch(pattern.getPredicate(), triple2.getPredicate()) &&
+                nodesMatch(pattern.getObject(), triple2.getObject());
+    }
+
+    private boolean nodesMatch(Node pattern, Node node) {
+        if (pattern.equals(AnySubjectNode.ANY_SUBJECT_NODE) || pattern.equals(AnyObjectNode.ANY_OBJECT_NODE) ||
+                pattern.equals(AnyObjectNode.ANY_OBJECT_NODE)) {
+            return true;
+        } else {
+            return tripleComparator.getNodeComparator().compare(pattern, node) == 0 ? true : false;
+        }
     }
 
     public Iterator<Triple> iterator() {

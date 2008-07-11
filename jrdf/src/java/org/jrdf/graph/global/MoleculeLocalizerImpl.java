@@ -78,4 +78,8 @@ public class MoleculeLocalizerImpl implements MoleculeLocalizer {
     public Long[] localizeTriple(Triple triple) throws GraphException {
         return localizer.localize(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
+
+    public Localizer getLocalizer() {
+        return localizer;
+    }
 }

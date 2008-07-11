@@ -120,6 +120,10 @@ public final class NullMolecule implements Molecule {
         return false;
     }
 
+    public Iterator<Triple> find(Triple triple) {
+        throw new UnsupportedOperationException();
+    }
+
     public void remove(Triple triple) {
     }
 

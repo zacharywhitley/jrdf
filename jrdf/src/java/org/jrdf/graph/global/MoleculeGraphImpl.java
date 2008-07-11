@@ -262,9 +262,9 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         MoleculeTraverser traverser = new MoleculeTraverserImpl();
         try {
             iterator = iterator();
+            MoleculeHandler handler = new MoleculeToText(builder, localizer.getLocalizer());
             while (iterator.hasNext()) {
                 Molecule molecule = iterator.next();
-                MoleculeHandler handler = new MoleculeToText(builder);
                 traverser.traverse(molecule, handler);
             }
             return builder.toString();

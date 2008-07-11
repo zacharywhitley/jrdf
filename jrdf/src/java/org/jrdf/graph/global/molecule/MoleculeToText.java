@@ -66,6 +66,8 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -90,9 +92,15 @@ public class MoleculeToText implements MoleculeHandler, TypedNodeVisitor {
     private StringBuilder builder;
     private String nodeAsString;
     private int level;
+    private Localizer localizer;
 
     public MoleculeToText(StringBuilder newBuilder) {
         this.builder = newBuilder;
+    }
+
+    public MoleculeToText(StringBuilder newBuilder, Localizer localizer) {
+        this(newBuilder);
+        this.localizer = localizer;
     }
 
     public void handleTriple(Triple triple) {
@@ -137,7 +145,13 @@ public class MoleculeToText implements MoleculeHandler, TypedNodeVisitor {
 
     public void visitBlankNode(BlankNode blankNode) {
         long nodeId;
-        if (visitedBlankNodes.keySet().contains(blankNode)) {
+        if (localizer != null) {
+            try {
+                nodeId = localizer.localize(blankNode);
+            } catch (GraphException e) {
+                throw new RuntimeException("Cannot get ID for blank node: " + blankNode.toString());
+            }
+        } else if (visitedBlankNodes.keySet().contains(blankNode)) {
             nodeId = visitedBlankNodes.get(blankNode);
         } else {
             currentId++;
