@@ -60,9 +60,12 @@
 package org.jrdf.graph.global.molecule.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.AnySubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.global.molecule.GlobalGraphTestUtil;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.MOLECULE_FACTORY;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2b2;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r3;
@@ -75,6 +78,7 @@ import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.global.molecule.MoleculeSubsumption;
+import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -84,7 +88,8 @@ import java.util.Set;
 
 public class MoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
+    private final TripleComparator tripleComparator = new TripleComparatorFactoryImpl().newComparator();
+    private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(tripleComparator);
     private MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
     private MergeSubmoleculesImpl merger;
@@ -182,6 +187,26 @@ public class MoleculeImplUnitTest extends TestCase {
         assertEquals(set.size(), size);
     }
 
+    public void testFindTriple() {
+        Molecule newMolecule = MOLECULE_FACTORY.createMolecule();
+        Molecule m1 = MOLECULE_FACTORY.createMolecule(r3r1r1);
+        newMolecule = newMolecule.add(r2r1r1, m1);
+        Triple triple = r3r1r1;
+        Iterator<Triple> triples = newMolecule.find(triple);
+        assertTrue(triples.hasNext());
+        Triple triple1 = triples.next();
+        assertEquals(0, tripleComparator.compare(triple, triple1));
+        assertFalse(triples.hasNext());
+
+        triple = new TripleImpl(AnySubjectNode.ANY_SUBJECT_NODE, GlobalGraphTestUtil.REF1, GlobalGraphTestUtil.REF1);
+        triples = newMolecule.find(triple);
+        assertTrue(triples.hasNext());
+        triple1 = triples.next();
+        assertEquals(0, tripleComparator.compare(r3r1r1, triple1));
+        assertTrue(triples.hasNext());
+        triple1 = triples.next();
+        assertEquals(0, tripleComparator.compare(r2r1r1, triple1));
+    }
 
     private void checkHasHeadMolecules(Molecule actualMolecule, Triple... triples) {
         Set<Triple> moleculeContents = new HashSet<Triple>();

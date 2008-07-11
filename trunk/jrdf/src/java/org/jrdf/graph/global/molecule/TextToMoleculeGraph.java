@@ -75,7 +75,7 @@ public class TextToMoleculeGraph {
     private LineNumberReader bufferedReader;
     private StringBuilder builder;
     private TextToMolecule moleculeBuilder;
-    private static final int READ_AHEAD_LIMIT = 255;
+    private static final int READ_AHEAD_LIMIT = 512;
 
     public TextToMoleculeGraph(TextToMolecule textToMolecule) {
         moleculeBuilder = textToMolecule;

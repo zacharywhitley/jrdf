@@ -59,11 +59,14 @@
 
 package org.jrdf.graph.global;
 
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 
 public interface MoleculeLocalizer {
     Long getNextMoleculeId();
 
     Long[] localizeTriple(Triple triple) throws GraphException;
+
+    Localizer getLocalizer();
 }

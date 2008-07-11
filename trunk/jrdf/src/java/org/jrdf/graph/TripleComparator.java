@@ -69,4 +69,5 @@ import java.util.Comparator;
  * @version $Id$
  */
 public interface TripleComparator extends Comparator<Triple>, Serializable {
+    NodeComparator getNodeComparator();
 }

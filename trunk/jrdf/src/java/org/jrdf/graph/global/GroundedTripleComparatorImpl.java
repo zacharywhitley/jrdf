@@ -67,6 +67,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.NodeComparator;
 
 /**
  * A different implementation of TripleComparator.  Where the number of blank nodes in a triple makes it less than
@@ -136,5 +137,9 @@ public class GroundedTripleComparatorImpl implements TripleComparator, TypedNode
     }
 
     public void visitResource(Resource resource) {
+    }
+
+    public NodeComparator getNodeComparator() {
+        return tripleComparator.getNodeComparator();
     }
 }

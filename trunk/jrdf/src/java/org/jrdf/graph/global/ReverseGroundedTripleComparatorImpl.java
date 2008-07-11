@@ -62,6 +62,7 @@ package org.jrdf.graph.global;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.NodeComparator;
 
 /**
  * A different implementation of TripleComparator.  Where the number of blank nodes in a triple makes it less than
@@ -108,5 +109,9 @@ public class ReverseGroundedTripleComparatorImpl implements TripleComparator {
             grounded--;
         }
         return grounded;
+    }
+
+    public NodeComparator getNodeComparator() {
+        return tripleComparator.getNodeComparator();
     }
 }
