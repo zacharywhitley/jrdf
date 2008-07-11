@@ -60,6 +60,9 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -212,4 +215,6 @@ public interface Molecule {
     Iterator<Triple> iterator();
 
     Iterator<Triple> find(Triple triple);
+
+    Iterator<Triple> find(SubjectNode subject, PredicateNode predicateNode, ObjectNode object);
 }

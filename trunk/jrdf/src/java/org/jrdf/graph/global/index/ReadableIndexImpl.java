@@ -90,6 +90,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         throw new GraphException("Cannot find triple:  " + asList(triple));
     }
 
+    // TODO should rturn null instead of throw exception?
     public Long findMid(Long... triple) throws GraphException {
         final ClosableIterator<Long[]> index = indexes[0].getSubSubIndex(triple[0], triple[1]);
         while (index.hasNext()) {
