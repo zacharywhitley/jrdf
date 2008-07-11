@@ -72,7 +72,7 @@ import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
-import org.jrdf.graph.global.molecule.MoleculeToString;
+import org.jrdf.graph.global.molecule.MoleculeToText;
 import org.jrdf.graph.global.molecule.MoleculeToTripleIterator;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -355,7 +355,7 @@ public class MoleculeImpl implements Molecule {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        traverser.traverse(this, new MoleculeToString(builder));
+        traverser.traverse(this, new MoleculeToText(builder));
         return builder.toString();
     }
 
