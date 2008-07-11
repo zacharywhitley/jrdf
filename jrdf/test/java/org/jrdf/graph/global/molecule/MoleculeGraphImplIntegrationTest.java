@@ -195,8 +195,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     }
 
     public void testMoleculeIndexComplex() throws GraphException, InterruptedException {
-        Triple[] triples = new Triple[]{B1R1R1, B1R2R2, B1R1B2, R1R2B2,
-                B2R2R1, B2R2B3, B3R2R3, B3R2R2};
+        Triple[] triples = new Triple[]{B1R1R1, B1R2R2, B1R1B2, R1R2B2, B2R2R1, B2R2B3, B3R2R3, B3R2R2};
 
         Molecule molecule = MOLECULE_FACTORY.createMolecule(B1R1R1, B1R2R2, B1R1B2);
         Molecule sm1 = MOLECULE_FACTORY.createMolecule(R1R2B2, B2R2R1, B2R2B3);

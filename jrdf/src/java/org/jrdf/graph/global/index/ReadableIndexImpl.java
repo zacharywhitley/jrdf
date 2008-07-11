@@ -118,25 +118,27 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
 
     public Long findEnclosingMoleculeId(Long mid) throws GraphException {
         ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(1L);
-        Long pid;
         while (subIndex.hasNext()) {
             Long[] quad = subIndex.next();
             if (quad[0] == mid) {
                 subIndex.close();
                 return 1L;
             }
-        }
-        subIndex.close();
-        subIndex = structureIndex.getSubIndex(1L);
-        while (subIndex.hasNext()) {
-            Long[] quad = subIndex.next();
-            pid = quad[0];
-            if (findParentMoleculeID(pid, mid) != 0L) {
+            if (findParentMoleculeID(quad[0], mid) != 0L) {
                 subIndex.close();
-                return pid;
+                return quad[0];
             }
         }
         subIndex.close();
+        /*subIndex = structureIndex.getSubIndex(1L);
+        while (subIndex.hasNext()) {
+            Long[] quad = subIndex.next();
+            if (findParentMoleculeID(quad[0], mid) != 0L) {
+                subIndex.close();
+                return quad[0];
+            }
+        }
+        subIndex.close();*/
         throw new GraphException("Cannot find parent molecule id for: " + mid);
     }
 
@@ -154,7 +156,11 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
                 subIndex.close();
                 return parentID;
             }
-            findParentMoleculeID(quad[0], mid);
+            Long tmpId = findParentMoleculeID(quad[0], mid);
+            if (tmpId != 0L) {
+                subIndex.close();
+                return parentID;
+            }
         }
         subIndex.close();
         return 0L;
