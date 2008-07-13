@@ -108,6 +108,7 @@ public class MoleculeImpl implements Molecule {
     public MoleculeImpl(MoleculeComparator newComparator) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
+        tripleComparator = moleculeComparator.getTripleComparator();
         isTopLevel = true;
         subMolecules = new TreeMap<Triple, SortedSet<Molecule>>(moleculeComparator.getTripleComparator());
     }
@@ -246,7 +247,7 @@ public class MoleculeImpl implements Molecule {
      * @return
      */
     public Iterator<Triple> find(Triple triple) {
-        final HashSet<Molecule> molecules = new HashSet<Molecule>();
+        final Set<Molecule> molecules = new HashSet<Molecule>();
         molecules.add(this);
         Set<Triple> set = findTriple(molecules, triple);
         return set.iterator();
