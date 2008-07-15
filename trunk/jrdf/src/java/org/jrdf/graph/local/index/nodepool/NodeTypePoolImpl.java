@@ -158,4 +158,11 @@ public class NodeTypePoolImpl implements NodeTypePool {
         uriNodePool.clear();
         literalNodePool.clear();
     }
+
+    public long getNumberOfEntries() {
+        long number = (long) blankNodePool.size();
+        number += (long) uriNodePool.size();
+        number += (long) literalNodePool.size();
+        return number;
+    }
 }
