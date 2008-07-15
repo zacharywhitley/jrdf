@@ -93,4 +93,8 @@ public class WritableIndexImpl implements WritableIndex<Long> {
         // parent, mid, spo
         structureIndex.remove(quin[4], quin[3], quin[0], quin[1], quin[2]);
     }
+
+    public void close() {
+        structureIndex.close();
+    }
 }

@@ -148,6 +148,7 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         return models.hasGraph(name);
     }
 
+    // TODO: Maybe model needs to remember the highest molecule id of an existing graph?
     public MoleculeGraph getExistingGraph(String name) throws IllegalArgumentException {
         if (models.getId(name) == 0) {
             throw new IllegalArgumentException("Cannot get graph named: " + name);
@@ -179,6 +180,8 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         openFactories.clear();
     }
 
+    // TODO Molecules not persistent on disk since the localizer is initlaized with moleculeId 1L.
+    // Need to find a way to reconstruct the molecules from structure index.
     private MoleculeGraph getGraph(long graphNumber) {
         collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
         final NodePool nodePool = getNodePool(graphNumber);

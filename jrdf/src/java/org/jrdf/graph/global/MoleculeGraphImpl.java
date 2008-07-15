@@ -112,6 +112,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public void add(Molecule molecule) {
         MoleculeTraverser traverser = new MoleculeTraverserImpl();
+        System.err.println("AddMoleculeToIndex");
         traverser.traverse(molecule, new AddMoleculeToIndex(writableIndex, localizer));
     }
 
@@ -227,6 +228,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     }
 
     public void close() {
+        writableIndex.close();
         graph.close();
     }
 
@@ -285,5 +287,16 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public ClosableIterator<Molecule> iterator() throws GraphException {
         return new LongIndexToMoleculeIterator(readableIndex.findChildIDs(1L), handlerImpl);
+    }
+
+    public long getNumberOfMolecules() {
+        final ClosableIterator<Long> iterator = readableIndex.findChildIDs(1L);
+        long size = 0;
+        while (iterator.hasNext()) {
+            size++;
+            iterator.next();
+        }
+        iterator.close();
+        return size;
     }
 }

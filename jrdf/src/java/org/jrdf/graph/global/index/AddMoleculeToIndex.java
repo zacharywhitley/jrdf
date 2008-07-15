@@ -86,6 +86,15 @@ public class AddMoleculeToIndex implements MoleculeHandler {
         parentIds.push(parentId);
     }
 
+    public AddMoleculeToIndex(WritableIndex<Long> newIndex, MoleculeLocalizer newLocalizer, Long mid) {
+        this.index = newIndex;
+        this.localizer = newLocalizer;
+        this.parentIds = new Stack<Long>();
+        moleculeId = mid;
+        parentIds.push(moleculeId);
+        parentIds.push(parentId);
+    }
+
     public void handleTriple(Triple triple) {
         try {
             Long[] quin = new Long[QUIN_SIZE];
