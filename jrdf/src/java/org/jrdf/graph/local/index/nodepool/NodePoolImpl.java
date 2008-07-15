@@ -92,6 +92,7 @@ public final class NodePoolImpl implements NodePool {
         checkNotNull(newNodeTypePool, newStringPool);
         this.nodeTypePool = newNodeTypePool;
         this.stringPool = newStringPool;
+        nextNode = nodeTypePool.getNumberOfEntries() + 1L;
     }
 
     public boolean nodeExists(Long id) {

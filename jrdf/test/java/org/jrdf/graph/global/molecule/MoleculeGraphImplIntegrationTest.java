@@ -383,7 +383,6 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         sm1.add(B1R1B2);
         molecule.add(R1R2B2, sm1);
         GRAPH.add(molecule);
-        System.err.println(GRAPH.toString());
 
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
@@ -401,6 +400,5 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, MOLECULE_FACTORY);
 
         final Molecule molecule1 = textToMolecule.parse(new StringReader(GRAPH.toString()));
-        System.err.println(molecule1.toString());
     }
 }

@@ -73,8 +73,8 @@ import org.jrdf.graph.global.index.WritableIndexImpl;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
 import org.jrdf.graph.global.index.longindex.sesame.MoleculeIndexSesame;
+import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesame;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
@@ -90,8 +90,6 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
-import org.jrdf.util.ClosableMap;
-import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
 import org.jrdf.util.ModelsImpl;
@@ -185,8 +183,8 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
         final NodePool nodePool = getNodePool(graphNumber);
         MoleculeIndex<Long>[] indexes = createMoleculeIndexes(graphNumber);
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
+        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexSesame(
+                btreeFactory.createQuinBTree(handler, "spomm" + graphNumber));
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),

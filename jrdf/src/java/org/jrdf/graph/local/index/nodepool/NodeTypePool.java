@@ -83,4 +83,6 @@ public interface NodeTypePool {
     String removeNode(Long value);
 
     boolean nodeExists(Long nodeId);
+
+    long getNumberOfEntries();
 }

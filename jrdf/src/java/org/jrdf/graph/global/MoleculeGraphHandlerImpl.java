@@ -99,6 +99,8 @@ public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
         return reconstructMolecule(null, pid, mid);
     }
 
+    // TODO if a sub molecule is to be returned, the isTopLevel field isn't correctly set when creating the molecule.
+    // TODO Maybe get the top-level molecule and return the subMolecule?
     private Molecule reconstructMolecule(Molecule parentMolecule, Long pid, Long mid) throws GraphException {
         Triple[] roots = iteratorAsTriples(readableIndex.findTriplesForMid(pid, mid));
         Map<BlankNode, Triple> rootTripleMap = getBNodeToRootMap(parentMolecule);
@@ -107,7 +109,7 @@ public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
         if (null == parentMolecule) {
             return molecule;
         } else {
-            Triple linkingTriple = findLinkingTriple(parentMolecule, roots, rootTripleMap);
+            Triple linkingTriple = findLinkingTriple(parentMolecule, roots, rootTripleMap, molecule);
             parentMolecule.add(linkingTriple, molecule);
             return parentMolecule;
         }
@@ -150,16 +152,17 @@ public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
     }
 
     // TODO YF a more robust version of findLinkingTriple is needed.
-    private Triple findLinkingTriple(Molecule parentMolecule, Triple[] roots, Map<BlankNode, Triple> rootTripleMap)
-        throws GraphException {
+    private Triple findLinkingTriple(Molecule parentMolecule, Triple[] roots, Map<BlankNode, Triple> rootTripleMap,
+                                     Molecule molecule) throws GraphException {
         for (Triple triple : roots) {
             SubjectNode sub = triple.getSubject();
-            if (AbstractBlankNode.class.isAssignableFrom(sub.getClass()) &&
-                    mapContainsBNode(rootTripleMap, sub)) {
+            if (AbstractBlankNode.isBlankNode(sub) && mapContainsBNode(rootTripleMap, sub)) {
                 return rootTripleMap.get(sub);
             }
+
         }
-        throw new GraphException("Cannot find the linking triple for molecule: " + parentMolecule);
+        throw new GraphException("Cannot find the linking triple for parent : " + parentMolecule +
+                "\nand submolecule" + molecule);
     }
 
     private boolean mapContainsBNode(Map<BlankNode, Triple> nodeTripleMap, SubjectNode sub) {

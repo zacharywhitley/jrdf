@@ -65,6 +65,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
@@ -104,9 +105,16 @@ public class GraphHandler012 extends AbstractGraphHandler {
     }
 
     public Triple createTriple(Long... nodes) {
-        SubjectNode subject = (SubjectNode) nodePool.getNodeById(nodes[0]);
-        PredicateNode predicate = (PredicateNode) nodePool.getNodeById(nodes[1]);
-        ObjectNode object = (ObjectNode) nodePool.getNodeById(nodes[2]);
+        final Node subNode = nodePool.getNodeById(nodes[0]);
+        //System.err.println("Subject = " + subNode.toString());
+        final Node predNode = nodePool.getNodeById(nodes[1]);
+        //System.err.println("Predicate = " + predNode.toString());
+        final Node objNode = nodePool.getNodeById(nodes[2]);
+        //System.err.println("Object = " + objNode.toString());
+
+        SubjectNode subject = (SubjectNode) subNode;
+        PredicateNode predicate = (PredicateNode) predNode;
+        ObjectNode object = (ObjectNode) objNode;
         return new TripleImpl(subject, predicate, object);
     }
 
