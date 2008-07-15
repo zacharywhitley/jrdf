@@ -77,4 +77,6 @@ public interface ReadableIndex<T> {
     Long findHeadTripleMid(Long PID, Long... triple) throws GraphException;
 
     ClosableIterator<Long[]> findTriplesForPid(Long pid);
+
+    Long getMaxMoleculeId();
 }

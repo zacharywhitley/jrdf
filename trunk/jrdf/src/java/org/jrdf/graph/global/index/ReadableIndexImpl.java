@@ -160,4 +160,14 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     public ClosableIterator<Long> findChildIDs(Long mid) {
         return new EntryIteratorOneFixedOneArray(structureIndex.getSubIndex(mid));
     }
+
+    public Long getMaxMoleculeId() {
+        final ClosableIterator<Long> iterator = findChildIDs(1L);
+        Long max = 1L;
+        while (iterator.hasNext()) {
+            Long id = iterator.next();
+            max = (id > max) ? id : max;
+        }
+        return max;
+    }
 }
