@@ -112,7 +112,6 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public void add(Molecule molecule) {
         MoleculeTraverser traverser = new MoleculeTraverserImpl();
-        System.err.println("AddMoleculeToIndex");
         traverser.traverse(molecule, new AddMoleculeToIndex(writableIndex, localizer));
     }
 
