@@ -161,9 +161,9 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         return new EntryIteratorOneFixedOneArray(structureIndex.getSubIndex(mid));
     }
 
-    public Long getMaxMoleculeId() {
+    public long getMaxMoleculeId() {
         final ClosableIterator<Long> iterator = findChildIDs(1L);
-        Long max = 1L;
+        long max = 2L;
         while (iterator.hasNext()) {
             Long id = iterator.next();
             max = (id > max) ? id : max;
