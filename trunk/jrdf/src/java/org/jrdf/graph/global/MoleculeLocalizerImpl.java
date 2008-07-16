@@ -71,6 +71,11 @@ public class MoleculeLocalizerImpl implements MoleculeLocalizer {
         this.localizer = localizer;
     }
 
+    public MoleculeLocalizerImpl(Localizer localizer, long currentId) {
+        this.localizer = localizer;
+        moleculeId = currentId;
+    }
+
     public Long getNextMoleculeId() {
         return moleculeId++;
     }

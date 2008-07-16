@@ -78,5 +78,5 @@ public interface ReadableIndex<T> {
 
     ClosableIterator<Long[]> findTriplesForPid(Long pid);
 
-    Long getMaxMoleculeId();
+    long getMaxMoleculeId();
 }

@@ -193,7 +193,9 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
             new LongIndexAdapter(indexes[1]), new LongIndexAdapter(indexes[2])};
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
-        MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(new LocalizerImpl(nodePool, STRING_MAPPER));
+        final long curMaxMoleculeId = readIndex.getMaxMoleculeId();
+        MoleculeLocalizer moleculeLocalizer =
+                new MoleculeLocalizerImpl(new LocalizerImpl(nodePool, STRING_MAPPER), curMaxMoleculeId);
         return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph);
     }
 
