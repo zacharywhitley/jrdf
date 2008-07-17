@@ -118,19 +118,20 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
 
     public Long findEnclosingMoleculeId(Long mid) throws GraphException {
         ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(1L);
-        while (subIndex.hasNext()) {
-            Long[] quad = subIndex.next();
-            if (quad[0] == mid) {
-                subIndex.close();
-                return 1L;
+        try {
+            while (subIndex.hasNext()) {
+                Long[] quad = subIndex.next();
+                if (quad[0] == mid) {
+                    return 1L;
+                }
+                if (findParentMoleculeID(quad[0], mid) != 0L) {
+                    return quad[0];
+                }
             }
-            if (findParentMoleculeID(quad[0], mid) != 0L) {
-                subIndex.close();
-                return quad[0];
-            }
+            throw new GraphException("Cannot find parent molecule id for: " + mid);
+        } finally {
+            subIndex.close();
         }
-        subIndex.close();
-        throw new GraphException("Cannot find parent molecule id for: " + mid);
     }
 
     /**
