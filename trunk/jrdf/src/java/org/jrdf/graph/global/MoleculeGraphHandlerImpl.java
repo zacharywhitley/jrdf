@@ -84,11 +84,11 @@ import java.util.Map;
 
 public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
     private MoleculeGraph graph;
-    private ReadableIndex readableIndex;
+    private ReadableIndex<Long> readableIndex;
     private MoleculeComparator moleculeComparator;
 
 
-    public MoleculeGraphHandlerImpl(MoleculeGraph graph, ReadableIndex readableIndex,
+    public MoleculeGraphHandlerImpl(MoleculeGraph graph, ReadableIndex<Long> readableIndex,
                                 MoleculeComparator moleculeComparator) {
         this.graph = graph;
         this.readableIndex = readableIndex;
