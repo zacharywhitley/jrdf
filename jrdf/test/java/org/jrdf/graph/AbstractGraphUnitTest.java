@@ -75,6 +75,7 @@ import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 
 import java.net.URI;
+import static java.net.URI.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -148,6 +149,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
     private static final String FAILED_TO_ADD_TRIPLE = "Failed to add triple.";
+    private static final int NUMBER_OF_TRIPLES_TO_ADD = 128;
 
     /**
      * Create test instance.
@@ -297,6 +299,14 @@ public abstract class AbstractGraphUnitTest extends TestCase {
                 graph.add(ref1, ref1, ANY_OBJECT_NODE);
             }
         });
+    }
+
+    public void testMultipleAddtion() throws Exception {
+        for (int i = 0; i < NUMBER_OF_TRIPLES_TO_ADD; i++) {
+            tripleFactory.addTriple(create("http://subject/" + i), create("http://predicate/" + i),
+                    create("http://object/" + i));
+        }
+        assertEquals(NUMBER_OF_TRIPLES_TO_ADD, graph.getNumberOfTriples());
     }
 
     /**
@@ -500,7 +510,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         GraphElementFactory newElementFactory = newGraph.getElementFactory();
         blank1 = newElementFactory.createBlankNode();
         blank2 = newElementFactory.createBlankNode();
-        ref1 = newElementFactory.createURIReference(URI.create("http://something/here"));
+        ref1 = newElementFactory.createURIReference(create("http://something/here"));
         t1 = tripleFactory.createTriple(blank1, ref1, blank2);
         newGraph.add(t1);
 

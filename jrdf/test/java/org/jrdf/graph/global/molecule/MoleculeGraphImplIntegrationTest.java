@@ -119,10 +119,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 // TODO Write a test to check that writing triples and getting molecules synchronise.  Especially with creating
-
 // new URIs across data structures.  e.g. create a triple with a new molecule and then do a find on it.
 public class MoleculeGraphImplIntegrationTest extends TestCase {
     private MoleculeGraph destGraph;
+    private static final int NUMBER_OF_MOLECULES_TO_ADD = 42;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -132,6 +132,19 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     @Override
     public void tearDown() {
         MoleculeGraphTestUtil.close();
+    }
+
+    public void testSimpleAdds() throws Exception {
+        for (int i = 0; i < NUMBER_OF_MOLECULES_TO_ADD; i++) {
+            Molecule molecule = MOLECULE_FACTORY.createMolecule(B1R1R1, B1R2R2, B1R1B2);
+            Molecule sm1 = MOLECULE_FACTORY.createMolecule(R1R2B2, B2R2R1, B2R2B3);
+            Molecule sm2 = MOLECULE_FACTORY.createMolecule(B3R2R3, B3R2R2);
+            molecule.add(B1R1B2, sm1);
+            sm1.add(B2R2B3, sm2);
+            GRAPH.add(molecule);
+        }
+        assertEquals(NUMBER_OF_MOLECULES_TO_ADD, GRAPH.getNumberOfMolecules());
+        assertEquals(NUMBER_OF_MOLECULES_TO_ADD * 8, GRAPH.getNumberOfTriples());
     }
 
     public void testSimpleAddRemove() throws Exception {
@@ -196,7 +209,6 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
 
     public void testMoleculeIndexComplex() throws GraphException, InterruptedException {
         Triple[] triples = new Triple[]{B1R1R1, B1R2R2, B1R1B2, R1R2B2, B2R2R1, B2R2B3, B3R2R3, B3R2R2};
-
         Molecule molecule = MOLECULE_FACTORY.createMolecule(B1R1R1, B1R2R2, B1R1B2);
         Molecule sm1 = MOLECULE_FACTORY.createMolecule(R1R2B2, B2R2R1, B2R2B3);
         Molecule sm2 = MOLECULE_FACTORY.createMolecule(B3R2R3, B3R2R2);
@@ -228,24 +240,29 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         Molecule molecule = MOLECULE_FACTORY.createMolecule();
         GRAPH.add(molecule);
         ClosableIterator<Molecule> iterator = GRAPH.iterator();
-        assertFalse("Empty iterator", iterator.hasNext());
+        try {
+            assertFalse("Empty iterator", iterator.hasNext());
+        } finally {
+            iterator.close();
+        }
     }
 
     public void testSimpleMoleculeIterator() throws GraphException {
         Molecule molecule = MOLECULE_FACTORY.createMolecule(R1R2B2, B2R2R1, B2R2B3);
         GRAPH.add(molecule);
         ClosableIterator<Molecule> iterator = GRAPH.iterator();
-        assertTrue("Got item", iterator.hasNext());
-        Molecule mol1 = iterator.next();
-        assertEquals("Same molecule", 0, MOLECULE_COMPARATOR.compare(molecule, mol1));
-        assertFalse("Empty iterator", iterator.hasNext());
-        iterator.close();
+        try {
+            assertTrue("Got item", iterator.hasNext());
+            Molecule mol1 = iterator.next();
+            assertEquals("Same molecule", 0, MOLECULE_COMPARATOR.compare(molecule, mol1));
+            assertFalse("Empty iterator", iterator.hasNext());
+        } finally {
+            iterator.close();
+        }
     }
 
     public void testMultiMoleculeIterator() throws GraphException {
-        Triple[] triples = new Triple[]{B1R1R1, B1R2R2, B1R1B2, R1R2B2,
-                B2R2R1, B2R2B3, B3R2R3, B3R2R2};
-
+        Triple[] triples = new Triple[]{B1R1R1, B1R2R2, B1R1B2, R1R2B2, B2R2R1, B2R2B3, B3R2R3, B3R2R2};
         Molecule molecule = MOLECULE_FACTORY.createMolecule(B1R1R1, B1R2R2, B1R1B2);
         Molecule sm1 = MOLECULE_FACTORY.createMolecule(R1R2B2, B2R2R1, B2R2B3);
         Molecule sm2 = MOLECULE_FACTORY.createMolecule(B3R2R3, B3R2R2);
@@ -253,21 +270,24 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         GRAPH.add(sm1);
         GRAPH.add(sm2);
         ClosableIterator<Molecule> iterator = GRAPH.iterator();
-        int size = 0;
-        Set<Triple> set = new HashSet<Triple>();
-        while (iterator.hasNext()) {
-            size++;
-            Molecule mol = iterator.next();
-            final Iterator<Triple> tripleI = mol.iterator();
-            while (tripleI.hasNext()) {
-                set.add(tripleI.next());
+        try {
+            int size = 0;
+            Set<Triple> set = new HashSet<Triple>();
+            while (iterator.hasNext()) {
+                size++;
+                Molecule mol = iterator.next();
+                final Iterator<Triple> tripleI = mol.iterator();
+                while (tripleI.hasNext()) {
+                    set.add(tripleI.next());
+                }
             }
-        }
-        iterator.close();
-        assertEquals("# molecules", 3, size);
-        assertEquals("# triples", triples.length, set.size());
-        for (Triple triple : triples) {
-            assertTrue(set.contains(triple));
+            assertEquals("# molecules", 3, size);
+            assertEquals("# triples", triples.length, set.size());
+            for (Triple triple : triples) {
+                assertTrue(set.contains(triple));
+            }
+        } finally {
+            iterator.close();
         }
     }
 
@@ -279,11 +299,14 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         molecule.add(B1R1B2, sm1);
         GRAPH.add(molecule);
         ClosableIterator<Molecule> iterator = GRAPH.iterator();
-        assertTrue("Got item", iterator.hasNext());
-        Molecule mol1 = iterator.next();
-        assertEquals("Same molecule", 0, MOLECULE_COMPARATOR.compare(molecule, mol1));
-        assertFalse("Empty iterator", iterator.hasNext());
-        iterator.close();
+        try {
+            assertTrue("Got item", iterator.hasNext());
+            Molecule mol1 = iterator.next();
+            assertEquals("Same molecule", 0, MOLECULE_COMPARATOR.compare(molecule, mol1));
+            assertFalse("Empty iterator", iterator.hasNext());
+        } finally {
+            iterator.close();
+        }
     }
 
     public void testMultiLevelMoleculeFind() throws GraphException {
@@ -304,13 +327,14 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         ClosableIterator<Triple> interactions = destGraph.find(AnySubjectNode.ANY_SUBJECT_NODE,
                 destElementFactory.createURIReference(RDF.TYPE),
                 destElementFactory.createURIReference(URI.create("http://www.biopax.org/release/biopax-level2.owl#physicalInteraction")));
-        assertTrue(interactions.hasNext());
-        Triple interaction = interactions.next();
-        //System.err.println("got interaction: " + interaction.toString());
-        Molecule interactionMolecule = destGraph.findTopLevelMolecule(interaction);
-        assertEquals(triples, interactionMolecule.size());
-        //System.err.println("molecule = " + interactionMolecule.toString());
-        interactions.close();
+        try {
+            assertTrue(interactions.hasNext());
+            Triple interaction = interactions.next();
+            Molecule interactionMolecule = destGraph.findTopLevelMolecule(interaction);
+            assertEquals(triples, interactionMolecule.size());
+        } finally {
+            interactions.close();
+        }
     }
 
     private void readTextToGraph() throws IOException {
@@ -367,7 +391,6 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         final SubjectParser subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
         final PredicateParser predicateParser = new PredicateParserImpl(referenceParser);
         final ObjectParser objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
-        MoleculeTraverser traverser = new MoleculeTraverserImpl();
         TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser, destGraph.getTripleFactory());
         TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, MOLECULE_FACTORY);
         TextToMoleculeGraph graphBuilder = new TextToMoleculeGraph(textToMolecule);

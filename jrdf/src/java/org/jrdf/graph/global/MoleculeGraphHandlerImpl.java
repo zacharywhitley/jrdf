@@ -142,7 +142,7 @@ public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
     }
 
     private Molecule createSubMolecules(Long mid, Molecule molecule) throws GraphException {
-        ClosableIterator<Long> childIDs = readableIndex.findChildIDs(mid);
+        ClosableIterator<Long> childIDs = readableIndex.findChildIds(mid);
         while (childIDs.hasNext()) {
             Long childID = childIDs.next();
             molecule = reconstructMolecule(molecule, mid, childID);

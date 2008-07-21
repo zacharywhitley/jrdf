@@ -72,8 +72,6 @@ public interface MoleculeGraph extends Graph {
     Molecule findEnclosingMolecule(Triple triple) throws GraphException;
     // TODO Add an append operation which gets the head triples mid and allows the user to specify more submolecule to
     // add.
-
     ClosableIterator<Molecule> iterator() throws GraphException;
-
     long getNumberOfMolecules();
 }

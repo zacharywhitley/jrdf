@@ -72,9 +72,9 @@ public interface ReadableIndex<T> {
 
     Long findEnclosingMoleculeId(Long mid) throws GraphException;
 
-    ClosableIterator<Long> findChildIDs(Long mid);
+    ClosableIterator<Long> findChildIds(Long mid);
 
-    Long findHeadTripleMid(Long PID, Long... triple) throws GraphException;
+    Long findHeadTripleMid(Long pid, Long... triple) throws GraphException;
 
     ClosableIterator<Long[]> findTriplesForPid(Long pid);
 

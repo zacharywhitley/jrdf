@@ -100,7 +100,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     private MoleculeGraphHandler handlerImpl;
 
     public MoleculeGraphImpl(WritableIndex<Long> newWriteIndex, ReadableIndex<Long> newReadIndex,
-                             MoleculeLocalizer newLocalizer, Graph newGraph) {
+        MoleculeLocalizer newLocalizer, Graph newGraph) {
         this.writableIndex = newWriteIndex;
         this.readableIndex = newReadIndex;
         this.localizer = newLocalizer;
@@ -269,33 +269,43 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        Iterator<Molecule> iterator;
         MoleculeTraverser traverser = new MoleculeTraverserImpl();
         try {
-            iterator = iterator();
-            MoleculeHandler handler = new MoleculeToText(builder, localizer.getLocalizer());
-            while (iterator.hasNext()) {
-                Molecule molecule = iterator.next();
-                traverser.traverse(molecule, handler);
+            ClosableIterator<Molecule> iterator = iterator();
+            try {
+                MoleculeHandler handler = new MoleculeToText(builder, localizer.getLocalizer());
+                while (iterator.hasNext()) {
+                    Molecule molecule = iterator.next();
+                    traverser.traverse(molecule, handler);
+                }
+                return builder.toString();
+            } finally {
+                iterator.close();
             }
-            return builder.toString();
         } catch (GraphException e) {
             throw new RuntimeException("Cannot return string representation", e);
         }
     }
 
     public ClosableIterator<Molecule> iterator() throws GraphException {
-        return new LongIndexToMoleculeIterator(readableIndex.findChildIDs(1L), handlerImpl);
+        return new LongIndexToMoleculeIterator(readableIndex.findChildIds(1L), handlerImpl);
     }
 
     public long getNumberOfMolecules() {
-        final ClosableIterator<Long> iterator = readableIndex.findChildIDs(1L);
-        long size = 0;
-        while (iterator.hasNext()) {
-            size++;
-            iterator.next();
+        final ClosableIterator<Long> iterator = readableIndex.findChildIds(1L);
+        try {
+            Long previousValue = 0L;
+            long size = 0;
+            while (iterator.hasNext()) {
+                Long currentValue = iterator.next();
+                if (!currentValue.equals(previousValue)) {
+                    size++;
+                }
+                previousValue = currentValue;
+            }
+            return size;
+        } finally {
+            iterator.close();
         }
-        iterator.close();
-        return size;
     }
 }

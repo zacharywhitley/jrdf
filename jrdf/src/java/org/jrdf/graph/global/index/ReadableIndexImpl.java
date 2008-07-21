@@ -124,7 +124,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
                 if (quad[0] == mid) {
                     return 1L;
                 }
-                if (findParentMoleculeID(quad[0], mid) != 0L) {
+                if (findParentMoleculeId(quad[0], mid) != 0L) {
                     return quad[0];
                 }
             }
@@ -136,34 +136,34 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
 
     /**
      * Search for the parent ID in a width-first search.
-     * @param parentID
+     * @param parentId
      * @param mid
      * @return
      */
-    private Long findParentMoleculeID(Long parentID, Long mid) {
-        final ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(parentID);
+    private Long findParentMoleculeId(Long parentId, Long mid) {
+        final ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(parentId);
         while (subIndex.hasNext()) {
             Long[] quad = subIndex.next();
             if (quad[0] == mid) {
                 subIndex.close();
-                return parentID;
+                return parentId;
             }
-            Long tmpId = findParentMoleculeID(quad[0], mid);
+            Long tmpId = findParentMoleculeId(quad[0], mid);
             if (tmpId != 0L) {
                 subIndex.close();
-                return parentID;
+                return parentId;
             }
         }
         subIndex.close();
         return 0L;
     }
 
-    public ClosableIterator<Long> findChildIDs(Long mid) {
-        return new EntryIteratorOneFixedOneArray(structureIndex.getSubIndex(mid));
+    public ClosableIterator<Long> findChildIds(Long parentId) {
+        return new EntryIteratorOneFixedOneArray(structureIndex.getSubIndex(parentId));
     }
 
     public long getMaxMoleculeId() {
-        final ClosableIterator<Long> iterator = findChildIDs(1L);
+        final ClosableIterator<Long> iterator = findChildIds(1L);
         long max = 2;
         while (iterator.hasNext()) {
             Long id = iterator.next();
