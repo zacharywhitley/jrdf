@@ -118,6 +118,7 @@ public class MoleculeGraphTestUtil {
 
         FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
         GRAPH = FACTORY.getNewGraph();
+        GRAPH.clear();
         ELEMENT_FACTORY = GRAPH.getElementFactory();
         TRIPLE_FACTORY = GRAPH.getTripleFactory();
 
