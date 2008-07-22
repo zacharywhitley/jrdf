@@ -215,8 +215,8 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
     }
 
     private BTree[] createBTrees(long graphNumber) {
-        return new BTree[]{btreeFactory.createQuadBTree(handler, "spo" + graphNumber),
-                btreeFactory.createQuadBTree(handler, "pos" + graphNumber),
-                btreeFactory.createQuadBTree(handler, "osp" + graphNumber)};
+        return new BTree[]{btreeFactory.createQuadBTree(handler, "mspo" + graphNumber),
+                btreeFactory.createQuadBTree(handler, "mpos" + graphNumber),
+                btreeFactory.createQuadBTree(handler, "mosp" + graphNumber)};
     }
 }
