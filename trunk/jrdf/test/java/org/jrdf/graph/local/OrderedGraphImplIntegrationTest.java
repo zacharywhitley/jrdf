@@ -61,17 +61,17 @@ package org.jrdf.graph.local;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;
-import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
 
 /**
- * Implementation of {@link AbstractGraphUnitTest} test case.
+ * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  * @version $Revision$
  */
-public class OrderedGraphImplUnitTest extends AbstractGraphUnitTest {
+public class OrderedGraphImplIntegrationTest extends AbstractGraphIntegrationTest {
     private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
 
     /**

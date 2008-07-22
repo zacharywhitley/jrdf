@@ -60,18 +60,18 @@
 package org.jrdf.graph.global;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedDiskGlobalJRDFFactory;
-import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.SortedMemoryGlobalJRDFFactory;
+import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
 
 /**
- * Implementation of {@link org.jrdf.graph.AbstractGraphUnitTest} test case.
+ * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
  *
  * @author Andrew Newman
  * @version $Revision: 1499 $
  */
-public class GlobalGraphDiskUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
+public class GlobalGraphMemIntegrationTest extends AbstractGraphIntegrationTest {
+    private static final JRDFFactory FACTORY = SortedMemoryGlobalJRDFFactory.getFactory();
 
     /**
      * Create a graph implementation.
@@ -84,7 +84,6 @@ public class GlobalGraphDiskUnitTest extends AbstractGraphUnitTest {
 
     @Override
     public void tearDown() {
-        graph.clear();
         FACTORY.close();
     }
 }
