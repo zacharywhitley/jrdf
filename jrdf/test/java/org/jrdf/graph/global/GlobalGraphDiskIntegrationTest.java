@@ -57,22 +57,21 @@
  *
  */
 
-package org.jrdf.graph.local;
+package org.jrdf.graph.global;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactory;
-import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.SortedDiskGlobalJRDFFactory;
+import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
 
 /**
- * Implementation of {@link AbstractGraphUnitTest} test case.
+ * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
  *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  * @version $Revision: 1499 $
  */
-public class SortedGraphImplUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
+public class GlobalGraphDiskIntegrationTest extends AbstractGraphIntegrationTest {
+    private static final JRDFFactory FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
 
     /**
      * Create a graph implementation.
@@ -81,5 +80,11 @@ public class SortedGraphImplUnitTest extends AbstractGraphUnitTest {
      */
     public Graph newGraph() throws Exception {
         return FACTORY.getNewGraph();
+    }
+
+    @Override
+    public void tearDown() {
+        graph.clear();
+        FACTORY.close();
     }
 }

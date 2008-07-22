@@ -61,12 +61,12 @@ package org.jrdf.graph.local;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedDiskBdbJRDFFactory;
-import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 
-public class BdbGraphImplIntegrationTest extends AbstractGraphUnitTest {
+public class BdbGraphImplIntegrationTest extends AbstractGraphIntegrationTest {
     private static final JRDFFactory FACTORY = SortedDiskBdbJRDFFactory.getFactory();
 
     /**

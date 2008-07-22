@@ -122,7 +122,7 @@ import java.util.Set;
 // new URIs across data structures.  e.g. create a triple with a new molecule and then do a find on it.
 public class MoleculeGraphImplIntegrationTest extends TestCase {
     private MoleculeGraph destGraph;
-    private static final int NUMBER_OF_MOLECULES_TO_ADD = 42;
+    private static final int NUMBER_OF_MOLECULES_TO_ADD = 10;
 
     public void setUp() throws Exception {
         super.setUp();

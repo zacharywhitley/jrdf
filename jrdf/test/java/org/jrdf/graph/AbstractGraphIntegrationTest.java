@@ -90,7 +90,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public abstract class AbstractGraphUnitTest extends TestCase {
+public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     /**
      * Instance of a graph object.
@@ -149,7 +149,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
     private static final String FAILED_TO_ADD_TRIPLE = "Failed to add triple.";
-    private static final int NUMBER_OF_TRIPLES_TO_ADD = 128;
+    private static final int NUMBER_OF_TRIPLES_TO_ADD = 10;
 
     /**
      * Create test instance.
