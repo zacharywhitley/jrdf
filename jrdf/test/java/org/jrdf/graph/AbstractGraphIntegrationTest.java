@@ -464,8 +464,12 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         int expectedNumberOfTriples) throws Exception {
         addTriplesToGraph();
         ClosableIterator<Triple> iterator = graph.find(subjectNode, predicateNode, objectNode);
-        graph.remove(iterator);
-        assertEquals(expectedNumberOfTriples, graph.getNumberOfTriples());
+        try {
+            graph.remove(iterator);
+            assertEquals(expectedNumberOfTriples, graph.getNumberOfTriples());
+        } finally {
+            iterator.close();
+        }
     }
 
     /**
@@ -565,7 +569,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         graph.add(blank2, ref1, l2);
 
         // look for the first triple and check that one is returned
-        ClosableIterator it = graph.find(blank1, ref1, blank2);
+        ClosableIterator<Triple> it = graph.find(blank1, ref1, blank2);
         assertTrue(it.hasNext());
         it.close();
 
@@ -813,13 +817,17 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     public void testResourceIteratorSimple() throws Exception {
         final ClosableIterator<? extends Node> resources = graph.findNodes(RESOURCE_TYPE);
-        boolean b = resources.hasNext();
-        assertFalse("Should be no resources for empty graph", b);
-        assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                resources.next();
-            }
-        });
+        try {
+            boolean b = resources.hasNext();
+            assertFalse("Should be no resources for empty graph", b);
+            assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    resources.next();
+                }
+            });
+        } finally {
+            resources.close();
+        }
     }
 
     public void testBlankNodeTypeIterator() throws Exception {
@@ -835,23 +843,31 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
         ClosableIterator<? super Resource> iterator = graph.findResources(URI_REFERENCE_TYPE);
-        int counter = 0;
-        while (iterator.hasNext()) {
-            iterator.next();
-            counter++;
+        try {
+            int counter = 0;
+            while (iterator.hasNext()) {
+                iterator.next();
+                counter++;
+            }
+            assertEquals("Unexpected number of unique URIs in the subject and object position", 3, counter);
+        } finally {
+            iterator.close();
         }
-        assertEquals("Unexpected number of unique URIs in the subject and object position", 3, counter);
     }
 
     public void testBlankNodeResourceIterator() throws Exception {
         addTestNodes();
         ClosableIterator<? super Resource> iterator = graph.findResources(BNODE_TYPE);
-        int counter = 0;
-        while (iterator.hasNext()) {
-            iterator.next();
-            counter++;
+        try {
+            int counter = 0;
+            while (iterator.hasNext()) {
+                iterator.next();
+                counter++;
+            }
+            assertEquals("Unexpected number of unique blank nodes in the subject and object position", 2, counter);
+        } finally {
+            iterator.close();
         }
-        assertEquals("Unexpected number of unique blank nodes in the subject and object position", 2, counter);
     }
 
     public void testURIReferencesIterator() throws Exception {
@@ -866,34 +882,46 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     private int countURIRefs() {
         ClosableIterator<? extends Node> iterator = graph.findNodes(URI_REFERENCE_TYPE);
-        int counter = 0;
-        while (iterator.hasNext()) {
-            iterator.next();
-            counter++;
+        try {
+            int counter = 0;
+            while (iterator.hasNext()) {
+                iterator.next();
+                counter++;
+            }
+            return counter;
+        } finally {
+            iterator.close();
         }
-        return counter;
     }
 
     public void testResourceIterators() throws Exception {
         addTestNodes();
         ClosableIterator<? extends Node> resources = graph.findNodes(RESOURCE_TYPE);
-        int counter = 0;
-        while (resources.hasNext()) {
-            resources.next();
-            counter++;
+        try {
+            int counter = 0;
+            while (resources.hasNext()) {
+                resources.next();
+                counter++;
+            }
+            assertEquals("Unexpected number of unique resources (Blank Nodes and URIs)", 5, counter);
+        } finally {
+            resources.close();
         }
-        assertEquals("Unexpected number of unique resources (Blank Nodes and URIs)", 5, counter);
     }
 
     public void testPredicateIterators() throws Exception {
         addTestNodes();
         ClosableIterator<? extends Node> uniquePredicates = graph.findNodes(PREDICATE_TYPE);
-        int counter = 0;
-        while (uniquePredicates.hasNext()) {
-            uniquePredicates.next();
-            counter++;
+        try {
+            int counter = 0;
+            while (uniquePredicates.hasNext()) {
+                uniquePredicates.next();
+                counter++;
+            }
+            assertEquals("Unexpected number of unique predicates", 4, counter);
+        } finally {
+            uniquePredicates.close();
         }
-        assertEquals("Unexpected number of unique predicates", 4, counter);
     }
 
     public void testFixedUniquePredicateIterator() throws Exception {
@@ -918,7 +946,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         assertEquals(1, graph.getNumberOfTriples());
     }
 
-    private void checkInvalidRemove(ClosableIterator ci) {
+    private void checkInvalidRemove(ClosableIterator<Triple> ci) {
         try {
             ci.remove();
             fail("Must throw an exception.");
@@ -946,14 +974,18 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         throws Exception {
         int counter = 0;
         ClosableIterator<PredicateNode> resourcePredicates = graph.findPredicates(resource);
-        Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
-        while (resourcePredicates.hasNext()) {
-            PredicateNode predicateNode = resourcePredicates.next();
-            assertTrue("Results should not have: " + predicateNode + " expected: " + expectedPredicates,
-                expectedPredicates.contains(predicateNode));
-            counter++;
+        try {
+            Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
+            while (resourcePredicates.hasNext()) {
+                PredicateNode predicateNode = resourcePredicates.next();
+                assertTrue("Results should not have: " + predicateNode + " expected: " + expectedPredicates,
+                    expectedPredicates.contains(predicateNode));
+                counter++;
+            }
+            assertEquals("Wrong number of unique predicates", expectedPredicates.size(), counter);
+        } finally {
+            resourcePredicates.close();
         }
-        assertEquals("Wrong number of unique predicates", expectedPredicates.size(), counter);
     }
 
     private void addTestNodes() throws GraphException {
@@ -976,12 +1008,16 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     private int getNumberOfBlankNodes() {
         ClosableIterator<? extends Node> blankNodes = graph.findNodes(new BlankNodeType());
-        int counter = 0;
-        while (blankNodes.hasNext()) {
-            blankNodes.next();
-            counter++;
+        try {
+            int counter = 0;
+            while (blankNodes.hasNext()) {
+                blankNodes.next();
+                counter++;
+            }
+            return counter;
+        } finally {
+            blankNodes.close();
         }
-        return counter;
     }
 
     private void checkFullIteratorRemoval(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
