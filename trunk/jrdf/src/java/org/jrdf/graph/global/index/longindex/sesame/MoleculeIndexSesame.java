@@ -72,8 +72,8 @@ import org.jrdf.util.btree.RecordIteratorHelper;
 import java.io.IOException;
 
 public final class MoleculeIndexSesame implements MoleculeIndex<Long> {
-    private BTree btree;
     private static final int QUAD = 4;
+    private BTree btree;
 
     public MoleculeIndexSesame(BTree newBtree) {
         this.btree = newBtree;
