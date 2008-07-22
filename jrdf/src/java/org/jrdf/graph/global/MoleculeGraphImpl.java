@@ -223,6 +223,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     }
 
     public void clear() {
+        writableIndex.close();
         graph.clear();
     }
 

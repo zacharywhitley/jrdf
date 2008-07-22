@@ -94,6 +94,13 @@ public class WritableIndexImpl implements WritableIndex<Long> {
         structureIndex.remove(quin[4], quin[3], quin[0], quin[1], quin[2]);
     }
 
+    public void clear() {
+        for (int i = 0; i < 3; i++) {
+            indexes[i].clear();
+        }
+        structureIndex.clear();
+    }
+
     public void close() {
         structureIndex.close();
     }

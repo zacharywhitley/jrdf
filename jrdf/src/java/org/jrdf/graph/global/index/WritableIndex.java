@@ -66,5 +66,7 @@ public interface WritableIndex<T> {
 
     void remove(T... quin) throws GraphException;
 
+    void clear();
+
     void close();
 }
