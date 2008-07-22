@@ -62,14 +62,23 @@ package org.jrdf.graph.global;
 import org.jrdf.*;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.btree.BTreeFactory;
+import org.jrdf.util.btree.BTreeFactoryImpl;
 import org.jrdf.graph.*;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
+import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
+import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesame;
 
 import java.net.URI;
+import java.util.Arrays;
 
 /**
  * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
@@ -85,14 +94,11 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
     private static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
     private static int graphNumber = 1;
     private PersistentGlobalJRDFFactory factory;
-    private MoleculeGraph moleculeGraph;
 
     @Override
     public void setUp() throws Exception {
         HANDLER.makeDir();
         factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-        moleculeGraph = factory.getNewGraph("foo");
-        moleculeGraph.clear();
         super.setUp();
     }
 
@@ -100,7 +106,6 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
     public void tearDown() throws Exception {
         super.tearDown();
         graph.close();
-        moleculeGraph.close();
         factory.close();
         HANDLER.removeDir();
     }
@@ -117,16 +122,28 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
     }
 
     public void testMoleculeSize() throws Exception {
+        MoleculeGraph moleculeGraph = factory.getNewGraph("foo");
+        moleculeGraph.clear();
         GraphElementFactory graphElementFactory = moleculeGraph.getElementFactory();
         TripleFactory tripleFactory = moleculeGraph.getTripleFactory();
         URIReference ref1 = graphElementFactory.createURIReference(URI.create("urn:foo"));
         URIReference ref2 = graphElementFactory.createURIReference(URI.create("urn:bar"));
         URIReference ref3 = graphElementFactory.createURIReference(URI.create("urn:baz"));
         BlankNode bnode1 = graphElementFactory.createBlankNode();
-        BlankNode bnode2 = graphElementFactory.createBlankNode();
-        assertEquals(0L, moleculeGraph.getNumberOfMolecules());
-        moleculeGraph.add(MOLECULE_FACTORY.createMolecule(tripleFactory.createTriple(bnode1, ref1, ref2)));
-        moleculeGraph.add(MOLECULE_FACTORY.createMolecule(tripleFactory.createTriple(bnode2, ref2, ref3)));
-        assertEquals(2L, moleculeGraph.getNumberOfMolecules());
+        addMolecule(tripleFactory.createTriple(bnode1, ref1, ref1), 1L);
+        addMolecule(tripleFactory.createTriple(bnode1, ref2, ref2), 2L);
+        addMolecule(tripleFactory.createTriple(bnode1, ref3, ref3), 3L);
+        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+        moleculeGraph = factory.getExistingGraph("foo");
+        assertEquals(3L, moleculeGraph.getNumberOfMolecules());
+    }
+
+    private void addMolecule(Triple triple, long expectedMoleculeNumber) throws GraphException {
+        MoleculeGraph moleculeGraph = factory.getExistingGraph("foo");
+        assertEquals(expectedMoleculeNumber - 1, moleculeGraph.getNumberOfMolecules());
+        moleculeGraph.add(MOLECULE_FACTORY.createMolecule(triple));
+        assertEquals(expectedMoleculeNumber, moleculeGraph.getNumberOfMolecules());
+        moleculeGraph.close();
+        factory.close();
     }
 }
