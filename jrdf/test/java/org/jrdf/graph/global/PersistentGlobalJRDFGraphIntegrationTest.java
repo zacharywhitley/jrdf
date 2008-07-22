@@ -82,7 +82,7 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
     private static final TripleComparator TRIPLE_COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
     private static final MoleculeComparator MOLECULE_COMPARATOR =
             new MoleculeHeadTripleComparatorImpl(TRIPLE_COMPARATOR);
-    public static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
+    private static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
     private static int graphNumber = 1;
     private PersistentGlobalJRDFFactory factory;
     private MoleculeGraph moleculeGraph;
