@@ -73,7 +73,7 @@ public class MoleculeLocalizerImpl implements MoleculeLocalizer {
 
     public MoleculeLocalizerImpl(Localizer localizer, long currentId) {
         this.localizer = localizer;
-        moleculeId = currentId;
+        this.moleculeId = currentId + 1;
     }
 
     public Long getNextMoleculeId() {

@@ -142,19 +142,22 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
      */
     private Long findParentMoleculeId(Long parentId, Long mid) {
         final ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(parentId);
-        while (subIndex.hasNext()) {
-            Long[] quad = subIndex.next();
-            if (quad[0] == mid) {
-                subIndex.close();
-                return parentId;
+        try {
+            while (subIndex.hasNext()) {
+                Long[] quad = subIndex.next();
+                if (quad[0] == mid) {
+                    subIndex.close();
+                    return parentId;
+                }
+                Long tmpId = findParentMoleculeId(quad[0], mid);
+                if (tmpId != 0L) {
+                    subIndex.close();
+                    return parentId;
+                }
             }
-            Long tmpId = findParentMoleculeId(quad[0], mid);
-            if (tmpId != 0L) {
-                subIndex.close();
-                return parentId;
-            }
+        } finally {
+            subIndex.close();
         }
-        subIndex.close();
         return 0L;
     }
 
@@ -164,11 +167,15 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
 
     public long getMaxMoleculeId() {
         final ClosableIterator<Long> iterator = findChildIds(1L);
-        long max = 2;
-        while (iterator.hasNext()) {
-            Long id = iterator.next();
-            max = (id > max) ? id : max;
+        try {
+            long max = 1;
+            while (iterator.hasNext()) {
+                Long id = iterator.next();
+                max = (id > max) ? id : max;
+            }
+            return max;
+        } finally {
+            iterator.close();
         }
-        return max;
     }
 }
