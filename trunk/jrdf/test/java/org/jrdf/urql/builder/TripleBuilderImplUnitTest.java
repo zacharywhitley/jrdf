@@ -103,7 +103,7 @@ public final class TripleBuilderImplUnitTest extends TestCase {
         new LiteralTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
     private static final TripleSpec VARIABLE_VARIABLE_BOOK_TITLE =
         new VariableResourceTripleSpec(VARIABLE_NAME_SUBJECT, VARIABLE_NAME_TITLE, URI_DC_SUBJECT);
-    private static final Class[] PARAM_TYPES = {Graph.class, AttributeValuePairHelper.class,
+    private static final Class<?>[] PARAM_TYPES = {Graph.class, AttributeValuePairHelper.class,
         SortedAttributeFactory.class};
     private static final String[] PARAMETER_NAMES = {"graph", "avpHelper", "sortedAttributeFactory"};
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();

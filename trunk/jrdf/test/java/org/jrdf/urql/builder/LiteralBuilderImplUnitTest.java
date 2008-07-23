@@ -70,7 +70,8 @@ import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
-import org.jrdf.urql.parser.node.AUntypedLiteralLiteral;
+import org.jrdf.urql.parser.node.ARdfLiteralLiteral;
+import org.jrdf.urql.parser.node.AUntypedLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.PDbQuotedStrand;
 import org.jrdf.urql.parser.node.PLiteralValue;
 import org.jrdf.urql.parser.node.PQuotedStrand;
@@ -78,6 +79,7 @@ import org.jrdf.urql.parser.node.TDbqtext;
 import org.jrdf.urql.parser.node.TDbquote;
 import org.jrdf.urql.parser.node.TQtext;
 import org.jrdf.urql.parser.node.TQuote;
+import org.jrdf.urql.parser.parser.ParserException;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
@@ -133,7 +135,7 @@ public class LiteralBuilderImplUnitTest extends TestCase {
         factory.verify();
     }
 
-    private void checkLiteralCreation(ALiteralObjectTripleElement element) throws GraphException {
+    private void checkLiteralCreation(ALiteralObjectTripleElement element) throws Exception {
         factory.reset();
         Literal literal = factory.createMock(Literal.class);
         LiteralBuilder builder = createBuilder();
@@ -145,14 +147,14 @@ public class LiteralBuilderImplUnitTest extends TestCase {
     }
 
     private void checkReturnsLiteral(LiteralBuilder builder, ALiteralObjectTripleElement element,
-        Literal expectedLiteral) throws GraphException {
+        Literal expectedLiteral) throws Exception {
         Literal actualLiteral = builder.createLiteral(element);
         assertNotNull(actualLiteral);
         assertEquals(expectedLiteral, actualLiteral);
     }
 
     private void checkThrowsException(final LiteralBuilder builder) {
-        AssertThrows.assertThrows(GraphElementFactoryException.class, new AssertThrows.Block() {
+        AssertThrows.assertThrows(ParserException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 builder.createLiteral(createQuotedElement());
             }
@@ -170,7 +172,8 @@ public class LiteralBuilderImplUnitTest extends TestCase {
         strand.add(new AQuotedUnescapedQuotedStrand(new TQtext("hello")));
         TQuote tQuote = new TQuote("'");
         PLiteralValue quotedLiteralLiteral = new AQuotedLiteralLiteralValue(tQuote, strand, tQuote);
-        return new ALiteralObjectTripleElement(new AUntypedLiteralLiteral(quotedLiteralLiteral));
+        return new ALiteralObjectTripleElement(
+                new ARdfLiteralLiteral(new AUntypedLiteralRdfLiteral(quotedLiteralLiteral)));
     }
 
     private ALiteralObjectTripleElement createDoubleQuotedElement() {
@@ -178,7 +181,7 @@ public class LiteralBuilderImplUnitTest extends TestCase {
         strand.add(new ADbQuotedUnescapedDbQuotedStrand(new TDbqtext("hello")));
         TDbquote tDbquote = new TDbquote("\"");
         PLiteralValue quotedLiteralLiteral = new ADbQuotedLiteralLiteralValue(tDbquote, strand, tDbquote);
-        return new ALiteralObjectTripleElement(new AUntypedLiteralLiteral(quotedLiteralLiteral));
+        return new ALiteralObjectTripleElement(new ARdfLiteralLiteral(new AUntypedLiteralRdfLiteral(quotedLiteralLiteral)));
     }
 }
 

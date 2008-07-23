@@ -66,25 +66,25 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
+import org.jrdf.urql.parser.node.ARdfLiteralLiteral;
 import org.jrdf.urql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.urql.parser.node.ATriple;
+import org.jrdf.urql.parser.node.AUntypedLiteralRdfLiteral;
+import org.jrdf.urql.parser.node.PLiteralValue;
 import org.jrdf.urql.parser.node.PObjectTripleElement;
 import org.jrdf.urql.parser.node.PQuotedStrand;
 import org.jrdf.urql.parser.node.PResourceTripleElement;
 import org.jrdf.urql.parser.node.TQtext;
 import org.jrdf.urql.parser.node.TQuote;
 import org.jrdf.urql.parser.node.TResource;
-import org.jrdf.urql.parser.node.PLiteralValue;
-import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
-import org.jrdf.urql.parser.node.AUntypedLiteralLiteral;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class LiteralTripleSpec implements TripleSpec {
-
     private URI subjectUri;
     private URI predicateUri;
     private String literal;
@@ -116,8 +116,8 @@ public final class LiteralTripleSpec implements TripleSpec {
     private PObjectTripleElement createLiteralTripleElement(String object) {
         List<PQuotedStrand> strand = new ArrayList<PQuotedStrand>();
         strand.add(new AQuotedUnescapedQuotedStrand(new TQtext(object)));
-        PLiteralValue literal = new AQuotedLiteralLiteralValue(new TQuote("'"), strand, new TQuote("'"));
-        return new ALiteralObjectTripleElement(new AUntypedLiteralLiteral(literal));
+        PLiteralValue literalValue = new AQuotedLiteralLiteralValue(new TQuote("'"), strand, new TQuote("'"));
+        return new ALiteralObjectTripleElement(new ARdfLiteralLiteral(new AUntypedLiteralRdfLiteral(literalValue)));
     }
 
     private AResourceResourceTripleElement createResourceTripleElement(URI uri) {

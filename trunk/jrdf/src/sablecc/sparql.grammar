@@ -155,6 +155,9 @@ Productions
     variableprefix identifier;
 
   literal =
+    {rdf_literal} rdf_literal ;
+
+  rdf_literal =
     {untyped_literal} literal_value |
     {lang_literal} literal_value at [language]:langtag |
     {typed_literal} literal_value datatype ;

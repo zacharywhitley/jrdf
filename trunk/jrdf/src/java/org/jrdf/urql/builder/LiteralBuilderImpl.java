@@ -62,35 +62,37 @@ package org.jrdf.urql.builder;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
-import org.jrdf.graph.GraphException;
 import org.jrdf.urql.parser.analysis.AnalysisAdapter;
-import org.jrdf.urql.parser.node.PLiteral;
-import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
-import org.jrdf.urql.parser.node.Switch;
-import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
-import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
-import org.jrdf.urql.parser.node.Node;
-import org.jrdf.urql.parser.node.AUntypedLiteralLiteral;
-import org.jrdf.urql.parser.node.PLiteralValue;
 import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteralValue;
-import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
-import org.jrdf.urql.parser.node.ALangLiteralLiteral;
-import org.jrdf.urql.parser.node.ATypedLiteralLiteral;
-import org.jrdf.urql.parser.node.PDatatype;
-import org.jrdf.urql.parser.node.AResourceDatatypeDatatype;
+import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
+import org.jrdf.urql.parser.node.ALangLiteralRdfLiteral;
+import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.urql.parser.node.AQnameDatatypeDatatype;
 import org.jrdf.urql.parser.node.AQnameQnameElement;
+import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
+import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
+import org.jrdf.urql.parser.node.ARdfLiteralLiteral;
+import org.jrdf.urql.parser.node.AResourceDatatypeDatatype;
+import org.jrdf.urql.parser.node.ATypedLiteralRdfLiteral;
+import org.jrdf.urql.parser.node.AUntypedLiteralRdfLiteral;
+import org.jrdf.urql.parser.node.PLiteral;
+import org.jrdf.urql.parser.node.Switch;
+import org.jrdf.urql.parser.node.Token;
+import org.jrdf.urql.parser.parser.ParserException;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
-import static java.net.URI.*;
+import static java.net.URI.create;
 import java.util.Map;
 
 public final class LiteralBuilderImpl extends AnalysisAdapter implements LiteralBuilder, Switch {
     private final GraphElementFactory factory;
     private final Map<String, String> prefixMap;
-    private GraphException exception;
+    private ParserException exception;
     private Literal result;
+    private URI uri;
+    private String lexicalValue;
+    private Token currentToken;
 
     public LiteralBuilderImpl(GraphElementFactory newFactory, Map<String, String> newPrefixMap) {
         checkNotNull(newFactory, newPrefixMap);
@@ -98,9 +100,11 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         this.prefixMap = newPrefixMap;
     }
 
-    public Literal createLiteral(ALiteralObjectTripleElement element) throws GraphException {
+    public Literal createLiteral(ALiteralObjectTripleElement element) throws ParserException {
         checkNotNull(element);
         exception = null;
+        uri = null;
+        lexicalValue = null;
         PLiteral pLiteral = element.getLiteral();
         pLiteral.apply(this);
         if (exception == null) {
@@ -110,56 +114,80 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         }
     }
 
+    @Override
+    public void caseARdfLiteralLiteral(ARdfLiteralLiteral node) {
+        node.getRdfLiteral().apply(this);
+    }
 
     @Override
-    public void caseAUntypedLiteralLiteral(AUntypedLiteralLiteral node) {
-        String lexicalValue = getLexicalValue(node.getLiteralValue());
-        createLiteral(lexicalValue);
+    public void caseAUntypedLiteralRdfLiteral(AUntypedLiteralRdfLiteral node) {
+        node.getLiteralValue().apply(this);
+        if (lexicalValue != null) {
+            createLiteral(lexicalValue);
+        }
     }
 
-    public void caseALangLiteralLiteral(ALangLiteralLiteral node) {
+    @Override
+    public void caseALangLiteralRdfLiteral(ALangLiteralRdfLiteral node) {
         String languageTag = node.getLanguage().getText();
-        String lexicalValue = getLexicalValue(node.getLiteralValue());
-        createLiteral(lexicalValue, languageTag);
+        node.getLiteralValue().apply(this);
+        if (lexicalValue != null && languageTag != null) {
+            createLiteral(lexicalValue, languageTag);
+        }
     }
 
-    public void caseATypedLiteralLiteral(ATypedLiteralLiteral node) {
-        PDatatype pDatatype = node.getDatatype();
-        URI uri = getDatatype(pDatatype);
-        String lexicalValue = getLexicalValue(node.getLiteralValue());
-        createLiteral(lexicalValue, uri);
+    @Override
+    public void caseATypedLiteralRdfLiteral(ATypedLiteralRdfLiteral node) {
+        node.getDatatype().apply(this);
+        node.getLiteralValue().apply(this);
+        if (lexicalValue != null && uri != null) {
+            createLiteral(lexicalValue, uri);
+        }
     }
 
-    private URI getDatatype(PDatatype pDatatype) {
-        URI uri = null;
-        if (pDatatype instanceof AResourceDatatypeDatatype) {
-            uri = create(((AResourceDatatypeDatatype) pDatatype).getResource().getText());
-        } else if (pDatatype instanceof AQnameDatatypeDatatype) {
-            AQnameQnameElement qname = (AQnameQnameElement) ((AQnameDatatypeDatatype) pDatatype).getQnameElement();
-            String prefix = qname.getNcnamePrefix().getText();
-            if (!prefixMap.keySet().contains(prefix)) {
-                exception = new GraphException("Prefix not found: " + prefix);
-            }
+    @Override
+    public void caseAResourceDatatypeDatatype(AResourceDatatypeDatatype node) {
+        uri = create(node.getResource().getText());
+    }
+
+    @Override
+    public void caseAQnameDatatypeDatatype(AQnameDatatypeDatatype node) {
+        AQnameQnameElement qname = (AQnameQnameElement) node.getQnameElement();
+        String prefix = qname.getNcnamePrefix().getText();
+        if (!prefixMap.keySet().contains(prefix)) {
+            exception = new ParserException(qname.getNcnamePrefix(), "Prefix not found: " + prefix);
+        } else {
             uri = create(prefixMap.get(prefix) + qname.getNcName().getText());
         }
-        return uri;
     }
 
-    private String getLexicalValue(PLiteralValue pLiteralValue) {
-        String lexicalValue = "";
-        if (pLiteralValue instanceof ADbQuotedLiteralLiteralValue) {
-            lexicalValue = getText(((ADbQuotedLiteralLiteralValue) pLiteralValue).getDbQuotedStrand().getFirst());
-        } else if (pLiteralValue instanceof AQuotedLiteralLiteralValue) {
-            lexicalValue = getText(((AQuotedLiteralLiteralValue) pLiteralValue).getQuotedStrand().getFirst());
-        }
-        return lexicalValue;
+    @Override
+    public void caseADbQuotedLiteralLiteralValue(ADbQuotedLiteralLiteralValue node) {
+        node.getDbQuotedStrand().getFirst().apply(this);
+    }
+
+    @Override
+    public void caseAQuotedLiteralLiteralValue(AQuotedLiteralLiteralValue node) {
+        node.getQuotedStrand().getFirst().apply(this);
+    }
+
+    @Override
+    public void caseAQuotedUnescapedQuotedStrand(AQuotedUnescapedQuotedStrand node) {
+        currentToken = node.getQtext();
+        lexicalValue = node.getQtext().getText();
+    }
+
+    @Override
+    public void caseADbQuotedUnescapedDbQuotedStrand(ADbQuotedUnescapedDbQuotedStrand node) {
+        currentToken = node.getDbqtext();
+        lexicalValue = node.getDbqtext().getText();
     }
 
     private void createLiteral(String s) {
         try {
             result = factory.createLiteral(s);
         } catch (GraphElementFactoryException e) {
-            exception = e;
+            exception = new ParserException(currentToken, "Could not create literal: " + s);
         }
     }
 
@@ -167,7 +195,7 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         try {
             result = factory.createLiteral(s, language);
         } catch (GraphElementFactoryException e) {
-            exception = e;
+            exception = new ParserException(currentToken, "Could not create literal: " + s + " lang: " + language);
         }
     }
 
@@ -175,18 +203,7 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         try {
             result = factory.createLiteral(s, datatype);
         } catch (GraphElementFactoryException e) {
-            exception = e;
+            exception = new ParserException(currentToken, "Could not create literal: " + s + " datatype: " + datatype);
         }
-    }
-
-    private String getText(Node tmpStrand) {
-        if (tmpStrand instanceof AQuotedUnescapedQuotedStrand) {
-            AQuotedUnescapedQuotedStrand strand = (AQuotedUnescapedQuotedStrand) tmpStrand;
-            return strand.getQtext().getText();
-        } else if (tmpStrand instanceof ADbQuotedUnescapedDbQuotedStrand) {
-            ADbQuotedUnescapedDbQuotedStrand strand = (ADbQuotedUnescapedDbQuotedStrand) tmpStrand;
-            return strand.getDbqtext().getText();
-        }
-        return "";
     }
 }
