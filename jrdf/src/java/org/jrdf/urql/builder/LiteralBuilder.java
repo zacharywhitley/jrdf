@@ -59,10 +59,10 @@
 
 package org.jrdf.urql.builder;
 
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.urql.parser.parser.ParserException;
 
 public interface LiteralBuilder {
-    Literal createLiteral(ALiteralObjectTripleElement element) throws GraphException;
+    Literal createLiteral(ALiteralObjectTripleElement element) throws ParserException;
 }

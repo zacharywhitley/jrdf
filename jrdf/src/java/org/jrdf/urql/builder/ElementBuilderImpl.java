@@ -60,6 +60,7 @@
 package org.jrdf.urql.builder;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
@@ -73,6 +74,7 @@ import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.urql.parser.node.AQnameObjectTripleElement;
+import org.jrdf.urql.parser.node.AQnameQnameElement;
 import org.jrdf.urql.parser.node.AQnameResourceTripleElement;
 import org.jrdf.urql.parser.node.AResourceObjectTripleElement;
 import org.jrdf.urql.parser.node.AResourceResourceTripleElement;
@@ -80,7 +82,6 @@ import org.jrdf.urql.parser.node.AVariable;
 import org.jrdf.urql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.urql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.urql.parser.node.TIdentifier;
-import org.jrdf.urql.parser.node.AQnameQnameElement;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.net.URI;
@@ -98,7 +99,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     private ParserException exception;
 
     public ElementBuilderImpl(NodeType nodeType, Node graphNode, Attribute attribute, Graph currentGraph,
-        Map<String, String> prefixMap) {
+            Map<String, String> prefixMap) {
         this.nodeType = nodeType;
         this.graphNode = graphNode;
         this.attribute = attribute;
@@ -190,9 +191,10 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     private URIReference createResource(String uri) {
         try {
-            return currentGraph.getElementFactory().createURIReference(new URI(uri));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return currentGraph.getElementFactory().createURIReference(URI.create(uri));
+        } catch (GraphElementFactoryException e) {
+            exception = new ParserException(new TIdentifier("identifier"), "Couldn't create URI: " + uri);
+            return null;
         }
     }
 
@@ -200,8 +202,9 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         try {
             LiteralBuilder literalBuilder = new LiteralBuilderImpl(currentGraph.getElementFactory(), prefixMap);
             return literalBuilder.createLiteral(node);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (ParserException e) {
+            exception = e;
+            return null;
         }
     }
 }
