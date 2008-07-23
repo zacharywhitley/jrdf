@@ -80,6 +80,7 @@ import org.jrdf.urql.parser.node.AVariable;
 import org.jrdf.urql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.urql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.urql.parser.node.TIdentifier;
+import org.jrdf.urql.parser.node.AQnameQnameElement;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.net.URI;
@@ -121,7 +122,8 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseAQnameResourceTripleElement(AQnameResourceTripleElement node) {
-        avp = createQNameResource(node.getNcnamePrefix().getText(), node.getNcName().getText());
+        AQnameQnameElement element = (AQnameQnameElement) node.getQnameElement();
+        avp = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
     }
 
     @Override
@@ -137,7 +139,8 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseAQnameObjectTripleElement(AQnameObjectTripleElement node) {
-        avp = createQNameResource(node.getNcnamePrefix().getText(), node.getNcName().getText());
+        AQnameQnameElement element = (AQnameQnameElement) node.getQnameElement();
+        avp = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
     }
 
     @Override
