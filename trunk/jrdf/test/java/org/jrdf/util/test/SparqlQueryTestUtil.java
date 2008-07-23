@@ -148,10 +148,6 @@ public final class SparqlQueryTestUtil {
         "WHERE { examplebook:book1 dc:title ?title . examplebook:book2 dc:title ?title }";
     public static final String QUERY_SINGLE_OPTIONAL = createSelectClause() +
         "WHERE { { ?x <" + FOAF_NAME + "> ?name } OPTIONAL { ?x <" + FOAF_NICK + "> ?nick } }";
-    public static final String QUERY_LITERAL_SINGLE_QUOTES = createSelectClause() +
-        "WHERE { ?s ?p \'The Pragmatic Programmer\' } ";
-    public static final String QUERY_LITERAL_DOUBLE_QUOTES = createSelectClause() +
-        "WHERE { ?s ?p \"The Pragmatic Programmer\" } ";
     public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_2 = createBookDcTitleExpression(URI_BOOK_2, 2);

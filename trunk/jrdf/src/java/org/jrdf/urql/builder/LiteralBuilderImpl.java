@@ -73,6 +73,8 @@ import org.jrdf.urql.parser.node.PDbQuotedStrand;
 import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
 import org.jrdf.urql.parser.node.ALangQuotedLiteralLiteral;
 import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
+import org.jrdf.urql.parser.node.ALangDbQuotedLiteralLiteral;
+import org.jrdf.urql.parser.node.Node;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.LinkedList;
@@ -110,16 +112,19 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
     public void caseADbQuotedLiteralLiteral(ADbQuotedLiteralLiteral node) {
         LinkedList<PDbQuotedStrand> list = node.getDbQuotedStrand();
         PDbQuotedStrand tmpStrand = list.get(0);
-        if (tmpStrand instanceof ADbQuotedUnescapedDbQuotedStrand) {
-            ADbQuotedUnescapedDbQuotedStrand strand = (ADbQuotedUnescapedDbQuotedStrand) tmpStrand;
-            createLiteral(strand.getDbqtext().getText());
-        }
+        createLiteral(getText(tmpStrand));
     }
 
     @Override
     public void caseALangQuotedLiteralLiteral(ALangQuotedLiteralLiteral node) {
         String languageTag = node.getLanguage().getText();
         PQuotedStrand tmpStrand = node.getQuotedStrand().getFirst();
+        createLiteral(getText(tmpStrand), languageTag);
+    }
+
+    public void caseALangDbQuotedLiteralLiteral(ALangDbQuotedLiteralLiteral node) {
+        String languageTag = node.getLanguage().getText();
+        PDbQuotedStrand tmpStrand = node.getDbQuotedStrand().getFirst();
         createLiteral(getText(tmpStrand), languageTag);
     }
 
@@ -139,10 +144,13 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         }
     }
 
-    private String getText(PQuotedStrand tmpStrand) {
+    private String getText(Node tmpStrand) {
         if (tmpStrand instanceof AQuotedUnescapedQuotedStrand) {
             AQuotedUnescapedQuotedStrand strand = (AQuotedUnescapedQuotedStrand) tmpStrand;
             return strand.getQtext().getText();
+        } else if (tmpStrand instanceof ADbQuotedUnescapedDbQuotedStrand) {
+            ADbQuotedUnescapedDbQuotedStrand strand = (ADbQuotedUnescapedDbQuotedStrand) tmpStrand;
+            return strand.getDbqtext().getText();
         }
         return "";
     }

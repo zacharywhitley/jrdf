@@ -71,7 +71,6 @@ import org.jrdf.query.expression.*;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
-import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.NodeTestUtil.*;
 import static org.jrdf.util.test.SparqlQueryTestUtil.ANY_SPO;
@@ -89,8 +88,6 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2_UNION_
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2_UNION_EMPTY;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_EMPTY_UNION_BOOK_1_UNION_2;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_LITERAL_DOUBLE_QUOTES;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_LITERAL_SINGLE_QUOTES;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_3;
@@ -144,7 +141,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         "name", 3);
     private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX,
         "mbox", 4);
-    private static final Expression<ExpressionVisitor> TITLE_EXP_1 = createConstraintExpression("s", "p", LITERAL, 1);
     private static final String SELECT_WHERE_S_P_O_AND_EMPTY = "SELECT * WHERE { ?s ?p ?o . {} } ";
     private QueryParser parser;
 
@@ -165,12 +161,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testPrefix() {
         checkConstraintExpression(QUERY_BOOK_1_AND_2_WITH_PREFIX, BOOK1_AND_2_CONJUNCTION);
-    }
-
-    public void testLangConstraint() {
-        Literal langLiteral = createLiteral("hello", "en");
-        Expression<ExpressionVisitor> spHello = createConstraintExpression("s", "p", langLiteral, 1);
-        checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'@en }", spHello);
     }
 
     public void testTwoConstraints() {
@@ -242,12 +232,18 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression(QUERY_OPTIONAL_5, expectedExpression);
     }
 
-    public void testQuotedLiteralWithNoDataTypeOrLanguage() {
-        checkConstraintExpression(QUERY_LITERAL_SINGLE_QUOTES, TITLE_EXP_1);
+    public void testLiteralQuote() {
+        Expression<ExpressionVisitor> spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p 'The Pragmatic Programmer' } ", spPrag1);
+        Expression<ExpressionVisitor> spPrag2 = createConstraintExpression("s", "p", LITERAL, 2);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p \"The Pragmatic Programmer\" } ", spPrag2);
     }
 
-    public void testDoubleQuotedLiteralWithNoDataTypeOrLanguage() {
-        checkConstraintExpression(QUERY_LITERAL_DOUBLE_QUOTES, TITLE_EXP_1);
+    public void testLiteralWithLanguage() {
+        Expression<ExpressionVisitor> spHello1 = createConstraintExpression("s", "p", createLiteral("hello", "en"), 1);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'@en }", spHello1);
+        Expression<ExpressionVisitor> spHello2 = createConstraintExpression("s", "p", createLiteral("hello", "en"), 2);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p \"hello\"@en }", spHello2);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
