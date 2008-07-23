@@ -66,18 +66,15 @@ import org.jrdf.urql.parser.analysis.AnalysisAdapter;
 import org.jrdf.urql.parser.node.PLiteral;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.urql.parser.node.Switch;
-import org.jrdf.urql.parser.node.AQuotedLiteralLiteral;
-import org.jrdf.urql.parser.node.PQuotedStrand;
-import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteral;
-import org.jrdf.urql.parser.node.PDbQuotedStrand;
 import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
-import org.jrdf.urql.parser.node.ALangQuotedLiteralLiteral;
 import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
-import org.jrdf.urql.parser.node.ALangDbQuotedLiteralLiteral;
 import org.jrdf.urql.parser.node.Node;
+import org.jrdf.urql.parser.node.AUntypedLiteralLiteral;
+import org.jrdf.urql.parser.node.PLiteralValue;
+import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteralValue;
+import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
+import org.jrdf.urql.parser.node.ALangLiteralLiteral;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
-import java.util.LinkedList;
 
 public final class LiteralBuilderImpl extends AnalysisAdapter implements LiteralBuilder, Switch {
     private final GraphElementFactory factory;
@@ -101,32 +98,57 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         }
     }
 
-    @Override
-    public void caseAQuotedLiteralLiteral(AQuotedLiteralLiteral node) {
-        LinkedList<PQuotedStrand> list = node.getQuotedStrand();
-        PQuotedStrand tmpStrand = list.getFirst();
-        createLiteral(getText(tmpStrand));
-    }
 
     @Override
-    public void caseADbQuotedLiteralLiteral(ADbQuotedLiteralLiteral node) {
-        LinkedList<PDbQuotedStrand> list = node.getDbQuotedStrand();
-        PDbQuotedStrand tmpStrand = list.get(0);
-        createLiteral(getText(tmpStrand));
+    public void caseAUntypedLiteralLiteral(AUntypedLiteralLiteral node) {
+        PLiteralValue pLiteralValue = node.getLiteralValue();
+        String lexicalValue = getLexicalValue(pLiteralValue);
+        createLiteral(lexicalValue);
     }
 
-    @Override
-    public void caseALangQuotedLiteralLiteral(ALangQuotedLiteralLiteral node) {
+    public void caseALangLiteralLiteral(ALangLiteralLiteral node) {
         String languageTag = node.getLanguage().getText();
-        PQuotedStrand tmpStrand = node.getQuotedStrand().getFirst();
-        createLiteral(getText(tmpStrand), languageTag);
+        PLiteralValue pLiteralValue = node.getLiteralValue();
+        String lexicalValue = getLexicalValue(pLiteralValue);
+        createLiteral(lexicalValue, languageTag);
     }
 
-    public void caseALangDbQuotedLiteralLiteral(ALangDbQuotedLiteralLiteral node) {
-        String languageTag = node.getLanguage().getText();
-        PDbQuotedStrand tmpStrand = node.getDbQuotedStrand().getFirst();
-        createLiteral(getText(tmpStrand), languageTag);
+    private String getLexicalValue(PLiteralValue pLiteralValue) {
+        String lexicalValue = "";
+        if (pLiteralValue instanceof ADbQuotedLiteralLiteralValue) {
+            lexicalValue = getText(((ADbQuotedLiteralLiteralValue) pLiteralValue).getDbQuotedStrand().getFirst());
+        } else if (pLiteralValue instanceof AQuotedLiteralLiteralValue) {
+            lexicalValue = getText(((AQuotedLiteralLiteralValue) pLiteralValue).getQuotedStrand().getFirst());
+        }
+        return lexicalValue;
     }
+
+    //    @Override
+//    public void caseAQuotedLiteralLiteral(AQuotedLiteralLiteral node) {
+//        LinkedList<PQuotedStrand> list = node.getQuotedStrand();
+//        PQuotedStrand tmpStrand = list.getFirst();
+//        createLiteral(getText(tmpStrand));
+//    }
+//
+//    @Override
+//    public void caseADbQuotedLiteralLiteral(ADbQuotedLiteralLiteral node) {
+//        LinkedList<PDbQuotedStrand> list = node.getDbQuotedStrand();
+//        PDbQuotedStrand tmpStrand = list.get(0);
+//        createLiteral(getText(tmpStrand));
+//    }
+//
+//    @Override
+//    public void caseALangQuotedLiteralLiteral(ALangQuotedLiteralLiteral node) {
+//        String languageTag = node.getLanguage().getText();
+//        PQuotedStrand tmpStrand = node.getQuotedStrand().getFirst();
+//        createLiteral(getText(tmpStrand), languageTag);
+//    }
+//
+//    public void caseALangDbQuotedLiteralLiteral(ALangDbQuotedLiteralLiteral node) {
+//        String languageTag = node.getLanguage().getText();
+//        PDbQuotedStrand tmpStrand = node.getDbQuotedStrand().getFirst();
+//        createLiteral(getText(tmpStrand), languageTag);
+//    }
 
     private void createLiteral(String s) {
         try {
