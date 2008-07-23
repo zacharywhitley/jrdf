@@ -63,10 +63,14 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.urql.parser.analysis.AnalysisAdapter;
+import org.jrdf.urql.parser.node.ABooleanLiteral;
 import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
+import org.jrdf.urql.parser.node.ADecimalUnsignedNumericLiteral;
+import org.jrdf.urql.parser.node.AIntegerUnsignedNumericLiteral;
 import org.jrdf.urql.parser.node.ALangLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.urql.parser.node.ANumericLiteralLiteral;
 import org.jrdf.urql.parser.node.AQnameDatatypeDatatype;
 import org.jrdf.urql.parser.node.AQnameQnameElement;
 import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
@@ -74,12 +78,15 @@ import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
 import org.jrdf.urql.parser.node.ARdfLiteralLiteral;
 import org.jrdf.urql.parser.node.AResourceDatatypeDatatype;
 import org.jrdf.urql.parser.node.ATypedLiteralRdfLiteral;
+import org.jrdf.urql.parser.node.AUnsignedNumericLiteralNumericLiteral;
 import org.jrdf.urql.parser.node.AUntypedLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.PLiteral;
 import org.jrdf.urql.parser.node.Switch;
 import org.jrdf.urql.parser.node.Token;
+import org.jrdf.urql.parser.node.ABooleanLiteralLiteral;
 import org.jrdf.urql.parser.parser.ParserException;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.vocabulary.XSD;
 
 import java.net.URI;
 import static java.net.URI.create;
@@ -117,6 +124,39 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
     @Override
     public void caseARdfLiteralLiteral(ARdfLiteralLiteral node) {
         node.getRdfLiteral().apply(this);
+    }
+
+    @Override
+    public void caseANumericLiteralLiteral(ANumericLiteralLiteral node) {
+        node.getNumericLiteral().apply(this);
+    }
+
+    @Override
+    public void caseAUnsignedNumericLiteralNumericLiteral(AUnsignedNumericLiteralNumericLiteral node) {
+        node.getUnsignedNumericLiteral().apply(this);
+    }
+
+    @Override
+    public void caseAIntegerUnsignedNumericLiteral(AIntegerUnsignedNumericLiteral node) {
+        createLiteral(node.getInteger().getText(), XSD.INTEGER);
+    }
+
+    @Override
+    public void caseADecimalUnsignedNumericLiteral(ADecimalUnsignedNumericLiteral node) {
+        createLiteral(node.getDecimal().getText(), XSD.DECIMAL);
+    }
+
+    @Override
+    public void caseABooleanLiteralLiteral(ABooleanLiteralLiteral node) {
+        node.getBooleanLiteral().apply(this);
+    }
+
+    @Override
+    public void caseABooleanLiteral(ABooleanLiteral node) {
+        String s = node.getIdentifier().getText();
+        if (s.equals("true") || s.equals("false")) {
+            createLiteral(s, XSD.BOOLEAN);
+        }
     }
 
     @Override

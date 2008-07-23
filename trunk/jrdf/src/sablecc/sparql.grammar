@@ -21,7 +21,7 @@ Helpers
   nondbquote = [character - [dbquote + '\']];
   nonslash   = [[33..126] - sl];
   urlchar    = [character - '>'];
-  echar      = 't' | 'b' | 'n' | 'r' | 'f' | '\' | dbquote | quote; 
+  echar      = 't' | 'b' | 'n' | 'r' | 'f' | '\' | dbquote | quote;
 
 States
   def,      /* default state */
@@ -55,8 +55,11 @@ Tokens
   {def->res}                      url            = '<';
   {res->def}                      endurl         = '>';
   {def}                           period         = '.';
-  {def}                           number         = digit+;
-  {def}                           float          = digit+ ('.' digit*) | ('.' digit+);
+  {def}                           expon          = 'e' | 'E';
+  {def}                           plusminus      = '+' | '-';
+  {def}                           integer        = digit+;
+  {def}                           decimal        = digit+ '.' digit* | '.' digit+;
+  {def}                           double         = digit+ ('.' digit*) | '.' digit+ | digit+;
   {def}                           asterisk       = '*';
 
   {res}                           resource       = urlchar*;
@@ -155,7 +158,9 @@ Productions
     variableprefix identifier;
 
   literal =
-    {rdf_literal} rdf_literal ;
+    {rdf_literal} rdf_literal |
+    {numeric_literal} numeric_literal |
+    {boolean_literal} boolean_literal;
 
   rdf_literal =
     {untyped_literal} literal_value |
@@ -177,3 +182,16 @@ Productions
   datatype =
     {resource_datatype} datatypeprefix resource |
     {qname_datatype} datatypeprefix qname_element;
+
+  numeric_literal =
+    {unsigned_numeric_literal} unsigned_numeric_literal;
+
+  unsigned_numeric_literal =
+    {integer} integer |
+    {decimal} decimal |
+    {double} double exponent;
+
+  exponent =
+     expon plusminus? integer;
+
+  boolean_literal = identifier;
