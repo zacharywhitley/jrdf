@@ -62,6 +62,7 @@ package org.jrdf.urql.builder;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.GraphException;
 import org.jrdf.urql.parser.analysis.AnalysisAdapter;
 import org.jrdf.urql.parser.node.PLiteral;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
@@ -77,22 +78,27 @@ import org.jrdf.urql.parser.node.ALangLiteralLiteral;
 import org.jrdf.urql.parser.node.ATypedLiteralLiteral;
 import org.jrdf.urql.parser.node.PDatatype;
 import org.jrdf.urql.parser.node.AResourceDatatypeDatatype;
+import org.jrdf.urql.parser.node.AQnameDatatypeDatatype;
+import org.jrdf.urql.parser.node.AQnameQnameElement;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
 import static java.net.URI.*;
+import java.util.Map;
 
 public final class LiteralBuilderImpl extends AnalysisAdapter implements LiteralBuilder, Switch {
     private final GraphElementFactory factory;
-    private GraphElementFactoryException exception;
+    private final Map<String, String> prefixMap;
+    private GraphException exception;
     private Literal result;
 
-    public LiteralBuilderImpl(GraphElementFactory newFactory) {
-        checkNotNull(newFactory);
-        factory = newFactory;
+    public LiteralBuilderImpl(GraphElementFactory newFactory, Map<String, String> newPrefixMap) {
+        checkNotNull(newFactory, newPrefixMap);
+        this.factory = newFactory;
+        this.prefixMap = newPrefixMap;
     }
 
-    public Literal createLiteral(ALiteralObjectTripleElement element) throws GraphElementFactoryException {
+    public Literal createLiteral(ALiteralObjectTripleElement element) throws GraphException {
         checkNotNull(element);
         exception = null;
         PLiteral pLiteral = element.getLiteral();
@@ -119,12 +125,24 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
 
     public void caseATypedLiteralLiteral(ATypedLiteralLiteral node) {
         PDatatype pDatatype = node.getDatatype();
+        URI uri = getDatatype(pDatatype);
+        String lexicalValue = getLexicalValue(node.getLiteralValue());
+        createLiteral(lexicalValue, uri);
+    }
+
+    private URI getDatatype(PDatatype pDatatype) {
         URI uri = null;
         if (pDatatype instanceof AResourceDatatypeDatatype) {
             uri = create(((AResourceDatatypeDatatype) pDatatype).getResource().getText());
+        } else if (pDatatype instanceof AQnameDatatypeDatatype) {
+            AQnameQnameElement qname = (AQnameQnameElement) ((AQnameDatatypeDatatype) pDatatype).getQnameElement();
+            String prefix = qname.getNcnamePrefix().getText();
+            if (!prefixMap.keySet().contains(prefix)) {
+                exception = new GraphException("Prefix not found: " + prefix);
+            }
+            uri = create(prefixMap.get(prefix) + qname.getNcName().getText());
         }
-        String lexicalValue = getLexicalValue(node.getLiteralValue());
-        createLiteral(lexicalValue, uri);
+        return uri;
     }
 
     private String getLexicalValue(PLiteralValue pLiteralValue) {
