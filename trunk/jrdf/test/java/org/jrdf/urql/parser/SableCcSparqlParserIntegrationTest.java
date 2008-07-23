@@ -292,6 +292,12 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.300 }", spOnePointThreeZeroZeroZero);
     }
 
+//    public void testUnsignedNumericDoubleLiteral() throws Exception {
+//        Literal trueLiteral = createLiteral("1.3e6", XSD.DOUBLE);
+//        Expression<ExpressionVisitor> spTrue = createConstraintExpression("s", "p", trueLiteral, 1);
+//        checkConstraintExpression("SELECT * WHERE { ?s ?p 1.3e6 }", spTrue);
+//    }
+
     public void testBooleanLiteral() throws Exception {
         Literal trueLiteral = createLiteral("true", XSD.BOOLEAN);
         Literal falseLiteral = createLiteral("false", XSD.BOOLEAN);
@@ -300,7 +306,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression("SELECT * WHERE { ?s ?p true }", spTrue);
         checkConstraintExpression("SELECT * WHERE { ?s ?p false }", spFalse);
     }
-    
+
     private void checkConstraintExpression(String queryString, Expression expectedExpression) throws Exception {
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
