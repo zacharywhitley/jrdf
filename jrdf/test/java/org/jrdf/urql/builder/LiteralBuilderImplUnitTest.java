@@ -64,10 +64,8 @@ import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
-import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteral;
 import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
-import org.jrdf.urql.parser.node.AQuotedLiteralLiteral;
 import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
 import org.jrdf.urql.parser.node.PDbQuotedStrand;
 import org.jrdf.urql.parser.node.PQuotedStrand;
@@ -75,6 +73,10 @@ import org.jrdf.urql.parser.node.TDbqtext;
 import org.jrdf.urql.parser.node.TDbquote;
 import org.jrdf.urql.parser.node.TQtext;
 import org.jrdf.urql.parser.node.TQuote;
+import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
+import org.jrdf.urql.parser.node.PLiteralValue;
+import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteralValue;
+import org.jrdf.urql.parser.node.AUntypedLiteralLiteral;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
@@ -162,16 +164,16 @@ public class LiteralBuilderImplUnitTest extends TestCase {
         List<PQuotedStrand> strand = new ArrayList<PQuotedStrand>();
         strand.add(new AQuotedUnescapedQuotedStrand(new TQtext("hello")));
         TQuote tQuote = new TQuote("'");
-        AQuotedLiteralLiteral quotedLiteralLiteral = new AQuotedLiteralLiteral(tQuote, strand, tQuote);
-        return new ALiteralObjectTripleElement(quotedLiteralLiteral);
+        PLiteralValue quotedLiteralLiteral = new AQuotedLiteralLiteralValue(tQuote, strand, tQuote);
+        return new ALiteralObjectTripleElement(new AUntypedLiteralLiteral(quotedLiteralLiteral));
     }
 
     private ALiteralObjectTripleElement createDoubleQuotedElement() {
         List<PDbQuotedStrand> strand = new ArrayList<PDbQuotedStrand>();
         strand.add(new ADbQuotedUnescapedDbQuotedStrand(new TDbqtext("hello")));
         TDbquote tDbquote = new TDbquote("\"");
-        ADbQuotedLiteralLiteral quotedLiteralLiteral = new ADbQuotedLiteralLiteral(tDbquote, strand, tDbquote);
-        return new ALiteralObjectTripleElement(quotedLiteralLiteral);
+        PLiteralValue quotedLiteralLiteral = new ADbQuotedLiteralLiteralValue(tDbquote, strand, tDbquote);
+        return new ALiteralObjectTripleElement(new AUntypedLiteralLiteral(quotedLiteralLiteral));
     }
 }
 
