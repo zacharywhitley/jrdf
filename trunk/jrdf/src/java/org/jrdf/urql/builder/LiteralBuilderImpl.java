@@ -63,15 +63,16 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.urql.parser.analysis.AnalysisAdapter;
-import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteral;
-import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
-import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
-import org.jrdf.urql.parser.node.AQuotedLiteralLiteral;
-import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
-import org.jrdf.urql.parser.node.PDbQuotedStrand;
 import org.jrdf.urql.parser.node.PLiteral;
-import org.jrdf.urql.parser.node.PQuotedStrand;
+import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.urql.parser.node.Switch;
+import org.jrdf.urql.parser.node.AQuotedLiteralLiteral;
+import org.jrdf.urql.parser.node.PQuotedStrand;
+import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteral;
+import org.jrdf.urql.parser.node.PDbQuotedStrand;
+import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
+import org.jrdf.urql.parser.node.ALangQuotedLiteralLiteral;
+import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.LinkedList;
@@ -101,11 +102,8 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
     @Override
     public void caseAQuotedLiteralLiteral(AQuotedLiteralLiteral node) {
         LinkedList<PQuotedStrand> list = node.getQuotedStrand();
-        PQuotedStrand tmpStrand = list.get(0);
-        if (tmpStrand instanceof AQuotedUnescapedQuotedStrand) {
-            AQuotedUnescapedQuotedStrand strand = (AQuotedUnescapedQuotedStrand) tmpStrand;
-            createLiteral(strand.getQtext().getText());
-        }
+        PQuotedStrand tmpStrand = list.getFirst();
+        createLiteral(getText(tmpStrand));
     }
 
     @Override
@@ -118,11 +116,34 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         }
     }
 
+    @Override
+    public void caseALangQuotedLiteralLiteral(ALangQuotedLiteralLiteral node) {
+        String languageTag = node.getLanguage().getText();
+        PQuotedStrand tmpStrand = node.getQuotedStrand().getFirst();
+        createLiteral(getText(tmpStrand), languageTag);
+    }
+
     private void createLiteral(String s) {
         try {
             result = factory.createLiteral(s);
         } catch (GraphElementFactoryException e) {
             exception = e;
         }
+    }
+
+    private void createLiteral(String s, String language) {
+        try {
+            result = factory.createLiteral(s, language);
+        } catch (GraphElementFactoryException e) {
+            exception = e;
+        }
+    }
+
+    private String getText(PQuotedStrand tmpStrand) {
+        if (tmpStrand instanceof AQuotedUnescapedQuotedStrand) {
+            AQuotedUnescapedQuotedStrand strand = (AQuotedUnescapedQuotedStrand) tmpStrand;
+            return strand.getQtext().getText();
+        }
+        return "";
     }
 }

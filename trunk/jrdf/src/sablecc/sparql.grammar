@@ -30,6 +30,7 @@ States
   dbqesc,   /* escaping character in double quoted literal with '\' */
   qlit,     /* quoted literal */
   dbqlit,   /* double quoted literal */
+  lang,     /* language tag after literal */
   res,      /* tagged resource */
   var;      /* escaping variable name with '?' or '$' */
 
@@ -41,35 +42,39 @@ Tokens
   {def}                optional    = ('OPTIONAL' | 'optional');
   {def}                filter      = ('FILTER' | 'filter');
 
-  {def, var->def}             identifier     = letter (letter | digit | '_' | '$' | '?' )*;
-  {def}                       blank          = whitespace+;
-  {def->com}                  hash           = '#';
-  {com}                       comment        = [character - [lf + cr]];
-  {com->def}                  endcomment     = (lf | cr)+;
-  {def}                       terminator     = ';';
-  {def}                       colon          = ':';
-  {def}                       lpar           = '{';
-  {def}                       rpar           = '}';
-  {def->res}                  url            = '<';
-  {res->def}                  endurl         = '>';
-  {def}                       datatypeprefix = '^^';
-  {def->var}                  variableprefix = ('?' | '$');
-  {def}                       period         = '.';
-  {def}                       number         = digit+;
-  {def}                       float          = digit+ ('.' digit*) | ('.' digit+);
-  {def}                       asterisk       = '*';
+  {def->var}                      variableprefix = ('?' | '$');
+  {def, var->def}                 identifier     = letter (letter | digit | '_' | '$' | '?' )*;
+  {def}                           blank          = whitespace+;
+  {def->com}                      hash           = '#';
+  {com}                           comment        = [character - [lf + cr]];
+  {com->def}                      endcomment     = (lf | cr)+;
+  {def}                           terminator     = ';';
+  {def}                           colon          = ':';
+  {def}                           lpar           = '{';
+  {def}                           rpar           = '}';
+  {def->res}                      url            = '<';
+  {res->def}                      endurl         = '>';
+  {def}                           period         = '.';
+  {def}                           number         = digit+;
+  {def}                           float          = digit+ ('.' digit*) | ('.' digit+);
+  {def}                           asterisk       = '*';
 
-  {res}                       resource       = urlchar*;
+  {res}                           resource       = urlchar*;
 
-  {def->qlit, qlit->def}      quote          = quote;
-  {qlit}                      qtext          = nonquote+;
-  {qlit->qesc}                qescape        = '\';
-  {qesc->qlit}                qescapedtext   = character;
+  {def->qlit, qlit->def}          quote          = quote;
+  {qlit}                          qtext          = nonquote+;
+  {qlit->qesc}                    qescape        = '\';
+  {qesc->qlit}                    qescapedtext   = character;
 
-  {def->dbqlit, dbqlit->def}  dbquote        = dbquote;
-  {dbqlit}                    dbqtext        = nondbquote+;
-  {dbqlit->dbqesc}            dbqescape      = '\';
-  {dbqesc->dbqlit}            dbqescapedtext = character;
+  {def->dbqlit, dbqlit->def}      dbquote        = dbquote;
+  {dbqlit}                        dbqtext        = nondbquote+;
+  {dbqlit->dbqesc}                dbqescape      = '\';
+  {dbqesc->dbqlit}                dbqescapedtext = character;
+
+  {def->lang}                     at             = '@';
+  {lang->def}                     langtag        = letter+ ('-' | letter)*;
+
+  {def}                           datatypeprefix = '^^';
 
 Ignored Tokens
   blank, comment, qescape, dbqescape, endcomment, endurl, hash, url;
@@ -145,7 +150,8 @@ Productions
 
   literal =
     {quoted_literal} [opening_quote]:quote quoted_strand* [closing_quote]:quote |
-    {db_quoted_literal} [opening_db_quote]:dbquote db_quoted_strand* [closing_db_quote]:dbquote;
+    {db_quoted_literal} [opening_db_quote]:dbquote db_quoted_strand* [closing_db_quote]:dbquote |
+    {lang_quoted_literal} [opening_quote]:quote quoted_strand* [closing_quote]:quote at [language]:langtag ;
 
   quoted_strand =
     {quoted_unescaped} qtext |

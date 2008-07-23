@@ -66,18 +66,14 @@ import org.jrdf.graph.Literal;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
-import org.jrdf.query.expression.Conjunction;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Optional;
-import org.jrdf.query.expression.Projection;
-import org.jrdf.query.expression.Union;
+import org.jrdf.query.expression.*;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.NodeTestUtil.*;
 import static org.jrdf.util.test.SparqlQueryTestUtil.ANY_SPO;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
@@ -118,7 +114,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
-    private static final Literal LITERAL = NodeTestUtil.createLiteral("The Pragmatic Programmer");
+    private static final Literal LITERAL = createLiteral("The Pragmatic Programmer");
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_CONJUNCTION
         = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_CONJUNCTION
@@ -169,6 +165,12 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testPrefix() {
         checkConstraintExpression(QUERY_BOOK_1_AND_2_WITH_PREFIX, BOOK1_AND_2_CONJUNCTION);
+    }
+
+    public void testLangConstraint() {
+        Literal langLiteral = createLiteral("hello", "en");
+        Expression<ExpressionVisitor> spHello = createConstraintExpression("s", "p", langLiteral, 1);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'@en }", spHello);
     }
 
     public void testTwoConstraints() {
