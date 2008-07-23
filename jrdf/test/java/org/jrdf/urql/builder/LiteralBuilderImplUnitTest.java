@@ -63,20 +63,21 @@ import junit.framework.TestCase;
 import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
+import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
+import org.jrdf.urql.parser.node.AUntypedLiteralLiteral;
 import org.jrdf.urql.parser.node.PDbQuotedStrand;
+import org.jrdf.urql.parser.node.PLiteralValue;
 import org.jrdf.urql.parser.node.PQuotedStrand;
 import org.jrdf.urql.parser.node.TDbqtext;
 import org.jrdf.urql.parser.node.TDbquote;
 import org.jrdf.urql.parser.node.TQtext;
 import org.jrdf.urql.parser.node.TQuote;
-import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
-import org.jrdf.urql.parser.node.PLiteralValue;
-import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteralValue;
-import org.jrdf.urql.parser.node.AUntypedLiteralLiteral;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
@@ -88,20 +89,24 @@ import org.jrdf.util.test.ParameterDefinition;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings({"unchecked"})
 public class LiteralBuilderImplUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
-    private static final Class[] CONSTRUCTOR_PARAM_TYPES = new Class[]{GraphElementFactory.class};
+    private static final Class[] CONSTRUCTOR_PARAM_TYPES = new Class[]{GraphElementFactory.class, Map.class};
     private static final String[] PARAM_NAMES = {"element"};
     private static final Class[] PARAM_TYPES = {ALiteralObjectTripleElement.class};
     private static final ParameterDefinition BUILD_PARAM_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
-    private static final LiteralBuilder BUILDER = new LiteralBuilderImpl(factory.createMock(GraphElementFactory.class));
+    private static final HashMap<String,String> PREFIX_MAP = new HashMap<String, String>();
+    private static final LiteralBuilder BUILDER = new LiteralBuilderImpl(factory.createMock(GraphElementFactory.class),
+        PREFIX_MAP);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(LiteralBuilder.class, LiteralBuilderImpl.class);
-        checkConstructor(LiteralBuilderImpl.class, Modifier.PUBLIC, GraphElementFactory.class);
+        checkConstructor(LiteralBuilderImpl.class, Modifier.PUBLIC, GraphElementFactory.class, Map.class);
     }
 
     public void testBadParams() throws Exception {
@@ -128,7 +133,7 @@ public class LiteralBuilderImplUnitTest extends TestCase {
         factory.verify();
     }
 
-    private void checkLiteralCreation(ALiteralObjectTripleElement element) throws GraphElementFactoryException {
+    private void checkLiteralCreation(ALiteralObjectTripleElement element) throws GraphException {
         factory.reset();
         Literal literal = factory.createMock(Literal.class);
         LiteralBuilder builder = createBuilder();
@@ -140,7 +145,7 @@ public class LiteralBuilderImplUnitTest extends TestCase {
     }
 
     private void checkReturnsLiteral(LiteralBuilder builder, ALiteralObjectTripleElement element,
-        Literal expectedLiteral) throws GraphElementFactoryException {
+        Literal expectedLiteral) throws GraphException {
         Literal actualLiteral = builder.createLiteral(element);
         assertNotNull(actualLiteral);
         assertEquals(expectedLiteral, actualLiteral);
@@ -154,10 +159,10 @@ public class LiteralBuilderImplUnitTest extends TestCase {
         });
     }
 
-    private LiteralBuilder createBuilder() throws GraphElementFactoryException {
+    private LiteralBuilder createBuilder() throws GraphException {
         GraphElementFactory graphFactory = factory.createMock(GraphElementFactory.class);
         graphFactory.createLiteral("hello");
-        return new LiteralBuilderImpl(graphFactory);
+        return new LiteralBuilderImpl(graphFactory, new HashMap<String, String>());
     }
 
     private ALiteralObjectTripleElement createQuotedElement() {

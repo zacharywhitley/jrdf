@@ -252,9 +252,12 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Literal helloString = createLiteral("hello", XSD.STRING);
         Expression<ExpressionVisitor> spHello1 = createConstraintExpression("s", "p", one, 1);
         Expression<ExpressionVisitor> spHello2 = createConstraintExpression("s", "p", helloString, 2);
+        Expression<ExpressionVisitor> spHello3 = createConstraintExpression("s", "p", helloString, 3);
         checkConstraintExpression("SELECT * WHERE { ?s ?p '1'^^<http://www.w3.org/2001/XMLSchema#integer> }", spHello1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'^^<http://www.w3.org/2001/XMLSchema#string> }",
             spHello2);
+        checkConstraintExpression("PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>" +
+                " SELECT * WHERE { ?s ?p 'hello'^^xsd:string }", spHello3);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {

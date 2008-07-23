@@ -198,7 +198,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     private Literal createLiteral(ALiteralObjectTripleElement node) {
         try {
-            LiteralBuilder literalBuilder = new LiteralBuilderImpl(currentGraph.getElementFactory());
+            LiteralBuilder literalBuilder = new LiteralBuilderImpl(currentGraph.getElementFactory(), prefixMap);
             return literalBuilder.createLiteral(node);
         } catch (Exception e) {
             throw new RuntimeException(e);
