@@ -43,7 +43,8 @@ Tokens
   {def}                filter      = ('FILTER' | 'filter');
 
   {def->var}                      variableprefix = ('?' | '$');
-  {def, var->def}                 identifier     = letter (letter | digit | '_' | '$' | '?' )*;
+  {var->def}                      variablename   = letter (letter | digit | '_' | '$' | '?' )*;
+  {def}                           identifier     = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           blank          = whitespace+;
   {def->com}                      hash           = '#';
   {com}                           comment        = [character - [lf + cr]];
@@ -155,7 +156,7 @@ Productions
       {qname} [ncname_prefix]:identifier colon [nc_name]:identifier;
 
   variable =
-    variableprefix identifier;
+    variableprefix variablename;
 
   literal =
     {rdf_literal} rdf_literal |

@@ -162,12 +162,12 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     private String getVariableName(AVariableResourceTripleElement element) {
         AVariable variable = (AVariable) element.getVariable();
-        return variable.getIdentifier().toString().trim();
+        return variable.getVariablename().toString().trim();
     }
 
     private String getVariableName(AVariableObjectTripleElement element) {
         AVariable variable = (AVariable) element.getVariable();
-        return variable.getIdentifier().toString().trim();
+        return variable.getVariablename().toString().trim();
     }
 
     private AttributeValuePair createQNameResource(String identifier, String ncName) {

@@ -72,8 +72,8 @@ import org.jrdf.urql.parser.node.AVariable;
 import org.jrdf.urql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.urql.parser.node.PObjectTripleElement;
 import org.jrdf.urql.parser.node.PResourceTripleElement;
-import org.jrdf.urql.parser.node.TIdentifier;
 import org.jrdf.urql.parser.node.TResource;
+import org.jrdf.urql.parser.node.TVariablename;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public final class VariableTripleSpec implements TripleSpec {
     }
 
     private AVariableObjectTripleElement createVariableTripleElement(String variableNameTitle) {
-        TIdentifier identifier = new TIdentifier(variableNameTitle);
+        TVariablename identifier = new TVariablename(variableNameTitle);
         return new AVariableObjectTripleElement(new AVariable(VARIABLE_PREFIX, identifier));
     }
 }
