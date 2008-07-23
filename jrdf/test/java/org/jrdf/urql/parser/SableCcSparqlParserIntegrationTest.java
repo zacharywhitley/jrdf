@@ -276,6 +276,31 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         });
     }
 
+    public void testUnsignedNumericIntegerLiteral() throws Exception {
+        Literal one = createLiteral("1", XSD.INTEGER);
+        Expression<ExpressionVisitor> spOne = createConstraintExpression("s", "p", one, 1);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p 1 }", spOne);
+    }
+
+    public void testUnsignedNumericDecimalLiteral() throws Exception {
+        Literal onePointThree = createLiteral("1.3", XSD.DECIMAL);
+        Literal onePointThreeZeroZeroZero = createLiteral("1.300", XSD.DECIMAL);
+        Expression<ExpressionVisitor> spOnePointThree = createConstraintExpression("s", "p", onePointThree, 1);
+        Expression<ExpressionVisitor> spOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
+            onePointThreeZeroZeroZero, 2);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p 1.3 }", spOnePointThree);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p 1.300 }", spOnePointThreeZeroZeroZero);
+    }
+
+    public void testBooleanLiteral() throws Exception {
+        Literal trueLiteral = createLiteral("true", XSD.BOOLEAN);
+        Literal falseLiteral = createLiteral("false", XSD.BOOLEAN);
+        Expression<ExpressionVisitor> spTrue = createConstraintExpression("s", "p", trueLiteral, 1);
+        Expression<ExpressionVisitor> spFalse = createConstraintExpression("s", "p", falseLiteral, 2);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p true }", spTrue);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p false }", spFalse);
+    }
+    
     private void checkConstraintExpression(String queryString, Expression expectedExpression) throws Exception {
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
