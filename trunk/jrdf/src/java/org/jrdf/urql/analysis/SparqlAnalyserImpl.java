@@ -79,10 +79,10 @@ import org.jrdf.util.param.ParameterUtil;
  * @version $Revision: 982 $
  */
 public final class SparqlAnalyserImpl extends DepthFirstAdapter implements SparqlAnalyser {
+    private final GraphRelationFactory graphRelationFactory;
     private Query query = NO_QUERY;
     private TripleBuilder tripleBuilder;
     private Graph graph;
-    private final GraphRelationFactory graphRelationFactory;
     private Expression<ExpressionVisitor> expression;
     private ParserException exception;
 

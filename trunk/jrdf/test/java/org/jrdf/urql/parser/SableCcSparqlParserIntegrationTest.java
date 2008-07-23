@@ -61,6 +61,7 @@ package org.jrdf.urql.parser;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.vocabulary.XSD;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
 import org.jrdf.query.InvalidQuerySyntaxException;
@@ -244,6 +245,16 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'@en }", spHello1);
         Expression<ExpressionVisitor> spHello2 = createConstraintExpression("s", "p", createLiteral("hello", "en"), 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p \"hello\"@en }", spHello2);
+    }
+
+    public void testLiteralWithDatatype() {
+        Literal one = createLiteral("1", XSD.INTEGER);
+        Literal helloString = createLiteral("hello", XSD.STRING);
+        Expression<ExpressionVisitor> spHello1 = createConstraintExpression("s", "p", one, 1);
+        Expression<ExpressionVisitor> spHello2 = createConstraintExpression("s", "p", helloString, 2);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p '1'^^<http://www.w3.org/2001/XMLSchema#integer> }", spHello1);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'^^<http://www.w3.org/2001/XMLSchema#string> }",
+            spHello2);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {

@@ -74,7 +74,13 @@ import org.jrdf.urql.parser.node.PLiteralValue;
 import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.ALangLiteralLiteral;
+import org.jrdf.urql.parser.node.ATypedLiteralLiteral;
+import org.jrdf.urql.parser.node.PDatatype;
+import org.jrdf.urql.parser.node.AResourceDatatypeDatatype;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
+import java.net.URI;
+import static java.net.URI.*;
 
 public final class LiteralBuilderImpl extends AnalysisAdapter implements LiteralBuilder, Switch {
     private final GraphElementFactory factory;
@@ -101,16 +107,24 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
 
     @Override
     public void caseAUntypedLiteralLiteral(AUntypedLiteralLiteral node) {
-        PLiteralValue pLiteralValue = node.getLiteralValue();
-        String lexicalValue = getLexicalValue(pLiteralValue);
+        String lexicalValue = getLexicalValue(node.getLiteralValue());
         createLiteral(lexicalValue);
     }
 
     public void caseALangLiteralLiteral(ALangLiteralLiteral node) {
         String languageTag = node.getLanguage().getText();
-        PLiteralValue pLiteralValue = node.getLiteralValue();
-        String lexicalValue = getLexicalValue(pLiteralValue);
+        String lexicalValue = getLexicalValue(node.getLiteralValue());
         createLiteral(lexicalValue, languageTag);
+    }
+
+    public void caseATypedLiteralLiteral(ATypedLiteralLiteral node) {
+        PDatatype pDatatype = node.getDatatype();
+        URI uri = null;
+        if (pDatatype instanceof AResourceDatatypeDatatype) {
+            uri = create(((AResourceDatatypeDatatype) pDatatype).getResource().getText());
+        }
+        String lexicalValue = getLexicalValue(node.getLiteralValue());
+        createLiteral(lexicalValue, uri);
     }
 
     private String getLexicalValue(PLiteralValue pLiteralValue) {
@@ -123,33 +137,6 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         return lexicalValue;
     }
 
-    //    @Override
-//    public void caseAQuotedLiteralLiteral(AQuotedLiteralLiteral node) {
-//        LinkedList<PQuotedStrand> list = node.getQuotedStrand();
-//        PQuotedStrand tmpStrand = list.getFirst();
-//        createLiteral(getText(tmpStrand));
-//    }
-//
-//    @Override
-//    public void caseADbQuotedLiteralLiteral(ADbQuotedLiteralLiteral node) {
-//        LinkedList<PDbQuotedStrand> list = node.getDbQuotedStrand();
-//        PDbQuotedStrand tmpStrand = list.get(0);
-//        createLiteral(getText(tmpStrand));
-//    }
-//
-//    @Override
-//    public void caseALangQuotedLiteralLiteral(ALangQuotedLiteralLiteral node) {
-//        String languageTag = node.getLanguage().getText();
-//        PQuotedStrand tmpStrand = node.getQuotedStrand().getFirst();
-//        createLiteral(getText(tmpStrand), languageTag);
-//    }
-//
-//    public void caseALangDbQuotedLiteralLiteral(ALangDbQuotedLiteralLiteral node) {
-//        String languageTag = node.getLanguage().getText();
-//        PDbQuotedStrand tmpStrand = node.getDbQuotedStrand().getFirst();
-//        createLiteral(getText(tmpStrand), languageTag);
-//    }
-
     private void createLiteral(String s) {
         try {
             result = factory.createLiteral(s);
@@ -161,6 +148,14 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
     private void createLiteral(String s, String language) {
         try {
             result = factory.createLiteral(s, language);
+        } catch (GraphElementFactoryException e) {
+            exception = e;
+        }
+    }
+
+    private void createLiteral(String s, URI datatype) {
+        try {
+            result = factory.createLiteral(s, datatype);
         } catch (GraphElementFactoryException e) {
             exception = e;
         }
