@@ -165,7 +165,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         Long[] localizedTriple = localizer.localizeTriple(triple);
         Long mid = readableIndex.findMid(localizedTriple);
         Long pid = readableIndex.findEnclosingMoleculeId(mid);
-        Long topMoleculeID = (pid == 1L) ? mid : pid;
+        Long topMoleculeID = pid.equals(1L) ? mid : pid;
         return handlerImpl.createMolecule(1L, topMoleculeID);
     }
 

@@ -121,10 +121,10 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         try {
             while (subIndex.hasNext()) {
                 Long[] quad = subIndex.next();
-                if (quad[0] == mid) {
+                if (quad[0].equals(mid)) {
                     return 1L;
                 }
-                if (findParentMoleculeId(quad[0], mid) != 0L) {
+                if (!findParentMoleculeId(quad[0], mid).equals(0L)) {
                     return quad[0];
                 }
             }
@@ -145,12 +145,12 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         try {
             while (subIndex.hasNext()) {
                 Long[] quad = subIndex.next();
-                if (quad[0] == mid) {
+                if (quad[0].equals(mid)) {
                     subIndex.close();
                     return parentId;
                 }
                 Long tmpId = findParentMoleculeId(quad[0], mid);
-                if (tmpId != 0L) {
+                if (!tmpId.equals(0L)) {
                     subIndex.close();
                     return parentId;
                 }
