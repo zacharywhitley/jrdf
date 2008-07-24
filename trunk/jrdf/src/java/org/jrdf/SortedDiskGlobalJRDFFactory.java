@@ -138,8 +138,7 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
         graphNumber++;
         MapFactory factory = new BdbMapFactory(BDB_HANDLER, "database" + graphNumber);
         MoleculeIndex<Long>[] indexes = createIndexes();
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(
-                new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()), graphNumber);
+        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);
         MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexSesame(
                 btreeFactory.createQuinBTree(HANDLER, "spomm" + graphNumber));
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);

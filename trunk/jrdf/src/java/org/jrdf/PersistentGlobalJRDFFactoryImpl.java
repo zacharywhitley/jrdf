@@ -169,7 +169,9 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
     }
 
     public void close() {
-        collectionFactory.close();
+        if (collectionFactory != null) {
+            collectionFactory.close();
+        }
         for (MoleculeIndex<Long> index : openIndexes) {
             index.close();
         }

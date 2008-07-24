@@ -59,39 +59,49 @@
 
 package org.jrdf.util;
 
-/** Takes a quad long array and returns the 1st index.
+import java.util.NoSuchElementException;
+
+/**
+ * Takes a quad long array and returns the 1st index.
+ *
  * @author Yuan-Fang Li
  * @version :$
  */
 
 public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
     private ClosableIterator<Long[]> quadIterator;
-    private Long currentMid = -1L;
+    private Long currentMid;
 
     public EntryIteratorOneFixedOneArray(ClosableIterator<Long[]> quads) {
         quadIterator = quads;
-        currentMid = -1L;
+        currentMid = getNextMid();
+    }
+
+    private Long getNextMid() {
+        Long mid;
+        if (quadIterator.hasNext()) {
+            mid = quadIterator.next()[0];
+        } else {
+            mid = null;
+        }
+        return mid;
     }
 
     public boolean hasNext() {
-        final boolean hasNext = quadIterator.hasNext();
-        if (hasNext) {
-            Long tmpMid = currentMid;
-            while (quadIterator.hasNext() && tmpMid == currentMid) {
-                tmpMid = quadIterator.next()[0];
-            }
-            if (tmpMid == currentMid) {
-                return false;
-            } else {
-                currentMid = tmpMid;
-                return true;
-            }
-        }
-        return hasNext;
+        return currentMid != null;
     }
 
     public Long next() {
-        return currentMid;
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        Long tmpMid = currentMid;
+        Long thisMid = currentMid;
+        while (thisMid != null && thisMid == currentMid) {
+            thisMid = getNextMid();
+        }
+        currentMid = thisMid;
+        return tmpMid;
     }
 
     public void remove() {

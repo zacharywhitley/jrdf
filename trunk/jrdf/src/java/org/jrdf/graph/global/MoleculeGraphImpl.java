@@ -295,14 +295,10 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     public long getNumberOfMolecules() {
         final ClosableIterator<Long> iterator = readableIndex.findChildIds(1L);
         try {
-            Long previousValue = 0L;
             long size = 0;
             while (iterator.hasNext()) {
-                Long currentValue = iterator.next();
-                if (!currentValue.equals(previousValue)) {
-                    size++;
-                }
-                previousValue = currentValue;
+                iterator.next();
+                size++;
             }
             return size;
         } finally {
