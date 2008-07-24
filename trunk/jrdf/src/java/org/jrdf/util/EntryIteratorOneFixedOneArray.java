@@ -78,11 +78,9 @@ public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
     }
 
     private Long getNextMid() {
-        Long mid;
+        Long mid = null;
         if (quadIterator.hasNext()) {
             mid = quadIterator.next()[0];
-        } else {
-            mid = null;
         }
         return mid;
     }
@@ -97,7 +95,7 @@ public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
         }
         Long tmpMid = currentMid;
         Long thisMid = currentMid;
-        while (thisMid != null && thisMid == currentMid) {
+        while (thisMid != null && thisMid.equals(currentMid)) {
             thisMid = getNextMid();
         }
         currentMid = thisMid;
