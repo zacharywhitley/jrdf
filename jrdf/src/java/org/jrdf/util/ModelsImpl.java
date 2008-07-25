@@ -129,10 +129,6 @@ public class ModelsImpl implements Models {
         return graphNameToId.keySet().contains(name);
     }
 
-    public Set<Resource> getResources() {
-        return graphs;
-    }
-
     public long addGraph(String name) {
         GraphElementFactory graphElementFactory = graph.getElementFactory();
         highestId++;
@@ -159,6 +155,12 @@ public class ModelsImpl implements Models {
         }
     }
 
+    // TODO Remove this method (used on in testing)
+    public Set<Resource> getResources() {
+        return graphs;
+    }
+
+    // TODO Remove this method (used on in testing)
     public long getId(Resource resource) {
         ClosableIterator<ObjectNode> nodeClosableIterator = tryGetObjects(resource, ID);
         if (nodeClosableIterator.hasNext()) {
@@ -166,10 +168,6 @@ public class ModelsImpl implements Models {
         } else {
             return 0;
         }
-    }
-
-    public long highestId() {
-        return highestId;
     }
 
     private ClosableIterator<ObjectNode> tryGetObjects(Resource resource, URI predicate) {
