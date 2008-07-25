@@ -74,4 +74,6 @@ public interface MoleculeGraph extends Graph {
     // add.
     ClosableIterator<Molecule> iterator() throws GraphException;
     long getNumberOfMolecules();
+
+    ClosableIterator<Molecule> findMolecules(Triple rootTriple) throws GraphException;
 }

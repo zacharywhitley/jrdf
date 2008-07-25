@@ -101,6 +101,7 @@ import java.util.Set;
 public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJRDFFactory {
     private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
     private final Set<MoleculeIndex<Long>> openIndexes = new HashSet<MoleculeIndex<Long>>();
+    private final Set<MoleculeStructureIndex<Long>> openStructureIndexes = new HashSet<MoleculeStructureIndex<Long>>();
     private final DirectoryHandler handler;
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private BasePersistentJRDFFactory base;
@@ -146,13 +147,16 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
             index.close();
         }
         openIndexes.clear();
+        for (MoleculeStructureIndex<Long> index : openStructureIndexes) {
+            index.close();
+        }
+        openStructureIndexes.clear();
     }
 
     private MoleculeGraph getGraph(long graphNumber) {
         final NodePool nodePool = base.createNodePool(graphNumber);
         MoleculeIndex<Long>[] indexes = createMoleculeIndexes(graphNumber);
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexSesame(
-                btreeFactory.createQuinBTree(handler, "spomm" + graphNumber));
+        MoleculeStructureIndex<Long>[] structureIndex = createMoleculeStructureIndexes(graphNumber);
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
@@ -167,9 +171,18 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
 
     private MoleculeIndex<Long>[] createMoleculeIndexes(long graphNumber) {
         BTree[] bTrees = createBTrees(graphNumber);
-        final MoleculeIndex<Long>[] indexes = new MoleculeIndexSesame[] {new MoleculeIndexSesame(bTrees[0]),
+        final MoleculeIndex<Long>[] indexes = new MoleculeIndexSesame[]{new MoleculeIndexSesame(bTrees[0]),
             new MoleculeIndexSesame(bTrees[1]), new MoleculeIndexSesame(bTrees[2])};
         openIndexes.addAll(asList(indexes));
+        return indexes;
+    }
+
+    private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes(long graphNumber) {
+        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesame[] {
+            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "mmspo" + graphNumber)),
+            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "spomm" + graphNumber))
+        };
+        openStructureIndexes.addAll(asList(indexes));
         return indexes;
     }
 

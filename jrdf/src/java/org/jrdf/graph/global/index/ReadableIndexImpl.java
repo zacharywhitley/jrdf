@@ -71,15 +71,15 @@ import static java.util.Arrays.asList;
 
 public class ReadableIndexImpl implements ReadableIndex<Long> {
     private final MoleculeIndex<Long>[] indexes;
-    private final MoleculeStructureIndex<Long> structureIndex;
+    private final MoleculeStructureIndex<Long>[] structureIndex;
 
-    public ReadableIndexImpl(MoleculeIndex<Long>[] newIndexes, MoleculeStructureIndex<Long> newStructureIndex) {
+    public ReadableIndexImpl(MoleculeIndex<Long>[] newIndexes, MoleculeStructureIndex<Long>[] newStructureIndex) {
         this.indexes = newIndexes;
         this.structureIndex = newStructureIndex;
     }
 
     public Long findHeadTripleMid(Long PID, Long... triple) throws GraphException {
-        final ClosableIterator<Long[]> index = structureIndex.getSubIndex(PID);
+        final ClosableIterator<Long[]> index = structureIndex[0].getSubIndex(PID);
         while (index.hasNext()) {
             Long[] midSPO = index.next();
             // Make sure object equals required value and mid is not 1L (not in a molecule).
@@ -104,7 +104,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     }
 
     public ClosableIterator<Long[]> findTriplesForMid(Long pid, Long mid) {
-        return new EntryIteratorTwoFixedFourArray(structureIndex.getSubSubIndex(pid, mid), mid);
+        return new EntryIteratorTwoFixedFourArray(structureIndex[0].getSubSubIndex(pid, mid), mid);
     }
 
     /**
@@ -113,11 +113,11 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
      * @return
      */
     public ClosableIterator<Long[]> findTriplesForPid(Long pid) {
-        return new EntryIteratorOneFixedFourArray(structureIndex.getSubIndex(pid));
+        return new EntryIteratorOneFixedFourArray(structureIndex[0].getSubIndex(pid));
     }
 
     public Long findEnclosingMoleculeId(Long mid) throws GraphException {
-        ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(1L);
+        ClosableIterator<Long[]> subIndex = structureIndex[0].getSubIndex(1L);
         try {
             while (subIndex.hasNext()) {
                 Long[] quad = subIndex.next();
@@ -141,7 +141,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
      * @return
      */
     private Long findParentMoleculeId(Long parentId, Long mid) {
-        final ClosableIterator<Long[]> subIndex = structureIndex.getSubIndex(parentId);
+        final ClosableIterator<Long[]> subIndex = structureIndex[0].getSubIndex(parentId);
         try {
             while (subIndex.hasNext()) {
                 Long[] quad = subIndex.next();
@@ -162,7 +162,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     }
 
     public ClosableIterator<Long> findChildIds(Long parentId) {
-        return new EntryIteratorOneFixedOneArray(structureIndex.getSubIndex(parentId));
+        return new EntryIteratorOneFixedOneArray(structureIndex[0].getSubIndex(parentId));
     }
 
     public long getMaxMoleculeId() {
@@ -177,5 +177,9 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         } finally {
             iterator.close();
         }
+    }
+
+    public ClosableIterator<Long> findMoleculeIDs(Long[] triple) {
+        return structureIndex[1].getFourthIndex(triple[0], triple[1], triple[2], 1L);
     }
 }
