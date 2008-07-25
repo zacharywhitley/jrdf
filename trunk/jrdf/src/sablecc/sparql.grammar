@@ -22,6 +22,7 @@ Helpers
   nonslash   = [[33..126] - sl];
   urlchar    = [character - '>'];
   echar      = 't' | 'b' | 'n' | 'r' | 'f' | '\' | dbquote | quote;
+  digitstart = digit+ '.' digit* | '.' digit+ | digit+;
 
 States
   def,      /* default state */
@@ -42,13 +43,13 @@ Tokens
   {def}                optional    = ('OPTIONAL' | 'optional');
   {def}                filter      = ('FILTER' | 'filter');
 
+  {def->com}                      hash           = '#';
+  {com}                           comment        = [character - [lf + cr]];
+  {com->def}                      endcomment     = (lf | cr)+;
   {def->var}                      variableprefix = ('?' | '$');
   {var->def}                      variablename   = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           identifier     = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           blank          = whitespace+;
-  {def->com}                      hash           = '#';
-  {com}                           comment        = [character - [lf + cr]];
-  {com->def}                      endcomment     = (lf | cr)+;
   {def}                           terminator     = ';';
   {def}                           colon          = ':';
   {def}                           lpar           = '{';
@@ -56,11 +57,10 @@ Tokens
   {def->res}                      url            = '<';
   {res->def}                      endurl         = '>';
   {def}                           period         = '.';
-  {def}                           expon          = 'e' | 'E';
   {def}                           plusminus      = '+' | '-';
   {def}                           integer        = digit+;
   {def}                           decimal        = digit+ '.' digit* | '.' digit+;
-  {def}                           double         = digit+ ('.' digit*) | '.' digit+ | digit+;
+  {def}                           double         = digitstart ('e' | 'E') digit+;
   {def}                           asterisk       = '*';
 
   {res}                           resource       = urlchar*;
@@ -190,9 +190,6 @@ Productions
   unsigned_numeric_literal =
     {integer} integer |
     {decimal} decimal |
-    {double} double exponent;
-
-  exponent =
-     expon plusminus? integer;
+    {double} double;
 
   boolean_literal = identifier;
