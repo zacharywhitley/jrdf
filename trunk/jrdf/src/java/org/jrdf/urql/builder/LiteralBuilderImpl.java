@@ -68,10 +68,12 @@ import org.jrdf.urql.parser.node.ABooleanLiteralLiteral;
 import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
 import org.jrdf.urql.parser.node.ADecimalUnsignedNumericLiteral;
+import org.jrdf.urql.parser.node.ADoubleUnsignedNumericLiteral;
 import org.jrdf.urql.parser.node.AIntegerUnsignedNumericLiteral;
 import org.jrdf.urql.parser.node.ALangLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.urql.parser.node.ANumericLiteralLiteral;
+import org.jrdf.urql.parser.node.APositiveNumericLiteralNumericLiteral;
 import org.jrdf.urql.parser.node.AQnameDatatypeDatatype;
 import org.jrdf.urql.parser.node.AQnameQnameElement;
 import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
@@ -84,7 +86,7 @@ import org.jrdf.urql.parser.node.AUntypedLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.PLiteral;
 import org.jrdf.urql.parser.node.Switch;
 import org.jrdf.urql.parser.node.Token;
-import org.jrdf.urql.parser.node.ADoubleUnsignedNumericLiteral;
+import org.jrdf.urql.parser.node.ANegativeNumericLiteralNumericLiteral;
 import org.jrdf.urql.parser.parser.ParserException;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.vocabulary.XSD;
@@ -100,6 +102,7 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
     private Literal result;
     private URI uri;
     private String lexicalValue;
+    private String currentSign;
     private Token currentToken;
 
     public LiteralBuilderImpl(GraphElementFactory newFactory, Map<String, String> newPrefixMap) {
@@ -113,6 +116,7 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         exception = null;
         uri = null;
         lexicalValue = null;
+        currentSign = "";
         PLiteral pLiteral = element.getLiteral();
         pLiteral.apply(this);
         if (exception == null) {
@@ -138,17 +142,29 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
     }
 
     @Override
+    public void caseAPositiveNumericLiteralNumericLiteral(APositiveNumericLiteralNumericLiteral node) {
+        currentSign = "+";
+        node.getUnsignedNumericLiteral().apply(this);
+    }
+
+    @Override
+    public void caseANegativeNumericLiteralNumericLiteral(ANegativeNumericLiteralNumericLiteral node) {
+        currentSign = "-";
+        node.getUnsignedNumericLiteral().apply(this);
+    }
+
+    @Override
     public void caseAIntegerUnsignedNumericLiteral(AIntegerUnsignedNumericLiteral node) {
-        createLiteral(node.getInteger().getText(), XSD.INTEGER);
+        createLiteral(currentSign + node.getInteger().getText(), XSD.INTEGER);
     }
 
     @Override
     public void caseADecimalUnsignedNumericLiteral(ADecimalUnsignedNumericLiteral node) {
-        createLiteral(node.getDecimal().getText(), XSD.DECIMAL);
+        createLiteral(currentSign + node.getDecimal().getText(), XSD.DECIMAL);
     }
 
     public void caseADoubleUnsignedNumericLiteral(ADoubleUnsignedNumericLiteral node) {
-        createLiteral(node.getDouble().getText(), XSD.DOUBLE);
+        createLiteral(currentSign + node.getDouble().getText(), XSD.DOUBLE);
     }
 
     @Override
