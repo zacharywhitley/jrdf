@@ -84,6 +84,7 @@ import org.jrdf.urql.parser.node.AUntypedLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.PLiteral;
 import org.jrdf.urql.parser.node.Switch;
 import org.jrdf.urql.parser.node.Token;
+import org.jrdf.urql.parser.node.ADoubleUnsignedNumericLiteral;
 import org.jrdf.urql.parser.parser.ParserException;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.vocabulary.XSD;
@@ -144,6 +145,10 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
     @Override
     public void caseADecimalUnsignedNumericLiteral(ADecimalUnsignedNumericLiteral node) {
         createLiteral(node.getDecimal().getText(), XSD.DECIMAL);
+    }
+
+    public void caseADoubleUnsignedNumericLiteral(ADoubleUnsignedNumericLiteral node) {
+        createLiteral(node.getDouble().getText(), XSD.DOUBLE);
     }
 
     @Override
