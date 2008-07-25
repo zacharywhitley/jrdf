@@ -118,6 +118,7 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
     private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
     private static long graphNumber;
     private Set<MoleculeIndex<Long>> openIndexes = new HashSet<MoleculeIndex<Long>>();
+    private Set<MoleculeStructureIndex<Long>> openStructureIndexes = new HashSet<MoleculeStructureIndex<Long>>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private Set<MapFactory> openMapFactories = new HashSet<MapFactory>();
     private CollectionFactory collectionFactory;
@@ -138,8 +139,7 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
         MoleculeIndex<Long>[] indexes = createIndexes(factory);
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(
                 new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()), graphNumber);
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
+        MoleculeStructureIndex<Long>[] structureIndex = createMoleculeStructureIndexes();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
         NodePool nodePool = nodePoolFactory.createNewNodePool();
@@ -170,10 +170,26 @@ public final class SortedDiskBdbGlobalJRDFFactory implements MoleculeJRDFFactory
         for (NodePoolFactory openFactory : openFactories) {
             openFactory.close();
         }
+        for (MoleculeStructureIndex<Long> index : openStructureIndexes) {
+            index.close();
+        }
         openIndexes.clear();
         openFactories.clear();
         openMapFactories.clear();
+        openStructureIndexes.clear();
     }
+
+    private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes() {
+        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexMem[]{
+            new MoleculeStructureIndexMem(
+                    new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>()),
+            new MoleculeStructureIndexMem(
+                    new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>())
+        };
+        openStructureIndexes.addAll(asList(indexes));
+        return indexes;
+    }
+
 
     private MoleculeIndex<Long>[] createIndexes(MapFactory factory) {
         return new MoleculeIndexBdb[]{new MoleculeIndexBdb(factory), new MoleculeIndexBdb(factory),

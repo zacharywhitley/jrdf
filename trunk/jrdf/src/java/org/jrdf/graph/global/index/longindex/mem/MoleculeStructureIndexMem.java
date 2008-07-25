@@ -185,6 +185,11 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
         return new LongArrayEmptyClosableIterator();
     }
 
+    // TODO: YF IMPLEMENT
+    public ClosableIterator<Long> getFourthIndex(Long first, Long second, Long third, Long fourth) {
+        throw new UnsupportedOperationException("Needs implementatio!");
+    }
+
     public boolean removeSubIndex(Long first) {
         final boolean containsKey = index.containsKey(first);
         index.remove(first);

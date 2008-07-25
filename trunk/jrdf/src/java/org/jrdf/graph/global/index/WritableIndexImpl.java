@@ -65,11 +65,11 @@ import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 
 public class WritableIndexImpl implements WritableIndex<Long> {
     private final MoleculeIndex<Long>[] indexes;
-    private final MoleculeStructureIndex<Long> structureIndex;
+    private final MoleculeStructureIndex<Long>[] structureIndexes;
 
-    public WritableIndexImpl(MoleculeIndex<Long>[] newIndexes, MoleculeStructureIndex<Long> newStructureIndex) {
+    public WritableIndexImpl(MoleculeIndex<Long>[] newIndexes, MoleculeStructureIndex<Long>[] newStructureIndex) {
         this.indexes = newIndexes;
-        this.structureIndex = newStructureIndex;
+        this.structureIndexes = newStructureIndex;
     }
 
     public void add(Long... quin) throws GraphException {
@@ -80,7 +80,9 @@ public class WritableIndexImpl implements WritableIndex<Long> {
         // osp, mid
         indexes[2].add(quin[2], quin[0], quin[1], quin[3]);
         // parent, mid, spo
-        structureIndex.add(quin[4], quin[3], quin[0], quin[1], quin[2]);
+        structureIndexes[0].add(quin[4], quin[3], quin[0], quin[1], quin[2]);
+        //spo, parent, mid
+        structureIndexes[1].add(quin[0], quin[1], quin[2], quin[4], quin[3]);
     }
 
     public void remove(Long... quin) throws GraphException {
@@ -91,17 +93,26 @@ public class WritableIndexImpl implements WritableIndex<Long> {
         // osp, mid
         indexes[2].remove(quin[2], quin[0], quin[1], quin[3]);
         // parent, mid, spo
-        structureIndex.remove(quin[4], quin[3], quin[0], quin[1], quin[2]);
+        structureIndexes[0].remove(quin[4], quin[3], quin[0], quin[1], quin[2]);
+        // spo, parent, mid
+        structureIndexes[1].remove(quin[0], quin[1], quin[2], quin[4], quin[3]);
     }
 
     public void clear() {
         for (int i = 0; i < 3; i++) {
             indexes[i].clear();
         }
-        structureIndex.clear();
+        for (int i = 0; i < 2; i++) {
+            structureIndexes[i].clear();
+        }
     }
 
     public void close() {
-        structureIndex.close();
+        for (int i = 0; i < 3; i++) {
+            indexes[i].close();
+        }
+        for (int i = 0; i < 2; i++) {
+            structureIndexes[i].close();
+        }
     }
 }

@@ -94,7 +94,7 @@ public class EntryIteratorTwoFixedTwoArray implements ClosableIterator<Long[]> {
     }
 
     public void remove() {
-        throw new UnsupportedOperationException("Cannot collection values - read only");
+        throw new UnsupportedOperationException("Cannot remove collection values - read only");
     }
 
     private void getNextValues() {

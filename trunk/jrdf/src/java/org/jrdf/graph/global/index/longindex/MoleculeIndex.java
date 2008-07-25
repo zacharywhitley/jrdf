@@ -86,4 +86,6 @@ public interface MoleculeIndex<T> {
     long getSize();
 
     void close();
+
+    ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third);
 }

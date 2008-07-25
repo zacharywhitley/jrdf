@@ -119,6 +119,7 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
     private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
     private static long graphNumber;
     private Set<MoleculeIndex<Long>> openIndexes = new HashSet<MoleculeIndex<Long>>();
+    private Set<MoleculeStructureIndex<Long>> openStructureIndexes = new HashSet<MoleculeStructureIndex<Long>>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private Set<MapFactory> openMapFactories = new HashSet<MapFactory>();
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
@@ -139,8 +140,7 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
         MapFactory factory = new BdbMapFactory(BDB_HANDLER, "database" + graphNumber);
         MoleculeIndex<Long>[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexSesame(
-                btreeFactory.createQuinBTree(HANDLER, "spomm" + graphNumber));
+        MoleculeStructureIndex<Long>[] structureIndex = createMoleculeStructureIndexes(graphNumber);
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
         NodePool nodePool = nodePoolFactory.createNewNodePool();
@@ -171,7 +171,11 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
         for (NodePoolFactory openFactory : openFactories) {
             openFactory.close();
         }
+        for (MoleculeStructureIndex<Long> index : openStructureIndexes) {
+            index.close();
+        }
         openIndexes.clear();
+        openStructureIndexes.clear();
         openFactories.clear();
         openMapFactories.clear();
     }
@@ -181,6 +185,16 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
         return new MoleculeIndexSesame[]{new MoleculeIndexSesame(bTrees[0]), new MoleculeIndexSesame(bTrees[1]),
             new MoleculeIndexSesame(bTrees[2])};
     }
+
+    private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes(long graphNumber) {
+        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesame[] {
+            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(HANDLER, "mmspo" + graphNumber)),
+            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(HANDLER, "spomm" + graphNumber))
+        };
+        openStructureIndexes.addAll(asList(indexes));
+        return indexes;
+    }
+
 
     private BTree[] createBTrees() {
         return new BTree[]{btreeFactory.createQuadBTree(HANDLER, "spom" + graphNumber),

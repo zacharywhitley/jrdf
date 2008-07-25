@@ -119,8 +119,7 @@ public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory 
 
     public MoleculeGraph getNewGraph() {
         MoleculeIndex<Long>[] indexes = createIndexes();
-        MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexMem(
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>());
+        MoleculeStructureIndex<Long>[] structureIndex = createMoleculeStructureIndexes();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
@@ -153,4 +152,15 @@ public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory 
         MoleculeIndex<Long> ospm = new MoleculeIndexMem(map3);
         return new MoleculeIndexMem[]{(MoleculeIndexMem) spom, (MoleculeIndexMem) posm, (MoleculeIndexMem) ospm};
     }
+
+    private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes() {
+        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexMem[]{
+            new MoleculeStructureIndexMem(
+                    new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>()),
+            new MoleculeStructureIndexMem(
+                    new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>())
+        };
+        return indexes;
+    }
+
 }

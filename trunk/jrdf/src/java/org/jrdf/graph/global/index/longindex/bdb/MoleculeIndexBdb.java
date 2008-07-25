@@ -175,4 +175,9 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long> {
 
     public void close() {
     }
+
+    // TODO YF IMPLEMENT
+    public ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third) {
+        throw new UnsupportedOperationException("Needs implementation!");
+    }
 }

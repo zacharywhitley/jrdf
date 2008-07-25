@@ -170,6 +170,11 @@ public class MoleculeIndexMem implements MoleculeIndex<Long> {
         return new LongArrayEmptyClosableIterator();
     }
 
+    // TODO YF IMPLEMENTATION
+    public ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third) {
+        throw new UnsupportedOperationException("Needs implementation!");
+    }
+
     public boolean removeSubIndex(Long first) {
         final boolean containsKey = index.containsKey(first);
         index.remove(first);

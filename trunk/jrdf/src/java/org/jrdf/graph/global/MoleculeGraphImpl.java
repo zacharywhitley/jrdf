@@ -73,6 +73,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.index.AddMoleculeToIndex;
 import org.jrdf.graph.global.index.ReadableIndex;
 import org.jrdf.graph.global.index.WritableIndex;
+import org.jrdf.graph.global.molecule.ClosableMoleculeIterator;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeHandler;
@@ -174,6 +175,12 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         Long mid = readableIndex.findMid(localizedTriple);
         Long pid = readableIndex.findEnclosingMoleculeId(mid);
         return handlerImpl.createMolecule(pid, mid);
+    }
+
+    public ClosableIterator<Molecule> findMolecules(Triple rootTriple) throws GraphException {
+        Long[] localizedTriple = localizer.localizeTriple(rootTriple);
+        ClosableIterator<Long> midIterator = readableIndex.findMoleculeIDs(localizedTriple);
+        return new ClosableMoleculeIterator(midIterator, handlerImpl);
     }
 
     // TODO Add more stuff here to handle molecule indexes
