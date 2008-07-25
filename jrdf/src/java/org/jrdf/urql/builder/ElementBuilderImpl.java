@@ -97,6 +97,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     private final Graph currentGraph;
     private final Map<String, String> prefixMap;
     private ParserException exception;
+    private LiteralBuilder literalBuilder;
 
     public ElementBuilderImpl(NodeType nodeType, Node graphNode, Attribute attribute, Graph currentGraph,
             Map<String, String> prefixMap) {
@@ -105,6 +106,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         this.attribute = attribute;
         this.currentGraph = currentGraph;
         this.prefixMap = prefixMap;
+        literalBuilder = new LiteralBuilderImpl(currentGraph.getElementFactory(), prefixMap);
     }
 
     public AttributeValuePair getElement() throws ParserException {
@@ -117,8 +119,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseAResourceResourceTripleElement(AResourceResourceTripleElement node) {
-        String text = getStringForm(node);
-        avp = new AttributeValuePairImpl(attribute, createResource(text));
+        avp = new AttributeValuePairImpl(attribute, createResource(node.getResource().getText()));
     }
 
     @Override
@@ -134,8 +135,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseAResourceObjectTripleElement(AResourceObjectTripleElement node) {
-        String text = getStringForm(node);
-        avp = new AttributeValuePairImpl(attribute, createResource(text));
+        avp = new AttributeValuePairImpl(attribute, createResource(node.getResource().getText()));
     }
 
     @Override
@@ -181,14 +181,6 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         }
     }
 
-    private String getStringForm(AResourceResourceTripleElement resourceNode) {
-        return resourceNode.getResource().getText();
-    }
-
-    private String getStringForm(AResourceObjectTripleElement resourceNode) {
-        return resourceNode.getResource().getText();
-    }
-
     private URIReference createResource(String uri) {
         try {
             return currentGraph.getElementFactory().createURIReference(URI.create(uri));
@@ -200,7 +192,6 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     private Literal createLiteral(ALiteralObjectTripleElement node) {
         try {
-            LiteralBuilder literalBuilder = new LiteralBuilderImpl(currentGraph.getElementFactory(), prefixMap);
             return literalBuilder.createLiteral(node);
         } catch (ParserException e) {
             exception = e;
