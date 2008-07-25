@@ -112,11 +112,13 @@ public final class SableCcSparqllParser implements SparqlParser {
         try {
             return parser.parse();
         } catch (ParserException e) {
-            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE + " token: " + e.getToken(), e);
+            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE + " token: [" + e.getToken() + "]", e);
         } catch (LexerException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
         } catch (IOException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
+        } finally {
+            parserFactory.close();
         }
     }
 

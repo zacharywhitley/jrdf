@@ -66,14 +66,13 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
+import static org.jrdf.urql.builder.TripleSpecHelper.createAVariable;
+import static org.jrdf.urql.builder.TripleSpecHelper.createResource;
 import org.jrdf.urql.parser.node.AResourceObjectTripleElement;
 import org.jrdf.urql.parser.node.ATriple;
-import org.jrdf.urql.parser.node.AVariable;
 import org.jrdf.urql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.urql.parser.node.PObjectTripleElement;
 import org.jrdf.urql.parser.node.PResourceTripleElement;
-import org.jrdf.urql.parser.node.TResource;
-import org.jrdf.urql.parser.node.TVariablename;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -84,6 +83,7 @@ public final class VariableResourceTripleSpec implements TripleSpec {
     private String subjectVariable;
     private String predicateVariable;
     private URI objectUri;
+
 
     public VariableResourceTripleSpec(String subjectVariable, String predicateVariable, URI objectUri) {
         this.subjectVariable = subjectVariable;
@@ -103,18 +103,14 @@ public final class VariableResourceTripleSpec implements TripleSpec {
     }
 
     public ATriple getTriple() {
-        PResourceTripleElement subjectElement = createVariableResourceTripleElement(subjectVariable);
-        PResourceTripleElement predicateElement = createVariableResourceTripleElement(predicateVariable);
+        PResourceTripleElement subjectElement = new AVariableResourceTripleElement(createAVariable(subjectVariable));
+        PResourceTripleElement predicateElement =
+                new AVariableResourceTripleElement(createAVariable(predicateVariable));
         PObjectTripleElement objectElement = createResourceObjectTripleElement(objectUri);
         return new ATriple(subjectElement, predicateElement, objectElement);
     }
 
-    private AVariableResourceTripleElement createVariableResourceTripleElement(String variableNameTitle) {
-        TVariablename identifier = new TVariablename(variableNameTitle);
-        return new AVariableResourceTripleElement(new AVariable(VARIABLE_PREFIX, identifier));
-    }
-
     private AResourceObjectTripleElement createResourceObjectTripleElement(URI uri) {
-        return new AResourceObjectTripleElement(new TResource(uri.toString()));
+        return new AResourceObjectTripleElement(createResource(uri));
     }
 }

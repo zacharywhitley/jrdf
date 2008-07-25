@@ -132,7 +132,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     public void testParseThrowsParserException() throws Exception {
-        checkThrowsException(PARSER_EXECPTION, ERROR_MSG + " token: foo ");
+        checkThrowsException(PARSER_EXECPTION, ERROR_MSG + " token: [foo ]");
     }
 
     public void testParseThrowsLexerException() throws Exception {
@@ -173,6 +173,8 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         ParserFactory parserFactory = mockFactory.createMock(ParserFactory.class);
         parserFactory.getParser(QUERY_BOOK_1_DC_TITLE);
         expectLastCall().andReturn(parser);
+        parserFactory.close();
+        expectLastCall();
         return parserFactory;
     }
 

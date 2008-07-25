@@ -69,4 +69,6 @@ import org.jrdf.urql.parser.parser.Parser;
  */
 public interface ParserFactory {
     Parser getParser(String queryText);
+
+    void close();
 }

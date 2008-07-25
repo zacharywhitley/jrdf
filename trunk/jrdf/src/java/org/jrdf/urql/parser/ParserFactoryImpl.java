@@ -65,6 +65,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 
 import java.io.PushbackReader;
 import java.io.StringReader;
+import java.io.IOException;
 
 /**
  * Creates new SPARQL Parsers.
@@ -74,12 +75,21 @@ import java.io.StringReader;
  */
 public final class ParserFactoryImpl implements ParserFactory {
     private static final int PUSHBACK_BUFFER_SIZE = 256;
+    private PushbackReader reader;
 
     public Parser getParser(String queryText) {
         checkNotEmptyString("queryText", queryText);
         StringReader in = new StringReader(queryText);
-        PushbackReader reader = new PushbackReader(in, PUSHBACK_BUFFER_SIZE);
+        reader = new PushbackReader(in, PUSHBACK_BUFFER_SIZE);
         Lexer lexer = new Lexer(reader);
         return new Parser(lexer);
+    }
+
+    public void close() {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
