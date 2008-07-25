@@ -66,36 +66,28 @@ import java.io.IOException;
 
 public class BTreeFactoryImpl implements BTreeFactory {
     private static final int BLOCK_SIZE = 4096;
-    private static final int VALUE_SIZE = 24;
+    private static final int TRIPLE_VALUE_SIZE = 24;
+    private static final int QUAD_VALUE_SIZE = 32;
+    private static final int QUIN_VALUE_SIZE = 40;
 
     public BTree createBTree(DirectoryHandler handler, String fileName) {
-        RecordComparator comparator = new DefaultRecordComparator();
-        try {
-            File parent = handler.makeDir();
-            File file = new File(parent, fileName);
-            return new BTree(file, BLOCK_SIZE, VALUE_SIZE, comparator);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return createBTreeWithSize(handler, fileName, TRIPLE_VALUE_SIZE);
     }
 
     public BTree createQuadBTree(DirectoryHandler handler, String fileName) {
-        RecordComparator comparator = new DefaultRecordComparator();
-        try {
-            File parent = handler.makeDir();
-            File file = new File(parent, fileName);
-            return new BTree(file, BLOCK_SIZE, 32, comparator);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return createBTreeWithSize(handler, fileName, QUAD_VALUE_SIZE);
     }
 
     public BTree createQuinBTree(DirectoryHandler handler, String fileName) {
+        return createBTreeWithSize(handler, fileName, QUIN_VALUE_SIZE);
+    }
+
+    private BTree createBTreeWithSize(DirectoryHandler handler, String fileName, int size) {
         RecordComparator comparator = new DefaultRecordComparator();
         try {
             File parent = handler.makeDir();
             File file = new File(parent, fileName);
-            return new BTree(file, BLOCK_SIZE, 40, comparator);
+            return new BTree(file, BLOCK_SIZE, size, comparator);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -64,6 +64,9 @@ import org.jrdf.graph.GraphException;
 
 import java.util.Set;
 
+/**
+ * An abstraction for storing the names and locations and other associated values in a model.
+ */
 public interface Models {
     Set<Resource> getResources();
 
@@ -75,7 +78,7 @@ public interface Models {
 
     long getId(String graphName);
 
-    void addGraph(String name, Long id);
+    long addGraph(String name);
 
     boolean hasGraph(String name);
 }
