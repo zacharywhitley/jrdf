@@ -74,8 +74,6 @@ public interface Models {
 
     long getId(Resource resource);
 
-    long highestId();
-
     long getId(String graphName);
 
     long addGraph(String name);
