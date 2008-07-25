@@ -65,6 +65,7 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
+import static org.jrdf.urql.builder.TripleSpecHelper.createResource;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
@@ -78,7 +79,6 @@ import org.jrdf.urql.parser.node.PQuotedStrand;
 import org.jrdf.urql.parser.node.PResourceTripleElement;
 import org.jrdf.urql.parser.node.TQtext;
 import org.jrdf.urql.parser.node.TQuote;
-import org.jrdf.urql.parser.node.TResource;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -88,6 +88,7 @@ public final class LiteralTripleSpec implements TripleSpec {
     private URI subjectUri;
     private URI predicateUri;
     private String literal;
+
 
     public LiteralTripleSpec(URI subjectUri, URI predicateUri, String literal) {
         this.subjectUri = subjectUri;
@@ -121,7 +122,6 @@ public final class LiteralTripleSpec implements TripleSpec {
     }
 
     private AResourceResourceTripleElement createResourceTripleElement(URI uri) {
-        return new AResourceResourceTripleElement(new TResource(uri.toString()));
+        return new AResourceResourceTripleElement(createResource(uri));
     }
-
 }

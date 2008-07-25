@@ -61,8 +61,6 @@ package org.jrdf.util.test;
 
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.ConstraintImpl;
-import org.jrdf.query.relation.attributename.VariableName;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
@@ -71,7 +69,7 @@ import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_2;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_3;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.createBookDcTitleExpression;
-import static org.jrdf.util.test.TripleTestUtil.*;
+import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 
 /**
  * Artefacts used in tests.
