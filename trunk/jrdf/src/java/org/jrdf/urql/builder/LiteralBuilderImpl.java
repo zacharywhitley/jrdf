@@ -72,6 +72,7 @@ import org.jrdf.urql.parser.node.ADoubleUnsignedNumericLiteral;
 import org.jrdf.urql.parser.node.AIntegerUnsignedNumericLiteral;
 import org.jrdf.urql.parser.node.ALangLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.urql.parser.node.ANegativeNumericLiteralNumericLiteral;
 import org.jrdf.urql.parser.node.ANumericLiteralLiteral;
 import org.jrdf.urql.parser.node.APositiveNumericLiteralNumericLiteral;
 import org.jrdf.urql.parser.node.AQnameDatatypeDatatype;
@@ -83,10 +84,8 @@ import org.jrdf.urql.parser.node.AResourceDatatypeDatatype;
 import org.jrdf.urql.parser.node.ATypedLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.AUnsignedNumericLiteralNumericLiteral;
 import org.jrdf.urql.parser.node.AUntypedLiteralRdfLiteral;
-import org.jrdf.urql.parser.node.PLiteral;
 import org.jrdf.urql.parser.node.Switch;
 import org.jrdf.urql.parser.node.Token;
-import org.jrdf.urql.parser.node.ANegativeNumericLiteralNumericLiteral;
 import org.jrdf.urql.parser.parser.ParserException;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.vocabulary.XSD;
@@ -113,14 +112,30 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
 
     public Literal createLiteral(ALiteralObjectTripleElement element) throws ParserException {
         checkNotNull(element);
+        resetState();
+        parseElement(element);
+        return getResult(element);
+    }
+
+    private void resetState() {
+        result = null;
         exception = null;
         uri = null;
         lexicalValue = null;
         currentSign = "";
-        PLiteral pLiteral = element.getLiteral();
-        pLiteral.apply(this);
+    }
+
+    private void parseElement(ALiteralObjectTripleElement element) {
+        element.getLiteral().apply(this);
+    }
+
+    private Literal getResult(ALiteralObjectTripleElement element) throws ParserException {
         if (exception == null) {
-            return result;
+            if (result == null) {
+                throw new IllegalStateException("Unable to parse element: " + element);
+            } else {
+                return result;
+            }
         } else {
             throw exception;
         }
@@ -163,6 +178,7 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         createLiteral(currentSign + node.getDecimal().getText(), XSD.DECIMAL);
     }
 
+    @Override
     public void caseADoubleUnsignedNumericLiteral(ADoubleUnsignedNumericLiteral node) {
         createLiteral(currentSign + node.getDouble().getText(), XSD.DOUBLE);
     }
