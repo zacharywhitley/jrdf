@@ -59,33 +59,19 @@
 
 package org.jrdf;
 
-import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesameSync;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
-import static org.jrdf.parser.Reader.parseNTriples;
-import org.jrdf.query.QueryFactory;
-import org.jrdf.query.QueryFactoryImpl;
-import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnection;
-import org.jrdf.urql.UrqlConnectionImpl;
-import org.jrdf.urql.builder.QueryBuilder;
 import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.Models;
-import org.jrdf.util.ModelsImpl;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
-import static org.jrdf.writer.Writer.writeNTriples;
 
-import java.io.File;
 import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
@@ -97,84 +83,59 @@ import java.util.Set;
  * @version $Id$
  */
 public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
-    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
-    private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
-    private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private final DirectoryHandler handler;
-    private final BdbEnvironmentHandler bdbHandler;
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
-    private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
-    private long currentGraphNumber;
-    private CollectionFactory collectionFactory;
-    private Models models;
-    private Graph modelsGraph;
-    private File file;
+    private BasePersistentJRDFFactory base;
 
-    private PersistentJRDFFactoryImpl(DirectoryHandler handler) {
-        this.handler = handler;
-        this.bdbHandler = new BdbEnvironmentHandlerImpl(handler);
-        handler.makeDir();
-        file = new File(handler.getDir(), "graphs.nt");
-        modelsGraph = parseNTriples(file);
-        models = new ModelsImpl(modelsGraph);
-        currentGraphNumber = models.highestId();
+    private PersistentJRDFFactoryImpl(DirectoryHandler newHandler) {
+        this.handler = newHandler;
+        this.base = new BasePersistentJRDFFactoryImpl(newHandler, new BdbEnvironmentHandlerImpl(handler));
+        refresh();
     }
 
     public static PersistentJRDFFactory getFactory(DirectoryHandler handler) {
         return new PersistentJRDFFactoryImpl(handler);
     }
 
-    public void refresh() {
+    public UrqlConnection getNewUrqlConnection() {
+        return base.createUrqlConnection();
     }
 
     public boolean hasGraph(String name) {
-        return models.hasGraph(name);
-    }
-
-    public Graph getExistingGraph(String name) throws IllegalArgumentException {
-        if (models.getId(name) == 0) {
-            throw new IllegalArgumentException("Cannot get graph named: " + name);
-        } else {
-            return getGraph(models.getId(name));
-        }
+        return base.hasGraph(name);
     }
 
     public Graph getNewGraph(String name) {
-        currentGraphNumber++;
-        models.addGraph(name, currentGraphNumber);
-        writeNTriples(file, modelsGraph);
-        return getGraph(currentGraphNumber);
+        long graphNumber = base.addNewGraph(name);
+        return getGraph(graphNumber);
     }
 
-    public UrqlConnection getNewUrqlConnection() {
-        return new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
+    public Graph getExistingGraph(String name) throws IllegalArgumentException {
+        if (!base.hasGraph(name)) {
+            throw new IllegalArgumentException("Cannot get graph named: " + name);
+        } else {
+            return getGraph(base.getGraphId(name));
+        }
+    }
+
+    public void refresh() {
+        base.refresh();
     }
 
     public void close() {
-        collectionFactory.close();
+        base.close();
         for (LongIndex index : openIndexes) {
             index.close();
         }
-        for (NodePoolFactory openFactory : openFactories) {
-            openFactory.close();
-        }
         openIndexes.clear();
-        openFactories.clear();
     }
 
     private Graph getGraph(long graphNumber) {
         LongIndex[] indexes = createIndexes(graphNumber);
-        final NodePool nodePool = getNodePool(graphNumber);
-        collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
+        final NodePool nodePool = base.createNodePool(graphNumber);
+        CollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
         return new OrderedGraphFactoryImpl(indexes, nodePool, collectionFactory).getGraph();
-    }
-
-    private NodePool getNodePool(long graphNumber) {
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(bdbHandler, graphNumber);
-        final NodePool nodePool = nodePoolFactory.openExistingNodePool();
-        openFactories.add(nodePoolFactory);
-        return nodePool;
     }
 
     private LongIndex[] createIndexes(long graphNumber) {

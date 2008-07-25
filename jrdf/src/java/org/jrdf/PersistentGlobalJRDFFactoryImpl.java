@@ -59,7 +59,6 @@
 
 package org.jrdf;
 
-import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.global.MoleculeGraph;
@@ -77,30 +76,18 @@ import org.jrdf.graph.global.index.longindex.sesame.MoleculeIndexSesame;
 import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesame;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
-import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
-import static org.jrdf.parser.Reader.parseNTriples;
-import org.jrdf.query.QueryFactory;
-import org.jrdf.query.QueryFactoryImpl;
-import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnection;
-import org.jrdf.urql.UrqlConnectionImpl;
-import org.jrdf.urql.builder.QueryBuilder;
 import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.Models;
-import org.jrdf.util.ModelsImpl;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
-import static org.jrdf.writer.Writer.writeNTriples;
 
-import java.io.File;
 import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
@@ -112,81 +99,57 @@ import java.util.Set;
  * @version $Id$
  */
 public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJRDFFactory {
-    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
-    private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
-    private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
+    private final Set<MoleculeIndex<Long>> openIndexes = new HashSet<MoleculeIndex<Long>>();
     private final DirectoryHandler handler;
-    private final BdbEnvironmentHandler bdbHandler;
-    private Set<MoleculeIndex<Long>> openIndexes = new HashSet<MoleculeIndex<Long>>();
-    private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
-    private long currentGraphNumber;
-    private CollectionFactory collectionFactory;
-    private Models models;
-    private Graph modelsGraph;
-    private File file;
+    private BasePersistentJRDFFactory base;
 
-    private PersistentGlobalJRDFFactoryImpl(DirectoryHandler handler) {
-        this.handler = handler;
-        this.bdbHandler = new BdbEnvironmentHandlerImpl(handler);
-        handler.makeDir();
-        file = new File(handler.getDir(), "graphs.nt");
-        modelsGraph = parseNTriples(file);
-        models = new ModelsImpl(modelsGraph);
-        currentGraphNumber = models.highestId();
+    private PersistentGlobalJRDFFactoryImpl(DirectoryHandler newHandler) {
+        this.handler = newHandler;
+        this.base = new BasePersistentJRDFFactoryImpl(newHandler, new BdbEnvironmentHandlerImpl(handler));
+        refresh();
     }
 
     public static PersistentGlobalJRDFFactory getFactory(DirectoryHandler handler) {
         return new PersistentGlobalJRDFFactoryImpl(handler);
     }
 
-    public void refresh() {
+    public UrqlConnection getNewUrqlConnection() {
+        return base.createUrqlConnection();
     }
 
     public boolean hasGraph(String name) {
-        return models.hasGraph(name);
-    }
-
-    // TODO: Maybe model needs to remember the highest molecule id of an existing graph?
-    public MoleculeGraph getExistingGraph(String name) throws IllegalArgumentException {
-        if (models.getId(name) == 0) {
-            throw new IllegalArgumentException("Cannot get graph named: " + name);
-        } else {
-            return getGraph(models.getId(name));
-        }
+        return base.hasGraph(name);
     }
 
     public MoleculeGraph getNewGraph(String name) {
-        currentGraphNumber++;
-        models.addGraph(name, currentGraphNumber);
-        writeNTriples(file, modelsGraph);
-        return getGraph(currentGraphNumber);
+        long graphNumber = base.addNewGraph(name);
+        return getGraph(graphNumber);
     }
 
-    public UrqlConnection getNewUrqlConnection() {
-        return new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
+    public MoleculeGraph getExistingGraph(String name) throws IllegalArgumentException {
+        if (!base.hasGraph(name)) {
+            throw new IllegalArgumentException("Cannot get graph named: " + name);
+        } else {
+            return getGraph(base.getGraphId(name));
+        }
+    }
+
+    public void refresh() {
+        base.refresh();
     }
 
     public void close() {
-        if (collectionFactory != null) {
-            collectionFactory.close();
-        }
+        base.close();
         for (MoleculeIndex<Long> index : openIndexes) {
             index.close();
         }
-        for (NodePoolFactory openFactory : openFactories) {
-            openFactory.close();
-        }
         openIndexes.clear();
-        openFactories.clear();
     }
 
-    // TODO Molecules not persistent on disk since the localizer is initlaized with moleculeId 1L.
-    // Need to find a way to reconstruct the molecules from structure index.
     private MoleculeGraph getGraph(long graphNumber) {
-        collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
-        final NodePool nodePool = getNodePool(graphNumber);
+        final NodePool nodePool = base.createNodePool(graphNumber);
         MoleculeIndex<Long>[] indexes = createMoleculeIndexes(graphNumber);
         MoleculeStructureIndex<Long> structureIndex = new MoleculeStructureIndexSesame(
                 btreeFactory.createQuinBTree(handler, "spomm" + graphNumber));
@@ -194,18 +157,12 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
             new LongIndexAdapter(indexes[1]), new LongIndexAdapter(indexes[2])};
+        CollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
         final long curMaxMoleculeId = readIndex.getMaxMoleculeId();
-        MoleculeLocalizer moleculeLocalizer =
-                new MoleculeLocalizerImpl(new LocalizerImpl(nodePool, STRING_MAPPER), curMaxMoleculeId);
+        Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);
+        MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer, curMaxMoleculeId);
         return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph);
-    }
-
-    private NodePool getNodePool(long graphNumber) {
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(bdbHandler, graphNumber);
-        final NodePool nodePool = nodePoolFactory.openExistingNodePool();
-        openFactories.add(nodePoolFactory);
-        return nodePool;
     }
 
     private MoleculeIndex<Long>[] createMoleculeIndexes(long graphNumber) {

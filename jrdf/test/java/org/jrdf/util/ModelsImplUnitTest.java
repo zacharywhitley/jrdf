@@ -99,7 +99,7 @@ public class ModelsImplUnitTest extends TestCase {
 
     public void testRoundTrip() throws Exception {
         models = new ModelsImpl(newGraph);
-        models.addGraph("experts", 1L);
+        models.addGraph("experts");
         assertEquals(3, newGraph.getNumberOfTriples());
         Set<Resource> resources = models.getResources();
         assertEquals(1, resources.size());

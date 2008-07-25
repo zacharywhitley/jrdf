@@ -62,13 +62,13 @@ package org.jrdf.util;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
@@ -93,15 +93,15 @@ public class ModelsImpl implements Models {
 
     public ModelsImpl(Graph newGraph) {
         this.graph = newGraph;
-        init(newGraph);
+        init();
     }
 
-    private void init(Graph newGraph) {
+    private void init() {
         try {
-            GraphElementFactory elementFactory = newGraph.getElementFactory();
+            GraphElementFactory elementFactory = graph.getElementFactory();
             PredicateNode type = elementFactory.createURIReference(RDF.TYPE);
             ObjectNode graphName = elementFactory.createURIReference(GRAPH);
-            ClosableIterator<Triple> iterator = newGraph.find(ANY_SUBJECT_NODE, type, graphName);
+            ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, type, graphName);
             try {
                 while (iterator.hasNext()) {
                     Triple triple = iterator.next();
@@ -133,10 +133,12 @@ public class ModelsImpl implements Models {
         return graphs;
     }
 
-    public void addGraph(String name, Long id) {
+    public long addGraph(String name) {
         GraphElementFactory graphElementFactory = graph.getElementFactory();
-        Resource resource = tryAddGraph(name, id, graphElementFactory);
+        highestId++;
+        Resource resource = tryAddGraph(name, highestId, graphElementFactory);
         graphs.add(resource);
+        return highestId;
     }
 
     public String getName(Resource resource) {
