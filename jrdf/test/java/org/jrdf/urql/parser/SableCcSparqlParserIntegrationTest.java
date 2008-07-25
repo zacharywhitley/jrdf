@@ -278,24 +278,34 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testUnsignedNumericIntegerLiteral() throws Exception {
         Literal one = createLiteral("1", XSD.INTEGER);
+        Literal posTwo = createLiteral("+02", XSD.INTEGER);
         Expression<ExpressionVisitor> spOne = createConstraintExpression("s", "p", one, 1);
+        Expression<ExpressionVisitor> spPosTwo = createConstraintExpression("s", "p", posTwo, 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1 }", spOne);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p +02 }", spPosTwo);
     }
 
     public void testUnsignedNumericDecimalLiteral() throws Exception {
         Literal onePointThree = createLiteral("1.3", XSD.DECIMAL);
         Literal onePointThreeZeroZeroZero = createLiteral("1.300", XSD.DECIMAL);
+        Literal negOnePointThreeZeroZeroZero = createLiteral("-1.300", XSD.DECIMAL);
         Expression<ExpressionVisitor> spOnePointThree = createConstraintExpression("s", "p", onePointThree, 1);
         Expression<ExpressionVisitor> spOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
             onePointThreeZeroZeroZero, 2);
+        Expression<ExpressionVisitor> spNegOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
+            negOnePointThreeZeroZeroZero, 3);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.3 }", spOnePointThree);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.300 }", spOnePointThreeZeroZeroZero);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p -1.300 }", spNegOnePointThreeZeroZeroZero);
     }
 
     public void testUnsignedNumericDoubleLiteral() throws Exception {
         Literal doubleLiteral = createLiteral("1.3e6", XSD.DOUBLE);
+        Literal signedDoubleLiteral = createLiteral("+1.3E06", XSD.DOUBLE);
         Expression<ExpressionVisitor> spDouble = createConstraintExpression("s", "p", doubleLiteral, 1);
+        Expression<ExpressionVisitor> spSignedDouble = createConstraintExpression("s", "p", signedDoubleLiteral, 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.3e6 }", spDouble);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p +1.3E06 }", spSignedDouble);
     }
 
     public void testBooleanLiteral() throws Exception {

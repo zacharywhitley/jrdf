@@ -27,13 +27,13 @@ Helpers
 States
   def,      /* default state */
   com,      /* comment */
+  var,      /* escaping variable name with '?' or '$' */
   qesc,     /* escaping character in quoted literal with '\' */
   dbqesc,   /* escaping character in double quoted literal with '\' */
   qlit,     /* quoted literal */
   dbqlit,   /* double quoted literal */
   lang,     /* language tag after literal */
-  res,      /* tagged resource */
-  var;      /* escaping variable name with '?' or '$' */
+  res;      /* tagged resource */
 
 Tokens
   {def}                prefix      = ('PREFIX' | 'prefix');
@@ -48,21 +48,22 @@ Tokens
   {com->def}                      endcomment     = (lf | cr)+;
   {def->var}                      variableprefix = ('?' | '$');
   {var->def}                      variablename   = letter (letter | digit | '_' | '$' | '?' )*;
+  {def}                           asterisk       = '*';
   {def}                           identifier     = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           blank          = whitespace+;
   {def}                           terminator     = ';';
   {def}                           colon          = ':';
   {def}                           lpar           = '{';
   {def}                           rpar           = '}';
-  {def->res}                      url            = '<';
-  {res->def}                      endurl         = '>';
   {def}                           period         = '.';
-  {def}                           plusminus      = '+' | '-';
+  {def}                           plus           = '+';
+  {def}                           minus          = '-';
   {def}                           integer        = digit+;
   {def}                           decimal        = digit+ '.' digit* | '.' digit+;
   {def}                           double         = digitstart ('e' | 'E') digit+;
-  {def}                           asterisk       = '*';
 
+  {def->res}                      url            = '<';
+  {res->def}                      endurl         = '>';
   {res}                           resource       = urlchar*;
 
   {def->qlit, qlit->def}          quote          = quote;
@@ -185,7 +186,9 @@ Productions
     {qname_datatype} datatypeprefix qname_element;
 
   numeric_literal =
-    {unsigned_numeric_literal} unsigned_numeric_literal;
+    {unsigned_numeric_literal} unsigned_numeric_literal |
+    {positive_numeric_literal} plus unsigned_numeric_literal |
+    {negative_numeric_literal} minus unsigned_numeric_literal;
 
   unsigned_numeric_literal =
     {integer} integer |
