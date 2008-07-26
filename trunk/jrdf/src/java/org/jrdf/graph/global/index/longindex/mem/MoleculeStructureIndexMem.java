@@ -61,14 +61,16 @@ package org.jrdf.graph.global.index.longindex.mem;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.util.LongArrayEmptyClosableIterator;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
+import org.jrdf.util.ClosableSetLongIterator;
 import org.jrdf.util.FlatteningFiveLongClosableIterator;
 import org.jrdf.util.FlatteningFourLongClosableIterator;
 import org.jrdf.util.FlatteningThreeLongClosableIterator;
+import org.jrdf.util.LongArrayEmptyClosableIterator;
+import org.jrdf.util.LongEmptyClosableIterator;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -185,9 +187,19 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
         return new LongArrayEmptyClosableIterator();
     }
 
-    // TODO: YF IMPLEMENT
     public ClosableIterator<Long> getFourthIndex(Long first, Long second, Long third, Long fourth) {
-        throw new UnsupportedOperationException("Needs implementatio!");
+        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> firstIndex = index.get(first);
+        if (firstIndex != null) {
+            ClosableMap<Long, ClosableMap<Long, Set<Long>>> secondIndex = firstIndex.get(second);
+            if (secondIndex != null) {
+                ClosableMap<Long, Set<Long>> thirdIndex = secondIndex.get(third);
+                if (thirdIndex != null) {
+                    Set<Long> fourthIndex = thirdIndex.get(fourth);
+                    return new ClosableSetLongIterator(fourthIndex);
+                }
+            }
+        }
+        return new LongEmptyClosableIterator();
     }
 
     public boolean removeSubIndex(Long first) {
