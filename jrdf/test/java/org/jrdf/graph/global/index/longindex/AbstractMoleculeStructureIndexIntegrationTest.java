@@ -166,4 +166,37 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
         Set<Long[]> results = asSet(new Long[]{2L, 3L, 4L}, new Long[]{2L, 4L, 5L}, new Long[]{2L, 5L, 6L}, new Long[]{3L, 3L, 4L});
         checkResults(subIndex, results);
     }
+
+    public void testgetFourthIndex() throws GraphException {
+        index.add(1L, 1L, 2L, 3L, 4L);
+        index.add(1L, 1L, 2L, 4L, 5L);
+        index.add(1L, 1L, 2L, 5L, 6L);
+        index.add(1L, 1L, 3L, 3L, 4L);
+        index.add(2L, 2L, 2L, 5L, 6L);
+        index.add(2L, 4L, 5L, 6L, 7L);
+        index.add(1L, 1L, 2L, 3L, 5L);
+        ClosableIterator<Long> iterator = index.getFourthIndex(1L, 1L, 2L, 3L);
+        Set<Long> set = asSet(new Long[]{4L, 5L});
+        checkLongIterator(set, iterator);
+
+    }
+
+    private void checkLongIterator(Set<Long> set, ClosableIterator<Long> iterator) {
+        int length = 0;
+        while (iterator.hasNext()) {
+            length++;
+            Long item = iterator.next();
+            assertTrue("Contains long", setContainsLong(set, item));
+        }
+        assertEquals("Same length", set.size(), length);
+    }
+
+    private boolean setContainsLong(Set<Long> set, Long item) {
+        for (Long entry : set) {
+            if (entry.equals(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
