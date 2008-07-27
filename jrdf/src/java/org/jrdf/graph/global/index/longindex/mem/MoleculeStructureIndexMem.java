@@ -65,7 +65,6 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
-import org.jrdf.util.ClosableSetLongIterator;
 import org.jrdf.util.FlatteningFiveLongClosableIterator;
 import org.jrdf.util.FlatteningFourLongClosableIterator;
 import org.jrdf.util.FlatteningThreeLongClosableIterator;
@@ -195,7 +194,7 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
                 ClosableMap<Long, Set<Long>> thirdIndex = secondIndex.get(third);
                 if (thirdIndex != null) {
                     Set<Long> fourthIndex = thirdIndex.get(fourth);
-                    return new ClosableSetLongIterator(fourthIndex);
+                    return new ClosableIteratorImpl<Long>(fourthIndex.iterator());
                 }
             }
         }

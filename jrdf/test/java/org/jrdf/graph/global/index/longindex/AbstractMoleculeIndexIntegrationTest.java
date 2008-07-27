@@ -141,6 +141,38 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
         checkResults(subIndex, results);
     }
 
+    public void testGetSubSubSubIndex() throws GraphException {
+        index.add(1L, 1L, 2L, 3L);
+        index.add(1L, 1L, 2L, 4L);
+        index.add(1L, 1L, 2L, 5L);
+        index.add(1L, 1L, 3L, 3L);
+        index.add(2L, 2L, 2L, 5L);
+        index.add(2L, 4L, 5L, 6L);
+        ClosableIterator<Long> subIndex = index.getSubSubSubIndex(1L, 1L, 2L);
+        Set<Long> results = asSet(new Long[] {3L, 4L, 5L});
+        checkSetResults(subIndex, results);
+    }
+
+    private void checkSetResults(ClosableIterator<Long> iterator, Set<Long> results) {
+        int length = 0;
+        while (iterator.hasNext()) {
+            Long aLong = iterator.next();
+            length++;
+
+        }
+        iterator.close();
+        assertEquals("Same length", results.size(), length);
+    }
+
+    private boolean setContainsLong(Set<Long> set, Long item) {
+        for (Long entry : set) {
+            if (entry.equals(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void checkResults(ClosableIterator<Long[]> iterator, Set<Long[]> results) {
         int length = 0;
         while (iterator.hasNext()) {
