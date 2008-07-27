@@ -188,6 +188,7 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
             Long item = iterator.next();
             assertTrue("Contains long", setContainsLong(set, item));
         }
+        iterator.close();
         assertEquals("Same length", set.size(), length);
     }
 
