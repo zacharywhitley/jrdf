@@ -179,7 +179,6 @@ public class  MoleculeIndexBdb implements MoleculeIndex<Long> {
     public void close() {
     }
 
-    // TODO YF IMPLEMENT
     public ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third) {
         LinkedList<Long[]> list = index.get(first);
         if (list == null) {

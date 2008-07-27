@@ -26,6 +26,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="PersistentJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="PersistentGlobalJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="LongIndexBdb"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexBdb"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
