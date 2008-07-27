@@ -69,6 +69,7 @@ import org.jrdf.util.FlatteningFourLongClosableIterator;
 import org.jrdf.util.FlatteningThreeLongClosableIterator;
 import org.jrdf.util.FlatteningTwoLongClosableIterator;
 import org.jrdf.util.LongArrayEmptyClosableIterator;
+import org.jrdf.util.LongEmptyClosableIterator;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -170,9 +171,18 @@ public class MoleculeIndexMem implements MoleculeIndex<Long> {
         return new LongArrayEmptyClosableIterator();
     }
 
-    // TODO YF IMPLEMENTATION
     public ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third) {
-        throw new UnsupportedOperationException("Needs implementation!");
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> firstMap = index.get(first);
+        if (firstMap != null) {
+            ClosableMap<Long, Set<Long>> secondMap = firstMap.get(second);
+            if (secondMap != null) {
+                Set<Long> set = secondMap.get(third);
+                if (set != null) {
+                    return new ClosableIteratorImpl<Long>(set.iterator());
+                }
+            }
+        }
+        return new LongEmptyClosableIterator();
     }
 
     public boolean removeSubIndex(Long first) {

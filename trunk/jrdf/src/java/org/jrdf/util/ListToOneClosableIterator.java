@@ -59,23 +59,28 @@
 
 package org.jrdf.util;
 
-import java.util.Set;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Created by IntelliJ IDEA.
  * User: liyf
- * Date: Jul 26, 2008
- * Time: 10:33:17 PM
+ * Date: Jul 27, 2008
+ * Time: 12:27:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ClosableSetLongIterator implements ClosableIterator<Long> {
-    private Set<Long> set;
-    private Iterator<Long> iterator;
+public class ListToOneClosableIterator implements ClosableIterator<Long> {
 
-    public ClosableSetLongIterator(Set<Long> set) {
-        this.set = set;
-        this.iterator = this.set.iterator();
+    private Iterator<Long[]> itemIterator;
+    private Long second;
+    private Long third;
+    private Long currentValue;
+
+    public ListToOneClosableIterator(Long second, Long third, Iterator<Long[]> list) {
+        this.second = second;
+        this.third = third;
+        this.itemIterator = list;
+        updatePosition();
     }
 
     public boolean close() {
@@ -83,14 +88,30 @@ public class ClosableSetLongIterator implements ClosableIterator<Long> {
     }
 
     public boolean hasNext() {
-        return iterator.hasNext();
+        return currentValue != null;
     }
 
     public Long next() {
-        return iterator.next();
+        if (currentValue == null) {
+            throw new NoSuchElementException();
+        }
+        Long returnValue = currentValue;
+        updatePosition();
+        return returnValue;
     }
 
     public void remove() {
-        iterator.remove();
+        throw new UnsupportedOperationException();
+    }
+
+    private void updatePosition() {
+        while (itemIterator.hasNext()) {
+            Long[] longs = itemIterator.next();
+            if (longs[0].equals(second) && longs[1].equals(third)) {
+                currentValue = longs[2];
+                return;
+            }
+        }
+        currentValue = null;
     }
 }

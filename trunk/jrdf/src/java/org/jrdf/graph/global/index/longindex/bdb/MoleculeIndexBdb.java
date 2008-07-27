@@ -61,16 +61,19 @@ package org.jrdf.graph.global.index.longindex.bdb;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
-import org.jrdf.util.LongArrayEmptyClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.FlatteningEntrySetClosableIterator;
+import org.jrdf.util.ListToOneClosableIterator;
 import org.jrdf.util.ListToTwoValuesClosableIterator;
+import org.jrdf.util.LongArrayEmptyClosableIterator;
+import org.jrdf.util.LongEmptyClosableIterator;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 
 /**
@@ -78,7 +81,7 @@ import java.util.Map;
  * @version :$
  */
 
-public class MoleculeIndexBdb implements MoleculeIndex<Long> {
+public class  MoleculeIndexBdb implements MoleculeIndex<Long> {
     protected Map<Long, LinkedList<Long[]>> index;
 
     public MoleculeIndexBdb(MapFactory newCreator) {
@@ -178,6 +181,12 @@ public class MoleculeIndexBdb implements MoleculeIndex<Long> {
 
     // TODO YF IMPLEMENT
     public ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third) {
-        throw new UnsupportedOperationException("Needs implementation!");
+        LinkedList<Long[]> list = index.get(first);
+        if (list == null) {
+            return new LongEmptyClosableIterator();
+        } else {
+            Iterator<Long[]> iterator = list.iterator();
+            return new ListToOneClosableIterator(second, third, iterator);
+        }
     }
 }
