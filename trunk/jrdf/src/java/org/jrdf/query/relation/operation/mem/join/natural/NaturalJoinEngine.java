@@ -136,7 +136,7 @@ public class NaturalJoinEngine implements TupleEngine {
             resultantAttributeValues.add(avp1);
             return false;
         } else {
-            return avp1.addAttributeValuePair(avpComparator, resultantAttributeValues, avp2);
+            return avp2.addAttributeValuePair(avpComparator, resultantAttributeValues, avp1);
         }
     }
 }

@@ -56,99 +56,88 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+package org.jrdf.query.relation.mem;
 
-package org.jrdf.query.expression;
-
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
-import org.jrdf.query.relation.type.NodeType;
-import org.jrdf.util.EqualsUtil;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.SortedSet;
 
 /**
- * A expression expression comprising a single expression.
+ * Implementation of an attribute name/value consists of the name (SUBJECT, PREDICATE, etc.) and value.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Id$
  */
-public final class ConstraintImpl<V extends ExpressionVisitor> implements Constraint<V> {
-    private static final long serialVersionUID = 4538228991602138679L;
-    private static final int DUMMY_HASHCODE = 47;
-    private List<AttributeValuePair> singleAvp;
 
-    private ConstraintImpl() {
+// TODO (AN) Add a check that the attribute type is consistent with the node type - or add it into the Factory.
+
+public final class AttributeValuePairNotEqualImpl implements AttributeValuePair {
+    private static final long serialVersionUID = -5045948869879997736L;
+    private Attribute attribute;
+    private Node value;
+
+    // For serialization.
+    private AttributeValuePairNotEqualImpl() {
     }
 
-    public ConstraintImpl(List<AttributeValuePair> singleAvp) {
-        checkNotNull(singleAvp);
-        this.singleAvp = singleAvp;
+    public AttributeValuePairNotEqualImpl(Attribute newAttribute, Node newValue) {
+        attribute = newAttribute;
+        value = newValue;
     }
 
-    public List<AttributeValuePair> getAvp(Map<AttributeName, ? extends NodeType> allVariables) {
-        List<AttributeValuePair> newAvps = new ArrayList<AttributeValuePair>();
-        for (AttributeValuePair avp : singleAvp) {
-            Attribute existingAttribute = avp.getAttribute();
-            Attribute newAttribute;
-            if (allVariables != null) {
-                newAttribute = createNewAttribute(existingAttribute, allVariables);
-            } else {
-                newAttribute = existingAttribute;
-            }
-            newAvps.add(new AttributeValuePairImpl(newAttribute, avp.getValue()));
-        }
-        return newAvps;
+    public Attribute getAttribute() {
+        return attribute;
     }
 
-    public void accept(V v) {
-        v.visitConstraint(this);
+    public Node getValue() {
+        return value;
     }
 
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+    public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
+            SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
+        if (avpComparator.compare(this, avp) != 0) {
+            newAttributeValues.add(this);
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return attribute.hashCode() ^ value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
+        if (hasSuperClassOrInterface(AttributeValuePair.class, obj)) {
+            return determineEqualityFromFields((AttributeValuePair) obj);
         }
-        return determineEqualityFromFields(this, (ConstraintImpl) obj);
+        return false;
     }
 
-    public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
-        return DUMMY_HASHCODE;
-    }
-
-    /**
-     * Delegates to <code>getAvp().toString()</code>.
-     */
     @Override
     public String toString() {
-        return singleAvp.toString();
+        return "{" + attribute + ", " + value + "}";
     }
 
-    private boolean determineEqualityFromFields(ConstraintImpl o1, ConstraintImpl o2) {
-        return o1.singleAvp.equals(o2.singleAvp);
-    }
-
-    private Attribute createNewAttribute(Attribute existingAttribute,
-        Map<AttributeName, ? extends NodeType> allVariables) {
-        Attribute newAttribute;
-        AttributeName existingAttributeName = existingAttribute.getAttributeName();
-        NodeType newNodeType = allVariables.get(existingAttributeName);
-        if (newNodeType == null) {
-            newNodeType = existingAttribute.getType();
+    private boolean determineEqualityFromFields(AttributeValuePair attributeValuePair) {
+        if (attributeValuePair.getAttribute().equals(getAttribute())) {
+            if (attributeValuePair.getValue().equals(getValue())) {
+                return true;
+            }
         }
-        newAttribute = new AttributeImpl(existingAttributeName, newNodeType);
-        return newAttribute;
+        return false;
     }
 }
