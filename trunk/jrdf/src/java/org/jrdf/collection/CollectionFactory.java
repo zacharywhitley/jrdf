@@ -89,10 +89,16 @@ public interface CollectionFactory {
     <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator);
 
     /**
+     * Createa s list for a known type.
+     *
+     * @param clazz The type of list to create.
+     * @return A list.
+     */
+    <T> List<T> createList(Class<T> clazz);
+
+    /**
      * Close any resources used by the factory - possibly database connections, file handles and the like.  It is
      * expected that a factory used that is not close may cause resource leaks.
      */
     void close();
-
-    <T> List<T> createList(Class<T> clazz);
 }

@@ -63,6 +63,7 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.ReverseGroundedTripleComparatorImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
@@ -81,7 +82,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * An in memory implementation that uses TreeSets and a small number of known types: Triples and PredicateNodes.
+ * An in memory implementation that uses TreeSets.
  */
 public class MemCollectionFactory implements CollectionFactory {
     private Map<Class<?>, Comparator<?>> defaultComparators = new HashMap<Class<?>, Comparator<?>>();
@@ -89,11 +90,11 @@ public class MemCollectionFactory implements CollectionFactory {
     public MemCollectionFactory() {
         NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
         BlankNodeComparator comparator = new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl());
-        NodeComparator newNodeComparator = new NodeComparatorImpl(nodeTypeComparator,
-            comparator);
-        TripleComparatorImpl tripleComparator = new TripleComparatorImpl(newNodeComparator);
-        defaultComparators.put(Triple.class, new ReverseGroundedTripleComparatorImpl(tripleComparator));
-        defaultComparators.put(PredicateNode.class, newNodeComparator);
+        NodeComparator nodeComparator = new NodeComparatorImpl(nodeTypeComparator, comparator);
+        TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
+        TripleComparator reverseTripleComparator = new ReverseGroundedTripleComparatorImpl(tripleComparator);
+        defaultComparators.put(Triple.class, reverseTripleComparator);
+        defaultComparators.put(PredicateNode.class, nodeComparator);
         defaultComparators.put(BlankNode.class, comparator);
     }
 
