@@ -65,7 +65,6 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
@@ -106,7 +105,7 @@ public class NaturalJoinEngine implements TupleEngine {
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = tuple1.getAttribute(attribute);
             AttributeValuePair avp2 = tuple2.getAttribute(attribute);
-            contradiction = addAttributeValuePair(avp1, avp2);
+            contradiction = compareAvps(avp1, avp2);
 
             // If we didn't find one for the current heading end early.
             if (contradiction) {
@@ -121,13 +120,14 @@ public class NaturalJoinEngine implements TupleEngine {
         }
     }
 
-    private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2) {
-        // Add if avp1 is not null and avp2 is, or they are both equal.
-        if (avp1 != null) {
-            return avp1NotNull(avp1, avp2);
+    private boolean compareAvps(AttributeValuePair avp1, AttributeValuePair avp2) {
+        if (avp1 == null) {
+            if (avp2 != null) {
+                resultantAttributeValues.add(avp2);
+            }
+            return false;
         } else {
-            // Add if avp1 is null and avp2 is not.
-            return avp1Null(avp2);
+            return avp1NotNull(avp1, avp2);
         }
     }
 
@@ -135,26 +135,8 @@ public class NaturalJoinEngine implements TupleEngine {
         if (avp2 == null) {
             resultantAttributeValues.add(avp1);
             return false;
-        } else if (avpComparator.compare(avp1, avp2) == 0) {
-            addNonNullaryAvp(avp1, avp2);
-            return false;
         } else {
-            return true;
-        }
-    }
-
-    private boolean avp1Null(AttributeValuePair avp2) {
-        if (avp2 != null) {
-            resultantAttributeValues.add(avp2);
-        }
-        return false;
-    }
-
-    private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2) {
-        if (!(avp1 instanceof NullaryAttributeValuePair)) {
-            resultantAttributeValues.add(avp1);
-        } else {
-            resultantAttributeValues.add(avp2);
+            return avp1.addAttributeValuePair(avpComparator, resultantAttributeValues, avp2);
         }
     }
 }

@@ -62,6 +62,7 @@ package org.jrdf.query.relation;
 import org.jrdf.graph.Node;
 
 import java.io.Serializable;
+import java.util.SortedSet;
 
 /**
  * An attribute name/value consists of the name (SUBJECT, PREDICATE, etc.) and value.
@@ -83,4 +84,7 @@ public interface AttributeValuePair extends Serializable {
      * @return the value of the attribute.
      */
     Node getValue();
+
+    boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
+            SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp);
 }

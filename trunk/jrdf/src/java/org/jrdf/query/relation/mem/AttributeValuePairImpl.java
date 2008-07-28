@@ -61,9 +61,12 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
+
+import java.util.SortedSet;
 
 /**
  * Implementation of an attribute name/value consists of the name (SUBJECT, PREDICATE, etc.) and value.
@@ -76,8 +79,12 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 
 public final class AttributeValuePairImpl implements AttributeValuePair {
     private static final long serialVersionUID = -5045948869879997736L;
-    private final Attribute attribute;
-    private final Node value;
+    private Attribute attribute;
+    private Node value;
+
+    // For serialization.
+    private AttributeValuePairImpl() {
+    }
 
     public AttributeValuePairImpl(Attribute newAttribute, Node newValue) {
         attribute = newAttribute;
@@ -90,6 +97,15 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
 
     public Node getValue() {
         return value;
+    }
+
+    public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
+            SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
+        if (avpComparator.compare(this, avp) == 0) {
+            newAttributeValues.add(this);
+            return false;
+        }
+        return true;
     }
 
     @Override
