@@ -78,7 +78,7 @@ import java.util.TreeSet;
  * <p/>
  * The general algorithm is:
  * 1. Find all matching attributes on two relations.
- * 2. OuterUnionImpl the attributes and tuples together.
+ * 2. Union the attributes and tuples together.
  * 3. Remove any attributes that are not common between the two.
  * <p/>
  * For example:
