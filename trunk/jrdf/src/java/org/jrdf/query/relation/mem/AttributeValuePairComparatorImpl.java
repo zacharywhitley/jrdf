@@ -70,9 +70,6 @@ public final class AttributeValuePairComparatorImpl implements AttributeValuePai
     private AttributeComparator attributeComparator;
     private NodeComparator valueComparator;
 
-    private AttributeValuePairComparatorImpl() {
-    }
-
     public AttributeValuePairComparatorImpl(AttributeComparator newAttributeComparator,
             NodeComparator newValueComparator) {
         this.attributeComparator = newAttributeComparator;
