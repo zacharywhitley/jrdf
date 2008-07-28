@@ -155,19 +155,19 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     }
 
     private AttributeValuePair createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
-        AttributeName newAttributeName = new VariableName(variableName);
-        Attribute att = new AttributeImpl(newAttributeName, type);
+        AttributeName attributeName = new VariableName(variableName);
+        Attribute att = new AttributeImpl(attributeName, type);
         return new AttributeValuePairImpl(att, anyNode);
     }
 
     private String getVariableName(AVariableResourceTripleElement element) {
         AVariable variable = (AVariable) element.getVariable();
-        return variable.getVariablename().toString().trim();
+        return variable.getVariablename().getText();
     }
 
     private String getVariableName(AVariableObjectTripleElement element) {
         AVariable variable = (AVariable) element.getVariable();
-        return variable.getVariablename().toString().trim();
+        return variable.getVariablename().getText();
     }
 
     private AttributeValuePair createQNameResource(String identifier, String ncName) {
