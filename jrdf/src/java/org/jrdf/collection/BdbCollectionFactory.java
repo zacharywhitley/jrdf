@@ -99,7 +99,7 @@ public class BdbCollectionFactory implements CollectionFactory {
         }
     }
 
-    @SuppressWarnings({ "RawUseOfParameterizedType", "RedundantCast", "unchecked" })
+    @SuppressWarnings({ "RawUseOfParameterizedType" })
     public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
         try {
             collectionNumber++;
