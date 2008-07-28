@@ -121,7 +121,7 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2) {
-        // Add if avp1 is not null and avp2 is or they are both equal.
+        // Add if avp1 is not null and avp2 is, or they are both equal.
         if (avp1 != null) {
             return avp1NotNull(avp2, avp1);
         } else {
