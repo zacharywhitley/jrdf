@@ -63,6 +63,7 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.NodeTypeVisitor;
@@ -70,6 +71,7 @@ import org.jrdf.query.relation.type.NodeTypeVisitor;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
+import java.util.SortedSet;
 
 public final class NullaryAttributeValuePair implements AttributeValuePair, Serializable {
     private static final long serialVersionUID = 1808216129525892254L;
@@ -88,6 +90,12 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
 
     public Node getValue() {
         return new NullaryNode();
+    }
+
+    public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
+            SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
+        newAttributeValues.add(avp);
+        return false;
     }
 
     private static final class NullaryAttribute implements Attribute, Serializable {
