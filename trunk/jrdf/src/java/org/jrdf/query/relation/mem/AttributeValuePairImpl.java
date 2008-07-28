@@ -76,11 +76,8 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 
 public final class AttributeValuePairImpl implements AttributeValuePair {
     private static final long serialVersionUID = -5045948869879997736L;
-    private Attribute attribute;
-    private Node value;
-
-    private AttributeValuePairImpl() {
-    }
+    private final Attribute attribute;
+    private final Node value;
 
     public AttributeValuePairImpl(Attribute newAttribute, Node newValue) {
         attribute = newAttribute;
@@ -95,14 +92,12 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
         return value;
     }
 
-    public String toString() {
-        return "{" + attribute + ", " + value + "}";
-    }
-
+    @Override
     public int hashCode() {
         return attribute.hashCode() ^ value.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (isNull(obj)) {
             return false;
@@ -114,6 +109,11 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
             return determineEqualityFromFields((AttributeValuePair) obj);
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + attribute + ", " + value + "}";
     }
 
     private boolean determineEqualityFromFields(AttributeValuePair attributeValuePair) {
