@@ -66,26 +66,28 @@ import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 
 public final class AttributeValuePairComparatorImpl implements AttributeValuePairComparator {
     private static final long serialVersionUID = -1770166629461241873L;
+    private static final int EQUAL = 0;
     private AttributeComparator attributeComparator;
     private NodeComparator valueComparator;
 
     private AttributeValuePairComparatorImpl() {
     }
 
-    public AttributeValuePairComparatorImpl(AttributeComparator attributeComparator, NodeComparator valueComparator) {
-        this.attributeComparator = attributeComparator;
-        this.valueComparator = valueComparator;
+    public AttributeValuePairComparatorImpl(AttributeComparator newAttributeComparator,
+            NodeComparator newValueComparator) {
+        this.attributeComparator = newAttributeComparator;
+        this.valueComparator = newValueComparator;
     }
 
-    public int compare(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {
+    public int compare(AttributeValuePair attributeValuePair1, AttributeValuePair attributeValuePair2) {
         int result;
-        ifNullThrowException(attributeValuePair, attributeValuePair1);
-        if (isNullary(attributeValuePair, attributeValuePair1)) {
-            return 0;
+        ifNullThrowException(attributeValuePair1, attributeValuePair2);
+        if (isNullary(attributeValuePair1, attributeValuePair2)) {
+            return EQUAL;
         }
-        result = attributeComparator.compare(attributeValuePair.getAttribute(), attributeValuePair1.getAttribute());
-        if (result == 0) {
-            result = valueComparator.compare(attributeValuePair.getValue(), attributeValuePair1.getValue());
+        result = attributeComparator.compare(attributeValuePair1.getAttribute(), attributeValuePair2.getAttribute());
+        if (result == EQUAL) {
+            result = valueComparator.compare(attributeValuePair1.getValue(), attributeValuePair2.getValue());
         }
         return result;
     }

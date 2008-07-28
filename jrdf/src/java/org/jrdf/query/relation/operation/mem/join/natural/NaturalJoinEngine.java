@@ -88,11 +88,12 @@ public class NaturalJoinEngine implements TupleEngine {
     private final RelationHelper relationHelper;
     private SortedSet<AttributeValuePair> resultantAttributeValues;
 
-    public NaturalJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
-        RelationHelper relationHelper) {
-        this.tupleFactory = tupleFactory;
-        this.avpComparator = avpComparator;
-        this.relationHelper = relationHelper;
+    public NaturalJoinEngine(TupleFactory newTupleFactory, AttributeValuePairComparator newAvpComparator,
+        RelationHelper newRelationHelper) {
+        this.tupleFactory = newTupleFactory;
+        this.avpComparator = newAvpComparator;
+        this.relationHelper = newRelationHelper;
+        this.resultantAttributeValues = new TreeSet<AttributeValuePair>(newAvpComparator);
     }
 
     public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
@@ -100,7 +101,6 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
-        resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
         boolean contradiction = false;
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = tuple1.getAttribute(attribute);
@@ -118,6 +118,7 @@ public class NaturalJoinEngine implements TupleEngine {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
+        resultantAttributeValues.clear();
     }
 
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2) {
