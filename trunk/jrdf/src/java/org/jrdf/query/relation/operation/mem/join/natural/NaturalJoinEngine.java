@@ -124,14 +124,14 @@ public class NaturalJoinEngine implements TupleEngine {
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2) {
         // Add if avp1 is not null and avp2 is, or they are both equal.
         if (avp1 != null) {
-            return avp1NotNull(avp2, avp1);
+            return avp1NotNull(avp1, avp2);
         } else {
             // Add if avp1 is null and avp2 is not.
             return avp1Null(avp2);
         }
     }
 
-    private boolean avp1NotNull(AttributeValuePair avp2, AttributeValuePair avp1) {
+    private boolean avp1NotNull(AttributeValuePair avp1, AttributeValuePair avp2) {
         if (avp2 == null) {
             resultantAttributeValues.add(avp1);
             return false;
