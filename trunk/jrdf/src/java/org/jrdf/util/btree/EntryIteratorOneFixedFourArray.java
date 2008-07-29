@@ -71,12 +71,8 @@ public class EntryIteratorOneFixedFourArray implements ClosableIterator<Long[]> 
     private byte[] currentValues;
 
     public EntryIteratorOneFixedFourArray(long newFirst, BTree newBTree) {
-        try {
-            this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
-            this.currentValues = iterator.next();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
+        getNextValues();
     }
 
     public boolean hasNext() {
