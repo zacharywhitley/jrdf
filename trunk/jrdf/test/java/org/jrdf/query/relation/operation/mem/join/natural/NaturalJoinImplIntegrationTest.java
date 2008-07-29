@@ -71,6 +71,7 @@ import org.jrdf.query.relation.operation.NadicJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT;
@@ -80,10 +81,14 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_NOT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R5;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
@@ -248,8 +253,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
             POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
 
-        Relation relation = createRelation(resultTuple);
-        checkJoin(relation, createRelation(tuple1, tuple2));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
 
     public void testNaturalJoinNoResults() {
@@ -259,8 +263,24 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(heading, EMPTY_SET), createRelation(tuple1, tuple2));
     }
 
+    public void testNotEqualAttributeValuePair() {
+        Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R4, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        tuple1.addAll(tmpTuple);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R5, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        tuple1.addAll(tmpTuple);
+        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_NOT_R3);
+
+        Set<Attribute> heading = createHeading(VAR_BAR1_SUBJECT, POS_FOO2_PREDICATE, POS_FOO4_PREDICATE,
+                POS_FOO3_OBJECT, POS_FOO5_OBJECT);
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R4, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R5, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        resultTuple.addAll(tmpTuple);
+        checkJoin(createRelation(heading, resultTuple), createRelation(tuple1, tuple2));
+    }
+
     private void checkJoin(Relation expectedResult, List<Relation> relations) {
-        Set<Relation> tuples = createRelations(relations.toArray(new Relation[]{}));
+        Set<Relation> tuples = createRelations(relations.toArray(new Relation[relations.size()]));
         checkRelation(expectedResult, tuples);
     }
 

@@ -75,6 +75,7 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import org.jrdf.query.relation.mem.AttributeValuePairNotEqualImpl;
 import org.jrdf.query.relation.mem.RelationFactoryImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
@@ -87,6 +88,7 @@ import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.vocabulary.RDF;
 
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -163,8 +165,12 @@ public class RelationIntegrationTestUtil {
 
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R3 =
         new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
+    public static final AttributeValuePair VAR_BAR1_SUBJECT_NOT_R3 =
+        new AttributeValuePairNotEqualImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R4 =
         new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_4);
+    public static final AttributeValuePair VAR_BAR1_SUBJECT_R5 =
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_5);
     public static final AttributeValuePair VAR_BAR1_PREDICATE_R1 =
         new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_1);
     public static final AttributeValuePair VAR_BAR1_PREDICATE_R2 =
@@ -198,22 +204,20 @@ public class RelationIntegrationTestUtil {
     public static Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
         AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
         Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(avpComparator);
-        for (AttributeValuePair attributeValuePair : attributeValuePairs) {
-            values.add(attributeValuePair);
-        }
+        values.addAll(asList(attributeValuePairs));
 
-        TupleComparator tupleComparator = FACTORY.getNewTupleComparator();
-        Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
         TupleFactory tf = new TupleFactoryImpl(FACTORY.getNewAttributeValuePairComparator());
         Tuple t = tf.getTuple(values);
+        TupleComparator tupleComparator = FACTORY.getNewTupleComparator();
+        Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
         tuples.add(t);
         return tuples;
     }
 
-    public static List<Relation> createRelation(Set<Tuple>... tuple) {
+    public static List<Relation> createRelation(Set<Tuple>... tuples) {
         List<Relation> relations = new ArrayList<Relation>();
-        for (Set<Tuple> tuples : tuple) {
-            Relation relation = createRelation(tuples);
+        for (Set<Tuple> tuple : tuples) {
+            Relation relation = createRelation(tuple);
             relations.add(relation);
         }
         return relations;

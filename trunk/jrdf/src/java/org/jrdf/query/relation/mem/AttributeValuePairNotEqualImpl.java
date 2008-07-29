@@ -100,9 +100,9 @@ public final class AttributeValuePairNotEqualImpl implements AttributeValuePair 
     }
 
     public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
-            SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
+        SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
         if (avpComparator.compare(this, avp) != 0) {
-            newAttributeValues.add(this);
+            newAttributeValues.add(avp);
             return false;
         }
         return true;
