@@ -64,18 +64,19 @@ import org.jrdf.SortedMemoryJRDFFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Literal;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
+import static java.net.URI.create;
 import java.util.Iterator;
 
 /**
@@ -88,28 +89,18 @@ public class JrdfExample {
     private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactory.getFactory();
 
     //Resources
-    private URIReference person;
+    private Resource person;
+    private Resource address;
 
-    private BlankNode address;
     //Properties
-    private URIReference hasAddress;
-    private URIReference hasStreet;
-    private URIReference hasCity;
-    private URIReference hasState;
-
-    private URIReference hasPostCode;
-    //Values
-    private Literal street;
-    private Literal city;
-    private Literal state;
-
-    private Literal postCode;
-    //Statements
+    private static final URI HAS_ADDRESS = create("http://example.org/terms#address");
+    private static final URI HAS_STREET = create("http://example.org/terms#street");
+    private static final URI HAS_CITY = create("http://example.org/terms#city");
+    private static final URI HAS_STATE = create("http://example.org/terms#state");
+    private static final URI HAS_POSTCODE = create("http://example.org/terms#postalCode");
+    private static final URI PERSON = create("http://example.org/staffid#85740");
     private Triple addressStatement;
-    private Triple streetStatement;
     private Triple cityStatement;
-    private Triple stateStatement;
-    private Triple postCodeStatement;
 
     /**
      * Default Constructor.
@@ -132,9 +123,11 @@ public class JrdfExample {
         Graph graph = JRDF_FACTORY.getNewGraph();
 
         //create example data
-        initializeData(graph);
 
-        //insert example statements
+        //initialize Nodes and Triples
+        System.out.println("Creating Graph Elements...");
+
+        //create statements
         populateGraph(graph);
 
         //perform find() operations
@@ -149,70 +142,17 @@ public class JrdfExample {
         System.out.println("Example finished.");
     }
 
-    /**
-     * Creates Nodes and Triples used by the Example.
-     *
-     * @param graph Graph
-     * @throws Exception
-     */
-    private void initializeData(Graph graph) throws Exception {
-
-        //initialize Nodes and Triples
-        System.out.println("Creating Graph Elements...");
-
-        //get the Factory
+    private void populateGraph(Graph graph) throws GraphException {
         GraphElementFactory elementFactory = graph.getElementFactory();
-        TripleFactory tripleFactory = graph.getTripleFactory();
-
-        assignVlues(elementFactory);
-
-        //create statements
-        createStatments(tripleFactory);
-    }
-
-    private void assignVlues(GraphElementFactory elementFactory) throws Exception {
-        //create resources
-        person = elementFactory.createURIReference(new URI("http://example.org/staffid#85740"));
-        address = elementFactory.createBlankNode();
-
-        //create properties
-        hasAddress = elementFactory.createURIReference(new URI("http://example.org/terms#address"));
-        hasStreet = elementFactory.createURIReference(new URI("http://example.org/terms#street"));
-        hasCity = elementFactory.createURIReference(new URI("http://example.org/terms#city"));
-        hasState = elementFactory.createURIReference(new URI("http://example.org/terms#state"));
-        hasPostCode = elementFactory.createURIReference(new URI("http://example.org/terms#postalCode"));
-
-        //create values
-        street = elementFactory.createLiteral("1501 Grant Avenue");
-        city = elementFactory.createLiteral("Bedford");
-        state = elementFactory.createLiteral("Massachusetts");
-        postCode = elementFactory.createLiteral("01730");
-    }
-
-    private void createStatments(TripleFactory tripleFactory) {
-        addressStatement = tripleFactory.createTriple(person, hasAddress, address);
-        streetStatement = tripleFactory.createTriple(address, hasStreet, street);
-        cityStatement = tripleFactory.createTriple(address, hasCity, city);
-        stateStatement = tripleFactory.createTriple(address, hasState, state);
-        postCodeStatement = tripleFactory.createTriple(address, hasPostCode, postCode);
-    }
-
-    /**
-     * Inserts example statements into the Graph.
-     *
-     * @param graph Graph
-     * @throws Exception
-     */
-    private void populateGraph(Graph graph) throws Exception {
-
-        System.out.println("Populating Graph...");
-
-        //insert the statements
+        person = elementFactory.createResource(PERSON);
+        address = elementFactory.createResource();
+        addressStatement = person.asTriple(HAS_ADDRESS, address);
         graph.add(addressStatement);
-        graph.add(streetStatement);
+        address.addValue(HAS_STREET, "1501 Grant Avenue");
+        cityStatement = address.asTriple(HAS_CITY, "Bedford");
         graph.add(cityStatement);
-        graph.add(stateStatement);
-        graph.add(postCodeStatement);
+        address.addValue(HAS_STATE, "Massachusetts");
+        address.addValue(HAS_POSTCODE, "01730");
 
         //print contents
         print("Graph contains: ", graph);
@@ -225,43 +165,52 @@ public class JrdfExample {
      * @throws Exception
      */
     private void searchGraph(Graph graph) throws Exception {
-
         System.out.println("Searching Graph...");
 
         //get the Factory
         TripleFactory tripleFactory = graph.getTripleFactory();
         getAllTriples(tripleFactory, graph);
         doSearch(tripleFactory, graph);
-
-
     }
 
     private void doSearch(TripleFactory tripleFactory, Graph graph) throws GraphException {
         //search for address (as a subject)
-        Triple findAddress = tripleFactory.createTriple(address, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        ClosableIterator addressSubject = graph.find(findAddress);
-        print("Search for address as a subject: ", addressSubject);
-        addressSubject.close();
+        ClosableIterator<Triple> addressSubject = graph.find(address, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        try {
+            print("Search for address as a subject: ", addressSubject);
+        } finally {
+            addressSubject.close();
+        }
 
         //search for the city: "Bedford"
-        Triple findCity = tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, city);
-        ClosableIterator bedfordCity = graph.find(findCity);
-        print("Search for city ('Bedford'): ", bedfordCity);
-        bedfordCity.close();
+        ObjectNode city = graph.getElementFactory().createLiteral("Bedford");
+        ClosableIterator<Triple> bedfordCity = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, city);
+        try {
+            print("Search for city ('Bedford'): ", bedfordCity);
+        } finally {
+            bedfordCity.close();
+        }
 
         //search for any subject that has an address
+        PredicateNode hasAddress = graph.getElementFactory().createURIReference(HAS_ADDRESS);
         Triple findAddresses = tripleFactory.createTriple(ANY_SUBJECT_NODE, hasAddress, ANY_OBJECT_NODE);
-        ClosableIterator addresses = graph.find(findAddresses);
-        print("Search for subjects that have an address: ", addresses);
-        addresses.close();
+        ClosableIterator<Triple> addresses = graph.find(findAddresses);
+        try {
+            print("Search for subjects that have an address: ", addresses);
+        } finally {
+            addresses.close();
+        }
     }
 
     private void getAllTriples(TripleFactory tripleFactory, Graph graph) throws GraphException {
         //get all Triples
         Triple findAll = tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        ClosableIterator allTriples = graph.find(findAll);
-        print("Search for all triples: ", allTriples);
-        allTriples.close();
+        ClosableIterator<Triple> allTriples = graph.find(findAll);
+        try {
+            print("Search for all triples: ", allTriples);
+        } finally {
+            allTriples.close();
+        }
     }
 
     /**
@@ -319,12 +268,9 @@ public class JrdfExample {
      * @throws IllegalArgumentException
      * @throws GraphException
      */
-    private void print(String message, Graph graph) throws IllegalArgumentException, GraphException,
-        TripleFactoryException {
-
+    private void print(String message, Graph graph) throws IllegalArgumentException, GraphException {
         //validate
         if (null == graph) {
-
             throw new IllegalArgumentException("Graph is null.");
         }
 
