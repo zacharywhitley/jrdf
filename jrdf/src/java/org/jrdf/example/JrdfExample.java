@@ -220,7 +220,6 @@ public class JrdfExample {
      * @throws Exception
      */
     private void performReification(Graph graph) throws Exception {
-
         System.out.println("Reifying a statement...");
 
         //get the Factories
@@ -250,7 +249,6 @@ public class JrdfExample {
      * @throws Exception
      */
     private void removeStatement(Graph graph) throws Exception {
-
         System.out.println("Removing a statement...");
 
         //delete the city (address, hasCity, city)
@@ -292,12 +290,9 @@ public class JrdfExample {
      * @param iterator Iterator
      * @throws IllegalArgumentException
      */
-    private void print(String message, Iterator iterator) throws
-        IllegalArgumentException {
-
+    private void print(String message, Iterator<Triple> iterator) throws IllegalArgumentException {
         //validate
         if (null == iterator) {
-
             throw new IllegalArgumentException("Iterator is null.");
         }
 
@@ -319,13 +314,10 @@ public class JrdfExample {
      * @param args String[]
      */
     public static void main(String[] args) {
-
         try {
-
             JrdfExample example = new JrdfExample();
             example.runExample();
         } catch (Exception exception) {
-
             //print an exception if one occurs
             exception.printStackTrace();
         }
