@@ -166,12 +166,12 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     }
 
     public long getMaxMoleculeId() {
-        final ClosableIterator<Long> iterator = findChildIds(1L);
+        final ClosableIterator<Long[]> iterator = structureIndex[0].iterator();
+        long max = 1;
         try {
-            long max = 1;
             while (iterator.hasNext()) {
-                Long id = iterator.next();
-                max = (id > max) ? id : max;
+                Long mid = iterator.next()[1];
+                max = (mid > max) ? mid : max;
             }
             return max;
         } finally {
