@@ -59,26 +59,26 @@
 
 package org.jrdf.graph.global;
 
-import org.jrdf.*;
-import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.TempDirectoryHandler;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.btree.BTreeFactory;
-import org.jrdf.util.btree.BTreeFactoryImpl;
-import org.jrdf.graph.*;
-import static org.jrdf.graph.AnyObjectNode.*;
-import static org.jrdf.graph.AnyPredicateNode.*;
-import static org.jrdf.graph.AnySubjectNode.*;
-import org.jrdf.graph.local.TripleComparatorFactoryImpl;
+import org.jrdf.PersistentGlobalJRDFFactory;
+import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import org.jrdf.graph.AbstractGraphIntegrationTest;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
-import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
-import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesame;
+import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
+import org.jrdf.graph.local.TripleComparatorFactoryImpl;
+import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 
 import java.net.URI;
-import java.util.Arrays;
 
 /**
  * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
