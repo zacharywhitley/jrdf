@@ -117,32 +117,15 @@ public class JrdfExample {
      * @throws Exception
      */
     private void runExample() throws Exception {
-
         System.out.println("Running example.");
-
-        //get a JRDF Graph
         System.out.println("Creating Graph...");
         Graph graph = JRDF_FACTORY.getNewGraph();
-
-        //create example data
-
-        //initialize Nodes and Triples
         System.out.println("Creating Graph Elements...");
-
-        //create statements
         populateGraph(graph);
-
-        //perform find() operations
         searchGraph(graph);
-
-        //reify a Statement
         performReification(graph);
-
-        //remove a statement
         removeStatement(graph);
-
         performQuery(graph);
-
         System.out.println("Example finished.");
     }
 
@@ -157,8 +140,6 @@ public class JrdfExample {
         graph.add(cityStatement);
         address.addValue(HAS_STATE, "Massachusetts");
         address.addValue(HAS_POSTCODE, "01730", XSD.INTEGER);
-
-        //print contents
         print("Graph contains: ", graph);
     }
 
