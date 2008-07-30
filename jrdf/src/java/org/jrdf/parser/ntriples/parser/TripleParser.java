@@ -64,4 +64,6 @@ import org.jrdf.util.boundary.RegexMatcher;
 
 public interface TripleParser {
     Triple parseTriple(RegexMatcher tripleRegexMatcher);
+
+    void clear();
 }

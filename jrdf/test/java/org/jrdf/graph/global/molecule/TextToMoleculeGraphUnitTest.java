@@ -136,6 +136,7 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
     }
 
     public void tearDown() {
+        textToMolecule.reset();
         destGraph.clear();
         destGraph.close();
         MoleculeGraphTestUtil.close();

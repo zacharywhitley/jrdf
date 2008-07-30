@@ -64,4 +64,6 @@ import org.jrdf.parser.ParseException;
 
 public interface BlankNodeParser {
     BlankNode parseBlankNode(String s) throws ParseException;
+
+    void clear();
 }

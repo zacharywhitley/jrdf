@@ -60,13 +60,13 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 
 import java.util.HashMap;
