@@ -65,6 +65,4 @@ import org.jrdf.util.boundary.RegexMatcher;
 
 public interface SubjectParser {
     SubjectNode parseSubject(RegexMatcher tripleRegexMatcher) throws ParseException;
-
-    void clear();
 }

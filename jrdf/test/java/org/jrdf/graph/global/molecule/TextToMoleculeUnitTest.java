@@ -88,13 +88,7 @@ import org.jrdf.parser.ntriples.parser.LiteralParser;
 import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
 import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
 import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
@@ -128,11 +122,8 @@ public class TextToMoleculeUnitTest extends TestCase {
         final BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         final LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
         final LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), literalMatcher);
-        final SubjectParser subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
-        final PredicateParser predicateParser = new PredicateParserImpl(referenceParser);
-        final ObjectParser objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
         traverser = new MoleculeTraverserImpl();
-        tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser, graph.getTripleFactory());
+        tripleParser = new TripleParserImpl(referenceParser, blankNodeParser, literalParser, graph.getTripleFactory());
         textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, FACTORY);
     }
 
