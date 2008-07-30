@@ -65,6 +65,8 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.mem.EqOperation;
+import org.jrdf.query.relation.mem.Operation;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.NodeTypeVisitor;
 
@@ -90,6 +92,10 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
 
     public Node getValue() {
         return new NullaryNode();
+    }
+
+    public Operation getOperation() {
+        return new EqOperation();
     }
 
     public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,

@@ -317,6 +317,17 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression("SELECT * WHERE { ?s ?p false }", spFalse);
     }
 
+//    public void testFilter() throws Exception {
+//        AttributeName oVar = new VariableName("o");
+//        Expression<ExpressionVisitor> spoExpression = createConstraintExpression("s", "p", "o");
+//        List<AttributeValuePair> avps = new ArrayList<AttributeValuePair>();
+//        avps.add(new AttributeValuePairImpl(
+//            new AttributeImpl(oVar, new ObjectNodeType()), createLiteral("unknown")));
+//        Expression<ExpressionVisitor> filterExpression = new ConstraintImpl<ExpressionVisitor>(avps);
+//        Expression<ExpressionVisitor> conjunction = new Conjunction<ExpressionVisitor>(spoExpression, filterExpression);
+//        checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\") }", conjunction);
+//    }
+
     private void checkConstraintExpression(String queryString, Expression expectedExpression) throws Exception {
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);

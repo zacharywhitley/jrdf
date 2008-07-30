@@ -68,6 +68,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
@@ -106,9 +107,7 @@ public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
 
     public List<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray) {
         List<AttributeValuePair> attributeValuePairs = new ArrayList<AttributeValuePair>();
-        for (AttributeValuePair attributeValuePair : attributeValuePairsArray) {
-            attributeValuePairs.add(attributeValuePair);
-        }
+        attributeValuePairs.addAll(asList(attributeValuePairsArray));
         return attributeValuePairs;
     }
 

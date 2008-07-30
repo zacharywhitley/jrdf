@@ -81,14 +81,20 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
     private static final long serialVersionUID = -5045948869879997736L;
     private Attribute attribute;
     private Node value;
+    private Operation operation;
 
     // For serialization.
     private AttributeValuePairImpl() {
     }
 
     public AttributeValuePairImpl(Attribute newAttribute, Node newValue) {
+        this (newAttribute, newValue, new EqOperation());
+    }
+
+    public AttributeValuePairImpl(Attribute newAttribute, Node newValue, Operation newOperation) {
         attribute = newAttribute;
         value = newValue;
+        operation = newOperation;
     }
 
     public Attribute getAttribute() {
@@ -99,13 +105,13 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
         return value;
     }
 
+    public Operation getOperation() {
+        return operation;
+    }
+
     public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
             SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
-        if (avpComparator.compare(this, avp) == 0) {
-            newAttributeValues.add(this);
-            return false;
-        }
-        return true;
+        return operation.addAttributeValuePair(avpComparator, newAttributeValues, this, avp);
     }
 
     @Override
