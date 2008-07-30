@@ -75,7 +75,7 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairNotEqualImpl;
+import org.jrdf.query.relation.mem.NeqOperation;
 import org.jrdf.query.relation.mem.RelationFactoryImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
@@ -166,7 +166,7 @@ public class RelationIntegrationTestUtil {
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R3 =
         new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECT_NOT_R3 =
-        new AttributeValuePairNotEqualImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3, new NeqOperation());
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R4 =
         new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_4);
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R5 =
