@@ -60,6 +60,7 @@
 package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.ParseErrorListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
@@ -72,20 +73,13 @@ import org.jrdf.parser.ntriples.parser.LiteralParser;
 import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
 import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
 import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
-import org.jrdf.map.MemMapFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -94,9 +88,9 @@ import java.net.URI;
 public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     private static final RDFInputFactory FACTORY = new NTriplesRDFInputFactoryImpl();
     private static final RegexMatcherFactory REGEX_MATCHER_FACTORY = new RegexMatcherFactoryImpl();
-    private SubjectParser subjectParser;
-    private PredicateParser predicateParser;
-    private ObjectParser objectParser;
+    private URIReferenceParser uriReferenceParser;
+    private BlankNodeParser blankNodeParser;
+    private LiteralParser literalParser;
 
     public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph) {
         ParserBlankNodeFactory parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
@@ -113,7 +107,7 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph,
         ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
-        TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
+        TripleParser tripleParser = new TripleParserImpl(uriReferenceParser, blankNodeParser, literalParser,
             graph.getTripleFactory());
         return new NTriplesEventReader(stream, baseURI, REGEX_MATCHER_FACTORY, tripleParser);
     }
@@ -121,7 +115,7 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph,
         ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
-        TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
+        TripleParser tripleParser = new TripleParserImpl(uriReferenceParser, blankNodeParser, literalParser,
             graph.getTripleFactory());
         return new NTriplesEventReader(reader, baseURI, REGEX_MATCHER_FACTORY, tripleParser);
     }
@@ -141,12 +135,9 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     private void init(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
-        URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory(), nTripleUtil);
-        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
+        uriReferenceParser = new URIReferenceParserImpl(graph.getElementFactory(), nTripleUtil);
+        blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
-        LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), literalMatcher);
-        subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
-        predicateParser = new PredicateParserImpl(referenceParser);
-        objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
+        literalParser = new LiteralParserImpl(graph.getElementFactory(), literalMatcher);
     }
 }

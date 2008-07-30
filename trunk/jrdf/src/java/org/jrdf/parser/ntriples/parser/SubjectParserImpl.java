@@ -87,8 +87,4 @@ public final class SubjectParserImpl implements SubjectParser {
             throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
         }
     }
-
-    public void clear() {
-        blankNodeParser.clear();
-    }
 }

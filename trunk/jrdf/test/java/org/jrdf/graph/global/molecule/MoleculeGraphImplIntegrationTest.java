@@ -83,7 +83,6 @@ import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_COMP
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.R1R2B2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.TRIPLE_FACTORY;
-import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
@@ -94,13 +93,7 @@ import org.jrdf.parser.ntriples.parser.LiteralParser;
 import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
 import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
 import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.parser.ntriples.parser.URIReferenceParser;
@@ -388,10 +381,8 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         final BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         final LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
         final LiteralParser literalParser = new LiteralParserImpl(destElementFactory, literalMatcher);
-        final SubjectParser subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
-        final PredicateParser predicateParser = new PredicateParserImpl(referenceParser);
-        final ObjectParser objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
-        TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser, destGraph.getTripleFactory());
+        TripleParser tripleParser = new TripleParserImpl(referenceParser, blankNodeParser, literalParser, 
+                destGraph.getTripleFactory());
         TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, MOLECULE_FACTORY);
         TextToMoleculeGraph graphBuilder = new TextToMoleculeGraph(textToMolecule);
         graphBuilder.parse(new StringReader(text));
@@ -415,13 +406,9 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         final BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         final LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
         final LiteralParser literalParser = new LiteralParserImpl(GRAPH.getElementFactory(), literalMatcher);
-        final SubjectParser subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
-        final PredicateParser predicateParser = new PredicateParserImpl(referenceParser);
-        final ObjectParser objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
-
-        TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser, GRAPH.getTripleFactory());
+        TripleParser tripleParser = new TripleParserImpl(referenceParser, blankNodeParser, literalParser,
+                GRAPH.getTripleFactory());
         TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, MOLECULE_FACTORY);
-
-        final Molecule molecule1 = textToMolecule.parse(new StringReader(GRAPH.toString()));
+        textToMolecule.parse(new StringReader(GRAPH.toString()));
     }
 }

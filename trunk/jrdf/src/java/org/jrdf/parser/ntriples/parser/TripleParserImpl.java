@@ -72,12 +72,14 @@ public class TripleParserImpl implements TripleParser {
     private final PredicateParser predicateParser;
     private final ObjectParser objectParser;
     private final TripleFactory tripleFactory;
+    private final BlankNodeParser blankNodeParser;
 
-    public TripleParserImpl(SubjectParser newSubjectParser, PredicateParser newPredicateParser,
-        ObjectParser newObjectParser, TripleFactory newTripleFactory) {
-        this.subjectParser = newSubjectParser;
-        this.predicateParser = newPredicateParser;
-        this.objectParser = newObjectParser;
+    public TripleParserImpl(URIReferenceParser newURIReferenceParser, BlankNodeParser newBlankNodeParser,
+            LiteralParser newLiteralNodeParser, TripleFactory newTripleFactory) {
+        this.subjectParser = new SubjectParserImpl(newURIReferenceParser, newBlankNodeParser);
+        this.predicateParser = new PredicateParserImpl(newURIReferenceParser);
+        this.objectParser = new ObjectParserImpl(newURIReferenceParser, newBlankNodeParser, newLiteralNodeParser);
+        this.blankNodeParser = newBlankNodeParser;
         this.tripleFactory = newTripleFactory;
     }
 
@@ -98,6 +100,6 @@ public class TripleParserImpl implements TripleParser {
     }
 
     public void clear() {
-        subjectParser.clear();
+        blankNodeParser.clear();
     }
 }

@@ -60,8 +60,8 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.MoleculeGraph;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R2R2;
@@ -81,13 +81,7 @@ import org.jrdf.parser.ntriples.parser.LiteralParser;
 import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
 import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
 import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
@@ -126,11 +120,8 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
         final BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         final LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
         final LiteralParser literalParser = new LiteralParserImpl(destElementFactory, literalMatcher);
-        final SubjectParser subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
-        final PredicateParser predicateParser = new PredicateParserImpl(referenceParser);
-        final ObjectParser objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
         traverser = new MoleculeTraverserImpl();
-        tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser, destGraph.getTripleFactory());
+        tripleParser = new TripleParserImpl(referenceParser, blankNodeParser, literalParser, destGraph.getTripleFactory());
         textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, MOLECULE_FACTORY);
         graphBuilder = new TextToMoleculeGraph(textToMolecule);
     }
