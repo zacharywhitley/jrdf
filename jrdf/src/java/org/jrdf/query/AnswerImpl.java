@@ -131,10 +131,33 @@ public final class AnswerImpl implements Answer, Serializable {
         return timeTaken;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        String[] columnNames = getColumnNames();
+        String[][] columnValues = getColumnValues();
+        for (int i = 0; i < numberOfTuples(); i++) {
+            builder.append("{ ");
+            for (int cols = 0; cols < columnNames.length; cols++) {
+                String columnName = columnNames[cols];
+                builder.append(columnName);
+                builder.append("=");
+                builder.append(columnValues[i][cols]);
+                if (cols < columnNames.length - 1) {
+                    builder.append(", ");
+                }
+            }
+            builder.append(" }\n");
+        }
+        return builder.toString();
+    }
+
+    @Override
     public int hashCode() {
         return (int) (results.hashCode() ^ timeTaken);
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (EqualsUtil.isNull(obj)) {
             return false;
