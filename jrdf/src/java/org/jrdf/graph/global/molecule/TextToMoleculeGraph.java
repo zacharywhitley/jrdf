@@ -72,10 +72,10 @@ import java.io.StringReader;
  */
 
 public class TextToMoleculeGraph {
+    private static final int READ_AHEAD_LIMIT = 512;
     private LineNumberReader bufferedReader;
     private StringBuilder builder;
     private TextToMolecule moleculeBuilder;
-    private static final int READ_AHEAD_LIMIT = 512;
 
     public TextToMoleculeGraph(TextToMolecule textToMolecule) {
         moleculeBuilder = textToMolecule;
@@ -90,19 +90,6 @@ public class TextToMoleculeGraph {
     }
 
     public Molecule next() {
-        moleculeBuilder.reset();
-        return parseNext();
-    }
-
-    public boolean hasNext() throws IOException {
-        bufferedReader.mark(READ_AHEAD_LIMIT);
-        String line = getLine();
-        line = getNextMoleculeStart(line);
-        bufferedReader.reset();
-        return (null != line && isStartOfTopLevelMolecule(line));
-    }
-
-    private Molecule parseNext() {
         builder = new StringBuilder();
         String line = getLine();
         line = getNextMoleculeStart(line);
@@ -115,6 +102,14 @@ public class TextToMoleculeGraph {
         }
 
         return moleculeBuilder.parse(new StringReader(builder.toString()));
+    }
+
+    public boolean hasNext() throws IOException {
+        bufferedReader.mark(READ_AHEAD_LIMIT);
+        String line = getLine();
+        line = getNextMoleculeStart(line);
+        bufferedReader.reset();
+        return (null != line && isStartOfTopLevelMolecule(line));
     }
 
     private String getNextMoleculeStart(String line) {

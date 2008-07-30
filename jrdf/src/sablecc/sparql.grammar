@@ -27,7 +27,8 @@ Helpers
 States
   def,      /* default state */
   com,      /* comment */
-  var,      /* escaping variable name with '?' or '$' */
+  var1,      /* escaping variable name with '?' or '$' */
+  var2,      /* escaping variable name with '?' or '$' */
   qesc,     /* escaping character in quoted literal with '\' */
   dbqesc,   /* escaping character in double quoted literal with '\' */
   qlit,     /* quoted literal */
@@ -42,20 +43,20 @@ Tokens
   {def}                where            = ('WHERE' | 'where');
   {def}                union            = ('UNION' | 'union');
   {def}                optional         = ('OPTIONAL' | 'optional');
-  {def}                filter           = ('FILTER' | 'filter');
-  {def}                str_call         = ('STR' | 'str');
-  {def}                lang_call        = ('LANG' | 'lang');
-  {def}                datatype_call    = ('DATATYPE' | 'datatype');
-  {def}                is_iri_call      = ('isIRI');
-  {def}                is_uri_call      = ('isURI');
-  {def}                is_blank_call    = ('isBLANK');
-  {def}                is_literal_call  = ('isLITERAL');
+  {def->filter}        filter           = ('FILTER' | 'filter');
+  {filter}             str_call         = ('STR' | 'str');
+  {filter}             lang_call        = ('LANG' | 'lang');
+  {filter}             datatype_call    = ('DATATYPE' | 'datatype');
+  {filter}             is_iri_call      = ('isIRI');
+  {filter}             is_uri_call      = ('isURI');
+  {filter}             is_blank_call    = ('isBLANK');
+  {filter}             is_literal_call  = ('isLITERAL');
 
   {def->com}                      hash           = '#';
   {com}                           comment        = [character - [lf + cr]];
   {com->def}                      endcomment     = (lf | cr)+;
-  {def->var}                      variableprefix = ('?' | '$');
-  {var->def}                      variablename   = letter (letter | digit | '_' | '$' | '?' )*;
+  {def->var1, filter->var2}       variableprefix = ('?' | '$');
+  {var1->def, var2->filter}       variablename   = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           asterisk       = '*';
   {def}                           identifier     = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           blank          = whitespace+;
@@ -72,8 +73,8 @@ Tokens
   {def}                           decimal        = digit+ '.' digit* | '.' digit+;
   {def}                           double         = digitstart ('e' | 'E') digit+;
 
-  {def->filter}                   lbracket       = '(';
-  {filter->def}                   rbracket       = ')';
+  {filter}                        lbracket       = '(';
+  {filter}                        rbracket       = ')';
   {filter}                        equals         = '=';
   {filter}                        nequals        = '!=';
   {filter}                        lt             = '<';
@@ -216,7 +217,9 @@ Productions
 
   boolean_literal = identifier;
 
-  constraint = builtincall;
+  constraint =
+    {builtincall} builtincall |
+    {bracketed_expression} bracketed_expression;
 
   builtincall =
     {str} str_call bracketed_expression |
@@ -261,7 +264,8 @@ Productions
     {rdf_literal} rdf_literal |
     {numeric_literal} numeric_literal |
     {boolean_literal} boolean_literal |
-    {variable} variable;
+    {variable} variable |
+    {builtincall} builtincall;
 
   more_numeric_expression =
     {e} equals numeric_expression |
