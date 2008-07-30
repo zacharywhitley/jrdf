@@ -73,11 +73,13 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.vocabulary.XSD;
 
 import java.net.URI;
 import static java.net.URI.create;
-import java.util.Iterator;
 
 /**
  * An example that performs simple operations on a JRDF Graph.
@@ -139,6 +141,8 @@ public class JrdfExample {
         //remove a statement
         removeStatement(graph);
 
+        performQuery(graph);
+
         System.out.println("Example finished.");
     }
 
@@ -152,7 +156,7 @@ public class JrdfExample {
         cityStatement = address.asTriple(HAS_CITY, "Bedford");
         graph.add(cityStatement);
         address.addValue(HAS_STATE, "Massachusetts");
-        address.addValue(HAS_POSTCODE, "01730");
+        address.addValue(HAS_POSTCODE, "01730", XSD.INTEGER);
 
         //print contents
         print("Graph contains: ", graph);
@@ -175,31 +179,16 @@ public class JrdfExample {
 
     private void doSearch(TripleFactory tripleFactory, Graph graph) throws GraphException {
         //search for address (as a subject)
-        ClosableIterator<Triple> addressSubject = graph.find(address, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        try {
-            print("Search for address as a subject: ", addressSubject);
-        } finally {
-            addressSubject.close();
-        }
+        print("Search for address as a subject: ", graph.find(address, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
 
         //search for the city: "Bedford"
         ObjectNode city = graph.getElementFactory().createLiteral("Bedford");
-        ClosableIterator<Triple> bedfordCity = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, city);
-        try {
-            print("Search for city ('Bedford'): ", bedfordCity);
-        } finally {
-            bedfordCity.close();
-        }
+        print("Search for city ('Bedford'): ", graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, city));
 
         //search for any subject that has an address
         PredicateNode hasAddress = graph.getElementFactory().createURIReference(HAS_ADDRESS);
         Triple findAddresses = tripleFactory.createTriple(ANY_SUBJECT_NODE, hasAddress, ANY_OBJECT_NODE);
-        ClosableIterator<Triple> addresses = graph.find(findAddresses);
-        try {
-            print("Search for subjects that have an address: ", addresses);
-        } finally {
-            addresses.close();
-        }
+        print("Search for subjects that have an address: ", graph.find(findAddresses));
     }
 
     private void getAllTriples(TripleFactory tripleFactory, Graph graph) throws GraphException {
@@ -258,6 +247,11 @@ public class JrdfExample {
         print("Graph contains (after remove): ", graph);
     }
 
+    private void performQuery(Graph graph) throws InvalidQuerySyntaxException, GraphException {
+        UrqlConnection connection = JRDF_FACTORY.getNewUrqlConnection();
+        System.out.println("Query Result:\n" + connection.executeQuery(graph, "SELECT ?s ?p ?o WHERE { ?s ?p ?o }"));
+    }
+
     /**
      * Prints the entire contents of a Graph to System.out
      *
@@ -290,22 +284,24 @@ public class JrdfExample {
      * @param iterator Iterator
      * @throws IllegalArgumentException
      */
-    private void print(String message, Iterator<Triple> iterator) throws IllegalArgumentException {
-        //validate
+    private void print(String message, ClosableIterator<Triple> iterator) throws IllegalArgumentException {
         if (null == iterator) {
             throw new IllegalArgumentException("Iterator is null.");
         }
+        try {
+            //print message first
+            System.out.println(message);
 
-        //print message first
-        System.out.println(message);
+            //print the contents
+            while (iterator.hasNext()) {
+                System.out.println(String.valueOf(iterator.next()));
+            }
 
-        //print the contents
-        while (iterator.hasNext()) {
-            System.out.println(String.valueOf(iterator.next()));
+            //print an empty line as a spacer
+            System.out.println("");
+        } finally {
+            iterator.close();
         }
-
-        //print an empty line as a spacer
-        System.out.println("");
     }
 
     /**

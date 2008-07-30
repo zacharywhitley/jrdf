@@ -123,6 +123,18 @@ public final class AnswerImpl implements Answer, Serializable {
         return table;
     }
 
+    public String[][] getSimpleValues() {
+        SortedSet<Tuple> sortedTuples = results.getSortedTuples();
+        String table[][] = new String[sortedTuples.size()][heading.size()];
+        int index = 0;
+        for (Tuple sortedTuple : sortedTuples) {
+            Set<AttributeValuePair> avps = sortedTuple.getAttributeValues();
+            table[index] = getDataWithValues(avps);
+            index++;
+        }
+        return table;
+    }
+
     public long numberOfTuples() {
         return results.getTuples().size();
     }
@@ -136,12 +148,26 @@ public final class AnswerImpl implements Answer, Serializable {
         StringBuilder builder = new StringBuilder();
         String[] columnNames = getColumnNames();
         String[][] columnValues = getColumnValues();
+        printColumns(builder, columnNames);
+        printRows(builder, columnNames, columnValues);
+        return builder.toString();
+    }
+
+    private void printColumns(StringBuilder builder, String[] columnNames) {
+        builder.append("{ ");
+        for (int cols = 0; cols < columnNames.length; cols++) {
+            builder.append(columnNames[cols]);
+            if (cols < columnNames.length - 1) {
+                builder.append(", ");
+            }
+        }
+        builder.append(" }\n");
+    }
+
+    private void printRows(StringBuilder builder, String[] columnNames, String[][] columnValues) {
         for (int i = 0; i < numberOfTuples(); i++) {
             builder.append("{ ");
             for (int cols = 0; cols < columnNames.length; cols++) {
-                String columnName = columnNames[cols];
-                builder.append(columnName);
-                builder.append("=");
                 builder.append(columnValues[i][cols]);
                 if (cols < columnNames.length - 1) {
                     builder.append(", ");
@@ -149,7 +175,6 @@ public final class AnswerImpl implements Answer, Serializable {
             }
             builder.append(" }\n");
         }
-        return builder.toString();
     }
 
     @Override
@@ -171,7 +196,7 @@ public final class AnswerImpl implements Answer, Serializable {
         return determineEqualityFromFields((AnswerImpl) obj);
     }
 
-    private String[] getDataWithValues(SortedSet<AttributeValuePair> avps) {
+    private String[] getDataWithValues(Set<AttributeValuePair> avps) {
         String[] results = new String[heading.size()];
         int index = 0;
         for (Attribute headingAttribute : heading) {
