@@ -96,4 +96,8 @@ public class TripleParserImpl implements TripleParser {
             throw new RuntimeException(e);
         }
     }
+
+    public void clear() {
+        subjectParser.clear();
+    }
 }
