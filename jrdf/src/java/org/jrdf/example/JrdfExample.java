@@ -268,7 +268,7 @@ public class JrdfExample {
 
         //find all statements
         Triple findAll = graph.getTripleFactory().createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        ClosableIterator allTriples = graph.find(findAll);
+        ClosableIterator<Triple> allTriples = graph.find(findAll);
 
         //print them
         print(message, allTriples);
