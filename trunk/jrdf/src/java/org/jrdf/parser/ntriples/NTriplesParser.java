@@ -101,6 +101,7 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
     }
 
     public void parse(Reader reader, String baseURI) throws IOException, StatementHandlerException {
+        // TODO Should reset blank node factory for each parse.
         LineNumberReader bufferedReader = new LineNumberReader(reader);
         try {
             String line;

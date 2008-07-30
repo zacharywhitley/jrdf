@@ -67,6 +67,7 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
 import org.jrdf.query.expression.Conjunction;
+import org.jrdf.query.expression.ConstraintImpl;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -74,8 +75,14 @@ import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
+import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.NodeTestUtil.createLiteral;
@@ -108,6 +115,8 @@ import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 import org.jrdf.vocabulary.XSD;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings({"unchecked"})
 public final class SableCcSparqlParserIntegrationTest extends TestCase {

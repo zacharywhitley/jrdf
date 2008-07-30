@@ -77,7 +77,6 @@ public final class BlankNodeParserImpl implements BlankNodeParser {
     public BlankNode parseBlankNode(String s) throws ParseException {
         checkNotEmptyString("s", s);
         try {
-//            System.err.println("BNode string = " + s);
             return parserBlankNodeFactory.createBlankNode(s);
         } catch (GraphElementFactoryException e) {
             throw new ParseException("Failed to create blank node: " + s, 1);

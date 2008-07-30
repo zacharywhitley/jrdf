@@ -97,15 +97,6 @@ public class TextToMolecule {
         this.regexMatcherFactory = newRegexFactory;
         this.tripleParser = newTripleParser;
         this.moleculeFactory = moleculeFactory;
-        reset();
-    }
-
-    public void reset() {
-        this.parentMolecules = new Stack<Molecule>();
-        this.parentTriples = new Stack<Triple>();
-        currentMolecule = null;
-        currentTriple = null;
-        tripleParser.clear();
     }
 
     public Molecule parse(InputStream in) {
@@ -113,9 +104,18 @@ public class TextToMolecule {
     }
 
     public Molecule parse(Reader reader) {
+        reset();
         this.bufferedReader = new LineNumberReader(reader);
         parseNext();
         return currentMolecule;
+    }
+
+    private void reset() {
+        this.parentMolecules = new Stack<Molecule>();
+        this.parentTriples = new Stack<Triple>();
+        currentMolecule = null;
+        currentTriple = null;
+        tripleParser.clear();
     }
 
     private void parseNext() {
@@ -135,7 +135,6 @@ public class TextToMolecule {
     }
 
     public void parseLine(String line) {
-        //System.err.println("Parsing: " + line);
         final RegexMatcher startMolecule = regexMatcherFactory.createMatcher(START_MOLECULE, line);
         if (startMolecule.matches()) {
             handleStartMolecule();
@@ -164,7 +163,6 @@ public class TextToMolecule {
 
     private void handleTriple(RegexMatcher tripleMatcher) {
         currentTriple = tripleParser.parseTriple(tripleMatcher);
-        //System.err.println("cur triple = " + currentTriple.toString());
         currentMolecule.add(currentTriple);
     }
 
