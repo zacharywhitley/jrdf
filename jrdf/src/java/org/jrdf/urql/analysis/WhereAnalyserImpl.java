@@ -66,14 +66,16 @@ import org.jrdf.query.expression.ConstraintImpl;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.urql.builder.LiteralBuilderImpl;
 import org.jrdf.urql.builder.TripleBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABlockOfTriples;
+import org.jrdf.urql.parser.node.AFilterPatternGraphPatternOrFilter;
 import org.jrdf.urql.parser.node.AFilteredBasicGraphPatternGraphPattern;
-import org.jrdf.urql.parser.node.AGraphPatternNotTriplesGraphPatternOrFilter;
 import org.jrdf.urql.parser.node.AGraphPatternOrFilterGraphPatternOperationPattern;
 import org.jrdf.urql.parser.node.AGroupOrUnionGraphPattern;
 import org.jrdf.urql.parser.node.AOptionalGraphPattern;
@@ -132,6 +134,8 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             } else if (Constraint.class.isAssignableFrom(rhs.getClass()) &&
                 (Constraint.class.isAssignableFrom(lhs.getClass()))) {
                 expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+            } else if (Operator.class.isAssignableFrom(rhs.getClass())) {
+                expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
             }
         } else {
             expression = rhs;
@@ -174,10 +178,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     @Override
     public void caseAGraphPatternOrFilterGraphPatternOperationPattern(
         AGraphPatternOrFilterGraphPatternOperationPattern node) {
-        AGraphPatternNotTriplesGraphPatternOrFilter pGraphPatternOrFilter =
-            (AGraphPatternNotTriplesGraphPatternOrFilter) node.getGraphPatternOrFilter();
-        Expression<ExpressionVisitor> lhs = getExpression((Node)
-            pGraphPatternOrFilter.getGraphPatternNotTriples().clone());
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getGraphPatternOrFilter().clone());
         Expression<ExpressionVisitor> rhs = getExpression((Node) node.getGraphPattern().clone());
         if (lhs != null && rhs != null) {
             expression = handleExistingLhsRhs(lhs, rhs);
@@ -185,6 +186,18 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             expression = lhs;
         } else if (rhs != null) {
             expression = rhs;
+        }
+    }
+
+    @Override
+    public void caseAFilterPatternGraphPatternOrFilter(AFilterPatternGraphPatternOrFilter node) {
+        try {
+            FilterAnalyser analyser = new FilterAnalyserImpl(new LiteralBuilderImpl(graph.getElementFactory(),
+                    tripleBuilder.getPrefixMap()));
+            node.apply(analyser);
+            expression = analyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
         }
     }
 

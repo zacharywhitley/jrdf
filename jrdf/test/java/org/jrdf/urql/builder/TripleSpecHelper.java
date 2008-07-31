@@ -13,6 +13,6 @@ public final class TripleSpecHelper {
     }
 
     public static TResource createResource(URI uri) {
-        return new TResource(uri.toString());
+        return new TResource("<" + uri.toString() + ">");
     }
 }

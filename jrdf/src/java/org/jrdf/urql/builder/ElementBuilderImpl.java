@@ -83,8 +83,10 @@ import org.jrdf.urql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.urql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.urql.parser.node.TIdentifier;
 import org.jrdf.urql.parser.parser.ParserException;
+import static org.jrdf.urql.builder.TokenHelper.*;
 
 import java.net.URI;
+import static java.net.URI.*;
 import java.util.Map;
 
 // TODO (AN) Too much coupling still!!
@@ -119,7 +121,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseAResourceResourceTripleElement(AResourceResourceTripleElement node) {
-        avp = new AttributeValuePairImpl(attribute, createResource(node.getResource().getText()));
+        avp = new AttributeValuePairImpl(attribute, createResource(getResource(node.getResource())));
     }
 
     @Override
@@ -135,7 +137,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseAResourceObjectTripleElement(AResourceObjectTripleElement node) {
-        avp = new AttributeValuePairImpl(attribute, createResource(node.getResource().getText()));
+        avp = new AttributeValuePairImpl(attribute, createResource(getResource(node.getResource())));
     }
 
     @Override
@@ -176,14 +178,14 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
             return null;
         } else {
             String stringForm = prefixMap.get(identifier) + ncName;
-            URIReference uriReference = createResource(stringForm);
+            URIReference uriReference = createResource(create(stringForm));
             return new AttributeValuePairImpl(attribute, uriReference);
         }
     }
 
-    private URIReference createResource(String uri) {
+    private URIReference createResource(URI uri) {
         try {
-            return currentGraph.getElementFactory().createURIReference(URI.create(uri));
+            return currentGraph.getElementFactory().createURIReference(uri);
         } catch (GraphElementFactoryException e) {
             exception = new ParserException(new TIdentifier("identifier"), "Couldn't create URI: " + uri);
             return null;

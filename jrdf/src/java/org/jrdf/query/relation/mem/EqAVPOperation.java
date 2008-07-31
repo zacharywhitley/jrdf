@@ -5,13 +5,13 @@ import org.jrdf.query.relation.AttributeValuePair;
 
 import java.util.SortedSet;
 
-public class NeqOperation implements Operation {
-    private static final long serialVersionUID = -5281476871321027939L;
+public class EqAVPOperation implements AVPOperation {
+    private static final long serialVersionUID = 7483134960149229688L;
 
     public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
             SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair lhs, AttributeValuePair rhs) {
-        if (avpComparator.compare(lhs, rhs) != 0) {
-            newAttributeValues.add(rhs);
+        if (avpComparator.compare(lhs, rhs) == 0) {
+            newAttributeValues.add(lhs);
             return false;
         }
         return true;
@@ -19,6 +19,6 @@ public class NeqOperation implements Operation {
 
     @Override
     public String toString() {
-        return "!=";
+        return "=";
     }
 }
