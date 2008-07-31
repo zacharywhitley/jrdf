@@ -60,7 +60,7 @@
 package org.jrdf.query.relation;
 
 import org.jrdf.graph.Node;
-import org.jrdf.query.relation.mem.Operation;
+import org.jrdf.query.relation.mem.AVPOperation;
 
 import java.io.Serializable;
 import java.util.SortedSet;
@@ -86,7 +86,7 @@ public interface AttributeValuePair extends Serializable {
      */
     Node getValue();
 
-    Operation getOperation();
+    AVPOperation getOperation();
 
     boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
             SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp);

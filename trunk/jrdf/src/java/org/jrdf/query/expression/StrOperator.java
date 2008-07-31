@@ -3,7 +3,7 @@ package org.jrdf.query.expression;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.EqualsUtil;
 
-public class StrOperator implements Operator {
+public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     private static final long serialVersionUID = -3910514962392635053L;
     private static final int DUMMY_HASHCODE = 47;
     private AttributeValuePair singleAvp;

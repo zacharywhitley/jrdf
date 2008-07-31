@@ -1,19 +1,15 @@
 package org.jrdf.urql.builder;
 
-import org.jrdf.urql.parser.node.Token;
+import org.jrdf.urql.parser.node.TResource;
 
-import java.util.List;
+import java.net.URI;
 
 public final class TokenHelper {
     private TokenHelper() {
-
     }
 
-    public static String getStringFromTokens(List<? extends Token> tokens) {
-        StringBuilder resourceStr = new StringBuilder(tokens.size());
-        for (Token urlChar : tokens) {
-            resourceStr.append(urlChar.getText());
-        }
-        return resourceStr.toString();
+    public static URI getResource(TResource resource) {
+        String s = resource.getText();
+        return URI.create(s.substring(1, s.length() - 1));
     }
 }

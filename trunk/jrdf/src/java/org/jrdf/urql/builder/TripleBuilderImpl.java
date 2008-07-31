@@ -121,16 +121,20 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
         prefixMap.put(identifier, resource);
     }
 
+    public Map<String, String> getPrefixMap() {
+        return prefixMap;
+    }
+
     @Override
     public void caseATriple(ATriple node) {
         List<Attribute> heading = sortedAttributeFactory.createHeading(Arrays.asList(TYPES));
         try {
             AttributeValuePair subject = getElement(node.getSubject(), ANY_SUBJECT_NODE, SUBJECT_NODE_TYPE,
-                heading.get(0), graph);
+                heading.get(0));
             AttributeValuePair predicate = getElement(node.getPredicate(), ANY_PREDICATE_NODE, PREDICATE_NODE_TYPE,
-                heading.get(1), graph);
+                heading.get(1));
             AttributeValuePair object = getElement(node.getObject(), ANY_OBJECT_NODE, OBJECT_NODE_TYPE,
-                heading.get(2), graph);
+                heading.get(2));
             avp = avpHelper.createAvp(new AttributeValuePair[]{subject, predicate, object});
         } catch (ParserException e) {
             exception = e;
@@ -138,7 +142,7 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
     }
 
     private AttributeValuePair getElement(org.jrdf.urql.parser.node.Node node, Node graphNode, NodeType nodeType,
-        Attribute attribute, Graph graph) throws ParserException {
+        Attribute attribute) throws ParserException {
         ElementBuilder analyser = new ElementBuilderImpl(nodeType, graphNode, attribute, graph, prefixMap);
         node.apply(analyser);
         return analyser.getElement();

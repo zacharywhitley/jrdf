@@ -59,9 +59,12 @@
 
 package org.jrdf.urql.analysis;
 
+import org.jrdf.urql.builder.TokenHelper;
 import org.jrdf.urql.builder.TripleBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.APrefixPrefixdecl;
+
+import java.net.URI;
 
 public class SinglePrefixAnalyser extends DepthFirstAdapter {
     private final TripleBuilder tripleBuilder;
@@ -72,11 +75,11 @@ public class SinglePrefixAnalyser extends DepthFirstAdapter {
 
     @Override
     public void caseAPrefixPrefixdecl(APrefixPrefixdecl node) {
-        String resource = node.getResource().getText();
+        URI resource = TokenHelper.getResource(node.getResource());
         String identifier = "";
         if (node.getIdentifier() != null) {
             identifier = node.getIdentifier().getText();
         }
-        tripleBuilder.addPrefix(identifier, resource);
+        tripleBuilder.addPrefix(identifier, resource.toString());
     }
 }

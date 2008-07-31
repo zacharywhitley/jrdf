@@ -81,17 +81,17 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
     private static final long serialVersionUID = -5045948869879997736L;
     private Attribute attribute;
     private Node value;
-    private Operation operation;
+    private AVPOperation operation;
 
     // For serialization.
     private AttributeValuePairImpl() {
     }
 
     public AttributeValuePairImpl(Attribute newAttribute, Node newValue) {
-        this (newAttribute, newValue, new EqOperation());
+        this (newAttribute, newValue, new EqAVPOperation());
     }
 
-    public AttributeValuePairImpl(Attribute newAttribute, Node newValue, Operation newOperation) {
+    public AttributeValuePairImpl(Attribute newAttribute, Node newValue, AVPOperation newOperation) {
         attribute = newAttribute;
         value = newValue;
         operation = newOperation;
@@ -105,7 +105,7 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
         return value;
     }
 
-    public Operation getOperation() {
+    public AVPOperation getOperation() {
         return operation;
     }
 

@@ -27,15 +27,12 @@ Helpers
 States
   def,      /* default state */
   com,      /* comment */
-  var1,      /* escaping variable name with '?' or '$' */
-  var2,      /* escaping variable name with '?' or '$' */
+  var,      /* escaping variable name with '?' or '$' */
   qesc,     /* escaping character in quoted literal with '\' */
   dbqesc,   /* escaping character in double quoted literal with '\' */
   qlit,     /* quoted literal */
   dbqlit,   /* double quoted literal */
-  lang,     /* language tag after literal */
-  res,      /* tagged resource */
-  filter;   /* filter */
+  lang;     /* language tag after literal */
 
 Tokens
   {def}                prefix           = ('PREFIX' | 'prefix');
@@ -43,20 +40,20 @@ Tokens
   {def}                where            = ('WHERE' | 'where');
   {def}                union            = ('UNION' | 'union');
   {def}                optional         = ('OPTIONAL' | 'optional');
-  {def->filter}        filter           = ('FILTER' | 'filter');
-  {filter}             str_call         = ('STR' | 'str');
-  {filter}             lang_call        = ('LANG' | 'lang');
-  {filter}             datatype_call    = ('DATATYPE' | 'datatype');
-  {filter}             is_iri_call      = ('isIRI');
-  {filter}             is_uri_call      = ('isURI');
-  {filter}             is_blank_call    = ('isBLANK');
-  {filter}             is_literal_call  = ('isLITERAL');
+  {def}                filter           = ('FILTER' | 'filter');
+  {def}                str_call         = ('STR' | 'str');
+  {def}                lang_call        = ('LANG' | 'lang');
+  {def}                datatype_call    = ('DATATYPE' | 'datatype');
+  {def}                is_iri_call      = ('isIRI');
+  {def}                is_uri_call      = ('isURI');
+  {def}                is_blank_call    = ('isBLANK');
+  {def}                is_literal_call  = ('isLITERAL');
 
   {def->com}                      hash           = '#';
   {com}                           comment        = [character - [lf + cr]];
   {com->def}                      endcomment     = (lf | cr)+;
-  {def->var1, filter->var2}       variableprefix = ('?' | '$');
-  {var1->def, var2->filter}       variablename   = letter (letter | digit | '_' | '$' | '?' )*;
+  {def->var}                      variableprefix = ('?' | '$');
+  {var->def}                      variablename   = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           asterisk       = '*';
   {def}                           identifier     = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           blank          = whitespace+;
@@ -73,18 +70,15 @@ Tokens
   {def}                           decimal        = digit+ '.' digit* | '.' digit+;
   {def}                           double         = digitstart ('e' | 'E') digit+;
 
-  {filter}                        lbracket       = '(';
-  {filter}                        rbracket       = ')';
-  {filter}                        equals         = '=';
-  {filter}                        nequals        = '!=';
-  {filter}                        lt             = '<';
-  {filter}                        lte            = '<=';
-  {filter}                        gt             = '>';
-  {filter}                        gte            = '>=';
-
-  {def->res}                      url            = '<';
-  {res->def}                      endurl         = '>';
-  {res}                           resource       = urlchar*;
+  {def}                           resource       = '<' urlchar* '>';
+  {def}                           lbracket       = '(';
+  {def}                           rbracket       = ')';
+  {def}                           equals         = '=';
+  {def}                           nequals        = '!=';
+  {def}                           lt             = '<';
+  {def}                           lte            = '<=';
+  {def}                           gt             = '>';
+  {def}                           gte            = '>=';
 
   {def->qlit, qlit->def}          quote          = quote;
   {qlit}                          qtext          = nonquote+;
@@ -102,7 +96,7 @@ Tokens
   {def}                           datatypeprefix = '^^';
 
 Ignored Tokens
-  blank, comment, qescape, dbqescape, endcomment, endurl, hash, url;
+  blank, comment, qescape, dbqescape, endcomment, hash;
 
 Productions
   start =

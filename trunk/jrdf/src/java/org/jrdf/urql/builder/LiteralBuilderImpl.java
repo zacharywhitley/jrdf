@@ -62,6 +62,7 @@ package org.jrdf.urql.builder;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
+import static org.jrdf.urql.builder.TokenHelper.getResource;
 import org.jrdf.urql.parser.analysis.AnalysisAdapter;
 import org.jrdf.urql.parser.node.ABooleanLiteral;
 import org.jrdf.urql.parser.node.ABooleanLiteralLiteral;
@@ -80,11 +81,12 @@ import org.jrdf.urql.parser.node.AQnameQnameElement;
 import org.jrdf.urql.parser.node.AQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.AQuotedUnescapedQuotedStrand;
 import org.jrdf.urql.parser.node.ARdfLiteralLiteral;
+import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
 import org.jrdf.urql.parser.node.AResourceDatatypeDatatype;
 import org.jrdf.urql.parser.node.ATypedLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.AUnsignedNumericLiteralNumericLiteral;
 import org.jrdf.urql.parser.node.AUntypedLiteralRdfLiteral;
-import org.jrdf.urql.parser.node.Switch;
+import org.jrdf.urql.parser.node.Node;
 import org.jrdf.urql.parser.node.Token;
 import org.jrdf.urql.parser.parser.ParserException;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -94,7 +96,7 @@ import java.net.URI;
 import static java.net.URI.create;
 import java.util.Map;
 
-public final class LiteralBuilderImpl extends AnalysisAdapter implements LiteralBuilder, Switch {
+public final class LiteralBuilderImpl extends AnalysisAdapter implements LiteralBuilder {
     private final GraphElementFactory factory;
     private final Map<String, String> prefixMap;
     private ParserException exception;
@@ -113,7 +115,14 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
     public Literal createLiteral(ALiteralObjectTripleElement element) throws ParserException {
         checkNotNull(element);
         resetState();
-        parseElement(element);
+        element.getLiteral().apply(this);
+        return getResult(element);
+    }
+
+    public Literal createLiteral(ARdfLiteralPrimaryExpression element) throws ParserException {
+        checkNotNull(element);
+        resetState();
+        element.getRdfLiteral().apply(this);
         return getResult(element);
     }
 
@@ -125,11 +134,7 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         currentSign = "";
     }
 
-    private void parseElement(ALiteralObjectTripleElement element) {
-        element.getLiteral().apply(this);
-    }
-
-    private Literal getResult(ALiteralObjectTripleElement element) throws ParserException {
+    private Literal getResult(Node element) throws ParserException {
         if (exception == null) {
             if (result == null) {
                 throw new IllegalStateException("Unable to parse element: " + element);
@@ -224,7 +229,7 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
 
     @Override
     public void caseAResourceDatatypeDatatype(AResourceDatatypeDatatype node) {
-        uri = create(node.getResource().getText());
+        uri = getResource(node.getResource());
     }
 
     @Override

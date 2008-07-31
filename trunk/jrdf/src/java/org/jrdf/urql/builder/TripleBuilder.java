@@ -64,9 +64,12 @@ import org.jrdf.urql.parser.node.Switch;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TripleBuilder extends Switch {
     List<AttributeValuePair> getTriples() throws ParserException;
 
     void addPrefix(String identifier, String resource);
+
+    Map<String, String> getPrefixMap();
 }
