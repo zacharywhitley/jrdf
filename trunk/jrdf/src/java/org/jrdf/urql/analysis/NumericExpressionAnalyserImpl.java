@@ -33,10 +33,7 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         if (exception != null) {
             throw exception;
         }
-        System.err.println("Operation: " + operation);
-        System.err.println("Attribute: " + attributeName);
-        System.err.println("Value: " + value);
-        // Revist node type creation!
+        // TODO AN Revist node type creation!
         return new AttributeValuePairImpl(new AttributeImpl(attributeName, new ObjectNodeType()), value, operation);
     }
 
