@@ -62,8 +62,8 @@ package org.jrdf.example.performance;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.collection.MapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 

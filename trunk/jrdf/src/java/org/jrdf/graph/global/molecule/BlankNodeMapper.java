@@ -66,7 +66,7 @@ import java.util.Map;
 /**
  * Creates a map of blank nodes from one molecule to another.  There must be at least as many blank nodes in the
  * first molecule as in the second one in order for a map to be created.  Used in conjunection with
- * {@see org.jrdf.graph.global.molecule.GraphDecomposer}
+ * {@link org.jrdf.graph.global.molecule.GraphDecomposer}
  *
  * @author Andrew Newman
  * @author Yuan-Fang Li

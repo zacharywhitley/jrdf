@@ -60,7 +60,7 @@
 package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.ParseErrorListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;

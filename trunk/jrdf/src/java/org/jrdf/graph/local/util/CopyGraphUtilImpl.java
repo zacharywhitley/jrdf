@@ -73,7 +73,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 

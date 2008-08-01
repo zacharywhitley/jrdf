@@ -61,7 +61,7 @@ package org.jrdf.graph.local.index.longindex;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.GraphException;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.*;

@@ -241,11 +241,6 @@ public class MoleculeImpl implements Molecule {
         return null;
     }
 
-    /**
-     * Find the triple in a WFS fashion.
-     * @param triple
-     * @return
-     */
     public Iterator<Triple> find(Triple triple) {
         final Set<Molecule> molecules = new HashSet<Molecule>();
         molecules.add(this);

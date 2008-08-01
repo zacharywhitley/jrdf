@@ -63,7 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.LongArrayEmptyClosableIterator;
 import org.jrdf.util.LongEmptyClosableIterator;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.FlatteningEntrySetClosableIterator;

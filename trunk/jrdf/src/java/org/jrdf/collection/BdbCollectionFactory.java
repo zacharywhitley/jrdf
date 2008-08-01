@@ -71,6 +71,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 
+/**
+ * An on disk implementation that uses Java BDB edition.
+ */
 public class BdbCollectionFactory implements CollectionFactory {
     private final BdbEnvironmentHandler handler;
     private final String databaseName;

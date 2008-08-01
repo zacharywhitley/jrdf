@@ -61,7 +61,7 @@ package org.jrdf.graph.global.index.longindex.bdb;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.FlatteningEntrySetClosableIterator;

@@ -82,7 +82,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * An in memory implementation that uses TreeSets.
+ * An in memory implementation that uses Java's TreeSet and LinkedList.
  */
 public class MemCollectionFactory implements CollectionFactory {
     private Map<Class<?>, Comparator<?>> defaultComparators = new HashMap<Class<?>, Comparator<?>>();

@@ -60,8 +60,8 @@
 package org.jrdf.graph.global.index.longindex.bdb;
 
 import org.jrdf.graph.global.index.longindex.AbstractMoleculeIndexIntegrationTest;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.BdbMapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;

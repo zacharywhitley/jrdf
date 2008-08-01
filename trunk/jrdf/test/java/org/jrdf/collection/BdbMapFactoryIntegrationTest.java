@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.collection;
 
 import junit.framework.TestCase;
 import org.jrdf.util.DirectoryHandler;

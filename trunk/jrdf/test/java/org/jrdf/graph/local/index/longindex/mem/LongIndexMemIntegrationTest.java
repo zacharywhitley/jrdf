@@ -60,7 +60,7 @@
 package org.jrdf.graph.local.index.longindex.mem;
 
 import org.jrdf.graph.local.index.longindex.AbstractLongIndexIntegrationTest;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.collection.MemMapFactory;
 
 public class LongIndexMemIntegrationTest extends AbstractLongIndexIntegrationTest {
     public void setUp() {

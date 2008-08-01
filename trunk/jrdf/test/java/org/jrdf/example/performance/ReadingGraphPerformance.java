@@ -1,9 +1,9 @@
 package org.jrdf.example.performance;
 
 import org.jrdf.SortedDiskJRDFFactory;
+import org.jrdf.collection.BdbMapFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;

@@ -83,7 +83,7 @@ import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_COMP
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.R1R2B2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.TRIPLE_FACTORY;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;

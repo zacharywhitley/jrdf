@@ -61,6 +61,7 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.MemoryJRDFFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
@@ -78,7 +79,6 @@ import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
-import org.jrdf.map.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
