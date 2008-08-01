@@ -64,16 +64,16 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.urql.builder.TripleBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.urql.parser.node.AVariable;
 import org.jrdf.urql.parser.node.AVariableListSelectClause;
 import org.jrdf.urql.parser.node.AWildcardSelectClause;
 import org.jrdf.urql.parser.node.Node;
-import org.jrdf.urql.parser.node.PVariable;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 
 /**
  * Default implementation of {@link org.jrdf.urql.analysis.SparqlAnalyser}.
@@ -85,6 +85,7 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
     private TripleBuilder tripleBuilder;
     private Graph graph;
     private final VariableCollector variableCollector;
+    private final LinkedHashSet<AttributeName> declaredVariables;
     private Expression<ExpressionVisitor> expression;
     private ParserException exception;
 
@@ -92,6 +93,7 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
         this.variableCollector = new AttributeCollectorImpl();
+        this.declaredVariables = new LinkedHashSet<AttributeName>();
     }
 
     public Expression<ExpressionVisitor> getExpression() throws ParserException {
@@ -106,7 +108,7 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
         try {
             WhereAnalyser analyser = analyseWhereClause(node.parent());
             Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
-            LinkedHashSet<AttributeName> declaredVariables = getAllVariables();
+            declaredVariables.addAll(variableCollector.getAttributes().keySet());
             expression = new Projection<ExpressionVisitor>(variableCollector, declaredVariables, nextExpression);
         } catch (ParserException e) {
             exception = e;
@@ -118,12 +120,16 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
         try {
             WhereAnalyser analyser = analyseWhereClause(node.parent());
             Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
-            // TODO Change this to apply the node and get the declared variables make it a field.
-            LinkedHashSet<AttributeName> declaredVariables = getDeclaredVariables(node);
+            super.caseAVariableListSelectClause(node);
             expression = new Projection<ExpressionVisitor>(variableCollector, declaredVariables, nextExpression);
         } catch (ParserException e) {
             exception = e;
         }
+    }
+
+    @Override
+    public void caseAVariable(AVariable node) {
+        declaredVariables.add(new VariableName(node.getVariablename().getText()));
     }
 
     private WhereAnalyser analyseWhereClause(Node node) {
@@ -132,20 +138,4 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
         return analyser;
     }
 
-    private LinkedHashSet<AttributeName> getAllVariables() {
-        LinkedHashSet<AttributeName> declaredVariables = new LinkedHashSet<AttributeName>();
-        declaredVariables.addAll(variableCollector.getAttributes().keySet());
-        return declaredVariables;
-    }
-
-    private LinkedHashSet<AttributeName> getDeclaredVariables(AVariableListSelectClause node) {
-        List<PVariable> variables = node.getVariable();
-        LinkedHashSet<AttributeName> variableNames = new LinkedHashSet<AttributeName>();
-        for (PVariable variable : variables) {
-            VariableAnalyser variableAnalyser = new VariableAnalyser();
-            variable.apply(variableAnalyser);
-            variableNames.add(variableAnalyser.getVariableName());
-        }
-        return variableNames;
-    }
 }
