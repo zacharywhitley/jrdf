@@ -1,3 +1,13 @@
+JRDF Release 0.5.5.2
+====================
+* Some initial work to support SPARQL FILTER.  Currently only STR matching
+ and not matching (Feature 2024302).
+* Now supports literal matching and the syntactic sugar for integers,
+ booleans, etc (Bug 1544836).
+* Ability to count number of molecules in a molecule store (Feature 2023271).
+* Various bugs in graph and molecule store (Bugs 2027360, 2024295, 2024247,
+ 2024233, 2024201).
+
 JRDF Release 0.5.5.1
 ====================
 * Permanent graph support (Feature 2002188).
@@ -9,7 +19,7 @@ JRDF Release 0.5.5.1
  (Bug 2002895).
 * Non-sorted graph does not pass all graph tests (Bug 2006458).
 * MoleculeStructureIndexSesame was writing incorrect number of values
-to the index (Bug 2008520).
+ to the index (Bug 2008520).
 
 JRDF Release 0.5.5
 ==================
@@ -226,4 +236,4 @@ JRDF Release 0.2
 * Node, SubjectNode, PredicateNode and ObjectNode marker interfaces.
 * Renaming of Statement to Triple and other renaming.
 * Defining hashCode and equals.
-* Refication added to NodeFactory.
+* Reification added to NodeFactory.
