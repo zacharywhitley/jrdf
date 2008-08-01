@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.collection;
 
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
