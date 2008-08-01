@@ -68,7 +68,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.query.expression.ConstraintImpl;
+import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
@@ -122,7 +122,7 @@ public class TripleTestUtil {
     public static Expression<ExpressionVisitor> createBookDcTitleExpression(URI bookUri, long suffix) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
         List<AttributeValuePair> avp = AVP_HELPER.createAvp(dcTitleTriple, createAttributes(suffix));
-        return new ConstraintImpl<ExpressionVisitor>(avp);
+        return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, URI predicate,
@@ -130,7 +130,7 @@ public class TripleTestUtil {
         Triple triple = createTriple(ANY_SUBJECT_NODE, NodeTestUtil.createResource(predicate), ANY_OBJECT_NODE);
         List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createSubjectObjectVariableAttributes(varSubject,
             varObject, suffix));
-        return new ConstraintImpl<ExpressionVisitor>(avp);
+        return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, String varPredicate,
@@ -139,7 +139,7 @@ public class TripleTestUtil {
         Attribute[] attributes = createAttributes(new VariableName(varSubject), new VariableName(varPredicate),
                 new VariableName(varObject));
         List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, attributes);
-        return new ConstraintImpl<ExpressionVisitor>(avp);
+        return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, String varPredicate,
@@ -147,7 +147,7 @@ public class TripleTestUtil {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, constLiteral);
         List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createSubjectPredicateVariableAttributes(
             varSubject, varPredicate, suffix));
-        return new ConstraintImpl<ExpressionVisitor>(avp);
+        return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
     public static Triple createTripleAllSame(URI uri) {

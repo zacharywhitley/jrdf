@@ -70,7 +70,7 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
     }
 
-    public <V extends ExpressionVisitor> void visitConstraint(ConstraintImpl<V> constraint) {
+    public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
     }
 
     public <V extends ExpressionVisitor> void visitEmptyConstraint(EmptyConstraint<V> constraint) {
@@ -83,5 +83,8 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
     }
 
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
+    }
+
+    public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
     }
 }

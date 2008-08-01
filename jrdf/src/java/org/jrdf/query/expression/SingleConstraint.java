@@ -78,15 +78,15 @@ import java.util.Map;
  * @author Tom Adams
  * @version $Revision$
  */
-public final class ConstraintImpl<V extends ExpressionVisitor> implements Constraint<V> {
+public final class SingleConstraint<V extends ExpressionVisitor> implements Constraint<V> {
     private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
     private List<AttributeValuePair> singleAvp;
 
-    private ConstraintImpl() {
+    private SingleConstraint() {
     }
 
-    public ConstraintImpl(List<AttributeValuePair> singleAvp) {
+    public SingleConstraint(List<AttributeValuePair> singleAvp) {
         checkNotNull(singleAvp);
         this.singleAvp = singleAvp;
     }
@@ -120,7 +120,7 @@ public final class ConstraintImpl<V extends ExpressionVisitor> implements Constr
         if (EqualsUtil.differentClasses(this, obj)) {
             return false;
         }
-        return determineEqualityFromFields(this, (ConstraintImpl) obj);
+        return determineEqualityFromFields(this, (SingleConstraint) obj);
     }
 
     public int hashCode() {
@@ -136,7 +136,7 @@ public final class ConstraintImpl<V extends ExpressionVisitor> implements Constr
         return singleAvp.toString();
     }
 
-    private boolean determineEqualityFromFields(ConstraintImpl o1, ConstraintImpl o2) {
+    private boolean determineEqualityFromFields(SingleConstraint o1, SingleConstraint o2) {
         return o1.singleAvp.equals(o2.singleAvp);
     }
 

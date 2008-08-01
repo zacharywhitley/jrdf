@@ -64,10 +64,15 @@ import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.operation.Restrict;
 
+import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * The relational operation that remove tuples that don't meet a specific criteria.
@@ -77,9 +82,13 @@ import java.util.Set;
  */
 public class RestrictImpl implements Restrict {
     private final RelationFactory relationFactory;
+    private final TupleFactory tupleFactory;
+    private final TupleComparator tupleComparator;
 
-    public RestrictImpl(RelationFactory relationFactory) {
+    public RestrictImpl(RelationFactory relationFactory, TupleFactory tupleFactory, TupleComparator tupleComparator) {
         this.relationFactory = relationFactory;
+        this.tupleFactory = tupleFactory;
+        this.tupleComparator = tupleComparator;
     }
 
     // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
@@ -93,5 +102,12 @@ public class RestrictImpl implements Restrict {
     public Relation restrict(GraphRelation relation, List<AttributeValuePair> nameValues) {
         Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
         return relationFactory.getRelation(restrictedTuples);
+    }
+
+    public Relation restrict(AttributeValuePair attributeValuePair) {
+        Tuple tuple = tupleFactory.getTuple(asList(attributeValuePair));
+        SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
+        resultTuples.add(tuple);
+        return relationFactory.getRelation(resultTuples);
     }
 }

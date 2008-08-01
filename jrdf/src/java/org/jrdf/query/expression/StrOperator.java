@@ -16,6 +16,11 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     }
 
     public void accept(ExpressionVisitor expressionVisitor) {
+        expressionVisitor.visitOperator(this);
+    }
+
+    public AttributeValuePair getAttributeValuePair() {
+        return singleAvp;
     }
 
     @Override
@@ -40,8 +45,8 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
 
     @Override
     public String toString() {
-        return " str (" + singleAvp.getAttribute() + ") " + singleAvp.getOperation() + " " + singleAvp.getValue() +
-            "} ";
+        return "str ((" + singleAvp.getAttribute() + ") " + singleAvp.getOperation() + " " + singleAvp.getValue() +
+            ") ";
     }
 
     private boolean determineEqualityFromFields(StrOperator s1, StrOperator s2) {

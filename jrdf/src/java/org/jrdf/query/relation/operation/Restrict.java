@@ -78,4 +78,6 @@ public interface Restrict extends Operation {
     // TODO (AN) Must be three specific attribute value pairs - where the attributes are Subject, Predicate and Object
     // or Blank Node, URI or Literal and the values either ANY_NODE or constants.
     Relation restrict(GraphRelation relation, List<AttributeValuePair> nameValues);
+
+    Relation restrict(AttributeValuePair attributeValuePair);
 }
