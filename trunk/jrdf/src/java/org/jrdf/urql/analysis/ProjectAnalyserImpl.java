@@ -118,6 +118,7 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
         try {
             WhereAnalyser analyser = analyseWhereClause(node.parent());
             Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
+            // TODO Change this to apply the node and get the declared variables make it a field.
             LinkedHashSet<AttributeName> declaredVariables = getDeclaredVariables(node);
             expression = new Projection<ExpressionVisitor>(variableCollector, declaredVariables, nextExpression);
         } catch (ParserException e) {
