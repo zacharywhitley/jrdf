@@ -68,7 +68,7 @@ package org.jrdf.query.expression;
 public interface ExpressionVisitor {
     <V extends ExpressionVisitor> void visitProjection(Projection<V> projection);
 
-    <V extends ExpressionVisitor> void visitConstraint(ConstraintImpl<V> constraint);
+    <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint);
 
     <V extends ExpressionVisitor> void visitEmptyConstraint(EmptyConstraint<V> constraint);
 
@@ -77,4 +77,6 @@ public interface ExpressionVisitor {
     <V extends ExpressionVisitor> void visitUnion(Union<V> union);
 
     <V extends ExpressionVisitor> void visitOptional(Optional<V> optional);
+
+    <V extends ExpressionVisitor> void visitOperator(Operator<V> operator);
 }

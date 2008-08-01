@@ -167,6 +167,8 @@
 
     <bean id="restrict" class="org.jrdf.query.relation.operation.mem.restrict.RestrictImpl">
         <constructor-arg ref="relationFactory"/>
+        <constructor-arg ref="tupleFactory"/>
+        <constructor-arg ref="tupleComparator"/>
     </bean>
 
     <bean id="outerUnion" class="org.jrdf.query.relation.operation.mem.union.OuterUnionImpl">

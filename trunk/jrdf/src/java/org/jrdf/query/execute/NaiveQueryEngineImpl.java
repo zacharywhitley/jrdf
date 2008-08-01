@@ -60,7 +60,7 @@
 package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.Conjunction;
-import org.jrdf.query.expression.ConstraintImpl;
+import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.EmptyConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -68,6 +68,7 @@ import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.Union;
+import org.jrdf.query.expression.Operator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
@@ -135,7 +136,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitConstraint(ConstraintImpl<V> constraint) {
+    public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
         List<AttributeValuePair> singleAvp = constraint.getAvp(allVariables);
         result = restrict.restrict(result, singleAvp);
     }
@@ -168,6 +169,10 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
             lhs = rhs;
         }
         result = leftOuterJoin.join(lhs, rhs);
+    }
+
+    public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
+        result = restrict.restrict(operator.getAttributeValuePair());
     }
 
     @SuppressWarnings({ "unchecked" })

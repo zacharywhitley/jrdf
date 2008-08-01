@@ -62,7 +62,7 @@ package org.jrdf.urql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
-import org.jrdf.query.expression.ConstraintImpl;
+import org.jrdf.query.expression.SingleConstraint;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -149,7 +149,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             node.apply(tripleBuilder);
             List<AttributeValuePair> attributeValuePairs = tripleBuilder.getTriples();
             collector.addConstraints(attributeValuePairs);
-            expression = new ConstraintImpl<ExpressionVisitor>(attributeValuePairs);
+            expression = new SingleConstraint<ExpressionVisitor>(attributeValuePairs);
         } catch (ParserException e) {
             exception = e;
         }

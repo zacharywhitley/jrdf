@@ -76,35 +76,35 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Unit test for {@link ConstraintImpl}.
+ * Unit test for {@link SingleConstraint}.
  *
  * @author Tom Adams
  * @version $Revision$
  */
 @SuppressWarnings({"unchecked"})
-public final class ConstraintUnitTest extends TestCase {
+public final class SingleConstraintUnitTest extends TestCase {
     private static final List<AttributeValuePair> AVP_1 = createAvpSet(TEST_ATTRIBUTE_VALUE_1);
     private static final List<AttributeValuePair> AVP_2 = createAvpSet(TEST_ATTRIBUTE_VALUE_2);
-    private static final ConstraintImpl CONSTRAINT_TRIPLE_1 = new ConstraintImpl<ExpressionVisitor>(AVP_1);
-    private static final ConstraintImpl CONSTRAINT_TRIPLE_2 = new ConstraintImpl<ExpressionVisitor>(AVP_2);
+    private static final SingleConstraint CONSTRAINT_TRIPLE_1 = new SingleConstraint<ExpressionVisitor>(AVP_1);
+    private static final SingleConstraint CONSTRAINT_TRIPLE_2 = new SingleConstraint<ExpressionVisitor>(AVP_2);
     private static final Class[] PARAM_TYPES = {List.class};
 
     public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(Expression.class, ConstraintImpl.class);
-        checkInstanceImplementsInterface(Serializable.class, ConstraintImpl.class);
-        checkConstructor(ConstraintImpl.class, Modifier.PUBLIC, List.class);
+        checkImplementationOfInterfaceAndFinal(Expression.class, SingleConstraint.class);
+        checkInstanceImplementsInterface(Serializable.class, SingleConstraint.class);
+        checkConstructor(SingleConstraint.class, Modifier.PUBLIC, List.class);
     }
 
     public void testSerialVersionUID() {
-        SerializationTestUtil.checkSerialialVersionUid(ConstraintImpl.class, 4538228991602138679L);
+        SerializationTestUtil.checkSerialialVersionUid(SingleConstraint.class, 4538228991602138679L);
     }
 
     public void testNullToConstructorThrowsException() {
-        ArgumentTestUtil.checkConstructNullAssertion(ConstraintImpl.class, PARAM_TYPES);
+        ArgumentTestUtil.checkConstructNullAssertion(SingleConstraint.class, PARAM_TYPES);
     }
 
     public void getAvp() {
-        ConstraintImpl constraint = new ConstraintImpl<ExpressionVisitor>(AVP_1);
+        SingleConstraint constraint = new SingleConstraint<ExpressionVisitor>(AVP_1);
         assertEquals(AVP_1, constraint.getAvp(Collections.EMPTY_MAP));
     }
 
@@ -144,14 +144,14 @@ public final class ConstraintUnitTest extends TestCase {
     }
 
     private void checkSameValueSameReference() {
-        ConstraintImpl x = CONSTRAINT_TRIPLE_1;
-        ConstraintImpl y = x;
+        SingleConstraint x = CONSTRAINT_TRIPLE_1;
+        SingleConstraint y = x;
         checkEquals(x, y);
     }
 
     private void checkSameValueDifferentReference() {
-        ConstraintImpl x = new ConstraintImpl<ExpressionVisitor>(AVP_1);
-        ConstraintImpl y = new ConstraintImpl<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
         checkEquals(x, y);
     }
 
@@ -160,24 +160,24 @@ public final class ConstraintUnitTest extends TestCase {
     }
 
     private void checkSymmetric() {
-        ConstraintImpl x = new ConstraintImpl<ExpressionVisitor>(AVP_1);
-        ConstraintImpl y = new ConstraintImpl<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
         checkEquals(x, y);
         checkEquals(y, y);
     }
 
     private void checkTransitive() {
-        ConstraintImpl x = new ConstraintImpl<ExpressionVisitor>(AVP_1);
-        ConstraintImpl y = new ConstraintImpl<ExpressionVisitor>(AVP_1);
-        ConstraintImpl z = new ConstraintImpl<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint z = new SingleConstraint<ExpressionVisitor>(AVP_1);
         checkEquals(x, y);
         checkEquals(y, z);
         checkEquals(x, z);
     }
 
     private void checkConsistentEquals() {
-        ConstraintImpl x = new ConstraintImpl<ExpressionVisitor>(AVP_1);
-        ConstraintImpl y = new ConstraintImpl<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
         checkEquals(x, y);
         checkEquals(x, y);
     }
@@ -189,8 +189,8 @@ public final class ConstraintUnitTest extends TestCase {
     }
 
     private void checkEqualObjectsReturnSameHashCode() {
-        ConstraintImpl x = new ConstraintImpl<ExpressionVisitor>(AVP_1);
-        ConstraintImpl y = new ConstraintImpl<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
         checkEquals(x, y);
         assertEquals(x.hashCode(), y.hashCode());
     }
@@ -199,7 +199,7 @@ public final class ConstraintUnitTest extends TestCase {
         checkNotEquals(CONSTRAINT_TRIPLE_1, CONSTRAINT_TRIPLE_2);
     }
 
-    private void checkEquals(ConstraintImpl x, ConstraintImpl y) {
+    private void checkEquals(SingleConstraint x, SingleConstraint y) {
         assertEquals(x, y);
     }
 
@@ -207,7 +207,7 @@ public final class ConstraintUnitTest extends TestCase {
         assertFalse(x.equals(y));
     }
 
-    private void checkToStringDelegatesToTriple(List<AttributeValuePair> avp, ConstraintImpl contraint) {
+    private void checkToStringDelegatesToTriple(List<AttributeValuePair> avp, SingleConstraint contraint) {
         assertEquals(avp.toString(), contraint.toString());
     }
 }

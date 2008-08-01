@@ -120,10 +120,12 @@ public final class TupleImpl implements Tuple {
         return null;
     }
 
+    @Override
     public int hashCode() {
         return attributeValues.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (isNull(obj)) {
             return false;
@@ -137,6 +139,7 @@ public final class TupleImpl implements Tuple {
         return false;
     }
 
+    @Override
     public String toString() {
         return attributeValues.toString();
     }

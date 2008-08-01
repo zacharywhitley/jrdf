@@ -59,7 +59,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.expression.ConstraintImpl;
+import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
@@ -68,14 +68,14 @@ import org.jrdf.util.test.TripleTestUtil;
 import java.util.List;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.expression.ConstraintImpl}.
+ * {@link Instantiator} for {@link org.jrdf.query.expression.SingleConstraint}.
  *
  * @author Tom Adams
  * @version $Id$
  */
 final class ConstraintTripleInstantiator implements Instantiator {
 
-    private static final Class<ConstraintImpl> CLASS_CONSTRAINT_TRIPLE = ConstraintImpl.class;
+    private static final Class<SingleConstraint> CLASS_CONSTRAINT_TRIPLE = SingleConstraint.class;
 
     public Object instantiate() {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_CONSTRAINT_TRIPLE, createParams());
