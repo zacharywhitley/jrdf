@@ -65,9 +65,6 @@ import org.jrdf.util.ClosableIterator;
 public interface ReadableIndex<T> {
     Long findMid(T... triple) throws GraphException;
 
-    // TODO
-//    Long findMid(Long[]... triple) throws GraphException;
-
     ClosableIterator<Long[]> findTriplesForMid(T pid, T mid);
 
     Long findEnclosingMoleculeId(Long mid) throws GraphException;

@@ -1,7 +1,7 @@
 <!--
   ~ $Header$
-  ~ $Revision: 982 $
-  ~ $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+  ~ $Revision$
+  ~ $Date$
   ~
   ~ ====================================================================
   ~
@@ -59,14 +59,25 @@
 
 <html>
 <head>
-    <title>Java RDF (JRDF) Vocabulary Package</title>
+    <title>Java RDF (JRDF) Package</title>
 </head>
 
 <body>
 <p>
-    This package contains a predefined set of URIs to be used in constructing
-    URI References that are used in RDF. It defines the RDF, RDFS, OWL and XSD
-    vocabularies.
+    This top level package consists of Factories to construct on disk or in memory version of JRDF, optionally
+    using Spring.
 </p>
+
+<p>
+    There is a difference between on disk and persistent JRDF graphs.  On disk factories simply allow temporary graphs
+    to be used without being restricted to available memory.  Persistent graphs allow a name to be given to a graph
+    which is stored on disk but can be reused across program runs.
+</p>
+
+<p>
+   Molecule factories create molecule stores which are an extension to RDF Graphs that allows them to be used in a
+   distributed fashion (including blanks nodes).
+</p>
+
 </body>
 </html>

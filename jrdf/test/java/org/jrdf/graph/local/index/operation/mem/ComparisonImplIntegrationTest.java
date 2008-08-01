@@ -73,7 +73,7 @@ import java.net.URI;
 // TODO (AN) Add tests for areIsomorphic.
 
 /**
- * Integration tests {@see org.jrdf.graph.local.index.index.operation.mem.ComparisonImpl}.
+ * Integration tests {@link org.jrdf.graph.local.index.index.operation.mem.ComparisonImpl}.
  *
  * @author Andrew Newman
  * @version $Revision$

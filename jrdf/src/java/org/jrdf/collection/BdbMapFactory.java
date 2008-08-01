@@ -57,46 +57,94 @@
  *
  */
 
-package org.jrdf.example.performance;
+package org.jrdf.collection;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.collection.MapFactory;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.RdfXmlParser;
+import com.sleepycat.je.Database;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.Environment;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-public class ParsePerformanceImpl implements ParsePerformance {
-    private static final String URI_STRING = "http://foo/bar";
-    private static final String PATH = "/org/jrdf/example/performance/pizza.rdf";
-    private final MapFactory mapFactory;
+public final class BdbMapFactory implements MapFactory {
+    private final BdbEnvironmentHandler handler;
+    private final String databaseName;
+    private Environment env;
+    private List<Database> databases = new ArrayList<Database>();
+    private long mapNumber;
 
-    public ParsePerformanceImpl(MapFactory mapFactory) {
-        this.mapFactory = mapFactory;
+    public BdbMapFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
+        checkNotNull(newHandler, newDatabaseName);
+        this.handler = newHandler;
+        this.databaseName = newDatabaseName;
     }
 
-    public void parse(Graph graph, GraphPerformance performance) throws GraphException {
-        InputStream stream = getResource();
-        Parser parser = new RdfXmlParser(graph.getElementFactory(), mapFactory);
-        long startTime = System.currentTimeMillis();
-        parse(stream, parser);
-        performance.outputResult(graph, startTime, "Testing Parsing Performance (" + PATH + "): ");
+    public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
+        mapNumber++;
+        return createMap(clazz1, clazz2, Long.toString(mapNumber));
     }
 
-    private void parse(InputStream stream, Parser parser) {
+    public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
         try {
-            parser.parse(stream, URI_STRING);
-        } catch (Exception e) {
+            env = handler.setUpEnvironment();
+            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
+            Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
+            databases.add(database);
+            final Map<T, U> map = handler.createMap(database, clazz1, clazz2);
+            map.clear();
+            return map;
+        } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private InputStream getResource() {
+    public <A, T, U extends A> Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name) {
         try {
-            return getClass().getResource(PATH).openStream();
-        } catch (IOException e) {
+            env = handler.setUpEnvironment();
+            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
+            Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
+            databases.add(database);
+            return handler.createMap(database, clazz1, clazz2);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public void close() {
+        try {
+            mapNumber = 0;
+            closeDatabase();
+        } finally {
+            closeEnvironment();
+        }
+    }
+
+    private void closeDatabase() {
+        try {
+            if (!databases.isEmpty()) {
+                for (Database database : databases) {
+                    database.close();
+                }
+            }
+            databases.clear();
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void closeEnvironment() {
+        try {
+            if (env != null) {
+                env.sync();
+                env.close();
+                env = null;
+            }
+        } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
     }

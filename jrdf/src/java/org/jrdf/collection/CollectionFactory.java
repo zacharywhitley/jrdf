@@ -64,14 +64,14 @@ import java.util.SortedSet;
 import java.util.List;
 
 /**
- * An abstract from specifically knowing how to create Sorted Sets.  This allows different implementations to be
- * swapped more easily (for example from memory bound to disk based).
+ * An abstract from specifically knowing how to create sorted sets and lists.  This allows different implementations
+ * to be swapped more easily (for example from memory bound to disk based).
  */
 public interface CollectionFactory {
     /**
      * Creates a sorted set for known type.  The supported types depend on the implementation - current implementations
-     * support types such as Triple and PredicateNode.  Otherwise, it will produce a sorted set without a comparator -
-     * which will need to be added later.
+     * support types such as Triple, PredicateNode and BlankNode.  Otherwise, it will produce a sorted set without
+     * a comparator - which will need to be added later.
      *
      * @param clazz The type of set to create.
      * @return A sorted set.
@@ -89,7 +89,7 @@ public interface CollectionFactory {
     <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator);
 
     /**
-     * Createa s list for a known type.
+     * Creates a list for a known type.
      *
      * @param clazz The type of list to create.
      * @return A list.
@@ -98,7 +98,7 @@ public interface CollectionFactory {
 
     /**
      * Close any resources used by the factory - possibly database connections, file handles and the like.  It is
-     * expected that a factory used that is not close may cause resource leaks.
+     * expected that a factory used that is not closed may cause resource leaks.
      */
     void close();
 }

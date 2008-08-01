@@ -62,7 +62,7 @@ package org.jrdf.parser.bnodefactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 
 import java.util.Map;

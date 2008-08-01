@@ -71,7 +71,7 @@ import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GLOBAL_MOLECU
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_FACTORY;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;

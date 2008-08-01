@@ -61,6 +61,7 @@ package org.jrdf;
 
 import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.BdbMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.MoleculeGraphImpl;
@@ -84,8 +85,7 @@ import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;

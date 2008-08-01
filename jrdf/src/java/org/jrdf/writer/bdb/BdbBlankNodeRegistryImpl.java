@@ -60,7 +60,7 @@
 package org.jrdf.writer.bdb;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 

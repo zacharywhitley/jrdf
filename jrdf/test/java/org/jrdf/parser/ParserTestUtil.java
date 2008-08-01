@@ -61,6 +61,7 @@ package org.jrdf.parser;
 
 import static junit.framework.Assert.assertEquals;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.collection.MapFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -73,8 +74,7 @@ import org.jrdf.graph.datatype.LexicalComparator;
 import org.jrdf.graph.datatype.LexicalComparatorImpl;
 import org.jrdf.graph.datatype.SemanticComparator;
 import org.jrdf.graph.datatype.SemanticComparatorImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;

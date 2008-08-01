@@ -57,95 +57,29 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.collection;
 
-import com.sleepycat.je.Database;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
-public final class BdbMapFactory implements MapFactory {
-    private final BdbEnvironmentHandler handler;
-    private final String databaseName;
-    private Environment env;
-    private List<Database> databases = new ArrayList<Database>();
-    private long mapNumber;
-
-    public BdbMapFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
-        checkNotNull(newHandler, newDatabaseName);
-        this.handler = newHandler;
-        this.databaseName = newDatabaseName;
-    }
+public final class MemMapFactory implements MapFactory {
+    private Map<String, Map<?, ?>> existingMaps = new HashMap<String, Map<?, ?>>();
 
     public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        mapNumber++;
-        return createMap(clazz1, clazz2, Long.toString(mapNumber));
+        return new HashMap<T, U>();
     }
 
     public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
-        try {
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
-            databases.add(database);
-            final Map<T, U> map = handler.createMap(database, clazz1, clazz2);
-            map.clear();
-            return map;
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+        final Map<T, U> map = new HashMap<T, U>();
+        existingMaps.put(name, map);
+        return map;
     }
 
+    @SuppressWarnings({ "unchecked" })
     public <A, T, U extends A> Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name) {
-        try {
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
-            databases.add(database);
-            return handler.createMap(database, clazz1, clazz2);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+        return (Map<T, U>) existingMaps.get(name);
     }
-
 
     public void close() {
-        try {
-            mapNumber = 0;
-            closeDatabase();
-        } finally {
-            closeEnvironment();
-        }
-    }
-
-    private void closeDatabase() {
-        try {
-            if (!databases.isEmpty()) {
-                for (Database database : databases) {
-                    database.close();
-                }
-            }
-            databases.clear();
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void closeEnvironment() {
-        try {
-            if (env != null) {
-                env.sync();
-                env.close();
-                env = null;
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

@@ -76,7 +76,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 

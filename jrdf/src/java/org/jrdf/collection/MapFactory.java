@@ -57,29 +57,16 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.collection;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public final class MemMapFactory implements MapFactory {
-    private Map<String, Map<?, ?>> existingMaps = new HashMap<String, Map<?, ?>>();
+public interface MapFactory {
+    <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2);
 
-    public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        return new HashMap<T, U>();
-    }
+    <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name);
 
-    public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
-        final Map<T, U> map = new HashMap<T, U>();
-        existingMaps.put(name, map);
-        return map;
-    }
+    <A, T, U extends A> Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name);
 
-    @SuppressWarnings({ "unchecked" })
-    public <A, T, U extends A> Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name) {
-        return (Map<T, U>) existingMaps.get(name);
-    }
-
-    public void close() {
-    }
+    void close();
 }

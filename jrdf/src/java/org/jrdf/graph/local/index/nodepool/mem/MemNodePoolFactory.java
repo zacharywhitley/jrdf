@@ -66,8 +66,8 @@ import org.jrdf.graph.local.index.nodepool.NodeTypePool;
 import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.collection.MapFactory;
+import org.jrdf.collection.MemMapFactory;
 
 import java.util.Map;
 

@@ -61,10 +61,10 @@ package org.jrdf.writer.ntriples;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFInputFactory;

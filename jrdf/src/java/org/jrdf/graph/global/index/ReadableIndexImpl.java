@@ -90,7 +90,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         throw new GraphException("Cannot find triple:  " + asList(triple));
     }
 
-    // TODO should rturn null instead of throw exception?
+    // TODO should return null instead of throw exception?
     public Long findMid(Long... triple) throws GraphException {
         final ClosableIterator<Long[]> index = indexes[0].getSubSubIndex(triple[0], triple[1]);
         while (index.hasNext()) {
@@ -107,11 +107,6 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         return new EntryIteratorTwoFixedFourArray(structureIndex[0].getSubSubIndex(pid, mid), mid);
     }
 
-    /**
-     * spo & mid.
-     * @param pid
-     * @return
-     */
     public ClosableIterator<Long[]> findTriplesForPid(Long pid) {
         return new EntryIteratorOneFixedFourArray(structureIndex[0].getSubIndex(pid));
     }
@@ -134,12 +129,6 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         }
     }
 
-    /**
-     * Search for the parent ID in a width-first search.
-     * @param parentId
-     * @param mid
-     * @return
-     */
     private Long findParentMoleculeId(Long parentId, Long mid) {
         final ClosableIterator<Long[]> subIndex = structureIndex[0].getSubIndex(parentId);
         try {

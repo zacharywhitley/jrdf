@@ -60,7 +60,7 @@
 package org.jrdf.graph.local.index.longindex;
 
 import junit.framework.TestCase;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 
 public abstract class AbstractLongIndexUnitTest extends TestCase {
     protected LongIndex longIndex;

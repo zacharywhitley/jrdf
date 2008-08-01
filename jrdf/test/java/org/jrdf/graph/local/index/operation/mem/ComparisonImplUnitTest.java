@@ -86,7 +86,7 @@ import java.lang.reflect.Modifier;
 // TODO (AN) Add tests for areIsomorphic.
 
 /**
- * Tests {@see org.jrdf.graph.local.index.index.operation.mem.ComparisonImpl}.
+ * Tests {@link org.jrdf.graph.local.index.index.operation.mem.ComparisonImpl}.
  *
  * @author Andrew Newman
  * @version $Revision$

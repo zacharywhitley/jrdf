@@ -61,7 +61,7 @@ package org.jrdf.example.performance;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.writer.BlankNodeRegistry;
 
 public abstract class AbstractGraphPerformance implements GraphPerformance {

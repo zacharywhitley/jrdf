@@ -61,9 +61,9 @@ package org.jrdf.parser.rdfxml;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.parser.ParserTestUtil.checkNegativeRdfTestParseException;
 import static org.jrdf.parser.ParserTestUtil.checkPositiveNtNtTest;

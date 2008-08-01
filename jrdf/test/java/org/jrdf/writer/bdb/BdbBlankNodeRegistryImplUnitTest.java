@@ -63,7 +63,7 @@ import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.map.MapFactory;
+import org.jrdf.collection.MapFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
