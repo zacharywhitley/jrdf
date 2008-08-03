@@ -60,6 +60,7 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
+import org.jrdf.collection.MemMapFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import org.jrdf.graph.AnySubjectNode;
@@ -78,12 +79,12 @@ import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B3R2R2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B3R2R3;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.ELEMENT_FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.FACTORY;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GLOBAL_MOLECULE_COMPARATOR;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_COMPARATOR;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.R1R2B2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.TRIPLE_FACTORY;
-import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
@@ -330,7 +331,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         }
     }
 
-    private void readTextToGraph() throws IOException {
+    private void readTextToGraph() throws IOException, GraphException {
         String text =
                 "[\n" +
                         "  _:a45 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#experimentalMethod> _:a58 .\n" +
@@ -410,5 +411,27 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
                 GRAPH.getTripleFactory());
         TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, MOLECULE_FACTORY);
         textToMolecule.parse(new StringReader(GRAPH.toString()));
+    }
+
+    public void testAddNewRootTripleToMolecule() throws GraphException {
+        Molecule molecule = MOLECULE_FACTORY.createMolecule(B2R2B3);
+        Molecule molecule1 = MOLECULE_FACTORY.createMolecule(B2R2R1);
+        molecule.add(B1R1B2, molecule1);
+        GRAPH.add(molecule);
+        GRAPH.add(molecule1);
+        Molecule newMolecule = GRAPH.addRootTriple(molecule, R1R2B2);
+        assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(molecule.add(R1R2B2), newMolecule));
+    }                                        
+
+    public void testRemoveRootTripleFromMolecule() throws GraphException {
+        Molecule molecule = MOLECULE_FACTORY.createMolecule(B2R2B3);
+        Molecule molecule1 = MOLECULE_FACTORY.createMolecule(B2R2R1);
+        molecule.add(B1R1B2, molecule1);
+        GRAPH.add(molecule);
+        GRAPH.add(molecule1);
+        Molecule newMolecule = GRAPH.removeRootTriple(molecule, B1R1B2);
+        molecule.remove(B1R1B2);
+        assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(molecule, newMolecule));
+        assertEquals("Same molecule", 1, newMolecule.size());
     }
 }

@@ -76,4 +76,9 @@ public interface MoleculeGraph extends Graph {
     long getNumberOfMolecules();
 
     ClosableIterator<Molecule> findMolecules(Triple rootTriple) throws GraphException;
+
+    Molecule addRootTriple(Molecule molecule, Triple rootTriple) throws GraphException;
+
+    // TODO recursively remove submolecules
+    Molecule removeRootTriple(Molecule molecule, Triple rootTriple) throws GraphException;
 }
