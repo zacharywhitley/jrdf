@@ -98,7 +98,8 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     private final Graph graph;
     private TripleComparator comparator;
     private MoleculeComparator moleculeComparator;
-    private MoleculeGraphHandler handlerImpl;
+    private MoleculeGraphHandler handler;
+    private static final int QUIN_SIZE = 5;
 
     public MoleculeGraphImpl(WritableIndex<Long> newWriteIndex, ReadableIndex<Long> newReadIndex,
         MoleculeLocalizer newLocalizer, Graph newGraph) {
@@ -108,7 +109,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         this.graph = newGraph;
         this.comparator = new TripleComparatorFactoryImpl().newComparator();
         this.moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
-        this.handlerImpl = new MoleculeGraphHandlerImpl(this, readableIndex, moleculeComparator);
+        this.handler = new MoleculeGraphHandlerImpl(this, readableIndex, moleculeComparator);
     }
 
     public void add(Molecule molecule) {
@@ -118,8 +119,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public void delete(Molecule molecule) throws GraphException {
         final Triple headTriple = molecule.getHeadTriple();
-        final Long[] longsForTriple = localizer.localizeTriple(headTriple);
-        final Long headTripleMid = readableIndex.findHeadTripleMid(1L, longsForTriple);
+        final Long headTripleMid = findMoleculeID(headTriple);
         Set<Long> mids = new HashSet<Long>();
         mids.add(headTripleMid);
         Set<Long[]> indicesToRemove = new HashSet<Long[]>();
@@ -127,7 +127,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         ClosableIterator<Long[]> iterator = readableIndex.findTriplesForMid(1L, headTripleMid);
         while (iterator.hasNext()) {
             Long[] spo = iterator.next();
-            Long[] quin = new Long[5];
+            Long[] quin = new Long[QUIN_SIZE];
             System.arraycopy(spo, 0, quin, 0, 3);
             quin[3] = headTripleMid;
             quin[4] = 1L;
@@ -141,6 +141,12 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         indicesToRemove.clear();
     }
 
+    private Long findMoleculeID(Triple headTriple) throws GraphException {
+        final Long[] longsForTriple = localizer.localizeTriple(headTriple);
+        final Long headTripleMid = readableIndex.findHeadTripleMid(1L, longsForTriple);
+        return headTripleMid;
+    }
+
     private Set<Long[]> deleteChildMolecules(Set<Long> mids, Set<Long[]> toRemove) throws GraphException {
         Set<Long> newMids = new HashSet<Long>();
         for (Long pid : mids) {
@@ -148,7 +154,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
             while (spoms.hasNext()) {
                 Long[] spom = spoms.next();
                 newMids.add(spom[3]);
-                Long[] quin = new Long[5];
+                Long[] quin = new Long[QUIN_SIZE];
                 System.arraycopy(spom, 0, quin, 0, 4);
                 quin[4] = pid;
                 //writableIndex.remove(quin);
@@ -167,20 +173,20 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         Long mid = readableIndex.findMid(localizedTriple);
         Long pid = readableIndex.findEnclosingMoleculeId(mid);
         Long topMoleculeID = pid.equals(1L) ? mid : pid;
-        return handlerImpl.createMolecule(1L, topMoleculeID);
+        return handler.createMolecule(1L, topMoleculeID);
     }
 
     public Molecule findEnclosingMolecule(Triple triple) throws GraphException {
         Long[] localizedTriple = localizer.localizeTriple(triple);
         Long mid = readableIndex.findMid(localizedTriple);
         Long pid = readableIndex.findEnclosingMoleculeId(mid);
-        return handlerImpl.createMolecule(pid, mid);
+        return handler.createMolecule(pid, mid);
     }
 
     public ClosableIterator<Molecule> findMolecules(Triple rootTriple) throws GraphException {
         Long[] localizedTriple = localizer.localizeTriple(rootTriple);
-        ClosableIterator<Long> midIterator = readableIndex.findMoleculeIDs(localizedTriple);
-        return new ClosableMoleculeIterator(midIterator, handlerImpl);
+        ClosableIterator<Long> midIterator = readableIndex.findMoleculeIDs(localizedTriple, 1L);
+        return new ClosableMoleculeIterator(midIterator, handler);
     }
 
     // TODO Add more stuff here to handle molecule indexes
@@ -296,7 +302,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     }
 
     public ClosableIterator<Molecule> iterator() throws GraphException {
-        return new LongIndexToMoleculeIterator(readableIndex.findChildIds(1L), handlerImpl);
+        return new LongIndexToMoleculeIterator(readableIndex.findChildIds(1L), handler);
     }
 
     public long getNumberOfMolecules() {
@@ -311,5 +317,67 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         } finally {
             iterator.close();
         }
+    }
+
+    public Molecule addRootTriple(Molecule molecule, Triple rootTriple) throws GraphException {
+        Triple headTriple = molecule.getHeadTriple();
+        Long[] tripleAsLongs = localizer.localizeTriple(headTriple);
+        ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs, 1L);
+        try {
+            while (iterator.hasNext()) {
+                Molecule m = handler.createMolecule(1L, iterator.next());
+                if (m != null && moleculeComparator.compare(molecule, m) == 0) {
+                    AddMoleculeToIndex amti = new AddMoleculeToIndex(writableIndex, localizer);
+                    amti.handleTriple(rootTriple);
+                    return molecule.add(rootTriple);
+                }
+            }
+        } finally {
+            iterator.close();
+        }
+        throw new GraphException("Cannot add new triple to molecule");
+    }
+
+    // TODO recursively remove submolecules
+    public Molecule removeRootTriple(Molecule molecule, Triple rootTriple) throws GraphException {
+        Long[] tripleAsLongs = localizer.localizeTriple(rootTriple);
+        ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs, 1L);
+        try {
+            while (iterator.hasNext()) {
+                Long aLong = iterator.next();
+                Molecule m = handler.createMolecule(1L, aLong);
+                if (m != null && moleculeComparator.compare(molecule, m) == 0) {
+                    return removeSubMolecules(molecule, rootTriple, tripleAsLongs, aLong);
+                }
+            }
+        } finally {
+            iterator.close();
+        }
+        throw new GraphException("Cannot remove triple from molecule");
+    }
+
+    // TODO finish implementation
+    private Molecule removeSubMolecules(Molecule molecule, Triple rootTriple,
+                                        Long[] tripleAsLongs, Long aLong) throws GraphException {
+        removeFromIndex(tripleAsLongs, aLong);
+        molecule.remove(rootTriple);
+        return molecule;
+    }
+
+    private void removeFromIndex(Long[] tripleAsLongs, Long mid) throws GraphException {
+        ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs, mid);
+        while (iterator.hasNext()) {
+            Long subMID = iterator.next();
+            Long[] quin = new Long[QUIN_SIZE];
+            System.arraycopy(tripleAsLongs, 0, quin, 0, QUIN_SIZE - 2);
+            writableIndex.remove(quin);
+            ClosableIterator<Long[]> triples = readableIndex.findTriplesForMid(mid, subMID);
+            while (triples.hasNext()) {
+                Long[] triple = triples.next();
+                removeFromIndex(triple, subMID);
+            }
+            triples.close();
+        }
+        iterator.close();
     }
 }

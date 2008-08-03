@@ -77,5 +77,5 @@ public interface ReadableIndex<T> {
 
     long getMaxMoleculeId();
 
-    ClosableIterator<Long> findMoleculeIDs(Long[] triple);
+    ClosableIterator<Long> findMoleculeIDs(Long[] triple, Long pid);
 }

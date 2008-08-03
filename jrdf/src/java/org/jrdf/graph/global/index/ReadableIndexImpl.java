@@ -78,14 +78,18 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         this.structureIndex = newStructureIndex;
     }
 
-    public Long findHeadTripleMid(Long PID, Long... triple) throws GraphException {
-        final ClosableIterator<Long[]> index = structureIndex[0].getSubIndex(PID);
-        while (index.hasNext()) {
-            Long[] midSPO = index.next();
-            // Make sure object equals required value and mid is not 1L (not in a molecule).
-            if (midSPO[1].equals(triple[0]) && midSPO[2].equals(triple[1]) && midSPO[3].equals(triple[2])) {
-                return midSPO[0];
+    public Long findHeadTripleMid(Long pid, Long... triple) throws GraphException {
+        final ClosableIterator<Long[]> index = structureIndex[0].getSubIndex(pid);
+        try {
+            while (index.hasNext()) {
+                Long[] midSPO = index.next();
+                // Make sure object equals required value and mid is not 1L (not in a molecule).
+                if (midSPO[1].equals(triple[0]) && midSPO[2].equals(triple[1]) && midSPO[3].equals(triple[2])) {
+                    return midSPO[0];
+                }
             }
+        } finally {
+            index.close();
         }
         throw new GraphException("Cannot find triple:  " + asList(triple));
     }
@@ -93,12 +97,16 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     // TODO should return null instead of throw exception?
     public Long findMid(Long... triple) throws GraphException {
         final ClosableIterator<Long[]> index = indexes[0].getSubSubIndex(triple[0], triple[1]);
-        while (index.hasNext()) {
-            Long[] oAndMid = index.next();
-            // Make sure object equals required value and mid is not 1L (not in a molecule).
-            if (oAndMid[0].equals(triple[2]) && !oAndMid[1].equals(1L)) {
-                return oAndMid[1];
+        try {
+            while (index.hasNext()) {
+                Long[] oAndMid = index.next();
+                // Make sure object equals required value and mid is not 1L (not in a molecule).
+                if (oAndMid[0].equals(triple[2]) && !oAndMid[1].equals(1L)) {
+                    return oAndMid[1];
+                }
             }
+        } finally {
+            index.close();
         }
         throw new GraphException("Cannot find triple:  " + asList(triple));
     }
@@ -168,7 +176,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         }
     }
 
-    public ClosableIterator<Long> findMoleculeIDs(Long[] triple) {
-        return structureIndex[1].getFourthIndex(triple[0], triple[1], triple[2], 1L);
+    public ClosableIterator<Long> findMoleculeIDs(Long[] triple, Long pid) {
+        return structureIndex[1].getFourthIndex(triple[0], triple[1], triple[2], pid);
     }
 }
