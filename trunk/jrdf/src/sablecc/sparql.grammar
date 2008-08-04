@@ -196,8 +196,8 @@ Productions
     {db_quoted_escaped} dbqescapedtext;
 
   datatype =
-    {resource_datatype} datatypeprefix resource |
-    {qname_datatype} datatypeprefix qname_element;
+    {qname_datatype} datatypeprefix qname_element |
+    {resource_datatype} datatypeprefix resource;
 
   numeric_literal =
     {unsigned_numeric_literal} unsigned_numeric_literal |
