@@ -81,7 +81,9 @@ public class MemNodePoolFactory implements NodePoolFactory {
         final Map<Long, String> literalNodePool = MAP_FACTORY.createMap(Long.class, String.class);
         final Map<String, Long> stringPool = MAP_FACTORY.createMap(String.class, Long.class);
         final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
-        return new NodePoolImpl(nodeTypePool, stringPool);
+        final NodePoolImpl pool = new NodePoolImpl(nodeTypePool, stringPool);
+        pool.clear();
+        return pool;
     }
 
     public NodePool openExistingNodePool() {
