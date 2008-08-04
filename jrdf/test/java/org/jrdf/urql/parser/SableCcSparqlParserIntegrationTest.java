@@ -335,6 +335,18 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\") }", conjunction);
     }
 
+    public void testPrefixInFilter() throws Exception {
+        AttributeName oVar = new VariableName("o");
+        Expression<ExpressionVisitor> spoExpression = createConstraintExpression("s", "p", "o");
+        AttributeValuePair avp = new AttributeValuePairImpl(new AttributeImpl(oVar, new ObjectNodeType()),
+                createLiteral("unknown", XSD.STRING));
+        Expression<ExpressionVisitor> filterExpression = new StrOperator(avp);
+        Expression<ExpressionVisitor> conjunction = new Conjunction<ExpressionVisitor>(spoExpression,
+                filterExpression);
+        checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
+                "SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", conjunction);
+    }
+
     private void checkConstraintExpression(String queryString, Expression expectedExpression) throws Exception {
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
