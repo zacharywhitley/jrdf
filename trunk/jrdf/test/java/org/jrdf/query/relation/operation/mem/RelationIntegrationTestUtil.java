@@ -166,7 +166,7 @@ public class RelationIntegrationTestUtil {
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R3 =
         new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECT_NOT_R3 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3, new NeqAVPOperation());
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3, NeqAVPOperation.NEQUALS);
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R4 =
         new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_4);
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R5 =

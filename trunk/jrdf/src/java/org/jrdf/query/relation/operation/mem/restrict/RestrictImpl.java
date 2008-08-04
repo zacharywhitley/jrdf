@@ -66,6 +66,7 @@ import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.mem.FilterTupleImpl;
 import org.jrdf.query.relation.operation.Restrict;
 
 import static java.util.Arrays.asList;
@@ -105,7 +106,7 @@ public class RestrictImpl implements Restrict {
     }
 
     public Relation restrict(AttributeValuePair attributeValuePair) {
-        Tuple tuple = tupleFactory.getTuple(asList(attributeValuePair));
+        Tuple tuple = new FilterTupleImpl(tupleFactory.getTuple(asList(attributeValuePair)));
         SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
         resultTuples.add(tuple);
         return relationFactory.getRelation(resultTuples);

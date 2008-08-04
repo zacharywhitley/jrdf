@@ -58,92 +58,55 @@
  */
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
+import org.jrdf.query.relation.Tuple;
 
+import java.util.Set;
 import java.util.SortedSet;
 
 /**
- * Implementation of an attribute name/value consists of the name (SUBJECT, PREDICATE, etc.) and value.
+ * Implementation of a tuple is a named finite set of attributeValues (attributes to a set of values).
  *
  * @author Andrew Newman
  * @version $Id$
  */
+@SuppressWarnings({ "unchecked" })
+public final class FilterTupleImpl implements Tuple {
+    private static final long serialVersionUID = 2963013568136460784L;
+    private Tuple tuple;
 
-// TODO (AN) Add a check that the attribute type is consistent with the node type - or add it into the Factory.
-
-public final class AttributeValuePairImpl implements AttributeValuePair {
-    private static final long serialVersionUID = -5045948869879997736L;
-    private Attribute attribute;
-    private Node value;
-    private AVPOperation operation;
-
-    // For serialization.
-    private AttributeValuePairImpl() {
+    private FilterTupleImpl() {
     }
 
-    public AttributeValuePairImpl(Attribute newAttribute, Node newValue) {
-        this (newAttribute, newValue, EqAVPOperation.EQUALS);
+    public FilterTupleImpl(Tuple newTuple) {
+        this.tuple = newTuple;
     }
 
-    public AttributeValuePairImpl(Attribute newAttribute, Node newValue, AVPOperation newOperation) {
-        attribute = newAttribute;
-        value = newValue;
-        operation = newOperation;
+    public Set<AttributeValuePair> getAttributeValues() {
+        return tuple.getAttributeValues();
     }
 
-    public Attribute getAttribute() {
-        return attribute;
+    public SortedSet<AttributeValuePair> getSortedAttributeValues() {
+        return tuple.getSortedAttributeValues();
     }
 
-    public Node getValue() {
-        return value;
-    }
-
-    public AVPOperation getOperation() {
-        return operation;
-    }
-
-    public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
-            SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
-        return operation.addAttributeValuePair(avpComparator, newAttributeValues, this, avp);
+    public AttributeValuePair getAttribute(Attribute expectedAttribute) {
+        return tuple.getAttribute(expectedAttribute);
     }
 
     @Override
     public int hashCode() {
-        return attribute.hashCode() ^ value.hashCode();
+        return tuple.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (isNull(obj)) {
-            return false;
-        }
-        if (sameReference(this, obj)) {
-            return true;
-        }
-        if (hasSuperClassOrInterface(AttributeValuePair.class, obj)) {
-            return determineEqualityFromFields((AttributeValuePair) obj);
-        }
-        return false;
+        return tuple.equals(obj);
     }
 
     @Override
     public String toString() {
-        return operation + "{" + attribute + ", " + value + "}";
-    }
-
-    private boolean determineEqualityFromFields(AttributeValuePair attributeValuePair) {
-        if (attributeValuePair.getAttribute().equals(getAttribute())) {
-            if (attributeValuePair.getValue().equals(getValue())) {
-                return true;
-            }
-        }
-        return false;
+        return tuple.toString();
     }
 }
