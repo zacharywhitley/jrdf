@@ -65,7 +65,7 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.mem.FilterTupleImpl;
+import org.jrdf.query.relation.mem.EqAVPOperation;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
@@ -101,24 +101,11 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
-        Tuple firstTuple = tuple1;
-        Tuple secondTuple = tuple2;
-        // TODO Fix this to use polymorphism instead of swapping like this.
-        // Ensure that Filter is always the LHS tuple.
-        if (tuple2.getClass().isAssignableFrom(FilterTupleImpl.class)) {
-            firstTuple = tuple2;
-            secondTuple = tuple1;
-        }
-        realProcess(headings, result, firstTuple, secondTuple);
-    }
-
-    private void realProcess(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple firstTuple,
-            Tuple secondTuple) {
         resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
         boolean contradiction = false;
         for (Attribute attribute : headings) {
-            AttributeValuePair avp1 = firstTuple.getAttribute(attribute);
-            AttributeValuePair avp2 = secondTuple.getAttribute(attribute);
+            AttributeValuePair avp1 = tuple1.getAttribute(attribute);
+            AttributeValuePair avp2 = tuple2.getAttribute(attribute);
             contradiction = compareAvps(avp1, avp2);
 
             // If we didn't find one for the current heading end early.
@@ -150,7 +137,11 @@ public class NaturalJoinEngine implements TupleEngine {
             resultantAttributeValues.add(avp1);
             return false;
         } else {
-            return avp2.addAttributeValuePair(avpComparator, resultantAttributeValues, avp1);
+            if (!avp1.getOperation().equals(EqAVPOperation.EQUALS)) {
+                return avp1.addAttributeValuePair(avpComparator, resultantAttributeValues, avp2);
+            } else {
+                return avp2.addAttributeValuePair(avpComparator, resultantAttributeValues, avp1);
+            }
         }
     }
 }
