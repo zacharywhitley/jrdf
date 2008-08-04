@@ -93,6 +93,7 @@ import java.util.List;
 /**
  * Default implementation of {@link org.jrdf.urql.analysis.SparqlAnalyser}.
  */
+//TODO This is a mess fix me please!!!!
 public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereAnalyser {
     private TripleBuilder tripleBuilder;
     private Graph graph;
@@ -129,8 +130,13 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             if (Optional.class.isAssignableFrom(rhs.getClass())) {
                 handleOptional(lhs, rhs);
             } else if (Conjunction.class.isAssignableFrom(rhs.getClass())) {
-                ((Conjunction<ExpressionVisitor>) rhs).setLhs(lhs);
-                expression = rhs;
+                Conjunction<ExpressionVisitor> conjunction = (Conjunction<ExpressionVisitor>) rhs;
+                if (conjunction.getLhs() != null) {
+                    expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+                } else {
+                    conjunction.setLhs(lhs);
+                    expression = rhs;
+                }
             } else if (Constraint.class.isAssignableFrom(rhs.getClass()) &&
                 (Constraint.class.isAssignableFrom(lhs.getClass()))) {
                 expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
