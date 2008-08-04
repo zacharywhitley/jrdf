@@ -1,12 +1,19 @@
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 
 import java.util.SortedSet;
 
-public class EqAVPOperation implements AVPOperation {
+public final class EqAVPOperation implements AVPOperation {
+    /**
+     * The constant to indicate equals operation.
+     */
+    public static final AVPOperation EQUALS = new EqAVPOperation();
     private static final long serialVersionUID = 7483134960149229688L;
+
+    private EqAVPOperation() {
+    }
 
     public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
             SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair lhs, AttributeValuePair rhs) {
@@ -15,6 +22,16 @@ public class EqAVPOperation implements AVPOperation {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj == this;
     }
 
     @Override

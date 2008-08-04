@@ -95,7 +95,7 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
     }
 
     public AVPOperation getOperation() {
-        return new EqAVPOperation();
+        return EqAVPOperation.EQUALS;
     }
 
     public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,

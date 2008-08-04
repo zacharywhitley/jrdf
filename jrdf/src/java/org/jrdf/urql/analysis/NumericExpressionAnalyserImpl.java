@@ -39,13 +39,13 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
 
     @Override
     public void caseAEMoreNumericExpression(AEMoreNumericExpression node) {
-        this.operation = new EqAVPOperation();
+        this.operation = EqAVPOperation.EQUALS;
         node.getNumericExpression().apply(this);
     }
 
     @Override
     public void caseANeMoreNumericExpression(ANeMoreNumericExpression node) {
-        this.operation = new NeqAVPOperation();
+        this.operation = NeqAVPOperation.NEQUALS;
         node.getNumericExpression().apply(this);
     }
 

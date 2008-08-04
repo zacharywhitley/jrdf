@@ -109,6 +109,11 @@ public class AttributeCollectorImpl implements VariableCollector {
         return variables;
     }
 
+    @Override
+    public String toString() {
+        return variables.toString();
+    }
+
     private void updateEntry(Attribute newAttribute) {
         AttributeName key = newAttribute.getAttributeName();
         PositionalNodeType currentEntry = variables.get(key);
@@ -145,4 +150,5 @@ public class AttributeCollectorImpl implements VariableCollector {
             variables.put(attribute, node);
         }
     }
+
 }
