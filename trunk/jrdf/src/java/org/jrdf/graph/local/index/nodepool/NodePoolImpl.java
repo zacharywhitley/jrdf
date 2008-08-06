@@ -95,6 +95,14 @@ public final class NodePoolImpl implements NodePool {
         nextNode = nodeTypePool.getNumberOfEntries() + 1L;
     }
 
+    public Node getNodeIfExists(Long nodeId) {
+        if (nextNode > nodeId) {
+            return nodeTypePool.getNodeIfExists(nodeId);
+        } else {
+            return null;
+        }
+    }
+
     public boolean nodeExists(Long id) {
         return nextNode > id && nodeTypePool.nodeExists(id);
     }
