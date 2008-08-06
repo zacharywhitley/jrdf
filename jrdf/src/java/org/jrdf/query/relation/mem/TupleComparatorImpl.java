@@ -59,68 +59,42 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.ValueOperation;
 
-import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Iterator;
 
 public final class TupleComparatorImpl implements TupleComparator {
     private static final long serialVersionUID = 7276502975947499595L;
-    private AttributeValuePairComparator attributeValuePairComparator;
+    private NodeComparator nodeComparator;
+    private AttributeComparator attributeComparator;
 
     private TupleComparatorImpl() {
     }
 
-    public TupleComparatorImpl(AttributeValuePairComparator attributeValuePairComparator) {
-        this.attributeValuePairComparator = attributeValuePairComparator;
+    public TupleComparatorImpl(NodeComparator newNodeComparator, AttributeComparator newAttributeComparator) {
+        this.nodeComparator = newNodeComparator;
+        this.attributeComparator = newAttributeComparator;
     }
 
     public int compare(Tuple o1, Tuple o2) {
         ifNullThrowException(o1, o2);
-
-        Set<AttributeValuePair> attributeValues1 = o1.getSortedAttributeValues();
-        Set<AttributeValuePair> attributeValues2 = o2.getSortedAttributeValues();
-        Iterator<AttributeValuePair> iterator1 = attributeValues1.iterator();
-        Iterator<AttributeValuePair> iterator2 = attributeValues2.iterator();
-
-        int result = comparePairs(iterator1, iterator2);
-
-        if (areDifferentLengths(attributeValues1, attributeValues2) && result == 0) {
-            result = compareDifferentLengths(iterator1, iterator2);
+        Map<Attribute, ValueOperation> attributeValues1 = o1.getAttributeValues();
+        Map<Attribute, ValueOperation> attributeValues2 = o2.getAttributeValues();
+        int result = compareSize(attributeValues1, attributeValues2);
+        if (result == 0) {
+            result = compareAttributeValues(attributeValues1,  attributeValues2);
         }
 
-        return result;
-    }
-
-    private int comparePairs(Iterator<AttributeValuePair> iterator1, Iterator<AttributeValuePair> iterator2) {
-        int result = 0;
-        boolean equal = true;
-        while ((iterator1.hasNext() && iterator2.hasNext()) && equal) {
-            AttributeValuePair av1 = iterator1.next();
-            AttributeValuePair av2 = iterator2.next();
-            result = attributeValuePairComparator.compare(av1, av2);
-            equal = result == 0;
-        }
-        return result;
-    }
-
-    private boolean areDifferentLengths(Set<AttributeValuePair> attributeValues1,
-        Set<AttributeValuePair> attributeValues2) {
-        return (attributeValues1.size() != attributeValues2.size());
-    }
-
-    private int compareDifferentLengths(Iterator<AttributeValuePair> iterator1,
-        Iterator<AttributeValuePair> iterator2) {
-        int result = 0;
-        if (iterator1.hasNext()) {
-            result = 1;
-        }
-        if (iterator2.hasNext()) {
-            result = -1;
-        }
         return result;
     }
 
@@ -128,5 +102,54 @@ public final class TupleComparatorImpl implements TupleComparator {
         if (tuple1 == null || tuple2 == null) {
             throw new NullPointerException();
         }
+    }
+
+    private int compareSize(Map<Attribute, ValueOperation> attributeValues1,
+        Map<Attribute, ValueOperation> attributeValues2) {
+        int result = 0;
+        if (attributeValues1.size() > attributeValues2.size()) {
+            result = 1;
+        } else if (attributeValues1.size() < attributeValues2.size()) {
+            result = -1;
+        }
+        return result;
+    }
+
+    private int compareAttributeValues(Map<Attribute, ValueOperation> attributeValues1,
+        Map<Attribute, ValueOperation> attributeValues2) {
+        int result = 0;
+        for (Attribute attribute : attributeValues1.keySet()) {
+            if (attributeValues2.keySet().contains(attribute)) {
+                final Node value1 = attributeValues1.get(attribute).getValue();
+                final Node value2 = attributeValues2.get(attribute).getValue();
+                result = nodeComparator.compare(value1, value2);
+                if (result != 0) {
+                    break;
+                }
+            } else {
+                result = compareAttributes(attributeValues1.keySet(), attributeValues2.keySet());
+                break;
+            }
+        }
+        return result;
+    }
+
+    // TODO Tuple Refactor Duplicate of RelationComparator.
+    private int compareAttributes(Set<Attribute> attributes1, Set<Attribute> attributes2) {
+        SortedSet<Attribute> sorted1 = new TreeSet<Attribute>(attributeComparator);
+        sorted1.addAll(attributes1);
+        SortedSet<Attribute> sorted2 = new TreeSet<Attribute>(attributeComparator);
+        sorted2.addAll(attributes2);
+        Iterator<Attribute> iterator1 = sorted1.iterator();
+        Iterator<Attribute> iterator2 = sorted2.iterator();
+        int result = 0;
+        boolean equal = true;
+        while (iterator1.hasNext() && iterator2.hasNext() && equal) {
+            Attribute att1 = iterator1.next();
+            Attribute att2 = iterator2.next();
+            result = attributeComparator.compare(att1, att2);
+            equal = result == 0;
+        }
+        return result;
     }
 }

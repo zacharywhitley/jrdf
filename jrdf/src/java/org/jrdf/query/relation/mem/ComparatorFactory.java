@@ -62,6 +62,7 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.graph.NodeComparator;
 
 public interface ComparatorFactory {
     AttributeValuePairComparator createAttributeValuePairComparator();
@@ -69,4 +70,6 @@ public interface ComparatorFactory {
     AttributeComparator createAttributeComparator();
 
     TupleComparator createTupleComparator();
+
+    NodeComparator createNodeComparator();
 }

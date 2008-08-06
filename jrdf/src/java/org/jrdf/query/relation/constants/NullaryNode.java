@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,21 +57,37 @@
  *
  */
 
-package org.jrdf.query.relation.mem;
+package org.jrdf.query.relation.constants;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.TypedNodeVisitor;
 
 import java.io.Serializable;
-import java.lang.reflect.Modifier;
 
-public class TupleComparatorImplUnitTest extends TestCase {
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(TupleComparator.class, TupleComparatorImpl.class);
-        checkImplementationOfInterface(Serializable.class, TupleComparator.class);
-        checkConstructor(TupleComparatorImpl.class, Modifier.PUBLIC, NodeComparator.class, AttributeComparator.class);
+/**
+ * Class description goes here.
+*/
+public final class NullaryNode implements Node, Serializable {
+    /**
+     * Nullary Node.
+     */
+    public static final Node NULLARY_NODE = new NullaryNode();
+    private static final long serialVersionUID = 1808216129525892250L;
+
+    private NullaryNode() {
+    }
+
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return true;
+    }
+
+    public void accept(TypedNodeVisitor visitor) {
+        // Do nothing.
     }
 }

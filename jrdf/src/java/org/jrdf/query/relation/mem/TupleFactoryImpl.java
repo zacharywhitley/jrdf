@@ -59,15 +59,16 @@
 
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.query.relation.ValueOperation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Creates purely in memory implementations of tuples.
@@ -77,23 +78,27 @@ import java.util.TreeSet;
  */
 public final class TupleFactoryImpl implements TupleFactory {
     private static final long serialVersionUID = 6162523916425888190L;
-    private AttributeValuePairComparator attributeValuePairComparator;
 
-    private TupleFactoryImpl() {
+    public TupleFactoryImpl() {
     }
 
-    public TupleFactoryImpl(AttributeValuePairComparator attributeValuePairComparator) {
-        checkNotNull(attributeValuePairComparator);
-        this.attributeValuePairComparator = attributeValuePairComparator;
+    public Tuple getTuple(Set<AttributeValuePair> avps) {
+        Map<Attribute, ValueOperation> map = new HashMap<Attribute, ValueOperation>();
+        for (AttributeValuePair avp : avps) {
+            map.put(avp.getAttribute(), new ValueOperationImpl(avp.getValue(), avp.getOperation()));
+        }
+        return new TupleImpl(map);
     }
 
-    public Tuple getTuple(Set<AttributeValuePair> avp) {
-        return new TupleImpl(avp, attributeValuePairComparator);
+    public Tuple getTuple(Map<Attribute, ValueOperation> avps) {
+        return new TupleImpl(avps);
     }
 
-    public Tuple getTuple(List<AttributeValuePair> avp) {
-        TreeSet<AttributeValuePair> valuePairs = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
-        valuePairs.addAll(avp);
-        return new TupleImpl(valuePairs, attributeValuePairComparator);
+    public Tuple getTuple(List<AttributeValuePair> avps) {
+        Map<Attribute, ValueOperation> map = new HashMap<Attribute, ValueOperation>();
+        for (AttributeValuePair avp : avps) {
+            map.put(avp.getAttribute(), new ValueOperationImpl(avp.getValue(), avp.getOperation()));
+        }
+        return new TupleImpl(map);
     }
 }

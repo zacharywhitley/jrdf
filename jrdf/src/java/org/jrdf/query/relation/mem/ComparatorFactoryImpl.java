@@ -85,10 +85,10 @@ public class ComparatorFactoryImpl implements ComparatorFactory {
     }
 
     public TupleComparator createTupleComparator() {
-        return new TupleComparatorImpl(createAttributeValuePairComparator());
+        return new TupleComparatorImpl(createNodeComparator(), createAttributeComparator());
     }
 
-    private NodeComparator createNodeComparator() {
+    public NodeComparator createNodeComparator() {
         NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
         BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(
             new LocalizedNodeComparatorImpl());

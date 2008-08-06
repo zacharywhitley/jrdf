@@ -59,11 +59,11 @@
     </bean>
 
     <bean id="tupleComparator" class="org.jrdf.query.relation.mem.TupleComparatorImpl">
-        <constructor-arg ref="avpComparator"/>
+        <constructor-arg ref="nodeComparator"/>
+        <constructor-arg ref="attributeComparator"/>
     </bean>
 
     <bean id="tupleFactory" class="org.jrdf.query.relation.mem.TupleFactoryImpl">
-        <constructor-arg ref="avpComparator"/>
     </bean>
 
     <bean id="relationComparator" class="org.jrdf.query.relation.mem.RelationComparatorImpl">
@@ -138,7 +138,7 @@
 
     <bean id="semiJoinEngine" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinEngine">
         <constructor-arg ref="tupleFactory"/>
-        <constructor-arg ref="avpComparator"/>
+        <constructor-arg ref="nodeComparator"/>
     </bean>
 
     <bean id="outerUnionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.OuterUnionEngine">

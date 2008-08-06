@@ -70,7 +70,6 @@ import java.util.Set;
 
 public final class RelationComparatorImpl implements RelationComparator {
     private static final long serialVersionUID = 9186461012818411817L;
-
     private AttributeComparator attributeComparator;
     private TupleComparator tupleComparator;
 
@@ -78,24 +77,21 @@ public final class RelationComparatorImpl implements RelationComparator {
     }
 
     public RelationComparatorImpl(AttributeComparator newAttributeComparator, TupleComparator newTupleComparator) {
-        attributeComparator = newAttributeComparator;
-        tupleComparator = newTupleComparator;
+        this.attributeComparator = newAttributeComparator;
+        this.tupleComparator = newTupleComparator;
     }
 
     public int compare(Relation relation1, Relation relation2) {
         ifNullThrowException(relation1, relation2);
-
         int result;
-
         result = compareAttributes(relation1, relation2);
-
         if (result == 0) {
             result = compareTuples(relation1, relation2);
         }
-
         return result;
     }
 
+    // TODO Tuple Refactor Duplicate of TupleComparator.
     private int compareAttributes(Relation relation1, Relation relation2) {
         int result = 0;
         Set<Attribute> sortedHeading1 = relation1.getSortedHeading();

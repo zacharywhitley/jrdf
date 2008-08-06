@@ -60,13 +60,14 @@
 package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
+import java.util.Map;
 import java.util.SortedSet;
 
 public class SubsumptionEngine implements TupleEngine {
@@ -91,8 +92,8 @@ public class SubsumptionEngine implements TupleEngine {
      * @param tuple2
      */
     public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
-        SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
-        SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
+        Map<Attribute, ValueOperation> avps1 = tuple1.getAttributeValues();
+        Map<Attribute, ValueOperation> avps2 = tuple2.getAttributeValues();
         int subsumes = subsumes(headings, avps1, avps2);
         if (tuple2SubsumesTuple1(subsumes)) {
             result.add(tupleFactory.getTuple(avps1));
@@ -110,8 +111,9 @@ public class SubsumptionEngine implements TupleEngine {
      * @return -1 indicates avps2 subsumes avps1, 1 indicates avps1 subsumes avps2 and 0 means they do not share any
      *         common values or are equal.
      */
-    public int subsumes(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-        SortedSet<AttributeValuePair> avps2) {
+    // TODO Tuple Refactor.
+    public int subsumes(SortedSet<Attribute> headings, Map<Attribute, ValueOperation> avps1,
+        Map<Attribute, ValueOperation> avps2) {
 
         // Don't subsume if all the values are collection.
         int noHeadings = headings.size();
@@ -121,8 +123,8 @@ public class SubsumptionEngine implements TupleEngine {
 
         // Compare avps and look for an equal avp.
         boolean found = false;
-        for (AttributeValuePair avp : avps1) {
-            if (avps2.contains(avp)) {
+        for (Attribute attribute : avps1.keySet()) {
+            if (avps2.keySet().contains(attribute) && avps1.get(attribute).equals(avps2.get(attribute))) {
                 found = true;
                 break;
             }
@@ -144,7 +146,7 @@ public class SubsumptionEngine implements TupleEngine {
      * @return -1 indicates avps2 subsumes avps1, 1 indicates avps1 subsumes avps2 and 0 means they do not share any
      *         common values or are equal.
      */
-    private int areSubsumedBy(SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2) {
+    private int areSubsumedBy(Map<Attribute, ValueOperation> avps1, Map<Attribute, ValueOperation> avps2) {
         if (avps1.size() > avps2.size() && onlyContainsAttributesValues(avps1, avps2)) {
             return 1;
         } else if (avps2.size() > avps1.size() && onlyContainsAttributesValues(avps2, avps1)) {
@@ -153,11 +155,12 @@ public class SubsumptionEngine implements TupleEngine {
         return 0;
     }
 
-    private boolean onlyContainsAttributesValues(SortedSet<AttributeValuePair> avps1,
-        SortedSet<AttributeValuePair> avps2) {
+    private boolean onlyContainsAttributesValues(Map<Attribute, ValueOperation> avps1,
+        Map<Attribute, ValueOperation> avps2) {
         boolean onlyContainsValues = false;
-        for (AttributeValuePair avp : avps2) {
-            onlyContainsValues = avps1.contains(avp);
+        for (Attribute attribute : avps2.keySet()) {
+            onlyContainsValues = avps1.keySet().contains(attribute) &&
+                avps1.get(attribute).equals(avps2.get(attribute));
             if (!onlyContainsValues) {
                 break;
             }

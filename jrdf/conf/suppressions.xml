@@ -36,6 +36,7 @@
     <suppress checks="JavaNCSS" files="OWL"/>
     <suppress checks="JavaNCSS" files="BasicOperations"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
+    <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
 

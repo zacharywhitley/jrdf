@@ -61,12 +61,7 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
-
-import java.util.SortedSet;
+import static org.jrdf.util.EqualsUtil.*;
 
 /**
  * Implementation of an attribute name/value consists of the name (SUBJECT, PREDICATE, etc.) and value.
@@ -107,11 +102,6 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
 
     public AVPOperation getOperation() {
         return operation;
-    }
-
-    public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
-            SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
-        return operation.addAttributeValuePair(avpComparator, newAttributeValues, this, avp);
     }
 
     @Override

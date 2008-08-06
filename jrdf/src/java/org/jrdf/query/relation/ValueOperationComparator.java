@@ -56,22 +56,10 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-
-package org.jrdf.query.relation.mem;
-
-import junit.framework.TestCase;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
+package org.jrdf.query.relation;
 
 import java.io.Serializable;
-import java.lang.reflect.Modifier;
+import java.util.Comparator;
 
-public class TupleComparatorImplUnitTest extends TestCase {
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(TupleComparator.class, TupleComparatorImpl.class);
-        checkImplementationOfInterface(Serializable.class, TupleComparator.class);
-        checkConstructor(TupleComparatorImpl.class, Modifier.PUBLIC, NodeComparator.class, AttributeComparator.class);
-    }
+public interface ValueOperationComparator extends Comparator<ValueOperation>, Serializable {
 }
