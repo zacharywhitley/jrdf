@@ -134,6 +134,7 @@ public class LiteralImpl extends AbstractLiteral implements LiteralMutableId {
      * @return the <var>lexicalForm</var> property, enclosed in <code>"</code>
      *         characters.
      */
+    @Override
     public String toString() {
         return thisString;
     }

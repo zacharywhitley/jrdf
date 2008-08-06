@@ -68,6 +68,9 @@ import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 /**
  * RDF blank node. Note that blank nodes are deliberately devoid of external indentifying attributes.
  * <p/>
@@ -77,6 +80,7 @@ import static org.jrdf.util.EqualsUtil.sameReference;
  * @version $Revision$
  */
 public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankNode {
+    private static final Pattern PATTERN = Pattern.compile("(.+)\\#(.+)");
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -90,7 +94,6 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
      * The internal identifier for this node.
      */
     private Long id;
-
     /**
      * Globally Unique Identifier.
      */
@@ -183,15 +186,10 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
      * @throws IllegalArgumentException
      */
     public static BlankNode valueOf(String nodeString) throws IllegalArgumentException {
-
-        String[] split = nodeString.split("#");
-
-        //validate
-        if (null == split || 2 > split.length) {
-            throw new IllegalArgumentException("String: " + nodeString + " is not " +
-                "of the format: uid#id");
+        Matcher matcher = PATTERN.matcher(nodeString);
+        if (matcher.matches() && matcher.groupCount() == 2) {
+            return new BlankNodeImpl(matcher.group(1), Long.valueOf(matcher.group(2)));
         }
-
-        return new BlankNodeImpl(split[0], Long.valueOf(split[1]));
+        throw new IllegalArgumentException("String: " + nodeString + " is not of the format: uid#id");
     }
 }
