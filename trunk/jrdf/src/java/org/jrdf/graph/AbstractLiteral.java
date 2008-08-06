@@ -109,6 +109,11 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     protected URI datatypeURI;
 
+    /**
+     * Cached version of escaped form
+     */
+    protected String escapedForm;
+
     protected AbstractLiteral() {
     }
 
@@ -301,8 +306,14 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * @return this instance in N-Triples format
      */
     public String getEscapedForm() {
-        String escaped = EscapeUtil.escape(getLexicalForm());
-        return '\"' + escaped + '\"' + appendType();
+        if (escapedForm == null) {
+            StringBuffer buffer = EscapeUtil.escape(getLexicalForm());
+            buffer.insert(0, "\"");
+            buffer.append("\"");
+            appendType(buffer);
+            escapedForm = buffer.toString();
+        }
+        return escapedForm;
     }
 
     /**
@@ -311,7 +322,9 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * @return the lexical form.
      */
     public String toString() {
-        return '\"' + getEscapedLexicalForm() + '\"' + appendType();
+        StringBuffer buffer = new StringBuffer('\"' + getEscapedLexicalForm() + '\"');
+        appendType(buffer);
+        return buffer.toString();
     }
 
     public String getEscapedLexicalForm() {
@@ -359,17 +372,13 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     /**
      * Appends the datatype URI or language code of a literal.
      *
-     * @return String the datatype URI in the form ^^<->, or language code @- or
-     *         an empty string.
+     * @param buffer The buffer to append the relevant datatype to.
      */
-    private String appendType() {
-        String appendString = "";
+    private void appendType(StringBuffer buffer) {
         if (!NULL_URI.equals(getDatatypeURI())) {
-            appendString = "^^<" + getDatatypeURI() + '>';
+            buffer.append("^^<").append(getDatatypeURI()).append('>');
         } else if (getLanguage().length() > 0) {
-            appendString = '@' + getLanguage();
+            buffer.append('@').append(getLanguage());
         }
-
-        return appendString;
     }
 }

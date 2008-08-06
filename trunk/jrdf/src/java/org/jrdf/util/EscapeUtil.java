@@ -122,13 +122,13 @@ public final class EscapeUtil {
      * @return a version of the <var>string</var> with N-Triples escapes applied.
      * @throws IllegalStateException if there is no handler to perform the relevant match.
      */
-    public static String escape(String string) throws IllegalStateException {
+    public static StringBuffer escape(String string) throws IllegalStateException {
         assert null != string;
         Matcher matcher = PATTERN.matcher(string);
 
         // Try to short-circuit the whole process -- maybe nothing needs escaping?
         if (!matcher.find()) {
-            return string;
+            return new StringBuffer(string);
         }
 
         // Perform escape character substitutions on each match found by the
@@ -143,7 +143,7 @@ public final class EscapeUtil {
         // Finish off by appending any remaining text that didn't require escaping,
         // and return the assembled buffer
         matcher.appendTail(stringBuffer);
-        return stringBuffer.toString();
+        return stringBuffer;
     }
 
     /**
