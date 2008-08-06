@@ -114,6 +114,11 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     protected String escapedForm;
 
+    /**
+     * Cached version of toString form. 
+     */
+    protected String string;
+
     protected AbstractLiteral() {
     }
 
@@ -322,9 +327,12 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * @return the lexical form.
      */
     public String toString() {
-        StringBuffer buffer = new StringBuffer('\"' + getEscapedLexicalForm() + '\"');
-        appendType(buffer);
-        return buffer.toString();
+        if (string == null) {
+            StringBuffer buffer = new StringBuffer('\"' + getEscapedLexicalForm() + '\"');
+            appendType(buffer);
+            string = buffer.toString();
+        }
+        return string;
     }
 
     public String getEscapedLexicalForm() {
