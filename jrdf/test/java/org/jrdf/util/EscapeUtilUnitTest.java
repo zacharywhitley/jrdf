@@ -106,6 +106,6 @@ public class EscapeUtilUnitTest extends TestCase {
     }
 
     private void testEscapedValue(String expectedValue, String testString) {
-        assertEquals(expectedValue, EscapeUtil.escape(testString));
+        assertEquals(expectedValue, EscapeUtil.escape(testString).toString());
     }
 }
