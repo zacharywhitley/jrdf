@@ -176,8 +176,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
 
     /**
      * Parses a String in the format of:
-     * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69) and creates a new
-     * BlankNodeImpl from it.
+     * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69) and creates a new BlankNodeImpl from it.
      * <p/>
      * Should only be applied to a value previously returned by toString()
      *
