@@ -56,22 +56,64 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-
 package org.jrdf.query.relation.mem;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
+import org.jrdf.graph.Node;
+import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.util.EqualsUtil.*;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
+public final class ValueOperationImpl implements ValueOperation {
+    private static final long serialVersionUID = -5045948869879997736L;
+    private Node value;
+    private AVPOperation operation;
 
-public class TupleComparatorImplUnitTest extends TestCase {
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(TupleComparator.class, TupleComparatorImpl.class);
-        checkImplementationOfInterface(Serializable.class, TupleComparator.class);
-        checkConstructor(TupleComparatorImpl.class, Modifier.PUBLIC, NodeComparator.class, AttributeComparator.class);
+    // For serialization.
+    private ValueOperationImpl() {
+    }
+
+    public ValueOperationImpl(Node newValue, AVPOperation newOperation) {
+        value = newValue;
+        operation = newOperation;
+    }
+
+    public Node getValue() {
+        return value;
+    }
+
+    public AVPOperation getOperation() {
+        return operation;
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode() ^ operation.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        if (hasSuperClassOrInterface(ValueOperation.class, obj)) {
+            return determineEqualityFromFields((ValueOperation) obj);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return operation + " " + value;
+    }
+
+    private boolean determineEqualityFromFields(ValueOperation attributeValuePair) {
+        if (attributeValuePair.getValue().equals(getValue())) {
+            if (attributeValuePair.getOperation().equals(getOperation())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

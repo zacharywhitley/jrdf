@@ -60,14 +60,11 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.EqualsUtil.*;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -180,15 +177,8 @@ public final class RelationImpl implements Relation {
     private Set<Attribute> createHeadingFromTuples(Set<Tuple> newTuples) {
         Set<Attribute> heading = new HashSet<Attribute>();
         for (Tuple tuple : newTuples) {
-            addHeading(tuple, heading);
+            heading.addAll(tuple.getAttributeValues().keySet());
         }
         return heading;
-    }
-
-    private void addHeading(Tuple tuple, Set<Attribute> heading) {
-        Set<AttributeValuePair> attributeValues = tuple.getAttributeValues();
-        for (AttributeValuePair attributeValue : attributeValues) {
-            heading.add(attributeValue.getAttribute());
-        }
     }
 }

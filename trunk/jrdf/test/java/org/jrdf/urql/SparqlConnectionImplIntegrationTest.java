@@ -65,26 +65,27 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.builder.QueryBuilder;
 import org.jrdf.util.test.ReflectTestUtil;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
-import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
-import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
-import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
+import static org.jrdf.util.test.SparqlQueryTestUtil.*;
+import static org.jrdf.util.test.TripleTestUtil.*;
 
 import java.net.URI;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public final class SparqlConnectionImplIntegrationTest extends TestCase {
 
@@ -143,11 +144,16 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
 
     private void checkFirstRowOfAnswer(Set<Tuple> solutions) {
         Tuple tuple = solutions.iterator().next();
-        Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
-        Iterator<AttributeValuePair> iterator = sortedAttributeValues.iterator();
-        checkSubject((SubjectNode) iterator.next().getValue());
-        checkPredicate((PredicateNode) iterator.next().getValue());
-        checkLiteral((Literal) iterator.next().getValue());
+        Map<Attribute, ValueOperation> sortedAttributeValues = tuple.getAttributeValues();
+        final TreeSet<Node> nodes = new TreeSet<Node>(FACTORY.getNewNodeComparator());
+        final Iterator<ValueOperation> unsortedIterator = sortedAttributeValues.values().iterator();
+        while (unsortedIterator.hasNext()) {
+            nodes.add(unsortedIterator.next().getValue());
+        }
+        Iterator<Node> iterator = nodes.iterator();
+        checkSubject((SubjectNode) iterator.next());
+        checkPredicate((PredicateNode) iterator.next());
+        checkLiteral((Literal) iterator.next());
     }
 
     // TODO AN Why do we need to call toString should they be equal?

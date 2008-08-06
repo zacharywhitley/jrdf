@@ -60,17 +60,18 @@
 package org.jrdf.query.relation.operation.mem.join.natural;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.EqAVPOperation;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * Combines two relations attributes if they have common tuple values.  The
@@ -86,14 +87,14 @@ public class NaturalJoinEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
     private final AttributeValuePairComparator avpComparator;
     private final RelationHelper relationHelper;
-    private SortedSet<AttributeValuePair> resultantAttributeValues;
+    private Map<Attribute, ValueOperation> resultantAttributeValues;
 
     public NaturalJoinEngine(TupleFactory newTupleFactory, AttributeValuePairComparator newAvpComparator,
         RelationHelper newRelationHelper) {
         this.tupleFactory = newTupleFactory;
         this.avpComparator = newAvpComparator;
         this.relationHelper = newRelationHelper;
-        this.resultantAttributeValues = new TreeSet<AttributeValuePair>(newAvpComparator);
+        this.resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
     }
 
     public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
@@ -101,12 +102,12 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
-        resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
+        resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
         boolean contradiction = false;
         for (Attribute attribute : headings) {
-            AttributeValuePair avp1 = tuple1.getAttribute(attribute);
-            AttributeValuePair avp2 = tuple2.getAttribute(attribute);
-            contradiction = compareAvps(avp1, avp2);
+            ValueOperation avp1 = tuple1.getValueOperation(attribute);
+            ValueOperation avp2 = tuple2.getValueOperation(attribute);
+            contradiction = compareAvps(attribute, avp1, avp2);
 
             // If we didn't find one for the current heading end early.
             if (contradiction) {
@@ -121,26 +122,26 @@ public class NaturalJoinEngine implements TupleEngine {
         }
     }
 
-    private boolean compareAvps(AttributeValuePair avp1, AttributeValuePair avp2) {
+    private boolean compareAvps(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
         if (avp1 == null) {
             if (avp2 != null) {
-                resultantAttributeValues.add(avp2);
+                resultantAttributeValues.put(attribute, avp2);
             }
             return false;
         } else {
-            return avp1NotNull(avp1, avp2);
+            return avp1NotNull(attribute, avp1, avp2);
         }
     }
 
-    private boolean avp1NotNull(AttributeValuePair avp1, AttributeValuePair avp2) {
+    private boolean avp1NotNull(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
         if (avp2 == null) {
-            resultantAttributeValues.add(avp1);
+            resultantAttributeValues.put(attribute, avp1);
             return false;
         } else {
             if (!avp1.getOperation().equals(EqAVPOperation.EQUALS)) {
-                return avp1.addAttributeValuePair(avpComparator, resultantAttributeValues, avp2);
+                return avp1.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp1, avp2);
             } else {
-                return avp2.addAttributeValuePair(avpComparator, resultantAttributeValues, avp1);
+                return avp2.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp2, avp1);
             }
         }
     }

@@ -68,10 +68,8 @@ import org.jrdf.graph.global.ReverseGroundedTripleComparatorImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -88,9 +86,8 @@ public class MemCollectionFactory implements CollectionFactory {
     private Map<Class<?>, Comparator<?>> defaultComparators = new HashMap<Class<?>, Comparator<?>>();
 
     public MemCollectionFactory() {
-        NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
         BlankNodeComparator comparator = new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl());
-        NodeComparator nodeComparator = new NodeComparatorImpl(nodeTypeComparator, comparator);
+        NodeComparator nodeComparator = new ComparatorFactoryImpl().createNodeComparator();
         TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
         TripleComparator reverseTripleComparator = new ReverseGroundedTripleComparatorImpl(tripleComparator);
         defaultComparators.put(Triple.class, reverseTripleComparator);

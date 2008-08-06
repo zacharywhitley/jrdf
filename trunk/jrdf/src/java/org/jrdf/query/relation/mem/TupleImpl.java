@@ -58,18 +58,13 @@
  */
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.Attribute;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.util.EqualsUtil.*;
+import static org.jrdf.util.param.ParameterUtil.*;
 
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Map;
 
 /**
  * Implementation of a tuple is a named finite set of attributeValues (attributes to a set of values).
@@ -80,44 +75,22 @@ import java.util.TreeSet;
 @SuppressWarnings({ "unchecked" })
 public final class TupleImpl implements Tuple {
     private static final long serialVersionUID = 4135312692643773094L;
-    private AttributeValuePairComparator attributeValuePairComparator;
-    private Set<AttributeValuePair> attributeValues;
+    private Map<Attribute, ValueOperation> attributeValues;
 
     private TupleImpl() {
     }
 
-    TupleImpl(Set<AttributeValuePair> attributeValues, AttributeValuePairComparator attributeValuePairComparator) {
-        checkNotNull(attributeValues, attributeValuePairComparator);
+    TupleImpl(Map<Attribute, ValueOperation> attributeValues) {
+        checkNotNull(attributeValues);
         this.attributeValues = attributeValues;
-        this.attributeValuePairComparator = attributeValuePairComparator;
     }
 
-    public Set<AttributeValuePair> getAttributeValues() {
+    public Map<Attribute, ValueOperation> getAttributeValues() {
         return attributeValues;
     }
 
-    // TODO (AN) Test drive me
-    public SortedSet<AttributeValuePair> getSortedAttributeValues() {
-        if (attributeValues instanceof SortedSet) {
-            if (((SortedSet) attributeValues).comparator() != null) {
-                return (SortedSet<AttributeValuePair>) attributeValues;
-            }
-        }
-
-        // TODO (AN) Turn this into a sort call instead?
-        SortedSet<AttributeValuePair> sortedPairs = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
-        sortedPairs.addAll(attributeValues);
-        attributeValues = sortedPairs;
-        return sortedPairs;
-    }
-
-    public AttributeValuePair getAttribute(Attribute expectedAttribute) {
-        for (AttributeValuePair avp : attributeValues) {
-            if (avp.getAttribute().equals(expectedAttribute)) {
-                return avp;
-            }
-        }
-        return null;
+    public ValueOperation getValueOperation(Attribute attribute) {
+        return attributeValues.get(attribute);
     }
 
     @Override

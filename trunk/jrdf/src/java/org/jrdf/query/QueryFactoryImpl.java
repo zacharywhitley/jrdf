@@ -60,11 +60,6 @@
 package org.jrdf.query;
 
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.BlankNodeComparator;
-import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.LocalizedNodeComparator;
-import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.query.execute.NaiveQueryEngineImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
@@ -78,6 +73,7 @@ import org.jrdf.query.relation.mem.AttributeComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.AttributeValuePairHelperImpl;
+import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.GraphRelationFactoryImpl;
 import org.jrdf.query.relation.mem.RelationFactoryImpl;
@@ -121,15 +117,12 @@ public class QueryFactoryImpl implements QueryFactory {
         ATTRIBUTE_NAME_COMPARATOR);
     private static final SortedAttributeFactory ATTRIBUTE_FACTORY = new SortedAttributeFactoryImpl(
         ATTRIBUTE_COMPARATOR, 0L);
-    private static final LocalizedNodeComparator LOCALIZED_NODE_COMPARATOR = new LocalizedNodeComparatorImpl();
-    private static final BlankNodeComparator BLANK_NODE_COMPARATOR = new LocalizedBlankNodeComparatorImpl(
-        LOCALIZED_NODE_COMPARATOR);
-    private static final NodeComparator NODE_COMPARATOR = new NodeComparatorImpl(NODE_TYPE_COMPARATOR,
-        BLANK_NODE_COMPARATOR);
+    private static final NodeComparator NODE_COMPARATOR = new ComparatorFactoryImpl().createNodeComparator();
     private static final AttributeValuePairComparator ATTRIBUTE_VALUE_PAIR_COMPARATOR =
         new AttributeValuePairComparatorImpl(ATTRIBUTE_COMPARATOR, NODE_COMPARATOR);
-    private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
-    private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
+    private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl();
+    private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(NODE_COMPARATOR,
+        ATTRIBUTE_COMPARATOR);
     private static final RelationFactory RELATION_FACTORY = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR,
         TUPLE_COMPARATOR);
 

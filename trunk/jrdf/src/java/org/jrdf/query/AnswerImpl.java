@@ -60,13 +60,13 @@
 package org.jrdf.query;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.util.EqualsUtil;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -74,6 +74,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -116,7 +117,7 @@ public final class AnswerImpl implements Answer, Serializable {
         String table[][] = new String[sortedTuples.size()][heading.size()];
         int index = 0;
         for (Tuple sortedTuple : sortedTuples) {
-            SortedSet<AttributeValuePair> avps = sortedTuple.getSortedAttributeValues();
+            Map<Attribute, ValueOperation> avps = sortedTuple.getAttributeValues();
             table[index] = getDataWithValues(avps);
             index++;
         }
@@ -128,7 +129,7 @@ public final class AnswerImpl implements Answer, Serializable {
         String table[][] = new String[sortedTuples.size()][heading.size()];
         int index = 0;
         for (Tuple sortedTuple : sortedTuples) {
-            Set<AttributeValuePair> avps = sortedTuple.getAttributeValues();
+            Map<Attribute, ValueOperation> avps = sortedTuple.getAttributeValues();
             table[index] = getDataWithValues(avps);
             index++;
         }
@@ -196,14 +197,14 @@ public final class AnswerImpl implements Answer, Serializable {
         return determineEqualityFromFields((AnswerImpl) obj);
     }
 
-    private String[] getDataWithValues(Set<AttributeValuePair> avps) {
+    private String[] getDataWithValues(Map<Attribute, ValueOperation> avps) {
         String[] results = new String[heading.size()];
         int index = 0;
         for (Attribute headingAttribute : heading) {
             boolean foundValue = false;
-            for (AttributeValuePair avp : avps) {
-                if (avp.getAttribute().equals(headingAttribute)) {
-                    results[index] = avp.getValue().toString();
+            for (Attribute attribute : avps.keySet()) {
+                if (attribute.equals(headingAttribute)) {
+                    results[index] = avps.get(attribute).getValue().toString();
                     foundValue = true;
                 }
             }

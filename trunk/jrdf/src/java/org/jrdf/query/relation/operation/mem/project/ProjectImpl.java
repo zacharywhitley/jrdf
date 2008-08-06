@@ -60,14 +60,16 @@
 package org.jrdf.query.relation.operation.mem.project;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.operation.Project;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -114,7 +116,7 @@ public class ProjectImpl implements Project {
         for (Tuple tuple : tuples) {
             Tuple newTuple = createNewTuples(tuple, newHeading);
             // TODO (AN) Only add non empty attributes - this failed.
-            if (newTuple.getSortedAttributeValues().size() > 0) {
+            if (newTuple.getAttributeValues().size() > 0) {
                 newTuples.add(newTuple);
             }
         }
@@ -124,11 +126,11 @@ public class ProjectImpl implements Project {
     }
 
     private Tuple createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
-        Set<AttributeValuePair> avps = tuple.getAttributeValues();
-        Set<AttributeValuePair> newAvps = new HashSet<AttributeValuePair>();
-        for (AttributeValuePair avp : avps) {
-            if (newHeading.contains(avp.getAttribute())) {
-                newAvps.add(avp);
+        Map<Attribute, ValueOperation> avps = tuple.getAttributeValues();
+        Map<Attribute, ValueOperation> newAvps = new HashMap<Attribute, ValueOperation>();
+        for (Attribute attribute : avps.keySet()) {
+            if (newHeading.contains(attribute)) {
+                newAvps.put(attribute, avps.get(attribute));
             }
         }
 

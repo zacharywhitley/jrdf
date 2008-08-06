@@ -57,21 +57,20 @@
  *
  */
 
-package org.jrdf.query.relation.mem;
+package org.jrdf.query.relation;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
+import org.jrdf.graph.Node;
+import org.jrdf.query.relation.mem.AVPOperation;
 
 import java.io.Serializable;
-import java.lang.reflect.Modifier;
 
-public class TupleComparatorImplUnitTest extends TestCase {
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(TupleComparator.class, TupleComparatorImpl.class);
-        checkImplementationOfInterface(Serializable.class, TupleComparator.class);
-        checkConstructor(TupleComparatorImpl.class, Modifier.PUBLIC, NodeComparator.class, AttributeComparator.class);
-    }
+public interface ValueOperation extends Serializable {
+    /**
+     * Returns the value of the attribute.
+     *
+     * @return the value of the attribute.
+     */
+    Node getValue();
+
+    AVPOperation getOperation();
 }

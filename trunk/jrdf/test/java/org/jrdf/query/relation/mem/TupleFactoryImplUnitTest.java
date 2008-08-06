@@ -60,16 +60,15 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.util.test.ArgumentTestUtil;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
 import org.jrdf.util.test.MockFactory;
 
 import java.lang.reflect.Modifier;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Test for in memory tuple factory.
@@ -80,26 +79,15 @@ import java.util.Set;
 @SuppressWarnings({"unchecked"})
 public class TupleFactoryImplUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
-    private static final Class[] CONSTRUCTOR_TYPES = {AttributeValuePairComparator.class};
-    private static final String[] CONSTRUCTOR_NAMES = {"attributeValuePairComparator"};
-    private static final AttributeValuePairComparator AVP_COMPARATOR =
-        factory.createMock(AttributeValuePairComparator.class);
-    private static final Set<AttributeValuePair> MOCK_AVP = factory.createMock(Set.class);
+    private static final Map<Attribute, ValueOperation> MOCK_AVP = factory.createMock(Map.class);
 
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TupleFactory.class, TupleFactoryImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(TupleFactoryImpl.class, Modifier.PUBLIC,
-            CONSTRUCTOR_TYPES);
-    }
-
-    public void testConstructor() {
-        ArgumentTestUtil.checkConstructNullAssertion(TupleFactoryImpl.class, CONSTRUCTOR_TYPES);
-        ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate(TupleFactoryImpl.class, CONSTRUCTOR_TYPES,
-            CONSTRUCTOR_NAMES);
+        checkImplementationOfInterfaceAndFinal(TupleFactory.class, TupleFactoryImpl.class);
+        checkConstructor(TupleFactoryImpl.class, Modifier.PUBLIC);
     }
 
     public void testGetTupleBySet() {
-        TupleFactory tupleFactory = new TupleFactoryImpl(AVP_COMPARATOR);
+        TupleFactory tupleFactory = new TupleFactoryImpl();
         Tuple tuple = tupleFactory.getTuple(MOCK_AVP);
         assertSame(MOCK_AVP, tuple.getAttributeValues());
         assertTrue(tuple instanceof TupleImpl);

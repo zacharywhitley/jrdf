@@ -62,20 +62,14 @@ import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_6;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.isFieldOfType;
-import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.*;
+import static org.jrdf.util.test.ArgumentTestUtil.*;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.*;
+import static org.jrdf.util.test.ReflectTestUtil.*;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -131,10 +125,7 @@ public class RelationImplUnitTest extends TestCase {
         Set<Attribute> heading = new TreeSet<Attribute>(FACTORY.getNewAttributeComparator());
         //noinspection unchecked
         for (Tuple tuple : tuples) {
-            Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
-            for (AttributeValuePair avPair : sortedAttributeValues) {
-                heading.add(avPair.getAttribute());
-            }
+            heading.addAll(tuple.getAttributeValues().keySet());
         }
         return heading;
     }

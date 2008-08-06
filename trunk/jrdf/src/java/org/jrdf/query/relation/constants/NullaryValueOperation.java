@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,21 +57,47 @@
  *
  */
 
-package org.jrdf.query.relation.mem;
+package org.jrdf.query.relation.constants;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
+import org.jrdf.graph.Node;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.query.relation.constants.NullaryAttribute.*;
+import static org.jrdf.query.relation.constants.NullaryNode.*;
+import org.jrdf.query.relation.mem.AVPOperation;
+import org.jrdf.query.relation.mem.EqAVPOperation;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
+import java.util.SortedSet;
 
-public class TupleComparatorImplUnitTest extends TestCase {
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(TupleComparator.class, TupleComparatorImpl.class);
-        checkImplementationOfInterface(Serializable.class, TupleComparator.class);
-        checkConstructor(TupleComparatorImpl.class, Modifier.PUBLIC, NodeComparator.class, AttributeComparator.class);
+public final class NullaryValueOperation implements ValueOperation {
+    private static final long serialVersionUID = 8287526418827933354L;
+
+    /**
+     * Nullary Value Operation.
+     */
+    public static final ValueOperation NULLARY_ATTRIBUTE_VALUE_PAIR = new NullaryValueOperation();
+
+    private NullaryValueOperation() {
     }
+
+    public Attribute getAttribute() {
+        return NULLARY_ATTRIBUTE;
+    }
+
+    public Node getValue() {
+        return NULLARY_NODE;
+    }
+
+    public AVPOperation getOperation() {
+        return EqAVPOperation.EQUALS;
+    }
+
+    public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
+            SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
+        newAttributeValues.add(avp);
+        return false;
+    }
+
 }

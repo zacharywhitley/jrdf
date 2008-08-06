@@ -62,15 +62,11 @@ package org.jrdf.graph.local;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
 
 public class TripleComparatorFactoryImpl implements TripleComparatorFactory {
     public TripleComparator newComparator() {
-        NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
-        LocalizedNodeComparator localNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localNodeComparator);
-        NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
+        NodeComparator nodeComparator = new ComparatorFactoryImpl().createNodeComparator();
         TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
         return new GroundedTripleComparatorImpl(tripleComparator);
     }

@@ -59,20 +59,15 @@
 
 package org.jrdf.query.relation.constants;
 
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.Attribute;
-import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.NULLARY_ATTRIBUTE_VALUE_PAIR;
-import org.jrdf.query.relation.mem.ComparatorFactory;
-import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.query.relation.constants.NullaryAttribute.*;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Map;
 
 /**
  * A class which simply contains the True Node constant.
@@ -81,14 +76,13 @@ import java.util.TreeSet;
  * @version $Revision$
  */
 public final class NullaryTuple implements Tuple, Serializable {
-    private static final ComparatorFactory FACTORY = new ComparatorFactoryImpl();
-    private static final long serialVersionUID = 1808216129525892255L;
     /**
      * The node which represents the boolean logic value "NULLARY_TUPLE".
      */
     public static final Tuple NULLARY_TUPLE = new NullaryTuple();
-    private static final AttributeValuePair NULLARY_AVP = NULLARY_ATTRIBUTE_VALUE_PAIR;
-    private static final Set<AttributeValuePair> NULLARY_AVP_SET = Collections.singleton(NULLARY_AVP);
+    private static final long serialVersionUID = 1808216129525892255L;
+    private static final Map<Attribute, ValueOperation> NULLARY_AVP_SET = Collections.singletonMap(NULLARY_ATTRIBUTE,
+            NullaryValueOperation.NULLARY_ATTRIBUTE_VALUE_PAIR);
 
     private NullaryTuple() {
     }
@@ -97,18 +91,11 @@ public final class NullaryTuple implements Tuple, Serializable {
         return NULLARY_TUPLE;
     }
 
-    public Set<AttributeValuePair> getAttributeValues() {
+    public Map<Attribute, ValueOperation> getAttributeValues() {
         return NULLARY_AVP_SET;
     }
 
-    public SortedSet<AttributeValuePair> getSortedAttributeValues() {
-        AttributeValuePairComparator avpComparator = FACTORY.createAttributeValuePairComparator();
-        SortedSet<AttributeValuePair> sortedPairs = new TreeSet<AttributeValuePair>(avpComparator);
-        sortedPairs.addAll(NULLARY_AVP_SET);
-        return sortedPairs;
-    }
-
-    public AttributeValuePair getAttribute(Attribute attribute) {
+    public ValueOperation getValueOperation(Attribute attribute) {
         return null;
     }
 }

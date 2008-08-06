@@ -206,7 +206,7 @@ public class RelationIntegrationTestUtil {
         Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(avpComparator);
         values.addAll(asList(attributeValuePairs));
 
-        TupleFactory tf = new TupleFactoryImpl(FACTORY.getNewAttributeValuePairComparator());
+        TupleFactory tf = new TupleFactoryImpl();
         Tuple t = tf.getTuple(values);
         TupleComparator tupleComparator = FACTORY.getNewTupleComparator();
         Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);

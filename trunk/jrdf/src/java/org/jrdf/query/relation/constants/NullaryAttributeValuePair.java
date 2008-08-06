@@ -64,15 +64,11 @@ import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.mem.EqAVPOperation;
+import static org.jrdf.query.relation.constants.NullaryAttribute.*;
 import org.jrdf.query.relation.mem.AVPOperation;
-import org.jrdf.query.relation.type.NodeType;
-import org.jrdf.query.relation.type.NodeTypeVisitor;
+import org.jrdf.query.relation.mem.EqAVPOperation;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Set;
 import java.util.SortedSet;
 
 public final class NullaryAttributeValuePair implements AttributeValuePair, Serializable {
@@ -87,7 +83,7 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
     }
 
     public Attribute getAttribute() {
-        return new NullaryAttribute();
+        return NULLARY_ATTRIBUTE;
     }
 
     public Node getValue() {
@@ -102,81 +98,6 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
             SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
         newAttributeValues.add(avp);
         return false;
-    }
-
-    private static final class NullaryAttribute implements Attribute, Serializable {
-        private static final long serialVersionUID = 1808216129525892253L;
-
-        private NullaryAttribute() {
-        }
-
-        public AttributeName getAttributeName() {
-            return new NullaryAttributeName();
-        }
-
-        public NodeType getType() {
-            return new NullaryNodeType();
-        }
-
-        @Override
-        public int hashCode() {
-            return 1;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return true;
-        }
-    }
-
-    private static final class NullaryAttributeName implements AttributeName, Serializable {
-        private static final long serialVersionUID = 1808216129525892252L;
-
-        private NullaryAttributeName() {
-        }
-
-        public String getLiteral() {
-            return "TRUE";
-        }
-
-        @Override
-        public int hashCode() {
-            return 1;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return true;
-        }
-    }
-
-    private static final class NullaryNodeType implements NodeType, Serializable {
-        private static final long serialVersionUID = 1808216129525892251L;
-
-        private NullaryNodeType() {
-        }
-
-        public String getName() {
-            return "TRUE";
-        }
-
-        @SuppressWarnings({ "unchecked" })
-        public Set<? extends NodeType> composedOf() {
-            return Collections.EMPTY_SET;
-        }
-
-        public void accept(NodeTypeVisitor visitor) {
-        }
-
-        @Override
-        public int hashCode() {
-            return 1;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return true;
-        }
     }
 
     private static final class NullaryNode implements Node, Serializable {

@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,21 +57,96 @@
  *
  */
 
-package org.jrdf.query.relation.mem;
+package org.jrdf.query.relation.constants;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.NodeTypeVisitor;
+import org.jrdf.query.relation.attributename.AttributeName;
 
 import java.io.Serializable;
-import java.lang.reflect.Modifier;
+import java.util.Set;
+import java.util.Collections;
 
-public class TupleComparatorImplUnitTest extends TestCase {
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(TupleComparator.class, TupleComparatorImpl.class);
-        checkImplementationOfInterface(Serializable.class, TupleComparator.class);
-        checkConstructor(TupleComparatorImpl.class, Modifier.PUBLIC, NodeComparator.class, AttributeComparator.class);
+/**
+ * Class description goes here.
+*/
+public final class NullaryAttribute implements Attribute, Serializable {
+    /**
+     * Nullary Attribute.
+     */
+    public static final Attribute NULLARY_ATTRIBUTE = new NullaryAttribute();
+    private static final long serialVersionUID = 1808216129525892253L;
+
+    private NullaryAttribute() {
     }
+
+    public AttributeName getAttributeName() {
+        return new NullaryAttributeName();
+    }
+
+    public NodeType getType() {
+        return new NullaryNodeType();
+    }
+
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return true;
+    }
+
+    private static final class NullaryAttributeName implements AttributeName, Serializable {
+        private static final long serialVersionUID = 1808216129525892252L;
+
+        private NullaryAttributeName() {
+        }
+
+        public String getLiteral() {
+            return "TRUE";
+        }
+
+        @Override
+        public int hashCode() {
+            return 1;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return true;
+        }
+    }
+
+    private static final class NullaryNodeType implements NodeType, Serializable {
+        private static final long serialVersionUID = 1808216129525892251L;
+
+        private NullaryNodeType() {
+        }
+
+        public String getName() {
+            return "TRUE";
+        }
+
+        @SuppressWarnings({ "unchecked" })
+        public Set<? extends NodeType> composedOf() {
+            return Collections.EMPTY_SET;
+        }
+
+        public void accept(NodeTypeVisitor visitor) {
+        }
+
+        @Override
+        public int hashCode() {
+            return 1;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return true;
+        }
+    }
+
 }
