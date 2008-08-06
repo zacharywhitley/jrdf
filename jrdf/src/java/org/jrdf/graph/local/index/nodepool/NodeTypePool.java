@@ -85,4 +85,6 @@ public interface NodeTypePool {
     boolean nodeExists(Long nodeId);
 
     long getNumberOfEntries();
+
+    Node getNodeIfExists(Long nodeId);
 }

@@ -132,10 +132,8 @@ public class LocalizerImpl implements Localizer {
 
     public void visitBlankNode(BlankNode blankNode) {
         currentId = ((LocalizedNode) blankNode).getId();
-        Node node = null;
-        if (nodePool.nodeExists(currentId)) {
-            node = nodePool.getNodeById(currentId);
-        } else {
+        Node node = nodePool.getNodeIfExists(currentId);
+        if (node == null) {
             try {
                 node = createLocalBlankNode();
                 currentId = ((LocalizedNode) node).getId();
