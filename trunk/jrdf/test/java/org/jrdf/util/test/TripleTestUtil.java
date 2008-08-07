@@ -68,11 +68,12 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
@@ -87,6 +88,7 @@ import static org.jrdf.util.test.NodeTestUtil.createResource;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
@@ -121,15 +123,15 @@ public class TripleTestUtil {
 
     public static Expression<ExpressionVisitor> createBookDcTitleExpression(URI bookUri, long suffix) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
-        List<AttributeValuePair> avp = AVP_HELPER.createAvp(dcTitleTriple, createAttributes(suffix));
+        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createAvo(dcTitleTriple, createAttributes(suffix));
         return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, URI predicate,
         String varObject, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, NodeTestUtil.createResource(predicate), ANY_OBJECT_NODE);
-        List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createSubjectObjectVariableAttributes(varSubject,
-            varObject, suffix));
+        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createAvo(triple,
+            createSubjectObjectVariableAttributes(varSubject, varObject, suffix));
         return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
@@ -138,15 +140,15 @@ public class TripleTestUtil {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Attribute[] attributes = createAttributes(new VariableName(varSubject), new VariableName(varPredicate),
                 new VariableName(varObject));
-        List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, attributes);
+        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createAvo(triple, attributes);
         return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, String varPredicate,
         Literal constLiteral, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, constLiteral);
-        List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createSubjectPredicateVariableAttributes(
-            varSubject, varPredicate, suffix));
+        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createAvo(triple,
+            createSubjectPredicateVariableAttributes(varSubject, varPredicate, suffix));
         return new SingleConstraint<ExpressionVisitor>(avp);
     }
 

@@ -72,8 +72,8 @@ public final class ValueOperationImpl implements ValueOperation {
     }
 
     public ValueOperationImpl(Node newValue, AVPOperation newOperation) {
-        value = newValue;
-        operation = newOperation;
+        this.value = newValue;
+        this.operation = newOperation;
     }
 
     public Node getValue() {

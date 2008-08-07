@@ -123,7 +123,7 @@ public final class SableCcSparqllParser implements SparqlParser {
     }
 
     private Query analyseQuery(Graph graph, Start start) throws InvalidQuerySyntaxException {
-        TripleBuilder builder = new TripleBuilderImpl(graph, avpHelper, sortedAttributeFactory);
+        TripleBuilder builder = new TripleBuilderImpl(graph, sortedAttributeFactory);
         SparqlAnalyser analyser = new SparqlAnalyserImpl(builder, graph, graphRelationFactory);
         start.apply(analyser);
         try {

@@ -60,16 +60,16 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
+import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -81,27 +81,26 @@ import java.util.Map;
 public final class SingleConstraint<V extends ExpressionVisitor> implements Constraint<V> {
     private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
-    private List<AttributeValuePair> singleAvp;
+    private Map<Attribute, ValueOperation> singleAvp;
 
     private SingleConstraint() {
     }
 
-    public SingleConstraint(List<AttributeValuePair> singleAvp) {
+    public SingleConstraint(LinkedHashMap<Attribute, ValueOperation> singleAvp) {
         checkNotNull(singleAvp);
         this.singleAvp = singleAvp;
     }
 
-    public List<AttributeValuePair> getAvp(Map<AttributeName, ? extends NodeType> allVariables) {
-        List<AttributeValuePair> newAvps = new ArrayList<AttributeValuePair>();
-        for (AttributeValuePair avp : singleAvp) {
-            Attribute existingAttribute = avp.getAttribute();
+    public LinkedHashMap<Attribute, ValueOperation> getAvp(Map<AttributeName, ? extends NodeType> allVariables) {
+        LinkedHashMap<Attribute, ValueOperation> newAvps = new LinkedHashMap<Attribute, ValueOperation>();
+        for (Attribute existingAttribute : singleAvp.keySet()) {
             Attribute newAttribute;
             if (allVariables != null) {
                 newAttribute = createNewAttribute(existingAttribute, allVariables);
             } else {
                 newAttribute = existingAttribute;
             }
-            newAvps.add(new AttributeValuePairImpl(newAttribute, avp.getValue()));
+            newAvps.put(newAttribute, new ValueOperationImpl(singleAvp.get(existingAttribute).getValue(), EQUALS));
         }
         return newAvps;
     }
@@ -141,7 +140,7 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
     }
 
     private Attribute createNewAttribute(Attribute existingAttribute,
-        Map<AttributeName, ? extends NodeType> allVariables) {
+            Map<AttributeName, ? extends NodeType> allVariables) {
         Attribute newAttribute;
         AttributeName existingAttributeName = existingAttribute.getAttributeName();
         NodeType newNodeType = allVariables.get(existingAttributeName);
