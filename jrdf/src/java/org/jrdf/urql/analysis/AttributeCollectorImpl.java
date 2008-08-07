@@ -61,6 +61,7 @@ package org.jrdf.urql.analysis;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.NodeType;
@@ -93,15 +94,25 @@ public class AttributeCollectorImpl implements VariableCollector {
     public void addConstraints(List<AttributeValuePair> avps) {
         for (AttributeValuePair avp : avps) {
             Attribute attribute = avp.getAttribute();
-            if (attribute.getAttributeName() instanceof VariableName) {
-                if (variables.containsKey(attribute.getAttributeName())) {
-                    updateEntry(attribute);
-                } else {
-                    addNewEntry(attribute);
-                }
+            checkAndAddEntry(attribute);
+        }
+    }
+
+    public void addConstraints(Map<Attribute, ValueOperation> avps) {
+        for (Attribute attribute : avps.keySet()) {
+            checkAndAddEntry(attribute);
+        }
+    }
+
+    private void checkAndAddEntry(Attribute attribute) {
+        if (attribute.getAttributeName() instanceof VariableName) {
+            if (variables.containsKey(attribute.getAttributeName())) {
+                updateEntry(attribute);
             } else {
                 addNewEntry(attribute);
             }
+        } else {
+            addNewEntry(attribute);
         }
     }
 

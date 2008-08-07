@@ -59,10 +59,13 @@
 
 package org.jrdf.urql.builder;
 
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.parser.node.Switch;
 import org.jrdf.urql.parser.parser.ParserException;
 
+import java.util.Map;
+
 public interface ElementBuilder extends Switch {
-    AttributeValuePair getElement() throws ParserException;
+    Map<Attribute, ValueOperation> getElement() throws ParserException;
 }

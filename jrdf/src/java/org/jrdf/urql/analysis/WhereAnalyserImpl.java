@@ -62,14 +62,15 @@ package org.jrdf.urql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
-import org.jrdf.query.expression.SingleConstraint;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
+import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.builder.LiteralBuilderImpl;
 import org.jrdf.urql.builder.TripleBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
@@ -87,6 +88,7 @@ import org.jrdf.urql.parser.node.PUnionGraphPattern;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -153,9 +155,9 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     public void caseATriple(ATriple node) {
         try {
             node.apply(tripleBuilder);
-            List<AttributeValuePair> attributeValuePairs = tripleBuilder.getTriples();
-            collector.addConstraints(attributeValuePairs);
-            expression = new SingleConstraint<ExpressionVisitor>(attributeValuePairs);
+            LinkedHashMap<Attribute, ValueOperation> map = tripleBuilder.getTriples();
+            collector.addConstraints(map);
+            expression = new SingleConstraint<ExpressionVisitor>(map);
         } catch (ParserException e) {
             exception = e;
         }

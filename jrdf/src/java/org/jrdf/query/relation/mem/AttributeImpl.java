@@ -80,8 +80,8 @@ public final class AttributeImpl implements Attribute {
     }
 
     public AttributeImpl(AttributeName newAttributeName, NodeType newType) {
-        attributeName = newAttributeName;
-        type = newType;
+        this.attributeName = newAttributeName;
+        this.type = newType;
     }
 
     public AttributeName getAttributeName() {

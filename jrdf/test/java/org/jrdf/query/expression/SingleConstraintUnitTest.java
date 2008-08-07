@@ -60,20 +60,26 @@
 package org.jrdf.query.expression;
 
 import junit.framework.TestCase;
-import org.jrdf.query.relation.AttributeValuePair;
-import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_1;
-import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_2;
-import org.jrdf.util.test.ArgumentTestUtil;
+import static org.jrdf.graph.AnyNode.ANY_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Node;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAR_VAR;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
+import org.jrdf.query.relation.mem.EqAVPOperation;
+import org.jrdf.query.relation.mem.ValueOperationImpl;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkInstanceImplementsInterface;
-import org.jrdf.util.test.SerializationTestUtil;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Unit test for {@link SingleConstraint}.
@@ -83,35 +89,33 @@ import java.util.List;
  */
 @SuppressWarnings({"unchecked"})
 public final class SingleConstraintUnitTest extends TestCase {
-    private static final List<AttributeValuePair> AVP_1 = createAvpSet(TEST_ATTRIBUTE_VALUE_1);
-    private static final List<AttributeValuePair> AVP_2 = createAvpSet(TEST_ATTRIBUTE_VALUE_2);
-    private static final SingleConstraint CONSTRAINT_TRIPLE_1 = new SingleConstraint<ExpressionVisitor>(AVP_1);
-    private static final SingleConstraint CONSTRAINT_TRIPLE_2 = new SingleConstraint<ExpressionVisitor>(AVP_2);
-    private static final Class[] PARAM_TYPES = {List.class};
+    private static final LinkedHashMap<Attribute, ValueOperation> AVO_1 =
+        createAvoMap(TEST_ATTRIBUTE_FOO_POS, ANY_NODE);
+    private static final LinkedHashMap<Attribute, ValueOperation> AVO_2 =
+        createAvoMap(TEST_ATTRIBUTE_BAR_VAR, ANY_SUBJECT_NODE);
+    private static final SingleConstraint<ExpressionVisitor> CONSTRAINT_TRIPLE_1 =
+        new SingleConstraint<ExpressionVisitor>(AVO_1);
+    private static final SingleConstraint<ExpressionVisitor> CONSTRAINT_TRIPLE_2 =
+        new SingleConstraint<ExpressionVisitor>(AVO_2);
+    private static final Class<?>[] PARAM_TYPES = {LinkedHashMap.class};
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Expression.class, SingleConstraint.class);
         checkInstanceImplementsInterface(Serializable.class, SingleConstraint.class);
-        checkConstructor(SingleConstraint.class, Modifier.PUBLIC, List.class);
+        checkConstructor(SingleConstraint.class, Modifier.PUBLIC, PARAM_TYPES);
     }
 
     public void testSerialVersionUID() {
-        SerializationTestUtil.checkSerialialVersionUid(SingleConstraint.class, 4538228991602138679L);
+        checkSerialialVersionUid(SingleConstraint.class, 4538228991602138679L);
     }
 
     public void testNullToConstructorThrowsException() {
-        ArgumentTestUtil.checkConstructNullAssertion(SingleConstraint.class, PARAM_TYPES);
+        checkConstructNullAssertion(SingleConstraint.class, PARAM_TYPES);
     }
 
     public void getAvp() {
-        SingleConstraint constraint = new SingleConstraint<ExpressionVisitor>(AVP_1);
-        assertEquals(AVP_1, constraint.getAvp(Collections.EMPTY_MAP));
-    }
-
-    private static List<AttributeValuePair> createAvpSet(AttributeValuePair testAttributeValue) {
-        List<AttributeValuePair> set = new ArrayList<AttributeValuePair>();
-        set.add(testAttributeValue);
-        return set;
+        SingleConstraint constraint = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        assertEquals(AVO_1, constraint.getAvp(Collections.EMPTY_MAP));
     }
 
     public void testEquals() {
@@ -130,8 +134,8 @@ public final class SingleConstraintUnitTest extends TestCase {
     }
 
     public void testToString() {
-        checkToStringDelegatesToTriple(AVP_1, CONSTRAINT_TRIPLE_1);
-        checkToStringDelegatesToTriple(AVP_2, CONSTRAINT_TRIPLE_2);
+        checkToStringDelegatesToTriple(AVO_1, CONSTRAINT_TRIPLE_1);
+        checkToStringDelegatesToTriple(AVO_2, CONSTRAINT_TRIPLE_2);
     }
 
     private void checkNull() {
@@ -150,34 +154,34 @@ public final class SingleConstraintUnitTest extends TestCase {
     }
 
     private void checkSameValueDifferentReference() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
         checkEquals(x, y);
     }
 
     private void checkDifferentClass() {
-        checkNotEquals(CONSTRAINT_TRIPLE_1, AVP_1);
+        checkNotEquals(CONSTRAINT_TRIPLE_1, AVO_1);
     }
 
     private void checkSymmetric() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
         checkEquals(x, y);
         checkEquals(y, y);
     }
 
     private void checkTransitive() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
-        SingleConstraint z = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint z = new SingleConstraint<ExpressionVisitor>(AVO_1);
         checkEquals(x, y);
         checkEquals(y, z);
         checkEquals(x, z);
     }
 
     private void checkConsistentEquals() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
         checkEquals(x, y);
         checkEquals(x, y);
     }
@@ -189,8 +193,8 @@ public final class SingleConstraintUnitTest extends TestCase {
     }
 
     private void checkEqualObjectsReturnSameHashCode() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVP_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVP_1);
+        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
         checkEquals(x, y);
         assertEquals(x.hashCode(), y.hashCode());
     }
@@ -207,7 +211,13 @@ public final class SingleConstraintUnitTest extends TestCase {
         assertFalse(x.equals(y));
     }
 
-    private void checkToStringDelegatesToTriple(List<AttributeValuePair> avp, SingleConstraint contraint) {
+    private void checkToStringDelegatesToTriple(Map<Attribute, ValueOperation> avp, SingleConstraint contraint) {
         assertEquals(avp.toString(), contraint.toString());
+    }
+
+    private static LinkedHashMap<Attribute, ValueOperation> createAvoMap(Attribute attribute, Node node) {
+        LinkedHashMap<Attribute, ValueOperation> avo = new LinkedHashMap<Attribute, ValueOperation>();
+        avo.put(attribute, new ValueOperationImpl(node, EqAVPOperation.EQUALS));
+        return avo;
     }
 }

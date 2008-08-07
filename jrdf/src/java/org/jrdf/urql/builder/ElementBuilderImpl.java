@@ -65,12 +65,14 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
+import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
+import static org.jrdf.urql.builder.TokenHelper.getResource;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.urql.parser.node.AQnameObjectTripleElement;
@@ -83,21 +85,21 @@ import org.jrdf.urql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.urql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.urql.parser.node.TIdentifier;
 import org.jrdf.urql.parser.parser.ParserException;
-import static org.jrdf.urql.builder.TokenHelper.*;
 
 import java.net.URI;
-import static java.net.URI.*;
+import static java.net.URI.create;
+import java.util.HashMap;
 import java.util.Map;
 
 // TODO (AN) Too much coupling still!!
 
 public final class ElementBuilderImpl extends DepthFirstAdapter implements ElementBuilder {
-    private AttributeValuePair avp;
     private final NodeType nodeType;
     private final Node graphNode;
     private final Attribute attribute;
     private final Graph currentGraph;
     private final Map<String, String> prefixMap;
+    private Map<Attribute, ValueOperation> avp = new HashMap<Attribute, ValueOperation>();
     private ParserException exception;
     private LiteralBuilder literalBuilder;
 
@@ -111,7 +113,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         literalBuilder = new LiteralBuilderImpl(currentGraph.getElementFactory(), prefixMap);
     }
 
-    public AttributeValuePair getElement() throws ParserException {
+    public Map<Attribute, ValueOperation> getElement() throws ParserException {
         if (exception != null) {
             throw exception;
         } else {
@@ -121,45 +123,50 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseAResourceResourceTripleElement(AResourceResourceTripleElement node) {
-        avp = new AttributeValuePairImpl(attribute, createResource(getResource(node.getResource())));
+        Node value = createResource(getResource(node.getResource()));
+        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
     }
 
     @Override
     public void caseAQnameResourceTripleElement(AQnameResourceTripleElement node) {
         AQnameQnameElement element = (AQnameQnameElement) node.getQnameElement();
-        avp = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
+        Node value = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
+        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
     }
 
     @Override
     public void caseAVariableResourceTripleElement(AVariableResourceTripleElement node) {
-        avp = createAttributeValuePair(nodeType, graphNode, getVariableName(node));
+        createAttributeValuePair(nodeType, graphNode, getVariableName(node));
     }
 
     @Override
     public void caseAResourceObjectTripleElement(AResourceObjectTripleElement node) {
-        avp = new AttributeValuePairImpl(attribute, createResource(getResource(node.getResource())));
+        Node value = createResource(getResource(node.getResource()));
+        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
     }
 
     @Override
     public void caseAQnameObjectTripleElement(AQnameObjectTripleElement node) {
         AQnameQnameElement element = (AQnameQnameElement) node.getQnameElement();
-        avp = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
+        Node value = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
+        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
     }
 
     @Override
     public void caseAVariableObjectTripleElement(AVariableObjectTripleElement node) {
-        avp = createAttributeValuePair(nodeType, graphNode, getVariableName(node));
+        createAttributeValuePair(nodeType, graphNode, getVariableName(node));
     }
 
     @Override
     public void caseALiteralObjectTripleElement(ALiteralObjectTripleElement node) {
-        avp = new AttributeValuePairImpl(attribute, createLiteral(node));
+        Node value = createLiteral(node);
+        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
     }
 
-    private AttributeValuePair createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
+    private void createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
         AttributeName attributeName = new VariableName(variableName);
         Attribute att = new AttributeImpl(attributeName, type);
-        return new AttributeValuePairImpl(att, anyNode);
+        avp.put(att, new ValueOperationImpl(anyNode, EQUALS));
     }
 
     private String getVariableName(AVariableResourceTripleElement element) {
@@ -172,14 +179,13 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         return variable.getVariablename().getText();
     }
 
-    private AttributeValuePair createQNameResource(String identifier, String ncName) {
+    private Node createQNameResource(String identifier, String ncName) {
         if (!prefixMap.keySet().contains(identifier)) {
             exception = new ParserException(new TIdentifier("identifier"), "Couldn't find prefix: " + identifier);
             return null;
         } else {
             String stringForm = prefixMap.get(identifier) + ncName;
-            URIReference uriReference = createResource(create(stringForm));
-            return new AttributeValuePairImpl(attribute, uriReference);
+            return createResource(create(stringForm));
         }
     }
 

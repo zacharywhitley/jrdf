@@ -60,6 +60,8 @@
 package org.jrdf.urql.analysis;
 
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
@@ -78,4 +80,6 @@ public interface VariableCollector extends Serializable {
     void addConstraints(List<AttributeValuePair> avps);
 
     Map<AttributeName, PositionalNodeType> getAttributes();
+
+    void addConstraints(Map<Attribute, ValueOperation> avps);
 }
