@@ -63,12 +63,15 @@ import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.index.ReadableIndex;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.mem.MoleculeImpl;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.ArrayList;
@@ -83,14 +86,13 @@ import java.util.Map;
  */
 
 public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
-    private MoleculeGraph graph;
+    private NodePool nodePool;
     private ReadableIndex<Long> readableIndex;
     private MoleculeComparator moleculeComparator;
 
-
-    public MoleculeGraphHandlerImpl(MoleculeGraph graph, ReadableIndex<Long> readableIndex,
+    public MoleculeGraphHandlerImpl(NodePool nodePool, ReadableIndex<Long> readableIndex,
         MoleculeComparator moleculeComparator) {
-        this.graph = graph;
+        this.nodePool = nodePool;
         this.readableIndex = readableIndex;
         this.moleculeComparator = moleculeComparator;
     }
@@ -116,13 +118,19 @@ public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
     }
 
     private Triple[] iteratorAsTriples(ClosableIterator<Long[]> iterator) {
-        List<Triple> triples = new ArrayList<Triple>();
-        while (iterator.hasNext()) {
-            triples.add(graph.getTriple(iterator.next()));
+        try {
+            List<Triple> triples = new ArrayList<Triple>();
+            while (iterator.hasNext()) {
+                Long[] longs = iterator.next();
+                Triple triple = new TripleImpl((SubjectNode) nodePool.getNodeById(longs[0]),
+                    (PredicateNode) nodePool.getNodeById(longs[1]), (ObjectNode) nodePool.getNodeById(longs[2]));
+                triples.add(triple);
+            }
+            Triple[] tripleArray = new Triple[triples.size()];
+            return triples.toArray(tripleArray);
+        } finally {
+            iterator.close();
         }
-        iterator.close();
-        Triple[] tripleArray = new Triple[triples.size()];
-        return triples.toArray(tripleArray);
     }
 
     private Map<BlankNode, Triple> getBNodeToRootMap(Molecule molecule) {

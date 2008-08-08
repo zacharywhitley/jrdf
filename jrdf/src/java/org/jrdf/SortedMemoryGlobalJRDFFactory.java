@@ -130,7 +130,7 @@ public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory 
             new LongIndexAdapter(indexes[1]), new LongIndexAdapter(indexes[2])};
         CollectionFactory collectionFactory = new MemCollectionFactory();
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
-        return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph);
+        return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph, nodePool);
     }
 
     public UrqlConnection getNewUrqlConnection() {

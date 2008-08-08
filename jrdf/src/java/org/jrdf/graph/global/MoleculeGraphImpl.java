@@ -82,10 +82,11 @@ import org.jrdf.graph.global.molecule.MoleculeTraverser;
 import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
-import org.jrdf.query.relation.type.NodeType;
-import org.jrdf.query.relation.type.ValueNodeType;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.LongIndexToMoleculeIterator;
 
@@ -104,14 +105,14 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     private static final int QUIN_SIZE = 5;
 
     public MoleculeGraphImpl(WritableIndex<Long> newWriteIndex, ReadableIndex<Long> newReadIndex,
-        MoleculeLocalizer newLocalizer, Graph newGraph) {
+        MoleculeLocalizer newLocalizer, Graph newGraph, NodePool nodePool) {
         this.writableIndex = newWriteIndex;
         this.readableIndex = newReadIndex;
         this.localizer = newLocalizer;
         this.graph = newGraph;
         this.comparator = new TripleComparatorFactoryImpl().newComparator();
         this.moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
-        this.handler = new MoleculeGraphHandlerImpl(this, readableIndex, moleculeComparator);
+        this.handler = new MoleculeGraphHandlerImpl(nodePool, readableIndex, moleculeComparator);
     }
 
     public void add(Molecule molecule) {
@@ -279,32 +280,8 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         return graph.isEmpty();
     }
 
-    public Triple getTriple(Long... index) {
-        return graph.getTriple(index);
-    }
-
     public GraphRelation createRelation(GraphRelationFactory graphRelationFactory) {
         return graph.createRelation(graphRelationFactory);
-    }
-
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        MoleculeTraverser traverser = new MoleculeTraverserImpl();
-        try {
-            ClosableIterator<Molecule> iterator = iterator();
-            try {
-                MoleculeHandler handler = new MoleculeToText(builder, localizer.getLocalizer());
-                while (iterator.hasNext()) {
-                    Molecule molecule = iterator.next();
-                    traverser.traverse(molecule, handler);
-                }
-                return builder.toString();
-            } finally {
-                iterator.close();
-            }
-        } catch (GraphException e) {
-            throw new RuntimeException("Cannot return string representation", e);
-        }
     }
 
     public ClosableIterator<Molecule> iterator() throws GraphException {
@@ -362,9 +339,30 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         throw new GraphException("Cannot remove triple from molecule");
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        MoleculeTraverser traverser = new MoleculeTraverserImpl();
+        try {
+            ClosableIterator<Molecule> iterator = iterator();
+            try {
+                MoleculeHandler handler = new MoleculeToText(builder, localizer.getLocalizer());
+                while (iterator.hasNext()) {
+                    Molecule molecule = iterator.next();
+                    traverser.traverse(molecule, handler);
+                }
+                return builder.toString();
+            } finally {
+                iterator.close();
+            }
+        } catch (GraphException e) {
+            throw new RuntimeException("Cannot return string representation", e);
+        }
+    }
+
     // TODO finish implementation
     private Molecule removeSubMolecules(Molecule molecule, Triple rootTriple,
-                                        Long[] tripleAsLongs, Long aLong) throws GraphException {
+        Long[] tripleAsLongs, Long aLong) throws GraphException {
         removeFromIndex(tripleAsLongs, aLong);
         molecule.remove(rootTriple);
         return molecule;

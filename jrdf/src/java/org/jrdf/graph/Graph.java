@@ -269,8 +269,5 @@ public interface Graph {
     boolean isEmpty() throws GraphException;
 
     // TODO Tuple Refactor
-    Triple getTriple(Long... index);
-
-    // TODO Tuple Refactor
     GraphRelation createRelation(GraphRelationFactory graphRelationFactory);
 }
