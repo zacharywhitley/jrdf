@@ -68,15 +68,18 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EqualsUtil;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -90,6 +93,7 @@ import java.util.TreeSet;
  */
 // TODO (AN) Come back and add unit tests and integration tests!!!!!
 public final class GraphRelationImpl implements GraphRelation {
+    private static final int TRIPLE = 3;
     private final Graph graph;
     private final TupleComparator tupleComparator;
     private final TupleFactory tupleFactory;
@@ -112,13 +116,16 @@ public final class GraphRelationImpl implements GraphRelation {
     public Set<Tuple> getTuples() {
         SortedSet<Attribute> heading = attributeFactory.createHeading();
         Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
-        return getTuplesFromGraph(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, attributes);
+        Triple searchTriple = new TripleImpl(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        return getTuplesFromGraph(searchTriple, attributes);
     }
 
-    public Set<Tuple> getTuples(List<AttributeValuePair> nameValues) {
-        Triple triple = avpHelper.createTriple(nameValues);
-        Attribute[] attributes = avpHelper.createAttributes(nameValues);
-        return getTuplesFromGraph(triple.getSubject(), triple.getPredicate(), triple.getObject(), attributes);
+    public Set<Tuple> getTuples(LinkedHashMap<Attribute, ValueOperation> nameValues) {
+        Attribute[] attributes = nameValues.keySet().toArray(new Attribute[TRIPLE]);
+        Triple searchTriple = new TripleImpl((SubjectNode) nameValues.get(attributes[0]).getValue(),
+            (PredicateNode) nameValues.get(attributes[1]).getValue(),
+            (ObjectNode) nameValues.get(attributes[2]).getValue());
+        return getTuplesFromGraph(searchTriple, attributes);
     }
 
     public SortedSet<Attribute> getSortedHeading() {
@@ -129,10 +136,12 @@ public final class GraphRelationImpl implements GraphRelation {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public int hashCode() {
         return graph.hashCode() ^ tupleComparator.hashCode() ^ attributeFactory.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (EqualsUtil.isNull(obj)) {
             return false;
@@ -146,9 +155,8 @@ public final class GraphRelationImpl implements GraphRelation {
         return determineEqualityFromFields((GraphRelation) obj);
     }
 
-    private Set<Tuple> getTuplesFromGraph(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-        Attribute[] attributes) {
-        ClosableIterator<Triple> closableIterator = tryGetTriples(subjectNode, predicateNode, objectNode);
+    private Set<Tuple> getTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
+        ClosableIterator<Triple> closableIterator = tryGetTriples(searchTriple);
         Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
@@ -157,10 +165,9 @@ public final class GraphRelationImpl implements GraphRelation {
         return tuples;
     }
 
-    private ClosableIterator<Triple> tryGetTriples(SubjectNode subjectNode, PredicateNode predicateNode,
-        ObjectNode objectNode) {
+    private ClosableIterator<Triple> tryGetTriples(Triple triple) {
         try {
-            return graph.find(subjectNode, predicateNode, objectNode);
+            return graph.find(triple);
         } catch (GraphException e) {
             throw new RuntimeException(e);
         }

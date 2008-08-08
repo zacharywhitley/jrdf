@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation;
 
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 /**
@@ -77,5 +77,5 @@ public interface GraphRelation extends Relation {
      * @param nameValues an ordered list of 3 attribute value pairs in the subject, predicate and object position.
      * @return a set of tuples.
      */
-    Set<Tuple> getTuples(List<AttributeValuePair> nameValues);
+    Set<Tuple> getTuples(LinkedHashMap<Attribute, ValueOperation> nameValues);
 }

@@ -59,6 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.restrict;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
@@ -66,10 +67,11 @@ import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.operation.Restrict;
 
 import static java.util.Arrays.asList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -92,14 +94,14 @@ public class RestrictImpl implements Restrict {
     }
 
     // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
-    public Relation restrict(Relation relation, List<AttributeValuePair> nameValues) {
+    public Relation restrict(Relation relation, LinkedHashMap<Attribute, ValueOperation> nameValues) {
         if (relation instanceof GraphRelation) {
             return restrict((GraphRelation) relation, nameValues);
         }
         throw new UnsupportedOperationException();
     }
 
-    public Relation restrict(GraphRelation relation, List<AttributeValuePair> nameValues) {
+    public Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, ValueOperation> nameValues) {
         Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
         return relationFactory.getRelation(restrictedTuples);
     }

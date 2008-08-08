@@ -75,10 +75,12 @@ public final class VariableName implements AttributeName {
         return variableName;
     }
 
+    @Override
     public int hashCode() {
         return variableName.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (EqualsUtil.isNull(obj)) {
             return false;
@@ -92,6 +94,7 @@ public final class VariableName implements AttributeName {
         return ((AttributeName) obj).getLiteral().equals(getLiteral());
     }
 
+    @Override
     public String toString() {
         return "?" + variableName;
     }

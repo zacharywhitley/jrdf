@@ -118,9 +118,9 @@ public final class NodeComparatorImpl implements NodeComparator, TypedNodeVisito
         if (nodeTypeEnum.isBlankNode()) {
             result = blankNodeComparator.compare((BlankNode) n1, (BlankNode) n2);
         } else if (nodeTypeEnum.isURIReferenceNode()) {
-            result = compareByString(n1.toString(), n2.toString());
+            result = compareURIReference((URIReference) n1, (URIReference) n2);
         } else if (nodeTypeEnum.isLiteralNode()) {
-            result = compareByString(n1.toString(), n2.toString());
+            result = compareLiteral((Literal) n1, (Literal) n2);
         } else {
             throw new IllegalArgumentException("Could not compare: " + n1.getClass() + " and " + n2.getClass());
         }
@@ -130,6 +130,22 @@ public final class NodeComparatorImpl implements NodeComparator, TypedNodeVisito
     // TODO (AN) Move to different class.
     private boolean areNodesDifferentType(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
         return !nodeType1Enum.equals(nodeType2Enum);
+    }
+
+    private int compareURIReference(URIReference n1, URIReference n2) {
+        int result = 0;
+        if (!n1.equals(n2)) {
+            result = compareByString(n1.toString(), n2.toString());
+        }
+        return result;
+    }
+
+    private int compareLiteral(Literal n1, Literal n2) {
+        int result = 0;
+        if (!n1.equals(n2)) {
+            result = compareByString(n1.toString(), n2.toString());
+        }
+        return result;
     }
 
     private int compareByString(String str1, String str2) {
