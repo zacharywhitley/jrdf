@@ -166,7 +166,7 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         final long curMaxMoleculeId = readIndex.getMaxMoleculeId();
         Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer, curMaxMoleculeId);
-        return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph);
+        return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph, nodePool);
     }
 
     private MoleculeIndex<Long>[] createMoleculeIndexes(long graphNumber) {

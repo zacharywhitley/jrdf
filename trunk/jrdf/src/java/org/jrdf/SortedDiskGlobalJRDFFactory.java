@@ -153,7 +153,7 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
         openIndexes.addAll(asList(indexes));
         openMapFactories.add(factory);
         openFactories.add(nodePoolFactory);
-        return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph);
+        return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph, nodePool);
     }
 
     public UrqlConnection getNewUrqlConnection() {

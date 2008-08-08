@@ -72,19 +72,18 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
+import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
 import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
 import org.jrdf.query.relation.type.ValueNodeType;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.RdfWriter;
@@ -266,13 +265,6 @@ public class GraphImpl implements Graph {
 
     public boolean isEmpty() throws GraphException {
         return readWriteGraph.getSize() == 0L;
-    }
-
-    public Triple getTriple(Long... index) {
-        SubjectNode sub = (SubjectNode) nodePool.getNodeById(index[0]);
-        PredicateNode pre = (PredicateNode) nodePool.getNodeById(index[1]);
-        ObjectNode obj = (ObjectNode) nodePool.getNodeById(index[2]);
-        return new TripleImpl(sub, pre, obj);
     }
 
     public GraphRelation createRelation(GraphRelationFactory graphRelationFactory) {
