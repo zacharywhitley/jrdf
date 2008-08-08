@@ -74,5 +74,4 @@ import java.util.Set;
 public interface TupleFactory extends Serializable {
     Tuple getTuple(Set<AttributeValuePair> avp);
     Tuple getTuple(Map<Attribute, ValueOperation> avp);
-    Tuple getTuple(List<AttributeValuePair> avp);
 }

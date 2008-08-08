@@ -80,6 +80,7 @@ import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -124,7 +125,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
         setAllVariables(projection.getAllVariables());
         Relation expression = getExpression(projection.getNextExpression());
-        Set<Attribute> attributes = projection.getAttributes();
+        LinkedHashSet<Attribute> attributes = projection.getAttributes();
         result = project.include(expression, attributes);
     }
 
@@ -135,7 +136,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
 
     @Override
     public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
-        result = restrict.restrict(result, constraint.getAvp(allVariables));
+        result = restrict.restrict(result, constraint.getAvo(allVariables));
     }
 
     @Override

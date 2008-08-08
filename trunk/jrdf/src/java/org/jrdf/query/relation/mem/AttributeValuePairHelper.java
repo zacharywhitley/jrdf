@@ -66,6 +66,7 @@ import org.jrdf.query.relation.ValueOperation;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Allows the creation of sorted AttributeValuePairs.
@@ -80,9 +81,9 @@ public interface AttributeValuePairHelper {
 
     Triple createTriple(List<AttributeValuePair> avp);
 
-    List<AttributeValuePair> createAvp(Triple triple, Attribute[] attributes);
-
     Attribute[] createAttributes(List<AttributeValuePair> nameValues);
 
-    LinkedHashMap<Attribute, ValueOperation> createAvo(Triple triple, Attribute[] attributes);
+    LinkedHashMap<Attribute, ValueOperation> createLinkedAvo(Triple triple, Attribute[] attributes);
+
+    Map<Attribute, ValueOperation> createAvo(Triple triple, Attribute[] attributes);
 }

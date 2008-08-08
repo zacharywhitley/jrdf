@@ -71,9 +71,11 @@ import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 
 /**
@@ -95,13 +97,17 @@ public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
         return createAttributeValuePairs(attributes, triple);
     }
 
-    public LinkedHashMap<Attribute, ValueOperation> createAvo(Triple triple, Attribute[] attributes) {
-        return createAttributeValueOperation(attributes, triple);
+    public Map<Attribute, ValueOperation> createAvo(Triple triple, Attribute[] attributes) {
+        Map<Attribute, ValueOperation> attributeValueOperations = new HashMap<Attribute, ValueOperation>();
+        addValues(triple, attributes, attributeValueOperations);
+        return attributeValueOperations;
     }
 
-    public List<AttributeValuePair> createAvp(Triple triple, Attribute[] attributes) {
-        // TODO (AN) Check that there are only 3 attributes.
-        return createAttributeValuePairs(attributes, triple);
+    public LinkedHashMap<Attribute, ValueOperation> createLinkedAvo(Triple triple, Attribute[] attributes) {
+        LinkedHashMap<Attribute, ValueOperation> attributeValueOperations =
+            new LinkedHashMap<Attribute, ValueOperation>();
+        addValues(triple, attributes, attributeValueOperations);
+        return attributeValueOperations;
     }
 
     public Attribute[] createAttributes(List<AttributeValuePair> nameValues) {
@@ -123,14 +129,10 @@ public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
         return getNodes(avp);
     }
 
-    private LinkedHashMap<Attribute, ValueOperation> createAttributeValueOperation(Attribute[] attributes,
-        Triple triple) {
-        LinkedHashMap<Attribute, ValueOperation> attributeValueOperations =
-            new LinkedHashMap<Attribute, ValueOperation>();
+    private void addValues(Triple triple, Attribute[] attributes, Map<Attribute, ValueOperation> attributeValueOperations) {
         attributeValueOperations.put(attributes[0], new ValueOperationImpl(triple.getSubject(), EQUALS));
         attributeValueOperations.put(attributes[1], new ValueOperationImpl(triple.getPredicate(), EQUALS));
         attributeValueOperations.put(attributes[2], new ValueOperationImpl(triple.getObject(), EQUALS));
-        return attributeValueOperations;
     }
 
     private List<AttributeValuePair> createAttributeValuePairs(Attribute[] attributes, Triple triple) {

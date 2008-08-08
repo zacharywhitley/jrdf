@@ -115,7 +115,7 @@ public final class SingleConstraintUnitTest extends TestCase {
 
     public void getAvp() {
         SingleConstraint constraint = new SingleConstraint<ExpressionVisitor>(AVO_1);
-        assertEquals(AVO_1, constraint.getAvp(Collections.EMPTY_MAP));
+        assertEquals(AVO_1, constraint.getAvo(Collections.EMPTY_MAP));
     }
 
     public void testEquals() {

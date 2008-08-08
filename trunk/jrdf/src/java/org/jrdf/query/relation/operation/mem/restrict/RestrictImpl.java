@@ -60,7 +60,6 @@
 package org.jrdf.query.relation.operation.mem.restrict;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
@@ -70,11 +69,11 @@ import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.operation.Restrict;
 
-import static java.util.Arrays.asList;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Map;
 
 /**
  * The relational operation that remove tuples that don't meet a specific criteria.
@@ -94,20 +93,20 @@ public class RestrictImpl implements Restrict {
     }
 
     // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
-    public Relation restrict(Relation relation, LinkedHashMap<Attribute, ValueOperation> nameValues) {
+    public Relation restrict(Relation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
         if (relation instanceof GraphRelation) {
-            return restrict((GraphRelation) relation, nameValues);
+            return restrict((GraphRelation) relation, avo);
         }
         throw new UnsupportedOperationException();
     }
 
-    public Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, ValueOperation> nameValues) {
-        Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
+    public Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
+        Set<Tuple> restrictedTuples = relation.getTuples(avo);
         return relationFactory.getRelation(restrictedTuples);
     }
 
-    public Relation restrict(AttributeValuePair attributeValuePair) {
-        Tuple tuple = tupleFactory.getTuple(asList(attributeValuePair));
+    public Relation restrict(Map<Attribute, ValueOperation> avo) {
+        Tuple tuple = tupleFactory.getTuple(avo);
         SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
         resultTuples.add(tuple);
         return relationFactory.getRelation(resultTuples);

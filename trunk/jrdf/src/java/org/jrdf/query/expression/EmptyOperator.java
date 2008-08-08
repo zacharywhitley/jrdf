@@ -1,14 +1,17 @@
 package org.jrdf.query.expression;
 
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
-import org.jrdf.query.relation.AttributeValuePair;
+
+import java.util.Map;
 
 public class EmptyOperator<V extends ExpressionVisitor> implements Operator<V> {
     private static final long serialVersionUID = 4636572000909954329L;
     private static final int DUMMY_HASHCODE = 47;
 
     //TODO Come back and make these two methods sensible.
-    public AttributeValuePair getAttributeValuePair() {
+    public Map<Attribute, ValueOperation> getAttributeValuePair() {
         return null;
     }
 

@@ -121,9 +121,7 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
 
     private void checkConnectionReturnsOneSolution(UrqlConnection connection) {
         Relation relation = executeQuery(connection, QUERY_SHOULD_RETURN_ONE_SOLUTION);
-        System.err.println("Got: " + relation);
         Set<Tuple> answer = relation.getTuples();
-        System.err.println("Got: " + answer);
         checkFirstRowOfAnswer(answer);
     }
 
@@ -136,8 +134,6 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
     private Relation executeQuery(UrqlConnection connection, String query) {
         try {
             Answer answer = connection.executeQuery(GRAPH, query);
-            System.err.println("Graph: " + GRAPH);
-            System.err.println("Query: " + query);
             return (Relation) ReflectTestUtil.getFieldValue(answer, "results");
         } catch (InvalidQuerySyntaxException e) {
             throw new RuntimeException(e);
