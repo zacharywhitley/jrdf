@@ -70,8 +70,8 @@ import java.lang.reflect.Modifier;
 public class LocalIteratorFactoryUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(IteratorFactory.class, LocalIteratorFactory.class);
-        checkConstructor(LocalIteratorFactory.class, Modifier.PUBLIC, GraphHandler[].class, Localizer.class,
+        checkImplementationOfInterfaceAndFinal(IteratorFactory.class, CopyingLocalIteratorFactory.class);
+        checkConstructor(CopyingLocalIteratorFactory.class, Modifier.PUBLIC, GraphHandler[].class, Localizer.class,
             CollectionFactory.class);
     }
 }

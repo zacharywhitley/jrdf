@@ -66,6 +66,7 @@ import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.query.expression.SingleConstraint}.
@@ -84,7 +85,7 @@ final class ConstraintTripleInstantiator implements Instantiator {
     private ParamSpec createParams() {
         List<AttributeValuePair> avp = TripleTestUtil.AVP_BOOK_1_DC_SUBJECT_LITERAL;
         Object[] params = {avp};
-        Class<?>[] types = new Class[]{List.class};
+        Class<?>[] types = new Class[]{Map.class};
         return new ParamSpec(types, params);
     }
 }

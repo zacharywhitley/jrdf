@@ -70,7 +70,7 @@ import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.graph.local.iterator.LocalIteratorFactory;
+import org.jrdf.graph.local.iterator.CopyingLocalIteratorFactory;
 import org.jrdf.collection.CollectionFactory;
 
 /**
@@ -94,8 +94,8 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
-        this.iteratorFactory = new LocalIteratorFactory(graphHandlers, localizer, newCollectionFactory);
-        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
+        this.iteratorFactory = new CopyingLocalIteratorFactory(graphHandlers, localizer, newCollectionFactory);
+        this.readWriteGraph = new ReadWriteGraphImpl(graphHandlers, longIndexes, nodePool, iteratorFactory);
     }
 
     public Graph getGraph() {
