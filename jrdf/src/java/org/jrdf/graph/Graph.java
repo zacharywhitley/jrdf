@@ -102,6 +102,9 @@ public interface Graph {
      */
     boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
 
+    // TODO Tuple Refactor - maybe make these methods read only (no remove) and not sorted.  Then add decorators that
+    // allow deletion and sorting (makes sense!).
+
     /**
      * Returns an iterator of {@link Triple}s to a set of statements that
      * match a given subject, predicate and object.  An AnyNode value for any of
