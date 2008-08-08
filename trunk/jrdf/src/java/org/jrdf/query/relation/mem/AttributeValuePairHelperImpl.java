@@ -129,7 +129,8 @@ public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
         return getNodes(avp);
     }
 
-    private void addValues(Triple triple, Attribute[] attributes, Map<Attribute, ValueOperation> attributeValueOperations) {
+    private void addValues(Triple triple, Attribute[] attributes,
+        Map<Attribute, ValueOperation> attributeValueOperations) {
         attributeValueOperations.put(attributes[0], new ValueOperationImpl(triple.getSubject(), EQUALS));
         attributeValueOperations.put(attributes[1], new ValueOperationImpl(triple.getPredicate(), EQUALS));
         attributeValueOperations.put(attributes[2], new ValueOperationImpl(triple.getObject(), EQUALS));
