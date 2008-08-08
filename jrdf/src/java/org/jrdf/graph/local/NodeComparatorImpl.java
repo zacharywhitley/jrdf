@@ -160,8 +160,7 @@ public final class NodeComparatorImpl implements NodeComparator, TypedNodeVisito
 
     private NodeTypeEnum getNodeType(Node node) {
         node.accept(this);
-        NodeTypeEnum nodeType1Enum = currentEnum;
-        return nodeType1Enum;
+        return currentEnum;
     }
 
     public void visitBlankNode(BlankNode blankNode) {
