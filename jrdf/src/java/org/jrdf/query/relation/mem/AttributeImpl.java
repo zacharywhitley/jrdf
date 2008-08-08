@@ -92,14 +92,12 @@ public final class AttributeImpl implements Attribute {
         return type;
     }
 
-    public String toString() {
-        return type.getName() + "|" + attributeName.getLiteral();
-    }
-
+    @Override
     public int hashCode() {
         return attributeName.hashCode() ^ type.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (isNull(obj)) {
             return false;
@@ -111,6 +109,11 @@ public final class AttributeImpl implements Attribute {
             return determineEqualityFromFields((Attribute) obj);
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return type.getName() + "|" + attributeName.getLiteral();
     }
 
     private boolean determineEqualityFromFields(Attribute attribute) {

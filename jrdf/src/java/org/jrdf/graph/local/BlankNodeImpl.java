@@ -94,6 +94,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
      * The internal identifier for this node.
      */
     private Long id;
+
     /**
      * Globally Unique Identifier.
      */

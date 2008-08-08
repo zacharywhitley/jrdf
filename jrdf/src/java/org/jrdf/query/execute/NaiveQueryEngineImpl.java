@@ -70,12 +70,9 @@ import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.constants.RelationDEE;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
@@ -83,9 +80,6 @@ import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -140,14 +134,8 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    // TODO AN Tuple Refactor
     public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
-        LinkedHashMap<Attribute, ValueOperation> singleAvp = constraint.getAvp(allVariables);
-        List<AttributeValuePair> pairs = new LinkedList<AttributeValuePair>();
-        for (Attribute attribute : singleAvp.keySet()) {
-            pairs.add(new AttributeValuePairImpl(attribute, singleAvp.get(attribute).getValue()));
-        }
-        result = restrict.restrict(result, pairs);
+        result = restrict.restrict(result, constraint.getAvp(allVariables));
     }
 
     @Override
