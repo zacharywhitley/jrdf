@@ -146,12 +146,12 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     }
 
     private void checkBuiltTripleWithVariable(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
-        Map<Attribute,ValueOperation> avp = AVP_HELPER.createAvo(expectedTriple, actualTriple.asAttributes());
+        Map<Attribute,ValueOperation> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
     private void checkBuiltTripleWithLiteral(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
-        Map<Attribute,ValueOperation> avp = AVP_HELPER.createAvo(expectedTriple, actualTriple.asAttributes());
+        Map<Attribute,ValueOperation> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 

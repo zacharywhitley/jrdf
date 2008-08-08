@@ -1,14 +1,15 @@
 package org.jrdf.urql.analysis;
 
 import org.jrdf.graph.Node;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.mem.EqAVPOperation;
 import org.jrdf.query.relation.mem.NeqAVPOperation;
+import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
@@ -17,6 +18,9 @@ import org.jrdf.urql.parser.node.ANeMoreNumericExpression;
 import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
 import org.jrdf.urql.parser.node.AVariable;
 import org.jrdf.urql.parser.parser.ParserException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements NumericExpressionAnalyser {
     private ParserException exception;
@@ -29,12 +33,15 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         this.literalBuilder = newLiteralBuilder;
     }
 
-    public AttributeValuePair getSingleAvp() throws ParserException {
+    public Map<Attribute, ValueOperation> getSingleAvp() throws ParserException {
         if (exception != null) {
             throw exception;
         }
-        // TODO AN Revist node type creation!
-        return new AttributeValuePairImpl(new AttributeImpl(attributeName, new ObjectNodeType()), value, operation);
+        Map<Attribute, ValueOperation> returnValue = new HashMap<Attribute, ValueOperation>();
+        Attribute attribute = new AttributeImpl(attributeName, new ObjectNodeType());
+        ValueOperation vo = new ValueOperationImpl(value, operation);
+        returnValue.put(attribute, vo);
+        return returnValue;
     }
 
     @Override

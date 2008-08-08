@@ -123,14 +123,14 @@ public class TripleTestUtil {
 
     public static Expression<ExpressionVisitor> createBookDcTitleExpression(URI bookUri, long suffix) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
-        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createAvo(dcTitleTriple, createAttributes(suffix));
+        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(dcTitleTriple, createAttributes(suffix));
         return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, URI predicate,
         String varObject, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, NodeTestUtil.createResource(predicate), ANY_OBJECT_NODE);
-        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createAvo(triple,
+        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(triple,
             createSubjectObjectVariableAttributes(varSubject, varObject, suffix));
         return new SingleConstraint<ExpressionVisitor>(avp);
     }
@@ -140,14 +140,14 @@ public class TripleTestUtil {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Attribute[] attributes = createAttributes(new VariableName(varSubject), new VariableName(varPredicate),
                 new VariableName(varObject));
-        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createAvo(triple, attributes);
+        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(triple, attributes);
         return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, String varPredicate,
         Literal constLiteral, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, constLiteral);
-        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createAvo(triple,
+        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(triple,
             createSubjectPredicateVariableAttributes(varSubject, varPredicate, suffix));
         return new SingleConstraint<ExpressionVisitor>(avp);
     }

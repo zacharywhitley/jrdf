@@ -74,14 +74,16 @@ import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.Union;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
+import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
@@ -115,6 +117,8 @@ import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 import org.jrdf.vocabulary.XSD;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings({"unchecked"})
 public final class SableCcSparqlParserIntegrationTest extends TestCase {
@@ -327,9 +331,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void testFilter() throws Exception {
         AttributeName oVar = new VariableName("o");
         Expression<ExpressionVisitor> spoExpression = createConstraintExpression("s", "p", "o");
-        AttributeValuePair avp = new AttributeValuePairImpl(new AttributeImpl(oVar, new ObjectNodeType()),
-                createLiteral("unknown"));
-        Expression<ExpressionVisitor> filterExpression = new StrOperator(avp);
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
+        ValueOperation value = new ValueOperationImpl(createLiteral("unknown"), EQUALS);
+        avo.put(attribute, value);
+        Expression<ExpressionVisitor> filterExpression = new StrOperator(avo);
         Expression<ExpressionVisitor> conjunction = new Conjunction<ExpressionVisitor>(spoExpression,
                 filterExpression);
         checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\") }", conjunction);
@@ -338,9 +344,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void testPrefixInFilter() throws Exception {
         AttributeName oVar = new VariableName("o");
         Expression<ExpressionVisitor> spoExpression = createConstraintExpression("s", "p", "o");
-        AttributeValuePair avp = new AttributeValuePairImpl(new AttributeImpl(oVar, new ObjectNodeType()),
-                createLiteral("unknown", XSD.STRING));
-        Expression<ExpressionVisitor> filterExpression = new StrOperator(avp);
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
+        ValueOperation value = new ValueOperationImpl(createLiteral("unknown", XSD.STRING), EQUALS);
+        avo.put(attribute, value);
+        Expression<ExpressionVisitor> filterExpression = new StrOperator(avo);
         Expression<ExpressionVisitor> conjunction = new Conjunction<ExpressionVisitor>(spoExpression,
                 filterExpression);
         checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +

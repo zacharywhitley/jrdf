@@ -70,7 +70,6 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
@@ -80,7 +79,7 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -157,12 +156,17 @@ public final class GraphRelationImpl implements GraphRelation {
 
     private Set<Tuple> getTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
         ClosableIterator<Triple> closableIterator = tryGetTriples(searchTriple);
-        Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
-        while (closableIterator.hasNext()) {
-            Triple triple = closableIterator.next();
-            addTripleToTuples(tuples, triple, attributes);
+        try {
+            Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
+            while (closableIterator.hasNext()) {
+                Triple triple = closableIterator.next();
+                Map<Attribute, ValueOperation> avo = avpHelper.createAvo(triple, attributes);
+                tuples.add(tupleFactory.getTuple(avo));
+            }
+            return tuples;
+        } finally {
+            closableIterator.close();
         }
-        return tuples;
     }
 
     private ClosableIterator<Triple> tryGetTriples(Triple triple) {
@@ -171,12 +175,6 @@ public final class GraphRelationImpl implements GraphRelation {
         } catch (GraphException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void addTripleToTuples(Set<Tuple> tuples, Triple triple, Attribute[] attributes) {
-        List<AttributeValuePair> avp = avpHelper.createAvp(triple, attributes);
-        Tuple tuple = tupleFactory.getTuple(avp);
-        tuples.add(tuple);
     }
 
     private boolean determineEqualityFromFields(GraphRelation graphRelation) {

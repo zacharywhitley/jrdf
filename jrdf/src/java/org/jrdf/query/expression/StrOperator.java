@@ -1,17 +1,20 @@
 package org.jrdf.query.expression;
 
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
+
+import java.util.Map;
 
 public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     private static final long serialVersionUID = -3910514962392635053L;
     private static final int DUMMY_HASHCODE = 47;
-    private AttributeValuePair singleAvp;
+    private Map<Attribute, ValueOperation> singleAvp;
 
     private StrOperator() {
     }
 
-    public StrOperator(AttributeValuePair newSingleAvp) {
+    public StrOperator(Map<Attribute, ValueOperation> newSingleAvp) {
         this.singleAvp = newSingleAvp;
     }
 
@@ -19,7 +22,7 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
         expressionVisitor.visitOperator(this);
     }
 
-    public AttributeValuePair getAttributeValuePair() {
+    public Map<Attribute, ValueOperation> getAttributeValuePair() {
         return singleAvp;
     }
 
@@ -45,8 +48,10 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
 
     @Override
     public String toString() {
-        return "str ((" + singleAvp.getAttribute() + ") " + singleAvp.getOperation() + " " + singleAvp.getValue() +
-            ") ";
+        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
+        Attribute attribute = attributeValueOperationEntry.getKey();
+        ValueOperation vo = attributeValueOperationEntry.getValue();
+        return "str ((" + attribute + ") " + vo.getOperation() + " " + vo.getValue() + ") ";
     }
 
     private boolean determineEqualityFromFields(StrOperator s1, StrOperator s2) {

@@ -91,7 +91,7 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
         this.singleAvp = singleAvp;
     }
 
-    public LinkedHashMap<Attribute, ValueOperation> getAvp(Map<AttributeName, ? extends NodeType> allVariables) {
+    public LinkedHashMap<Attribute, ValueOperation> getAvo(Map<AttributeName, ? extends NodeType> allVariables) {
         LinkedHashMap<Attribute, ValueOperation> newAvps = new LinkedHashMap<Attribute, ValueOperation>();
         for (Attribute existingAttribute : singleAvp.keySet()) {
             Attribute newAttribute;
@@ -109,6 +109,7 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
         v.visitConstraint(this);
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (EqualsUtil.isNull(obj)) {
             return false;
@@ -122,6 +123,7 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
         return determineEqualityFromFields(this, (SingleConstraint) obj);
     }
 
+    @Override
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
         return DUMMY_HASHCODE;
@@ -140,14 +142,12 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
     }
 
     private Attribute createNewAttribute(Attribute existingAttribute,
-            Map<AttributeName, ? extends NodeType> allVariables) {
-        Attribute newAttribute;
+        Map<AttributeName, ? extends NodeType> allVariables) {
         AttributeName existingAttributeName = existingAttribute.getAttributeName();
         NodeType newNodeType = allVariables.get(existingAttributeName);
         if (newNodeType == null) {
             newNodeType = existingAttribute.getType();
         }
-        newAttribute = new AttributeImpl(existingAttributeName, newNodeType);
-        return newAttribute;
+        return new AttributeImpl(existingAttributeName, newNodeType);
     }
 }
