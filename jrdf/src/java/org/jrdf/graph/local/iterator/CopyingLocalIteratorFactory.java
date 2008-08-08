@@ -61,8 +61,12 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.graph.local.index.nodepool.Localizer;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
+import java.util.List;
 
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
@@ -70,12 +74,17 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class LocalIteratorFactory implements IteratorFactory {
+public final class CopyingLocalIteratorFactory implements IteratorFactory {
     private final GraphHandler[] graphHandlers;
+    private final Localizer localizer;
+    private final CollectionFactory collectionFactory;
 
-    public LocalIteratorFactory(final GraphHandler[] newGraphHandlers) {
-        checkNotNull(newGraphHandlers);
+    public CopyingLocalIteratorFactory(final GraphHandler[] newGraphHandlers, final Localizer newLocalizer,
+        final CollectionFactory newCollectionFactory) {
+        checkNotNull(newGraphHandlers, newLocalizer, newCollectionFactory);
         this.graphHandlers = newGraphHandlers;
+        this.localizer = newLocalizer;
+        this.collectionFactory = newCollectionFactory;
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
@@ -83,19 +92,19 @@ public final class LocalIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newGraphIterator() {
-        return new GraphIterator(graphHandlers[0]);
+        return copyTriples(new GraphIterator(graphHandlers[0]));
     }
 
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return new OneFixedIterator(fixedFirstNode, graphHandlers[index]);
+        return copyTriples(new OneFixedIterator(fixedFirstNode, graphHandlers[index]));
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, graphHandlers[index]);
+        return copyTriples(new TwoFixedIterator(fixedFirstNode, fixedSecondNode, graphHandlers[index]));
     }
 
     public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
-        return new ThreeFixedIterator(newNodes, graphHandlers[0]);
+        return copyTriples(new ThreeFixedIterator(newNodes, graphHandlers[0]));
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
@@ -104,5 +113,14 @@ public final class LocalIteratorFactory implements IteratorFactory {
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
         return new FixedResourcePredicateIterator(resource, graphHandlers[0], graphHandlers[1]);
+    }
+
+    private ClosableIterator<Triple> copyTriples(ClosableIterator<Triple> closableIterator) {
+        List<Triple> list = collectionFactory.createList(Triple.class);
+        while (closableIterator.hasNext()) {
+            list.add(closableIterator.next());
+        }
+        closableIterator.close();
+        return new TripleClosableIterator(list.iterator(), localizer, graphHandlers[0]);
     }
 }

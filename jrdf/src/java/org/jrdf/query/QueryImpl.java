@@ -106,7 +106,7 @@ public final class QueryImpl implements Query {
     }
 
     private Relation getResult(Graph graph, QueryEngine queryEngine) {
-        GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
+        GraphRelation entireGraph = graph.createRelation(graphRelationFactory);
         queryEngine.initialiseBaseRelation(entireGraph);
         expression.accept(queryEngine);
         return queryEngine.getResult();

@@ -89,7 +89,7 @@ public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
 
 
     public MoleculeGraphHandlerImpl(MoleculeGraph graph, ReadableIndex<Long> readableIndex,
-                                MoleculeComparator moleculeComparator) {
+        MoleculeComparator moleculeComparator) {
         this.graph = graph;
         this.readableIndex = readableIndex;
         this.moleculeComparator = moleculeComparator;

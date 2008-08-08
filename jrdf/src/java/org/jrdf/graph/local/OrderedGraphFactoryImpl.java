@@ -122,6 +122,6 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         this.iteratorFactory = new OrderedIteratorFactoryImpl(localizer, graphHandlers, collectionFactory);
-        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
+        this.readWriteGraph = new ReadWriteGraphImpl(graphHandlers, longIndexes, nodePool, iteratorFactory);
     }
 }

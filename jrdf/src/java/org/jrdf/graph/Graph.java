@@ -61,6 +61,8 @@ package org.jrdf.graph;
 
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
@@ -266,5 +268,9 @@ public interface Graph {
      */
     boolean isEmpty() throws GraphException;
 
+    // TODO Tuple Refactor
     Triple getTriple(Long... index);
+
+    // TODO Tuple Refactor
+    GraphRelation createRelation(GraphRelationFactory graphRelationFactory);
 }

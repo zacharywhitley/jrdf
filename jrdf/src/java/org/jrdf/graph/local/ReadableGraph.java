@@ -66,6 +66,8 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
 
 public interface ReadableGraph {
     boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);
@@ -77,4 +79,6 @@ public interface ReadableGraph {
     ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException;
 
     ClosableIterator<PredicateNode> findUniquePredicates();
+
+    GraphRelation createRelation(GraphRelationFactory factory);
 }

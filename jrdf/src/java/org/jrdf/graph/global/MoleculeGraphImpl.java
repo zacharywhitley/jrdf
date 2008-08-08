@@ -84,6 +84,8 @@ import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
+import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.LongIndexToMoleculeIterator;
 
@@ -279,6 +281,10 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public Triple getTriple(Long... index) {
         return graph.getTriple(index);
+    }
+
+    public GraphRelation createRelation(GraphRelationFactory graphRelationFactory) {
+        return graph.createRelation(graphRelationFactory);
     }
 
     public String toString() {

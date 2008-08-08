@@ -59,31 +59,46 @@
 
 package org.jrdf.graph.local;
 
-import static org.jrdf.graph.AnyObjectNode.*;
-import static org.jrdf.graph.AnyPredicateNode.*;
-import static org.jrdf.graph.AnySubjectNode.*;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.graph.local.iterator.LocalIteratorFactory;
+import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class ReadableGraphImpl implements ReadableGraph {
-    private Localizer localizer;
+    private GraphHandler[] graphHandlers;
     private LongIndex[] longIndexes;
+    private Localizer localizer;
     private IteratorFactory iteratorFactory;
 
-    public ReadableGraphImpl(LongIndex[] newLongIndexes, Localizer newLocalizer, IteratorFactory newIteratorFactory) {
-        checkNotNull(newLongIndexes, newLocalizer, newIteratorFactory);
+    // TODO Tuple Refactor
+    public ReadableGraphImpl(GraphHandler[] newGraphHandlers, LongIndex[] newLongIndexes, Localizer newLocalizer,
+            IteratorFactory newIteratorFactory) {
+        checkNotNull(newGraphHandlers, newLongIndexes, newLocalizer, newIteratorFactory);
+        this.graphHandlers = newGraphHandlers;
         this.longIndexes = newLongIndexes;
         this.localizer = newLocalizer;
         this.iteratorFactory = newIteratorFactory;
+    }
+
+    public GraphRelation createRelation(GraphRelationFactory factory) {
+        IteratorFactory localIteratorFactory = new LocalIteratorFactory(graphHandlers);
+        ReadableGraph readableGraph = new ReadableGraphImpl(graphHandlers, longIndexes, localizer,
+            localIteratorFactory);
+        return factory.createRelation(readableGraph);
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
