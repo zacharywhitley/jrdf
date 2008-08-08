@@ -146,8 +146,8 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
         NodePool nodePool = nodePoolFactory.createNewNodePool();
         Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
-        LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
-            new LongIndexAdapter(indexes[1]), new LongIndexAdapter(indexes[2])};
+        LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]), new LongIndexAdapter(indexes[1]),
+            new LongIndexAdapter(indexes[2])};
         collectionFactory = new BdbCollectionFactory(BDB_HANDLER, "collection" + graphNumber);
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
         openIndexes.addAll(asList(indexes));
