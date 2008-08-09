@@ -63,15 +63,13 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.GraphValueFactory;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.net.URI;
 
@@ -84,18 +82,19 @@ import java.net.URI;
  * @version $Revision$
  */
 public final class GraphElementFactoryImpl implements GraphElementFactory {
-    private final NodePool nodePool;
     private final ResourceFactory resourceFactory;
     private final Localizer localizer;
+    private final GraphValueFactory valueFactory;
 
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePool newNodePool, ReadWriteGraph newGraph) {
-        checkNotNull(newNodePool, newGraph);
-        this.nodePool = newNodePool;
-        this.resourceFactory = new ResourceFactoryImpl(newGraph, this);
-        this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
+    GraphElementFactoryImpl(ResourceFactory newResourceFactory, Localizer newLocalizer,
+        GraphValueFactory newValueFactory) {
+        checkNotNull(newResourceFactory, newLocalizer, newValueFactory);
+        this.resourceFactory = newResourceFactory;
+        this.localizer = newLocalizer;
+        this.valueFactory = newValueFactory;
     }
 
     public Resource createResource() throws GraphElementFactoryException {
@@ -126,6 +125,16 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return createResource(createURIReference(uri));
     }
 
+    public Resource createResource(Node node) throws GraphElementFactoryException {
+        if (BlankNode.class.isAssignableFrom(node.getClass())) {
+            return resourceFactory.createResource((BlankNode) node);
+        } else if (URIReference.class.isAssignableFrom(node.getClass())) {
+            return resourceFactory.createResource((URIReference) node);
+        } else {
+            throw new GraphElementFactoryException("Resource cannot be created from: " + node);
+        }
+    }
+
     public BlankNode createBlankNode() throws GraphElementFactoryException {
         try {
             return localizer.createLocalBlankNode();
@@ -135,65 +144,26 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     }
 
     public URIReference createURIReference(URI uri) throws GraphElementFactoryException {
-        return createURIReference(uri, true);
+        return valueFactory.createURIReference(uri);
     }
 
     public URIReference createURIReference(URI uri, boolean validate) throws GraphElementFactoryException {
-        if (null == uri) {
-            throw new GraphElementFactoryException("URI may not be null for a URIReference");
-        }
-        return getLocalURIReference(uri, validate);
+        return valueFactory.createURIReference(uri, validate);
     }
 
-    public Literal createLiteral(Object object) {
-        final LiteralImpl literal = new LiteralImpl(object);
-        return getLocalLiteral(literal.getEscapedForm());
+    public Literal createLiteral(Object object) throws GraphElementFactoryException {
+        return valueFactory.createLiteral(object);
     }
 
-    public Literal createLiteral(String lexicalValue) {
-        final LiteralImpl literal = new LiteralImpl(lexicalValue);
-        return getLocalLiteral(literal.getEscapedForm());
+    public Literal createLiteral(String lexicalValue) throws GraphElementFactoryException {
+        return valueFactory.createLiteral(lexicalValue);
     }
 
-    public Literal createLiteral(String lexicalValue, String languageType) {
-        final LiteralImpl literal = new LiteralImpl(lexicalValue, languageType);
-        return getLocalLiteral(literal.getEscapedForm());
+    public Literal createLiteral(String lexicalValue, String languageType) throws GraphElementFactoryException {
+        return valueFactory.createLiteral(lexicalValue, languageType);
     }
 
-    public Literal createLiteral(String lexicalValue, URI datatypeURI) {
-        final LiteralImpl literal = new LiteralImpl(lexicalValue, datatypeURI);
-        return getLocalLiteral(literal.getEscapedForm());
-    }
-
-    private URIReference getLocalURIReference(URI uri, boolean validate) {
-        Long nodeId = nodePool.getNodeIdByString(uri.toString());
-        URIReference newURIReference;
-        if (null != nodeId) {
-            newURIReference = (URIReference) nodePool.getNodeById(nodeId);
-        } else {
-            newURIReference = localizer.createLocalURIReference(uri, validate);
-        }
-        return newURIReference;
-    }
-
-    private Literal getLocalLiteral(String escapedForm) {
-        Long nodeId = nodePool.getNodeIdByString(escapedForm);
-        Literal newLiteral;
-        if (null != nodeId) {
-            newLiteral = (Literal) nodePool.getNodeById(nodeId);
-        } else {
-            newLiteral = localizer.createLocalLiteral(escapedForm);
-        }
-        return newLiteral;
-    }
-
-    public Resource createResource(Node node) throws GraphElementFactoryException {
-        if (BlankNode.class.isAssignableFrom(node.getClass())) {
-            return resourceFactory.createResource((BlankNode) node);
-        } else if (URIReference.class.isAssignableFrom(node.getClass())) {
-            return resourceFactory.createResource((URIReference) node);
-        } else {
-            throw new GraphElementFactoryException("Resource cannot be created from: " + node);
-        }
+    public Literal createLiteral(String lexicalValue, URI datatypeURI) throws GraphElementFactoryException {
+        return valueFactory.createLiteral(lexicalValue, datatypeURI);
     }
 }
