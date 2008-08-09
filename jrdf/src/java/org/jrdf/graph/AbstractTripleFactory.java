@@ -59,6 +59,7 @@
 
 package org.jrdf.graph;
 
+import org.jrdf.graph.local.ReadWriteGraph;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
@@ -78,14 +79,14 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     /**
      * The graph that this factory constructs nodes for.
      */
-    protected Graph graph;
+    protected ReadWriteGraph graph;
 
     /**
      * The graph element factory.
      */
     protected GraphElementFactory elementFactory;
 
-    protected AbstractTripleFactory(Graph newGraph, GraphElementFactory newElementFactory) {
+    protected AbstractTripleFactory(ReadWriteGraph newGraph, GraphElementFactory newElementFactory) {
         this.graph = newGraph;
         this.elementFactory = newElementFactory;
     }
@@ -124,9 +125,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         try {
             SubjectNode subjectNode = elementFactory.createURIReference(subject);
             PredicateNode predicateNode = elementFactory.createURIReference(predicate);
-            Triple triple = new TripleImpl(subjectNode, predicateNode, objectNode);
-            graph.add(triple);
-            return triple;
+            graph.localizeAndAdd(subjectNode, predicateNode, objectNode);
+            return new TripleImpl(subjectNode, predicateNode, objectNode);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
@@ -173,10 +173,10 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             }
 
             // insert the reification statements
-            graph.add(reificationNode, rdfType, rdfStatement);
-            graph.add(reificationNode, hasSubject, (ObjectNode) subjectNode);
-            graph.add(reificationNode, hasPredicate, (ObjectNode) predicateNode);
-            graph.add(reificationNode, hasObject, objectNode);
+            graph.localizeAndAdd(reificationNode, rdfType, rdfStatement);
+            graph.localizeAndAdd(reificationNode, hasSubject, (ObjectNode) subjectNode);
+            graph.localizeAndAdd(reificationNode, hasPredicate, (ObjectNode) predicateNode);
+            graph.localizeAndAdd(reificationNode, hasObject, objectNode);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
@@ -187,7 +187,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
     public void addAlternative(SubjectNode subjectNode, Alternative alternative) throws TripleFactoryException {
         try {
-            graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
+            graph.localizeAndAdd(subjectNode, elementFactory.createURIReference(RDF.TYPE),
                 elementFactory.createURIReference(RDF.ALT));
             addContainer(subjectNode, alternative);
         } catch (GraphException e) {
@@ -197,7 +197,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
     public void addBag(SubjectNode subjectNode, Bag bag) throws TripleFactoryException {
         try {
-            graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
+            graph.localizeAndAdd(subjectNode, elementFactory.createURIReference(RDF.TYPE),
                 elementFactory.createURIReference(RDF.BAG));
             addContainer(subjectNode, bag);
         } catch (GraphException e) {
@@ -207,7 +207,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
     public void addSequence(SubjectNode subjectNode, Sequence sequence) throws TripleFactoryException {
         try {
-            graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
+            graph.localizeAndAdd(subjectNode, elementFactory.createURIReference(RDF.TYPE),
                 elementFactory.createURIReference(RDF.SEQ));
             addContainer(subjectNode, sequence);
         } catch (GraphException e) {
@@ -221,8 +221,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             // Insert statements from colletion.
             long counter = 1L;
             for (ObjectNode object : container) {
-                graph.add(subjectNode, elementFactory.createURIReference(new URI(RDF.BASE_URI + "_" + counter++)),
-                    object);
+                final URI uri = new URI(RDF.BASE_URI + "_" + counter++);
+                final URIReference predicateNode = elementFactory.createURIReference(uri);
+                graph.localizeAndAdd(subjectNode, predicateNode, object);
             }
         } catch (URISyntaxException e) {
             throw new TripleFactoryException(e);
@@ -258,17 +259,17 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
             // Get the next object and create the new FIRST statement.
             ObjectNode object = iter.next();
-            graph.add(currentSubjectNode, rdfFirst, object);
+            graph.localizeAndAdd(currentSubjectNode, rdfFirst, object);
 
             // Check if there are any more elements in the Collection.
             if (iter.hasNext()) {
                 // Create a new blank node, link the existing subject to it using the REST predicate.
                 ObjectNode newSubject = elementFactory.createBlankNode();
-                graph.add(subject, rdfRest, newSubject);
+                graph.localizeAndAdd(subject, rdfRest, newSubject);
                 currentSubjectNode = (SubjectNode) newSubject;
             } else {
                 // If we are at the end of the list link the existing subject to NIL using the REST predicate.
-                graph.add(currentSubjectNode, rdfRest, rdfNil);
+                graph.localizeAndAdd(currentSubjectNode, rdfRest, rdfNil);
             }
         }
     }

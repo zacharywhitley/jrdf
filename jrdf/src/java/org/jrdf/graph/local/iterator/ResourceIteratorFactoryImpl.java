@@ -61,18 +61,18 @@ package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
-import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.local.ResourceFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 public class ResourceIteratorFactoryImpl implements ResourceIteratorFactory {
     private final LongIndex[] longIndexes;
-    private final GraphElementFactory factory;
+    private final ResourceFactory factory;
     private final NodePool nodePool;
 
-    public ResourceIteratorFactoryImpl(final LongIndex[] newLongIndexes, final GraphElementFactory newResourceFactory,
+    public ResourceIteratorFactoryImpl(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
         final NodePool newNodePool) {
         checkNotNull(newLongIndexes, newResourceFactory, newNodePool);
         longIndexes = newLongIndexes;
