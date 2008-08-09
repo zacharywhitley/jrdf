@@ -91,10 +91,10 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePool newNodePool, ResourceFactory newResourceFactory) {
-        checkNotNull(newNodePool, newResourceFactory);
+    GraphElementFactoryImpl(NodePool newNodePool, ReadWriteGraph newGraph) {
+        checkNotNull(newNodePool, newGraph);
         this.nodePool = newNodePool;
-        this.resourceFactory = newResourceFactory;
+        this.resourceFactory = new ResourceFactoryImpl(newGraph, this);
         this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
     }
 

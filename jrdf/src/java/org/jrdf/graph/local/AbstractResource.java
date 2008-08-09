@@ -59,9 +59,8 @@
 
 package org.jrdf.graph.local;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.Graph;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
@@ -73,23 +72,24 @@ import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.local.iterator.ObjectNodeIterator;
 import org.jrdf.graph.local.iterator.SubjectNodeIterator;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.net.URI;
 
 public abstract class AbstractResource implements Resource, LocalizedNode {
     private static final long serialVersionUID = 3641740111800858628L;
-    private Graph graph;
+    private ReadWriteGraph graph;
     private LocalizedNode node;
     private GraphElementFactory elementFactory;
 
     protected AbstractResource() {
     }
 
-    public AbstractResource(Graph newGraph, LocalizedNode newNode) {
-        checkNotNull(newGraph, newNode);
+    public AbstractResource(ReadWriteGraph newGraph, GraphElementFactory newGraphElementFactory,
+        LocalizedNode newNode) {
+        checkNotNull(newGraph, newGraphElementFactory, newNode);
         this.graph = newGraph;
-        this.elementFactory = graph.getElementFactory();
+        this.elementFactory = newGraphElementFactory;
         this.node = newNode;
     }
 
@@ -98,7 +98,7 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     }
 
     public void addValue(PredicateNode predicate, ObjectNode object) throws GraphException {
-        graph.add((SubjectNode) node, predicate, object);
+        graph.localizeAndAdd((SubjectNode) node, predicate, object);
     }
 
     public void addValue(URI predicate, URI object) throws GraphException {
@@ -161,7 +161,7 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     }
 
     public void removeValue(PredicateNode predicate, ObjectNode object) throws GraphException {
-        graph.remove((SubjectNode) node, predicate, object);
+        graph.localizeAndRemove((SubjectNode) node, predicate, object);
     }
 
     public void removeValue(URI predicate, URI object) throws GraphException {
@@ -190,7 +190,7 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
 
     public void removeValues(PredicateNode predicate) throws GraphException {
         ClosableIterator<Triple> iterator = graph.find((SubjectNode) node, predicate, ANY_OBJECT_NODE);
-        graph.remove(iterator);
+        graph.removeIterator(iterator);
     }
 
     public void removeValues(URI predicate) throws GraphException {
@@ -229,7 +229,7 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
 
     public void removeSubject(SubjectNode subject, PredicateNode predicate) throws GraphException {
         while (graph.contains(subject, predicate, this)) {
-            graph.remove(subject, predicate, this);
+            graph.localizeAndRemove(subject, predicate, this);
         }
     }
 

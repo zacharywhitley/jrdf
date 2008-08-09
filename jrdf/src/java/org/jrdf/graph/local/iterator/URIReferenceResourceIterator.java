@@ -59,10 +59,10 @@
 
 package org.jrdf.graph.local.iterator;
 
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.ResourceFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
@@ -70,7 +70,7 @@ import org.jrdf.util.ClosableIterator;
 public class URIReferenceResourceIterator extends ResourceIterator<URIReference> {
     private long currentValue;
 
-    public URIReferenceResourceIterator(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
+    public URIReferenceResourceIterator(final LongIndex[] newLongIndexes, final GraphElementFactory newResourceFactory,
         final NodePool newNodePool) {
         super(newLongIndexes, newResourceFactory, newNodePool);
     }

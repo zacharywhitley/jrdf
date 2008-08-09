@@ -150,10 +150,9 @@ public class GraphImpl implements Graph {
         this.indexes = longIndexes;
         this.nodePool = newNodePool;
         this.readWriteGraph = newWritableGraph;
-        ResourceFactory resourceFactory = new ResourceFactoryImpl(this);
-        this.elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
+        this.elementFactory = new GraphElementFactoryImpl(nodePool, readWriteGraph);
         this.tripleFactory = new TripleFactoryImpl(this, elementFactory);
-        this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(indexes, resourceFactory, nodePool);
+        this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(indexes, elementFactory, nodePool);
     }
 
     public boolean contains(Triple triple) throws GraphException {

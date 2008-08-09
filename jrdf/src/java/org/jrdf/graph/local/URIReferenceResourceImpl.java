@@ -59,14 +59,12 @@
 
 package org.jrdf.graph.local;
 
-import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
+import static org.jrdf.util.EqualsUtil.*;
 
 import java.net.URI;
 
@@ -77,8 +75,9 @@ public final class URIReferenceResourceImpl extends AbstractResource {
     private URIReferenceResourceImpl() {
     }
 
-    URIReferenceResourceImpl(Graph newGraph, URIReference newNode) {
-        super(newGraph, ((LocalizedNode) newNode));
+    URIReferenceResourceImpl(ReadWriteGraph newGraph, GraphElementFactory newGraphElementFactory,
+        URIReference newNode) {
+        super(newGraph, newGraphElementFactory, ((LocalizedNode) newNode));
         this.node = newNode;
     }
 
