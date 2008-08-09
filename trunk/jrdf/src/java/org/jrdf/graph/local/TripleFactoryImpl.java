@@ -60,7 +60,6 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.graph.AbstractTripleFactory;
-import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 
 /**
@@ -71,8 +70,7 @@ import org.jrdf.graph.GraphElementFactory;
  * @version $Revision$
  */
 class TripleFactoryImpl extends AbstractTripleFactory {
-
-    TripleFactoryImpl(Graph newGraph, GraphElementFactory newElementFactory) {
+    TripleFactoryImpl(ReadWriteGraph newGraph, GraphElementFactory newElementFactory) {
         super(newGraph, newElementFactory);
     }
 }
