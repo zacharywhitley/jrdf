@@ -59,12 +59,13 @@
 
 package org.jrdf.graph.local;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.GraphValueFactory;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -73,24 +74,27 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.Localizer;
+import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
+import static org.jrdf.query.relation.type.BlankNodeType.*;
 import org.jrdf.query.relation.type.NodeType;
-import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
-import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
-import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
+import static org.jrdf.query.relation.type.PredicateNodeType.*;
+import static org.jrdf.query.relation.type.ResourceNodeType.*;
+import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.rdfxml.MemRdfXmlWriter;
 
 import java.io.StringWriter;
-import static java.util.Arrays.asList;
+import static java.util.Arrays.*;
 import java.util.Iterator;
 
 /**
@@ -150,7 +154,10 @@ public class GraphImpl implements Graph {
         this.indexes = longIndexes;
         this.nodePool = newNodePool;
         this.readWriteGraph = newWritableGraph;
-        this.elementFactory = new GraphElementFactoryImpl(nodePool, readWriteGraph);
+        Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
+        GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);
+        ResourceFactory resourceFactory = new ResourceFactoryImpl(readWriteGraph, valueFactory);
+        this.elementFactory = new GraphElementFactoryImpl(resourceFactory, localizer, valueFactory);
         this.tripleFactory = new TripleFactoryImpl(this, elementFactory);
         this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(indexes, elementFactory, nodePool);
     }
