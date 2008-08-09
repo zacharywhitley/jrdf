@@ -60,14 +60,12 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.global.GlobalizedBlankNode;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
+import static org.jrdf.util.EqualsUtil.*;
 
 import java.net.URI;
 
@@ -78,9 +76,9 @@ public final class BlankNodeResourceImpl extends AbstractResource implements Glo
     private BlankNodeResourceImpl() {
     }
 
-    BlankNodeResourceImpl(Graph newGraph, GlobalizedBlankNode newNode) {
-        super(newGraph, newNode);
-        this.node = newNode;
+    BlankNodeResourceImpl(ReadWriteGraph newGraph, GraphElementFactory newGraphElementFactory, BlankNode newNode) {
+        super(newGraph, newGraphElementFactory, (GlobalizedBlankNode) newNode);
+        this.node = (GlobalizedBlankNode) newNode;
     }
 
     public boolean isURIReference() {

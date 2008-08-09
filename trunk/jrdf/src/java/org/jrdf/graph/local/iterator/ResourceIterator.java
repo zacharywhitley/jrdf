@@ -60,28 +60,29 @@
 package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.ResourceFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.util.NoSuchElementException;
 
 public abstract class ResourceIterator<E> implements ClosableIterator<E> {
     protected final LongIndex longIndex012;
-    protected final ResourceFactory resourceFactory;
+    protected final GraphElementFactory resourceFactory;
     protected ClosableIterator<Long[]> iterator012;    //spo iterator
     protected ClosableIterator<Long[]> iterator201;    //osp iterator
     protected Resource nextResource;
     protected boolean firstTime = true;
     protected NodePool nodePool;
 
-    public ResourceIterator(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
+    public ResourceIterator(final LongIndex[] newLongIndexes, final GraphElementFactory newResourceFactory,
         final NodePool newNodePool) {
         checkNotNull(newLongIndexes, newResourceFactory, newNodePool);
         resourceFactory = newResourceFactory;
@@ -164,14 +165,18 @@ public abstract class ResourceIterator<E> implements ClosableIterator<E> {
      * @return passed node as a resource.
      */
     private Resource toResource(final Node node) {
-        if (node instanceof BlankNode) {
-            return resourceFactory.createResource((BlankNode) node);
-        } else if (node instanceof URIReference) {
-            return resourceFactory.createResource((URIReference) node);
-        } else if (node instanceof Literal) {
-            throw new UnsupportedOperationException("Cannot convert Literals to Resources");
-        } else {
-            return null;
+        try {
+            if (node instanceof BlankNode) {
+                return resourceFactory.createResource((BlankNode) node);
+            } else if (node instanceof URIReference) {
+                return resourceFactory.createResource((URIReference) node);
+            } else if (node instanceof Literal) {
+                throw new UnsupportedOperationException("Cannot convert Literals to Resources");
+            } else {
+                return null;
+            }
+        } catch (GraphElementFactoryException e) {
+            throw new RuntimeException(e);
         }
     }
 

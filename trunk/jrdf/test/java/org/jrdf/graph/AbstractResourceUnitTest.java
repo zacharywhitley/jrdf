@@ -60,19 +60,19 @@
 package org.jrdf.graph;
 
 import junit.framework.TestCase;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import org.jrdf.graph.global.GlobalizedBlankNode;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import org.jrdf.graph.local.ReadWriteGraph;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.AssertThrows.assertThrows;
+import static org.jrdf.util.test.AssertThrows.*;
 
 import java.net.URI;
 import java.util.NoSuchElementException;
 
 public abstract class AbstractResourceUnitTest extends TestCase {
     private GraphElementFactory elementFactory;
-    private Graph readWriteGraph;
+    private ReadWriteGraph readWriteGraph;
     private PredicateNode predicate1;
     private PredicateNode predicate2;
     private PredicateNode predicate3;
@@ -85,13 +85,13 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     private Resource blankNode4;
     private Resource uriRef1;
 
-    public abstract Graph getGraph();
+    public abstract ReadWriteGraph getGraph();
 
     public abstract GraphElementFactory getElementFactory();
 
-    public abstract Resource createBlankNodeResource(Graph graph, GlobalizedBlankNode node);
+    public abstract Resource createBlankNodeResource(ReadWriteGraph graph, GraphElementFactory factory) throws Exception;
 
-    public abstract Resource createURIReferenceResource(Graph graph, URIReference node);
+    public abstract Resource createURIReferenceResource(ReadWriteGraph graph, GraphElementFactory factory, URI uri) throws Exception;
 
     public void setUp() throws Exception {
         elementFactory = getElementFactory();
@@ -106,11 +106,11 @@ public abstract class AbstractResourceUnitTest extends TestCase {
         object1 = elementFactory.createLiteral("SomeValue1");
         object2 = elementFactory.createLiteral("SomeValue2");
         object3 = elementFactory.createLiteral("SomeValue3");
-        blankNode1 = createBlankNodeResource(readWriteGraph, (GlobalizedBlankNode) elementFactory.createBlankNode());
-        blankNode2 = createBlankNodeResource(readWriteGraph, (GlobalizedBlankNode) elementFactory.createBlankNode());
-        blankNode3 = createBlankNodeResource(readWriteGraph, (GlobalizedBlankNode) elementFactory.createBlankNode());
-        blankNode4 = createBlankNodeResource(readWriteGraph, (GlobalizedBlankNode) elementFactory.createBlankNode());
-        uriRef1 = createURIReferenceResource(readWriteGraph, elementFactory.createURIReference(uri1));
+        blankNode1 = createBlankNodeResource(readWriteGraph, elementFactory);
+        blankNode2 = createBlankNodeResource(readWriteGraph, elementFactory);
+        blankNode3 = createBlankNodeResource(readWriteGraph, elementFactory);
+        blankNode4 = createBlankNodeResource(readWriteGraph, elementFactory);
+        uriRef1 = createURIReferenceResource(readWriteGraph, elementFactory, uri1);
     }
 
     public void testCreateResource() throws Exception {
@@ -139,8 +139,7 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     private void checkAddValue(Resource node, PredicateNode predicate, ObjectNode object) throws GraphException {
         node.addValue(predicate, object);
         assertTrue("Cannot find triple with the BlankNode", readWriteGraph.contains(node, predicate, object));
-        assertEquals("Size should be 1 but I got " + readWriteGraph.getNumberOfTriples(), 1,
-            readWriteGraph.getNumberOfTriples());
+        assertEquals("Size should be 1 but I got " + readWriteGraph.getSize(), 1, readWriteGraph.getSize());
     }
 
     public void testAddValue() throws Exception {
@@ -148,8 +147,7 @@ public abstract class AbstractResourceUnitTest extends TestCase {
         blankNode2.addValue(predicate1, object2);
         blankNode3.addValue(predicate2, object3);
         blankNode4.addValue(predicate3, object3);
-        assertTrue("Size should be 4 but I got " + readWriteGraph.getNumberOfTriples(),
-            readWriteGraph.getNumberOfTriples() == 4);
+        assertTrue("Size should be 4 but I got " + readWriteGraph.getSize(), readWriteGraph.getSize() == 4);
     }
 
     public void testAddValueWithResource() throws Exception {
@@ -172,8 +170,7 @@ public abstract class AbstractResourceUnitTest extends TestCase {
         node.addValue(predicate, objects[0]);
         node.addValue(predicate, objects[1]);
         node.setValue(predicate, objects[2]);
-        assertEquals("Size should be 1 but I got " + readWriteGraph.getNumberOfTriples(), 1,
-            readWriteGraph.getNumberOfTriples());
+        assertEquals("Size should be 1 but I got " + readWriteGraph.getSize(), 1, readWriteGraph.getSize());
         assertFalse(readWriteGraph.contains(node, predicate, objects[0]));
         assertFalse(readWriteGraph.contains(node, predicate, objects[1]));
         assertTrue(readWriteGraph.contains(node, predicate, objects[2]));
@@ -190,8 +187,8 @@ public abstract class AbstractResourceUnitTest extends TestCase {
         int expectedSize) throws GraphException {
         node.removeValue(predicate, object);
         assertFalse(readWriteGraph.contains(node, predicate, object));
-        assertEquals("Size should be " + expectedSize + " but I got " + readWriteGraph.getNumberOfTriples(),
-            expectedSize, readWriteGraph.getNumberOfTriples());
+        assertEquals("Size should be " + expectedSize + " but I got " + readWriteGraph.getSize(), expectedSize,
+            readWriteGraph.getSize());
     }
 
     public void testRemoveValues() throws Exception {
@@ -211,8 +208,8 @@ public abstract class AbstractResourceUnitTest extends TestCase {
 
     private void checkRemoveAllFromPredicate(int expectedValue, PredicateNode predicate) throws GraphException {
         blankNode1.removeValues(predicate);
-        assertEquals("Size should be " + expectedValue + "  but I got " + readWriteGraph.getNumberOfTriples(),
-            expectedValue, readWriteGraph.getNumberOfTriples());
+        assertEquals("Size should be " + expectedValue + "  but I got " + readWriteGraph.getSize(), expectedValue,
+            readWriteGraph.getSize());
     }
 
     public void testRemoveSubject() throws Exception {
@@ -243,8 +240,7 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     }
 
     public void testGetSubjects() throws Exception {
-        Resource object = createBlankNodeResource(readWriteGraph, (GlobalizedBlankNode) elementFactory.createBlankNode()
-        );
+        Resource object = createBlankNodeResource(readWriteGraph, elementFactory);
         blankNode1.addValue(predicate1, object);
         blankNode2.addValue(predicate1, object);
         blankNode3.addValue(predicate1, object);
@@ -268,8 +264,7 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     }
 
     public void testContainsTriple() throws GraphException {
-        Resource subject = this.createURIReferenceResource(readWriteGraph, uriRef1);
-
+        Resource subject = uriRef1;
         subject.addValue(predicate1, object1);
         assertTrue("Contains p1, o1", subject.containsTriple(predicate1, object1));
         assertFalse("Doesn't contain p1, o2", subject.containsTriple(predicate1, object2));

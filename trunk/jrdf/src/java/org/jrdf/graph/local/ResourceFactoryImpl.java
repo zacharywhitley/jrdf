@@ -60,29 +60,31 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GlobalizedBlankNode;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 public class ResourceFactoryImpl implements ResourceFactory {
-    private Graph graph;
+    private final ReadWriteGraph graph;
+    private final GraphElementFactory graphElementFactory;
 
-    public ResourceFactoryImpl(Graph newGraph) {
-        checkNotNull(newGraph);
+    public ResourceFactoryImpl(ReadWriteGraph newGraph, GraphElementFactory newGraphElementFactory) {
+        checkNotNull(newGraph, newGraphElementFactory);
         this.graph = newGraph;
+        this.graphElementFactory = newGraphElementFactory;
     }
 
     public Resource createResource(BlankNode node) {
         if (GlobalizedBlankNode.class.isAssignableFrom(node.getClass())) {
-            return new BlankNodeResourceImpl(graph, (GlobalizedBlankNode) node);
+            return new BlankNodeResourceImpl(graph, graphElementFactory, node);
         } else {
             throw new IllegalArgumentException("Unknown node type: " + node.getClass());
         }
     }
 
     public Resource createResource(URIReference node) {
-        return new URIReferenceResourceImpl(graph, node);
+        return new URIReferenceResourceImpl(graph, graphElementFactory, node);
     }
 }

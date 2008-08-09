@@ -61,18 +61,17 @@ package org.jrdf.graph.local;
 
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractResourceUnitTest;
-import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.GlobalizedBlankNode;
+
+import java.net.URI;
 
 public class ResourceUnitTest extends AbstractResourceUnitTest {
     private static final ReadWriteGraphFactory FACTORY = TestJRDFFactory.getFactory().getNewReadWriteGraphFactory();
 
     @Override
-    public Graph getGraph() {
-        return FACTORY.getGraph();
+    public ReadWriteGraph getGraph() {
+        return FACTORY.getReadWriteGraph();
     }
 
     @Override
@@ -81,12 +80,13 @@ public class ResourceUnitTest extends AbstractResourceUnitTest {
     }
 
     @Override
-    public Resource createBlankNodeResource(Graph graph, GlobalizedBlankNode node) {
-        return new BlankNodeResourceImpl(graph, node);
+    public Resource createBlankNodeResource(ReadWriteGraph graph, GraphElementFactory factory) throws Exception {
+        return new BlankNodeResourceImpl(graph, factory, factory.createBlankNode());
     }
 
     @Override
-    public Resource createURIReferenceResource(Graph graph, URIReference node) {
-        return new URIReferenceResourceImpl(graph, node);
+    public Resource createURIReferenceResource(ReadWriteGraph graph, GraphElementFactory factory, URI uri)
+        throws Exception {
+        return new URIReferenceResourceImpl(graph, factory, factory.createURIReference(uri));
     }
 }
