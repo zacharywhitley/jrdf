@@ -89,7 +89,7 @@ public final class TupleFactoryImpl implements TupleFactory {
         return new TupleImpl(map);
     }
 
-    public Tuple getTuple(Map<Attribute, ValueOperation> avps) {
-        return new TupleImpl(avps);
+    public Tuple getTuple(Map<Attribute, ValueOperation> avo) {
+        return new TupleImpl(avo);
     }
 }
