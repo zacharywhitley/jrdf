@@ -64,12 +64,9 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -92,7 +89,6 @@ import static org.jrdf.util.test.NodeTestUtil.*;
 import org.jrdf.vocabulary.RDF;
 
 import java.util.ArrayList;
-import static java.util.Arrays.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -199,18 +195,6 @@ public class RelationIntegrationTestUtil {
             allAvos.putAll(avo);
         }
         tuples.add(tupleFactory.getTuple(allAvos));
-        return tuples;
-    }
-
-    public static Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
-        AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
-        Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(avpComparator);
-        values.addAll(asList(attributeValuePairs));
-        TupleFactory tf = new TupleFactoryImpl();
-        Tuple t = tf.getTuple(values);
-        TupleComparator tupleComparator = FACTORY.getNewTupleComparator();
-        Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
-        tuples.add(t);
         return tuples;
     }
 

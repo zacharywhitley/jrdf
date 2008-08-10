@@ -60,14 +60,11 @@
 package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.ValueOperation;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Creates purely in memory implementations of tuples.
@@ -79,14 +76,6 @@ public final class TupleFactoryImpl implements TupleFactory {
     private static final long serialVersionUID = 6162523916425888190L;
 
     public TupleFactoryImpl() {
-    }
-
-    public Tuple getTuple(Set<AttributeValuePair> avps) {
-        Map<Attribute, ValueOperation> map = new HashMap<Attribute, ValueOperation>();
-        for (AttributeValuePair avp : avps) {
-            map.put(avp.getAttribute(), new ValueOperationImpl(avp.getValue(), avp.getOperation()));
-        }
-        return new TupleImpl(map);
     }
 
     public Tuple getTuple(Map<Attribute, ValueOperation> avo) {
