@@ -60,6 +60,7 @@
 package org.jrdf.query.relation.operation.mem;
 
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
@@ -70,14 +71,17 @@ import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import static org.jrdf.query.relation.mem.EqAVPOperation.*;
 import org.jrdf.query.relation.mem.NeqAVPOperation;
 import org.jrdf.query.relation.mem.RelationFactoryImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
+import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
@@ -88,10 +92,12 @@ import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.vocabulary.RDF;
 
 import java.util.ArrayList;
-import static java.util.Arrays.asList;
+import static java.util.Arrays.*;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -130,6 +136,7 @@ public class RelationIntegrationTestUtil {
     public static final URIReference RESOURCE_5 = NodeTestUtil.createResource(RDF.SUBJECT);
     public static final URIReference RESOURCE_6 = NodeTestUtil.createResource(RDF.PREDICATE);
 
+    public static final Map<Attribute, ValueOperation> AVO_POS_FOO1_SUBJECT_R1 = createAvo(POS_FOO1_SUBJECT, RESOURCE_1);
     public static final AttributeValuePair POS_FOO1_SUBJECT_R1 =
         new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_1);
     public static final AttributeValuePair POS_FOO1_SUBJECT_R3 =
@@ -201,6 +208,14 @@ public class RelationIntegrationTestUtil {
     public static final AttributeValuePair VAR_BAR1_SUBJECTOBJECT_R4 =
         new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_4);
 
+    private static Map<Attribute, ValueOperation> createAvo(final Attribute attribute, final Node node) {
+        return new HashMap<Attribute, ValueOperation>() { 
+            {
+                put(attribute, new ValueOperationImpl(node, EQUALS));
+            }
+        };
+    }
+
     public static Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
         AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
         Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(avpComparator);
@@ -253,6 +268,4 @@ public class RelationIntegrationTestUtil {
         }
         return tuples;
     }
-
-
 }

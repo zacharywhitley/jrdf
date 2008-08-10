@@ -60,7 +60,6 @@
 package org.jrdf.urql.analysis;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
@@ -71,7 +70,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -91,28 +89,9 @@ public class AttributeCollectorImpl implements VariableCollector {
     private transient Map<AttributeName, PositionalNodeType> variables
         = new HashMap<AttributeName, PositionalNodeType>();
 
-    public void addConstraints(List<AttributeValuePair> avps) {
-        for (AttributeValuePair avp : avps) {
-            Attribute attribute = avp.getAttribute();
+    public void addConstraints(final Map<Attribute, ValueOperation> avps) {
+        for (final Attribute attribute : avps.keySet()) {
             checkAndAddEntry(attribute);
-        }
-    }
-
-    public void addConstraints(Map<Attribute, ValueOperation> avps) {
-        for (Attribute attribute : avps.keySet()) {
-            checkAndAddEntry(attribute);
-        }
-    }
-
-    private void checkAndAddEntry(Attribute attribute) {
-        if (attribute.getAttributeName() instanceof VariableName) {
-            if (variables.containsKey(attribute.getAttributeName())) {
-                updateEntry(attribute);
-            } else {
-                addNewEntry(attribute);
-            }
-        } else {
-            addNewEntry(attribute);
         }
     }
 
@@ -125,10 +104,22 @@ public class AttributeCollectorImpl implements VariableCollector {
         return variables.toString();
     }
 
-    private void updateEntry(Attribute newAttribute) {
-        AttributeName key = newAttribute.getAttributeName();
-        PositionalNodeType currentEntry = variables.get(key);
-        NodeType type = newAttribute.getType();
+    private void checkAndAddEntry(final Attribute attribute) {
+        if (attribute.getAttributeName() instanceof VariableName) {
+            if (variables.containsKey(attribute.getAttributeName())) {
+                updateEntry(attribute);
+            } else {
+                addNewEntry(attribute);
+            }
+        } else {
+            addNewEntry(attribute);
+        }
+    }
+
+    private void updateEntry(final Attribute newAttribute) {
+        final AttributeName key = newAttribute.getAttributeName();
+        final PositionalNodeType currentEntry = variables.get(key);
+        final NodeType type = newAttribute.getType();
         if (type instanceof PositionalNodeType) {
             if (!currentEntry.getClass().equals(type.getClass())) {
                 variables.put(key, currentEntry.upgrade((PositionalNodeType) type));
@@ -136,8 +127,8 @@ public class AttributeCollectorImpl implements VariableCollector {
         }
     }
 
-    private void addNewEntry(Attribute attribute) {
-        NodeType nodeType = attribute.getType();
+    private void addNewEntry(final Attribute attribute) {
+        final NodeType nodeType = attribute.getType();
         if (nodeType instanceof PositionalNodeType) {
             variables.put(attribute.getAttributeName(), (PositionalNodeType) nodeType);
         }

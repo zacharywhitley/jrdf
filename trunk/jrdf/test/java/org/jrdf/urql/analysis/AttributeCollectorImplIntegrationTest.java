@@ -59,28 +59,28 @@
 
 package org.jrdf.urql.analysis;
 
-import com.gargoylesoftware.base.testing.TestUtil;
+import static com.gargoylesoftware.base.testing.TestUtil.*;
 import junit.framework.TestCase;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
-import java.util.Arrays;
 import java.util.Map;
 
 public class AttributeCollectorImplIntegrationTest extends TestCase {
-    private static final AttributeValuePair VALUE_1 = RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
-    private static final AttributeValuePair[] VALUES = new AttributeValuePair[]{VALUE_1};
+    private static final Map<Attribute, ValueOperation> VALUE_1 = RelationIntegrationTestUtil.AVO_POS_FOO1_SUBJECT_R1;
 
     public void testSerialization() throws Exception {
         VariableCollector collector = new AttributeCollectorImpl();
-        collector.addConstraints(Arrays.asList(VALUES));
-        VariableCollector collector2 = (VariableCollector) TestUtil.copyBySerialization(collector);
-        Map<AttributeName, PositionalNodeType> attributes = collector2.getAttributes();
+        collector.addConstraints(VALUE_1);
+        VariableCollector copyiedCollector = (VariableCollector) copyBySerialization(collector);
+        Map<AttributeName, PositionalNodeType> attributes = copyiedCollector.getAttributes();
         assertEquals(1, attributes.size());
-        AttributeName attributeName = VALUE_1.getAttribute().getAttributeName();
+        final Attribute firstAttribute = VALUE_1.keySet().iterator().next();
+        AttributeName attributeName = firstAttribute.getAttributeName();
         assertTrue(attributes.keySet().contains(attributeName));
-        assertEquals(VALUE_1.getAttribute().getType(), attributes.get(attributeName));
+        assertEquals(firstAttribute.getType(), attributes.get(attributeName));
     }
 }
