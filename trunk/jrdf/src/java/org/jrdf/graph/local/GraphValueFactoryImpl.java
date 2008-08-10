@@ -76,7 +76,7 @@ public final class GraphValueFactoryImpl implements GraphValueFactory {
     /**
      * Package scope constructor.
      */
-    GraphValueFactoryImpl(NodePool newNodePool, Localizer newLocalizer) {
+    public GraphValueFactoryImpl(NodePool newNodePool, Localizer newLocalizer) {
         checkNotNull(newNodePool, newLocalizer);
         this.nodePool = newNodePool;
         this.localizer = newLocalizer;

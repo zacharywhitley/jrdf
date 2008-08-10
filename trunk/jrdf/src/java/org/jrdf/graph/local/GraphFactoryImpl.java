@@ -59,6 +59,9 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphValueFactory;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
@@ -71,6 +74,8 @@ import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.CopyingLocalIteratorFactory;
+import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
+import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
 import org.jrdf.collection.CollectionFactory;
 
 /**
@@ -85,6 +90,9 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
+    private GraphElementFactory elementFactory;
+    private TripleFactory tripleFactory;
+    private ResourceIteratorFactory resourceIteratorFactory;
 
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
         CollectionFactory newCollectionFactory) {
@@ -95,11 +103,16 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
         this.iteratorFactory = new CopyingLocalIteratorFactory(graphHandlers, localizer, newCollectionFactory);
-        this.readWriteGraph = new ReadWriteGraphImpl(graphHandlers, longIndexes, nodePool, iteratorFactory);
+        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
+        GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);
+        ResourceFactory resourceFactory = new ResourceFactoryImpl(readWriteGraph, valueFactory);
+        this.elementFactory = new GraphElementFactoryImpl(resourceFactory, localizer, valueFactory);
+        this.tripleFactory = new TripleFactoryImpl(readWriteGraph, elementFactory);
+        this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(longIndexes, resourceFactory, nodePool);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, readWriteGraph);
+        return new GraphImpl(nodePool, readWriteGraph, elementFactory, tripleFactory, resourceIteratorFactory);
     }
 
     public ReadWriteGraph getReadWriteGraph() {

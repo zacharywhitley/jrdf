@@ -105,4 +105,8 @@ public final class LocalIteratorFactory implements IteratorFactory {
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
         return new FixedResourcePredicateIterator(resource, graphHandlers[0], graphHandlers[1]);
     }
+
+    public IteratorFactory getUnsortedIteratorFactory() {
+        return this;
+    }
 }

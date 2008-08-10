@@ -65,7 +65,6 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
@@ -75,7 +74,7 @@ import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.util.Iterator;
 
@@ -84,11 +83,10 @@ public class ReadWriteGraphImpl implements ReadWriteGraph {
     private final WritableGraph writableGraph;
 
     // TODO Take in Readable and Writable graphs instead??
-    public ReadWriteGraphImpl(GraphHandler[] newGraphHandlers, LongIndex[] newIndexes, NodePool newNodePool,
-        IteratorFactory newIteratorFactory) {
-        checkNotNull(newGraphHandlers, newIndexes, newNodePool, newIteratorFactory);
+    public ReadWriteGraphImpl(LongIndex[] newIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
+        checkNotNull(newIndexes, newNodePool, newIteratorFactory);
         Localizer localizer = new LocalizerImpl(newNodePool, new StringNodeMapperFactoryImpl().createMapper());
-        this.readableGraph = new ReadableGraphImpl(newGraphHandlers, newIndexes, localizer, newIteratorFactory);
+        this.readableGraph = new ReadableGraphImpl(newIndexes, localizer, newIteratorFactory);
         this.writableGraph = new WritableGraphImpl(newIndexes, newNodePool, localizer);
     }
 

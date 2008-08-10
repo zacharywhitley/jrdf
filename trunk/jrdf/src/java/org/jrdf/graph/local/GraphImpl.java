@@ -65,7 +65,6 @@ import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.GraphValueFactory;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -73,13 +72,8 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
-import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.query.relation.type.BlankNodeType.*;
@@ -113,15 +107,6 @@ public class GraphImpl implements Graph {
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
 
-    // indexes are mapped as:
-    // s -> {p -> {collection of o}}
-    // This is defined in the private add() method
-
-    /**
-     * Collection of all indexes.
-     */
-    private LongIndex[] indexes;
-
     /**
      * Graph Element Factory.
      */
@@ -150,16 +135,13 @@ public class GraphImpl implements Graph {
     /**
      * Default constructor.
      */
-    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, ReadWriteGraph newWritableGraph) {
-        this.indexes = longIndexes;
+    public GraphImpl(NodePool newNodePool, ReadWriteGraph newWritableGraph, GraphElementFactory newElementFactory,
+        TripleFactory newTripleFactory, ResourceIteratorFactory newResourceIteratorFactory) {
         this.nodePool = newNodePool;
         this.readWriteGraph = newWritableGraph;
-        Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
-        GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);
-        ResourceFactory resourceFactory = new ResourceFactoryImpl(readWriteGraph, valueFactory);
-        this.elementFactory = new GraphElementFactoryImpl(resourceFactory, localizer, valueFactory);
-        this.tripleFactory = new TripleFactoryImpl(readWriteGraph, elementFactory);
-        this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(indexes, resourceFactory, nodePool);
+        this.elementFactory = newElementFactory;
+        this.tripleFactory = newTripleFactory;
+        this.resourceIteratorFactory = newResourceIteratorFactory;
     }
 
     public boolean contains(Triple triple) throws GraphException {

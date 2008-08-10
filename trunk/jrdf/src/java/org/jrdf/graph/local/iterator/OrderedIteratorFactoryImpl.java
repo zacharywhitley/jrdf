@@ -112,6 +112,10 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
         return sortPredicates(new FixedResourcePredicateIterator(resource, graphHandlers[0], graphHandlers[1]));
     }
 
+    public IteratorFactory getUnsortedIteratorFactory() {
+        return new LocalIteratorFactory(graphHandlers);
+    }
+
     private ClosableIterator<Triple> sortTriples(ClosableIterator<Triple> closableIterator) {
         SortedSet<Triple> orderedSet = collectionFactory.createSet(Triple.class);
         while (closableIterator.hasNext()) {

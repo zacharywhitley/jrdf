@@ -60,10 +60,18 @@ package org.jrdf.graph.local.disk;
 
 import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphValueFactory;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.local.GraphElementFactoryImpl;
 import org.jrdf.graph.local.GraphImpl;
+import org.jrdf.graph.local.GraphValueFactoryImpl;
 import org.jrdf.graph.local.ReadWriteGraph;
 import org.jrdf.graph.local.ReadWriteGraphFactory;
 import org.jrdf.graph.local.ReadWriteGraphImpl;
+import org.jrdf.graph.local.ResourceFactory;
+import org.jrdf.graph.local.ResourceFactoryImpl;
+import org.jrdf.graph.local.TripleFactoryImpl;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
@@ -76,6 +84,8 @@ import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.OrderedIteratorFactoryImpl;
+import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
+import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
@@ -93,6 +103,9 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
     private Localizer localizer;
+    private GraphElementFactory elementFactory;
+    private TripleFactory tripleFactory;
+    private ResourceIteratorFactory resourceIteratorFactory;
 
     public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, BTree[] trees,
         long graphNumber) {
@@ -105,11 +118,16 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         this.iteratorFactory = new OrderedIteratorFactoryImpl(localizer, graphHandlers,
             new BdbCollectionFactory(new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()),
                 "tmpResults" + graphNumber));
-        this.readWriteGraph = new ReadWriteGraphImpl(graphHandlers, longIndexes, nodePool, iteratorFactory);
+        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
+        GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);
+        ResourceFactory resourceFactory = new ResourceFactoryImpl(readWriteGraph, valueFactory);
+        this.elementFactory = new GraphElementFactoryImpl(resourceFactory, localizer, valueFactory);
+        this.tripleFactory = new TripleFactoryImpl(readWriteGraph, elementFactory);
+        this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(longIndexes, resourceFactory, nodePool);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, readWriteGraph);
+        return new GraphImpl(nodePool, readWriteGraph, elementFactory, tripleFactory, resourceIteratorFactory);
     }
 
     public ReadWriteGraph getReadWriteGraph() {

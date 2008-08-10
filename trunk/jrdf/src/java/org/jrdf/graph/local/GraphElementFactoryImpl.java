@@ -89,7 +89,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(ResourceFactory newResourceFactory, Localizer newLocalizer,
+    public GraphElementFactoryImpl(ResourceFactory newResourceFactory, Localizer newLocalizer,
         GraphValueFactory newValueFactory) {
         checkNotNull(newResourceFactory, newLocalizer, newValueFactory);
         this.resourceFactory = newResourceFactory;
