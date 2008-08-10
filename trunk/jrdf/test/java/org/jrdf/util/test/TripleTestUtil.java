@@ -118,8 +118,6 @@ public class TripleTestUtil {
     public static final Triple SPO_VARIABLES = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
-    public static final List<AttributeValuePair> AVP_BOOK_1_DC_SUBJECT_LITERAL =
-        createAvp(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
     public static final LinkedHashMap<Attribute, ValueOperation> AVO_BOOK_1_DC_SUBJECT_LITERAL =
         createAvo(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
 

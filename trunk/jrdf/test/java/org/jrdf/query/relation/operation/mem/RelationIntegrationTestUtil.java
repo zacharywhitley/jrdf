@@ -75,8 +75,8 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import static org.jrdf.query.relation.mem.EqAVPOperation.*;
 import org.jrdf.query.relation.mem.NeqAVPOperation;
 import org.jrdf.query.relation.mem.RelationFactoryImpl;
@@ -88,7 +88,7 @@ import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.query.relation.type.SubjectObjectNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
-import org.jrdf.util.test.NodeTestUtil;
+import static org.jrdf.util.test.NodeTestUtil.*;
 import org.jrdf.vocabulary.RDF;
 
 import java.util.ArrayList;
@@ -114,6 +114,7 @@ public class RelationIntegrationTestUtil {
     public static final AttributeName VAR_BAR1 = new VariableName("bar1");
     public static final AttributeName VAR_BAR2 = new VariableName("bar2");
     public static final AttributeName POS_BAR3 = new PositionName("bar3");
+
     public static final Attribute POS_FOO1_SUBJECT = new AttributeImpl(POS_FOO1, new SubjectNodeType());
     public static final Attribute POS_FOO2_PREDICATE = new AttributeImpl(POS_FOO2, new PredicateNodeType());
     public static final Attribute POS_FOO3_OBJECT = new AttributeImpl(POS_FOO3, new ObjectNodeType());
@@ -122,98 +123,83 @@ public class RelationIntegrationTestUtil {
     public static final Attribute VAR_BAR1_SUBJECT = new AttributeImpl(VAR_BAR1, new SubjectNodeType());
     public static final Attribute VAR_BAR1_PREDICATE = new AttributeImpl(VAR_BAR1, new PredicateNodeType());
     public static final Attribute VAR_BAR1_OBJECT = new AttributeImpl(VAR_BAR1, new ObjectNodeType());
-    public static final Attribute VAR_BAR1_SUBJECTPREDICATE = new AttributeImpl(VAR_BAR1,
-        new SubjectPredicateNodeType());
+    public static final Attribute VAR_BAR1_SUBJECTPREDICATE = new AttributeImpl(VAR_BAR1, new SubjectPredicateNodeType());
     public static final Attribute VAR_BAR1_SUBJECTOBJECT = new AttributeImpl(VAR_BAR1, new SubjectObjectNodeType());
-    public static final Attribute VAR_BAR1_SUBJECTPREDICATEOBJECT = new AttributeImpl(VAR_BAR1,
-        new SubjectPredicateObjectNodeType());
+    public static final Attribute VAR_BAR1_SUBJECTPREDICATEOBJECT = new AttributeImpl(VAR_BAR1, new SubjectPredicateObjectNodeType());
     public static final Attribute VAR_BAR2_PREDICATE = new AttributeImpl(VAR_BAR2, new PredicateNodeType());
     public static final Attribute POS_BAR3_OBJECT = new AttributeImpl(POS_BAR3, new ObjectNodeType());
-    public static final URIReference RESOURCE_1 = NodeTestUtil.createResource(RDF.ALT);
-    public static final URIReference RESOURCE_2 = NodeTestUtil.createResource(RDF.BAG);
-    public static final URIReference RESOURCE_3 = NodeTestUtil.createResource(RDF.FIRST);
-    public static final URIReference RESOURCE_4 = NodeTestUtil.createResource(RDF.LI);
-    public static final URIReference RESOURCE_5 = NodeTestUtil.createResource(RDF.SUBJECT);
-    public static final URIReference RESOURCE_6 = NodeTestUtil.createResource(RDF.PREDICATE);
 
-    public static final Map<Attribute, ValueOperation> AVO_POS_FOO1_SUBJECT_R1 = createAvo(POS_FOO1_SUBJECT, RESOURCE_1);
-    public static final AttributeValuePair POS_FOO1_SUBJECT_R1 =
-        new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_1);
-    public static final AttributeValuePair POS_FOO1_SUBJECT_R3 =
-        new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_3);
-    public static final AttributeValuePair POS_FOO1_SUBJECT_R4 =
-        new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_4);
+    public static final URIReference RESOURCE_1 = createResource(RDF.ALT);
+    public static final URIReference RESOURCE_2 = createResource(RDF.BAG);
+    public static final URIReference RESOURCE_3 = createResource(RDF.FIRST);
+    public static final URIReference RESOURCE_4 = createResource(RDF.LI);
+    public static final URIReference RESOURCE_5 = createResource(RDF.SUBJECT);
+    public static final URIReference RESOURCE_6 = createResource(RDF.PREDICATE);
 
-    public static final AttributeValuePair POS_FOO2_PREDICATE_R2 =
-        new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_2);
-    public static final AttributeValuePair POS_FOO2_PREDICATE_R4 =
-        new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_4);
-    public static final AttributeValuePair POS_FOO2_PREDICATE_R6 =
-        new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_6);
-    public static final AttributeValuePair POS_FOO4_PREDICATE_R2 =
-        new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_2);
-    public static final AttributeValuePair POS_FOO4_PREDICATE_R3 =
-        new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_3);
-    public static final AttributeValuePair POS_FOO4_PREDICATE_R5 =
-        new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_5);
-    public static final AttributeValuePair POS_FOO5_OBJECT_R6 =
-        new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_6);
+    public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_R1 = createAvo(POS_FOO1_SUBJECT, RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_R3 = createAvo(POS_FOO1_SUBJECT, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_R4 = createAvo(POS_FOO1_SUBJECT, RESOURCE_4);
 
-    public static final AttributeValuePair POS_FOO3_OBJECT_R3 =
-        new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_3);
-    public static final AttributeValuePair POS_FOO3_OBJECT_R4 =
-        new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_4);
-    public static final AttributeValuePair POS_FOO3_OBJECT_R5 =
-        new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_5);
-    public static final AttributeValuePair POS_FOO3_OBJECT_R6 =
-        new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_6);
-    public static final AttributeValuePair POS_FOO5_OBJECT_R4 =
-        new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R2 = createAvo(POS_FOO2_PREDICATE, RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R4 = createAvo(POS_FOO2_PREDICATE, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R6 = createAvo(POS_FOO2_PREDICATE, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> POS_FOO4_PREDICATE_R2 = createAvo(POS_FOO4_PREDICATE, RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> POS_FOO4_PREDICATE_R3 = createAvo(POS_FOO4_PREDICATE, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> POS_FOO4_PREDICATE_R5 = createAvo(POS_FOO4_PREDICATE, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> POS_FOO5_OBJECT_R6 = createAvo(POS_FOO5_OBJECT, RESOURCE_6);
 
-    public static final AttributeValuePair VAR_BAR1_SUBJECT_R3 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
-    public static final AttributeValuePair VAR_BAR1_SUBJECT_NOT_R3 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3, NeqAVPOperation.NEQUALS);
-    public static final AttributeValuePair VAR_BAR1_SUBJECT_R4 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_4);
-    public static final AttributeValuePair VAR_BAR1_SUBJECT_R5 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_5);
-    public static final AttributeValuePair VAR_BAR1_PREDICATE_R1 =
-        new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_1);
-    public static final AttributeValuePair VAR_BAR1_PREDICATE_R2 =
-        new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_2);
-    public static final AttributeValuePair VAR_BAR1_PREDICATE_R3 =
-        new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_3);
-    public static final AttributeValuePair VAR_BAR1_PREDICATE_R4 =
-        new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_4);
-    public static final AttributeValuePair VAR_BAR2_PREDICATE_R4 =
-        new AttributeValuePairImpl(VAR_BAR2_PREDICATE, RESOURCE_4);
-    public static final AttributeValuePair VAR_BAR1_OBJECT_R3 =
-        new AttributeValuePairImpl(VAR_BAR1_OBJECT, RESOURCE_3);
-    public static final AttributeValuePair VAR_BAR1_OBJECT_R4 =
-        new AttributeValuePairImpl(VAR_BAR1_OBJECT, RESOURCE_4);
-    public static final AttributeValuePair POS_BAR3_OBJECT_R1 =
-        new AttributeValuePairImpl(POS_BAR3_OBJECT, RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> POS_FOO3_OBJECT_R3 = createAvo(POS_FOO3_OBJECT, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> POS_FOO3_OBJECT_R4 = createAvo(POS_FOO3_OBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> POS_FOO3_OBJECT_R5 = createAvo(POS_FOO3_OBJECT, RESOURCE_5);
+    public static final Map<Attribute, ValueOperation> POS_FOO3_OBJECT_R6 = createAvo(POS_FOO3_OBJECT, RESOURCE_6);
+    public static final Map<Attribute, ValueOperation> POS_FOO5_OBJECT_R4 = createAvo(POS_FOO5_OBJECT, RESOURCE_4);
 
-    public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATE_R3 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_3);
-    public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATE_R4 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_4);
-    public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATEOBJECT_R3 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_3);
-    public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATEOBJECT_R4 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_4);
-    public static final AttributeValuePair VAR_BAR1_SUBJECTOBJECT_R3 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_3);
-    public static final AttributeValuePair VAR_BAR1_SUBJECTOBJECT_R4 =
-        new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R3 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_NOT_R3 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_3, NeqAVPOperation.NEQUALS);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R4 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R5 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_5);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R1 = createAvo(VAR_BAR1_PREDICATE, RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R2 = createAvo(VAR_BAR1_PREDICATE, RESOURCE_2);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R3 = createAvo(VAR_BAR1_PREDICATE, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R4 = createAvo(VAR_BAR1_PREDICATE, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR2_PREDICATE_R4 = createAvo(VAR_BAR2_PREDICATE, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_OBJECT_R3 = createAvo(VAR_BAR1_OBJECT, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_OBJECT_R4 = createAvo(VAR_BAR1_OBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> POS_BAR3_OBJECT_R1 = createAvo(POS_BAR3_OBJECT, RESOURCE_1);
+
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATE_R3 = createAvo(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATE_R4 = createAvo(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATEOBJECT_R3 = createAvo(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATEOBJECT_R4 = createAvo(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTOBJECT_R3 = createAvo(VAR_BAR1_SUBJECTOBJECT, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTOBJECT_R4 = createAvo(VAR_BAR1_SUBJECTOBJECT, RESOURCE_4);
 
     private static Map<Attribute, ValueOperation> createAvo(final Attribute attribute, final Node node) {
-        return new HashMap<Attribute, ValueOperation>() { 
+        return new HashMap<Attribute, ValueOperation>() {
             {
                 put(attribute, new ValueOperationImpl(node, EQUALS));
             }
         };
+    }
+
+    private static Map<Attribute, ValueOperation> createAvo(final Attribute attribute, final Node node,
+        final AVPOperation operation) {
+        return new HashMap<Attribute, ValueOperation>() {
+            {
+                put(attribute, new ValueOperationImpl(node, operation));
+            }
+        };
+    }
+
+    public static Set<Tuple> createASingleTuple(Map<Attribute, ValueOperation>... avos) {
+        final Set<Tuple> tuples = new TreeSet<Tuple>(FACTORY.getNewTupleComparator());
+        final TupleFactory tupleFactory = new TupleFactoryImpl();
+        final Map<Attribute, ValueOperation> allAvos = new HashMap<Attribute, ValueOperation>();
+        for (Map<Attribute, ValueOperation> avo : avos) {
+            allAvos.putAll(avo);
+        }
+        tuples.add(tupleFactory.getTuple(allAvos));
+        return tuples;
     }
 
     public static Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
