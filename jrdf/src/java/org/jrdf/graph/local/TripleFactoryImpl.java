@@ -69,8 +69,8 @@ import org.jrdf.graph.GraphElementFactory;
  * @author Andrew Newman
  * @version $Revision$
  */
-class TripleFactoryImpl extends AbstractTripleFactory {
-    TripleFactoryImpl(ReadWriteGraph newGraph, GraphElementFactory newElementFactory) {
+public class TripleFactoryImpl extends AbstractTripleFactory {
+    public TripleFactoryImpl(ReadWriteGraph newGraph, GraphElementFactory newElementFactory) {
         super(newGraph, newElementFactory);
     }
 }

@@ -125,4 +125,6 @@ public interface IteratorFactory {
      * @return a new PredicateIterator - all unique predicate for a given resource (subject and object).
      */
     ClosableIterator<PredicateNode> newPredicateIterator(Long resource);
+
+    IteratorFactory getUnsortedIteratorFactory();
 }

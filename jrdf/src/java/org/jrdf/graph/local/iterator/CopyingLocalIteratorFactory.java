@@ -87,6 +87,10 @@ public final class CopyingLocalIteratorFactory implements IteratorFactory {
         this.collectionFactory = newCollectionFactory;
     }
 
+    public IteratorFactory getUnsortedIteratorFactory() {
+        return new LocalIteratorFactory(graphHandlers);
+    }
+
     public ClosableIterator<Triple> newEmptyClosableIterator() {
         return new TripleEmptyClosableIterator();
     }
