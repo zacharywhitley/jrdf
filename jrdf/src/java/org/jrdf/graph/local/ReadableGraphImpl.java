@@ -71,8 +71,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.*;
 
@@ -80,6 +78,7 @@ public class ReadableGraphImpl implements ReadableGraph {
     private LongIndex[] longIndexes;
     private Localizer localizer;
     private IteratorFactory iteratorFactory;
+    private ReadableGraph unsortedReadableGraph;
 
     // TODO Tuple Refactor
     public ReadableGraphImpl(LongIndex[] newLongIndexes, Localizer newLocalizer, IteratorFactory newIteratorFactory) {
@@ -87,12 +86,6 @@ public class ReadableGraphImpl implements ReadableGraph {
         this.longIndexes = newLongIndexes;
         this.localizer = newLocalizer;
         this.iteratorFactory = newIteratorFactory;
-    }
-
-    public GraphRelation createRelation(GraphRelationFactory factory) {
-        final IteratorFactory unsortedFactory = iteratorFactory.getUnsortedIteratorFactory();
-        final ReadableGraph readableGraph = new ReadableGraphImpl(longIndexes, localizer, unsortedFactory);
-        return factory.createRelation(readableGraph);
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
@@ -119,6 +112,14 @@ public class ReadableGraphImpl implements ReadableGraph {
         }
 
         return findNonEmptyIterator(subject, predicate, object, values);
+    }
+
+    public ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        if (unsortedReadableGraph == null) {
+            this.unsortedReadableGraph = new ReadableGraphImpl(longIndexes, localizer,
+                iteratorFactory.getUnsortedIteratorFactory());
+        }
+        return unsortedReadableGraph.find(subject, predicate, object);
     }
 
     public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException {

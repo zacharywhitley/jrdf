@@ -118,7 +118,7 @@ public final class ReflectTestUtil {
 
     public static Object createInstanceUsingConstructor(Class<?> cls, ParamSpec params) {
         Constructor<?> constructor = ClassPropertiesTestUtil.tryGetConstructor(cls, params);
-        return invokeConstructor(constructor, params);
+        return invokeConstructor(cls, constructor, params);
     }
 
     public static Object callMethod(Object obj, String methodName, Class[] parameterTypes, Object... args)
@@ -149,11 +149,11 @@ public final class ReflectTestUtil {
         }
     }
 
-    private static Object invokeConstructor(Constructor<?> constructor, ParamSpec params) {
+    private static Object invokeConstructor(Class<?> cls, Constructor<?> constructor, ParamSpec params) {
         try {
             return constructor.newInstance(params.getParams());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Invoking constructor for: " + cls, e);
         }
     }
 

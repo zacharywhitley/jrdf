@@ -83,8 +83,6 @@ import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
@@ -278,10 +276,6 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public boolean isEmpty() throws GraphException {
         return graph.isEmpty();
-    }
-
-    public GraphRelation createRelation(GraphRelationFactory graphRelationFactory) {
-        return graph.createRelation(graphRelationFactory);
     }
 
     public ClosableIterator<Molecule> iterator() throws GraphException {

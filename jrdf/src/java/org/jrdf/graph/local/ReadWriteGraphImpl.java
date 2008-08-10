@@ -71,8 +71,6 @@ import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.*;
 
@@ -110,8 +108,8 @@ public class ReadWriteGraphImpl implements ReadWriteGraph {
         return readableGraph.findUniquePredicates();
     }
 
-    public GraphRelation createRelation(GraphRelationFactory factory) {
-        return readableGraph.createRelation(factory);
+    public ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return readableGraph.findUnsorted(subject, predicate, object);
     }
 
     public void localizeAndAdd(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
