@@ -74,8 +74,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.query.relation.type.BlankNodeType.*;
 import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.query.relation.type.PredicateNodeType.*;
@@ -255,16 +253,28 @@ public class GraphImpl implements Graph {
         return readWriteGraph.getSize() == 0L;
     }
 
-    public GraphRelation createRelation(GraphRelationFactory graphRelationFactory) {
-        return readWriteGraph.createRelation(graphRelationFactory);
-    }
-
     public void clear() {
         readWriteGraph.clear();
     }
 
     public void close() {
         // no op
+    }
+
+    public ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return readWriteGraph.findUnsorted(subject, predicate, object);
+    }
+
+    @Override
+    public String toString() {
+        RdfWriter writer = new MemRdfXmlWriter();
+        StringWriter sw = new StringWriter();
+        try {
+            writer.write(this, sw);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to get String representation of graph", e);
+        }
+        return sw.toString();
     }
 
     private void checkForNullsAndAnyNodes(SubjectNode subject, PredicateNode predicate, ObjectNode object,
@@ -283,17 +293,5 @@ public class GraphImpl implements Graph {
         if (null == subject || null == predicate || null == object) {
             throw new IllegalArgumentException(message);
         }
-    }
-
-    @Override
-    public String toString() {
-        RdfWriter writer = new MemRdfXmlWriter();
-        StringWriter sw = new StringWriter();
-        try {
-            writer.write(this, sw);
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to get String representation of graph", e);
-        }
-        return sw.toString();
     }
 }

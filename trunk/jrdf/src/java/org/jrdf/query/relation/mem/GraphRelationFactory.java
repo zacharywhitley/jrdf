@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.local.ReadableGraph;
+import org.jrdf.graph.Graph;
 import org.jrdf.query.relation.GraphRelation;
 
 /**
@@ -69,5 +69,5 @@ import org.jrdf.query.relation.GraphRelation;
  * @version $Revision:$
  */
 public interface GraphRelationFactory {
-    GraphRelation createRelation(ReadableGraph graph);
+    GraphRelation createRelation(Graph graph);
 }

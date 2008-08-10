@@ -60,13 +60,13 @@
 package org.jrdf.util.test.instantiate;
 
 import org.jrdf.query.expression.SingleConstraint;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
-import java.util.List;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.query.expression.SingleConstraint}.
@@ -75,7 +75,6 @@ import java.util.Map;
  * @version $Id$
  */
 final class ConstraintTripleInstantiator implements Instantiator {
-
     private static final Class<SingleConstraint> CLASS_CONSTRAINT_TRIPLE = SingleConstraint.class;
 
     public Object instantiate() {
@@ -83,9 +82,9 @@ final class ConstraintTripleInstantiator implements Instantiator {
     }
 
     private ParamSpec createParams() {
-        List<AttributeValuePair> avp = TripleTestUtil.AVP_BOOK_1_DC_SUBJECT_LITERAL;
+        LinkedHashMap<Attribute, ValueOperation> avp = TripleTestUtil.AVO_BOOK_1_DC_SUBJECT_LITERAL;
         Object[] params = {avp};
-        Class<?>[] types = new Class[]{Map.class};
+        Class<?>[] types = new Class[]{LinkedHashMap.class};
         return new ParamSpec(types, params);
     }
 }

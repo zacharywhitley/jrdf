@@ -61,8 +61,6 @@ package org.jrdf.graph;
 
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
-import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
@@ -270,7 +268,4 @@ public interface Graph {
      * @throws GraphException If the statements number of statements in the graph fails to be found.
      */
     boolean isEmpty() throws GraphException;
-
-    // TODO Tuple Refactor
-    GraphRelation createRelation(GraphRelationFactory graphRelationFactory);
 }

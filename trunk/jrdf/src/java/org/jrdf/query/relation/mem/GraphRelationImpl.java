@@ -59,15 +59,17 @@
 
 package org.jrdf.query.relation.mem;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
-import org.jrdf.graph.local.ReadableGraph;
+import org.jrdf.graph.local.GraphImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
@@ -92,14 +94,14 @@ import java.util.TreeSet;
 // TODO (AN) Come back and add unit tests and integration tests!!!!!
 public final class GraphRelationImpl implements GraphRelation {
     private static final int TRIPLE = 3;
-    private final ReadableGraph graph;
+    private final Graph graph;
     private final TupleComparator tupleComparator;
     private final TupleFactory tupleFactory;
     private final SortedAttributeFactory attributeFactory;
     private final AttributeValuePairHelper avpHelper;
 
-    public GraphRelationImpl(ReadableGraph graph, SortedAttributeFactory attributeFactory,
-        AttributeValuePairHelper avpHelper, TupleComparator tupleComparator, TupleFactory tupleFactory) {
+    public GraphRelationImpl(Graph graph, SortedAttributeFactory attributeFactory, AttributeValuePairHelper avpHelper,
+        TupleComparator tupleComparator, TupleFactory tupleFactory) {
         this.graph = graph;
         this.attributeFactory = attributeFactory;
         this.avpHelper = avpHelper;
@@ -121,8 +123,8 @@ public final class GraphRelationImpl implements GraphRelation {
     public Set<Tuple> getTuples(LinkedHashMap<Attribute, ValueOperation> nameValues) {
         Attribute[] attributes = nameValues.keySet().toArray(new Attribute[TRIPLE]);
         Triple searchTriple = new TripleImpl((SubjectNode) nameValues.get(attributes[0]).getValue(),
-            (PredicateNode) nameValues.get(attributes[1]).getValue(),
-            (ObjectNode) nameValues.get(attributes[2]).getValue());
+                (PredicateNode) nameValues.get(attributes[1]).getValue(),
+                (ObjectNode) nameValues.get(attributes[2]).getValue());
         return getTuplesFromGraph(searchTriple, attributes);
     }
 
@@ -154,8 +156,7 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     private Set<Tuple> getTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
-        ClosableIterator<Triple> closableIterator = graph.find(searchTriple.getSubject(), searchTriple.getPredicate(),
-            searchTriple.getObject());
+        ClosableIterator<Triple> closableIterator = getIterator(searchTriple);
         try {
             Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
             while (closableIterator.hasNext()) {
@@ -178,4 +179,16 @@ public final class GraphRelationImpl implements GraphRelation {
         return false;
     }
 
+    private ClosableIterator<Triple> getIterator(Triple searchTriple) {
+        try {
+            if (graph.getClass().isAssignableFrom(GraphImpl.class)) {
+                return ((GraphImpl) graph).findUnsorted(searchTriple.getSubject(), searchTriple.getPredicate(),
+                        searchTriple.getObject());
+            } else {
+                return graph.find(searchTriple.getSubject(), searchTriple.getPredicate(), searchTriple.getObject());
+            }
+        } catch (GraphException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
