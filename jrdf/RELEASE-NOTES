@@ -1,3 +1,9 @@
+JRDF Release 0.5.5.3
+====================
+* FILTER optimized (Bug 2045977).
+* AttributeValuePair replaced with Map<Attribute, ValueOperation>
+ (Bug 2045670).
+
 JRDF Release 0.5.5.2
 ====================
 * Some initial work to support SPARQL FILTER.  Currently only STR matching
