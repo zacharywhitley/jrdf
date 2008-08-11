@@ -72,7 +72,6 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
@@ -203,10 +202,6 @@ public class TripleTestUtil {
 
     private static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         return NodeTestUtil.createTriple(subject, predicate, object);
-    }
-
-    private static List<AttributeValuePair> createAvp(Triple tripleBook1DcSubjectLiteral) {
-        return AVP_HELPER.createAvp(tripleBook1DcSubjectLiteral);
     }
 
     private static Attribute[] createAttributes(long suffix) {

@@ -63,14 +63,12 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.execute.NaiveQueryEngineImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeComparatorImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.AttributeValuePairHelperImpl;
 import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
@@ -118,8 +116,6 @@ public class QueryFactoryImpl implements QueryFactory {
     private static final SortedAttributeFactory ATTRIBUTE_FACTORY = new SortedAttributeFactoryImpl(
         ATTRIBUTE_COMPARATOR, 0L);
     private static final NodeComparator NODE_COMPARATOR = new ComparatorFactoryImpl().createNodeComparator();
-    private static final AttributeValuePairComparator ATTRIBUTE_VALUE_PAIR_COMPARATOR =
-        new AttributeValuePairComparatorImpl(ATTRIBUTE_COMPARATOR, NODE_COMPARATOR);
     private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl();
     private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(NODE_COMPARATOR,
         ATTRIBUTE_COMPARATOR);
@@ -144,8 +140,7 @@ public class QueryFactoryImpl implements QueryFactory {
         Project project = new ProjectImpl(TUPLE_FACTORY, RELATION_FACTORY);
         RelationProcessor relationProcessor = new RelationProcessorImpl(RELATION_FACTORY, TUPLE_COMPARATOR);
         RelationHelper relationHelper = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
-        TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, ATTRIBUTE_VALUE_PAIR_COMPARATOR,
-            relationHelper);
+        TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, relationHelper);
         TupleEngine unionTupleEngine = new OuterUnionEngine(relationHelper);
         NadicJoin join = new NadicJoinImpl(relationProcessor, joinTupleEngine);
         Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR);

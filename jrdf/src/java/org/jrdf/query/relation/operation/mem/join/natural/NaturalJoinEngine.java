@@ -60,7 +60,6 @@
 package org.jrdf.query.relation.operation.mem.join.natural;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
@@ -85,14 +84,11 @@ import java.util.SortedSet;
  */
 public class NaturalJoinEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
-    private final AttributeValuePairComparator avpComparator;
     private final RelationHelper relationHelper;
     private Map<Attribute, ValueOperation> resultantAttributeValues;
 
-    public NaturalJoinEngine(TupleFactory newTupleFactory, AttributeValuePairComparator newAvpComparator,
-        RelationHelper newRelationHelper) {
+    public NaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper) {
         this.tupleFactory = newTupleFactory;
-        this.avpComparator = newAvpComparator;
         this.relationHelper = newRelationHelper;
         this.resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
     }

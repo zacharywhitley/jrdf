@@ -87,6 +87,7 @@ import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.util.TempDirectoryHandler;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -103,7 +104,6 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
     private TextToMolecule textToMolecule;
     private TripleParserImpl tripleParser;
     private MoleculeTraverser traverser;
-
     private TextToMoleculeGraph graphBuilder;
     private GraphElementFactory destElementFactory;
 
@@ -112,7 +112,6 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
         MoleculeGraphTestUtil.setUp();
         destGraph = FACTORY.getNewGraph();
         destElementFactory = destGraph.getElementFactory();
-
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
         URIReferenceParser referenceParser = new URIReferenceParserImpl(destElementFactory, nTripleUtil);

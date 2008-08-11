@@ -59,24 +59,14 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleImpl;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 
-import java.util.ArrayList;
-import static java.util.Arrays.asList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 /**
  * Allows the creation of sroted AttributeValuePairs.
@@ -92,11 +82,6 @@ public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
         this.sortedAttributeFactory = sortedAttributeFactory;
     }
 
-    public List<AttributeValuePair> createAvp(Triple triple) {
-        Attribute[] attributes = getAttributes();
-        return createAttributeValuePairs(attributes, triple);
-    }
-
     public Map<Attribute, ValueOperation> createAvo(Triple triple, Attribute[] attributes) {
         Map<Attribute, ValueOperation> attributeValueOperations = new HashMap<Attribute, ValueOperation>();
         addValues(triple, attributes, attributeValueOperations);
@@ -110,64 +95,10 @@ public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
         return attributeValueOperations;
     }
 
-    public Attribute[] createAttributes(List<AttributeValuePair> nameValues) {
-        List<Attribute> attributes = new ArrayList<Attribute>();
-        for (AttributeValuePair avp : nameValues) {
-            attributes.add(avp.getAttribute());
-        }
-        return attributes.toArray(new Attribute[attributes.size()]);
-    }
-
-    public List<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray) {
-        List<AttributeValuePair> attributeValuePairs = new ArrayList<AttributeValuePair>();
-        attributeValuePairs.addAll(asList(attributeValuePairsArray));
-        return attributeValuePairs;
-    }
-
-    public Triple createTriple(List<AttributeValuePair> avp) {
-        throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(avp);
-        return getNodes(avp);
-    }
-
     private void addValues(Triple triple, Attribute[] attributes,
         Map<Attribute, ValueOperation> attributeValueOperations) {
         attributeValueOperations.put(attributes[0], new ValueOperationImpl(triple.getSubject(), EQUALS));
         attributeValueOperations.put(attributes[1], new ValueOperationImpl(triple.getPredicate(), EQUALS));
         attributeValueOperations.put(attributes[2], new ValueOperationImpl(triple.getObject(), EQUALS));
-    }
-
-    private List<AttributeValuePair> createAttributeValuePairs(Attribute[] attributes, Triple triple) {
-        AttributeValuePair subjectAv = new AttributeValuePairImpl(attributes[0], triple.getSubject());
-        AttributeValuePair predicateAv = new AttributeValuePairImpl(attributes[1], triple.getPredicate());
-        AttributeValuePair objectAv = new AttributeValuePairImpl(attributes[2], triple.getObject());
-        List<AttributeValuePair> attributeValuePairs = new ArrayList<AttributeValuePair>();
-        attributeValuePairs.add(subjectAv);
-        attributeValuePairs.add(predicateAv);
-        attributeValuePairs.add(objectAv);
-        return attributeValuePairs;
-    }
-
-    private Attribute[] getAttributes() {
-        SortedSet<Attribute> heading = sortedAttributeFactory.createHeading();
-        Iterator<Attribute> iterator = heading.iterator();
-        Attribute[] attributes = new Attribute[TRIPLES];
-        attributes[0] = iterator.next();
-        attributes[1] = iterator.next();
-        attributes[2] = iterator.next();
-        return attributes;
-    }
-
-    private void throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(List<AttributeValuePair> nameValues) {
-        if (nameValues.size() != TRIPLES) {
-            throw new IllegalArgumentException("Can only get 3 tuples.");
-        }
-    }
-
-    private Triple getNodes(List<AttributeValuePair> nameValues) {
-        Iterator<AttributeValuePair> iterator = nameValues.iterator();
-        SubjectNode subject = (SubjectNode) iterator.next().getValue();
-        PredicateNode predicate = (PredicateNode) iterator.next().getValue();
-        ObjectNode object = (ObjectNode) iterator.next().getValue();
-        return new TripleImpl(subject, predicate, object);
     }
 }

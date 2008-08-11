@@ -61,12 +61,12 @@ package org.jrdf.query;
 
 import com.gargoylesoftware.base.testing.TestUtil;
 import junit.framework.TestCase;
-import org.jrdf.graph.AnyNode;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.mem.AttributeImplUnitTest;
 import org.jrdf.query.relation.mem.TupleImplUnitTest;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.RESOURCE_1;
 import org.jrdf.util.test.ReflectTestUtil;
 
 import java.util.HashSet;
@@ -80,17 +80,19 @@ import java.util.Set;
  * @version $Revision: 1510 $
  */
 public final class AnswerImplIntegrationTest extends TestCase {
+    private static final String FOO_SUBJECT = "foo1 | Subject";
+
     public void testSerialization() throws Exception {
         RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
         LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
-        heading.add(AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS);
+        heading.add(POS_FOO1_SUBJECT);
         Set<Tuple> tuples = new HashSet<Tuple>();
         tuples.add(TupleImplUnitTest.TEST_TUPLE_1);
         Answer answer = new AnswerImpl(heading, relationFactory.getRelation(tuples), 1000L, true);
-        checkAnswer(answer, "foo | Literal", AnyNode.ANY_NODE.toString(), 1000L, true);
+        checkAnswer(answer, FOO_SUBJECT, RESOURCE_1.toString(), 1000L, true);
         Answer answer2 = (Answer) TestUtil.copyBySerialization(answer);
         // read the graph
-        checkAnswer(answer2, "foo | Literal", AnyNode.ANY_NODE.toString(), 1000L, true);
+        checkAnswer(answer2, FOO_SUBJECT, RESOURCE_1.toString(), 1000L, true);
     }
 
     private void checkAnswer(Answer answer, String expectedColumnName, String expectedValue, long expectedTimeTaken,

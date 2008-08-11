@@ -65,7 +65,6 @@ import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparatorImpl;
@@ -76,10 +75,6 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 
 
 public class ComparatorFactoryImpl implements ComparatorFactory {
-    public AttributeValuePairComparator createAttributeValuePairComparator() {
-        return new AttributeValuePairComparatorImpl(createAttributeComparator(), createNodeComparator());
-    }
-
     public AttributeComparator createAttributeComparator() {
         return new AttributeComparatorImpl(createTypeComparator(), createNameComparator());
     }

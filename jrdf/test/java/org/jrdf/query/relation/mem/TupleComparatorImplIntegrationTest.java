@@ -63,13 +63,11 @@ import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLES_1_2;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLES_1_3;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLES_3_1;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_5;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_6;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_LITERAL_L1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_LITERAL_L2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_FOO1_LITERAL_L1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_FOO1_LITERAL_L2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createTuple;
 import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
 
 /**
@@ -83,13 +81,13 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
     private TupleComparator tupleComparator;
-    private static final Tuple TEST_VARBAR_LITERAL_TUPLE_1 = TEST_TUPLE_3;
-    private static final Tuple TEST_VARFOO_LITERAL_TUPLE_2 = TEST_TUPLE_4;
-    private static final Tuple TEST_VARBAR_LITERAL_TUPLE_3 = TEST_TUPLE_5;
-    private static final Tuple TEST_VARFOO_LITERAL_TUPLE_4 = TEST_TUPLE_6;
-    private static final Tuple TEST_TUPLE_1_2 = TEST_TUPLES_1_2;
-    private static final Tuple TEST_TUPLE_1_3 = TEST_TUPLES_1_3;
-    private static final Tuple TEST_TUPLE_3_1 = TEST_TUPLES_3_1;
+    private static final Tuple TEST_VARBAR_LITERAL_TUPLE_1 = new TupleImpl(VAR_BAR1_LITERAL_L1);
+    private static final Tuple TEST_VARFOO_LITERAL_TUPLE_2 = new TupleImpl(VAR_FOO1_LITERAL_L1);
+    private static final Tuple TEST_VARBAR_LITERAL_TUPLE_3 = new TupleImpl(VAR_BAR1_LITERAL_L2);
+    private static final Tuple TEST_VARFOO_LITERAL_TUPLE_4 = new TupleImpl(VAR_FOO1_LITERAL_L2);
+    private static final Tuple TEST_TUPLE_1_2 = createTuple(VAR_BAR1_LITERAL_L1, VAR_FOO1_LITERAL_L1);
+    private static final Tuple TEST_TUPLE_1_3 = createTuple(VAR_BAR1_LITERAL_L1, VAR_BAR1_LITERAL_L2);
+    private static final Tuple TEST_TUPLE_3_1 = createTuple(VAR_BAR1_LITERAL_L2, VAR_BAR1_LITERAL_L1);
 
     protected void setUp() throws Exception {
         super.setUp();

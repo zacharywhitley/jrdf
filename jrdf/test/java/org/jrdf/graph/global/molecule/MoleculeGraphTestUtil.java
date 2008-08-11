@@ -61,6 +61,7 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.MoleculeJRDFFactory;
 import org.jrdf.SortedDiskGlobalJRDFFactory;
+import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -116,6 +117,7 @@ public class MoleculeGraphTestUtil {
         MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(COMPARATOR);
         MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
 
+        new TempDirectoryHandler().removeDir();
         FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
         GRAPH = FACTORY.getNewGraph();
         GRAPH.clear();

@@ -61,15 +61,11 @@ package org.jrdf.query.relation.constants;
 
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.query.relation.constants.NullaryAttribute.*;
-import static org.jrdf.query.relation.constants.NullaryNode.*;
+import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
+import static org.jrdf.query.relation.constants.NullaryNode.NULLARY_NODE;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.EqAVPOperation;
-
-import java.util.SortedSet;
 
 public final class NullaryValueOperation implements ValueOperation {
     private static final long serialVersionUID = 8287526418827933354L;
@@ -93,11 +89,4 @@ public final class NullaryValueOperation implements ValueOperation {
     public AVPOperation getOperation() {
         return EqAVPOperation.EQUALS;
     }
-
-    public boolean addAttributeValuePair(AttributeValuePairComparator avpComparator,
-            SortedSet<AttributeValuePair> newAttributeValues, AttributeValuePair avp) {
-        newAttributeValues.add(avp);
-        return false;
-    }
-
 }

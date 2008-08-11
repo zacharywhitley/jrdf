@@ -74,7 +74,7 @@ public final class LocalIteratorFactory implements IteratorFactory {
     private final GraphHandler[] graphHandlers;
 
     public LocalIteratorFactory(final GraphHandler[] newGraphHandlers) {
-        checkNotNull((GraphHandler[]) newGraphHandlers);
+        checkNotNull((Object) newGraphHandlers);
         this.graphHandlers = newGraphHandlers;
     }
 
