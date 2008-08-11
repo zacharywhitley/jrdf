@@ -65,34 +65,38 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.*;
-import static org.jrdf.util.test.ArgumentTestUtil.*;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.*;
-import static org.jrdf.util.test.ReflectTestUtil.*;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_LITERAL_L2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_FOO1_LITERAL_L2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.isFieldOfType;
+import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class RelationImplUnitTest extends TestCase {
-    private static final Tuple[] TUPLES_1 = {TEST_TUPLE_3};
-    private static final Tuple[] TUPLES_2 = {TEST_TUPLE_4};
-    private static final Tuple[] TUPLES_3 = {TEST_TUPLE_6};
     private static final String HEADING_NAME = "heading";
     private static final String TUPLES_NAME = "tuples";
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
     private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
-    private static final Class[] PARAM_TYPES_1 = {Set.class, AttributeComparator.class, TupleComparator.class};
-    private static final Class[] PARAM_TYPES_2 =
+    private static final Class<?>[] PARAM_TYPES_1 = {Set.class, AttributeComparator.class, TupleComparator.class};
+    private static final Class<?>[] PARAM_TYPES_2 =
         {Set.class, Set.class, AttributeComparator.class, TupleComparator.class};
     private static final String[] PARAM_NAMES_1 = {"tuples", "attributeComparator", "tupleComparator"};
     private static final String[] PARAM_NAMES_2 = {"heading", "tuples", "attributeComparator", "tupleComparator"};
-
-    public static final Relation TEST_RELATION_1 = createRelation(createTuple(TUPLES_1));
-    public static final Relation TEST_RELATION_2 = createRelation(createTuple(TUPLES_2));
-    public static final Relation TEST_RELATION_3 = createRelation(createTuple(TUPLES_3));
+    private static final Set<Tuple> TUPLES_1 = createASingleTuple(VAR_BAR1_LITERAL_L2);
+    private static final Set<Tuple> TUPLES_2 = createASingleTuple(VAR_FOO1_LITERAL_L2);
+    private static final Set<Tuple> TUPLES_3 = createASingleTuple(POS_FOO5_OBJECT_R6);
+    public static final Relation TEST_RELATION_1 = createRelation(TUPLES_1);
+    public static final Relation TEST_RELATION_2 = createRelation(TUPLES_2);
+    public static final Relation TEST_RELATION_3 = createRelation(TUPLES_3);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
@@ -110,8 +114,8 @@ public class RelationImplUnitTest extends TestCase {
     }
 
     public void testConstructor() {
-        checkStandardConstructor(createHeading(TUPLES_1), createTuple(TUPLES_1), TEST_RELATION_1);
-        checkStandardConstructor(createHeading(TUPLES_2), createTuple(TUPLES_2), TEST_RELATION_2);
+        checkStandardConstructor(createHeading(TUPLES_1), TUPLES_1, TEST_RELATION_1);
+        checkStandardConstructor(createHeading(TUPLES_2), TUPLES_2, TEST_RELATION_2);
     }
 
     private void checkStandardConstructor(Set<Attribute> heading, Set<Tuple> tuples, Relation relation) {
@@ -121,20 +125,13 @@ public class RelationImplUnitTest extends TestCase {
         assertEquals(tuples, relation.getTuples());
     }
 
-    private static Set<Attribute> createHeading(Tuple[] tuples) {
+    private static Set<Attribute> createHeading(Set<Tuple> tuples) {
         Set<Attribute> heading = new TreeSet<Attribute>(FACTORY.getNewAttributeComparator());
         //noinspection unchecked
         for (Tuple tuple : tuples) {
             heading.addAll(tuple.getAttributeValues().keySet());
         }
         return heading;
-    }
-
-    private static Set<Tuple> createTuple(Tuple[] tuples) {
-        //noinspection unchecked
-        Set<Tuple> sortedTuples = new TreeSet<Tuple>(FACTORY.getNewTupleComparator());
-        sortedTuples.addAll(Arrays.asList(tuples));
-        return sortedTuples;
     }
 
     private static Relation createRelation(Set<Tuple> newTuples) {

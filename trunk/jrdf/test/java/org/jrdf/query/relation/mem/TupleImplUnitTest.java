@@ -60,16 +60,16 @@ package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.query.relation.mem.AttributeValuePairComparatorImplIntegrationTest.*;
-import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.*;
-import static org.jrdf.util.test.ArgumentTestUtil.*;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
-import static org.jrdf.util.test.ReflectTestUtil.*;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R4;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -79,30 +79,12 @@ import java.util.Map;
  * @version $Id$
  */
 public class TupleImplUnitTest extends TestCase {
-    private static final Class[] CONSTRUCTOR_TYPES = {Map.class};
+    private static final Class<?>[] CONSTRUCTOR_TYPES = {Map.class};
     private static final String[] CONSTRUCTOR_NAMES = {"attributeValues"};
-
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_1 = create(TEST_ATTRIBUTE_VALUE_1);
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_2 = create(TEST_ATTRIBUTE_VALUE_1,
-        TEST_ATTRIBUTE_VALUE_2);
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_3 = create(TEST_AVP_1);
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_4 = create(TEST_AVP_2);
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_5 = create(TEST_AVP_3);
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_6 = create(TEST_AVP_4);
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_1_2 = create(TEST_AVP_1, TEST_AVP_2);
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_1_3 = create(TEST_AVP_1, TEST_AVP_3);
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_3_1 = create(TEST_AVP_3, TEST_AVP_1);
+    public static final Tuple TEST_TUPLE_1 = new TupleImpl(POS_FOO1_SUBJECT_R1);
+    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_1 = POS_FOO1_SUBJECT_R1;
+    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_2 = POS_FOO1_SUBJECT_R4;
     private static final String TUPLES_NAME = "attributeValues";
-
-    public static final Tuple TEST_TUPLE_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_1);
-    public static final Tuple TEST_TUPLE_2 = new TupleImpl(ATTRIBUTE_VALUE_SET_2);
-    public static final Tuple TEST_TUPLE_3 = new TupleImpl(ATTRIBUTE_VALUE_SET_3);
-    public static final Tuple TEST_TUPLE_4 = new TupleImpl(ATTRIBUTE_VALUE_SET_4);
-    public static final Tuple TEST_TUPLE_5 = new TupleImpl(ATTRIBUTE_VALUE_SET_5);
-    public static final Tuple TEST_TUPLE_6 = new TupleImpl(ATTRIBUTE_VALUE_SET_6);
-    public static final Tuple TEST_TUPLES_1_2 = new TupleImpl(ATTRIBUTE_VALUE_SET_1_2);
-    public static final Tuple TEST_TUPLES_1_3 = new TupleImpl(ATTRIBUTE_VALUE_SET_1_3);
-    public static final Tuple TEST_TUPLES_3_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_3_1);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Tuple.class, TupleImpl.class);
@@ -121,13 +103,4 @@ public class TupleImplUnitTest extends TestCase {
         checkFieldValue(tuple, TUPLES_NAME, tupleSet);
         assertEquals(tupleSet, tuple.getAttributeValues());
     }
-
-    private static Map<Attribute, ValueOperation> create(final AttributeValuePair... attributeValuePair) {
-        Map<Attribute, ValueOperation> map = new HashMap<Attribute, ValueOperation>();
-        for (AttributeValuePair avp : attributeValuePair) {
-            map.put(avp.getAttribute(), new ValueOperationImpl(avp.getValue(), avp.getOperation()));
-        }
-        return map;
-    }
-
 }

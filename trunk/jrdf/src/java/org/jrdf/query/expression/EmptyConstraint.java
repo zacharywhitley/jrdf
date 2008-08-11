@@ -59,14 +59,7 @@
 
 package org.jrdf.query.expression;
 
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.util.EqualsUtil;
-
-import static java.util.Collections.emptyList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A expression expression comprising an empty expression.
@@ -83,10 +76,6 @@ public final class EmptyConstraint<V extends ExpressionVisitor> implements Const
     private static final long serialVersionUID = 8277006464668938996L;
 
     private EmptyConstraint() {
-    }
-
-    public List<AttributeValuePair> getAvp(Map<AttributeName, ? extends NodeType> allVariables) {
-        return emptyList();
     }
 
     public void accept(V v) {

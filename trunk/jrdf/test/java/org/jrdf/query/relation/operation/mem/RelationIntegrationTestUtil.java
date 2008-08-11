@@ -60,6 +60,7 @@
 package org.jrdf.query.relation.operation.mem;
 
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
@@ -74,18 +75,20 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import static org.jrdf.query.relation.mem.EqAVPOperation.*;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.NeqAVPOperation;
 import org.jrdf.query.relation.mem.RelationFactoryImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
+import org.jrdf.query.relation.type.LiteralNodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.query.relation.type.SubjectObjectNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
-import static org.jrdf.util.test.NodeTestUtil.*;
+import org.jrdf.util.test.NodeTestUtil;
+import static org.jrdf.util.test.NodeTestUtil.createResource;
 import org.jrdf.vocabulary.RDF;
 
 import java.util.ArrayList;
@@ -102,6 +105,7 @@ public class RelationIntegrationTestUtil {
     private static final RelationFactory RELATION_FACTORY = FACTORY.getNewRelationFactory();
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
 
+    public static final AttributeName POS_BAR1 = new PositionName("bar1");
     public static final AttributeName POS_FOO1 = new PositionName("foo1");
     public static final AttributeName POS_FOO2 = new PositionName("foo2");
     public static final AttributeName POS_FOO3 = new PositionName("foo3");
@@ -109,8 +113,10 @@ public class RelationIntegrationTestUtil {
     public static final AttributeName POS_FOO5 = new PositionName("foo5");
     public static final AttributeName VAR_BAR1 = new VariableName("bar1");
     public static final AttributeName VAR_BAR2 = new VariableName("bar2");
+    public static final AttributeName VAR_FOO1 = new VariableName("foo1");
     public static final AttributeName POS_BAR3 = new PositionName("bar3");
 
+    public static final Attribute POS_BAR1_SUBJECT = new AttributeImpl(POS_BAR1, new SubjectNodeType());
     public static final Attribute POS_FOO1_SUBJECT = new AttributeImpl(POS_FOO1, new SubjectNodeType());
     public static final Attribute POS_FOO2_PREDICATE = new AttributeImpl(POS_FOO2, new PredicateNodeType());
     public static final Attribute POS_FOO3_OBJECT = new AttributeImpl(POS_FOO3, new ObjectNodeType());
@@ -119,6 +125,8 @@ public class RelationIntegrationTestUtil {
     public static final Attribute VAR_BAR1_SUBJECT = new AttributeImpl(VAR_BAR1, new SubjectNodeType());
     public static final Attribute VAR_BAR1_PREDICATE = new AttributeImpl(VAR_BAR1, new PredicateNodeType());
     public static final Attribute VAR_BAR1_OBJECT = new AttributeImpl(VAR_BAR1, new ObjectNodeType());
+    public static final Attribute VAR_FOO1_LITERAL = new AttributeImpl(VAR_FOO1, new LiteralNodeType());
+    public static final Attribute VAR_BAR1_LITERAL = new AttributeImpl(VAR_BAR1, new LiteralNodeType());
     public static final Attribute VAR_BAR1_SUBJECTPREDICATE = new AttributeImpl(VAR_BAR1, new SubjectPredicateNodeType());
     public static final Attribute VAR_BAR1_SUBJECTOBJECT = new AttributeImpl(VAR_BAR1, new SubjectObjectNodeType());
     public static final Attribute VAR_BAR1_SUBJECTPREDICATEOBJECT = new AttributeImpl(VAR_BAR1, new SubjectPredicateObjectNodeType());
@@ -131,10 +139,14 @@ public class RelationIntegrationTestUtil {
     public static final URIReference RESOURCE_4 = createResource(RDF.LI);
     public static final URIReference RESOURCE_5 = createResource(RDF.SUBJECT);
     public static final URIReference RESOURCE_6 = createResource(RDF.PREDICATE);
+    public static final Literal LITERAL_1 = NodeTestUtil.createLiteral("hello");
+    public static final Literal LITERAL_2 = NodeTestUtil.createLiteral("there");
 
     public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_R1 = createAvo(POS_FOO1_SUBJECT, RESOURCE_1);
     public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_R3 = createAvo(POS_FOO1_SUBJECT, RESOURCE_3);
     public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_R4 = createAvo(POS_FOO1_SUBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> POS_BAR1_SUBJECT_R1 = createAvo(POS_BAR1_SUBJECT, RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> POS_BAR1_SUBJECT_R3 = createAvo(POS_BAR1_SUBJECT, RESOURCE_3);
 
     public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R2 = createAvo(POS_FOO2_PREDICATE, RESOURCE_1);
     public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R4 = createAvo(POS_FOO2_PREDICATE, RESOURCE_3);
@@ -149,6 +161,7 @@ public class RelationIntegrationTestUtil {
     public static final Map<Attribute, ValueOperation> POS_FOO3_OBJECT_R5 = createAvo(POS_FOO3_OBJECT, RESOURCE_5);
     public static final Map<Attribute, ValueOperation> POS_FOO3_OBJECT_R6 = createAvo(POS_FOO3_OBJECT, RESOURCE_6);
     public static final Map<Attribute, ValueOperation> POS_FOO5_OBJECT_R4 = createAvo(POS_FOO5_OBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> POS_BAR3_OBJECT_R1 = createAvo(POS_BAR3_OBJECT, RESOURCE_1);
 
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R3 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_3);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_NOT_R3 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_3, NeqAVPOperation.NEQUALS);
@@ -161,7 +174,10 @@ public class RelationIntegrationTestUtil {
     public static final Map<Attribute, ValueOperation> VAR_BAR2_PREDICATE_R4 = createAvo(VAR_BAR2_PREDICATE, RESOURCE_4);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_OBJECT_R3 = createAvo(VAR_BAR1_OBJECT, RESOURCE_3);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_OBJECT_R4 = createAvo(VAR_BAR1_OBJECT, RESOURCE_4);
-    public static final Map<Attribute, ValueOperation> POS_BAR3_OBJECT_R1 = createAvo(POS_BAR3_OBJECT, RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_LITERAL_L1 = createAvo(VAR_BAR1_LITERAL, LITERAL_1);
+    public static final Map<Attribute, ValueOperation> VAR_FOO1_LITERAL_L1 = createAvo(VAR_FOO1_LITERAL, LITERAL_1);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_LITERAL_L2 = createAvo(VAR_BAR1_LITERAL, LITERAL_2);
+    public static final Map<Attribute, ValueOperation> VAR_FOO1_LITERAL_L2 = createAvo(VAR_FOO1_LITERAL, LITERAL_2);
 
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATE_R3 = createAvo(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_3);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATE_R4 = createAvo(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_4);
@@ -187,15 +203,26 @@ public class RelationIntegrationTestUtil {
         };
     }
 
+    public static Tuple createTuple(Map<Attribute, ValueOperation>... avos) {
+        final TupleFactory tupleFactory = new TupleFactoryImpl();
+        final Map<Attribute, ValueOperation> allAvos = addAllAvos(avos);
+        return tupleFactory.getTuple(allAvos);
+    }
+
     public static Set<Tuple> createASingleTuple(Map<Attribute, ValueOperation>... avos) {
         final Set<Tuple> tuples = new TreeSet<Tuple>(FACTORY.getNewTupleComparator());
         final TupleFactory tupleFactory = new TupleFactoryImpl();
+        final Map<Attribute, ValueOperation> allAvos = addAllAvos(avos);
+        tuples.add(tupleFactory.getTuple(allAvos));
+        return tuples;
+    }
+
+    public static Map<Attribute, ValueOperation> addAllAvos(Map<Attribute, ValueOperation>... avos) {
         final Map<Attribute, ValueOperation> allAvos = new HashMap<Attribute, ValueOperation>();
         for (Map<Attribute, ValueOperation> avo : avos) {
             allAvos.putAll(avo);
         }
-        tuples.add(tupleFactory.getTuple(allAvos));
-        return tuples;
+        return allAvos;
     }
 
     public static List<Relation> createRelation(Set<Tuple>... tuples) {
