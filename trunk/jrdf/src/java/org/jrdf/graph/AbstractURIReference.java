@@ -168,10 +168,11 @@ public abstract class AbstractURIReference implements URIReference, Serializable
         if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(URIReference.class, obj)) {
+        try {
+            return determineEqualityFromFields((URIReference) obj);
+        } catch (ClassCastException cce) {
             return false;
         }
-        return determineEqualityFromFields((URIReference) obj);
     }
 
     private boolean determineEqualityFromFields(URIReference uriReference) {

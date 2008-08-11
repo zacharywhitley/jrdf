@@ -71,6 +71,7 @@ import static org.jrdf.util.EqualsUtil.sameReference;
  * @version $Id$
  */
 public final class AttributeImpl implements Attribute {
+    private static final int PRIME = 31;
     private static final long serialVersionUID = 6078409285334034368L;
     private AttributeName attributeName;
     private NodeType type;
@@ -93,7 +94,8 @@ public final class AttributeImpl implements Attribute {
 
     @Override
     public int hashCode() {
-        return attributeName.hashCode() ^ type.hashCode();
+        int hash = PRIME + attributeName.hashCode();
+        return hash * PRIME + type.hashCode();
     }
 
     @Override
@@ -107,8 +109,8 @@ public final class AttributeImpl implements Attribute {
         try {
             return determineEqualityFromFields((Attribute) obj);
         } catch (ClassCastException cce) {
+            return false;
         }
-        return false;
     }
 
     @Override
