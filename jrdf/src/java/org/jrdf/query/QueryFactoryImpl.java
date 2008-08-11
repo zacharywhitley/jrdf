@@ -123,7 +123,7 @@ public class QueryFactoryImpl implements QueryFactory {
         TUPLE_COMPARATOR);
 
     public QueryBuilder createQueryBuilder() {
-        AttributeValuePairHelper avpHelper = new AttributeValuePairHelperImpl(ATTRIBUTE_FACTORY);
+        AttributeValuePairHelper avpHelper = new AttributeValuePairHelperImpl();
         GraphRelationFactory graphRelationFactory = new GraphRelationFactoryImpl(ATTRIBUTE_FACTORY, avpHelper,
             TUPLE_COMPARATOR, TUPLE_FACTORY);
         ParserFactory parserFactory = new ParserFactoryImpl();
