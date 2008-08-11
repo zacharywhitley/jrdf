@@ -81,7 +81,7 @@ import java.util.Map;
 public final class SingleConstraint<V extends ExpressionVisitor> implements Constraint<V> {
     private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
+    private LinkedHashMap<Attribute, ValueOperation> singleAvp;
 
     private SingleConstraint() {
     }
@@ -89,6 +89,12 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
     public SingleConstraint(LinkedHashMap<Attribute, ValueOperation> singleAvp) {
         checkNotNull(singleAvp);
         this.singleAvp = singleAvp;
+    }
+
+    public void setAvo(Attribute existingAttribute, ValueOperation newValueOperation) {
+        if (singleAvp.remove(existingAttribute) != null) {
+            singleAvp.put(existingAttribute, newValueOperation);
+        }
     }
 
     public LinkedHashMap<Attribute, ValueOperation> getAvo(Map<AttributeName, ? extends NodeType> allVariables) {

@@ -79,7 +79,7 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
     }
 
-    public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {
+    public <V extends ExpressionVisitor> void visitUnion(Union<V> union) {
     }
 
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
