@@ -58,7 +58,8 @@
  */
 package org.jrdf.query.relation.attributename;
 
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 public final class VariableName implements AttributeName {
     private static final long serialVersionUID = 504817351812142680L;
@@ -82,16 +83,17 @@ public final class VariableName implements AttributeName {
 
     @Override
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(VariableName.class, obj)) {
-            return false;
+        try {
+            return ((AttributeName) obj).getLiteral().equals(getLiteral());
+        } catch (ClassCastException cce) {
         }
-        return ((AttributeName) obj).getLiteral().equals(getLiteral());
+        return false;
     }
 
     @Override

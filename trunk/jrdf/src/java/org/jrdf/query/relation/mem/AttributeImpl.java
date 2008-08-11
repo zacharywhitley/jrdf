@@ -61,7 +61,6 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.NodeType;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
@@ -105,8 +104,9 @@ public final class AttributeImpl implements Attribute {
         if (sameReference(this, obj)) {
             return true;
         }
-        if (hasSuperClassOrInterface(Attribute.class, obj)) {
+        try {
             return determineEqualityFromFields((Attribute) obj);
+        } catch (ClassCastException cce) {
         }
         return false;
     }
