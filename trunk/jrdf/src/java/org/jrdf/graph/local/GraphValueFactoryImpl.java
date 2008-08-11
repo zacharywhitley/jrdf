@@ -101,20 +101,14 @@ public final class GraphValueFactoryImpl implements GraphValueFactory {
 
     public Literal createLiteral(String lexicalValue) {
         return getLocalLiteral("\"" + EscapeUtil.escape(lexicalValue) + "\"");
-//        final Literal literal = new LiteralImpl(lexicalValue);
-//        return getLocalLiteral(literal.getEscapedForm());
     }
 
     public Literal createLiteral(String lexicalValue, String languageType) {
         return getLocalLiteral("\"" + EscapeUtil.escape(lexicalValue) + "\"" + "@" + languageType);
-//        final Literal literal = new LiteralImpl(lexicalValue, languageType);
-//        return getLocalLiteral(literal.getEscapedForm());
     }
 
     public Literal createLiteral(String lexicalValue, URI datatypeURI) {
         return getLocalLiteral("\"" + EscapeUtil.escape(lexicalValue) + "\"" + "^^<" + datatypeURI + ">");
-//        final Literal literal = new LiteralImpl(lexicalValue, datatypeURI);
-//        return getLocalLiteral(literal.getEscapedForm());
     }
 
     private URIReference getLocalURIReference(URI uri, boolean validate) {
