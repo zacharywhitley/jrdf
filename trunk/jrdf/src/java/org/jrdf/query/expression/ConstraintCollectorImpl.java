@@ -2,6 +2,7 @@ package org.jrdf.query.expression;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +41,11 @@ public class ConstraintCollectorImpl extends ExpressionVisitorAdapter implements
     }
 
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
-        operators.putAll(operator.getAttributeValuePair());
+        Map<Attribute, ValueOperation> valuePair = operator.getAttributeValuePair();
+        ValueOperation valueOperation = valuePair.values().iterator().next();
+        if (valueOperation.getOperation().equals(EQUALS)) {
+            operators.putAll(valuePair);
+        }
     }
 
     public <V extends ExpressionVisitor> Map<Attribute, ValueOperation> getNext(Expression<V> expression) {
