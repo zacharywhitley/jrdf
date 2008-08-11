@@ -63,7 +63,6 @@ import static org.jrdf.graph.NullURI.NULL_URI;
 import org.jrdf.graph.datatype.DatatypeFactory;
 import org.jrdf.graph.datatype.DatatypeFactoryImpl;
 import org.jrdf.graph.datatype.DatatypeValue;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 import org.jrdf.util.EscapeUtil;
@@ -275,10 +274,11 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         if (sameReference(this, obj)) {
             return true;
         }
-        if (!hasSuperClassOrInterface(Literal.class, obj)) {
+        try {
+            return getEscapedForm().equals(((Literal) obj).getEscapedForm());
+        } catch (ClassCastException cce) {
             return false;
         }
-        return getEscapedForm().equals(((Literal) obj).getEscapedForm());
     }
 
     /**
@@ -312,6 +312,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      *
      * @return the lexical form.
      */
+    @Override
     public String toString() {
         return '\"' + getEscapedLexicalForm() + '\"';
     }

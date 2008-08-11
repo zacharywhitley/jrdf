@@ -93,6 +93,7 @@ public class BlankNodeImpl extends AbstractBlankNode {
      *
      * @return a hash-code value for this blank node.
      */
+    @Override
     public int hashCode() {
         return uid.hashCode();
     }
@@ -104,6 +105,7 @@ public class BlankNodeImpl extends AbstractBlankNode {
      * @param obj the reference object with which to compare.
      * @return true if this object is the same as the obj argument; false otherwise.
      */
+    @Override
     public boolean equals(Object obj) {
 
         // Check equal by reference
@@ -132,6 +134,7 @@ public class BlankNodeImpl extends AbstractBlankNode {
      *
      * @return String
      */
+    @Override
     public String toString() {
         return uid;
     }

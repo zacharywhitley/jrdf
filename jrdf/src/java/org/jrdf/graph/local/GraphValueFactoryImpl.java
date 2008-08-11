@@ -66,6 +66,7 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import static org.jrdf.util.param.ParameterUtil.*;
+import org.jrdf.util.EscapeUtil;
 
 import java.net.URI;
 
@@ -99,18 +100,21 @@ public final class GraphValueFactoryImpl implements GraphValueFactory {
     }
 
     public Literal createLiteral(String lexicalValue) {
-        final Literal literal = new LiteralImpl(lexicalValue);
-        return getLocalLiteral(literal.getEscapedForm());
+        return getLocalLiteral("\"" + EscapeUtil.escape(lexicalValue) + "\"");
+//        final Literal literal = new LiteralImpl(lexicalValue);
+//        return getLocalLiteral(literal.getEscapedForm());
     }
 
     public Literal createLiteral(String lexicalValue, String languageType) {
-        final Literal literal = new LiteralImpl(lexicalValue, languageType);
-        return getLocalLiteral(literal.getEscapedForm());
+        return getLocalLiteral("\"" + EscapeUtil.escape(lexicalValue) + "\"" + "@" + languageType);
+//        final Literal literal = new LiteralImpl(lexicalValue, languageType);
+//        return getLocalLiteral(literal.getEscapedForm());
     }
 
     public Literal createLiteral(String lexicalValue, URI datatypeURI) {
-        final Literal literal = new LiteralImpl(lexicalValue, datatypeURI);
-        return getLocalLiteral(literal.getEscapedForm());
+        return getLocalLiteral("\"" + EscapeUtil.escape(lexicalValue) + "\"" + "^^<" + datatypeURI + ">");
+//        final Literal literal = new LiteralImpl(lexicalValue, datatypeURI);
+//        return getLocalLiteral(literal.getEscapedForm());
     }
 
     private URIReference getLocalURIReference(URI uri, boolean validate) {

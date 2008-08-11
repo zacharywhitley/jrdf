@@ -92,8 +92,8 @@ public final class VariableName implements AttributeName {
         try {
             return ((AttributeName) obj).getLiteral().equals(getLiteral());
         } catch (ClassCastException cce) {
+            return false;
         }
-        return false;
     }
 
     @Override

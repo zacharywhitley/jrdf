@@ -64,12 +64,11 @@ package org.jrdf.graph.local;
 import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.global.GlobalizedBlankNode;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * RDF blank node. Note that blank nodes are deliberately devoid of external indentifying attributes.
@@ -80,6 +79,7 @@ import java.util.regex.Matcher;
  * @version $Revision$
  */
 public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankNode {
+    private static final int PRIME = 31;
     private static final Pattern PATTERN = Pattern.compile("(.+)\\#(.+)");
 
     /**
@@ -94,7 +94,6 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
      * The internal identifier for this node.
      */
     private Long id;
-
     /**
      * Globally Unique Identifier.
      */
@@ -140,7 +139,8 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
      */
     @Override
     public int hashCode() {
-        return id.hashCode() ^ uid.hashCode();
+        int hash = PRIME + id.hashCode();
+        return hash * PRIME + uid.hashCode();
     }
 
     /**
@@ -158,11 +158,12 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
         if (sameReference(this, obj)) {
             return true;
         }
-        if (!hasSuperClassOrInterface(GlobalizedBlankNode.class, obj)) {
+        try {
+            GlobalizedBlankNode tmpNode = (GlobalizedBlankNode) obj;
+            return getId().equals(tmpNode.getId()) && getUID().equals(tmpNode.getUID());
+        } catch (ClassCastException cce) {
             return false;
         }
-        GlobalizedBlankNode tmpNode = (GlobalizedBlankNode) obj;
-        return getId().equals(tmpNode.getId()) && getUID().equals(tmpNode.getUID());
     }
 
     /**
