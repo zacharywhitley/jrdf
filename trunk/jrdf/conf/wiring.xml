@@ -105,7 +105,6 @@
     </bean>
 
     <bean id="attributeValuePairHelper" class="org.jrdf.query.relation.mem.AttributeValuePairHelperImpl">
-        <constructor-arg ref="sortedAttributeFactory"/>
     </bean>
 
     <bean id="graphRelationFactory" class="org.jrdf.query.relation.mem.GraphRelationFactoryImpl">

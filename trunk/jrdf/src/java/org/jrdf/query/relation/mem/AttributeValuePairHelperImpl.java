@@ -75,13 +75,6 @@ import java.util.Map;
  * @version $Revision:$
  */
 public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
-    private static final int TRIPLES = 3;
-    private SortedAttributeFactory sortedAttributeFactory;
-
-    public AttributeValuePairHelperImpl(SortedAttributeFactory sortedAttributeFactory) {
-        this.sortedAttributeFactory = sortedAttributeFactory;
-    }
-
     public Map<Attribute, ValueOperation> createAvo(Triple triple, Attribute[] attributes) {
         Map<Attribute, ValueOperation> attributeValueOperations = new HashMap<Attribute, ValueOperation>();
         addValues(triple, attributes, attributeValueOperations);
