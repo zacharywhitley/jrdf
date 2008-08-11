@@ -1,6 +1,7 @@
 package org.jrdf.query.relation.mem;
 
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 
@@ -19,7 +20,9 @@ public final class NeqAVPOperation implements AVPOperation {
 
     public boolean addAttributeValuePair(Attribute attribute, Map<Attribute, ValueOperation> newAttributeValues,
         ValueOperation lhs, ValueOperation rhs) {
-        if (COMPARATOR.compare(lhs.getValue(), rhs.getValue()) != 0) {
+        Node lhsValue = lhs.getValue();
+        Node rhsValue = rhs.getValue();
+        if (COMPARATOR.compare(lhsValue, rhsValue) != 0) {
             newAttributeValues.put(attribute, rhs);
             return false;
         }
