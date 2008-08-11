@@ -3,6 +3,7 @@ JRDF Release 0.5.5.3
 * FILTER optimized (Bug 2045977).
 * AttributeValuePair replaced with Map<Attribute, ValueOperation>
  (Bug 2045670).
+* Prefixes do not work in FILTER (Bug 2037291).
 
 JRDF Release 0.5.5.2
 ====================
