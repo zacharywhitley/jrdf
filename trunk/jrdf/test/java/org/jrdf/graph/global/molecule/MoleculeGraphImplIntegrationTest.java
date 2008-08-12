@@ -61,6 +61,7 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.collection.MemMapFactory;
+import org.jrdf.graph.AnyObjectNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import org.jrdf.graph.AnySubjectNode;
@@ -78,6 +79,7 @@ import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B2R2B3;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B2R2R1;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B3R2R2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.BNODE2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.ELEMENT_FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GLOBAL_MOLECULE_COMPARATOR;
@@ -85,9 +87,8 @@ import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_COMPARATOR;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.R1R2B2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.TRIPLE_FACTORY;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.BNODE1;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.REF1;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.TRIPLE_FACTORY;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
@@ -439,8 +440,21 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     }
 
     public void testFindAnyNode() throws GraphException {
-        Triple triple = new TripleImpl(ANY_SUBJECT_NODE, REF1, BNODE1);
-        final ClosableIterator<Molecule> iterator = GRAPH.findMolecules(triple);
+        Triple triple = new TripleImpl(ANY_SUBJECT_NODE, REF1, BNODE2);
+        Molecule molecule = MOLECULE_FACTORY.createMolecule(B2R2B3);
+        Molecule molecule1 = MOLECULE_FACTORY.createMolecule(B2R2R1);
+        molecule.add(B1R1B2, molecule1);
+        GRAPH.add(molecule);
+        GRAPH.add(molecule1);
+        ClosableIterator<Molecule> iterator = GRAPH.findMolecules(triple);
+        assertTrue(iterator.hasNext());
+        Molecule mol1 = iterator.next();
+        assertEquals("Same molecule", 0, MOLECULE_COMPARATOR.compare(molecule, mol1));
+        assertFalse(iterator.hasNext());
+        iterator.close();
+        triple = new TripleImpl(BNODE2, REF1, ANY_OBJECT_NODE);
+        iterator = GRAPH.findMolecules(triple);
+        assertFalse(iterator.hasNext());
         iterator.close();
     }
 }
