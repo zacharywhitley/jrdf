@@ -185,6 +185,17 @@ public class MoleculeIndexMem implements MoleculeIndex<Long> {
         return new LongEmptyClosableIterator();
     }
 
+    public ClosableIterator<Long> getAllMIDs() {
+        final ClosableIterator<Long[]> iterator = this.iterator();
+        Set<Long> set = new HashSet<Long>();
+        while (iterator.hasNext()) {
+            final Long[] longs = iterator.next();
+            set.add(longs[3]);
+        }
+        iterator.close();
+        return new ClosableIteratorImpl<Long>(set.iterator());
+    }
+
     private Set<Long> squash(Collection<Set<Long>> collection, Set<Long> longs) {
         final Iterator<Set<Long>> iterator = collection.iterator();
         while (iterator.hasNext()) {

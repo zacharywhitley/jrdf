@@ -203,6 +203,17 @@ public class  MoleculeIndexBdb implements MoleculeIndex<Long> {
         return set;
     }
 
+    public ClosableIterator<Long> getAllMIDs() {
+        final ClosableIterator<Long[]> iterator = this.iterator();
+        Set<Long> set = new HashSet<Long>();
+        while (iterator.hasNext()) {
+            final Long[] longs = iterator.next();
+            set.add(longs[3]);
+        }
+        iterator.close();
+        return new ClosableIteratorImpl<Long>(set.iterator());
+    }
+
     public ClosableIterator<Long> getMidForOneValue(Long first) {
         final List<Long[]> list = index.get(first);
         Set<Long> set = new HashSet<Long>();

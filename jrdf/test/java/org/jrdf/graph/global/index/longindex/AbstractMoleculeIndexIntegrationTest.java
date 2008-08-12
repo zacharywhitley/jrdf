@@ -179,6 +179,19 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
         Set<Long> results = asSet(3L, 4L, 5L, 6L);
         checkSetResults(iterator, results);
     }
+
+    public void testGetAllMids() throws GraphException {
+        index.add(1L, 1L, 2L, 3L);
+        index.add(1L, 1L, 2L, 4L);
+        index.add(1L, 1L, 2L, 5L);
+        index.add(1L, 2L, 3L, 3L);
+        index.add(2L, 2L, 2L, 5L);
+        index.add(2L, 4L, 5L, 6L);
+        ClosableIterator<Long> iterator = index.getAllMIDs();
+        Set<Long> results = asSet(3L, 4L, 5L, 6L);
+        checkSetResults(iterator, results);
+    }
+
     private void checkSetResults(ClosableIterator<Long> iterator, Set<Long> results) {
         int length = 0;
         while (iterator.hasNext()) {

@@ -183,19 +183,27 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         return result;
     }
 
-    public ClosableIterator<Long> findMoleculeIDs(Long[] triple, Long pid) {
+    public ClosableIterator<Long> findMoleculeIDs(Long[] triple) {
         final Long subject = triple[0];
         final Long predicate = triple[1];
         final Long object = triple[2];
+        ClosableIterator<Long> iterator;
+        iterator = findMoleculeIDs(subject, predicate, object);
+        return iterator;
+    }
+
+    private ClosableIterator<Long> findMoleculeIDs(Long subject, Long predicate, Long object) {
+        ClosableIterator<Long> iterator;
         if (subject != null) {
-            return fixedSubjectMIDIterator(triple, subject, predicate, object);
+            iterator = fixedSubjectMIDIterator(subject, predicate, object);
         } else if (predicate != null) {
-            return anySubjectFixedPredicateMIDIterator(predicate, object);
+            iterator = anySubjectFixedPredicateMIDIterator(predicate, object);
         } else if (object != null) {
-            return anySubjectAnyPredicateFixedObjectMIDIterator(object);
+            iterator = anySubjectAnyPredicateFixedObjectMIDIterator(object);
         } else {
-            return this.findChildIds(1L);
+            iterator = indexes[0].getAllMIDs();
         }
+        return iterator;
     }
 
     private ClosableIterator<Long> anySubjectAnyPredicateFixedObjectMIDIterator(Long object) {
@@ -213,23 +221,25 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         }
     }
 
-    private ClosableIterator<Long> fixedSubjectMIDIterator(Long[] triple, Long subject, Long predicate, Long object) {
+    private ClosableIterator<Long> fixedSubjectMIDIterator(Long subject, Long predicate, Long object) {
+        ClosableIterator<Long> iterator;
         if (predicate != null) {
             if (object != null) {
                 // spo
-                return indexes[0].getSubSubSubIndex(subject, predicate, object);
+                iterator = indexes[0].getSubSubSubIndex(subject, predicate, object);
             } else {
                 // sp*
-                return indexes[0].getMidForTwoValues(subject, predicate);
+                iterator = indexes[0].getMidForTwoValues(subject, predicate);
             }
         } else {
-            if (triple[2] != null) {
+            if (object != null) {
                 // s*o
-                return indexes[2].getMidForTwoValues(object, subject);
+                iterator = indexes[2].getMidForTwoValues(object, subject);
             } else {
                 // s**
-                return indexes[0].getMidForOneValue(subject);
+                iterator = indexes[0].getMidForOneValue(subject);
             }
         }
+        return iterator;
     }
 }
