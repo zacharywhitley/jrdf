@@ -87,7 +87,7 @@ public interface MoleculeStructureIndex<T> {
 
     void close();
 
-    boolean keyExists(Long node);
-
     ClosableIterator<Long> getFourthIndex(Long first, Long second, Long third, Long fourth);
+
+    boolean containsPIDMID(Long pid, Long mid);
 }

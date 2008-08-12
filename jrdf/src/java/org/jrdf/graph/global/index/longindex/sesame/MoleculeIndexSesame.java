@@ -65,8 +65,10 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.btree.BTree;
 import static org.jrdf.util.btree.ByteHandler.toBytes;
 import org.jrdf.util.btree.EntryIteratorArray;
+import org.jrdf.util.btree.EntryIteratorOneFixedOneArray;
 import org.jrdf.util.btree.EntryIteratorOneFixedThreeArray;
 import org.jrdf.util.btree.EntryIteratorThreeFixedOneArray;
+import org.jrdf.util.btree.EntryIteratorTwoFixedOneArray;
 import org.jrdf.util.btree.EntryIteratorTwoFixedTwoArray;
 import org.jrdf.util.btree.RecordIteratorHelper;
 
@@ -129,6 +131,14 @@ public final class MoleculeIndexSesame implements MoleculeIndex<Long> {
 
     public ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third) {
         return new EntryIteratorThreeFixedOneArray(first, second, third, btree);
+    }
+
+    public ClosableIterator<Long> getMidForTwoValues(Long first, Long second) {
+        return new EntryIteratorTwoFixedOneArray(first, second, btree);
+    }
+
+    public ClosableIterator<Long> getMidForOneValue(Long first) {
+        return new EntryIteratorOneFixedOneArray(first, btree);
     }
 
     public boolean contains(Long first) {

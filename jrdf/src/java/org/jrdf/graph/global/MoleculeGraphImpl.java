@@ -302,11 +302,14 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs, 1L);
         try {
             while (iterator.hasNext()) {
-                Molecule m = handler.createMolecule(1L, iterator.next());
-                if (m != null && moleculeComparator.compare(molecule, m) == 0) {
-                    AddMoleculeToIndex amti = new AddMoleculeToIndex(writableIndex, localizer);
-                    amti.handleTriple(rootTriple);
-                    return molecule.add(rootTriple);
+                final Long mid = iterator.next();
+                if (readableIndex.isSubmoleculeOfParentID(1L, mid)) {
+                    Molecule m = handler.createMolecule(1L, mid);
+                    if (m != null && moleculeComparator.compare(molecule, m) == 0) {
+                        AddMoleculeToIndex amti = new AddMoleculeToIndex(writableIndex, localizer);
+                        amti.handleTriple(rootTriple);
+                        return molecule.add(rootTriple);
+                    }
                 }
             }
         } finally {
@@ -322,9 +325,11 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         try {
             while (iterator.hasNext()) {
                 Long aLong = iterator.next();
-                Molecule m = handler.createMolecule(1L, aLong);
-                if (m != null && moleculeComparator.compare(molecule, m) == 0) {
-                    return removeSubMolecules(molecule, rootTriple, tripleAsLongs, aLong);
+                if (readableIndex.isSubmoleculeOfParentID(1L, aLong)) {
+                    Molecule m = handler.createMolecule(1L, aLong);
+                    if (m != null && moleculeComparator.compare(molecule, m) == 0) {
+                        return removeSubMolecules(molecule, rootTriple, tripleAsLongs, aLong);
+                    }
                 }
             }
         } finally {
@@ -366,15 +371,17 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs, mid);
         while (iterator.hasNext()) {
             Long subMID = iterator.next();
-            Long[] quin = new Long[QUIN_SIZE];
-            System.arraycopy(tripleAsLongs, 0, quin, 0, QUIN_SIZE - 2);
-            writableIndex.remove(quin);
-            ClosableIterator<Long[]> triples = readableIndex.findTriplesForMid(mid, subMID);
-            while (triples.hasNext()) {
-                Long[] triple = triples.next();
-                removeFromIndex(triple, subMID);
+            if (readableIndex.isSubmoleculeOfParentID(mid, subMID)) {
+                Long[] quin = new Long[QUIN_SIZE];
+                System.arraycopy(tripleAsLongs, 0, quin, 0, QUIN_SIZE - 2);
+                writableIndex.remove(quin);
+                ClosableIterator<Long[]> triples = readableIndex.findTriplesForMid(mid, subMID);
+                while (triples.hasNext()) {
+                    Long[] triple = triples.next();
+                    removeFromIndex(triple, subMID);
+                }
+                triples.close();
             }
-            triples.close();
         }
         iterator.close();
     }

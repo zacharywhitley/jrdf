@@ -64,7 +64,7 @@ import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EntryIteratorOneFixedFourArray;
-import org.jrdf.util.EntryIteratorOneFixedOneArray;
+import org.jrdf.util.EntryIteratorOneFixedOneQuinArray;
 import org.jrdf.util.EntryIteratorTwoFixedFourArray;
 
 import static java.util.Arrays.asList;
@@ -159,7 +159,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     }
 
     public ClosableIterator<Long> findChildIds(Long parentId) {
-        return new EntryIteratorOneFixedOneArray(structureIndex[0].getSubIndex(parentId));
+        return new EntryIteratorOneFixedOneQuinArray(structureIndex[0].getSubIndex(parentId));
     }
 
     public long getMaxMoleculeId() {
@@ -176,7 +176,60 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         }
     }
 
+    public boolean isSubmoleculeOfParentID(Long pid, Long mid) {
+        final ClosableIterator<Long[]> subIndex = structureIndex[0].getSubSubIndex(pid, mid);
+        final boolean result = subIndex.hasNext();
+        subIndex.close();
+        return result;
+    }
+
     public ClosableIterator<Long> findMoleculeIDs(Long[] triple, Long pid) {
-        return structureIndex[1].getFourthIndex(triple[0], triple[1], triple[2], pid);
+        final Long subject = triple[0];
+        final Long predicate = triple[1];
+        final Long object = triple[2];
+        if (subject != null) {
+            return fixedSubjectMIDIterator(triple, subject, predicate, object);
+        } else if (predicate != null) {
+            return anySubjectFixedPredicateMIDIterator(predicate, object);
+        } else if (object != null) {
+            return anySubjectAnyPredicateFixedObjectMIDIterator(object);
+        } else {
+            return this.findChildIds(1L);
+        }
+    }
+
+    private ClosableIterator<Long> anySubjectAnyPredicateFixedObjectMIDIterator(Long object) {
+        // **o
+        return indexes[2].getMidForOneValue(object);
+    }
+
+    private ClosableIterator<Long> anySubjectFixedPredicateMIDIterator(Long predicate, Long object) {
+        if (object != null) {
+            // *po
+            return indexes[1].getMidForTwoValues(predicate, object);
+        } else {
+            // *p*
+            return indexes[1].getMidForOneValue(predicate);
+        }
+    }
+
+    private ClosableIterator<Long> fixedSubjectMIDIterator(Long[] triple, Long subject, Long predicate, Long object) {
+        if (predicate != null) {
+            if (object != null) {
+                // spo
+                return indexes[0].getSubSubSubIndex(subject, predicate, object);
+            } else {
+                // sp*
+                return indexes[0].getMidForTwoValues(subject, predicate);
+            }
+        } else {
+            if (triple[2] != null) {
+                // s*o
+                return indexes[2].getMidForTwoValues(object, subject);
+            } else {
+                // s**
+                return indexes[0].getMidForOneValue(subject);
+            }
+        }
     }
 }

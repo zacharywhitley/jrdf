@@ -76,6 +76,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
 public class MoleculeIndexMem implements MoleculeIndex<Long> {
     protected Map<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> index;
@@ -169,6 +170,41 @@ public class MoleculeIndexMem implements MoleculeIndex<Long> {
             }
         }
         return new LongArrayEmptyClosableIterator();
+    }
+
+    public ClosableIterator<Long> getMidForTwoValues(Long first, Long second) {
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> firstMap = index.get(first);
+        Set<Long> longs = new HashSet<Long>();
+        if (firstMap != null) {
+            ClosableMap<Long, Set<Long>> secondMap = firstMap.get(second);
+            if (secondMap != null) {
+                final Collection<Set<Long>> mids = secondMap.values();
+                return new ClosableIteratorImpl<Long>(squash(mids, longs).iterator());
+            }
+        }
+        return new LongEmptyClosableIterator();
+    }
+
+    private Set<Long> squash(Collection<Set<Long>> collection, Set<Long> longs) {
+        final Iterator<Set<Long>> iterator = collection.iterator();
+        while (iterator.hasNext()) {
+            longs.addAll(iterator.next());
+        }
+        return longs;
+    }
+
+    public ClosableIterator<Long> getMidForOneValue(Long first) {
+        ClosableMap<Long, ClosableMap<Long, Set<Long>>> firstMap = index.get(first);
+        Set<Long> longs = new HashSet<Long>();
+        if (firstMap != null) {
+            final Collection<ClosableMap<Long, Set<Long>>> collection = firstMap.values();
+            for (ClosableMap<Long, Set<Long>> entry : collection) {
+                final Collection<Set<Long>> set = entry.values();
+                longs = squash(set, longs);
+            }
+            return new ClosableIteratorImpl<Long>(longs.iterator());
+        }
+        return new LongEmptyClosableIterator();
     }
 
     public ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third) {

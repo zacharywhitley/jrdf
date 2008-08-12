@@ -69,6 +69,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.MoleculeGraph;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R1R1;
@@ -85,6 +86,8 @@ import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_COMP
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_FACTORY;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.R1R2B2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.TRIPLE_FACTORY;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.BNODE1;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.REF1;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
@@ -218,8 +221,8 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         assertEquals(8, GRAPH.getNumberOfTriples());
         Molecule mol = GRAPH.findEnclosingMolecule(B2R2B3);
         assertEquals("Same molecule", sm1, mol);
-        Triple tempTriple = TRIPLE_FACTORY.createTriple(MoleculeGraphTestUtil.REF1, MoleculeGraphTestUtil.REF1,
-                MoleculeGraphTestUtil.REF1);
+        Triple tempTriple = TRIPLE_FACTORY.createTriple(REF1, REF1,
+                REF1);
         mol.add(tempTriple);
         GRAPH.delete(molecule);
         assertEquals(0, GRAPH.getNumberOfTriples());
@@ -433,5 +436,11 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         molecule.remove(B1R1B2);
         assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(molecule, newMolecule));
         assertEquals("Same molecule", 1, newMolecule.size());
+    }
+
+    public void testFindAnyNode() throws GraphException {
+        Triple triple = new TripleImpl(ANY_SUBJECT_NODE, REF1, BNODE1);
+        final ClosableIterator<Molecule> iterator = GRAPH.findMolecules(triple);
+        iterator.close();
     }
 }

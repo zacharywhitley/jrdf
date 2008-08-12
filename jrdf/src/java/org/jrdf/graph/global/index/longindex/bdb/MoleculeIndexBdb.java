@@ -59,21 +59,24 @@
 
 package org.jrdf.graph.global.index.longindex.bdb;
 
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
-import org.jrdf.collection.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.FlatteningEntrySetClosableIterator;
 import org.jrdf.util.ListToOneClosableIterator;
+import org.jrdf.util.ListToOneValueClosableIterator;
 import org.jrdf.util.ListToTwoValuesClosableIterator;
 import org.jrdf.util.LongArrayEmptyClosableIterator;
 import org.jrdf.util.LongEmptyClosableIterator;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
+import java.util.Set;
 
 
 /**
@@ -176,16 +179,51 @@ public class  MoleculeIndexBdb implements MoleculeIndex<Long> {
         }
     }
 
+    public ClosableIterator<Long> getMidForTwoValues(Long first, Long second) {
+        final List<Long[]> list = index.get(first);
+        Set<Long> set = new HashSet<Long>();
+        if (list != null) {
+            final ClosableIterator<Long> objectIDs = new ListToOneValueClosableIterator(second, list.iterator());
+            while (objectIDs.hasNext()) {
+                final Long oid = objectIDs.next();
+                set = addAllFromIterator(first, second, set, oid);
+            }
+            objectIDs.close();
+            return new ClosableIteratorImpl<Long>(set.iterator());
+        }
+        return new LongEmptyClosableIterator();
+    }
+
+    private Set<Long> addAllFromIterator(Long first, Long second, Set<Long> set, Long oid) {
+        final ClosableIterator<Long> subSubSubIndex = getSubSubSubIndex(first, second, oid);
+        while (subSubSubIndex.hasNext()) {
+            set.add(subSubSubIndex.next());
+        }
+        subSubSubIndex.close();
+        return set;
+    }
+
+    public ClosableIterator<Long> getMidForOneValue(Long first) {
+        final List<Long[]> list = index.get(first);
+        Set<Long> set = new HashSet<Long>();
+        if (list != null) {
+            for (Long[] entry : list) {
+                set.add(entry[2]);
+            }
+            return new ClosableIteratorImpl<Long>(set.iterator());
+        }
+        return new LongEmptyClosableIterator();
+    }
+
     public void close() {
     }
 
     public ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third) {
         LinkedList<Long[]> list = index.get(first);
-        if (list == null) {
-            return new LongEmptyClosableIterator();
-        } else {
+        if (list != null) {
             Iterator<Long[]> iterator = list.iterator();
             return new ListToOneClosableIterator(second, third, iterator);
         }
+        return new LongEmptyClosableIterator();
     }
 }

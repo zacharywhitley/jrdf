@@ -57,27 +57,64 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.util.btree;
 
-import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
+import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
 
-public interface ReadableIndex<T> {
-    Long findMid(T... triple) throws GraphException;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
-    ClosableIterator<Long[]> findTriplesForMid(T pid, T mid);
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
 
-    Long findEnclosingMoleculeId(Long mid) throws GraphException;
+public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
+    private static final int QUADS = 4;
+    private RecordIterator iterator;
+    private byte[] currentValues;
+    private Set<Long> set;
+    private ClosableIterator<Long> longIterator;
 
-    ClosableIterator<Long> findChildIds(Long mid);
+    public EntryIteratorOneFixedOneArray(Long newFirst, BTree newBTree) {
+        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L);
+        try {
+            this.currentValues = iterator.next();
+            this.set = new HashSet<Long>();
+            while (currentValues != null) {
+                Long[] longs = ByteHandler.fromBytes(currentValues, QUADS);
+                set.add(longs[QUADS - 1]);
+                currentValues = iterator.next();
+            }
+            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    Long findHeadTripleMid(Long pid, Long... triple) throws GraphException;
+    public boolean close() {
+        try {
+            iterator.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            set.clear();
+        }
+    }
 
-    ClosableIterator<Long[]> findTriplesForPid(Long pid);
+    public boolean hasNext() {
+        return longIterator.hasNext();
+    }
 
-    long getMaxMoleculeId();
+    public Long next() {
+        return longIterator.next();
+    }
 
-    ClosableIterator<Long> findMoleculeIDs(Long[] triple, Long pid);
-
-    boolean isSubmoleculeOfParentID(Long pid, Long mid);
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot remove collection values - read only");
+    }
 }

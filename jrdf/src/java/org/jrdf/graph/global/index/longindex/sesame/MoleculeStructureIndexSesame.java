@@ -111,14 +111,6 @@ public final class MoleculeStructureIndexSesame implements MoleculeStructureInde
         return new EntryIteratorArray(btree, QUIN);
     }
 
-    public boolean keyExists(Long first) {
-        try {
-            return RecordIteratorHelper.contains(btree, first, QUIN);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public ClosableIterator<Long[]> getSubIndex(Long first) {
         return new EntryIteratorOneFixedFourArray(first, btree);
     }
@@ -134,6 +126,14 @@ public final class MoleculeStructureIndexSesame implements MoleculeStructureInde
     public boolean contains(Long first) {
         try {
             return RecordIteratorHelper.contains(btree, first, QUIN);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean containsPIDMID(Long pid, Long mid) {
+        try {
+            return RecordIteratorHelper.contains(btree, pid, mid, QUIN);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
