@@ -157,8 +157,12 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
         }
     }
 
-    public boolean keyExists(Long node) {
-        return index.containsKey(node);
+    public boolean containsPIDMID(Long pid, Long mid) {
+        final ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map = index.get(pid);
+        if (map != null) {
+            return map.containsKey(mid);
+        }
+        return false;
     }
 
     public ClosableIterator<Long[]> getSubIndex(Long first) {

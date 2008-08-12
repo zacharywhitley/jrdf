@@ -57,56 +57,64 @@
  *
  */
 
-package org.jrdf.util;
+package org.jrdf.util.btree;
 
-import java.util.NoSuchElementException;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
+import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Takes a quad long array and returns the 1st index.
- *
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
-    private ClosableIterator<Long[]> quadIterator;
-    private Long currentMid;
+public class EntryIteratorTwoFixedOneArray implements ClosableIterator<Long> {
+    private static final int QUADS = 4;
+    private RecordIterator iterator;
+    private byte[] currentValues;
+    private Set<Long> set;
+    private ClosableIterator<Long> longIterator;
 
-    public EntryIteratorOneFixedOneArray(ClosableIterator<Long[]> quads) {
-        quadIterator = quads;
-        currentMid = getNextMid();
-    }
-
-    private Long getNextMid() {
-        Long mid = null;
-        if (quadIterator.hasNext()) {
-            mid = quadIterator.next()[0];
+    public EntryIteratorTwoFixedOneArray(Long newFirst, Long newSecond, BTree newBTree) {
+        try {
+            this.iterator = getIterator(newBTree, newFirst, newSecond, 0L, 0L);
+            this.currentValues = iterator.next();
+            this.set = new HashSet<Long>();
+            while (currentValues != null) {
+                Long[] longs = ByteHandler.fromBytes(currentValues, QUADS);
+                set.add(longs[QUADS - 1]);
+                currentValues = iterator.next();
+            }
+            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return mid;
-    }
-
-    public boolean hasNext() {
-        return currentMid != null;
-    }
-
-    public Long next() {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
-        }
-        Long tmpMid = currentMid;
-        Long thisMid = currentMid;
-        while (thisMid != null && thisMid.equals(currentMid)) {
-            thisMid = getNextMid();
-        }
-        currentMid = thisMid;
-        return tmpMid;
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException();
     }
 
     public boolean close() {
-        return quadIterator.close();
+        try {
+            iterator.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            set.clear();
+        }
+    }
+
+    public boolean hasNext() {
+        return longIterator.hasNext();
+    }
+
+    public Long next() {
+        return longIterator.next();
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot remove collection values - read only");
     }
 }

@@ -88,4 +88,8 @@ public interface MoleculeIndex<T> {
     void close();
 
     ClosableIterator<Long> getSubSubSubIndex(Long first, Long second, Long third);
+
+    ClosableIterator<Long> getMidForTwoValues(Long first, Long second);
+
+    ClosableIterator<Long> getMidForOneValue(Long first);
 }

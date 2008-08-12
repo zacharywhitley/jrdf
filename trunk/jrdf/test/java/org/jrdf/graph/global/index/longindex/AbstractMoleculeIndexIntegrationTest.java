@@ -149,14 +149,41 @@ public abstract class AbstractMoleculeIndexIntegrationTest extends TestCase {
         index.add(2L, 2L, 2L, 5L);
         index.add(2L, 4L, 5L, 6L);
         ClosableIterator<Long> subIndex = index.getSubSubSubIndex(1L, 1L, 2L);
-        Set<Long> results = asSet(new Long[] {3L, 4L, 5L});
+        Set<Long> results = asSet(3L, 4L, 5L);
         checkSetResults(subIndex, results);
     }
 
+    public void testGetMidForTwoValues() throws GraphException {
+        index.add(1L, 1L, 2L, 3L);
+        index.add(1L, 1L, 2L, 4L);
+        index.add(1L, 1L, 2L, 5L);
+        index.add(1L, 2L, 3L, 6L);
+        index.add(2L, 2L, 2L, 5L);
+        index.add(2L, 4L, 5L, 6L);
+        ClosableIterator<Long> iterator = index.getMidForTwoValues(1L, 1L);
+        Set<Long> results = asSet(3L, 4L, 5L);
+        checkSetResults(iterator, results);
+        iterator = index.getMidForTwoValues(1L, 3L);
+        assertFalse(iterator.hasNext());
+        iterator.close();
+    }
+
+    public void testGetMidForOneValue() throws GraphException {
+        index.add(1L, 1L, 2L, 3L);
+        index.add(1L, 1L, 2L, 4L);
+        index.add(1L, 1L, 2L, 5L);
+        index.add(1L, 2L, 3L, 6L);
+        index.add(2L, 2L, 2L, 5L);
+        index.add(2L, 4L, 5L, 6L);
+        ClosableIterator<Long> iterator = index.getMidForOneValue(1L);
+        Set<Long> results = asSet(3L, 4L, 5L, 6L);
+        checkSetResults(iterator, results);
+    }
     private void checkSetResults(ClosableIterator<Long> iterator, Set<Long> results) {
         int length = 0;
         while (iterator.hasNext()) {
             Long aLong = iterator.next();
+            assertTrue("Contains " + aLong, setContainsLong(results, aLong));
             length++;
 
         }

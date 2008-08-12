@@ -57,27 +57,56 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.util;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.util.ClosableIterator;
+import java.util.NoSuchElementException;
 
-public interface ReadableIndex<T> {
-    Long findMid(T... triple) throws GraphException;
+/**
+ * Takes a quad long array and returns the 1st index.
+ *
+ * @author Yuan-Fang Li
+ * @version :$
+ */
 
-    ClosableIterator<Long[]> findTriplesForMid(T pid, T mid);
+public class EntryIteratorOneFixedOneQuinArray implements ClosableIterator<Long> {
+    private ClosableIterator<Long[]> quadIterator;
+    private Long currentMid;
 
-    Long findEnclosingMoleculeId(Long mid) throws GraphException;
+    public EntryIteratorOneFixedOneQuinArray(ClosableIterator<Long[]> quads) {
+        quadIterator = quads;
+        currentMid = getNextMid();
+    }
 
-    ClosableIterator<Long> findChildIds(Long mid);
+    private Long getNextMid() {
+        Long mid = null;
+        if (quadIterator.hasNext()) {
+            mid = quadIterator.next()[0];
+        }
+        return mid;
+    }
 
-    Long findHeadTripleMid(Long pid, Long... triple) throws GraphException;
+    public boolean hasNext() {
+        return currentMid != null;
+    }
 
-    ClosableIterator<Long[]> findTriplesForPid(Long pid);
+    public Long next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        Long tmpMid = currentMid;
+        Long thisMid = currentMid;
+        while (thisMid != null && thisMid.equals(currentMid)) {
+            thisMid = getNextMid();
+        }
+        currentMid = thisMid;
+        return tmpMid;
+    }
 
-    long getMaxMoleculeId();
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 
-    ClosableIterator<Long> findMoleculeIDs(Long[] triple, Long pid);
-
-    boolean isSubmoleculeOfParentID(Long pid, Long mid);
+    public boolean close() {
+        return quadIterator.close();
+    }
 }

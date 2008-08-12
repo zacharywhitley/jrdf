@@ -68,6 +68,7 @@
     <suppress checks="MagicNumber" files="MoleculeGraphImpl"/>
     <suppress checks="MagicNumber" files="ReadableIndexImpl"/>
     <suppress checks="ReturnCount" files="BlankNodeMapperImpl"/>
+    <suppress checks="ReturnCount" files="ReadableIndexImpl"/>
 
     <!-- Import -->
     <!-- Persistence -->
