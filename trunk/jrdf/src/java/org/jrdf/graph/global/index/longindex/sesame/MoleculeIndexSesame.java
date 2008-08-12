@@ -62,6 +62,7 @@ package org.jrdf.graph.global.index.longindex.sesame;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.btree.BTree;
 import static org.jrdf.util.btree.ByteHandler.toBytes;
 import org.jrdf.util.btree.EntryIteratorArray;
@@ -73,6 +74,8 @@ import org.jrdf.util.btree.EntryIteratorTwoFixedTwoArray;
 import org.jrdf.util.btree.RecordIteratorHelper;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class MoleculeIndexSesame implements MoleculeIndex<Long> {
     private static final int QUAD = 4;
@@ -139,6 +142,16 @@ public final class MoleculeIndexSesame implements MoleculeIndex<Long> {
 
     public ClosableIterator<Long> getMidForOneValue(Long first) {
         return new EntryIteratorOneFixedOneArray(first, btree);
+    }
+
+    public ClosableIterator<Long> getAllMIDs() {
+        final ClosableIterator<Long> iterator = getSubSubSubIndex(0L, 0L, 0L);
+        Set<Long> set = new HashSet<Long>();
+        while (iterator.hasNext()) {
+            set.add(iterator.next());
+        }
+        iterator.close();
+        return new ClosableIteratorImpl<Long>(set.iterator());
     }
 
     public boolean contains(Long first) {

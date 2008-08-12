@@ -186,7 +186,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
 
     public ClosableIterator<Molecule> findMolecules(Triple rootTriple) throws GraphException {
         Long[] localizedTriple = localizer.localizeTriple(rootTriple);
-        ClosableIterator<Long> midIterator = readableIndex.findMoleculeIDs(localizedTriple, 1L);
+        ClosableIterator<Long> midIterator = readableIndex.findMoleculeIDs(localizedTriple);
         return new ClosableMoleculeIterator(midIterator, handler);
     }
 
@@ -299,7 +299,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     public Molecule addRootTriple(Molecule molecule, Triple rootTriple) throws GraphException {
         Triple headTriple = molecule.getHeadTriple();
         Long[] tripleAsLongs = localizer.localizeTriple(headTriple);
-        ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs, 1L);
+        ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs);
         try {
             while (iterator.hasNext()) {
                 final Long mid = iterator.next();
@@ -321,7 +321,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     // TODO recursively remove submolecules
     public Molecule removeRootTriple(Molecule molecule, Triple rootTriple) throws GraphException {
         Long[] tripleAsLongs = localizer.localizeTriple(rootTriple);
-        ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs, 1L);
+        ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs);
         try {
             while (iterator.hasNext()) {
                 Long aLong = iterator.next();
@@ -368,7 +368,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     }
 
     private void removeFromIndex(Long[] tripleAsLongs, Long mid) throws GraphException {
-        ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs, mid);
+        ClosableIterator<Long> iterator = readableIndex.findMoleculeIDs(tripleAsLongs);
         while (iterator.hasNext()) {
             Long subMID = iterator.next();
             if (readableIndex.isSubmoleculeOfParentID(mid, subMID)) {

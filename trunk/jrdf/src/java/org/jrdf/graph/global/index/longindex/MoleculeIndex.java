@@ -92,4 +92,6 @@ public interface MoleculeIndex<T> {
     ClosableIterator<Long> getMidForTwoValues(Long first, Long second);
 
     ClosableIterator<Long> getMidForOneValue(Long first);
+
+    ClosableIterator<Long> getAllMIDs();
 }
