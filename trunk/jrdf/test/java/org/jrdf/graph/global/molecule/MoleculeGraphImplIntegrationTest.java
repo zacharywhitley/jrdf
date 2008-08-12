@@ -61,7 +61,6 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.collection.MemMapFactory;
-import org.jrdf.graph.AnyObjectNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import org.jrdf.graph.AnySubjectNode;

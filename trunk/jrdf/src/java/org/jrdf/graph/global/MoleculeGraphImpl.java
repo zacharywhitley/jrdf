@@ -70,6 +70,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.index.AddMoleculeToIndex;
 import org.jrdf.graph.global.index.ReadableIndex;
 import org.jrdf.graph.global.index.WritableIndex;
@@ -182,6 +183,12 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         Long mid = readableIndex.findMid(localizedTriple);
         Long pid = readableIndex.findEnclosingMoleculeId(mid);
         return handler.createMolecule(pid, mid);
+    }
+
+    public ClosableIterator<Molecule> findMolecules(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws GraphException {
+        Triple triple = new TripleImpl(subject, predicate, object);
+        return findMolecules(triple);
     }
 
     public ClosableIterator<Molecule> findMolecules(Triple rootTriple) throws GraphException {

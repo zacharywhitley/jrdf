@@ -62,6 +62,9 @@ package org.jrdf.graph.global;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.util.ClosableIterator;
 
@@ -81,4 +84,7 @@ public interface MoleculeGraph extends Graph {
 
     // TODO recursively remove submolecules
     Molecule removeRootTriple(Molecule molecule, Triple rootTriple) throws GraphException;
+
+    ClosableIterator<Molecule> findMolecules(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws GraphException;
 }
