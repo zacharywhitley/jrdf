@@ -66,7 +66,9 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.differentClasses;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.LinkedHashMap;
@@ -117,13 +119,13 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
 
     @Override
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (EqualsUtil.differentClasses(this, obj)) {
+        if (differentClasses(this, obj)) {
             return false;
         }
         return determineEqualityFromFields(this, (SingleConstraint) obj);
