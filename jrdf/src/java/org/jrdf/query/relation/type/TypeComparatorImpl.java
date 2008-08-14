@@ -84,16 +84,13 @@ public final class TypeComparatorImpl implements TypeComparator {
 
     public int compare(NodeType type1, NodeType type2) {
         ifNullThrowException(type1, type2);
-
-        if (type1.equals(type2)) {
-            return EQUAL;
-        }
-
-        int result;
-        if (!bothPositionalOrNode(type1, type2)) {
-            result = compareDifferentCategoryOfTypes(type1, type2);
-        } else {
-            result = compareSameCategoryOfTypes(type1, type2);
+        int result = EQUAL;
+        if (!type1.equals(type2)) {
+            if (!bothPositionalOrNode(type1, type2)) {
+                result = compareDifferentCategoryOfTypes(type1, type2);
+            } else {
+                result = compareSameCategoryOfTypes(type1, type2);
+            }
         }
         return result;
     }
