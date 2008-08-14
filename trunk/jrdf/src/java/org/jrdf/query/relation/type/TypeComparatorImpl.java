@@ -122,17 +122,19 @@ public final class TypeComparatorImpl implements TypeComparator {
     }
 
     private int comparePositionalNodeTypes(NodeType type1, NodeType type2) {
+        int result;
         if (type1 instanceof SubjectNodeType) {
-            return BEFORE;
+            result = BEFORE;
         } else if (type1 instanceof PredicateNodeType) {
             if (type2 instanceof ObjectNodeType) {
-                return BEFORE;
+                result = BEFORE;
             } else {
-                return AFTER;
+                result = AFTER;
             }
         } else {
-            return AFTER;
+            result = AFTER;
         }
+        return result;
     }
 
     private int compareNodeTypes(NodeType type, NodeType type2) {
