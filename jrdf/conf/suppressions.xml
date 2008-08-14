@@ -26,8 +26,6 @@
     <suppress checks="ClassDataAbstractionCoupling" files="PersistentJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="PersistentGlobalJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="LongIndexBdb"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexBdb"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
@@ -43,8 +41,9 @@
 
     <!-- Cleanup molecule implementation -->
     <suppress checks="BooleanExpressionComplexity" files="FlatteningFiveLongClosableIterator"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DecomposerPerformance"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexBdb"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexMem"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexSesame"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeStructureIndexMem"/>
@@ -63,27 +62,11 @@
     <suppress checks="JavaNCSS" files="MoleculeImpl"/>
     <suppress checks="JavaNCSS" files="NaiveGraphDecomposerImpl" />
     <suppress checks="MagicNumber" files="MoleculeStructureIndex"/>
-    <suppress checks="MagicNumber" files="WritableIndexImpl"/>
-    <suppress checks="MagicNumber" files="MoleculeIndexBdb"/>
-    <suppress checks="MagicNumber" files="MoleculeIndexMem"/>
     <suppress checks="MagicNumber" files="MoleculeGraphImpl"/>
-    <suppress checks="MagicNumber" files="ReadableIndexImpl"/>
+    <suppress checks="MagicNumber" files="WritableIndexImpl"/>
     <suppress checks="ReturnCount" files="BlankNodeMapperImpl"/>
 
     <!-- Import -->
-    <!-- Persistence -->
-    <suppress checks="JavaNCSS" files="ClassMapping"/>
-    <suppress checks="JavaNCSS" files="EntityManagerImpl"/>
-    <suppress checks="JavaNCSS" files="PropertyMapping"/>
-    <suppress checks="JavaNCSS" files="Statements"/>
-    <suppress checks="CyclomaticComplexity" files="ClassMapping"/>
-    <suppress checks="CyclomaticComplexity" files="EntityManagerImpl"/>
-    <suppress checks="CyclomaticComplexity" files="PropertyManagerImpl"/>
-    <suppress checks="CyclomaticComplexity" files="RDFIntrospector"/>
-    <suppress checks="CyclomaticComplexity" files="PropertyMapping"/>
-    <suppress checks="CyclomaticComplexity" files="Statements"/>
-    <suppress checks="ReturnCount" files="RDFIntrospector"/>
-
     <!-- BTree -->
     <suppress checks="BooleanExpressionComplexity" files="ByteArrayUtil"/>
     <suppress checks="BooleanExpressionComplexity" files="ByteHandler"/>

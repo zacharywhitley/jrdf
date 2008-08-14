@@ -94,6 +94,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class MoleculeGraphImpl implements MoleculeGraph {
+    private static final int QUIN_SIZE = 5;
+    private static final int QUAD_SIZE = 4;
     private final WritableIndex<Long> writableIndex;
     private final ReadableIndex<Long> readableIndex;
     private final MoleculeLocalizer localizer;
@@ -101,7 +103,6 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     private TripleComparator comparator;
     private MoleculeComparator moleculeComparator;
     private MoleculeGraphHandler handler;
-    private static final int QUIN_SIZE = 5;
 
     public MoleculeGraphImpl(WritableIndex<Long> newWriteIndex, ReadableIndex<Long> newReadIndex,
         MoleculeLocalizer newLocalizer, Graph newGraph, NodePool nodePool) {
@@ -157,8 +158,8 @@ public class MoleculeGraphImpl implements MoleculeGraph {
                 Long[] spom = spoms.next();
                 newMids.add(spom[3]);
                 Long[] quin = new Long[QUIN_SIZE];
-                System.arraycopy(spom, 0, quin, 0, 4);
-                quin[4] = pid;
+                System.arraycopy(spom, 0, quin, 0, QUAD_SIZE);
+                quin[QUAD_SIZE] = pid;
                 //writableIndex.remove(quin);
                 toRemove.add(quin);
             }
