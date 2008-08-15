@@ -75,16 +75,25 @@ public class SemanticLiteralComparatorImplUnitTest extends TestCase {
         final Literal literal1 = new LiteralImpl("4", XSD.INT);
         final Literal literal2 = new LiteralImpl("04", XSD.INTEGER);
         final Literal literal3 = new LiteralImpl("4", XSD.LONG);
-        final Literal literal4 = new LiteralImpl("4", XSD.FLOAT);
-        final Literal literal5 = new LiteralImpl("4.0", XSD.FLOAT);
-        assertEquals(0, semanticComparator.compare(literal1, literal2));
-        assertEquals(0, semanticComparator.compare(literal2, literal3));
-        assertEquals(0, semanticComparator.compare(literal4, literal5));
+        final Literal literal4 = new LiteralImpl("4", XSD.NON_NEGATIVE_INTEGER);
+        final Literal literal5 = new LiteralImpl("4", XSD.FLOAT);
+        final Literal literal6 = new LiteralImpl("4.0", XSD.FLOAT);
+        isEqual(literal1, literal2);
+        isEqual(literal1, literal3);
+        isEqual(literal1, literal4);
+        isEqual(literal2, literal3);
+        isEqual(literal2, literal4);
+        isEqual(literal5, literal6);
     }
 
     public void testSemanticallyEqualStrings() {
         final Literal literal1 = new LiteralImpl("foo");
         final Literal literal2 = new LiteralImpl("foo", XSD.STRING);
+        isEqual(literal1, literal2);
+    }
+
+    private void isEqual(Literal literal1, Literal literal2) {
         assertEquals(0, semanticComparator.compare(literal1, literal2));
+        assertEquals(0, semanticComparator.compare(literal2, literal1));
     }
 }
