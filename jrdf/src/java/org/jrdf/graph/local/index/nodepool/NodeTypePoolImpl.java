@@ -62,6 +62,7 @@ package org.jrdf.graph.local.index.nodepool;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.LocalizedNode;
 
@@ -76,13 +77,15 @@ public class NodeTypePoolImpl implements NodeTypePool {
     private Map<Long, String> uriNodePool;
     private Map<Long, String> literalNodePool;
     private StringNodeMapper mapper;
+    private Long nodeId;
+    private String nodeValue;
 
     public NodeTypePoolImpl(StringNodeMapper newMapper, Map<Long, String> blankNodePool,
         Map<Long, String> uriNodePool, Map<Long, String> literalNodePool) {
         this.blankNodePool = blankNodePool;
         this.uriNodePool = uriNodePool;
         this.literalNodePool = literalNodePool;
-        mapper = newMapper;
+        this.mapper = newMapper;
     }
 
     public boolean nodeExists(Long nodeId) {
@@ -111,16 +114,9 @@ public class NodeTypePoolImpl implements NodeTypePool {
     }
 
     public void put(Long id, LocalizedNode node) {
-        String value = mapper.convertToString(node);
-        if (BlankNode.class.isAssignableFrom(node.getClass())) {
-            blankNodePool.put(id, value);
-        } else if (URIReference.class.isAssignableFrom(node.getClass())) {
-            uriNodePool.put(id, value);
-        } else if (Literal.class.isAssignableFrom(node.getClass())) {
-            literalNodePool.put(id, value);
-        } else {
-            throw new IllegalArgumentException("Failed to add node with id: " + id + " Node: " + node);
-        }
+        nodeId = id;
+        nodeValue = mapper.convertToString(node);
+        node.accept(this);
     }
 
     public void addNodeValues(NodePool nodePool, List<Map<Long, String>> values) {
@@ -164,5 +160,24 @@ public class NodeTypePoolImpl implements NodeTypePool {
         number += (long) uriNodePool.size();
         number += (long) literalNodePool.size();
         return number;
+    }
+
+    public void visitBlankNode(BlankNode blankNode) {
+        blankNodePool.put(nodeId, nodeValue);
+    }
+
+    public void visitURIReference(URIReference uriReference) {
+        uriNodePool.put(nodeId, nodeValue);
+    }
+
+    public void visitLiteral(Literal literal) {
+        literalNodePool.put(nodeId, nodeValue);
+    }
+
+    public void visitNode(Node node) {
+        throw new IllegalArgumentException("Failed to add node with id: " + nodeId + " Node: " + node);
+    }
+
+    public void visitResource(Resource resource) {
     }
 }

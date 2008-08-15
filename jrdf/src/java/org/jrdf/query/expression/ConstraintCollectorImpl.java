@@ -48,6 +48,7 @@ public class ConstraintCollectorImpl extends ExpressionVisitorAdapter implements
         }
     }
 
+    @SuppressWarnings({ "unchecked" })
     public <V extends ExpressionVisitor> Map<Attribute, ValueOperation> getNext(Expression<V> expression) {
         ConstraintCollector expressionSimplifier = new ConstraintCollectorImpl();
         expression.accept((V) expressionSimplifier);
