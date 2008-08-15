@@ -60,6 +60,7 @@ package org.jrdf.graph.local;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.datatype.SemanticLiteralComparator;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
@@ -80,6 +81,6 @@ public class NodeComparatorImplUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
         ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PRIVATE);
         ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class,
-            BlankNodeComparator.class);
+            SemanticLiteralComparator.class, BlankNodeComparator.class);
     }
 }

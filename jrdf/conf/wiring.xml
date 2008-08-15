@@ -50,8 +50,15 @@
 
     <bean id="nodeComparator" class="org.jrdf.graph.local.NodeComparatorImpl">
         <constructor-arg ref="nodeTypeComparator"/>
+        <constructor-arg ref="literalComparator"/>
         <constructor-arg ref="blankNodeComparator"/>
     </bean>
+
+    <bean id="literalComparator" class="org.jrdf.graph.datatype.SemanticLiteralComparatorImpl">
+        <constructor-arg ref="lexicalComparator"/>
+    </bean>
+
+    <bean id="lexicalComparator" class="org.jrdf.graph.datatype.LexicalComparatorImpl"/>
 
     <bean id="tupleComparator" class="org.jrdf.query.relation.mem.TupleComparatorImpl">
         <constructor-arg ref="nodeComparator"/>

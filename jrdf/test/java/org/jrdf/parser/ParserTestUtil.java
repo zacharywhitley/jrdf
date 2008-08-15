@@ -72,8 +72,8 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.datatype.LexicalComparator;
 import org.jrdf.graph.datatype.LexicalComparatorImpl;
-import org.jrdf.graph.datatype.SemanticComparator;
-import org.jrdf.graph.datatype.SemanticComparatorImpl;
+import org.jrdf.graph.datatype.SemanticLiteralComparator;
+import org.jrdf.graph.datatype.SemanticLiteralComparatorImpl;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
@@ -96,7 +96,7 @@ public class ParserTestUtil {
     private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(CREATOR,
         NEW_GRAPH.getElementFactory());
     public static final LexicalComparator LEX_COMPARATOR = new LexicalComparatorImpl();
-    public static final SemanticComparator SEM_COMPARATOR = new SemanticComparatorImpl(LEX_COMPARATOR);
+    public static final SemanticLiteralComparator SEM_COMPARATOR = new SemanticLiteralComparatorImpl(LEX_COMPARATOR);
 
     private ParserTestUtil() {
     }

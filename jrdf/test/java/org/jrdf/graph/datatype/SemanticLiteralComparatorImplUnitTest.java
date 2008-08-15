@@ -61,25 +61,30 @@ package org.jrdf.graph.datatype;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Literal;
-import org.jrdf.util.test.Literal1;
+import org.jrdf.graph.local.LiteralImpl;
 import org.jrdf.vocabulary.XSD;
 
-public class SemanticComparatorImplUnitTest extends TestCase {
-    private SemanticComparator semanticComparator;
+public class SemanticLiteralComparatorImplUnitTest extends TestCase {
+    private SemanticLiteralComparator semanticComparator;
 
     public void setUp() {
-        semanticComparator = new SemanticComparatorImpl(new LexicalComparatorImpl());
+        semanticComparator = new SemanticLiteralComparatorImpl(new LexicalComparatorImpl());
     }
 
     public void testSemanticallyEqualNumbers() {
-        final Literal literal1 = new Literal1("4", XSD.INT);
-        final Literal literal2 = new Literal1("04", XSD.INTEGER);
-        final Literal literal3 = new Literal1("4", XSD.LONG);
-        final Literal literal4 = new Literal1("4", XSD.FLOAT);
-        final Literal literal5 = new Literal1("4.0", XSD.FLOAT);
+        final Literal literal1 = new LiteralImpl("4", XSD.INT);
+        final Literal literal2 = new LiteralImpl("04", XSD.INTEGER);
+        final Literal literal3 = new LiteralImpl("4", XSD.LONG);
+        final Literal literal4 = new LiteralImpl("4", XSD.FLOAT);
+        final Literal literal5 = new LiteralImpl("4.0", XSD.FLOAT);
         assertEquals(0, semanticComparator.compare(literal1, literal2));
         assertEquals(0, semanticComparator.compare(literal2, literal3));
         assertEquals(0, semanticComparator.compare(literal4, literal5));
     }
 
+    public void testSemanticallyEqualStrings() {
+        final Literal literal1 = new LiteralImpl("foo");
+        final Literal literal2 = new LiteralImpl("foo", XSD.STRING);
+        assertEquals(0, semanticComparator.compare(literal1, literal2));
+    }
 }

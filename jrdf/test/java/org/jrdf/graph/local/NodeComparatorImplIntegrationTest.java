@@ -65,6 +65,8 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.datatype.SemanticLiteralComparatorImpl;
+import org.jrdf.graph.datatype.SemanticLiteralComparator;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.ComparatorTestUtil;
@@ -101,7 +103,7 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
         ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
         ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class,
-            BlankNodeComparator.class);
+            SemanticLiteralComparator.class, BlankNodeComparator.class);
     }
 
     public void testNullPointerException() {
@@ -139,8 +141,8 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
     }
 
     public void testLiteralComparisonByString() {
-        assertEquals(BEFORE, nodeComparator.compare(LITERAL_1, LITERAL_2));
-        assertEquals(AFTER, nodeComparator.compare(LITERAL_2, LITERAL_1));
+        assertTrue(nodeComparator.compare(LITERAL_1, LITERAL_2) <= BEFORE);
+        assertTrue(nodeComparator.compare(LITERAL_2, LITERAL_1) >= AFTER);
         assertEquals(EQUAL, nodeComparator.compare(LITERAL_2, new LiteralImpl("foo")));
     }
 }
