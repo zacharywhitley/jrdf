@@ -23,7 +23,6 @@ public class HelloWorldResource extends Resource {
     */
    @Override
    public Representation getRepresentation(Variant variant) {
-      Representation representation = new StringRepresentation("hello, world", MediaType.TEXT_PLAIN);
-      return representation;
+       return new StringRepresentation("hello, world", MediaType.TEXT_PLAIN);
    }
 }
