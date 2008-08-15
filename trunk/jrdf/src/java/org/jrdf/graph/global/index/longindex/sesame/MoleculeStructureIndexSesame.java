@@ -64,10 +64,11 @@ import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.btree.BTree;
 import static org.jrdf.util.btree.ByteHandler.toBytes;
-import org.jrdf.util.btree.EntryIteratorArray;
+import org.jrdf.util.btree.EntryIteratorFixedLengthLongArray;
 import org.jrdf.util.btree.EntryIteratorFourFixedOneArray;
-import org.jrdf.util.btree.EntryIteratorOneFixedFourArray;
-import org.jrdf.util.btree.EntryIteratorTwoFixedThreeArray;
+import org.jrdf.util.btree.EntryIteratorOneFixedOneArray;
+import org.jrdf.util.btree.EntryIteratorThreeFixedOneArray;
+import org.jrdf.util.btree.EntryIteratorTwoFixedOneArray;
 import org.jrdf.util.btree.RecordIteratorHelper;
 
 import java.io.IOException;
@@ -108,19 +109,39 @@ public final class MoleculeStructureIndexSesame implements MoleculeStructureInde
     }
 
     public ClosableIterator<Long[]> iterator() {
-        return new EntryIteratorArray(btree, QUIN);
+        return new EntryIteratorFixedLengthLongArray(QUIN, btree);
     }
 
     public ClosableIterator<Long[]> getSubIndex(Long first) {
-        return new EntryIteratorOneFixedFourArray(first, btree);
+        return new EntryIteratorFixedLengthLongArray(QUIN, btree, first);
     }
 
     public ClosableIterator<Long[]> getSubSubIndex(Long first, Long second) {
-        return new EntryIteratorTwoFixedThreeArray(first, second, btree);
+        return new EntryIteratorFixedLengthLongArray(QUIN, btree, first, second);
     }
 
-    public ClosableIterator<Long> getFourthIndex(Long first, Long second, Long third, Long fourth) {
+    public ClosableIterator<Long[]> getFourthIndex(Long first, Long second, Long third) {
+        return new EntryIteratorFixedLengthLongArray(QUIN, btree, first, second, third);
+    }
+
+    public ClosableIterator<Long> getFifthIndex(Long first, Long second, Long third, Long fourth) {
         return new EntryIteratorFourFixedOneArray(first, second, third, fourth, btree);
+    }
+
+    public ClosableIterator<Long> getFourthIndexOnly(Long first, Long second, Long third) {
+        return new EntryIteratorThreeFixedOneArray(first, second, third, btree);
+    }
+
+    public ClosableIterator<Long> getFourthForTwoValues(Long first, Long second) {
+        return new EntryIteratorTwoFixedOneArray(first, second, btree);
+    }
+
+    public ClosableIterator<Long> getFourthForOneValue(Long first) {
+        return new EntryIteratorOneFixedOneArray(first, btree);
+    }
+
+    public ClosableIterator<Long> getAllFourthIndex() {
+        return new EntryIteratorThreeFixedOneArray(0L, 0L, 0L, btree);
     }
 
     public boolean contains(Long first) {

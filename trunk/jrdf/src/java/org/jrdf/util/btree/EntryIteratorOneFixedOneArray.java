@@ -73,20 +73,20 @@ import java.util.Set;
  */
 
 public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUADS = 4;
+    private static final int QUIN = 5;
     private RecordIterator iterator;
     private byte[] currentValues;
     private Set<Long> set;
     private ClosableIterator<Long> longIterator;
 
     public EntryIteratorOneFixedOneArray(Long newFirst, BTree newBTree) {
-        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L);
+        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
         try {
             this.currentValues = iterator.next();
             this.set = new HashSet<Long>();
             while (currentValues != null) {
-                Long[] longs = ByteHandler.fromBytes(currentValues, QUADS);
-                set.add(longs[QUADS - 1]);
+                Long[] longs = ByteHandler.fromBytes(currentValues, QUIN);
+                set.add(longs[QUIN - 1]);
                 currentValues = iterator.next();
             }
             longIterator = new ClosableIteratorImpl<Long>(set.iterator());
@@ -97,12 +97,11 @@ public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
 
     public boolean close() {
         try {
+            set.clear();
             iterator.close();
             return true;
         } catch (IOException e) {
             return false;
-        } finally {
-            set.clear();
         }
     }
 

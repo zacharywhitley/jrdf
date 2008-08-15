@@ -68,6 +68,7 @@ import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.FlatteningFiveLongClosableIterator;
 import org.jrdf.util.FlatteningFourLongClosableIterator;
 import org.jrdf.util.FlatteningThreeLongClosableIterator;
+import org.jrdf.util.FlatteningTwoLongClosableIterator;
 import org.jrdf.util.LongArrayEmptyClosableIterator;
 import org.jrdf.util.LongEmptyClosableIterator;
 
@@ -75,6 +76,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
 public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
     private ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> index;
@@ -190,7 +192,21 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
         return new LongArrayEmptyClosableIterator();
     }
 
-    public ClosableIterator<Long> getFourthIndex(Long first, Long second, Long third, Long fourth) {
+    public ClosableIterator<Long[]> getFourthIndex(Long first, Long second, Long third) {
+        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> subIndex = index.get(first);
+        if (subIndex != null) {
+            ClosableMap<Long, ClosableMap<Long, Set<Long>>> subSubIndex = subIndex.get(second);
+            if (subSubIndex != null) {
+                final ClosableMap<Long, Set<Long>> map = subSubIndex.get(third);
+                if (map != null) {
+                    return new FlatteningTwoLongClosableIterator(map);
+                }
+            }
+        }
+        return new LongArrayEmptyClosableIterator();
+    }
+
+    public ClosableIterator<Long> getFifthIndex(Long first, Long second, Long third, Long fourth) {
         ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> firstIndex = index.get(first);
         if (firstIndex != null) {
             ClosableMap<Long, ClosableMap<Long, Set<Long>>> secondIndex = firstIndex.get(second);
@@ -203,6 +219,78 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
             }
         }
         return new LongEmptyClosableIterator();
+    }
+
+    public ClosableIterator<Long> getFourthIndexOnly(Long first, Long second, Long third) {
+        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> firstIndex = index.get(first);
+        if (firstIndex != null) {
+            ClosableMap<Long, ClosableMap<Long, Set<Long>>> secondIndex = firstIndex.get(second);
+            if (secondIndex != null) {
+                ClosableMap<Long, Set<Long>> thirdIndex = secondIndex.get(third);
+                if (thirdIndex != null) {
+                    return new ClosableIteratorImpl<Long>(thirdIndex.keySet().iterator());
+                }
+            }
+        }
+        return new LongEmptyClosableIterator();
+    }
+
+    public ClosableIterator<Long> getAllFourthIndex() {
+        Set<Long> longs = new HashSet<Long>();
+        final Collection<ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> collection =
+                index.values();
+        for (ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map : collection) {
+            final Collection<ClosableMap<Long, ClosableMap<Long, Set<Long>>>> subCollection = map.values();
+            for (ClosableMap<Long, ClosableMap<Long, Set<Long>>> subMap : subCollection) {
+                final Collection<ClosableMap<Long, Set<Long>>> subSubCollection = subMap.values();
+                for (ClosableMap<Long, Set<Long>> subSubMap : subSubCollection) {
+                    longs.addAll(subSubMap.keySet());
+                }
+            }
+        }
+        return new ClosableIteratorImpl<Long>(longs.iterator());
+    }
+
+    public ClosableIterator<Long> getFourthForTwoValues(Long first, Long second) {
+        final ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> firstMap = index.get(first);
+        Set<Long> longs = new HashSet<Long>();
+        if (firstMap != null) {
+            final ClosableMap<Long, ClosableMap<Long, Set<Long>>> secondMap = firstMap.get(second);
+            if (secondMap != null) {
+                final Collection<ClosableMap<Long, Set<Long>>> closableMaps = secondMap.values();
+                return new ClosableIteratorImpl<Long>(squash(closableMaps, longs).iterator());
+            }
+        }
+        return new LongEmptyClosableIterator();
+    }
+
+    public ClosableIterator<Long> getFourthForOneValue(Long first) {
+        final ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> subIndex = index.get(first);
+        Set<Long> longs = new HashSet<Long>();
+        if (subIndex != null) {
+            final Collection<ClosableMap<Long, ClosableMap<Long, Set<Long>>>> collection = subIndex.values();
+            return new ClosableIteratorImpl<Long>(moreSquash(collection, longs).iterator());
+        }
+        return new LongEmptyClosableIterator();
+    }
+
+    private Set<Long> moreSquash(Collection<ClosableMap<Long, ClosableMap<Long, Set<Long>>>> collection,
+                                 Set<Long> longs) {
+        final Iterator<ClosableMap<Long, ClosableMap<Long, Set<Long>>>> iterator = collection.iterator();
+        while (iterator.hasNext()) {
+            final ClosableMap<Long, ClosableMap<Long, Set<Long>>> map = iterator.next();
+            longs = squash(map.values(), longs);
+        }
+        return longs;
+    }
+
+    private Set<Long> squash(Collection<ClosableMap<Long, Set<Long>>> collection, Set<Long> longs) {
+        final Iterator<ClosableMap<Long, Set<Long>>> iterator = collection.iterator();
+        while (iterator.hasNext()) {
+            final ClosableMap<Long, Set<Long>> map = iterator.next();
+            longs.addAll(map.keySet());
+        }
+        return longs;
     }
 
     public boolean removeSubIndex(Long first) {

@@ -73,7 +73,7 @@ import java.util.Set;
  */
 
 public class EntryIteratorTwoFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUADS = 4;
+    private static final int QUIN = 5;
     private RecordIterator iterator;
     private byte[] currentValues;
     private Set<Long> set;
@@ -81,12 +81,12 @@ public class EntryIteratorTwoFixedOneArray implements ClosableIterator<Long> {
 
     public EntryIteratorTwoFixedOneArray(Long newFirst, Long newSecond, BTree newBTree) {
         try {
-            this.iterator = getIterator(newBTree, newFirst, newSecond, 0L, 0L);
+            this.iterator = getIterator(newBTree, newFirst, newSecond, 0L, 0L, 0L);
             this.currentValues = iterator.next();
             this.set = new HashSet<Long>();
             while (currentValues != null) {
-                Long[] longs = ByteHandler.fromBytes(currentValues, QUADS);
-                set.add(longs[QUADS - 1]);
+                Long[] longs = ByteHandler.fromBytes(currentValues, QUIN);
+                set.add(longs[QUIN - 2]);
                 currentValues = iterator.next();
             }
             longIterator = new ClosableIteratorImpl<Long>(set.iterator());

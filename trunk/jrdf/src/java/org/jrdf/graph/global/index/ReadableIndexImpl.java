@@ -60,7 +60,6 @@
 package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EntryIteratorOneFixedFourArray;
@@ -70,16 +69,14 @@ import org.jrdf.util.EntryIteratorTwoFixedFourArray;
 import static java.util.Arrays.asList;
 
 public class ReadableIndexImpl implements ReadableIndex<Long> {
-    private final MoleculeIndex<Long>[] indexes;
     private final MoleculeStructureIndex<Long>[] structureIndex;
 
-    public ReadableIndexImpl(MoleculeIndex<Long>[] newIndexes, MoleculeStructureIndex<Long>[] newStructureIndex) {
-        this.indexes = newIndexes;
+    public ReadableIndexImpl(MoleculeStructureIndex<Long>[] newStructureIndex) {
         this.structureIndex = newStructureIndex;
     }
 
     public Long findHeadTripleMid(Long pid, Long... triple) throws GraphException {
-        final ClosableIterator<Long[]> index = structureIndex[0].getSubIndex(pid);
+        final ClosableIterator<Long[]> index = structureIndex[3].getSubIndex(pid);
         try {
             while (index.hasNext()) {
                 Long[] midSPO = index.next();
@@ -94,15 +91,20 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         throw new GraphException("Cannot find triple:  " + asList(triple));
     }
 
+    public ClosableIterator<Long[]> getMidPidPairs(Long... triple) {
+        return structureIndex[0].getFourthIndex(triple[0], triple[1], triple[2]);
+    }
+
     // TODO should return null instead of throw exception?
     public Long findMid(Long... triple) throws GraphException {
-        final ClosableIterator<Long[]> index = indexes[0].getSubSubIndex(triple[0], triple[1]);
+        final ClosableIterator<Long[]> index = structureIndex[0].getFourthIndex(triple[0], triple[1], triple[2]);
         try {
             while (index.hasNext()) {
-                Long[] oAndMid = index.next();
+                Long[] oMidAndPid = index.next();
                 // Make sure object equals required value and mid is not 1L (not in a molecule).
-                if (oAndMid[0].equals(triple[2]) && !oAndMid[1].equals(1L)) {
-                    return oAndMid[1];
+                if (!oMidAndPid[0].equals(1L)) {
+                    index.close();
+                    return oMidAndPid[0];
                 }
             }
         } finally {
@@ -112,58 +114,54 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     }
 
     public ClosableIterator<Long[]> findTriplesForMid(Long pid, Long mid) {
-        return new EntryIteratorTwoFixedFourArray(structureIndex[0].getSubSubIndex(pid, mid), mid);
+        return new EntryIteratorTwoFixedFourArray(structureIndex[3].getSubSubIndex(pid, mid), mid);
     }
 
     public ClosableIterator<Long[]> findTriplesForPid(Long pid) {
-        return new EntryIteratorOneFixedFourArray(structureIndex[0].getSubIndex(pid));
+        return new EntryIteratorOneFixedFourArray(structureIndex[3].getSubIndex(pid));
     }
 
-    public Long findEnclosingMoleculeId(Long mid) throws GraphException {
-        ClosableIterator<Long[]> subIndex = structureIndex[0].getSubIndex(1L);
-        try {
-            while (subIndex.hasNext()) {
-                Long[] quad = subIndex.next();
-                if (quad[0].equals(mid)) {
-                    return 1L;
-                }
-                if (!findParentMoleculeId(quad[0], mid).equals(0L)) {
-                    return quad[0];
-                }
-            }
-            throw new GraphException("Cannot find parent molecule id for: " + mid);
-        } finally {
-            subIndex.close();
-        }
+    public Long findEnclosingMoleculeId(Long mid) {
+        return findParentMoleculeId(1L, mid);
     }
 
     private Long findParentMoleculeId(Long parentId, Long mid) {
-        final ClosableIterator<Long[]> subIndex = structureIndex[0].getSubIndex(parentId);
-        try {
-            while (subIndex.hasNext()) {
-                Long[] quad = subIndex.next();
-                if (quad[0].equals(mid)) {
+        final ClosableIterator<Long[]> subIndex = structureIndex[3].getSubIndex(parentId);
+        while (subIndex.hasNext()) {
+            final Long[] quad = subIndex.next();
+            if (quad[0].equals(mid)) {
+                subIndex.close();
+                return parentId;
+            } else {
+                final Long pid = findParentMoleculeId(quad[0], mid);
+                if (pid != 0L) {
                     subIndex.close();
-                    return parentId;
-                }
-                Long tmpId = findParentMoleculeId(quad[0], mid);
-                if (!tmpId.equals(0L)) {
-                    subIndex.close();
-                    return parentId;
+                    return pid;
                 }
             }
-        } finally {
-            subIndex.close();
         }
+        subIndex.close();
         return 0L;
     }
 
     public ClosableIterator<Long> findChildIds(Long parentId) {
-        return new EntryIteratorOneFixedOneQuinArray(structureIndex[0].getSubIndex(parentId));
+        return new EntryIteratorOneFixedOneQuinArray(structureIndex[3].getSubIndex(parentId));
+    }
+
+    public Long findTopMoleculeID(Long mid) throws GraphException {
+        Long tmpPid = mid;
+        while (tmpPid != 1L) {
+            tmpPid = findEnclosingMoleculeId(mid);
+            if (tmpPid == 1L) {
+                break;
+            }
+            mid = tmpPid;
+        }
+        return mid;
     }
 
     public long getMaxMoleculeId() {
-        final ClosableIterator<Long[]> iterator = structureIndex[0].iterator();
+        final ClosableIterator<Long[]> iterator = structureIndex[3].iterator();
         long max = 1;
         try {
             while (iterator.hasNext()) {
@@ -177,47 +175,38 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
     }
 
     public boolean isSubmoleculeOfParentID(Long pid, Long mid) {
-        final ClosableIterator<Long[]> subIndex = structureIndex[0].getSubSubIndex(pid, mid);
+        final ClosableIterator<Long[]> subIndex = structureIndex[3].getSubSubIndex(pid, mid);
         final boolean result = subIndex.hasNext();
         subIndex.close();
         return result;
     }
 
     public ClosableIterator<Long> findMoleculeIDs(Long[] triple) {
-        final Long subject = triple[0];
-        final Long predicate = triple[1];
-        final Long object = triple[2];
         ClosableIterator<Long> iterator;
-        iterator = findMoleculeIDs(subject, predicate, object);
-        return iterator;
-    }
-
-    private ClosableIterator<Long> findMoleculeIDs(Long subject, Long predicate, Long object) {
-        ClosableIterator<Long> iterator;
-        if (subject != null) {
-            iterator = fixedSubjectMIDIterator(subject, predicate, object);
-        } else if (predicate != null) {
-            iterator = anySubjectFixedPredicateMIDIterator(predicate, object);
-        } else if (object != null) {
-            iterator = anySubjectAnyPredicateFixedObjectMIDIterator(object);
+        if (triple[0] != null) {
+            iterator = fixedSubjectMIDIterator(triple[0], triple[1], triple[2]);
+        } else if (triple[1] != null) {
+            iterator = anySubjectFixedPredicateMIDIterator(triple[1], triple[2]);
+        } else if (triple[2] != null) {
+            iterator = anySubjectAnyPredicateFixedObjectMIDIterator(triple[2]);
         } else {
-            iterator = indexes[0].getAllMIDs();
+            iterator = structureIndex[0].getAllFourthIndex();
         }
         return iterator;
     }
 
     private ClosableIterator<Long> anySubjectAnyPredicateFixedObjectMIDIterator(Long object) {
         // **o
-        return indexes[2].getMidForOneValue(object);
+        return structureIndex[2].getFourthForOneValue(object);
     }
 
     private ClosableIterator<Long> anySubjectFixedPredicateMIDIterator(Long predicate, Long object) {
         if (object != null) {
             // *po
-            return indexes[1].getMidForTwoValues(predicate, object);
+            return structureIndex[1].getFourthForTwoValues(predicate, object);
         } else {
             // *p*
-            return indexes[1].getMidForOneValue(predicate);
+            return structureIndex[1].getFourthForOneValue(predicate);
         }
     }
 
@@ -226,18 +215,19 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
         if (predicate != null) {
             if (object != null) {
                 // spo
-                iterator = indexes[0].getSubSubSubIndex(subject, predicate, object);
+                iterator = structureIndex[0].getFourthIndexOnly(subject, predicate, object);
+
             } else {
                 // sp*
-                iterator = indexes[0].getMidForTwoValues(subject, predicate);
+                iterator = structureIndex[0].getFourthForTwoValues(subject, predicate);
             }
         } else {
             if (object != null) {
                 // s*o
-                iterator = indexes[2].getMidForTwoValues(object, subject);
+                iterator = structureIndex[2].getFourthForTwoValues(object, subject);
             } else {
                 // s**
-                iterator = indexes[0].getMidForOneValue(subject);
+                iterator = structureIndex[0].getFourthForOneValue(subject);
             }
         }
         return iterator;

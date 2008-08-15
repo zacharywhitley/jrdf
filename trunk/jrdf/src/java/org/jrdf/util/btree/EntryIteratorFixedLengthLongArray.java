@@ -57,31 +57,84 @@
  *
  */
 
-package org.jrdf.graph.global.index.longindex.bdb;
+package org.jrdf.util.btree;
 
-import org.jrdf.graph.global.index.longindex.AbstractMoleculeIndexIntegrationTest;
-import org.jrdf.collection.BdbMapFactory;
-import org.jrdf.collection.MapFactory;
-import org.jrdf.util.TempDirectoryHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
+
+import java.io.IOException;
+import static java.util.Arrays.fill;
+import java.util.NoSuchElementException;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class MoleculeIndexBdbIntegrationTest extends AbstractMoleculeIndexIntegrationTest {
-    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
-    private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
-    private static final MapFactory FACTORY = new BdbMapFactory(BDB_HANDLER, "molMaps");
+public class EntryIteratorFixedLengthLongArray implements ClosableIterator<Long[]> {
+    private RecordIterator iterator;
+    private byte[] currentValues;
+    private int length;
+    private int fixed;
 
-    public void setUp() throws Exception {
-        index = new MoleculeIndexBdb(FACTORY);
+    public EntryIteratorFixedLengthLongArray(int length, BTree newBTree, Long... nodes) {
+        this.length = length;
+        Long[] longs = getLongs(nodes);
+        this.iterator = getIterator(newBTree, longs);
+        getNextValues();
     }
 
-    public void tearDown() {
-        index.clear();
-        index.close();
+    private Long[] getLongs(Long... nodes) {
+        Long[] longs = new Long[this.length];
+        fill(longs, 0L);
+        if (nodes == null || nodes.length == 0) {
+            fixed = 0;
+        } else {
+            fixed = nodes.length;
+            for (int i = 0; i < nodes.length; i++) {
+                longs[i] = nodes[i];
+            }
+        }
+        return longs;
+    }
+
+    public boolean hasNext() {
+        return currentValues != null;
+    }
+
+    public Long[] next() {
+        // Current values null then we are at the end.
+        if (currentValues == null) {
+            throw new NoSuchElementException();
+        }
+        final int returnLength = length - fixed;
+        Long[] longs = ByteHandler.fromBytes(currentValues, length);
+        Long[] returnValues = new Long[returnLength];
+        for (int i = fixed; i < length; i++) {
+            returnValues[i - fixed] = longs[i];
+        }
+        getNextValues();
+        return returnValues;
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot modify collection values - read only");
+    }
+
+    private void getNextValues() {
+        try {
+            currentValues = iterator.next();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean close() {
+        try {
+            iterator.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

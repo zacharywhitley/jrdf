@@ -60,10 +60,13 @@
 package org.jrdf.util.btree;
 
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
+import static org.jrdf.util.btree.ByteHandler.fromBytes;
 import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -73,21 +76,31 @@ import java.util.NoSuchElementException;
  * To change this template use File | Settings | File Templates.
  */
 public class EntryIteratorThreeFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUAD = 4;
+    private static final int QUIN = 5;
     private RecordIterator iterator;
     private byte[] currentValues;
+    private Long currentLong;
+    private ClosableIterator<Long> longIterator;
+    private Set<Long> set;
 
     public EntryIteratorThreeFixedOneArray(long newFirst, long newSecond, long newThird, BTree newBTree) {
         try {
-            this.iterator = getIterator(newBTree, newFirst, newSecond, newThird, 0L);
+            set = new HashSet<Long>();
+            this.iterator = getIterator(newBTree, newFirst, newSecond, newThird, 0L, 0L);
             this.currentValues = iterator.next();
+            while (currentValues != null) {
+                currentLong = getLongFromByteArray();
+                set.add(currentLong);
+                currentValues = iterator.next();
+            }
+            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public boolean hasNext() {
-        return (currentValues != null);
+        return longIterator.hasNext();
     }
 
     public void remove() {
@@ -95,21 +108,11 @@ public class EntryIteratorThreeFixedOneArray implements ClosableIterator<Long> {
     }
 
     public Long next() {
-        if (currentValues == null) {
-            throw new NoSuchElementException();
-        }
-        Long[] returnValues = ByteHandler.fromBytes(currentValues, QUAD);
-        getNextValues();
-        return new Long(returnValues[QUAD - 1]);
-
+        return longIterator.next();
     }
 
-    private void getNextValues() {
-        try {
-            currentValues = iterator.next();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private Long getLongFromByteArray() {
+        return fromBytes(currentValues, QUIN)[QUIN - 2];
     }
 
     public boolean close() {
@@ -118,6 +121,9 @@ public class EntryIteratorThreeFixedOneArray implements ClosableIterator<Long> {
             return true;
         } catch (IOException e) {
             return false;
+        } finally {
+            set.clear();
+            longIterator.close();
         }
     }
 }
