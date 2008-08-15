@@ -60,12 +60,13 @@
 package org.jrdf.graph.local.index.nodepool;
 
 import org.jrdf.graph.Node;
+import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.local.LocalizedNode;
 
 import java.util.List;
 import java.util.Map;
 
-public interface NodeTypePool {
+public interface NodeTypePool extends TypedNodeVisitor {
     Node get(Long nodeId);
 
     void put(Long id, LocalizedNode node);
