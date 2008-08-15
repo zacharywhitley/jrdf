@@ -61,6 +61,9 @@ package org.jrdf.graph.global;
 
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.datatype.SemanticLiteralComparatorImpl;
+import org.jrdf.graph.datatype.LexicalComparatorImpl;
+import org.jrdf.graph.datatype.SemanticLiteralComparator;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.GlobalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.NodeComparatorImpl;
@@ -72,7 +75,8 @@ public class ReverseGroundedTripleComparatorFactoryImpl implements GroundedTripl
     public TripleComparator newComparator() {
         NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
         BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
-        NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, blankNodeComparator);
+        SemanticLiteralComparator literalComparator = new SemanticLiteralComparatorImpl(new LexicalComparatorImpl());
+        NodeComparator nodeComparator = new NodeComparatorImpl(typeComparator, literalComparator, blankNodeComparator);
         TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
         return new ReverseGroundedTripleComparatorImpl(tripleComparator);
     }

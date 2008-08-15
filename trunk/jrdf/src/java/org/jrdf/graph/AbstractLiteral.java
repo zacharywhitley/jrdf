@@ -263,7 +263,8 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     @Override
     public int hashCode() {
-        return getEscapedForm().hashCode();
+        // This is to allow same values but different data types to still be equal.
+        return value.hashCode();
     }
 
     @Override
@@ -314,7 +315,9 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     @Override
     public String toString() {
-        return '\"' + getEscapedLexicalForm() + '\"';
+        StringBuffer buffer = new StringBuffer('\"' + getEscapedLexicalForm() + '\"');
+        appendType(buffer);
+        return buffer.toString();
     }
 
     public String getEscapedLexicalForm() {

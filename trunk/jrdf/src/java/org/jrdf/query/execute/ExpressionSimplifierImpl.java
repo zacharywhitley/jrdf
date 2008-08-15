@@ -45,6 +45,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         }
     }
 
+    @SuppressWarnings({ "unchecked" })
     public <V extends ExpressionVisitor> void getNext(Expression<V> expression) {
         ExpressionSimplifier expressionSimplifier = new ExpressionSimplifierImpl(newAttributeValues);
         expression.accept((V) expressionSimplifier);

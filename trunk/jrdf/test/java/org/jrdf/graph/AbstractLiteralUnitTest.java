@@ -93,4 +93,9 @@ public abstract class AbstractLiteralUnitTest extends TestCase {
         checkSerialization(literal2);
         checkSerialization(literal3);
     }
+
+    public void testToString() throws Exception {
+        Literal literal1 = createLiteral(DATE, XSD.DATE_TIME);
+        assertEquals("\"1980-01-01T10:00:10.000+10:00\"^^<" + XSD.DATE_TIME + ">", literal1.toString());
+    }
 }

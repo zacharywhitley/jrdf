@@ -65,6 +65,7 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.datatype.SemanticLiteralComparator;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeEnum;
 
@@ -79,13 +80,16 @@ public final class NodeComparatorImpl implements NodeComparator, TypedNodeVisito
     private static final long serialVersionUID = 1941872400257968398L;
     private NodeTypeComparator nodeTypeComparator;
     private BlankNodeComparator blankNodeComparator;
+    private SemanticLiteralComparator literalComparator;
     private NodeTypeEnum currentEnum;
 
     private NodeComparatorImpl() {
     }
 
-    public NodeComparatorImpl(NodeTypeComparator nodeTypeComparator, BlankNodeComparator blankNodeComparator) {
+    public NodeComparatorImpl(NodeTypeComparator nodeTypeComparator, SemanticLiteralComparator literalComparator,
+        BlankNodeComparator blankNodeComparator) {
         this.nodeTypeComparator = nodeTypeComparator;
+        this.literalComparator = literalComparator;
         this.blankNodeComparator = blankNodeComparator;
     }
 
@@ -141,11 +145,12 @@ public final class NodeComparatorImpl implements NodeComparator, TypedNodeVisito
     }
 
     private int compareLiteral(Literal n1, Literal n2) {
-        int result = 0;
-        if (!n1.equals(n2)) {
-            result = compareByString(n1.toString(), n2.toString());
+        try {
+            return literalComparator.compare(n1, n2);
+        } catch (ClassCastException cce) {
+            // Assume different data types.
+            return -1;
         }
-        return result;
     }
 
     private int compareByString(String str1, String str2) {
