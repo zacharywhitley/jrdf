@@ -71,9 +71,7 @@ import org.jrdf.graph.global.index.ReadableIndexImpl;
 import org.jrdf.graph.global.index.WritableIndex;
 import org.jrdf.graph.global.index.WritableIndexImpl;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
-import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem;
 import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
@@ -118,16 +116,15 @@ public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory 
     }
 
     public MoleculeGraph getNewGraph() {
-        MoleculeIndex<Long>[] indexes = createIndexes();
-        MoleculeStructureIndex<Long>[] structureIndex = createMoleculeStructureIndexes();
-        ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
-        WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
+        MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes();
+        ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
+        WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
         NodePool nodePool = nodePoolFactory.createNewNodePool();
         Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
-        LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
-            new LongIndexAdapter(indexes[1]), new LongIndexAdapter(indexes[2])};
+        LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
+            new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
         CollectionFactory collectionFactory = new MemCollectionFactory();
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
         return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph, nodePool);
@@ -140,21 +137,12 @@ public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory 
     public void close() {
     }
 
-    private MoleculeIndex<Long>[] createIndexes() {
-        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map1 =
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map2 =
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> map3 =
-            new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>();
-        MoleculeIndex<Long> spom = new MoleculeIndexMem(map1);
-        MoleculeIndex<Long> posm = new MoleculeIndexMem(map2);
-        MoleculeIndex<Long> ospm = new MoleculeIndexMem(map3);
-        return new MoleculeIndexMem[]{(MoleculeIndexMem) spom, (MoleculeIndexMem) posm, (MoleculeIndexMem) ospm};
-    }
-
     private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes() {
         MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexMem[]{
+            new MoleculeStructureIndexMem(
+                    new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>()),
+            new MoleculeStructureIndexMem(
+                    new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>()),
             new MoleculeStructureIndexMem(
                     new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>()),
             new MoleculeStructureIndexMem(

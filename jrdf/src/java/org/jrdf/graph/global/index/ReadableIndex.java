@@ -80,4 +80,8 @@ public interface ReadableIndex<T> {
     ClosableIterator<Long> findMoleculeIDs(Long[] triple);
 
     boolean isSubmoleculeOfParentID(Long pid, Long mid);
+
+    ClosableIterator<Long[]> getMidPidPairs(Long... triple);
+
+    Long findTopMoleculeID(Long mid) throws GraphException;
 }

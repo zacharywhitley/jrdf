@@ -78,11 +78,7 @@ public class EntryIteratorOneFixedFourArray implements ClosableIterator<Long[]> 
     }
 
     public Long[] next() {
-        Long[] quad = subIndex.next();
-        Long[] result = new Long[QUAD];
-        System.arraycopy(quad, 1, result, 0, TREE);
-        result[TREE] = quad[0];
-        return result;
+        return subIndex.next();
     }
 
     public void remove() {

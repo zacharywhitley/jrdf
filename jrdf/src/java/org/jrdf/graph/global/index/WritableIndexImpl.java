@@ -60,58 +60,54 @@
 package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 
 public class WritableIndexImpl implements WritableIndex<Long> {
-    private final MoleculeIndex<Long>[] indexes;
     private final MoleculeStructureIndex<Long>[] structureIndexes;
 
-    public WritableIndexImpl(MoleculeIndex<Long>[] newIndexes, MoleculeStructureIndex<Long>[] newStructureIndex) {
-        this.indexes = newIndexes;
+    public WritableIndexImpl(MoleculeStructureIndex<Long>[] newStructureIndex) {
         this.structureIndexes = newStructureIndex;
     }
 
+    /**
+     * Merge indexes into using structure index only. Will have only 4 indexes now:
+     * 1. spomm,
+     * 2. posmm,
+     * 3. ospmm, and
+     * 4. mmspo
+     * @param quin
+     * @throws GraphException
+     */
     public void add(Long... quin) throws GraphException {
-        // spo, mid
-        indexes[0].add(quin[0], quin[1], quin[2], quin[3]);
-        // pos, mid
-        indexes[1].add(quin[1], quin[2], quin[0], quin[3]);
-        // osp, mid
-        indexes[2].add(quin[2], quin[0], quin[1], quin[3]);
+        // spo, mid, parentid
+        structureIndexes[0].add(quin[0], quin[1], quin[2], quin[3], quin[4]);
+        // pos, mid, parentid
+        structureIndexes[1].add(quin[1], quin[2], quin[0], quin[3], quin[4]);
+        //osp, mid, parentid
+        structureIndexes[2].add(quin[2], quin[0], quin[1], quin[3], quin[4]);
         // parent, mid, spo
-        structureIndexes[0].add(quin[4], quin[3], quin[0], quin[1], quin[2]);
-        //spo, parent, mid
-        structureIndexes[1].add(quin[0], quin[1], quin[2], quin[4], quin[3]);
+        structureIndexes[3].add(quin[4], quin[3], quin[0], quin[1], quin[2]);
     }
 
     public void remove(Long... quin) throws GraphException {
-        // spo, mid
-        indexes[0].remove(quin[0], quin[1], quin[2], quin[3]);
-        // pos, mid
-        indexes[1].remove(quin[1], quin[2], quin[0], quin[3]);
-        // osp, mid
-        indexes[2].remove(quin[2], quin[0], quin[1], quin[3]);
+        // spo, mid, parentid
+        structureIndexes[0].remove(quin[0], quin[1], quin[2], quin[3], quin[4]);
+        // pos, mid, parentid
+        structureIndexes[1].remove(quin[1], quin[2], quin[0], quin[3], quin[4]);
+        //osp, mid, parentid
+        structureIndexes[2].remove(quin[2], quin[0], quin[1], quin[3], quin[4]);
         // parent, mid, spo
-        structureIndexes[0].remove(quin[4], quin[3], quin[0], quin[1], quin[2]);
-        // spo, parent, mid
-        structureIndexes[1].remove(quin[0], quin[1], quin[2], quin[4], quin[3]);
+        structureIndexes[3].remove(quin[4], quin[3], quin[0], quin[1], quin[2]);
     }
 
     public void clear() {
-        for (int i = 0; i < 3; i++) {
-            indexes[i].clear();
-        }
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < structureIndexes.length; i++) {
             structureIndexes[i].clear();
         }
     }
 
     public void close() {
-        for (int i = 0; i < 3; i++) {
-            indexes[i].close();
-        }
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < structureIndexes.length; i++) {
             structureIndexes[i].close();
         }
     }

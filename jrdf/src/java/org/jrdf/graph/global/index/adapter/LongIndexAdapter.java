@@ -60,27 +60,27 @@
 package org.jrdf.graph.global.index.adapter;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.index.longindex.MoleculeIndex;
+import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
 
 /**
- * Wraps a MolecueIndex around the LongIndex interface.  All normal LongIndex calls are translated into MoleculeIndex
- * calls where the Molecule ID is 0.
+ * Wraps a MolecueIndex and a parent molecul id around the LongIndex interface.  All normal LongIndex calls
+ * are translated into MoleculeIndex calls where the Molecule ID is 0.
  */
 public class LongIndexAdapter implements LongIndex {
-    private final MoleculeIndex<Long> index;
+    private final MoleculeStructureIndex<Long> index;
 
-    public LongIndexAdapter(MoleculeIndex<Long> newIndex) {
+    public LongIndexAdapter(MoleculeStructureIndex<Long> newIndex) {
         this.index = newIndex;
     }
 
     public void add(Long... node) throws GraphException {
-        index.add(node[0], node[1], node[2], 0L);
+        index.add(node[0], node[1], node[2], 0L, 0L);
     }
 
     public void remove(Long... node) throws GraphException {
-        index.remove(node[0], node[1], node[2], 0L);
+        index.remove(node[0], node[1], node[2], 0L, 0L);
     }
 
     public void clear() {

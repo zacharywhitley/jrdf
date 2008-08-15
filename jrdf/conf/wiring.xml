@@ -10,7 +10,7 @@
     <bean id="memIndex" class="org.jrdf.graph.local.index.longindex.mem.LongIndexMem" singleton="false"/>
     <bean id="moleculeIndex" class="org.jrdf.graph.global.index.adapter.LongIndexAdapter" singleton="false">
         <constructor-arg>
-            <bean class="org.jrdf.graph.global.index.longindex.mem.MoleculeIndexMem" singleton="false"/>
+            <bean class="org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem" singleton="false"/>
         </constructor-arg>
     </bean>
 

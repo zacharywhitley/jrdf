@@ -61,12 +61,13 @@ package org.jrdf.graph.global.index.longindex;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.GraphException;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.SetUtil.asSet;
-import org.jrdf.util.ClosableIterator;
 
-import java.util.Set;
 import static java.util.Arrays.asList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
@@ -167,7 +168,20 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
         checkResults(subIndex, results);
     }
 
-    public void testgetFourthIndex() throws GraphException {
+    public void testGetFourthIndex() throws GraphException {
+        index.add(1L, 1L, 2L, 3L, 4L);
+        index.add(1L, 1L, 2L, 4L, 5L);
+        index.add(1L, 1L, 2L, 5L, 6L);
+        index.add(1L, 1L, 3L, 3L, 4L);
+        index.add(2L, 2L, 2L, 5L, 6L);
+        index.add(2L, 4L, 5L, 6L, 7L);
+        final ClosableIterator<Long[]> iterator = index.getFourthIndex(2L, 4L, 5L);
+        Set<Long[]> results = new HashSet<Long[]>();
+        results.add(new Long[]{6L, 7L});
+        checkResults(iterator, results);
+    }
+
+    public void testgetFifthIndex() throws GraphException {
         index.add(1L, 1L, 2L, 3L, 4L);
         index.add(1L, 1L, 2L, 4L, 5L);
         index.add(1L, 1L, 2L, 5L, 6L);
@@ -175,10 +189,37 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
         index.add(2L, 2L, 2L, 5L, 6L);
         index.add(2L, 4L, 5L, 6L, 7L);
         index.add(1L, 1L, 2L, 3L, 5L);
-        ClosableIterator<Long> iterator = index.getFourthIndex(1L, 1L, 2L, 3L);
+        ClosableIterator<Long> iterator = index.getFifthIndex(1L, 1L, 2L, 3L);
         Set<Long> set = asSet(new Long[]{4L, 5L});
         checkLongIterator(set, iterator);
+    }
 
+    public void testGetFourthIndexOnly() throws GraphException {
+        index.add(1L, 1L, 2L, 3L, 4L);
+        index.add(1L, 1L, 2L, 4L, 5L);
+        index.add(1L, 1L, 2L, 5L, 6L);
+        index.add(1L, 1L, 3L, 3L, 4L);
+        index.add(2L, 2L, 2L, 5L, 6L);
+        index.add(2L, 4L, 5L, 6L, 7L);
+        index.add(1L, 1L, 2L, 3L, 5L);
+        index.add(1L, 1L, 2L, 2L, 7L);
+        final ClosableIterator<Long> iterator = index.getFourthIndexOnly(1L, 1L, 2L);
+        Set<Long> set = asSet(new Long[]{2L, 3L, 4L, 5L});
+        checkLongIterator(set, iterator);
+    }
+
+    public void testGetAllFourthIndex() throws GraphException {
+        index.add(1L, 1L, 2L, 3L, 4L);
+        index.add(1L, 1L, 2L, 4L, 5L);
+        index.add(1L, 1L, 2L, 5L, 6L);
+        index.add(1L, 1L, 3L, 3L, 4L);
+        index.add(2L, 2L, 2L, 5L, 6L);
+        index.add(2L, 4L, 5L, 6L, 7L);
+        index.add(1L, 1L, 2L, 3L, 5L);
+        index.add(1L, 1L, 2L, 2L, 7L);
+        final ClosableIterator<Long> iterator = index.getAllFourthIndex();
+        Set<Long> set = asSet(new Long[]{2L, 3L, 4L, 5L, 6L});
+        checkLongIterator(set, iterator);
     }
 
     private void checkLongIterator(Set<Long> set, ClosableIterator<Long> iterator) {

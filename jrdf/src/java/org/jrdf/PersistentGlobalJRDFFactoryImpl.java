@@ -70,9 +70,7 @@ import org.jrdf.graph.global.index.ReadableIndexImpl;
 import org.jrdf.graph.global.index.WritableIndex;
 import org.jrdf.graph.global.index.WritableIndexImpl;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
-import org.jrdf.graph.global.index.longindex.MoleculeIndex;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.graph.global.index.longindex.sesame.MoleculeIndexSesame;
 import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesame;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
@@ -84,7 +82,6 @@ import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
-import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
 
@@ -100,7 +97,6 @@ import java.util.Set;
  */
 public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJRDFFactory {
     private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
-    private final Set<MoleculeIndex<Long>> openIndexes = new HashSet<MoleculeIndex<Long>>();
     private final Set<MoleculeStructureIndex<Long>> openStructureIndexes = new HashSet<MoleculeStructureIndex<Long>>();
     private final DirectoryHandler handler;
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
@@ -143,10 +139,6 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
 
     public void close() {
         base.close();
-        for (MoleculeIndex<Long> index : openIndexes) {
-            index.close();
-        }
-        openIndexes.clear();
         for (MoleculeStructureIndex<Long> index : openStructureIndexes) {
             index.close();
         }
@@ -155,12 +147,11 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
 
     private MoleculeGraph getGraph(long graphNumber) {
         final NodePool nodePool = base.createNodePool(graphNumber);
-        MoleculeIndex<Long>[] indexes = createMoleculeIndexes(graphNumber);
-        MoleculeStructureIndex<Long>[] structureIndex = createMoleculeStructureIndexes(graphNumber);
-        ReadableIndex<Long> readIndex = new ReadableIndexImpl(indexes, structureIndex);
-        WritableIndex<Long> writeIndex = new WritableIndexImpl(indexes, structureIndex);
-        LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(indexes[0]),
-            new LongIndexAdapter(indexes[1]), new LongIndexAdapter(indexes[2])};
+        MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes(graphNumber);
+        ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
+        WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);
+        LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
+            new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
         CollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
         final long curMaxMoleculeId = readIndex.getMaxMoleculeId();
@@ -169,26 +160,14 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph, nodePool);
     }
 
-    private MoleculeIndex<Long>[] createMoleculeIndexes(long graphNumber) {
-        BTree[] bTrees = createBTrees(graphNumber);
-        final MoleculeIndex<Long>[] indexes = new MoleculeIndexSesame[]{new MoleculeIndexSesame(bTrees[0]),
-            new MoleculeIndexSesame(bTrees[1]), new MoleculeIndexSesame(bTrees[2])};
-        openIndexes.addAll(asList(indexes));
-        return indexes;
-    }
-
     private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes(long graphNumber) {
         MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesame[] {
+            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "spomm" + graphNumber)),
+            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "posmm" + graphNumber)),
+            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "ospmm" + graphNumber)),
             new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "mmspo" + graphNumber)),
-            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "spomm" + graphNumber))
         };
         openStructureIndexes.addAll(asList(indexes));
         return indexes;
-    }
-
-    private BTree[] createBTrees(long graphNumber) {
-        return new BTree[]{btreeFactory.createQuadBTree(handler, "mspo" + graphNumber),
-                btreeFactory.createQuadBTree(handler, "mpos" + graphNumber),
-                btreeFactory.createQuadBTree(handler, "mosp" + graphNumber)};
     }
 }

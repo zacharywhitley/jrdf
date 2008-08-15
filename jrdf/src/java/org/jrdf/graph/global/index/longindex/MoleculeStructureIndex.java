@@ -87,7 +87,17 @@ public interface MoleculeStructureIndex<T> {
 
     void close();
 
-    ClosableIterator<Long> getFourthIndex(Long first, Long second, Long third, Long fourth);
+    ClosableIterator<Long> getFifthIndex(Long first, Long second, Long third, Long fourth);
 
     boolean containsPIDMID(Long pid, Long mid);
+
+    ClosableIterator<Long[]> getFourthIndex(Long first, Long second, Long third);
+
+    ClosableIterator<Long> getFourthIndexOnly(Long first, Long second, Long third);
+
+    ClosableIterator<Long> getFourthForTwoValues(Long first, Long second);
+
+    ClosableIterator<Long> getFourthForOneValue(Long first);
+
+    ClosableIterator<Long> getAllFourthIndex();
 }
