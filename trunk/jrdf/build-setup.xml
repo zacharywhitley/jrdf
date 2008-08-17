@@ -103,8 +103,8 @@
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/je/je-3.3.62.jar"/>
         <include name="${lib.dir}/restlet/org.restlet.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.jar"/>
-        <include name="${lib.dir}/restlet/org.simpleframework.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet_1.1m5.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet_1.1m5.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
@@ -127,9 +127,8 @@
         <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/je/je-3.3.62.jar"/>
-        <include name="${lib.dir}/restlet/org.restlet.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.jar"/>
-        <include name="${lib.dir}/restlet/org.simpleframework.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet_1.1m5.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet_1.1m5.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>

@@ -537,10 +537,10 @@
     </library>
     <library name="restlet">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.simple_3.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet_1.1m5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet_1.1m5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
