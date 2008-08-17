@@ -6,6 +6,7 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Resource;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.StringRepresentation;
 import org.restlet.resource.Variant;
 
@@ -20,7 +21,7 @@ public class HelloWorldResource extends Resource {
      * Returns a full representation for a given variant.
      */
     @Override
-    public Representation getRepresentation(Variant variant) {
+    public Representation represent(Variant variant) throws ResourceException {
         return new StringRepresentation("hello, world", MediaType.TEXT_PLAIN);
     }
 }

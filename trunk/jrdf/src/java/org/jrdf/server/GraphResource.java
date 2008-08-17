@@ -16,7 +16,7 @@ public class GraphResource extends Resource {
     }
 
     @Override
-    public Representation getRepresentation(Variant variant) {
+    public Representation represent(Variant variant) {
         return new StringRepresentation("hello, world", MediaType.TEXT_PLAIN);
     }
 }
