@@ -20,6 +20,7 @@ public class SampleApplication extends Application {
     @Override
     public synchronized Restlet createRoot() {
         Router router = new Router(getContext());
+        router.attach("/graph/", GraphResource.class);
         router.attachDefault(GraphResource.class);
         return router;
     }

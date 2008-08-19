@@ -16,6 +16,16 @@ public class GraphResource extends Resource {
     }
 
     @Override
+    public boolean allowGet() {
+        return true;
+    }
+
+    @Override
+    public void handleGet() {
+        System.err.println("Got: " + this.getRequest().getAttributes());
+    }
+
+    @Override
     public Representation represent(Variant variant) {
         return new StringRepresentation("hello, world", MediaType.TEXT_PLAIN);
     }
