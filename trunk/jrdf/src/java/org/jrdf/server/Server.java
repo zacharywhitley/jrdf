@@ -12,7 +12,7 @@ public class Server {
             MediaType.register("application/sparql-results+xml", "SPARQL Query Results");
             Component component = new Component();
             component.getServers().add(Protocol.HTTP, PORT);
-            component.getDefaultHost().attach(new SampleApplication(component.getContext()));
+            component.getDefaultHost().attach(new WebInterfaceApplication());
             component.start();
         } catch (Exception e) {
             e.printStackTrace();

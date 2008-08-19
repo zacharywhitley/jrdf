@@ -74,7 +74,7 @@ public final class LongIndexSesame implements LongIndex {
     private BTree btree;
     private static final int TRIPLE = 3;
 
-    public LongIndexSesame(BTree newBtree) {
+    LongIndexSesame(BTree newBtree) {
         this.btree = newBtree;
     }
 
