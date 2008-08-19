@@ -1,31 +1,17 @@
 package org.jrdf.server;
 
-import org.jrdf.PersistentGlobalJRDFFactory;
-import static org.jrdf.PersistentGlobalJRDFFactoryImpl.getFactory;
+import org.jrdf.PersistentJRDFFactory;
+import org.jrdf.PersistentJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.Router;
 
-import java.net.URI;
-
 public class WebInterfaceApplication extends Application {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
-    private static final PersistentGlobalJRDFFactory FACTORY = getFactory(HANDLER);
-
-    public WebInterfaceApplication() {
-        MoleculeGraph moleculeGraph = FACTORY.getNewGraph("foo");
-        try {
-            Resource resource = moleculeGraph.getElementFactory().createResource();
-            resource.addValue(URI.create("foo:bar"), URI.create("foo:bar"));
-        } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-    }
+    private static final PersistentJRDFFactory FACTORY = PersistentJRDFFactoryImpl.getFactory(HANDLER);
 
     @Override
     public synchronized Restlet createRoot() {
@@ -36,6 +22,6 @@ public class WebInterfaceApplication extends Application {
     }
 
     public Graph getGraph(String name) {
-        return FACTORY.getExistingGraph(name);
+        return FACTORY.getGraph(name);
     }
 }

@@ -106,7 +106,18 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         return base.hasGraph(name);
     }
 
+    public Graph getGraph(String name) {
+        if (base.hasGraph(name)) {
+            return getExistingGraph(name);
+        } else {
+            return getNewGraph(name);
+        }
+    }
+
     public Graph getNewGraph(String name) {
+        if (base.hasGraph(name)) {
+            throw new IllegalArgumentException("Graph already exists: " + name);
+        }
         long graphNumber = base.addNewGraph(name);
         return getGraph(graphNumber);
     }

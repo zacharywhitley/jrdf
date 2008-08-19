@@ -50,6 +50,7 @@ public class GraphResource extends Resource {
         System.err.println("Values: " + subject);
         System.err.println("Values: " + predicate);
         System.err.println("Values: " + object);
+        System.err.println("Got: " + graph);
         return new StringRepresentation("hello, world", MediaType.TEXT_PLAIN);
     }
 

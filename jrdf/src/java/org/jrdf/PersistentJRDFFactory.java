@@ -67,9 +67,11 @@ public interface PersistentJRDFFactory {
 
     boolean hasGraph(String name);
 
+    Graph getGraph(String name);
+
     Graph getExistingGraph(String name) throws IllegalArgumentException;
 
-    Graph getNewGraph(String name);
+    Graph getNewGraph(String name) throws IllegalArgumentException;
 
     UrqlConnection getNewUrqlConnection();
 
