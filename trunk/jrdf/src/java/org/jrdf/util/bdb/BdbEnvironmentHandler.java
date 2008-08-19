@@ -59,23 +59,19 @@
 
 package org.jrdf.util.bdb;
 
-import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
-import java.util.List;
 
 public interface BdbEnvironmentHandler {
     Environment setUpEnvironment() throws DatabaseException;
 
     DatabaseConfig setUpDatabaseConfig(boolean transactional);
-
-    StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
-        throws DatabaseException;
 
     Database setupDatabase(Environment env, String dbName, DatabaseConfig dbConfig) throws DatabaseException;
 

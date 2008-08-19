@@ -60,7 +60,6 @@
 package org.jrdf.util.bdb;
 
 import com.sleepycat.bind.EntryBinding;
-import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
 import com.sleepycat.bind.tuple.TupleBinding;
@@ -114,12 +113,6 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         dbConfig.setTransactional(transactional);
         dbConfig.setAllowCreate(true);
         return dbConfig;
-    }
-
-    public StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
-        throws DatabaseException {
-        Database catalogDb = env.openDatabase(null, classCatalogString, dbConfig);
-        return new StoredClassCatalog(catalogDb);
     }
 
     public Database setupDatabase(Environment env, String dbName, DatabaseConfig dbConfig) throws DatabaseException {
