@@ -61,6 +61,9 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     }
 
     public long addNewGraph(String name) {
+        if (models.getId(name) != 0) {
+            throw new IllegalArgumentException("Graph " + name + " already exists");
+        }
         long graphNumber = models.addGraph(name);
         writeNTriples(file, modelsGraph);
         return graphNumber;
