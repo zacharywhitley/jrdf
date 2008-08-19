@@ -541,6 +541,7 @@
         <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet_1.1m5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet_1.1m5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

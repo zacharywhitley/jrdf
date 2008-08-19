@@ -106,6 +106,7 @@
         <include name="${lib.dir}/restlet/org.restlet_1.1m5.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet_1.1m5.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1.jar"/>
+        <include name="${lib.dir}/restlet/org.simpleframework.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
     </patternset>
@@ -130,6 +131,7 @@
         <include name="${lib.dir}/restlet/org.restlet_1.1m5.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet_1.1m5.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1.jar"/>
+        <include name="${lib.dir}/restlet/org.simpleframework.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
