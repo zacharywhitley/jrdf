@@ -59,10 +59,12 @@
 
 package org.jrdf;
 
+import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
+import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesameSync;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.query.QueryFactory;
@@ -78,10 +80,8 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
-import org.jrdf.collection.BdbCollectionFactory;
-import org.jrdf.collection.CollectionFactory;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -141,8 +141,8 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
 
     private LongIndex[] createIndexes() {
         BTree[] bTrees = createBTrees();
-        return new LongIndex[]{new LongIndexSesame(bTrees[0]), new LongIndexSesame(bTrees[1]),
-            new LongIndexSesame(bTrees[2])};
+        return new LongIndex[]{new LongIndexSesameSync(bTrees[0]), new LongIndexSesameSync(bTrees[1]),
+            new LongIndexSesameSync(bTrees[2])};
     }
 
     private BTree[] createBTrees() {

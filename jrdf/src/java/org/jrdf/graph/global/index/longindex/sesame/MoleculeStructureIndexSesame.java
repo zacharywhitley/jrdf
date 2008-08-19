@@ -77,7 +77,7 @@ public final class MoleculeStructureIndexSesame implements MoleculeStructureInde
     private static final int QUIN = 5;
     private BTree btree;
 
-    public MoleculeStructureIndexSesame(BTree newBtree) {
+    MoleculeStructureIndexSesame(BTree newBtree) {
         this.btree = newBtree;
     }
 
@@ -171,6 +171,14 @@ public final class MoleculeStructureIndexSesame implements MoleculeStructureInde
     public long getSize() {
         try {
             return RecordIteratorHelper.getSize(btree);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sync() {
+        try {
+            btree.sync();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

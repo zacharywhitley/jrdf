@@ -71,7 +71,7 @@ import org.jrdf.graph.global.index.WritableIndex;
 import org.jrdf.graph.global.index.WritableIndexImpl;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
-import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesame;
+import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesameSync;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
@@ -161,11 +161,11 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
     }
 
     private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes(long graphNumber) {
-        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesame[] {
-            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "spomm" + graphNumber)),
-            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "posmm" + graphNumber)),
-            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "ospmm" + graphNumber)),
-            new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(handler, "mmspo" + graphNumber)),
+        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesameSync[] {
+            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "spomd" + graphNumber)),
+            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "posmd" + graphNumber)),
+            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "ospmd" + graphNumber)),
+            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "dmspo" + graphNumber)),
         };
         openStructureIndexes.addAll(asList(indexes));
         return indexes;
