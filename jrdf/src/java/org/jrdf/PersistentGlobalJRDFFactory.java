@@ -60,18 +60,11 @@
 package org.jrdf;
 
 import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.urql.UrqlConnection;
 
-public interface PersistentGlobalJRDFFactory {
-    UrqlConnection getNewUrqlConnection();
+public interface PersistentGlobalJRDFFactory extends PersistentJRDFFactory {
+    MoleculeGraph getGraph(String name);
 
     MoleculeGraph getNewGraph(String name);
 
-    boolean hasGraph(String name);
-
     MoleculeGraph getExistingGraph(String name) throws IllegalArgumentException;
-
-    void refresh();
-
-    void close();
 }
