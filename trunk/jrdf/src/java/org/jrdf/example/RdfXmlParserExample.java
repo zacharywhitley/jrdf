@@ -101,7 +101,7 @@ public final class RdfXmlParserExample {
         URL url = getDocumentURL(args);
         InputStream in = getInputStream(url);
         try {
-            final Graph jrdfMem = JRDF_FACTORY.getNewGraph();
+            final Graph jrdfMem = JRDF_FACTORY.getGraph();
             Parser parser = new GraphRdfXmlParser(jrdfMem);
             parser.parse(in, EscapeURL.toEscapedString(url));
             ClosableIterator<Triple> iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);

@@ -95,7 +95,7 @@ public class DecomposerPerformance {
     private static final int LOOP_SIZE = 9;
     private static final int NUMBER_OF_MOLECULES = 1000;
     private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
-    private final Graph graph = factory.getNewGraph();
+    private final Graph graph = factory.getGraph();
     private final GraphElementFactory elementFactory = graph.getElementFactory();
     private final TripleComparator comparator = new TripleComparatorFactoryImpl().newComparator();
     private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);

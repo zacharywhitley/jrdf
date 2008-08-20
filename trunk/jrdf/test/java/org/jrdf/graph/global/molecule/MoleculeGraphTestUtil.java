@@ -59,7 +59,7 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.MoleculeJRDFFactory;
+import org.jrdf.GlobalJRDFFactory;
 import org.jrdf.SortedDiskGlobalJRDFFactory;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.graph.BlankNode;
@@ -83,7 +83,7 @@ import java.net.URI;
  */
 
 public class MoleculeGraphTestUtil {
-    public static MoleculeJRDFFactory FACTORY;
+    public static GlobalJRDFFactory FACTORY;
     public static TripleComparator COMPARATOR, GLOBAL_COMPARATOR;
     public static MoleculeComparator MOLECULE_COMPARATOR, GLOBAL_MOLECULE_COMPARATOR;
     public static MoleculeFactory MOLECULE_FACTORY;
@@ -119,7 +119,7 @@ public class MoleculeGraphTestUtil {
 
         new TempDirectoryHandler().removeDir();
         FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
-        GRAPH = FACTORY.getNewGraph();
+        GRAPH = FACTORY.getGraph();
         GRAPH.clear();
         ELEMENT_FACTORY = GRAPH.getElementFactory();
         TRIPLE_FACTORY = GRAPH.getTripleFactory();

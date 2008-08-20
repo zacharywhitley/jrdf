@@ -77,7 +77,7 @@ public final class Reader {
 
     public static Graph parseNTriples(File file) {
         JRDFFactory factory = MemoryJRDFFactory.getFactory();
-        Graph newGraph = factory.getNewGraph();
+        Graph newGraph = factory.getGraph();
         Parser parser = new GraphNtriplesParser(newGraph);
         InputStream stream = getInputStream(file);
         tryParse(parser, stream);
@@ -86,7 +86,7 @@ public final class Reader {
 
     public static Graph parseRdfXml(File file) {
         JRDFFactory factory = MemoryJRDFFactory.getFactory();
-        Graph newGraph = factory.getNewGraph();
+        Graph newGraph = factory.getGraph();
         Parser parser = new GraphRdfXmlParser(newGraph);
         InputStream stream = getInputStream(file);
         tryParse(parser, stream);

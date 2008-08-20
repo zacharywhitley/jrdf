@@ -107,7 +107,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
+public final class SortedDiskGlobalJRDFFactory implements GlobalJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
@@ -124,14 +124,14 @@ public final class SortedDiskGlobalJRDFFactory implements MoleculeJRDFFactory {
     private SortedDiskGlobalJRDFFactory() {
     }
 
-    public static MoleculeJRDFFactory getFactory() {
+    public static GlobalJRDFFactory getFactory() {
         return new SortedDiskGlobalJRDFFactory();
     }
 
     public void refresh() {
     }
 
-    public MoleculeGraph getNewGraph() {
+    public MoleculeGraph getGraph() {
         graphNumber++;
         MapFactory factory = new BdbMapFactory(BDB_HANDLER, "database" + graphNumber);
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);

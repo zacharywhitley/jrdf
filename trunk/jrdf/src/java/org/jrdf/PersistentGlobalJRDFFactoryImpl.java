@@ -120,6 +120,10 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         return base.hasGraph(name);
     }
 
+    public MoleculeGraph getGraph() {
+        return getGraph("default");
+    }
+
     public MoleculeGraph getGraph(String name) {
         if (base.hasGraph(name)) {
             return getExistingGraph(name);

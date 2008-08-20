@@ -90,7 +90,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
      * @return A new graph implementation object.
      */
     public Graph newGraph() throws GraphException {
-        return TestJRDFFactory.getFactory().getNewGraph();
+        return TestJRDFFactory.getFactory().getGraph();
     }
 
     /**
