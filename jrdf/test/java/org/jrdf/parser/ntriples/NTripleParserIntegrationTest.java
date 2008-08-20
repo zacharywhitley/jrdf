@@ -108,7 +108,7 @@ public class NTripleParserIntegrationTest extends TestCase {
     };
 
     public void testStandardTest() throws Exception {
-        Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
+        Graph newGraph = TEST_JRDF_FACTORY.getGraph();
         MapFactory creator = new MemMapFactory();
         ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, newGraph.getElementFactory());
         InputStream in = getSampleData(this.getClass(), TEST_DATA);
@@ -119,11 +119,11 @@ public class NTripleParserIntegrationTest extends TestCase {
 
     public void testPositiveTests() throws Exception {
         for (String fileName : POSITIVE_TESTS.keySet()) {
-            Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
+            Graph newGraph = TEST_JRDF_FACTORY.getGraph();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, newGraph.getElementFactory());
             Set<Triple> actualResults = getResults(fileName, newGraph, factory);
-            newGraph = TEST_JRDF_FACTORY.getNewGraph();
+            newGraph = TEST_JRDF_FACTORY.getGraph();
             Set<Triple> expectedResults = getResults(POSITIVE_TESTS.get(fileName), newGraph, factory);
             ParserTestUtil.checkGraph(actualResults, expectedResults);
         }
@@ -132,7 +132,7 @@ public class NTripleParserIntegrationTest extends TestCase {
     public void testNegativeTests() throws Exception {
         for (String fileName : NEGATIVE_TESTS) {
             final URL file = getClass().getClassLoader().getResource(fileName);
-            Graph graph = TEST_JRDF_FACTORY.getNewGraph();
+            Graph graph = TEST_JRDF_FACTORY.getGraph();
             ParserFactory parserFactory = new ParserFactoryImpl();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());

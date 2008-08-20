@@ -70,7 +70,7 @@ import junit.framework.TestCase;
 public class JrdfFactoryImplIntegrationTest extends TestCase {
     public void testWiring() {
         TestJRDFFactory jrdfFactory = TestJRDFFactory.getFactory();
-        jrdfFactory.getNewGraph();
+        jrdfFactory.getGraph();
         jrdfFactory.getNewTupleComparator();
         jrdfFactory.getNewUrqlConnection();
         jrdfFactory.getNewNaturalJoin();

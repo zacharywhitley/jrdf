@@ -376,7 +376,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
                         "  _:a45 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#ExperimentalObservation> .\n" +
                         "]";
 
-        destGraph = FACTORY.getNewGraph();
+        destGraph = FACTORY.getGraph();
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
         final GraphElementFactory destElementFactory = destGraph.getElementFactory();

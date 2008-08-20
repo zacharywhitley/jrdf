@@ -129,7 +129,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
     private GraphElementFactory eFac2;
 
     private Graph newGraph() {
-        return FACTORY.getNewGraph();
+        return FACTORY.getGraph();
     }
 
     public void setUp() throws Exception {

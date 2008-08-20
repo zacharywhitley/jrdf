@@ -167,7 +167,7 @@ public class RdfXmlIntegrationTest extends TestCase {
             final String rdfFile = POSITIVE_RDFXML_TESTS.get(ntriplesFile);
             final URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/" + ntriplesFile);
             final URL actualFile = getClass().getClassLoader().getResource("rdf-tests/" + rdfFile);
-            Graph graph = TEST_JRDF_FACTORY.getNewGraph();
+            Graph graph = TEST_JRDF_FACTORY.getGraph();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory nodeFactory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
             checkPositiveNtRdfTest(expectedFile, actualFile, "http://www.w3.org/2000/10/rdf-tests/" + rdfFile,
@@ -180,7 +180,7 @@ public class RdfXmlIntegrationTest extends TestCase {
             final URL actualFile = getClass().getClassLoader().getResource("rdf-tests/" + actualName);
             final String expectedName = POSITIVE_NTRIPLE_TESTS.get(actualName);
             final URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/" + expectedName);
-            Graph graph = TEST_JRDF_FACTORY.getNewGraph();
+            Graph graph = TEST_JRDF_FACTORY.getGraph();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory nodeFactory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
             checkPositiveNtNtTest(expectedFile,  actualFile, "http://example.org", graph, nodeFactory);
@@ -190,7 +190,7 @@ public class RdfXmlIntegrationTest extends TestCase {
     public void testNegativeTests() throws Exception {
         for (String rdfFile : NEGATIVE_TESTS) {
             final URL errorFile = getClass().getClassLoader().getResource("rdf-tests/" + rdfFile);
-            Graph graph = TEST_JRDF_FACTORY.getNewGraph();
+            Graph graph = TEST_JRDF_FACTORY.getGraph();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory nodeFactory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
             checkNegativeRdfTestParseException(errorFile, graph, nodeFactory);

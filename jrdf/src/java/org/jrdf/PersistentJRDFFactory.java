@@ -60,11 +60,8 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.urql.UrqlConnection;
 
-public interface PersistentJRDFFactory {
-    void refresh();
-
+public interface PersistentJRDFFactory extends JRDFFactory {
     boolean hasGraph(String name);
 
     Graph getGraph(String name);
@@ -72,8 +69,4 @@ public interface PersistentJRDFFactory {
     Graph getExistingGraph(String name) throws IllegalArgumentException;
 
     Graph getNewGraph(String name) throws IllegalArgumentException;
-
-    UrqlConnection getNewUrqlConnection();
-
-    void close();
 }

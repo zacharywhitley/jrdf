@@ -76,7 +76,7 @@ public class BdbGraphImplIntegrationTest extends AbstractGraphIntegrationTest {
      */
     @Override
     public Graph newGraph() throws Exception {
-        Graph newGraph = FACTORY.getNewGraph();
+        Graph newGraph = FACTORY.getGraph();
         newGraph.clear();
         return newGraph;
     }

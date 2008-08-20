@@ -71,7 +71,7 @@ public class MemPerformance extends AbstractGraphPerformance {
     private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
 
     protected Graph getGraph() {
-        return FACTORY.getNewGraph();
+        return FACTORY.getGraph();
     }
 
     protected MapFactory getMapFactory() {

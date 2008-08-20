@@ -90,7 +90,7 @@ public final class SpringJRDFFactory implements JRDFFactory {
         return BEAN_FACTORY;
     }
 
-    public Graph getNewGraph() {
+    public Graph getGraph() {
         GraphFactory graphFactory = (GraphFactory) BEAN_FACTORY.getBean("graphFactory");
         return graphFactory.getGraph();
     }

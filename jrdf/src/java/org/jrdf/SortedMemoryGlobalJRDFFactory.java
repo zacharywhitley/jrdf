@@ -99,7 +99,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory {
+public final class SortedMemoryGlobalJRDFFactory implements GlobalJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
@@ -108,14 +108,14 @@ public final class SortedMemoryGlobalJRDFFactory implements MoleculeJRDFFactory 
     private SortedMemoryGlobalJRDFFactory() {
     }
 
-    public static MoleculeJRDFFactory getFactory() {
+    public static GlobalJRDFFactory getFactory() {
         return new SortedMemoryGlobalJRDFFactory();
     }
 
     public void refresh() {
     }
 
-    public MoleculeGraph getNewGraph() {
+    public MoleculeGraph getGraph() {
         MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);

@@ -87,7 +87,6 @@ import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
-import org.jrdf.util.TempDirectoryHandler;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -110,7 +109,7 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         MoleculeGraphTestUtil.setUp();
-        destGraph = FACTORY.getNewGraph();
+        destGraph = FACTORY.getGraph();
         destElementFactory = destGraph.getElementFactory();
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);

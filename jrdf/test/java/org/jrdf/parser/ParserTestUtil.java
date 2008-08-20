@@ -91,7 +91,7 @@ import java.io.IOException;
 
 public class ParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
+    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
     private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(CREATOR,
         NEW_GRAPH.getElementFactory());

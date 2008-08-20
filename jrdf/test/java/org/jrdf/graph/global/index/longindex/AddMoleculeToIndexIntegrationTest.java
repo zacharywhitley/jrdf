@@ -60,7 +60,7 @@
 package org.jrdf.graph.global.index.longindex;
 
 import junit.framework.TestCase;
-import org.jrdf.MoleculeJRDFFactory;
+import org.jrdf.GlobalJRDFFactory;
 import org.jrdf.SortedDiskGlobalJRDFFactory;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -89,13 +89,13 @@ import java.net.URI;
 public class AddMoleculeToIndexIntegrationTest extends TestCase {
     private static final TripleComparator TRIPLE_COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
     private static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(TRIPLE_COMPARATOR);
-    private MoleculeJRDFFactory factory = SortedDiskGlobalJRDFFactory.getFactory();
+    private GlobalJRDFFactory factory = SortedDiskGlobalJRDFFactory.getFactory();
     private MoleculeFactory molFactory = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
 
     public void setUp() {
-        graph = factory.getNewGraph();
+        graph = factory.getGraph();
         elementFactory = graph.getElementFactory();
     }
 

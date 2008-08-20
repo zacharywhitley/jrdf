@@ -98,7 +98,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
     }
 
     public void testWriteOneStatement() throws Exception {
-        Graph graph = TestJRDFFactory.getFactory().getNewGraph();
+        Graph graph = TestJRDFFactory.getFactory().getGraph();
         GraphElementFactory graphElementFactory = graph.getElementFactory();
         URI uri = new URI("http://hello.com/foo");
         URIReference resource = graphElementFactory.createURIReference(uri);
@@ -149,7 +149,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
     }
 
     private Graph readGraph(Reader reader, String baseURI) throws GraphException {
-        Graph read = TestJRDFFactory.getFactory().getNewGraph();
+        Graph read = TestJRDFFactory.getFactory().getGraph();
         Parser parser = new GraphRdfXmlParser(read);
         try {
             parser.parse(reader, baseURI);
