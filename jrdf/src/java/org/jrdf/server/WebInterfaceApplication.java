@@ -1,8 +1,8 @@
 package org.jrdf.server;
 
-import org.jrdf.PersistentJRDFFactory;
-import org.jrdf.PersistentJRDFFactoryImpl;
-import org.jrdf.graph.Graph;
+import org.jrdf.PersistentGlobalJRDFFactory;
+import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.restlet.Application;
@@ -11,7 +11,7 @@ import org.restlet.Router;
 
 public class WebInterfaceApplication extends Application {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
-    private static final PersistentJRDFFactory FACTORY = PersistentJRDFFactoryImpl.getFactory(HANDLER);
+    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
 
     @Override
     public synchronized Restlet createRoot() {
@@ -21,7 +21,11 @@ public class WebInterfaceApplication extends Application {
         return router;
     }
 
-    public Graph getGraph(String name) {
+    public MoleculeGraph getGraph(String name) {
         return FACTORY.getGraph(name);
+    }
+
+    public MoleculeGraph getGraph() {
+        return FACTORY.getGraph();
     }
 }

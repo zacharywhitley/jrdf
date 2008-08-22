@@ -1,5 +1,17 @@
 package org.jrdf.server;
 
+import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnyPredicateNode;
+import org.jrdf.graph.AnySubjectNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.util.ClosableIterator;
 import org.restlet.Application;
 import org.restlet.Context;
 import org.restlet.data.Form;
@@ -10,8 +22,8 @@ import org.restlet.resource.Representation;
 import org.restlet.resource.Resource;
 import org.restlet.resource.StringRepresentation;
 import org.restlet.resource.Variant;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
+
+import static java.net.URI.create;
 
 public class GraphResource extends Resource {
     private String graphName;
@@ -38,23 +50,72 @@ public class GraphResource extends Resource {
 
     @Override
     public Representation represent(Variant variant) {
-        MediaType type = variant.getMediaType();
-        Graph graph = getApplication().getGraph("foo");
-        try {
-            System.err.println("Got: " + graph.getNumberOfTriples());
-        } catch (GraphException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        MoleculeGraph graph = getGraph();
+        GraphElementFactory elementFactory = graph.getElementFactory();
+        SubjectNode subjectNode = getSubjectNode(elementFactory, subject);
+        PredicateNode predicateNode = getPredicateNode(elementFactory, predicate);
+        ObjectNode objectNode = getObjectNode(elementFactory, object);
+        ClosableIterator<Molecule> molecules = getMolecules(graph, subjectNode, predicateNode, objectNode);
+        while (molecules.hasNext()) {
+            System.err.println("Got: " + molecules.next());
         }
-        System.err.println("Type: " + type);
-        System.err.println("Values: " + graphName);
-        System.err.println("Values: " + subject);
-        System.err.println("Values: " + predicate);
-        System.err.println("Values: " + object);
-        System.err.println("Got: " + graph);
         return new StringRepresentation("hello, world", MediaType.TEXT_PLAIN);
+    }
+
+    private ClosableIterator<Molecule> getMolecules(MoleculeGraph graph, SubjectNode subjectNode,
+        PredicateNode predicateNode, ObjectNode objectNode) {
+        ClosableIterator<Molecule> molecules;
+        try {
+            molecules = graph.findMolecules(subjectNode, predicateNode, objectNode);
+        } catch (GraphException e) {
+            molecules = null;
+        }
+        return molecules;
     }
 
     public WebInterfaceApplication getApplication() {
         return (WebInterfaceApplication) Application.getCurrent();
+    }
+
+    private MoleculeGraph getGraph() {
+        MoleculeGraph graph;
+        if (graphName == null) {
+            graph = getApplication().getGraph();
+        } else {
+            graph = getApplication().getGraph(graphName);
+        }
+        return graph;
+    }
+
+    private SubjectNode getSubjectNode(GraphElementFactory elementFactory, String literalValue) {
+        SubjectNode subjectNode = getNode(elementFactory, literalValue);
+        if (subjectNode == null) {
+            subjectNode = AnySubjectNode.ANY_SUBJECT_NODE;
+        }
+        return subjectNode;
+    }
+
+    private PredicateNode getPredicateNode(GraphElementFactory elementFactory, String literalValue) {
+        PredicateNode predicateNode = getNode(elementFactory, literalValue);
+        if (predicateNode == null) {
+            predicateNode = AnyPredicateNode.ANY_PREDICATE_NODE;
+        }
+        return predicateNode;
+    }
+
+    private ObjectNode getObjectNode(GraphElementFactory elementFactory, String literalValue) {
+        ObjectNode objectNode = getNode(elementFactory, literalValue);
+        if (objectNode == null) {
+            objectNode = AnyObjectNode.ANY_OBJECT_NODE;
+        }
+        return objectNode;
+    }
+
+    private URIReference getNode(GraphElementFactory elementFactory, String literalValue) {
+        try {
+            return elementFactory.createURIReference(create(literalValue.substring(1, literalValue.length() - 1)));
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
