@@ -69,7 +69,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.FindEntryNode;
 import static org.jrdf.graph.local.BlankNodeImpl.isBlankNode;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 
 import static java.util.Arrays.asList;
 import java.util.HashSet;
@@ -120,15 +120,15 @@ public class FindEntryNodeImpl implements FindEntryNode {
         }
     }
 
-    private void getNewBlankNodes(Set<BlankNode> newNodes, ClosableIterator<Triple> iterator) {
-        while (iterator.hasNext()) {
-            Triple triple = iterator.next();
+    private void getNewBlankNodes(Set<BlankNode> newNodes, ClosableIterable<Triple> triples) {
+        for (Triple triple : triples) {
             SubjectNode newNode = triple.getSubject();
             if (isBlankNode(newNode) && (!visitedNodes.contains((BlankNode) newNode))) {
                 currentTriple = triple;
                 newNodes.add((BlankNode) newNode);
             }
         }
+        triples.iterator().close();
     }
 }
 

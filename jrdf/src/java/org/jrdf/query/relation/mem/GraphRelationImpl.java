@@ -185,7 +185,8 @@ public final class GraphRelationImpl implements GraphRelation {
                 return ((GraphImpl) graph).findUnsorted(searchTriple.getSubject(), searchTriple.getPredicate(),
                         searchTriple.getObject());
             } else {
-                return graph.find(searchTriple.getSubject(), searchTriple.getPredicate(), searchTriple.getObject());
+                return graph.find(searchTriple.getSubject(), searchTriple.getPredicate(), searchTriple.getObject()).
+                    iterator();
             }
         } catch (GraphException e) {
             throw new RuntimeException(e);

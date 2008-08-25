@@ -67,7 +67,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.operation.Comparison;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 
 /**
  * Default in memory Comparison.
@@ -81,18 +81,17 @@ public final class ComparisonImpl implements Comparison {
 
     public boolean isGrounded(Graph g) throws GraphException {
         if (!g.isEmpty()) {
-            ClosableIterator<Triple> iterator = null;
+            ClosableIterable<Triple> triples = null;
             try {
-                iterator = g.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-                while (iterator.hasNext()) {
-                    Triple triple = iterator.next();
+                triples = g.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+                for (Triple triple : triples) {
                     if (tripleContainsBlankNode(triple)) {
                         return false;
                     }
                 }
             } finally {
-                if (iterator != null) {
-                    iterator.close();
+                if (triples != null) {
+                    triples.iterator().close();
                 }
             }
         }
@@ -153,13 +152,16 @@ public final class ComparisonImpl implements Comparison {
     }
 
     private boolean compareGraphContents(Graph g1, Graph g2) throws GraphException {
-        ClosableIterator<Triple> iterator = g1.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        while (iterator.hasNext()) {
-            Triple triple = iterator.next();
-            if (!g2.contains(triple)) {
-                return false;
+        ClosableIterable<Triple> triples = g1.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        try {
+            for (Triple triple : triples) {
+                if (!g2.contains(triple)) {
+                    return false;
+                }
             }
+            return true;
+        } finally {
+            triples.iterator().close();
         }
-        return true;
     }
 }

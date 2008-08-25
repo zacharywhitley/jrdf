@@ -62,32 +62,32 @@ package org.jrdf.parser;
 import static junit.framework.Assert.assertEquals;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MapFactory;
+import org.jrdf.collection.MemMapFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.datatype.LexicalComparator;
 import org.jrdf.graph.datatype.LexicalComparatorImpl;
 import org.jrdf.graph.datatype.SemanticLiteralComparator;
 import org.jrdf.graph.datatype.SemanticLiteralComparatorImpl;
-import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.test.AssertThrows;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Iterator;
-import java.io.IOException;
+import java.util.Set;
 
 public class ParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
@@ -132,14 +132,13 @@ public class ParserTestUtil {
         Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, blankNodeFactory);
         rdfXmlParser.parse(actualFile.openStream(), baseURI);
         Set<Triple> resultTriples = new HashSet<Triple>();
-        ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterable<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
-            while (results.hasNext()) {
-                Triple o = results.next();
+            for (Triple o : results) {
                 resultTriples.add(o);
             }
         } finally {
-            results.close();
+            results.iterator().close();
         }
         return resultTriples;
     }

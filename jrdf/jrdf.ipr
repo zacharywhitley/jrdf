@@ -303,7 +303,6 @@
         </entry>
       </map>
     </option>
-    <option name="myVersion" value="123" />
   </component>
   <component name="ToggleTest">
     <toggle from="*" to="*UnitTest" />

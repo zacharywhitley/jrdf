@@ -65,9 +65,9 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.AssertThrows.*;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
@@ -365,10 +365,9 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
             graph.contains((SubjectNode) o, rdfFirst, fruit[0]));
 
         // Get all rdf:first statements
-        ClosableIterator iter = graph.find(ANY_SUBJECT_NODE, rdfFirst, ANY_OBJECT_NODE);
+        ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, rdfFirst, ANY_OBJECT_NODE);
         int counter = 0;
-        while (iter.hasNext()) {
-            iter.next();
+        for (Triple triple : triples) {
             counter++;
         }
         assertTrue("Should have three rdf:first statements, not " + counter, 3 == counter);
@@ -379,19 +378,17 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         }
 
         // Get all rdf:rest statements
-        iter = graph.find(ANY_SUBJECT_NODE, rdfRest, ANY_OBJECT_NODE);
+        triples = graph.find(ANY_SUBJECT_NODE, rdfRest, ANY_OBJECT_NODE);
         counter = 0;
-        while (iter.hasNext()) {
-            iter.next();
+        for (Triple triple : triples) {
             counter++;
         }
         assertTrue("Should have three rdf:rest statements", 3 == counter);
 
         // Get all rdf:rest with rdf:nil statements
-        iter = graph.find(ANY_SUBJECT_NODE, rdfRest, rdfNil);
+        triples = graph.find(ANY_SUBJECT_NODE, rdfRest, rdfNil);
         counter = 0;
-        while (iter.hasNext()) {
-            iter.next();
+        for (Triple triple : triples) {
             counter++;
         }
 
@@ -435,10 +432,9 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[3]));
 
         // Check that it doesn't allow duplicates.
-        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit[0]);
+        ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit[0]);
         int count = 0;
-        while (iter.hasNext()) {
-            iter.next();
+        for (Triple triple : triples) {
             count++;
         }
         assertTrue("Should have only the same statements: " + fruit[0], 1 == count);
@@ -486,10 +482,9 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[2]));
 
         // Check that it allows duplicates.
-        ClosableIterator iter = graph.find(s, ANY_PREDICATE_NODE, fruit[2]);
+        ClosableIterable<Triple> triples = graph.find(s, ANY_PREDICATE_NODE, fruit[2]);
         int count = 0;
-        while (iter.hasNext()) {
-            iter.next();
+        for (Triple triple : triples) {
             count++;
         }
         assertTrue("Should have two of the same statements: " + fruit[2], 2 == count);

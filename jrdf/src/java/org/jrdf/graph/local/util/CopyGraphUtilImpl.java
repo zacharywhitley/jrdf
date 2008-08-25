@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.local.util;
 
+import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.AbstractBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -73,8 +75,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.collection.MapFactory;
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
@@ -105,9 +106,10 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
 
     public Graph copyGraph(Graph newSourceGraph, Graph newTargetGraph) throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory, setFactory);
-        ClosableIterator<Triple> triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
+            iterator();
         readAndUpdateTripleIterator(triples);
-        triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         try {
             mapper.createNewTriples(triples);
         } catch (Exception e) {
@@ -219,14 +221,11 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
 
     private void addTriplesToSet(Graph graph, Set<Triple> set, SubjectNode subjectNode,
         PredicateNode predicateNode, ObjectNode objectNode) throws GraphException {
-        ClosableIterator<Triple> iterator = graph.find(subjectNode, predicateNode, objectNode);
-        try {
-            while (iterator.hasNext()) {
-                set.add(iterator.next());
-            }
-        } finally {
-            iterator.close();
+        ClosableIterable<Triple> triples = graph.find(subjectNode, predicateNode, objectNode);
+        for (Triple triple : triples) {
+            set.add(triple);
         }
+        triples.iterator().close();
     }
 
     private void readAndUpdateTripleIterator(Iterator<Triple> triples) throws GraphException {

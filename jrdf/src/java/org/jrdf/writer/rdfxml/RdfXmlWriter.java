@@ -184,7 +184,8 @@ public class RdfXmlWriter implements RdfWriter {
      * @throws WriteException If the statements could not be written.
      */
     private void writeStatements(final Graph graph) throws GraphException, WriteException, XMLStreamException {
-        final ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        final ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
+            iterator();
         try {
             final IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
             final ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter);

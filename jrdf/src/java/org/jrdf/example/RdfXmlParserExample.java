@@ -68,7 +68,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.EscapeURL;
 
 import java.io.InputStream;
@@ -104,14 +104,14 @@ public final class RdfXmlParserExample {
             final Graph jrdfMem = JRDF_FACTORY.getGraph();
             Parser parser = new GraphRdfXmlParser(jrdfMem);
             parser.parse(in, EscapeURL.toEscapedString(url));
-            ClosableIterator<Triple> iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            ClosableIterable<Triple> triples = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
             try {
-                while (iter.hasNext()) {
-                    System.out.println("Graph: " + iter.next());
+                for (Triple triple : triples) {
+                    System.out.println("Graph: " + triple);
                 }
                 System.out.println("Total number of statements: " + jrdfMem.getNumberOfTriples());
             } finally {
-                iter.close();
+                triples.iterator().close();
             }
         } finally {
             in.close();

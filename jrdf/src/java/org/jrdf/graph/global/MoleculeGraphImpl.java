@@ -88,6 +88,7 @@ import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.LongIndexToMoleculeIterator;
+import org.jrdf.util.ClosableIterable;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -216,24 +217,24 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         return graph.contains(subject, predicate, object);
     }
 
-    public ClosableIterator<Triple> find(Triple triple) throws GraphException {
+    public ClosableIterable<Triple> find(Triple triple) throws GraphException {
         return graph.find(triple);
     }
 
-    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+    public ClosableIterable<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
         throws GraphException {
         return graph.find(subject, predicate, object);
     }
 
-    public ClosableIterator<? extends Node> findNodes(NodeType type) {
+    public ClosableIterable<? extends Node> findNodes(NodeType type) {
         return graph.findNodes(type);
     }
 
-    public ClosableIterator<PredicateNode> findPredicates(Resource resource) throws GraphException {
+    public ClosableIterable<PredicateNode> findPredicates(Resource resource) throws GraphException {
         return graph.findPredicates(resource);
     }
 
-    public ClosableIterator<? super Resource> findResources(ValueNodeType type) {
+    public ClosableIterable<? super Resource> findResources(ValueNodeType type) {
         return graph.findResources(type);
     }
 

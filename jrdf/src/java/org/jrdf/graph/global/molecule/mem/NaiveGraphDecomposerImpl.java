@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.global.molecule.mem;
 
+import org.jrdf.collection.CollectionFactory;
 import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -73,8 +74,7 @@ import org.jrdf.graph.global.molecule.GraphDecomposer;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
-import org.jrdf.collection.CollectionFactory;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Set;
@@ -100,9 +100,8 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         triplesChecked.clear();
         molecules.clear();
         graph = newGraph;
-        ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        while (iterator.hasNext()) {
-            Triple currentTriple = iterator.next();
+        ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        for (Triple currentTriple : triples) {
             if (!triplesChecked.contains(currentTriple)) {
                 Triple newStartingPoint = new FindEntryNodeImpl().find(graph, currentTriple);
                 if (tripleComparator.compare(newStartingPoint, currentTriple) < 0) {
@@ -115,7 +114,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
                 molecules.add(molecule);
             }
         }
-        iterator.close();
+        triples.iterator().close();
         return molecules;
     }
 
@@ -138,10 +137,9 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         return molecule;
     }
 
-    private Molecule findEnclosedTriples(Molecule molecule, ClosableIterator<Triple> closableIterator)
+    private Molecule findEnclosedTriples(Molecule molecule, ClosableIterable<Triple> triples)
         throws GraphException {
-        while (closableIterator.hasNext()) {
-            Triple triple = closableIterator.next();
+        for (Triple triple : triples) {
             if (!triplesChecked.contains(triple)) {
                 if (isDoubleLinkedTriple(triple) && isDoubleLinkedTriple(molecule.getHeadTriple()) &&
                         triple.getSubject().equals(molecule.getHeadTriple().getSubject())) {
@@ -159,7 +157,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
                 }
             }
         }
-        closableIterator.close();
+        triples.iterator().close();
         return molecule;
     }
 
@@ -202,15 +200,14 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
 
     private void addTriplesToMolecule(Molecule molecule, SubjectNode subject, ObjectNode object)
         throws GraphException {
-        ClosableIterator<Triple> tripleClosableIterator = graph.find(subject, ANY_PREDICATE_NODE, object);
-        while (tripleClosableIterator.hasNext()) {
-            Triple currentTriple = tripleClosableIterator.next();
+        ClosableIterable<Triple> triples = graph.find(subject, ANY_PREDICATE_NODE, object);
+        for (Triple currentTriple : triples) {
             if (!triplesChecked.contains(currentTriple)) {
                 molecule.add(currentTriple);
                 triplesChecked.add(currentTriple);
             }
         }
-        tripleClosableIterator.close();
+        triples.iterator().close();
     }
 
     private void getSubMolecule(Molecule subMolecule, Triple triple) throws GraphException {

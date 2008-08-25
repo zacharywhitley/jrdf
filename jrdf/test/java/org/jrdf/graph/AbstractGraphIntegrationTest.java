@@ -70,12 +70,13 @@ import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
 import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 
 import java.net.URI;
-import static java.net.URI.*;
+import static java.net.URI.create;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -463,7 +464,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     private void checkRemoveIterator(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
         int expectedNumberOfTriples) throws Exception {
         addTriplesToGraph();
-        ClosableIterator<Triple> iterator = graph.find(subjectNode, predicateNode, objectNode);
+        ClosableIterator<Triple> iterator = graph.find(subjectNode, predicateNode, objectNode).iterator();
         try {
             graph.remove(iterator);
             assertEquals(expectedNumberOfTriples, graph.getNumberOfTriples());
@@ -569,56 +570,56 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         graph.add(blank2, ref1, l2);
 
         // look for the first triple and check that one is returned
-        ClosableIterator<Triple> it = graph.find(blank1, ref1, blank2);
+        ClosableIterator<Triple> it = graph.find(blank1, ref1, blank2).iterator();
         assertTrue(it.hasNext());
         it.close();
 
         // look for a non-existent triple
-        it = graph.find(ref1, ref1, blank1);
+        it = graph.find(ref1, ref1, blank1).iterator();
         assertFalse(it.hasNext());
         it.close();
 
         // look for doubles and check that there is data there
-        it = graph.find(blank1, ref1, ANY_OBJECT_NODE);
+        it = graph.find(blank1, ref1, ANY_OBJECT_NODE).iterator();
         assertTrue(it.hasNext());
         it.close();
-        it = graph.find(blank1, ANY_PREDICATE_NODE, blank2);
+        it = graph.find(blank1, ANY_PREDICATE_NODE, blank2).iterator();
         assertTrue(it.hasNext());
         it.close();
-        it = graph.find(ANY_SUBJECT_NODE, ref1, blank2);
+        it = graph.find(ANY_SUBJECT_NODE, ref1, blank2).iterator();
         assertTrue(it.hasNext());
         it.close();
 
         // look for a non-existent double
-        it = graph.find(ref1, ref1, ANY_OBJECT_NODE);
+        it = graph.find(ref1, ref1, ANY_OBJECT_NODE).iterator();
         assertFalse(it.hasNext());
         it.close();
-        it = graph.find(ref1, ANY_PREDICATE_NODE, blank2);
+        it = graph.find(ref1, ANY_PREDICATE_NODE, blank2).iterator();
         assertFalse(it.hasNext());
         it.close();
-        it = graph.find(ANY_SUBJECT_NODE, ref3, blank2);
+        it = graph.find(ANY_SUBJECT_NODE, ref3, blank2).iterator();
         assertFalse(it.hasNext());
         it.close();
 
         // look for singles
-        it = graph.find(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        it = graph.find(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         assertTrue(it.hasNext());
         it.close();
-        it = graph.find(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE);
+        it = graph.find(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE).iterator();
         assertTrue(it.hasNext());
         it.close();
-        it = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, l1);
+        it = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, l1).iterator();
         assertTrue(it.hasNext());
         it.close();
 
         // look for non-existent singles
-        it = graph.find(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        it = graph.find(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         assertFalse(it.hasNext());
         it.close();
-        it = graph.find(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE);
+        it = graph.find(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE).iterator();
         assertFalse(it.hasNext());
         it.close();
-        it = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ref1);
+        it = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ref1).iterator();
         assertFalse(it.hasNext());
         it.close();
 
@@ -626,69 +627,69 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
         // look for the first triple and check that one is returned
         Triple t = tripleFactory.createTriple(blank1, ref1, blank2);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertTrue(it.hasNext());
         it.close();
 
         // look for a non-existent triple
         t = tripleFactory.createTriple(ref1, ref1, blank1);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertFalse(it.hasNext());
         it.close();
 
         // look for doubles and check that there is data there
         t = tripleFactory.createTriple(blank1, ref1, ANY_OBJECT_NODE);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertTrue(it.hasNext());
         it.close();
         t = tripleFactory.createTriple(blank1, ANY_PREDICATE_NODE, blank2);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertTrue(it.hasNext());
         it.close();
         t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ref1, blank2);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertTrue(it.hasNext());
         it.close();
 
         // look for a non-existent double
         t = tripleFactory.createTriple(ref1, ref1, ANY_OBJECT_NODE);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertFalse(it.hasNext());
         it.close();
         t = tripleFactory.createTriple(ref1, ANY_PREDICATE_NODE, blank2);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertFalse(it.hasNext());
         it.close();
         t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ref3, blank2);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertFalse(it.hasNext());
         it.close();
 
         // look for singles
         t = tripleFactory.createTriple(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertTrue(it.hasNext());
         it.close();
         t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertTrue(it.hasNext());
         it.close();
         t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, l1);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertTrue(it.hasNext());
         it.close();
 
         // look for non-existent singles
         t = tripleFactory.createTriple(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertFalse(it.hasNext());
         it.close();
         t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertFalse(it.hasNext());
         it.close();
         t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ref1);
-        it = graph.find(t);
+        it = graph.find(t).iterator();
         assertFalse(it.hasNext());
         it.close();
 
@@ -753,13 +754,12 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         //query them and put contents of iterator in a collection for checking
         //(iterator may return results in a different order)
         Set<Triple> statements = new HashSet<Triple>();
-        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        assertTrue("ClosableIterator is returning false for hasNext().", iter.hasNext());
-        while (iter.hasNext()) {
-            final Triple o = iter.next();
-            statements.add(o);
+        ClosableIterable<Triple> iterable = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        assertTrue("ClosableIterator is returning false for hasNext().", iterable.iterator().hasNext());
+        for (Triple triple : iterable) {
+            statements.add(triple);
         }
-        iter.close();
+        iterable.iterator().close();
 
         //check that the iterator contained the correct number of statements
         assertEquals("ClosableIterator is incomplete.", graph.getNumberOfTriples(), statements.size());
@@ -816,7 +816,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     }
 
     public void testResourceIteratorSimple() throws Exception {
-        final ClosableIterator<? extends Node> resources = graph.findNodes(RESOURCE_TYPE);
+        final ClosableIterator<? extends Node> resources = graph.findNodes(RESOURCE_TYPE).iterator();
         try {
             boolean b = resources.hasNext();
             assertFalse("Should be no resources for empty graph", b);
@@ -842,7 +842,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
-        ClosableIterator<? super Resource> iterator = graph.findResources(URI_REFERENCE_TYPE);
+        ClosableIterator<? super Resource> iterator = graph.findResources(URI_REFERENCE_TYPE).iterator();
         try {
             int counter = 0;
             while (iterator.hasNext()) {
@@ -857,7 +857,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     public void testBlankNodeResourceIterator() throws Exception {
         addTestNodes();
-        ClosableIterator<? super Resource> iterator = graph.findResources(BNODE_TYPE);
+        ClosableIterator<? super Resource> iterator = graph.findResources(BNODE_TYPE).iterator();
         try {
             int counter = 0;
             while (iterator.hasNext()) {
@@ -881,46 +881,43 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     }
 
     private int countURIRefs() {
-        ClosableIterator<? extends Node> iterator = graph.findNodes(URI_REFERENCE_TYPE);
+        ClosableIterable<? extends Node> iterator = graph.findNodes(URI_REFERENCE_TYPE);
         try {
             int counter = 0;
-            while (iterator.hasNext()) {
-                iterator.next();
+            for (Node node : iterator) {
                 counter++;
             }
             return counter;
         } finally {
-            iterator.close();
+            iterator.iterator().close();
         }
     }
 
     public void testResourceIterators() throws Exception {
         addTestNodes();
-        ClosableIterator<? extends Node> resources = graph.findNodes(RESOURCE_TYPE);
+        ClosableIterable<? extends Node> resources = graph.findNodes(RESOURCE_TYPE);
         try {
             int counter = 0;
-            while (resources.hasNext()) {
-                resources.next();
+            for (Node node : resources) {
                 counter++;
             }
             assertEquals("Unexpected number of unique resources (Blank Nodes and URIs)", 5, counter);
         } finally {
-            resources.close();
+            resources.iterator().close();
         }
     }
 
     public void testPredicateIterators() throws Exception {
         addTestNodes();
-        ClosableIterator<? extends Node> uniquePredicates = graph.findNodes(PREDICATE_TYPE);
+        ClosableIterable<? extends Node> uniquePredicates = graph.findNodes(PREDICATE_TYPE);
         try {
             int counter = 0;
-            while (uniquePredicates.hasNext()) {
-                uniquePredicates.next();
+            for (Node node : uniquePredicates) {
                 counter++;
             }
             assertEquals("Unexpected number of unique predicates", 4, counter);
         } finally {
-            uniquePredicates.close();
+            uniquePredicates.iterator().close();
         }
     }
 
@@ -933,10 +930,10 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     public void testClear() throws Exception {
         addTriplesToGraph();
         assertEquals(3, graph.getNumberOfTriples());
-        assertEquals(true, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).hasNext());
+        assertEquals(true, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator().hasNext());
         graph.clear();
         assertEquals(0, graph.getNumberOfTriples());
-        assertEquals(false, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).hasNext());
+        assertEquals(false, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator().hasNext());
     }
 
     public void testSeparateGraphs() throws Exception {
@@ -973,18 +970,17 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     private void checkFixedUniquePredicateIterator(Resource resource, PredicateNode... predicates)
         throws Exception {
         int counter = 0;
-        ClosableIterator<PredicateNode> resourcePredicates = graph.findPredicates(resource);
+        ClosableIterable<PredicateNode> resourcePredicates = graph.findPredicates(resource);
         try {
             Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
-            while (resourcePredicates.hasNext()) {
-                PredicateNode predicateNode = resourcePredicates.next();
+            for (PredicateNode predicateNode : resourcePredicates) {
                 assertTrue("Results should not have: " + predicateNode + " expected: " + expectedPredicates,
                     expectedPredicates.contains(predicateNode));
                 counter++;
             }
             assertEquals("Wrong number of unique predicates", expectedPredicates.size(), counter);
         } finally {
-            resourcePredicates.close();
+            resourcePredicates.iterator().close();
         }
     }
 
@@ -1007,16 +1003,15 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     }
 
     private int getNumberOfBlankNodes() {
-        ClosableIterator<? extends Node> blankNodes = graph.findNodes(new BlankNodeType());
+        ClosableIterable<? extends Node> blankNodes = graph.findNodes(new BlankNodeType());
         try {
             int counter = 0;
-            while (blankNodes.hasNext()) {
-                blankNodes.next();
+            for (Node node : blankNodes) {
                 counter++;
             }
             return counter;
         } finally {
-            blankNodes.close();
+            blankNodes.iterator().close();
         }
     }
 
@@ -1032,7 +1027,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         assertEquals(numberOfTriplesInGraph, graph.getNumberOfTriples());
 
         // get an iterator for all the elements
-        ClosableIterator<Triple> ci = graph.find(subjectNode, predicateNode, objectNode);
+        ClosableIterator<Triple> ci = graph.find(subjectNode, predicateNode, objectNode).iterator();
 
         // Check that it throws an exception before hasNext is called.
         checkInvalidRemove(ci);
