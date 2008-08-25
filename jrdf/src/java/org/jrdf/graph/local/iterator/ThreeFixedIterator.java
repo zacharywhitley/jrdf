@@ -144,7 +144,6 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
         return removeTriple;
     }
 
-
     public void remove() {
         if (null != removeTriple) {
             try {
