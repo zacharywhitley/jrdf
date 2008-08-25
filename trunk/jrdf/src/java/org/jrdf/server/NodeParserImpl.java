@@ -1,12 +1,12 @@
 package org.jrdf.server;
 
-import org.jrdf.graph.SubjectNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.AnySubjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
 
 import static java.net.URI.create;
@@ -15,7 +15,7 @@ public class NodeParserImpl implements NodeParser {
     public SubjectNode getSubjectNode(GraphElementFactory elementFactory, String value) {
         SubjectNode subjectNode = getNode(elementFactory, value);
         if (subjectNode == null) {
-            subjectNode = AnySubjectNode.ANY_SUBJECT_NODE;
+            subjectNode = ANY_SUBJECT_NODE;
         }
         return subjectNode;
     }
@@ -23,7 +23,7 @@ public class NodeParserImpl implements NodeParser {
     public PredicateNode getPredicateNode(GraphElementFactory elementFactory, String value) {
         PredicateNode predicateNode = getNode(elementFactory, value);
         if (predicateNode == null) {
-            predicateNode = AnyPredicateNode.ANY_PREDICATE_NODE;
+            predicateNode = ANY_PREDICATE_NODE;
         }
         return predicateNode;
     }
@@ -31,7 +31,7 @@ public class NodeParserImpl implements NodeParser {
     public ObjectNode getObjectNode(GraphElementFactory elementFactory, String value) {
         ObjectNode objectNode = getNode(elementFactory, value);
         if (objectNode == null) {
-            objectNode = AnyObjectNode.ANY_OBJECT_NODE;
+            objectNode = ANY_OBJECT_NODE;
         }
         return objectNode;
     }
