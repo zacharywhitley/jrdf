@@ -70,7 +70,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,9 +98,9 @@ public class NTriplesParserTestUtil {
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.parse(in, "foo");
         Set<Triple> actualResults = new HashSet<Triple>();
-        ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        while (iterator.hasNext()) {
-            actualResults.add(iterator.next());
+        ClosableIterable<Triple> tripleClosableIterable = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        for (Triple triple : tripleClosableIterable) {
+            actualResults.add(triple);
         }
         return actualResults;
     }

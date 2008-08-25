@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.local.util;
 
+import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.AbstractBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -76,9 +78,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
-import org.jrdf.collection.MapFactory;
-import org.jrdf.collection.CollectionFactory;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -186,15 +186,14 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         if (ObjectNode.class.isAssignableFrom(node.getClass()) &&
             ObjectNode.class.isAssignableFrom(newNode.getClass())) {
             final ObjectNode oldONode = (ObjectNode) createNewNode(node);
-            ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, oldONode);
-            while (iterator.hasNext()) {
-                Triple triple = iterator.next();
+            ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, oldONode);
+            for (Triple triple : triples) {
                 Triple newTriple =
                     tripleFactory.createTriple(triple.getSubject(), triple.getPredicate(), (ObjectNode) newNode);
                 triplesToAdd.add(newTriple);
                 triplesToRemove.add(new TripleImpl(triple.getSubject(), triple.getPredicate(), oldONode));
             }
-            iterator.close();
+            triples.iterator().close();
             addRemoveTriples();
         }
     }
@@ -206,15 +205,14 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         if (PredicateNode.class.isAssignableFrom(node.getClass()) &&
             PredicateNode.class.isAssignableFrom(newNode.getClass())) {
             final PredicateNode oldONode = (PredicateNode) createNewNode(node);
-            ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, oldONode, ANY_OBJECT_NODE);
-            while (iterator.hasNext()) {
-                Triple triple = iterator.next();
+            ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, oldONode, ANY_OBJECT_NODE);
+            for (Triple triple : triples) {
                 Triple newTriple =
                     tripleFactory.createTriple(triple.getSubject(), (PredicateNode) newNode, triple.getObject());
                 triplesToAdd.add(newTriple);
                 triplesToRemove.add(new TripleImpl(triple.getSubject(), oldONode, triple.getObject()));
             }
-            iterator.close();
+            triples.iterator().close();
             addRemoveTriples();
         }
     }
@@ -226,15 +224,14 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         if (SubjectNode.class.isAssignableFrom(node.getClass()) &&
             SubjectNode.class.isAssignableFrom(newNode.getClass())) {
             final SubjectNode oldSNode = (SubjectNode) createNewNode(node);
-            ClosableIterator<Triple> iterator = graph.find(oldSNode, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-            while (iterator.hasNext()) {
-                Triple triple = iterator.next();
+            ClosableIterable<Triple> triples = graph.find(oldSNode, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            for (Triple triple : triples) {
                 Triple newTriple =
                     tripleFactory.createTriple((SubjectNode) newNode, triple.getPredicate(), triple.getObject());
                 triplesToAdd.add(newTriple);
                 triplesToRemove.add(new TripleImpl(oldSNode, triple.getPredicate(), triple.getObject()));
             }
-            iterator.close();
+            triples.iterator().close();
             addRemoveTriples();
         }
     }

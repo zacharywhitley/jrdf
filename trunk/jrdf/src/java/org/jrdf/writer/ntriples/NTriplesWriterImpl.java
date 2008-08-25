@@ -59,9 +59,9 @@
 
 package org.jrdf.writer.ntriples;
 
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.AnySubjectNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
@@ -71,7 +71,7 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TypedNodeVisitable;
 import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.writer.WriteException;
 
 import javax.xml.stream.XMLStreamException;
@@ -108,14 +108,13 @@ public class NTriplesWriterImpl implements NTriplesWriter {
     }
 
     private void write(Graph graph, String encoding) throws GraphException, WriteException {
-        ClosableIterator<Triple> tripleIterator = graph.find(AnySubjectNode.ANY_SUBJECT_NODE,
-            AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
+        ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
-            while (tripleIterator.hasNext()) {
-                printTriple(tripleIterator.next());
+            for (Triple triple : triples) {
+                printTriple(triple);
             }
         } finally {
-            tripleIterator.close();
+            triples.iterator().close();
         }
     }
 

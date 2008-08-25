@@ -178,7 +178,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
 
         graph2 = cgUtil.copyGraph(graph1, graph2);
 
-        ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         if (it.hasNext()) {
             Triple triple = it.next();
             Node n1 = triple.getSubject();
@@ -195,7 +195,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple1);
 
         graph2 = cgUtil.copyGraph(graph1, graph2);
-        ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         if (it.hasNext()) {
             Triple triple = it.next();
             Node n1 = triple.getSubject();
@@ -213,7 +213,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
 
         cgUtil.copyGraph(graph1, graph2);
         graph2 = cgUtil.getGraph();
-        ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         if (it.hasNext()) {
             Triple triple = it.next();
             Node n1 = triple.getSubject();
@@ -233,7 +233,8 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple1);
 
         graph2 = cgUtil.copyGraph(graph1, graph2);
-        ClosableIterator<Triple> triples = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> triples = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
+            iterator();
         Triple trip = triples.next();
         assertTrue("Value ok", ((Literal) trip.getObject()).getValue().equals("whatever"));
         assertTrue("Type ok", ((Literal) trip.getObject()).getDatatypeURI().toString().equals("xsd:string"));
@@ -278,7 +279,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple1);
         graph1.add(triple2);
         graph2 = cgUtil.copyGraph(graph1, graph2);
-        ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         Triple t1 = it.next();
         Triple t2 = it.next();
         it.close();
@@ -335,20 +336,20 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         PredicateNode np3Node = eFac2.createURIReference(URI.create(url1 + "p3"));
 
         graph2 = cgUtil.copyGraph(graph1, graph2);
-        ClosableIterator<Triple> trps1 = graph2.find(ANY_SUBJECT_NODE, np1Node, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> trps1 = graph2.find(ANY_SUBJECT_NODE, np1Node, ANY_OBJECT_NODE).iterator();
         Triple trp1 = null;
         while (trps1.hasNext()) {
             trp1 = trps1.next();
             assertTrue("not empty", trp1 != null);
         }
 
-        ClosableIterator<Triple> trps2 = graph2.find(ANY_SUBJECT_NODE, np2Node, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> trps2 = graph2.find(ANY_SUBJECT_NODE, np2Node, ANY_OBJECT_NODE).iterator();
         Triple trp2 = null;
         while (trps2.hasNext()) {
             trp2 = trps2.next();
             assertTrue("Not empty", trp2 != null);
         }
-        ClosableIterator<Triple> trps3 = graph2.find(ANY_SUBJECT_NODE, np3Node, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> trps3 = graph2.find(ANY_SUBJECT_NODE, np3Node, ANY_OBJECT_NODE).iterator();
         Triple trp3 = null;
         while (trps3.hasNext()) {
             trp3 = trps3.next();
@@ -378,8 +379,8 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         cgUtil.copyTriplesForSubjectNode(graph1, graph2, (SubjectNode) node2, (SubjectNode) node5);
         cgUtil.replaceNode(graph2, node2, node5);
         assertEquals("Graph2 size should be 3", 3, graph2.getNumberOfTriples());
-        ClosableIterator<Triple> iterator =
-            graph2.find(eFac2.createURIReference(URI.create(node2.toString())), ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> iterator = graph2.find(eFac2.createURIReference(URI.create(node2.toString())),
+            ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         assertTrue("Graph2 doesn't contain node2", !iterator.hasNext());
         iterator.close();
     }

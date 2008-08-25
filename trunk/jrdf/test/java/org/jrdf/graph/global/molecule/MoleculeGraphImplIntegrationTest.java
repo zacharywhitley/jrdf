@@ -63,13 +63,13 @@ import junit.framework.TestCase;
 import org.jrdf.collection.MemMapFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import org.jrdf.graph.AnySubjectNode;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R1R1;
@@ -110,6 +110,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import static java.net.URI.create;
+import static java.net.URI.*;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -153,13 +154,14 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         Molecule molecule2 = MOLECULE_FACTORY.createMolecule(b2.asTriple(r1, b2));
         GRAPH.add(molecule2);
         assertEquals(2, GRAPH.getNumberOfTriples());
-        ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
+            iterator();
         assertTrue(iterator.hasNext());
         GRAPH.delete(molecule);
         assertEquals(1, GRAPH.getNumberOfTriples());
         GRAPH.delete(molecule2);
         assertEquals(0, GRAPH.getNumberOfTriples());
-        iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         assertFalse(iterator.hasNext());
     }
 
@@ -173,13 +175,14 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         Molecule molecule2 = MOLECULE_FACTORY.createMolecule(b2.asTriple(r1, b2));
         GRAPH.add(molecule2);
         assertEquals(2, GRAPH.getNumberOfTriples());
-        ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
+            iterator();
         assertTrue(iterator.hasNext());
         GRAPH.delete(molecule);
         assertEquals(1, GRAPH.getNumberOfTriples());
         GRAPH.delete(molecule2);
         assertEquals(0, GRAPH.getNumberOfTriples());
-        iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         assertFalse(iterator.hasNext());
     }
 
@@ -321,9 +324,10 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         readTextToGraph();
         final long triples = destGraph.getNumberOfTriples();
         final GraphElementFactory destElementFactory = destGraph.getElementFactory();
-        ClosableIterator<Triple> interactions = destGraph.find(AnySubjectNode.ANY_SUBJECT_NODE,
-                destElementFactory.createURIReference(RDF.TYPE),
-                destElementFactory.createURIReference(URI.create("http://www.biopax.org/release/biopax-level2.owl#physicalInteraction")));
+        URIReference typePredicate = destElementFactory.createURIReference(RDF.TYPE);
+        URIReference object = destElementFactory.createURIReference(
+            create("http://www.biopax.org/release/biopax-level2.owl#physicalInteraction"));
+        ClosableIterator<Triple> interactions = destGraph.find(ANY_SUBJECT_NODE, typePredicate, object).iterator();
         try {
             assertTrue(interactions.hasNext());
             Triple interaction = interactions.next();

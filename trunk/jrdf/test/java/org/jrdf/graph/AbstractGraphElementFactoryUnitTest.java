@@ -63,6 +63,7 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
@@ -276,18 +277,17 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         assertEquals(l1.getEscapedForm(), l3.getEscapedForm());
         assertTrue(graph.contains(ref4, ref5, blank1));
 
-        ClosableIterator iter = graph.find(ref2, ref1, ANY_OBJECT_NODE);
-        while (iter.hasNext()) {
-            triple = (Triple) iter.next();
-            assertEquals(l1, triple.getObject());
-            assertTrue(l1.hashCode() == triple.getObject().hashCode());
-            assertEquals(l3, triple.getObject());
-            assertTrue(l3.hashCode() == triple.getObject().hashCode());
+        ClosableIterable<Triple> triples = graph.find(ref2, ref1, ANY_OBJECT_NODE);
+        for (Triple aTriple : triples) {
+            assertEquals(l1, aTriple.getObject());
+            assertTrue(l1.hashCode() == aTriple.getObject().hashCode());
+            assertEquals(l3, aTriple.getObject());
+            assertTrue(l3.hashCode() == aTriple.getObject().hashCode());
         }
 
-        assertTrue(graph.find(ref2, ref1, l1).hasNext());
+        assertTrue(graph.find(ref2, ref1, l1).iterator().hasNext());
         assertTrue(graph.contains(ref2, ref1, l1));
-        assertTrue(graph.find(ref5, ref4, l3).hasNext());
+        assertTrue(graph.find(ref5, ref4, l3).iterator().hasNext());
         assertTrue(graph.contains(ref5, ref4, l3));
     }
 
@@ -343,14 +343,14 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         g2.add(g2u3, g2u3, g2u3);
 
         assertTrue("Contains should work by value", g2.contains(g1u3, g1u3, g1u3));
-        assertTrue("Find should work by value", g2.find(g1u3, g1u3, g1u3).hasNext());
+        assertTrue("Find should work by value", g2.find(g1u3, g1u3, g1u3).iterator().hasNext());
 
         // Test the find(<foo>, *, *) works.
-        ClosableIterator iter = g2.find(g2u3, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> iter = g2.find(g2u3, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         assertTrue("Should get back at least one result", iter.hasNext());
 
         // Test the find(*, *, *) works.
-        iter = g2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        iter = g2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
         assertTrue("Should get back at least one result", iter.hasNext());
     }
 }

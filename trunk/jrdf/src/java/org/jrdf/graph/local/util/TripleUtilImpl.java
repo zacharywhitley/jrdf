@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.local.util;
 
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.AbstractBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -72,8 +73,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.collection.CollectionFactory;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 
 import java.util.Set;
 
@@ -168,13 +168,13 @@ public class TripleUtilImpl implements TripleUtil {
 
     private void addTriplesToSet(Set<Triple> set, SubjectNode subjectNode, PredicateNode predicateNode,
         ObjectNode objectNode) throws GraphException {
-        ClosableIterator<Triple> iterator = graph.find(subjectNode, predicateNode, objectNode);
+        ClosableIterable<Triple> triples = graph.find(subjectNode, predicateNode, objectNode);
         try {
-            while (iterator.hasNext()) {
-                set.add(iterator.next());
+            for (Triple triple : triples) {
+                set.add(triple);
             }
         } finally {
-            iterator.close();
+            triples.iterator().close();
         }
     }
 

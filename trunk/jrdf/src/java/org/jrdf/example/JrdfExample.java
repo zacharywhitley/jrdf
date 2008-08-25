@@ -75,7 +75,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.urql.UrqlConnection;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.vocabulary.XSD;
 
 import java.net.URI;
@@ -175,11 +175,11 @@ public class JrdfExample {
     private void getAllTriples(TripleFactory tripleFactory, Graph graph) throws GraphException {
         //get all Triples
         Triple findAll = tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        ClosableIterator<Triple> allTriples = graph.find(findAll);
+        ClosableIterable<Triple> allTriples = graph.find(findAll);
         try {
             print("Search for all triples: ", allTriples);
         } finally {
-            allTriples.close();
+            allTriples.iterator().close();
         }
     }
 
@@ -249,24 +249,24 @@ public class JrdfExample {
 
         //find all statements
         Triple findAll = graph.getTripleFactory().createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        ClosableIterator<Triple> allTriples = graph.find(findAll);
+        ClosableIterable<Triple> allTriples = graph.find(findAll);
 
         //print them
         print(message, allTriples);
 
         //release any resources
-        allTriples.close();
+        allTriples.iterator().close();
     }
 
     /**
      * Prints the contents of an Iterator to System.out
      *
      * @param message  String
-     * @param iterator Iterator
+     * @param triples Iterator
      * @throws IllegalArgumentException
      */
-    private void print(String message, ClosableIterator<Triple> iterator) throws IllegalArgumentException {
-        if (null == iterator) {
+    private void print(String message, ClosableIterable<Triple> triples) throws IllegalArgumentException {
+        if (null == triples) {
             throw new IllegalArgumentException("Iterator is null.");
         }
         try {
@@ -274,14 +274,14 @@ public class JrdfExample {
             System.out.println(message);
 
             //print the contents
-            while (iterator.hasNext()) {
-                System.out.println(String.valueOf(iterator.next()));
+            for (Triple triple : triples) {
+                System.out.println(String.valueOf(triple));
             }
 
             //print an empty line as a spacer
             System.out.println("");
         } finally {
-            iterator.close();
+            triples.iterator().close();
         }
     }
 

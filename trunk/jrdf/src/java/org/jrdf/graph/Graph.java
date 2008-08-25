@@ -61,7 +61,7 @@ package org.jrdf.graph;
 
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 
 import java.util.Iterator;
 
@@ -101,19 +101,19 @@ public interface Graph {
     boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
 
     /**
-     * Returns an iterator of {@link Triple}s to a set of statements that
+     * Returns an iteratable of {@link Triple}s to a set of statements that
      * match a given subject, predicate and object.  An AnyNode value for any of
      * the parts of a triple are treated as unconstrained, any values will be
      * returned.
      *
      * @param triple The triple to find.
-     * @return an iterator containing the matching statements.
+     * @return an iteratable containing the matching statements.
      * @throws GraphException If there was an error accessing the graph.
      */
-    ClosableIterator<Triple> find(Triple triple) throws GraphException;
+    ClosableIterable<Triple> find(Triple triple) throws GraphException;
 
     /**
-     * Returns an iterator of {@link Triple}s to a set of statements that
+     * Returns an iteratable of {@link Triple}s to a set of statements that
      * match a given subject, predicate and object.  An AnyNode value for any of
      * the parts of a triple are treated as unconstrained, any values will be
      * returned.
@@ -121,11 +121,11 @@ public interface Graph {
      * @param subject   The subject to find or AnySubjectNode to indicate any subject.
      * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
      * @param object    The object to find or AnyObjectNode to indicate any object.
-     * @return an iterator containing the matching statements.
+     * @return an iteratable containing the matching statements.
      * @throws GraphException If there was an error accessing the graph.
      */
-    ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
-        GraphException;
+    ClosableIterable<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws GraphException;
 
     /**
      * Returns all unique values of a given type.
@@ -133,7 +133,7 @@ public interface Graph {
      * @param type the node type can be positional (SPO) or node type (URIReference, Literal or BNode).
      * @return all unique values of a given type.
      */
-    ClosableIterator<? extends Node> findNodes(NodeType type);
+    ClosableIterable<? extends Node> findNodes(NodeType type);
 
     /**
      * Return predicates that are part of an RDF triple where resource is either a subject or object.
@@ -142,7 +142,7 @@ public interface Graph {
      * @return the unique predicates associated with the resource.
      * @throws GraphException If there was an error accessing the graph.
      */
-    ClosableIterator<PredicateNode> findPredicates(Resource resource) throws GraphException;
+    ClosableIterable<PredicateNode> findPredicates(Resource resource) throws GraphException;
 
     /**
      * Returns all unique resources for a given ValueNodeType (BNode or URIReference is currently supported).
@@ -151,7 +151,7 @@ public interface Graph {
      * @param type either BlankNodeType or URIReferenceNodeType.
      * @return all unique resources.
      */
-    ClosableIterator<? super Resource> findResources(ValueNodeType type);
+    ClosableIterable<? super Resource> findResources(ValueNodeType type);
 
     /**
      * Adds a triple to the graph.  The nodes must have already been created using {@link GraphElementFactory}.

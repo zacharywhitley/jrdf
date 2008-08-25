@@ -124,7 +124,8 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
+            iterator();
         GRAPH.remove(iterator);
     }
 

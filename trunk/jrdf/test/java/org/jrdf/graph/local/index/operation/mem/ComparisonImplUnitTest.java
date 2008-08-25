@@ -78,7 +78,7 @@ import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_2;
 import static org.jrdf.util.test.TripleTestUtil.createTripleAllSame;
-import static org.jrdf.util.test.TripleTestUtil.createTripleIterator;
+import static org.jrdf.util.test.TripleTestUtil.createTripleIterable;
 
 import java.lang.reflect.Modifier;
 
@@ -86,7 +86,7 @@ import java.lang.reflect.Modifier;
 // TODO (AN) Add tests for areIsomorphic.
 
 /**
- * Tests {@link org.jrdf.graph.local.index.index.operation.mem.ComparisonImpl}.
+ * Tests {@link org.jrdf.graph.local.index.operation.mem.ComparisonImpl}.
  *
  * @author Andrew Newman
  * @version $Revision$
@@ -187,9 +187,9 @@ public class ComparisonImplUnitTest extends TestCase {
 
     private void setUpFindAndIteratorCalls(Triple[] triples1, Triple[] triples2) throws GraphException {
         mockGraph1.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        expectLastCall().andReturn(createTripleIterator(triples1));
-        ClosableIterator<Triple> iterator1 = createTripleIterator(triples1);
-        ClosableIterator<Triple> iterator2 = createTripleIterator(triples2);
+        expectLastCall().andReturn(createTripleIterable(triples1));
+        ClosableIterator<Triple> iterator1 = createTripleIterable(triples1).iterator();
+        ClosableIterator<Triple> iterator2 = createTripleIterable(triples2).iterator();
         while (iterator1.hasNext()) {
             Triple triple1 = iterator1.next();
             Triple triple2 = iterator2.next();

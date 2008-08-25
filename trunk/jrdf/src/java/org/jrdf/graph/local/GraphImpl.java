@@ -59,9 +59,9 @@
 
 package org.jrdf.graph.local;
 
-import static org.jrdf.graph.AnyObjectNode.*;
-import static org.jrdf.graph.AnyPredicateNode.*;
-import static org.jrdf.graph.AnySubjectNode.*;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -74,19 +74,20 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
-import static org.jrdf.query.relation.type.BlankNodeType.*;
+import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import org.jrdf.query.relation.type.NodeType;
-import static org.jrdf.query.relation.type.PredicateNodeType.*;
-import static org.jrdf.query.relation.type.ResourceNodeType.*;
-import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
+import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
+import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
+import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
 import org.jrdf.query.relation.type.ValueNodeType;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.rdfxml.MemRdfXmlWriter;
 
 import java.io.StringWriter;
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 import java.util.Iterator;
 
 /**
@@ -157,19 +158,23 @@ public class GraphImpl implements Graph {
         }
     }
 
-    public ClosableIterator<Triple> find(Triple triple) throws GraphException {
+    public ClosableIterable<Triple> find(Triple triple) throws GraphException {
         return find(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
-    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-        throws GraphException {
+    public ClosableIterable<Triple> find(final SubjectNode subject, final PredicateNode predicate,
+        final ObjectNode object) throws GraphException {
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
-        return readWriteGraph.find(subject, predicate, object);
+        return new ClosableIterable<Triple>() {
+            public ClosableIterator<Triple> iterator() {
+                return readWriteGraph.find(subject, predicate, object);
+            }
+        };
     }
 
     // TODO AN Missing Literal type and s, o and combinations.
-    public ClosableIterator<? extends Node> findNodes(NodeType type) {
-        ClosableIterator<? extends Node> result;
+    public ClosableIterable<? extends Node> findNodes(NodeType type) {
+        final ClosableIterator<? extends Node> result;
         if (type.equals(BNODE_TYPE)) {
             result = nodePool.getBlankNodeIterator();
         } else if (type.equals(URI_REFERENCE_TYPE)) {
@@ -181,22 +186,39 @@ public class GraphImpl implements Graph {
         } else {
             throw new UnsupportedOperationException("Cannot find with node type: " + type);
         }
-        return result;
+        return new ClosableIterable<Node>() {
+            @SuppressWarnings({ "unchecked" })
+            public ClosableIterator<Node> iterator() {
+                return (ClosableIterator<Node>) result;
+            }
+        };
     }
 
-    public ClosableIterator<PredicateNode> findPredicates(Resource resource) throws GraphException {
+    public ClosableIterable<PredicateNode> findPredicates(final Resource resource) throws GraphException {
         checkNotNull(resource);
-        return readWriteGraph.findUniquePredicates(resource);
+        final ClosableIterator<PredicateNode> result = readWriteGraph.findUniquePredicates(resource);
+        return new ClosableIterable<PredicateNode>() {
+            public ClosableIterator<PredicateNode> iterator() {
+                return result;
+            }
+        };
     }
 
-    public ClosableIterator<? super Resource> findResources(ValueNodeType type) {
+    public ClosableIterable<? super Resource> findResources(ValueNodeType type) {
+        final ClosableIterator<? super Resource> resource;
         if (type.equals(URI_REFERENCE_TYPE)) {
-            return resourceIteratorFactory.newURIReferenceResourceIterator();
+            resource = resourceIteratorFactory.newURIReferenceResourceIterator();
         } else if (type.equals(BNODE_TYPE)) {
-            return resourceIteratorFactory.newBlankNodeResourceIterator();
+            resource = resourceIteratorFactory.newBlankNodeResourceIterator();
         } else {
             throw new UnsupportedOperationException("Cannot find resource with node type: " + type);
         }
+        return new ClosableIterable<Resource>() {
+            @SuppressWarnings({ "unchecked" })
+            public ClosableIterator<Resource> iterator() {
+                return (ClosableIterator<Resource>) resource;
+            }
+        };
     }
 
     public void add(Iterator<Triple> triples) throws GraphException {

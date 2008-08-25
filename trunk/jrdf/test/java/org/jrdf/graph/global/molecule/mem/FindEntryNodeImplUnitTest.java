@@ -89,7 +89,7 @@ public class FindEntryNodeImplUnitTest extends TestCase {
     private FindEntryNode finder = new FindEntryNodeImpl();
 
     public void setUp() throws Exception {
-        GRAPH.remove(GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
+        GRAPH.remove(GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator());
     }
 
     public void testSingleNode() throws Exception {

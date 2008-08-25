@@ -59,14 +59,14 @@
 
 package org.jrdf.example.performance;
 
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.AnyPredicateNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIterable;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -101,20 +101,19 @@ public class UpdatePerformanceImpl implements UpdatePerformance {
 
     private List<Triple> addTriplesToArray(Graph graph, URI subjectURI) throws Exception {
         URIReference newSubject = graph.getElementFactory().createURIReference(subjectURI);
-        ClosableIterator<Triple> itr = findAllPredicates(graph, newSubject);
+        ClosableIterable<Triple> triples = findAllPredicates(graph, newSubject);
         List<Triple> triplesToChange = new ArrayList<Triple>();
         try {
-            while (itr.hasNext()) {
-                Triple triple = itr.next();
+            for (Triple triple : triples) {
                 triplesToChange.add(triple);
             }
         } finally {
-            itr.close();
+            triples.iterator().close();
         }
         return triplesToChange;
     }
 
-    private ClosableIterator<Triple> findAllPredicates(Graph graph, SubjectNode subject) throws GraphException {
-        return graph.find(subject, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
+    private ClosableIterable<Triple> findAllPredicates(Graph graph, SubjectNode subject) throws GraphException {
+        return graph.find(subject, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
     }
 }
