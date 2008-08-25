@@ -170,6 +170,7 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
             currentNodes = new Long[]{first, second, third};
         } else {
             currentNodes = null;
+            close();
         }
     }
 }
