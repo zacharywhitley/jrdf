@@ -14,7 +14,6 @@
       <antReference projectDefault="true" />
       <customJdkName value="" />
       <maximumHeapSize value="128" />
-      <maximumStackSize value="32" />
       <properties />
     </buildFile>
   </component>
@@ -292,102 +291,6 @@
         <entry key="$PROJECT_DIR$">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://jrdf.svn.sf.net/svnroot/jrdf/branches">
-                    <value>
-                      <list>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1214444979184" />
-                          <option name="revision" value="2175" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/jrdf0-5-5" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1213820196798" />
-                          <option name="revision" value="2085" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/moleculeTemplates20080619" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1199941613463" />
-                          <option name="revision" value="1813" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/persistence" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1194608767245" />
-                          <option name="revision" value="1621" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/jrdf_0_5_1" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1194234701034" />
-                          <option name="revision" value="1582" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/skiplists" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1194234652589" />
-                          <option name="revision" value="1581" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/imran-molecules-01" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1188123587099" />
-                          <option name="revision" value="1389" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/jrdf0-5-0" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1151187029220" />
-                          <option name="revision" value="630" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/jrdf0-3-4" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1151187029220" />
-                          <option name="revision" value="630" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/jrdf0-3-4-1" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1151187029220" />
-                          <option name="revision" value="630" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/jrdf0-3-4-2" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1151182549134" />
-                          <option name="revision" value="629" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/jrdf0-3-4-3" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1143975393460" />
-                          <option name="revision" value="454" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/jrdf0-4-0" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1071201648000" />
-                          <option name="revision" value="5" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/branches/vendor" />
-                        </SvnBranchItem>
-                      </list>
-                    </value>
-                  </entry>
-                  <entry key="https://jrdf.svn.sf.net/svnroot/jrdf/tags">
-                    <value>
-                      <list>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1165694916662" />
-                          <option name="revision" value="1006" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/tags/jrdf-last-sparql" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1132827599000" />
-                          <option name="revision" value="434" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/tags/jrdf0-3-4-2" />
-                        </SvnBranchItem>
-                        <SvnBranchItem>
-                          <option name="creationDateMillis" value="1071201650000" />
-                          <option name="revision" value="7" />
-                          <option name="url" value="https://jrdf.svn.sf.net/svnroot/jrdf/tags/start" />
-                        </SvnBranchItem>
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://jrdf.svn.sf.net/svnroot/jrdf/branches" />

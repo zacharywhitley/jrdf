@@ -31,6 +31,7 @@
     <orderEntry type="library" name="spring-rcp" level="project" />
     <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
+    <orderEntryProperties />
   </component>
   <component name="copyright">
     <Base>

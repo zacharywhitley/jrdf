@@ -21,6 +21,10 @@ public class WebInterfaceApplication extends Application {
         return router;
     }
 
+    public void close() {
+        FACTORY.close();
+    }
+
     public MoleculeGraph getGraph(String name) {
         return FACTORY.getGraph(name);
     }

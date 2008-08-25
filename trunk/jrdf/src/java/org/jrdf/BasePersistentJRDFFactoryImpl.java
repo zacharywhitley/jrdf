@@ -82,7 +82,9 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
         for (NodePoolFactory openFactory : openNodePoolFactories) {
             openFactory.close();
         }
-        collectionFactory.close();
+        if (collectionFactory != null) {
+            collectionFactory.close();
+        }
         openNodePoolFactories.clear();
     }
 }
