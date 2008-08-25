@@ -107,6 +107,11 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
     private Long[] currentNodes;
 
     /**
+     * If the resources have been closed.
+     */
+    private boolean hasClosed;
+
+    /**
      * Constructor.  Sets up the internal iterators.
      */
     public TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, GraphHandler newHandler) {
@@ -121,7 +126,11 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
     }
 
     public boolean hasNext() {
-        return currentNodes != null;
+        boolean hasNext = currentNodes != null;
+        if (!hasNext) {
+            close();
+        }
+        return hasNext;
     }
 
     public Triple next() throws NoSuchElementException {
@@ -148,9 +157,10 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
     }
 
     public boolean close() {
-        if (subSubIndex != null) {
+        if (subSubIndex != null && !hasClosed) {
             subSubIndex.close();
         }
+        hasClosed = true;
         return true;
     }
 

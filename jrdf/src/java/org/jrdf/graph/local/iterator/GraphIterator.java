@@ -95,6 +95,11 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
     private Long[] currentNodes;
 
     /**
+     * If the resources have been closed.
+     */
+    private boolean hasClosed;
+
+    /**
      * Constructor.  Sets up the internal iterators.
      *
      * @throws IllegalArgumentException Must be created with implementations from the memory package.
@@ -112,7 +117,11 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
      * @return <code>true</code> If there is an element to be read.
      */
     public boolean hasNext() {
-        return iterator.hasNext();
+        boolean hasNext = iterator.hasNext();
+        if (!hasNext) {
+            close();
+        }
+        return hasNext;
     }
 
     /**
@@ -156,7 +165,10 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
      * @return <code>true</code> indicating success.
      */
     public boolean close() {
-        iterator.close();
+        if (iterator != null && !hasClosed) {
+            iterator.close();
+        }
+        hasClosed = true;
         return true;
     }
 }
