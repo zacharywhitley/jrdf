@@ -102,6 +102,11 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
     private Long[] currentNodes;
 
     /**
+     * If the resources have been closed.
+     */
+    private boolean hasClosed;
+
+    /**
      * Constructor.  Sets up the internal iterators.
      *
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
@@ -116,7 +121,11 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
 
 
     public boolean hasNext() {
-        return subIndex != null && subIndex.hasNext();
+        boolean hasNext = subIndex != null && subIndex.hasNext();
+        if (!hasNext) {
+            close();
+        }
+        return hasNext;
     }
 
 
@@ -142,7 +151,7 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
     }
 
     public boolean close() {
-        if (subIndex != null) {
+        if (subIndex != null && !hasClosed) {
             subIndex.close();
         }
         return true;
