@@ -80,6 +80,7 @@ public abstract class ResourceIterator<E> implements ClosableIterator<E> {
     protected Resource nextResource;
     protected boolean firstTime = true;
     protected NodePool nodePool;
+    private boolean hasClosed;
 
     public ResourceIterator(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
         final NodePool newNodePool) {
@@ -93,13 +94,20 @@ public abstract class ResourceIterator<E> implements ClosableIterator<E> {
     }
 
     public boolean close() {
-        iterator201.close();
-        iterator012.close();
+        if (!hasClosed) {
+            iterator201.close();
+            iterator012.close();
+        }
+        hasClosed = true;
         return true;
     }
 
     public boolean hasNext() {
-        return nextResource != null;
+        boolean hasNext = nextResource != null;
+        if (!hasNext) {
+            close();
+        }
+        return hasNext;
     }
 
     private Resource getNextNode() {
@@ -112,6 +120,9 @@ public abstract class ResourceIterator<E> implements ClosableIterator<E> {
         }
         if (iterator012.hasNext()) {
             resource = getNextSPOElement();
+        }
+        if (resource == null) {
+            close();
         }
         return resource;
     }
