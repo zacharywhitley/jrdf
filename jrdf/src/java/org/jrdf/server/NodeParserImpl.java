@@ -12,33 +12,33 @@ import org.jrdf.graph.URIReference;
 import static java.net.URI.create;
 
 public class NodeParserImpl implements NodeParser {
-    public SubjectNode getSubjectNode(GraphElementFactory elementFactory, String literalValue) {
-        SubjectNode subjectNode = getNode(elementFactory, literalValue);
+    public SubjectNode getSubjectNode(GraphElementFactory elementFactory, String value) {
+        SubjectNode subjectNode = getNode(elementFactory, value);
         if (subjectNode == null) {
             subjectNode = AnySubjectNode.ANY_SUBJECT_NODE;
         }
         return subjectNode;
     }
 
-    public PredicateNode getPredicateNode(GraphElementFactory elementFactory, String literalValue) {
-        PredicateNode predicateNode = getNode(elementFactory, literalValue);
+    public PredicateNode getPredicateNode(GraphElementFactory elementFactory, String value) {
+        PredicateNode predicateNode = getNode(elementFactory, value);
         if (predicateNode == null) {
             predicateNode = AnyPredicateNode.ANY_PREDICATE_NODE;
         }
         return predicateNode;
     }
 
-    public ObjectNode getObjectNode(GraphElementFactory elementFactory, String literalValue) {
-        ObjectNode objectNode = getNode(elementFactory, literalValue);
+    public ObjectNode getObjectNode(GraphElementFactory elementFactory, String value) {
+        ObjectNode objectNode = getNode(elementFactory, value);
         if (objectNode == null) {
             objectNode = AnyObjectNode.ANY_OBJECT_NODE;
         }
         return objectNode;
     }
 
-    private URIReference getNode(GraphElementFactory elementFactory, String literalValue) {
+    private URIReference getNode(GraphElementFactory elementFactory, String value) {
         try {
-            return elementFactory.createURIReference(create(literalValue.substring(1, literalValue.length() - 1)));
+            return elementFactory.createURIReference(create(value.substring(1, value.length() - 1)));
         } catch (Exception e) {
             return null;
         }
