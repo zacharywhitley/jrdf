@@ -847,7 +847,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
             int counter = 0;
             while (iterator.hasNext()) {
                 Resource resource = iterator.next();
-                assertTrue(URIReference.class.isAssignableFrom(resource.getUnderlyingNode().getClass()));
+                assertTrue(resource.getUnderlyingNode() instanceof URIReference);
                 counter++;
             }
             assertEquals("Unexpected number of unique URIs in the subject and object position", 3, counter);
@@ -863,7 +863,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
             int counter = 0;
             while (iterator.hasNext()) {
                 Resource resource = iterator.next();
-                assertTrue(BlankNode.class.isAssignableFrom(resource.getUnderlyingNode().getClass()));
+                assertTrue(resource.getUnderlyingNode() instanceof BlankNode);
                 counter++;
             }
             assertEquals("Unexpected number of unique blank nodes in the subject and object position", 2, counter);

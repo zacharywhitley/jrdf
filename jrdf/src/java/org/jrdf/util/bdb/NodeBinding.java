@@ -63,21 +63,26 @@ import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.TypedNodeVisitable;
+import org.jrdf.graph.TypedNodeVisitor;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.local.LocalizedNode;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
-import org.jrdf.graph.local.LiteralImpl;
-import org.jrdf.graph.local.LocalizedNode;
-import org.jrdf.graph.local.URIReferenceImpl;
 
 import java.io.Serializable;
 
-public class NodeBinding extends TupleBinding implements Serializable {
+public class NodeBinding extends TupleBinding implements TypedNodeVisitor, Serializable {
     private static final long serialVersionUID = 2361309903891433676L;
     private static final byte BLANK_NODE = 0;
     private static final byte URI_REFERENCE = 1;
     private static final byte LITERAL = 2;
     private StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
+    private TupleOutput tupleOutput;
+    private Object object;
 
     public Object entryToObject(TupleInput tupleInput) {
         Object object;
@@ -96,31 +101,37 @@ public class NodeBinding extends TupleBinding implements Serializable {
     }
 
     public void objectToEntry(Object object, TupleOutput tupleOutput) {
-        if (BlankNode.class.isAssignableFrom(object.getClass())) {
-            writeBlankNode(object, tupleOutput);
-        } else if (URIReferenceImpl.class.isAssignableFrom(object.getClass())) {
-            writeURIReference(object, tupleOutput);
-        } else if (LiteralImpl.class.isAssignableFrom(object.getClass())) {
-            writeLiteral(object, tupleOutput);
-        } else {
-            throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
-        }
+        this.object = object;
+        this.tupleOutput = tupleOutput;
+        ((TypedNodeVisitable) object).accept(this);
     }
 
-    private void writeBlankNode(Object object, TupleOutput tupleOutput) {
+    public void visitBlankNode(BlankNode blankNode) {
         tupleOutput.writeByte(BLANK_NODE);
         tupleOutput.writeString(mapper.convertToString((Node) object));
     }
 
-    private void writeURIReference(Object object, TupleOutput tupleOutput) {
+    public void visitURIReference(URIReference uriReference) {
         tupleOutput.writeByte(URI_REFERENCE);
         tupleOutput.writeString(mapper.convertToString((Node) object));
         tupleOutput.writeLong(((LocalizedNode) object).getId());
     }
 
-    private void writeLiteral(Object object, TupleOutput tupleOutput) {
+    public void visitLiteral(Literal literal) {
         tupleOutput.writeByte(LITERAL);
         tupleOutput.writeString(mapper.convertToString((Node) object));
         tupleOutput.writeLong(((LocalizedNode) object).getId());
+    }
+
+    public void visitNode(Node node) {
+        badNodeType(node.getClass());
+    }
+
+    public void visitResource(Resource resource) {
+        badNodeType(resource.getClass());
+    }
+
+    private void badNodeType(Class<?> aClass) {
+        throw new IllegalArgumentException("Cannot persist class of type: " + aClass);
     }
 }

@@ -102,10 +102,10 @@ public class ReverseGroundedTripleComparatorImpl implements TripleComparator {
 
     private int countGroundNodes(Triple o1) {
         int grounded = MAXIMUM_NUMBER_OF_GROUNDED_NODES;
-        if (BlankNode.class.isAssignableFrom(o1.getSubject().getClass())) {
+        if (o1.getSubject() instanceof BlankNode) {
             grounded--;
         }
-        if (BlankNode.class.isAssignableFrom(o1.getObject().getClass())) {
+        if (o1.getObject() instanceof BlankNode) {
             grounded--;
         }
         return grounded;

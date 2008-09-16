@@ -86,7 +86,7 @@ public class URIReferenceResourceIterator extends ResourceIterator<Resource> {
             final long id = iterator.next()[0];
             if (id != currentValue) {
                 final Node node = nodePool.getNodeById(id);
-                if (URIReference.class.isAssignableFrom(node.getClass())) {
+                if (node instanceof URIReference) {
                     nextKey = id;
                 }
             }

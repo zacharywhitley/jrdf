@@ -87,7 +87,7 @@ public class TriplePattern extends AbstractTriple {
 
     private NodePattern createNodePattern(Node sbj) {
         NodePattern pattern;
-        if (NodePatternImpl.isNodePattern(sbj)) {
+        if ((Object) sbj instanceof NodePattern) {
             pattern = (NodePattern) sbj;
         } else {
             pattern = new NodePatternImpl(sbj);

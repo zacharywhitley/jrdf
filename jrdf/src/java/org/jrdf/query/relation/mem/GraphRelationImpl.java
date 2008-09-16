@@ -181,7 +181,7 @@ public final class GraphRelationImpl implements GraphRelation {
 
     private ClosableIterator<Triple> getIterator(Triple searchTriple) {
         try {
-            if (graph.getClass().isAssignableFrom(GraphImpl.class)) {
+            if (graph instanceof GraphImpl) {
                 return ((GraphImpl) graph).findUnsorted(searchTriple.getSubject(), searchTriple.getPredicate(),
                         searchTriple.getObject());
             } else {

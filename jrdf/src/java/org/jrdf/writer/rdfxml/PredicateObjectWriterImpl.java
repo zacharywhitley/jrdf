@@ -151,7 +151,7 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     }
 
     private void writePredicate(PredicateNode predicate) throws WriteException, XMLStreamException {
-        if (!(URIReference.class.isAssignableFrom(predicate.getClass()))) {
+        if (!(predicate instanceof URIReference)) {
             throw new WriteException("Unknown predicate node type: " + predicate.getClass().getName());
         }
         String resourceName = names.replaceNamespace((URIReference) predicate);

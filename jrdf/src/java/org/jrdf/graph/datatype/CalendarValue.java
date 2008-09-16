@@ -59,7 +59,9 @@
 
 package org.jrdf.graph.datatype;
 
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -134,20 +136,20 @@ public class CalendarValue implements DatatypeValue {
 
     @Override
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(CalendarValue.class, obj)) {
+        if (!hasSuperClassOrInterface(CalendarValue.class, obj)) {
             return false;
         }
         return value.equals(((CalendarValue) obj).value);
     }
 
     private void writeObject(ObjectOutputStream output) throws IOException {
-        if (value == null || Serializable.class.isAssignableFrom(value.getClass())) {
+        if (value == null || value instanceof Serializable) {
             output.writeBoolean(true);
             output.defaultWriteObject();
         } else {

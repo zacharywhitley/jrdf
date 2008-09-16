@@ -85,6 +85,6 @@ public abstract class AbstractBlankNode implements BlankNode, Serializable {
     }
 
     public static boolean isBlankNode(Node node) {
-        return BlankNode.class.isAssignableFrom(node.getClass());
+        return node instanceof BlankNode;
     }
 }

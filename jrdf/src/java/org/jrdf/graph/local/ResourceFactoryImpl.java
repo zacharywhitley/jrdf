@@ -96,7 +96,7 @@ public class ResourceFactoryImpl implements ResourceFactory, TypedNodeVisitor {
     }
 
     public void visitBlankNode(BlankNode blankNode) {
-        if (GlobalizedBlankNode.class.isAssignableFrom(blankNode.getClass())) {
+        if (blankNode instanceof GlobalizedBlankNode) {
             newResource = new BlankNodeResourceImpl(graph, valueFactory, blankNode);
         } else {
             throw new IllegalArgumentException("Unknown node type: " + blankNode.getClass());
