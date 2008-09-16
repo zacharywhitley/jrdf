@@ -70,7 +70,7 @@ public class BlankNodeBinding extends TupleBinding {
     }
 
     public void objectToEntry(Object object, TupleOutput tupleOutput) {
-        if (BlankNodeImpl.class.isAssignableFrom(object.getClass())) {
+        if (object instanceof BlankNodeImpl) {
             BlankNodeImpl node = (BlankNodeImpl) object;
             tupleOutput.writeString(node.toString());
         } else {

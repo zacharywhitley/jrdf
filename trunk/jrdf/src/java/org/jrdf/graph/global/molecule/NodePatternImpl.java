@@ -59,18 +59,18 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.AnySubjectNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.TypedNodeVisitor;
 
 import java.util.UUID;
 
 public class NodePatternImpl implements NodePattern {
-    private int id;
-    private String string;
-    private Node node;
+    private final int id;
+    private final String string;
+    private final Node node;
     private static final String NP_PREFIX = "NodePattern#";
 
 
@@ -80,15 +80,15 @@ public class NodePatternImpl implements NodePattern {
         node = null;
     }
 
-    public NodePatternImpl(Node node) {
-        if (node == null) {
+    public NodePatternImpl(Node newNode) {
+        if (newNode == null) {
             string = NP_PREFIX + UUID.randomUUID().toString();
             id = string.hashCode();
-            this.node = null;
+            node = null;
         } else {
-            string = node.toString();
-            id = node.hashCode();
-            this.node = node;
+            string = newNode.toString();
+            id = newNode.hashCode();
+            node = newNode;
         }
     }
 
@@ -96,11 +96,11 @@ public class NodePatternImpl implements NodePattern {
         return id;
     }
 
-    public boolean matches(Node node) {
-        if (node == null) {
+    public boolean matches(Node nodeToMatch) {
+        if (nodeToMatch == null) {
             return false;
-        } else if (this.node != null && !this.isAnyNode() && !this.isAnyNode(node)) {
-            return this.node.equals(node);
+        } else if (node != null && !isAnyNode() && !isAnyNode(nodeToMatch)) {
+            return node.equals(nodeToMatch);
         } else {
             return true;
         }
@@ -114,9 +114,7 @@ public class NodePatternImpl implements NodePattern {
     public boolean isAnyNode(Node node) {
         boolean result = false;
         if (node != null) {
-            if (node == AnySubjectNode.ANY_SUBJECT_NODE ||
-                    node == AnyPredicateNode.ANY_PREDICATE_NODE ||
-                    node == AnyObjectNode.ANY_OBJECT_NODE) {
+            if (node == ANY_SUBJECT_NODE || node == ANY_PREDICATE_NODE || node == ANY_OBJECT_NODE) {
                 result = true;
             }
         }
@@ -137,17 +135,9 @@ public class NodePatternImpl implements NodePattern {
     }
 
     public boolean equals(Object pattern) {
-        if (pattern == null || !NodePatternImpl.isNodePattern(pattern)) {
+        if (pattern == null || !(pattern instanceof NodePattern)) {
             return false;
         }
         return this.hashCode() == pattern.hashCode();
-    }
-
-    public static boolean isNodePattern(Object node) {
-        if (node == null) {
-            return false;
-        } else {
-            return NodePattern.class.isAssignableFrom(node.getClass());
-        }
     }
 }

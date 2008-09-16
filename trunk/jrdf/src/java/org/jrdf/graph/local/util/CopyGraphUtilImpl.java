@@ -209,7 +209,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     }
 
     private void addTriplesToSetForSubject(Graph graph, Set<Triple> set, Node node) throws GraphException {
-        if (!Literal.class.isAssignableFrom(node.getClass())) {
+        if (!(node instanceof Literal)) {
             addTriplesToSet(graph, set, (SubjectNode) node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         }
     }
@@ -239,7 +239,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         } catch (Exception e) {
             throw new GraphException("Cannot read RDF graph", e);
         } finally {
-            if (ClosableIterator.class.isAssignableFrom(triples.getClass())) {
+            if (triples instanceof ClosableIterator) {
                 ((ClosableIterator<Triple>) triples).close();
             }
         }

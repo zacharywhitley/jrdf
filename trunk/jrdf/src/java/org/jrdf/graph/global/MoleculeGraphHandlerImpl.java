@@ -142,7 +142,7 @@ public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
         while (triples.hasNext()) {
             Triple triple = triples.next();
             ObjectNode obj = triple.getObject();
-            if (AbstractBlankNode.class.isAssignableFrom(obj.getClass())) {
+            if (obj instanceof AbstractBlankNode) {
                 rootTripleMap.put((BlankNode) obj, triple);
             }
         }

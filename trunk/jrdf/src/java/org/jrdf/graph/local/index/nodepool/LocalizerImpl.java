@@ -99,7 +99,7 @@ public class LocalizerImpl implements Localizer {
 
     public Long localize(Node node) throws GraphException {
         if (ANY_SUBJECT_NODE != node && ANY_PREDICATE_NODE != node && ANY_OBJECT_NODE != node) {
-            if (LocalizedNode.class.isAssignableFrom(node.getClass())) {
+            if (node instanceof LocalizedNode) {
                 return getId(node);
             }
             throw new GraphException("Node id was not found in the graph: " + node);
