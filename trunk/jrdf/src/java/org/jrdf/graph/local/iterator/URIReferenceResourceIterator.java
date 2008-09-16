@@ -67,7 +67,7 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
 
-public class URIReferenceResourceIterator extends ResourceIterator<URIReference> {
+public class URIReferenceResourceIterator extends ResourceIterator<Resource> {
     private long currentValue;
 
     public URIReferenceResourceIterator(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
@@ -75,9 +75,8 @@ public class URIReferenceResourceIterator extends ResourceIterator<URIReference>
         super(newLongIndexes, newResourceFactory, newNodePool);
     }
 
-    public URIReference next() {
-        Resource resource = getNextResource();
-        return (URIReference) resource.getUnderlyingNode();
+    public Resource next() {
+        return getNextResource();
     }
 
     @Override

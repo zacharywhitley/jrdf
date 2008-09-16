@@ -234,7 +234,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         return graph.findPredicates(resource);
     }
 
-    public ClosableIterable<? super Resource> findResources(ValueNodeType type) {
+    public ClosableIterable<Resource> findResources(ValueNodeType type) {
         return graph.findResources(type);
     }
 
