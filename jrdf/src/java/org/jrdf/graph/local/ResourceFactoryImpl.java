@@ -62,13 +62,17 @@ package org.jrdf.graph.local;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphValueFactory;
 import org.jrdf.graph.Resource;
+import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.global.GlobalizedBlankNode;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public class ResourceFactoryImpl implements ResourceFactory {
+public class ResourceFactoryImpl implements ResourceFactory, TypedNodeVisitor {
     private final ReadWriteGraph graph;
     private final GraphValueFactory valueFactory;
+    private Resource newResource;
 
     public ResourceFactoryImpl(ReadWriteGraph newGraph, GraphValueFactory newValueFactory) {
         checkNotNull(newGraph, newValueFactory);
@@ -76,15 +80,46 @@ public class ResourceFactoryImpl implements ResourceFactory {
         this.valueFactory = newValueFactory;
     }
 
+    public Resource createResource(Node node) {
+        node.accept(this);
+        return newResource;
+    }
+
     public Resource createResource(BlankNode node) {
-        if (GlobalizedBlankNode.class.isAssignableFrom(node.getClass())) {
-            return new BlankNodeResourceImpl(graph, valueFactory, node);
-        } else {
-            throw new IllegalArgumentException("Unknown node type: " + node.getClass());
-        }
+        visitBlankNode(node);
+        return newResource;
     }
 
     public Resource createResource(URIReference node) {
-        return new URIReferenceResourceImpl(graph, valueFactory, node);
+        visitURIReference(node);
+        return newResource;
+    }
+
+    public void visitBlankNode(BlankNode blankNode) {
+        if (GlobalizedBlankNode.class.isAssignableFrom(blankNode.getClass())) {
+            newResource = new BlankNodeResourceImpl(graph, valueFactory, blankNode);
+        } else {
+            throw new IllegalArgumentException("Unknown node type: " + blankNode.getClass());
+        }
+    }
+
+    public void visitURIReference(URIReference uriReference) {
+        newResource = new URIReferenceResourceImpl(graph, valueFactory, uriReference);
+    }
+
+    public void visitLiteral(Literal literal) {
+        badNodeType(literal.getClass());
+    }
+
+    public void visitNode(Node node) {
+        badNodeType(node.getClass());
+    }
+
+    public void visitResource(Resource resource) {
+        newResource = resource;
+    }
+
+    private void badNodeType(Class<?> aClass) {
+        throw new IllegalArgumentException("Unknown node type: " + aClass);
     }
 }

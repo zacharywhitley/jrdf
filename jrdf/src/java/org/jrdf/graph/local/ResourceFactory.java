@@ -62,8 +62,11 @@ package org.jrdf.graph.local;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Node;
 
 public interface ResourceFactory {
+    Resource createResource(Node node);
+
     Resource createResource(BlankNode node);
 
     Resource createResource(URIReference node);
