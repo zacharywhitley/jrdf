@@ -59,16 +59,14 @@
 
 package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.ResourceFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.NoSuchElementException;
 
@@ -142,7 +140,7 @@ public abstract class ResourceIterator<E> implements ClosableIterator<E> {
                 final Node node = nodePool.getNodeById(nodeId);
                 //check node is not a literal
                 if (!(node instanceof Literal)) {
-                    return toResource(node);
+                    return resourceFactory.createResource(node);
                 }
             }
         }
@@ -159,31 +157,13 @@ public abstract class ResourceIterator<E> implements ClosableIterator<E> {
         final Long index = getNextNodeId(iterator012);
         if (index != -1) {
             final Node node = nodePool.getNodeById(index);
-            return toResource(node);
+            return resourceFactory.createResource(node);
         }
         return null;
     }
 
     public void remove() {
         throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Converts the given node into a Resource.
-     *
-     * @param node to be converted.
-     * @return passed node as a resource.
-     */
-    private Resource toResource(final Node node) {
-        if (node instanceof BlankNode) {
-            return resourceFactory.createResource((BlankNode) node);
-        } else if (node instanceof URIReference) {
-            return resourceFactory.createResource((URIReference) node);
-        } else if (node instanceof Literal) {
-            throw new UnsupportedOperationException("Cannot convert Literals to Resources");
-        } else {
-            return null;
-        }
     }
 
     protected Resource getNextResource() {
