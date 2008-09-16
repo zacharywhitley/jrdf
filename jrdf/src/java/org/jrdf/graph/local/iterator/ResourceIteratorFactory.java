@@ -66,7 +66,7 @@ import org.jrdf.util.ClosableIterator;
 public interface ResourceIteratorFactory {
     ClosableIterator<? extends Node> newAnyResourceIterator();
 
-    ClosableIterator<? super Resource> newURIReferenceResourceIterator();
+    ClosableIterator<Resource> newURIReferenceResourceIterator();
 
-    ClosableIterator<? super Resource> newBlankNodeResourceIterator();
+    ClosableIterator<Resource> newBlankNodeResourceIterator();
 }

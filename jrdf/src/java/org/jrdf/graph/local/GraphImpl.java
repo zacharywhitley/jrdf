@@ -204,7 +204,7 @@ public class GraphImpl implements Graph {
         };
     }
 
-    public ClosableIterable<? super Resource> findResources(ValueNodeType type) {
+    public ClosableIterable<Resource> findResources(ValueNodeType type) {
         final ClosableIterator<? super Resource> resource;
         if (type.equals(URI_REFERENCE_TYPE)) {
             resource = resourceIteratorFactory.newURIReferenceResourceIterator();

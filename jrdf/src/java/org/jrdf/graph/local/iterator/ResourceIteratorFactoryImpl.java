@@ -84,11 +84,11 @@ public class ResourceIteratorFactoryImpl implements ResourceIteratorFactory {
         return new AnyResourceIterator(longIndexes, factory, nodePool);
     }
 
-    public ClosableIterator<? super Resource> newURIReferenceResourceIterator() {
+    public ClosableIterator<Resource> newURIReferenceResourceIterator() {
         return new URIReferenceResourceIterator(longIndexes, factory, nodePool);
     }
 
-    public ClosableIterator<? super Resource> newBlankNodeResourceIterator() {
+    public ClosableIterator<Resource> newBlankNodeResourceIterator() {
         return new BlankNodeResourceIterator(factory, nodePool);
     }
 }

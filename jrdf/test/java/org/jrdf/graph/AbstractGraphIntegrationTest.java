@@ -842,11 +842,12 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
-        ClosableIterator<? super Resource> iterator = graph.findResources(URI_REFERENCE_TYPE).iterator();
+        ClosableIterator<Resource> iterator = graph.findResources(URI_REFERENCE_TYPE).iterator();
         try {
             int counter = 0;
             while (iterator.hasNext()) {
-                iterator.next();
+                Resource resource = iterator.next();
+                assertTrue(URIReference.class.isAssignableFrom(resource.getUnderlyingNode().getClass()));
                 counter++;
             }
             assertEquals("Unexpected number of unique URIs in the subject and object position", 3, counter);
@@ -857,11 +858,12 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     public void testBlankNodeResourceIterator() throws Exception {
         addTestNodes();
-        ClosableIterator<? super Resource> iterator = graph.findResources(BNODE_TYPE).iterator();
+        ClosableIterator<Resource> iterator = graph.findResources(BNODE_TYPE).iterator();
         try {
             int counter = 0;
             while (iterator.hasNext()) {
-                iterator.next();
+                Resource resource = iterator.next();
+                assertTrue(BlankNode.class.isAssignableFrom(resource.getUnderlyingNode().getClass()));
                 counter++;
             }
             assertEquals("Unexpected number of unique blank nodes in the subject and object position", 2, counter);
@@ -923,8 +925,8 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     public void testFixedUniquePredicateIterator() throws Exception {
         addTestNodes();
-//        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(blank2), ref1, ref2);
-//        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(ref5), ref2, ref3, ref5);
+        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(blank2), ref1, ref2);
+        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(ref5), ref2, ref3, ref5);
     }
 
     public void testClear() throws Exception {

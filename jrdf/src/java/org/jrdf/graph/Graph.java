@@ -145,13 +145,13 @@ public interface Graph {
     ClosableIterable<PredicateNode> findPredicates(Resource resource) throws GraphException;
 
     /**
-     * Returns all unique resources for a given ValueNodeType (BNode or URIReference is currently supported).
-     * Resources are nodes that appear in either the subject or object position.
+     * Returns all unique resources for a given ValueNodeType (BNode or URIReference).  Resources are nodes that
+     * appear in either the subject or object position.
      *
      * @param type either BlankNodeType or URIReferenceNodeType.
      * @return all unique resources.
      */
-    ClosableIterable<? super Resource> findResources(ValueNodeType type);
+    ClosableIterable<Resource> findResources(ValueNodeType type);
 
     /**
      * Adds a triple to the graph.  The nodes must have already been created using {@link GraphElementFactory}.
