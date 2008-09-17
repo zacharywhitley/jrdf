@@ -34,6 +34,8 @@
     <suppress checks="JavaNCSS" files="XSD"/>
     <suppress checks="JavaNCSS" files="OWL"/>
     <suppress checks="JavaNCSS" files="BasicOperations"/>
+    <suppress checks="JavaNCSS" files="AnswerImpl"/>
+    <suppress checks="JavaNCSS" files="AnswerXMLWriterImpl"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
@@ -99,6 +101,4 @@
     <suppress checks="MethodLength" files="XmlUtil"/>
     <suppress checks="ReturnCount" files="XmlDatatypeUtil"/>
     <suppress checks="ReturnCount" files="XmlUtil"/>
-    <suppress checks="JavaNCSS" files="AnswerImpl"/>
-    <suppress checks="JavaNCSS" files="AnswerXMLWriterImpl"/>
 </suppressions>
