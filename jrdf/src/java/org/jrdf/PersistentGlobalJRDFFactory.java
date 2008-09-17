@@ -62,6 +62,8 @@ package org.jrdf;
 import org.jrdf.graph.global.MoleculeGraph;
 
 public interface PersistentGlobalJRDFFactory extends PersistentJRDFFactory, GlobalJRDFFactory {
+    MoleculeGraph getGraph();
+
     MoleculeGraph getGraph(String name);
 
     MoleculeGraph getExistingGraph(String name) throws IllegalArgumentException;

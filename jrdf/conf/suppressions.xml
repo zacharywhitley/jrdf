@@ -99,4 +99,6 @@
     <suppress checks="MethodLength" files="XmlUtil"/>
     <suppress checks="ReturnCount" files="XmlDatatypeUtil"/>
     <suppress checks="ReturnCount" files="XmlUtil"/>
+    <suppress checks="JavaNCSS" files="AnswerImpl"/>
+    <suppress checks="JavaNCSS" files="AnswerXMLWriterImpl"/>
 </suppressions>

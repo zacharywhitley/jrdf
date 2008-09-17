@@ -59,12 +59,16 @@
 
 package org.jrdf.query;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.Writer;
+
 /**
  * An answer to a query.
  *
  * @version $Id$
  */
 public interface Answer {
+
     String[] getColumnNames();
 
     String[][] getColumnValues();
@@ -72,4 +76,6 @@ public interface Answer {
     long numberOfTuples();
 
     long getTimeTaken();
+
+    void asXML(Writer writer) throws XMLStreamException;
 }

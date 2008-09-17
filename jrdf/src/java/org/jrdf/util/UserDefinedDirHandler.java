@@ -57,63 +57,26 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.util;
 
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
-import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUIN = 5;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-    private Set<Long> set;
-    private ClosableIterator<Long> longIterator;
+public class UserDefinedDirHandler extends TempDirectoryHandler implements DirectoryHandler {
+    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+    private final String dirName;
 
-    public EntryIteratorOneFixedOneArray(Long newFirst, BTree newBTree) {
-        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
-        try {
-            this.currentValues = iterator.next();
-            this.set = new HashSet<Long>();
-            while (currentValues != null) {
-                Long[] longs = ByteHandler.fromBytes(currentValues, QUIN);
-                set.add(longs[QUIN - 2]);
-                currentValues = iterator.next();
-            }
-            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public UserDefinedDirHandler(String dirName) {
+        this.dirName = dirName;
     }
 
-    public boolean close() {
-        try {
-            set.clear();
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public boolean hasNext() {
-        return longIterator.hasNext();
-    }
-
-    public Long next() {
-        return longIterator.next();
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove collection values - read only");
+    public File getDir() {
+        final File file = new File(SYSTEM_TEMP_DIR, dirName);
+        System.err.println("file = " + file.getPath());
+        return file;
     }
 }

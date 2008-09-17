@@ -59,9 +59,12 @@
 
 package org.jrdf.query;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.Serializable;
+import java.io.Writer;
 
 public final class EmptyAnswer implements Answer, Serializable {
+    private static final String SPACE = "  ";
     private static final long serialVersionUID = -7374613298128439580L;
 
     /**
@@ -86,5 +89,11 @@ public final class EmptyAnswer implements Answer, Serializable {
 
     public long getTimeTaken() {
         return 0;
+    }
+
+    public void asXML(Writer writer) throws XMLStreamException {
+        AnswerXMLWriter xmlBuilderWriter = new AnswerXMLWriterImpl(null, null);
+        xmlBuilderWriter.write(writer);
+
     }
 }

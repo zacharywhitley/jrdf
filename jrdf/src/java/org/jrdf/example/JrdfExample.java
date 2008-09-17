@@ -73,11 +73,14 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.vocabulary.XSD;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.StringWriter;
 import java.net.URI;
 import static java.net.URI.create;
 
@@ -228,9 +231,14 @@ public class JrdfExample {
         print("Graph contains (after remove): ", graph);
     }
 
-    private void performQuery(Graph graph) throws InvalidQuerySyntaxException, GraphException {
+    private void performQuery(Graph graph) throws InvalidQuerySyntaxException, GraphException, XMLStreamException {
         UrqlConnection connection = JRDF_FACTORY.getNewUrqlConnection();
-        System.out.println("Query Result:\n" + connection.executeQuery(graph, "SELECT ?s ?p ?o WHERE { ?s ?p ?o }"));
+        final Answer answer = connection.executeQuery(graph, "SELECT ?s ?p ?o WHERE { ?s ?p ?o }");
+        System.out.println("Query Result:\n" + answer);
+        StringWriter writer = new StringWriter();
+        answer.asXML(writer);
+        String xmlString = writer.toString();
+        System.out.printf("Query result xml:\n" + xmlString);
     }
 
     /**
