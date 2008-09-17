@@ -122,10 +122,6 @@ public class AnswerXMLWriterImpl implements AnswerXMLWriter {
         }
     }
 
-    public String writeString() {
-        return printWriter.toString();
-    }
-
     private void writeBody() throws XMLStreamException {
         streamWriter.writeStartElement(SPARQL);
         streamWriter.writeAttribute("xmlns", "http://www.w3.org/2005/sparql-results#");
