@@ -79,6 +79,7 @@ import java.text.StringCharacterIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.net.URI;
 
 /**
  * @author Yuan-Fang Li
@@ -116,7 +117,8 @@ public class AnswerXMLWriterImpl implements AnswerXMLWriter {
             writeBody();
             streamWriter.writeEndDocument();
         } finally {
-            printWriter.close();
+            streamWriter.flush();
+            streamWriter.close();
         }
     }
 
@@ -167,19 +169,22 @@ public class AnswerXMLWriterImpl implements AnswerXMLWriter {
         String nodeType;
         nodeType = getNodeType(node);
         boolean isLiteral = nodeType.equalsIgnoreCase(LITERAL);
-        writeNodeBinding(nodeType, node);
+        streamWriter.writeStartElement(nodeType);
         if (isLiteral) {
             writeLiteralAttributes(node);
         }
+        streamWriter.writeCharacters(escapeXMLSpecialChars(node.toString()));
         streamWriter.writeEndElement();
     }
 
     private void writeLiteralAttributes(Node node) throws XMLStreamException {
         final Literal literal = (Literal) node;
-        if (literal.getDatatypeURI() != null) {
-            streamWriter.writeAttribute(DATATYPE, literal.getDatatypeURI().toString());
-        } else if (literal.getLanguage() != null) {
-            streamWriter.writeAttribute(XML_LANG, literal.getLanguage());
+        final URI datatypeURI = literal.getDatatypeURI();
+        final String language = literal.getLanguage();
+        if (datatypeURI != null) {
+            streamWriter.writeAttribute(DATATYPE, datatypeURI.toString());
+        } else if (language != null || !language.equals("")) {
+            streamWriter.writeAttribute(XML_LANG, language);
         }
     }
 
@@ -193,11 +198,6 @@ public class AnswerXMLWriterImpl implements AnswerXMLWriter {
             nodeType = LITERAL;
         }
         return nodeType;
-    }
-
-    private void writeNodeBinding(String nodeType, Node node) throws XMLStreamException {
-        streamWriter.writeStartElement(nodeType);
-        streamWriter.writeCharacters(escapeXMLSpecialChars(node.toString()));
     }
 
     private void writeVariables() throws XMLStreamException {

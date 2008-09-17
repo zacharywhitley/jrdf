@@ -118,7 +118,6 @@ public class GraphClientImpl implements GraphClient {
         Response response = client.handle(request);
         if (response.getStatus().isSuccess()) {
             Representation output = response.getEntity();
-            System.err.println("media type = " + output.getMediaType().toString());
             return output.getText();
         } else {
             System.err.println("Error: " + response.getStatus().toString());
