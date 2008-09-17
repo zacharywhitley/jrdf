@@ -66,12 +66,14 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.util.EqualsUtil;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.Writer;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -113,18 +115,6 @@ public final class AnswerImpl implements Answer, Serializable {
     }
 
     public String[][] getColumnValues() {
-        SortedSet<Tuple> sortedTuples = results.getSortedTuples();
-        String table[][] = new String[sortedTuples.size()][heading.size()];
-        int index = 0;
-        for (Tuple sortedTuple : sortedTuples) {
-            Map<Attribute, ValueOperation> avps = sortedTuple.getAttributeValues();
-            table[index] = getDataWithValues(avps);
-            index++;
-        }
-        return table;
-    }
-
-    public String[][] getSimpleValues() {
         SortedSet<Tuple> sortedTuples = results.getSortedTuples();
         String table[][] = new String[sortedTuples.size()][heading.size()];
         int index = 0;
@@ -241,7 +231,7 @@ public final class AnswerImpl implements Answer, Serializable {
         }
     }
 
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked" })
     private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
         RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
         Set<Attribute> newAttributes = new HashSet<Attribute>();
@@ -258,5 +248,10 @@ public final class AnswerImpl implements Answer, Serializable {
             newTuples.add((Tuple) input.readObject());
         }
         results = relationFactory.getRelation(newAttributes, newTuples);
+    }
+
+    public void asXML(Writer writer) throws XMLStreamException {
+        AnswerXMLWriter xmlBuilderWriter = new AnswerXMLWriterImpl(heading, results);
+        xmlBuilderWriter.write(writer);
     }
 }

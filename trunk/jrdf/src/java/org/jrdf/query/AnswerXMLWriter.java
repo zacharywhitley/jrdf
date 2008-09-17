@@ -57,63 +57,91 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.query;
 
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
-import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import javax.xml.stream.XMLStreamException;
+import java.io.OutputStream;
+import java.io.Writer;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUIN = 5;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-    private Set<Long> set;
-    private ClosableIterator<Long> longIterator;
+public interface AnswerXMLWriter {
+    /**
+     * The XML header.
+     */
+    String HEADER = "<?xml version=\"1.0\"?>\n" +
+        "<sparql xmlns=\"http://www.w3.org/2005/sparql-results#\"\n" +
+        "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+        "        xsi:schemaLocation=\"http://www.w3.org/2007/SPARQL/result.xsd\">\n\n";
+    /**
+     * The sparql keyword.
+     */
+    String SPARQL = "sparql";
+    /**
+     * The left parenthesis.
+     */
+    String LEFT_PARA = "<";
+    /**
+     * The right parenthesis.
+     */
+    String RIGHT_PARA = ">";
+    /**
+     * The slash.
+     */
+    String SLASH = "/";
+    /**
+     * The XML footer.
+     */
+    String FOOTER = "</sparql>\n";
+    /**
+     * The element "head".
+     */
+    String HEAD = "head";
+    /**
+     * The element "variable".
+     */
+    String VARIABLE = "variable";
+    /**
+     * The element "name".
+     */
+    String NAME = "name";
+    /**
+     * The element "results".
+     */
+    String RESULTS = "results";
+    /**
+     * The element "result".
+     */
+    String RESULT = "result";
+    /**
+     * The element "binding".
+     */
+    String BINDING = "binding";
+    /**
+     * The element "bnode".
+     */
+    String BNODE = "bnode";
+    /**
+     * The element "literal".
+     */
+    String LITERAL = "literal";
+    /**
+     * The element "uri".
+     */
+    String URI = "uri";
+    /**
+     * The element "datatype".
+     */
+    String DATATYPE = "datatype";
+    /**
+     * The element "xml:lang".
+     */
+    String XML_LANG = "xml:lang";
 
-    public EntryIteratorOneFixedOneArray(Long newFirst, BTree newBTree) {
-        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
-        try {
-            this.currentValues = iterator.next();
-            this.set = new HashSet<Long>();
-            while (currentValues != null) {
-                Long[] longs = ByteHandler.fromBytes(currentValues, QUIN);
-                set.add(longs[QUIN - 2]);
-                currentValues = iterator.next();
-            }
-            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    void write(OutputStream stream) throws XMLStreamException;
 
-    public boolean close() {
-        try {
-            set.clear();
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public boolean hasNext() {
-        return longIterator.hasNext();
-    }
-
-    public Long next() {
-        return longIterator.next();
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove collection values - read only");
-    }
+    void write(Writer writer) throws XMLStreamException;
 }

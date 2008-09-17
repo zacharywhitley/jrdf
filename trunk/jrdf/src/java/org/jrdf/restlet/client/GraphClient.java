@@ -57,63 +57,18 @@
  *
  */
 
-package org.jrdf.util.btree;
-
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
-import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
+package org.jrdf.restlet.client;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.Callable;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUIN = 5;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-    private Set<Long> set;
-    private ClosableIterator<Long> longIterator;
+public interface GraphClient extends Callable<String> {
+    void constructPostQuery(String graphName, String queryString) throws IOException;
 
-    public EntryIteratorOneFixedOneArray(Long newFirst, BTree newBTree) {
-        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
-        try {
-            this.currentValues = iterator.next();
-            this.set = new HashSet<Long>();
-            while (currentValues != null) {
-                Long[] longs = ByteHandler.fromBytes(currentValues, QUIN);
-                set.add(longs[QUIN - 2]);
-                currentValues = iterator.next();
-            }
-            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean close() {
-        try {
-            set.clear();
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public boolean hasNext() {
-        return longIterator.hasNext();
-    }
-
-    public Long next() {
-        return longIterator.next();
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove collection values - read only");
-    }
+    String processResponse() throws IOException;
 }

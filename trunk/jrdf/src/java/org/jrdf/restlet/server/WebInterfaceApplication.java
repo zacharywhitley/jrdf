@@ -57,63 +57,44 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.restlet.server;
 
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
-import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
+import org.jrdf.PersistentGlobalJRDFFactory;
+import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
+import org.restlet.Application;
+import org.restlet.Restlet;
+import org.restlet.Router;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+public class WebInterfaceApplication extends Application {
+    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
+    //private static final DirectoryHandler HANDLER = new UserDefinedDirHandler("perstMoleculeGraph");
+    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-
-public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUIN = 5;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-    private Set<Long> set;
-    private ClosableIterator<Long> longIterator;
-
-    public EntryIteratorOneFixedOneArray(Long newFirst, BTree newBTree) {
-        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
-        try {
-            this.currentValues = iterator.next();
-            this.set = new HashSet<Long>();
-            while (currentValues != null) {
-                Long[] longs = ByteHandler.fromBytes(currentValues, QUIN);
-                set.add(longs[QUIN - 2]);
-                currentValues = iterator.next();
-            }
-            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public synchronized Restlet createRoot() {
+        Router router = new Router(getContext());
+        router.attach("/graphs", GraphsResource.class);
+        router.attach("/graphs/{graph}", GraphResource.class);
+        router.attachDefault(GraphResource.class);
+        return router;
     }
 
-    public boolean close() {
-        try {
-            set.clear();
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+    public void close() {
+        FACTORY.close();
     }
 
-    public boolean hasNext() {
-        return longIterator.hasNext();
+    public MoleculeGraph getGraph(String name) {
+        return FACTORY.getGraph(name);
     }
 
-    public Long next() {
-        return longIterator.next();
+    public MoleculeGraph getGraph() {
+        return FACTORY.getGraph();
     }
 
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove collection values - read only");
+    public DirectoryHandler getHandler() {
+        return HANDLER;
     }
 }

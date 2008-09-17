@@ -57,63 +57,63 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.restlet.client;
 
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
-import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUIN = 5;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-    private Set<Long> set;
-    private ClosableIterator<Long> longIterator;
+public class DistributedQueryClientImpl implements DistributedQueryClient {
+    private GraphClient[] clientImpls;
+    private String[] serverAddresses;
+    private int length;
+    private ExecutorService executor;
 
-    public EntryIteratorOneFixedOneArray(Long newFirst, BTree newBTree) {
-        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
+    public DistributedQueryClientImpl(String... servers) {
+        serverAddresses = servers;
+        length = serverAddresses.length;
+        executor = new ScheduledThreadPoolExecutor(length);
+        clientImpls = new GraphClientImpl[length];
+        for (int i = 0; i < length; i++) {
+            clientImpls[i] = new GraphClientImpl(serverAddresses[i]);
+        }
+    }
+
+    public String postQuery(String graphName, String queryString) {
         try {
-            this.currentValues = iterator.next();
-            this.set = new HashSet<Long>();
-            while (currentValues != null) {
-                Long[] longs = ByteHandler.fromBytes(currentValues, QUIN);
-                set.add(longs[QUIN - 2]);
-                currentValues = iterator.next();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < length; i++) {
+                clientImpls[i].constructPostQuery(graphName, queryString);
             }
-            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
-        } catch (IOException e) {
+            for (int i = 0; i < length; i++) {
+                System.err.println("Starting client: " + i);
+                Future<String> future = executor.submit(clientImpls[i]);
+                while (!future.isDone()) {
+                    String answer = future.get(2, TimeUnit.SECONDS);
+                    builder.append(answer);
+                }
+            }
+            return builder.toString();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public boolean close() {
-        try {
-            set.clear();
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
+    public static void main(String[] args) {
+        if (args.length == 1) {
+            throw new RuntimeException("Empty server list.");
         }
-    }
-
-    public boolean hasNext() {
-        return longIterator.hasNext();
-    }
-
-    public Long next() {
-        return longIterator.next();
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove collection values - read only");
+        String[] servers = new String[args.length - 1];
+        System.arraycopy(args, 1, servers, 0, args.length - 1);
+        DistributedQueryClient client = new DistributedQueryClientImpl(servers);
+        final String queryString = "select ?s where { ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> " +
+                "<http://www.biopax.org/release/biopax-level2.owl#physicalEntity> . }";
+        client.postQuery("perstMoleculeGraph", queryString);
     }
 }

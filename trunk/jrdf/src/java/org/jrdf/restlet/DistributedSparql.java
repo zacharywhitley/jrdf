@@ -57,63 +57,37 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.restlet;
 
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
-import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
+import org.jrdf.restlet.client.DistributedQueryClientImpl;
+import org.jrdf.restlet.client.DistributedQueryClient;
+import org.jrdf.restlet.server.Server;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUIN = 5;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-    private Set<Long> set;
-    private ClosableIterator<Long> longIterator;
+public class DistributedSparql {
+    private DistributedQueryClient client;
 
-    public EntryIteratorOneFixedOneArray(Long newFirst, BTree newBTree) {
-        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
-        try {
-            this.currentValues = iterator.next();
-            this.set = new HashSet<Long>();
-            while (currentValues != null) {
-                Long[] longs = ByteHandler.fromBytes(currentValues, QUIN);
-                set.add(longs[QUIN - 2]);
-                currentValues = iterator.next();
-            }
-            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public static void main(String[] args) throws IOException, InterruptedException {
+        if (args.length == 0) {
+            throw new RuntimeException("Need at least 1 argument");
         }
-    }
-
-    public boolean close() {
-        try {
-            set.clear();
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
+        if (args[0].equals("-s")) {
+            Thread serverThread = new Thread(new Server());
+            serverThread.start();
+            System.err.println("Server started");
+        } else if (args[0].equals("-c")) {
+            String[] servers = new String[args.length - 1];
+            System.arraycopy(args, 1, servers, 0, args.length - 1);
+            DistributedQueryClient client = new DistributedQueryClientImpl(servers);
+            final String queryString = "select ?s where { ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> " +
+                "<http://www.biopax.org/release/biopax-level2.owl#physicalEntity> . }";
+            client.postQuery("perstMoleculeGraph", queryString);
         }
-    }
-
-    public boolean hasNext() {
-        return longIterator.hasNext();
-    }
-
-    public Long next() {
-        return longIterator.next();
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove collection values - read only");
     }
 }

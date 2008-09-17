@@ -57,63 +57,17 @@
  *
  */
 
-package org.jrdf.util.btree;
+package org.jrdf.restlet.server;
 
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.ClosableIteratorImpl;
-import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+public interface NodeParser {
+    SubjectNode getSubjectNode(GraphElementFactory elementFactory, String value);
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
+    PredicateNode getPredicateNode(GraphElementFactory elementFactory, String value);
 
-public class EntryIteratorOneFixedOneArray implements ClosableIterator<Long> {
-    private static final int QUIN = 5;
-    private RecordIterator iterator;
-    private byte[] currentValues;
-    private Set<Long> set;
-    private ClosableIterator<Long> longIterator;
-
-    public EntryIteratorOneFixedOneArray(Long newFirst, BTree newBTree) {
-        this.iterator = getIterator(newBTree, newFirst, 0L, 0L, 0L, 0L);
-        try {
-            this.currentValues = iterator.next();
-            this.set = new HashSet<Long>();
-            while (currentValues != null) {
-                Long[] longs = ByteHandler.fromBytes(currentValues, QUIN);
-                set.add(longs[QUIN - 2]);
-                currentValues = iterator.next();
-            }
-            longIterator = new ClosableIteratorImpl<Long>(set.iterator());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean close() {
-        try {
-            set.clear();
-            iterator.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public boolean hasNext() {
-        return longIterator.hasNext();
-    }
-
-    public Long next() {
-        return longIterator.next();
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove collection values - read only");
-    }
+    ObjectNode getObjectNode(GraphElementFactory elementFactory, String value);
 }
