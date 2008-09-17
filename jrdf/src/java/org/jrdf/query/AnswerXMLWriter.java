@@ -70,32 +70,9 @@ import java.io.Writer;
 
 public interface AnswerXMLWriter {
     /**
-     * The XML header.
-     */
-    String HEADER = "<?xml version=\"1.0\"?>\n" +
-        "<sparql xmlns=\"http://www.w3.org/2005/sparql-results#\"\n" +
-        "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-        "        xsi:schemaLocation=\"http://www.w3.org/2007/SPARQL/result.xsd\">\n\n";
-    /**
      * The sparql keyword.
      */
     String SPARQL = "sparql";
-    /**
-     * The left parenthesis.
-     */
-    String LEFT_PARA = "<";
-    /**
-     * The right parenthesis.
-     */
-    String RIGHT_PARA = ">";
-    /**
-     * The slash.
-     */
-    String SLASH = "/";
-    /**
-     * The XML footer.
-     */
-    String FOOTER = "</sparql>\n";
     /**
      * The element "head".
      */
