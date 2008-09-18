@@ -86,7 +86,7 @@ import java.net.URI;
  * @version :$
  */
 
-public class AnswerXMLWriterImpl implements AnswerXMLWriter {
+public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
     private static final String ENCODING_DEFAULT = "UTF-8";
     private static final String VERSION_NUMBER = "1.0";
     private static final XMLOutputFactory FACTORY = XMLOutputFactory.newInstance();
@@ -96,10 +96,10 @@ public class AnswerXMLWriterImpl implements AnswerXMLWriter {
     private XMLStreamWriter streamWriter;
     private PrintWriter printWriter;
 
-    private AnswerXMLWriterImpl() {
+    private AnswerXMLStreamWriterImpl() {
     }
 
-    public AnswerXMLWriterImpl(Set<Attribute> heading, Relation results) {
+    public AnswerXMLStreamWriterImpl(Set<Attribute> heading, Relation results) {
         this.heading = heading;
         this.results = results;
     }
@@ -114,6 +114,8 @@ public class AnswerXMLWriterImpl implements AnswerXMLWriter {
         try {
             streamWriter = FACTORY.createXMLStreamWriter(printWriter);
             streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
+            String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
+            streamWriter.writeProcessingInstruction("xml-stylesheet", target);
             writeBody();
             streamWriter.writeEndDocument();
         } finally {

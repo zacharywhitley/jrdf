@@ -236,7 +236,7 @@ public class JrdfExample {
         final Answer answer = connection.executeQuery(graph, "SELECT ?s ?p ?o WHERE { ?s ?p ?o }");
         System.out.println("Query Result:\n" + answer);
         StringWriter writer = new StringWriter();
-        answer.asXML(writer);
+        answer.writeXML(writer);
         String xmlString = writer.toString();
         System.out.printf("Query result xml:\n" + xmlString);
     }

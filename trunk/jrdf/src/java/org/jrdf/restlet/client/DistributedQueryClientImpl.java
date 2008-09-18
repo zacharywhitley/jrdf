@@ -59,6 +59,8 @@
 
 package org.jrdf.restlet.client;
 
+import org.jrdf.restlet.server.Server;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -81,7 +83,7 @@ public class DistributedQueryClientImpl implements DistributedQueryClient {
         executor = new ScheduledThreadPoolExecutor(length);
         clientImpls = new GraphClientImpl[length];
         for (int i = 0; i < length; i++) {
-            clientImpls[i] = new GraphClientImpl(serverAddresses[i]);
+            clientImpls[i] = new GraphClientImpl(serverAddresses[i], Server.PORT);
         }
     }
 

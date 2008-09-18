@@ -59,8 +59,8 @@
 
 package org.jrdf.restlet.client;
 
-import org.jrdf.restlet.server.GraphResource;
-import org.jrdf.restlet.server.Server;
+import static org.jrdf.restlet.server.GraphResource.QUERY_STRING;
+import static org.jrdf.restlet.server.Server.PORT;
 import org.restlet.Client;
 import org.restlet.data.Form;
 import org.restlet.data.Method;
@@ -72,7 +72,6 @@ import org.restlet.resource.Representation;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author Yuan-Fang Li
@@ -82,33 +81,19 @@ import java.util.concurrent.ExecutionException;
 public class GraphClientImpl implements GraphClient {
     private Client client;
     private String serverString;
+    private int serverPort;
     protected Request request;
     protected String answer;
 
-    public GraphClientImpl(String server) {
+    public GraphClientImpl(String server, int portNumber) {
         serverString = server;
+        serverPort = portNumber;
         client = new Client(HTTP);
     }
 
     public String call() throws Exception {
         return processResponse();
     }
-
-    /*public synchronized void run() {
-        try {
-            System.err.println("GraphClient running: " + System.currentTimeMillis());
-            answer = processResponse();
-            notifyAll();
-            System.err.println("GraphClient finished: " + System.currentTimeMillis());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
-
-    /*public synchronized String getAnswers() throws InterruptedException {
-        wait();
-        return answer;
-    }*/
 
     public void constructPostQuery(String graphName, String queryString) throws IOException {
         request = preparePostRequest(graphName, queryString);
@@ -127,25 +112,21 @@ public class GraphClientImpl implements GraphClient {
 
     private Request preparePostRequest(String graphName, String queryString) throws MalformedURLException {
         Form form = new Form();
-        form.add(GraphResource.QUERY_STRING, queryString);
+        form.add(QUERY_STRING, queryString);
         Representation representation = form.getWebRepresentation();
-        String requestURL = makeRequestString(graphName, serverString);
+        String requestURL = makeRequestString(graphName);
         return new Request(Method.POST, requestURL, representation);
     }
 
-    private String makeRequestString(String graphName, String serverName) throws MalformedURLException {
-        URL url = new URL(HTTP.getSchemeName(), serverName, Server.PORT, "/graphs/" + graphName);
+    private String makeRequestString(String graphName) throws MalformedURLException {
+        URL url = new URL(HTTP.getSchemeName(), serverString, serverPort, "/graphs/" + graphName);
         return url.toString();
     }
 
-    public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
-        GraphClient clientImpl = new GraphClientImpl("127.0.0.1");
-        clientImpl.constructPostQuery("foo", "SELECT * WHERE { ?s <urn:baz> ?o. }");
-        String answer = clientImpl.processResponse();
-        /*ExecutorService executor = new ScheduledThreadPoolExecutor(1);
-        Future<String> future = executor.submit(clientImpl);
-        String answer = future.get();
-        executor.shutdown();*/
+    public static void main(String[] args) throws IOException {
+        GraphClient client = new GraphClientImpl("127.0.0.1", PORT);
+        client.constructPostQuery("foo", "SELECT * WHERE { ?s ?p ?o. }");
+        String answer = client.processResponse();
         System.err.println("Answer = " + answer);
     }
 }

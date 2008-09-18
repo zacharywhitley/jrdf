@@ -70,6 +70,10 @@ import java.io.Writer;
 
 public interface AnswerXMLWriter {
     /**
+     * The XML -> HTML XSLT.
+     */
+    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
+    /**
      * The sparql keyword.
      */
     String SPARQL = "sparql";
