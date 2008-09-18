@@ -91,8 +91,8 @@ public final class EmptyAnswer implements Answer, Serializable {
         return 0;
     }
 
-    public void asXML(Writer writer) throws XMLStreamException {
-        AnswerXMLWriter xmlBuilderWriter = new AnswerXMLWriterImpl(null, null);
+    public void writeXML(Writer writer) throws XMLStreamException {
+        AnswerXMLWriter xmlBuilderWriter = new AnswerXMLStreamWriterImpl(null, null);
         xmlBuilderWriter.write(writer);
 
     }

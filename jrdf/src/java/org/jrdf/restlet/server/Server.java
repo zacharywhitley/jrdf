@@ -35,13 +35,16 @@ public class Server implements Runnable {
         component.stop();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        final Server server = new Server();
+        Thread serverThread = new Thread(server);
         try {
-            Thread serverThread = new Thread(new Server());
             serverThread.start();
             System.err.println("Server started");
         } catch (Exception e) {
-            e.printStackTrace();
+            server.stop();
+            serverThread.join();
+            throw new RuntimeException(e);
         }
     }
 }

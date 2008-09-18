@@ -74,6 +74,7 @@ import static org.jrdf.query.AnswerXMLWriter.BNODE;
 import static org.jrdf.query.AnswerXMLWriter.RESULT;
 import static org.jrdf.query.AnswerXMLWriter.LITERAL;
 import org.jrdf.restlet.server.Server;
+import static org.jrdf.restlet.server.Server.PORT;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.w3c.dom.Document;
@@ -98,16 +99,17 @@ import java.util.Set;
 public class DistributedQueryUnitTest extends TestCase {
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
-    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+    private PersistentGlobalJRDFFactory factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
 
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private Thread serverThread;
-    protected Server server;
+    private Server server;
 
     protected void setUp() throws Exception {
         super.setUp();
-        graph = FACTORY.getGraph(FOO);
+        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+        graph = factory.getGraph(FOO);
         graph.clear();
         elementFactory = graph.getElementFactory();
         server = new Server();
@@ -119,6 +121,7 @@ public class DistributedQueryUnitTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         graph.close();
+        factory.close();
         server.stop();
         serverThread.join();
     }
@@ -130,17 +133,16 @@ public class DistributedQueryUnitTest extends TestCase {
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        GraphClient clientImpl = new GraphClientImpl("127.0.0.1");
-        clientImpl.constructPostQuery(FOO, "SELECT * WHERE { ?s <urn:p> ?o. }");
-        String answer = clientImpl.processResponse();
+        GraphClient client = new GraphClientImpl("127.0.0.1", PORT);
+        client.constructPostQuery(FOO, "SELECT * WHERE { ?s <urn:p> ?o. }");
+        String answer = client.processResponse();
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
-    }
+    }                                            
 
     public void testEmptyDistributedClient() throws IOException, SAXException {
         String[] servers = new String[] {"127.0.0.1"};
         DistributedQueryClient client = new DistributedQueryClientImpl(servers);
-        final String queryString = "select ?s where { ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> " +
-                "<http://www.biopax.org/release/biopax-level2.owl#physicalEntity> . }";
+        final String queryString = "SELECT * WHERE { ?s <urn:p> ?o. }";
         final String answer = client.postQuery(FOO, queryString);
         checkAnswerXML(answer, 0);
     }

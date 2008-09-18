@@ -70,7 +70,6 @@ import org.restlet.Router;
 
 public class WebInterfaceApplication extends Application {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
-    //private static final DirectoryHandler HANDLER = new UserDefinedDirHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
 
     @Override

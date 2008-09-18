@@ -10,6 +10,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="LocalIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphResource"/>
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl"/>
@@ -26,6 +27,8 @@
     <suppress checks="ClassDataAbstractionCoupling" files="PersistentJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="PersistentGlobalJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="LongIndexBdb"/>
+    <suppress checks="JavaNCSS" files="AnswerImpl"/>
+    <suppress checks="JavaNCSS" files="AnswerXMLStreamWriterImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
@@ -34,8 +37,6 @@
     <suppress checks="JavaNCSS" files="XSD"/>
     <suppress checks="JavaNCSS" files="OWL"/>
     <suppress checks="JavaNCSS" files="BasicOperations"/>
-    <suppress checks="JavaNCSS" files="AnswerImpl"/>
-    <suppress checks="JavaNCSS" files="AnswerXMLWriterImpl"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>

@@ -77,5 +77,5 @@ public interface Answer {
 
     long getTimeTaken();
 
-    void asXML(Writer writer) throws XMLStreamException;
+    void writeXML(Writer writer) throws XMLStreamException;
 }
