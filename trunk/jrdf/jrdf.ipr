@@ -536,13 +536,23 @@
     <library name="restlet">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.simple_3.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet_1.1m5.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet_1.1m5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.freemarker_2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="freemarker">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/freemarker-2.3.14/lib/freemarker.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="file://$PROJECT_DIR$/lib/freemarker-2.3.14/src" />
+      </SOURCES>
     </library>
   </component>
 </project>

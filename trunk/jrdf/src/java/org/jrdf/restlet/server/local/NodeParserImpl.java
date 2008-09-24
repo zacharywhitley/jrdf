@@ -1,4 +1,4 @@
-package org.jrdf.restlet.server;
+package org.jrdf.restlet.server.local;
 
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;

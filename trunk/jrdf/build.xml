@@ -43,6 +43,8 @@
             <fileset dir="${prod.src.dir}" includes="**/messages.properties"/>
             <fileset dir="${prod.src.dir}" includes="**/about.txt"/>
             <fileset dir="${conf.dir}" includes="**/wiring.xml"/>
+            <!-- Freemarker templates -->
+            <fileset dir="${prod.src.dir}" includes="**/*.ftl"/>
         </copy>
 
         <!-- Test data used by the RDF/XML Parser and Writer and NTriples Reader -->
@@ -143,7 +145,7 @@
         </pathconvert>
         <jar destfile="${dist.dir}/restlet/main.jar">
             <manifest>
-                <attribute name="Main-Class" value="org.jrdf.restlet.DistributedSparql"/>
+                <attribute name="Main-Class" value="org.jrdf.restlet.server.SparqlQueryServer"/>
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
             <fileset dir="${prod.classes.dir}"/>

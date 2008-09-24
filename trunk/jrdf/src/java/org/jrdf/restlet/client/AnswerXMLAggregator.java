@@ -59,81 +59,17 @@
 
 package org.jrdf.restlet.client;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
-import org.jrdf.util.param.ParameterUtil;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class DistributedQueryClientImpl implements GraphQueryClient {
-    private ExecutorService executor;
-    private Collection<CallableGraphQueryClient> queryClients;
-    private Collection<String> serverAddresses;
-    private int localPort;
+public interface AnswerXMLAggregator {
+    void aggregate(String xml) throws IOException, SAXException;
 
-    public DistributedQueryClientImpl(int localPort, String... servers) {
-        this.localPort = localPort;
-        serverAddresses = new LinkedList<String>();
-        for (String server : servers) {
-            serverAddresses.add(server);
-        }
-        queryClients = new LinkedList<CallableGraphQueryClient>();
-        for (String server : serverAddresses) {
-            queryClients.add(new GraphClientImpl(server, this.localPort));
-        }
-        executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
-    }
-
-    public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
-    }
-
-    public void postQuery(String graphName, String queryString) {
-        try {
-            for (GraphQueryClient queryClient : queryClients) {
-                queryClient.postQuery(graphName, queryString);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public String executeQuery() throws IOException {
-        ParameterUtil.checkNotNull(queryClients);
-        StringBuilder builder = new StringBuilder();
-        AnswerXMLAggregator aggregator = new AnswerXMLDOMAggregator();
-        try {
-            for (CallableGraphQueryClient queryClient : queryClients) {
-                System.err.println("Starting client: " + queryClient.toString());
-                Future<String> future = executor.submit(queryClient);
-                while (!future.isDone()) {
-                    String answer = future.get(2, SECONDS);
-                    aggregator.aggregate(answer);
-                }
-            }
-            builder.append(aggregator.getXML());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return builder.toString();
-    }
-
-    private void writeStringToXML(String content) throws IOException, SAXException {
-        DOMParser parser = new DOMParser();
-        parser.parse(new InputSource(new StringReader(content)));
-        parser.getDocument();
-    }
+    String getXML();
 }

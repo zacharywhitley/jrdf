@@ -65,23 +65,23 @@ import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.AnswerXMLWriter;
 import static org.jrdf.query.AnswerXMLWriter.BINDING;
 import static org.jrdf.query.AnswerXMLWriter.BNODE;
-import static org.jrdf.query.AnswerXMLWriter.RESULT;
 import static org.jrdf.query.AnswerXMLWriter.LITERAL;
-import org.jrdf.restlet.server.Server;
-import static org.jrdf.restlet.server.Server.PORT;
+import static org.jrdf.query.AnswerXMLWriter.RESULT;
+import org.jrdf.restlet.server.distributed.DistributedQueryServer;
+import org.jrdf.restlet.server.local.LocalQueryServer;
+import static org.jrdf.restlet.server.local.LocalQueryServer.PORT;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import static org.w3c.dom.Node.ELEMENT_NODE;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -103,61 +103,66 @@ public class DistributedQueryUnitTest extends TestCase {
 
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
-    private Thread serverThread;
-    private Server server;
+    private LocalQueryServer localQueryServer;
+    private static final String QUERY_STRING = "SELECT * WHERE { ?s <urn:p> ?o. }";
 
     protected void setUp() throws Exception {
         super.setUp();
+        HANDLER.removeDir();
+        HANDLER.makeDir();
         factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
         graph = factory.getGraph(FOO);
         graph.clear();
         elementFactory = graph.getElementFactory();
-        server = new Server();
-        serverThread = new Thread(server);
-        serverThread.start();
-        System.err.println("Server started");
+        localQueryServer = new LocalQueryServer();
+        localQueryServer.start();
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
         graph.close();
         factory.close();
-        server.stop();
-        serverThread.join();
+        localQueryServer.stop();
     }
 
-    public void testGraphClient() throws GraphException, IOException, SAXException {
+    public void testGraphClient() throws Exception {
         final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
         final BlankNode b1 = elementFactory.createBlankNode();
         final BlankNode b2 = elementFactory.createBlankNode();
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        GraphClient client = new GraphClientImpl("127.0.0.1", PORT);
-        client.constructPostQuery(FOO, "SELECT * WHERE { ?s <urn:p> ?o. }");
-        String answer = client.processResponse();
+        CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
+        queryClient.postQuery(FOO, QUERY_STRING);
+        String answer = queryClient.call();
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
     }                                            
 
-    public void testEmptyDistributedClient() throws IOException, SAXException {
-        String[] servers = new String[] {"127.0.0.1"};
-        DistributedQueryClient client = new DistributedQueryClientImpl(servers);
-        final String queryString = "SELECT * WHERE { ?s <urn:p> ?o. }";
-        final String answer = client.postQuery(FOO, queryString);
+    public void testEmptyDistributedClient() throws Exception {
+        DistributedQueryServer server = new DistributedQueryServer();
+        server.start();
+        GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
+        client.postDistributedServer(PORT, "add", "127.0.0.1");
+        client.postQuery(FOO, QUERY_STRING);
+        final String answer = client.executeQuery();
         checkAnswerXML(answer, 0);
+        server.stop();
     }
 
-    public void testDistributedClient() throws IOException, SAXException, GraphException {
+    public void testDistributedClient() throws Exception {
+        DistributedQueryServer server = new DistributedQueryServer();
+        server.start();
         final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
         final BlankNode b1 = elementFactory.createBlankNode();
         final BlankNode b2 = elementFactory.createBlankNode();
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        String[] servers = new String[] {"127.0.0.1"};
-        DistributedQueryClient client = new DistributedQueryClientImpl(servers);
-        final String queryString = "SELECT * WHERE { ?s <urn:p> ?o. }";
-        final String answer = client.postQuery(FOO, queryString);
+        GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
+        client.postDistributedServer(PORT, "add", "127.0.0.1");
+        final String queryString = QUERY_STRING;
+        client.postQuery(FOO, queryString);
+        final String answer = client.executeQuery();
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
     }
 
