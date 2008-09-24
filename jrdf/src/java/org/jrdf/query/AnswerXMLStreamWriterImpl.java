@@ -67,19 +67,23 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_OBJECT_NAME;
+import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_PREDICATE_NAME;
+import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_SUBJECT_NAME;
 
 import javax.xml.stream.XMLOutputFactory;
+import static javax.xml.stream.XMLOutputFactory.newInstance;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.URI;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.net.URI;
 
 /**
  * @author Yuan-Fang Li
@@ -89,7 +93,7 @@ import java.net.URI;
 public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
     private static final String ENCODING_DEFAULT = "UTF-8";
     private static final String VERSION_NUMBER = "1.0";
-    private static final XMLOutputFactory FACTORY = XMLOutputFactory.newInstance();
+    private static final XMLOutputFactory FACTORY = newInstance();
 
     private Set<Attribute> heading;
     private Relation results;
@@ -212,7 +216,19 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
     }
 
     private String getVariableName(Attribute attribute) {
-        return attribute.getAttributeName().toString().substring(1);
+        String name = attribute.getAttributeName().toString();
+        if (name.startsWith("?")) {
+            name = name.substring(1);
+        } else {
+            if (name.startsWith(DEFAULT_SUBJECT_NAME)) {
+                name = DEFAULT_SUBJECT_NAME;
+            } else if (name.startsWith(DEFAULT_PREDICATE_NAME)) {
+                name = DEFAULT_PREDICATE_NAME;
+            } else if (name.startsWith(DEFAULT_OBJECT_NAME)) {
+                name = DEFAULT_OBJECT_NAME;
+            }
+        }
+        return name;
     }
 
     private String escapeXMLSpecialChars(String aText) {

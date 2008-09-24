@@ -57,13 +57,52 @@
  *
  */
 
-package org.jrdf.restlet.client;
+package org.jrdf.restlet.server.local;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
+import org.jrdf.PersistentGlobalJRDFFactory;
+import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import org.jrdf.restlet.server.GraphsResource;
+import org.jrdf.restlet.server.BaseGraphApplication;
+import org.jrdf.graph.global.MoleculeGraph;
+import org.restlet.Restlet;
+import org.restlet.Router;
 
-public interface DistributedQueryClient {
-    String postQuery(String graphName, String queryString);
+public class WebInterfaceGraphApplication extends BaseGraphApplication {
+    private static final String LOCAL_SERVER = "127.0.0.1";
+
+    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+    private final String[] serverAddresses;
+
+    public WebInterfaceGraphApplication() {
+        serverAddresses = new String[]{LOCAL_SERVER};
+    }
+
+    public WebInterfaceGraphApplication(String[] serverAddresses) {
+        this.serverAddresses = serverAddresses;
+    }
+
+    @Override
+    public synchronized Restlet createRoot() {
+        Router router = new Router(getContext());
+        router.attach("/graphs", GraphsResource.class);
+        router.attach("/graphs/{graph}", LocalGraphResource.class);
+        router.attachDefault(GraphsResource.class);
+        return router;
+    }
+
+    public void close() {
+        FACTORY.close();
+    }
+
+    public MoleculeGraph getGraph(String name) {
+        return FACTORY.getGraph(name);
+    }
+
+    public MoleculeGraph getGraph() {
+        return FACTORY.getGraph();
+    }
+
+    public String[] getServers() {
+        return serverAddresses;
+    }
 }

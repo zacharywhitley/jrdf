@@ -57,43 +57,75 @@
  *
  */
 
-package org.jrdf.restlet.server;
+package org.jrdf.restlet.server.distributed;
 
-import org.jrdf.PersistentGlobalJRDFFactory;
-import org.jrdf.PersistentGlobalJRDFFactoryImpl;
-import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.restlet.client.DistributedQueryClientImpl;
+import org.jrdf.restlet.client.GraphQueryClient;
+import org.jrdf.restlet.server.BaseGraphResource;
 import org.restlet.Application;
-import org.restlet.Restlet;
-import org.restlet.Router;
+import org.restlet.Context;
+import org.restlet.data.Form;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.data.Status;
+import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
+import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
+import org.restlet.resource.Representation;
+import org.restlet.resource.ResourceException;
 
-public class WebInterfaceApplication extends Application {
-    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
-    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+import java.util.Collection;
 
-    @Override
-    public synchronized Restlet createRoot() {
-        Router router = new Router(getContext());
-        router.attach("/graphs", GraphsResource.class);
-        router.attach("/graphs/{graph}", GraphResource.class);
-        router.attachDefault(GraphResource.class);
-        return router;
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
+
+public class DistributedGraphResource extends BaseGraphResource {
+    private int localPort;
+    private DistributedQueryGraphApplication application;
+    private Collection<String> servers;
+    private GraphQueryClient client;
+
+    public DistributedGraphResource(Context context, Request request, Response response) {
+        super(context, request, response);
+        System.err.println("graph name = " + graphName);
+        setUpServersAndClients();
     }
 
-    public void close() {
-        FACTORY.close();
+    private void setUpServersAndClients() {
+        application = (DistributedQueryGraphApplication) Application.getCurrent();
+        servers = application.getServers();
+        if (servers.size() == 0) {
+            servers.add("127.0.0.1");
+        }
+        localPort = application.getPort();
+        String[] serverArray = new String[servers.size()];
+        serverArray = servers.toArray(serverArray);
+        client = new DistributedQueryClientImpl(localPort, serverArray);
     }
 
-    public MoleculeGraph getGraph(String name) {
-        return FACTORY.getGraph(name);
+    public boolean allowGet() {
+        return true;
     }
 
-    public MoleculeGraph getGraph() {
-        return FACTORY.getGraph();
+    public boolean allowPost() {
+        return true;
     }
 
-    public DirectoryHandler getHandler() {
-        return HANDLER;
+    public void acceptRepresentation(Representation representation) throws ResourceException {
+        try {
+            Form form = new Form(representation);
+            String queryString = form.getFirstValue(QUERY_STRING);
+            client.postQuery(graphName, queryString);
+            String answerString = client.executeQuery();
+            String newFormat = form.getFirstValue(FORMAT);
+            format = (newFormat == null) ? FORMAT_XML : newFormat;
+            constructAnswerRepresentation(format, answerString);
+            getResponse().setStatus(Status.SUCCESS_OK);
+        } catch (IllegalArgumentException e) {
+            getResponse().setStatus(CLIENT_ERROR_BAD_REQUEST, e);
+        } catch (Exception e) {
+            getResponse().setStatus(SERVER_ERROR_INTERNAL, e);
+        }
     }
 }

@@ -57,18 +57,41 @@
  *
  */
 
-package org.jrdf.restlet.client;
+package org.jrdf.restlet.server;
 
-import java.io.IOException;
-import java.util.concurrent.Callable;
+import org.jrdf.restlet.server.local.LocalQueryServer;
+import org.jrdf.restlet.server.distributed.DistributedQueryServer;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public interface GraphClient extends Callable<String> {
-    void constructPostQuery(String graphName, String queryString) throws IOException;
+public class SparqlQueryServer {
+    private LocalQueryServer localServer;
+    private DistributedQueryServer distributedServer;
 
-    String processResponse() throws IOException;
+    public void startLocal() throws Exception {
+        localServer = new LocalQueryServer();
+        localServer.start();
+    }
+
+    public void startDistributed() throws Exception {
+        distributedServer = new DistributedQueryServer();
+        distributedServer.start();
+    }
+
+    public static void main(String[] args) throws Exception {
+        if (args == null || args.length == 0) {
+            System.err.println(" -d for distributed server and -l for local query server ");
+            return;
+        }
+        final String option = args[0];
+        SparqlQueryServer server = new SparqlQueryServer();
+        if (option.equals("-l")) {
+            server.startLocal();
+        } else if (option.equals("-d")) {
+            server.startDistributed();
+        }
+    }
 }

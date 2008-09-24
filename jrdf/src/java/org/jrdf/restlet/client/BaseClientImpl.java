@@ -59,79 +59,44 @@
 
 package org.jrdf.restlet.client;
 
-import static org.jrdf.restlet.server.distributed.DistributedQueryResource.PORT_STRING;
-import static org.jrdf.restlet.server.distributed.DistributedQueryResource.ACTION;
-import org.jrdf.restlet.server.distributed.DistributedQueryResource;
-import static org.jrdf.restlet.server.local.LocalQueryServer.PORT;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-import org.restlet.Client;
-import org.restlet.data.Form;
-import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
-import org.restlet.data.Response;
+import org.restlet.data.Form;
 import org.restlet.data.Method;
+import static org.restlet.data.Protocol.HTTP;
 import org.restlet.resource.Representation;
+import static org.jrdf.restlet.server.BaseGraphResource.QUERY_STRING;
+import static org.jrdf.restlet.server.BaseGraphResource.FORMAT;
+import static org.jrdf.restlet.server.BaseGraphResource.FORMAT_XML;
 
-import java.io.IOException;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class GraphClientImpl extends BaseClientImpl implements CallableGraphQueryClient {
-    private Client client;
-    protected Request request;
-    protected String answer;
+public abstract class BaseClientImpl implements GraphQueryClient {
+    protected String serverString;
+    protected int serverPort;
 
-    public GraphClientImpl(String server, int portNumber) {
-        super(portNumber, server);
-        client = new Client(HTTP);
+    public BaseClientImpl(int portNumber, String server) {
+        serverPort = portNumber;
+        serverString = server;
     }
 
-    public String call() throws Exception {
-        return executeQuery();
-    }
-
-    public void postQuery(String graphName, String queryString) throws IOException {
-        request = preparePostRequest(graphName, queryString);
-    }
-
-    public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
-        checkNotNull(port, servers);
+    protected Request preparePostRequest(String graphName, String queryString)
+        throws MalformedURLException {
         Form form = new Form();
-        form.add(PORT_STRING, Integer.toString(port));
-        form.add(ACTION, action);
-        form.add(DistributedQueryResource.SERVERS_STRING, servers);
+        form.add(QUERY_STRING, queryString);
+        form.add(FORMAT, FORMAT_XML);
         Representation representation = form.getWebRepresentation();
-        URL url = new URL(HTTP.getSchemeName(), serverString, serverPort, "/");
-        String requestURL = url.toString();
-        Request request = new Request(Method.POST, requestURL, representation);
-        Response response = client.handle(request);
-        if (!response.getStatus().isSuccess()) {
-            System.err.println("Error: " + response.getStatus().toString());
-            throw new RuntimeException(response.getStatus().toString());
-        }
+        String requestURL = makeRequestString(graphName);
+        return new Request(Method.POST, requestURL, representation);
     }
 
-    public String executeQuery() throws IOException {
-        checkNotNull(client, request);
-        Response response = client.handle(request);
-        if (response.getStatus().isSuccess()) {
-            Representation output = response.getEntity();
-            return output.getText();
-        } else {
-            System.err.println("Error: " + response.getStatus().toString());
-            throw new RuntimeException(response.getStatus().toString());
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
-        CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
-        queryClient.postQuery("foo", "SELECT * WHERE { ?s ?p ?o. }");
-        String answer = queryClient.call();
-        System.err.println("Answer = " + answer);
+    private String makeRequestString(String graphName) throws MalformedURLException {
+        URL url = new URL(HTTP.getSchemeName(), serverString, serverPort, "/graphs/" + graphName);
+        return url.toString();
     }
 }

@@ -69,7 +69,6 @@ import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
 import org.jrdf.util.ModelsImpl;
 import static org.jrdf.util.ModelsImpl.JRDF_NAMESPACE;
-import org.restlet.Application;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
@@ -100,7 +99,6 @@ public class GraphsResource extends Resource {
     private Models model;
     private Set<org.jrdf.graph.Resource> resources;
     private DirectoryHandler handler;
-    protected WebInterfaceApplication application;
     protected String path;
 
     public GraphsResource(Context context, Request request, Response response) {
@@ -110,8 +108,7 @@ public class GraphsResource extends Resource {
         if (!path.endsWith("/")) {
             path += "/";
         }
-        application = (WebInterfaceApplication) Application.getCurrent();
-        handler = application.getHandler();
+        handler = BaseGraphApplication.getHandler();
         File file = new File(handler.getDir(), "graphs.nt");
         System.err.println("Graphs dir = " + file.getPath());
         Graph modelsGraph = parseNTriples(file);

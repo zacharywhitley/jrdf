@@ -57,37 +57,17 @@
  *
  */
 
-package org.jrdf.restlet;
+package org.jrdf.restlet.server.local;
 
-import org.jrdf.restlet.client.DistributedQueryClientImpl;
-import org.jrdf.restlet.client.DistributedQueryClient;
-import org.jrdf.restlet.server.Server;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
 
-import java.io.IOException;
+public interface NodeParser {
+    SubjectNode getSubjectNode(GraphElementFactory elementFactory, String value);
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
+    PredicateNode getPredicateNode(GraphElementFactory elementFactory, String value);
 
-public class DistributedSparql {
-    private DistributedQueryClient client;
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        if (args.length == 0) {
-            throw new RuntimeException("Need at least 1 argument");
-        }
-        if (args[0].equals("-s")) {
-            Thread serverThread = new Thread(new Server());
-            serverThread.start();
-            System.err.println("Server started");
-        } else if (args[0].equals("-c")) {
-            String[] servers = new String[args.length - 1];
-            System.arraycopy(args, 1, servers, 0, args.length - 1);
-            DistributedQueryClient client = new DistributedQueryClientImpl(servers);
-            final String queryString = "select ?s where { ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> " +
-                "<http://www.biopax.org/release/biopax-level2.owl#physicalEntity> . }";
-            client.postQuery("perstMoleculeGraph", queryString);
-        }
-    }
+    ObjectNode getObjectNode(GraphElementFactory elementFactory, String value);
 }

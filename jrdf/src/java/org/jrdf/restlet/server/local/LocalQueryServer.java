@@ -1,10 +1,11 @@
-package org.jrdf.restlet.server;
+package org.jrdf.restlet.server.local;
 
 import org.restlet.Component;
 import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
+import org.jrdf.restlet.server.BaseGraphApplication;
 
-public class Server implements Runnable {
+public class LocalQueryServer {
     /**
      * The port number of the server(s).
      */
@@ -15,20 +16,14 @@ public class Server implements Runnable {
     public static final String SPARQL_XML_RESULT_MEDIA_TYPE_STRING = "application/sparql-results+xml";
     protected Component component;
 
-    private void start() throws Exception {
+    public void start() throws Exception {
         MediaType.register(SPARQL_XML_RESULT_MEDIA_TYPE_STRING, "SPARQL Query Results");
+        final BaseGraphApplication graphApplication = new WebInterfaceGraphApplication();
         component = new Component();
         component.getServers().add(Protocol.HTTP, PORT);
-        component.getDefaultHost().attach(new WebInterfaceApplication());
+        component.getDefaultHost().attach(graphApplication);
         component.start();
-    }
-
-    public void run() {
-        try {
-            start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        System.err.println("Local server started");
     }
 
     public void stop() throws Exception {
@@ -36,14 +31,11 @@ public class Server implements Runnable {
     }
 
     public static void main(String[] args) throws Exception {
-        final Server server = new Server();
-        Thread serverThread = new Thread(server);
+        final LocalQueryServer server = new LocalQueryServer();
         try {
-            serverThread.start();
-            System.err.println("Server started");
+            server.start();
         } catch (Exception e) {
             server.stop();
-            serverThread.join();
             throw new RuntimeException(e);
         }
     }

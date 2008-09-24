@@ -57,17 +57,20 @@
  *
  */
 
-package org.jrdf.restlet.server;
+package org.jrdf.restlet.client;
 
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.ObjectNode;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
-public interface NodeParser {
-    SubjectNode getSubjectNode(GraphElementFactory elementFactory, String value);
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
 
-    PredicateNode getPredicateNode(GraphElementFactory elementFactory, String value);
+public interface GraphQueryClient {
+    void postQuery(String graphName, String queryString) throws IOException;
 
-    ObjectNode getObjectNode(GraphElementFactory elementFactory, String value);
+    String executeQuery() throws IOException;
+
+    void postDistributedServer(int port, String action, String servers) throws MalformedURLException;
 }

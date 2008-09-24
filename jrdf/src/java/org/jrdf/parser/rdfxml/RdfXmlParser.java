@@ -19,6 +19,8 @@
  */
 package org.jrdf.parser.rdfxml;
 
+import org.jrdf.collection.MapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -27,8 +29,6 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
-import org.jrdf.collection.MapFactory;
-import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.ConfigurableParser;
 import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.ParseErrorListener;
@@ -241,7 +241,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      *
      * @param graphElementFactory A GraphElementFactory.
      * @param creator A BlankNodeFactoryCreator.
-     * @throws GraphException
+     * @throws org.jrdf.graph.GraphException
      */
     public RdfXmlParser(GraphElementFactory graphElementFactory, MapFactory creator) {
         this(graphElementFactory, new ParserBlankNodeFactoryImpl(creator, graphElementFactory));
