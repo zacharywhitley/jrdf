@@ -56,12 +56,14 @@ public class LocalGraphResource extends BaseGraphResource {
         } catch (Exception e) {
             getResponse().setStatus(SERVER_ERROR_INTERNAL, e);
         }
-    }                                                    
+    }
 
     private String processQuery(String queryString, String format) throws InvalidQuerySyntaxException,
         GraphException, XMLStreamException {
         checkNotNull(queryString, format);
+        System.err.println("Before query starts");
         Answer answer = urqlConnection.executeQuery(graph, queryString);
+        System.err.println("Query answered!");
         StringWriter writer = new StringWriter();
         answer.writeXML(writer);
         return writer.toString();

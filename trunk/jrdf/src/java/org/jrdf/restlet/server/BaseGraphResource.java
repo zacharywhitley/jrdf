@@ -76,15 +76,18 @@ import org.restlet.resource.Variant;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
@@ -111,6 +114,7 @@ public class BaseGraphResource extends Resource {
     private static final TransformerFactory TRANSFORM_FACTORY = TransformerFactory.newInstance();
     protected String graphName;
     protected String format;
+    private static final String GRAPH_NAME = "graphName";
 
     public BaseGraphResource(org.restlet.Context context, org.restlet.data.Request request,
                              org.restlet.data.Response response) {
@@ -134,7 +138,9 @@ public class BaseGraphResource extends Resource {
     protected Representation renderResult(String format, String xmlString) throws TransformerException {
         Representation rep;
         if (FORMAT_HTML.equalsIgnoreCase(format)) {
+            System.err.println("Start xslt transformation, xml # = " + xmlString.length());
             String transformedXMLString = doXSLTTransformation(xmlString);
+            System.err.println("End xslt transformation");
             rep = new StringRepresentation(transformedXMLString, TEXT_HTML);
         } else {
             rep = new StringRepresentation(xmlString, TEXT_XML);
@@ -143,14 +149,14 @@ public class BaseGraphResource extends Resource {
     }
 
     private String doXSLTTransformation(String xmlString) throws TransformerException {
-        StringWriter writer;
         Source xmlSource = new StreamSource(new StringReader(xmlString));
         Source xsltSource = new StreamSource(XSLT_URL_STRING);
-        writer = new StringWriter();
-        Result result = new StreamResult(writer);
-        Transformer transformer = TRANSFORM_FACTORY.newTransformer(xsltSource);
+        ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
+        Result result = new StreamResult(resultStream);
+        final Templates template = TRANSFORM_FACTORY.newTemplates(xsltSource);
+        Transformer transformer = template.newTransformer();
         transformer.transform(xmlSource, result);
-        final String transformedXMLString = writer.toString();
+        final String transformedXMLString = resultStream.toString();
         return transformedXMLString;
     }
 
@@ -165,7 +171,9 @@ public class BaseGraphResource extends Resource {
             cfg.setObjectWrapper(new DefaultObjectWrapper());
             cfg.setDirectoryForTemplateLoading(dir);
             Template template = cfg.getTemplate("queryPage.ftl");
-            rep = new TemplateRepresentation(template, TEXT_HTML);
+            Map<String, String> root = new HashMap<String, String>();
+            root.put(GRAPH_NAME, graphName);
+            rep = new TemplateRepresentation(template, root, TEXT_HTML);
         } catch (IOException e) {
             getResponse().setStatus(SERVER_ERROR_INTERNAL, e);
         }

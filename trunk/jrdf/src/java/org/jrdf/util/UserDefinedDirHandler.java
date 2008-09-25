@@ -76,7 +76,6 @@ public class UserDefinedDirHandler extends TempDirectoryHandler implements Direc
 
     public File getDir() {
         final File file = new File(SYSTEM_TEMP_DIR, dirName);
-        System.err.println("file = " + file.getPath());
         return file;
     }
 }

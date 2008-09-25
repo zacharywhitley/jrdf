@@ -79,8 +79,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.URI;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -94,11 +92,13 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
     private static final String ENCODING_DEFAULT = "UTF-8";
     private static final String VERSION_NUMBER = "1.0";
     private static final XMLOutputFactory FACTORY = newInstance();
+    private static final int MAX_RESULT = 200;
 
     private Set<Attribute> heading;
     private Relation results;
     private XMLStreamWriter streamWriter;
     private PrintWriter printWriter;
+    private int counter;
 
     private AnswerXMLStreamWriterImpl() {
     }
@@ -110,6 +110,7 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
 
     public void write(OutputStream stream) throws XMLStreamException {
         printWriter = new PrintWriter(stream);
+        counter = 0;
         write(printWriter);
     }
 
@@ -120,7 +121,9 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
             streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
             String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
             streamWriter.writeProcessingInstruction("xml-stylesheet", target);
+            System.err.println("before writing body");
             writeBody();
+            System.err.println("after writing body");
             streamWriter.writeEndDocument();
         } finally {
             streamWriter.flush();
@@ -134,6 +137,7 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
         streamWriter.writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         streamWriter.writeAttribute("xsi:schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
         writeVariables();
+        streamWriter.flush();
         writeResults();
         streamWriter.writeEndElement();
     }
@@ -144,6 +148,10 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
             SortedSet<Tuple> sortedTuples = results.getSortedTuples();
             for (Tuple tuple : sortedTuples) {
                 writeOneResult(tuple);
+                counter++;
+                if (counter % MAX_RESULT == 0) {
+                    streamWriter.flush();
+                }
             }
         }
         streamWriter.writeEndElement();
@@ -172,10 +180,14 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
         nodeType = getNodeType(node);
         boolean isLiteral = nodeType.equalsIgnoreCase(LITERAL);
         streamWriter.writeStartElement(nodeType);
+        String characters;
         if (isLiteral) {
             writeLiteralAttributes(node);
+            characters = ((Literal) node).getValue().toString();
+        } else {
+            characters = node.toString();
         }
-        streamWriter.writeCharacters(escapeXMLSpecialChars(node.toString()));
+        streamWriter.writeCharacters(characters);
         streamWriter.writeEndElement();
     }
 
@@ -229,32 +241,5 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
             }
         }
         return name;
-    }
-
-    private String escapeXMLSpecialChars(String aText) {
-        final StringBuilder result = new StringBuilder();
-        final StringCharacterIterator iterator = new StringCharacterIterator(aText);
-        char character = iterator.current();
-        while (character != CharacterIterator.DONE) {
-            result.append(processOneCharacter(character));
-            character = iterator.next();
-        }
-        return result.toString();
-    }
-
-    private String processOneCharacter(char character) {
-        String result;
-        if (character == '<') {
-            result = "&lt;";
-        } else if (character == '>') {
-            result = "&gt;";
-        } else if (character == '&') {
-            result = "&amp;";
-        } else if (character == '\"') {
-            result = "&quot;";
-        } else {
-            result = Character.toString(character);
-        }
-        return result;
     }
 }
