@@ -124,7 +124,7 @@ public class DistributedQueryResource extends Resource {
         Representation rep = null;
         try {
             Configuration cfg = new Configuration();
-            final File dir = new File(getClass().getResource(".").getPath());
+            final File dir = new File(System.getProperty("user.dir"));
             System.err.println("dir = " + dir.getCanonicalPath());
             cfg.setDirectoryForTemplateLoading(dir);
             cfg.setObjectWrapper(new DefaultObjectWrapper());

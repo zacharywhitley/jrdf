@@ -56,7 +56,7 @@ public class LocalGraphResource extends BaseGraphResource {
         } catch (Exception e) {
             getResponse().setStatus(SERVER_ERROR_INTERNAL, e);
         }
-    }
+    }                                                    
 
     private String processQuery(String queryString, String format) throws InvalidQuerySyntaxException,
         GraphException, XMLStreamException {

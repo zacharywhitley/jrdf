@@ -59,9 +59,9 @@
 
 package org.jrdf.restlet.server;
 
-import org.restlet.Application;
 import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.UserDefinedDirHandler;
+import org.restlet.Application;
 
 /**
  * @author Yuan-Fang Li
@@ -69,7 +69,7 @@ import org.jrdf.util.TempDirectoryHandler;
  */
 
 public abstract class BaseGraphApplication extends Application {
-    protected static final DirectoryHandler HANDLER = new TempDirectoryHandler();
+    protected static final DirectoryHandler HANDLER = new UserDefinedDirHandler("perstMoleculeGraph");
 
     public static DirectoryHandler getHandler() {
         return HANDLER;
