@@ -72,11 +72,11 @@ import static org.jrdf.query.AnswerXMLWriter.BINDING;
 import static org.jrdf.query.AnswerXMLWriter.BNODE;
 import static org.jrdf.query.AnswerXMLWriter.LITERAL;
 import static org.jrdf.query.AnswerXMLWriter.RESULT;
+import static org.jrdf.restlet.server.BaseGraphApplication.getHandler;
 import org.jrdf.restlet.server.distributed.DistributedQueryServer;
 import org.jrdf.restlet.server.local.LocalQueryServer;
 import static org.jrdf.restlet.server.local.LocalQueryServer.PORT;
 import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.TempDirectoryHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -98,7 +98,7 @@ import java.util.Set;
 
 public class DistributedQueryUnitTest extends TestCase {
     private static final String FOO = "foo";
-    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final DirectoryHandler HANDLER = getHandler();
     private PersistentGlobalJRDFFactory factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
 
     private MoleculeGraph graph;
