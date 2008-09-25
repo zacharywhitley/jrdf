@@ -159,10 +159,11 @@ public class BaseGraphResource extends Resource {
         Representation rep = null;
         try {
             Configuration cfg = new Configuration();
-            final File dir = new File(getClass().getResource(".").getPath());
+            final String curDir = System.getProperty("user.dir");
+            final File dir = new File(curDir);
             System.err.println("dir = " + dir.getCanonicalPath());
             cfg.setObjectWrapper(new DefaultObjectWrapper());
-            cfg.setDirectoryForTemplateLoading(dir.getParentFile());
+            cfg.setDirectoryForTemplateLoading(dir);
             Template template = cfg.getTemplate("queryPage.ftl");
             rep = new TemplateRepresentation(template, TEXT_HTML);
         } catch (IOException e) {
