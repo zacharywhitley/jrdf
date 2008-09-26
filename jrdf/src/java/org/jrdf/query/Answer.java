@@ -61,6 +61,7 @@ package org.jrdf.query;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.Writer;
+import java.io.IOException;
 
 /**
  * An answer to a query.
@@ -77,5 +78,7 @@ public interface Answer {
 
     long getTimeTaken();
 
-    void writeXML(Writer writer) throws XMLStreamException;
+    void writeXML(Writer writer) throws XMLStreamException, IOException;
+
+    AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException;
 }

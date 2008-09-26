@@ -57,73 +57,54 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.util.bdb;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
+import com.sleepycat.bind.tuple.TupleBinding;
+import com.sleepycat.bind.tuple.TupleInput;
+import com.sleepycat.bind.tuple.TupleOutput;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.constants.NullaryAttribute;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.type.NodeType;
+
+import java.io.Serializable;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public interface AnswerXMLWriter {
-    /**
-     * The XML -> HTML XSLT.
-     */
-    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
-    /**
-     * The sparql keyword.
-     */
-    String SPARQL = "sparql";
-    /**
-     * The element "head".
-     */
-    String HEAD = "head";
-    /**
-     * The element "variable".
-     */
-    String VARIABLE = "variable";
-    /**
-     * The element "name".
-     */
-    String NAME = "name";
-    /**
-     * The element "results".
-     */
-    String RESULTS = "results";
-    /**
-     * The element "result".
-     */
-    String RESULT = "result";
-    /**
-     * The element "binding".
-     */
-    String BINDING = "binding";
-    /**
-     * The element "bnode".
-     */
-    String BNODE = "bnode";
-    /**
-     * The element "literal".
-     */
-    String LITERAL = "literal";
-    /**
-     * The element "uri".
-     */
-    String URI = "uri";
-    /**
-     * The element "datatype".
-     */
-    String DATATYPE = "datatype";
-    /**
-     * The element "xml:lang".
-     */
-    String XML_LANG = "xml:lang";
+public class AttributeBinding extends TupleBinding implements Serializable {
+    private static final long serialVersionUID = -6106464996541411484L;
+    private static final int NORMAL_ATTRIBUTE = 0;
+    private static final int NULLARY_ATTRIBUTE = 1;
+    private TupleBinding nameBinding = new AttributeNameBinding();
+    private NodeTypeBinding typeBinding = new NodeTypeBinding();
 
-    void write() throws XMLStreamException, IOException;
+    public Object entryToObject(TupleInput tupleInput) {
+        final byte b = tupleInput.readByte();
+        Object o;
+        if (b == NORMAL_ATTRIBUTE) {
+            AttributeName name = (AttributeName) nameBinding.entryToObject(tupleInput);
+            NodeType type = (NodeType) typeBinding.entryToObject(tupleInput);
+            o = new AttributeImpl(name, type);
+        } else if (b == NULLARY_ATTRIBUTE) {
+            o = NullaryAttribute.NULLARY_ATTRIBUTE;
+        } else {
+            throw new IllegalArgumentException("Cannot read class type: " + b);
+        }
+        return o;
+    }
 
-    void close() throws XMLStreamException, IOException;
-
-    boolean hasMoreResults();
+    public void objectToEntry(Object o, TupleOutput tupleOutput) {
+        Attribute object = (Attribute) o;
+        if (object instanceof AttributeImpl) {
+            tupleOutput.writeByte(NORMAL_ATTRIBUTE);
+            nameBinding.objectToEntry(object.getAttributeName(), tupleOutput);
+            typeBinding.objectToEntry(object.getType(), tupleOutput);
+        } else if (object instanceof NullaryAttribute) {
+            tupleOutput.writeByte(NULLARY_ATTRIBUTE);
+        }
+    }
 }

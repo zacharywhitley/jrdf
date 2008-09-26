@@ -250,8 +250,15 @@ public final class AnswerImpl implements Answer, Serializable {
         results = relationFactory.getRelation(newAttributes, newTuples);
     }
 
-    public void writeXML(Writer writer) throws XMLStreamException {
-        AnswerXMLWriter xmlBuilderWriter = new AnswerXMLStreamWriterImpl(heading, results);
-        xmlBuilderWriter.write(writer);
+    public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException {
+        return new AnswerXMLStreamWriterImpl(heading, results, writer);
+    }
+
+    public void writeXML(Writer writer) throws XMLStreamException, IOException {
+        AnswerXMLWriter xmlBuilderWriter = new AnswerXMLStreamWriterImpl(heading, results, writer);
+        if (xmlBuilderWriter.hasMoreResults()) {
+            xmlBuilderWriter.write();
+        }
+        xmlBuilderWriter.close();
     }
 }

@@ -25,6 +25,7 @@ import org.restlet.resource.ResourceException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.StringWriter;
+import java.io.IOException;
 
 public class LocalGraphResource extends BaseGraphResource {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
@@ -59,7 +60,7 @@ public class LocalGraphResource extends BaseGraphResource {
     }
 
     private String processQuery(String queryString, String format) throws InvalidQuerySyntaxException,
-        GraphException, XMLStreamException {
+        GraphException, XMLStreamException, IOException {
         checkNotNull(queryString, format);
         System.err.println("Before query starts");
         Answer answer = urqlConnection.executeQuery(graph, queryString);

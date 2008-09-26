@@ -39,8 +39,10 @@
     <suppress checks="JavaNCSS" files="XSD"/>
     <suppress checks="JavaNCSS" files="OWL"/>
     <suppress checks="JavaNCSS" files="BasicOperations"/>
+    <suppress checks="JavaNCSS" files="NodeTypeBinding"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
+    <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
 
     <!-- Cleanup molecule implementation -->
