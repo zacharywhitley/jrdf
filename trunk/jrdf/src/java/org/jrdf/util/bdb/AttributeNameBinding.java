@@ -57,73 +57,50 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.util.bdb;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
+import com.sleepycat.bind.tuple.TupleBinding;
+import com.sleepycat.bind.tuple.TupleInput;
+import com.sleepycat.bind.tuple.TupleOutput;
+import org.jrdf.query.relation.attributename.PositionName;
+import org.jrdf.query.relation.attributename.VariableName;
+
+import java.io.Serializable;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public interface AnswerXMLWriter {
-    /**
-     * The XML -> HTML XSLT.
-     */
-    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
-    /**
-     * The sparql keyword.
-     */
-    String SPARQL = "sparql";
-    /**
-     * The element "head".
-     */
-    String HEAD = "head";
-    /**
-     * The element "variable".
-     */
-    String VARIABLE = "variable";
-    /**
-     * The element "name".
-     */
-    String NAME = "name";
-    /**
-     * The element "results".
-     */
-    String RESULTS = "results";
-    /**
-     * The element "result".
-     */
-    String RESULT = "result";
-    /**
-     * The element "binding".
-     */
-    String BINDING = "binding";
-    /**
-     * The element "bnode".
-     */
-    String BNODE = "bnode";
-    /**
-     * The element "literal".
-     */
-    String LITERAL = "literal";
-    /**
-     * The element "uri".
-     */
-    String URI = "uri";
-    /**
-     * The element "datatype".
-     */
-    String DATATYPE = "datatype";
-    /**
-     * The element "xml:lang".
-     */
-    String XML_LANG = "xml:lang";
+public class AttributeNameBinding extends TupleBinding implements Serializable {
+    private static final long serialVersionUID = -4579363911884744137L;
+    private static final int POSITION_NAME = 0;
+    private static final int VARIABLE_NAME = 1;
 
-    void write() throws XMLStreamException, IOException;
+    public Object entryToObject(TupleInput tupleInput) {
+        final byte b = tupleInput.readByte();
+        final String name = tupleInput.readString();
+        Object o;
+        switch (b) {
+            case POSITION_NAME:
+                o = new PositionName(name);
+                break;
+            case VARIABLE_NAME:
+                o = new VariableName(name);
+                break;
+            default:
+                throw new IllegalArgumentException("Cannot read class type: " + b);
+        }
+        return o;
+    }
 
-    void close() throws XMLStreamException, IOException;
-
-    boolean hasMoreResults();
+    public void objectToEntry(Object o, TupleOutput tupleOutput) {
+        if (o instanceof PositionName) {
+            tupleOutput.writeByte(POSITION_NAME);
+            tupleOutput.writeString(((PositionName) o).getLiteral());
+        } else if (o instanceof VariableName) {
+            tupleOutput.writeByte(VARIABLE_NAME);
+            tupleOutput.writeString(((VariableName) o).getLiteral());
+        }
+    }
 }

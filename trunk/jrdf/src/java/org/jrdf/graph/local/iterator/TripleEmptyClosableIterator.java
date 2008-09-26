@@ -61,8 +61,7 @@ package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
-
-import java.util.NoSuchElementException;
+import org.jrdf.util.EmptyClosableIterator;
 
 /**
  * An iterator that returns no triples.
@@ -70,40 +69,9 @@ import java.util.NoSuchElementException;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class TripleEmptyClosableIterator implements ClosableIterator<Triple> {
+public final class TripleEmptyClosableIterator extends EmptyClosableIterator<Triple>
+    implements ClosableIterator<Triple> {
 
     public TripleEmptyClosableIterator() {
-    }
-
-    /**
-     * Returns false.
-     *
-     * @return <code>false</code>.
-     */
-    public boolean hasNext() {
-        return false;
-    }
-
-    /**
-     * Never returns anything.  A call to this will throw NoSuchElementException.
-     *
-     * @return will not return.
-     * @throws NoSuchElementException always.
-     */
-    public Triple next() throws NoSuchElementException {
-        throw new NoSuchElementException();
-    }
-
-    /**
-     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
-     *
-     * @throws UnsupportedOperationException always.
-     */
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean close() {
-        return true;
     }
 }

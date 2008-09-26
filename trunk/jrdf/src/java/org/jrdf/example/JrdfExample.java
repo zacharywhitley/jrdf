@@ -81,6 +81,7 @@ import org.jrdf.vocabulary.XSD;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.StringWriter;
+import java.io.IOException;
 import java.net.URI;
 import static java.net.URI.create;
 
@@ -231,7 +232,8 @@ public class JrdfExample {
         print("Graph contains (after remove): ", graph);
     }
 
-    private void performQuery(Graph graph) throws InvalidQuerySyntaxException, GraphException, XMLStreamException {
+    private void performQuery(Graph graph) throws InvalidQuerySyntaxException, GraphException,
+        XMLStreamException, IOException {
         UrqlConnection connection = JRDF_FACTORY.getNewUrqlConnection();
         final Answer answer = connection.executeQuery(graph, "SELECT ?s ?p ?o WHERE { ?s ?p ?o }");
         System.out.println("Query Result:\n" + answer);

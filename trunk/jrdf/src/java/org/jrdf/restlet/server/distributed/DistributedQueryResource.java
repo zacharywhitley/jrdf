@@ -124,9 +124,9 @@ public class DistributedQueryResource extends Resource {
         Representation rep = null;
         try {
             Configuration cfg = new Configuration();
-            final File dir = new File(System.getProperty("user.dir"));
-            System.err.println("dir = " + dir.getCanonicalPath());
-            cfg.setDirectoryForTemplateLoading(dir);
+            File resourcesDir = new File(new File(System.getProperty("user.dir")), "resources");
+            System.err.println("dir = " + resourcesDir.getCanonicalPath());
+            cfg.setDirectoryForTemplateLoading(resourcesDir);
             cfg.setObjectWrapper(new DefaultObjectWrapper());
             Map<String, String> root = new HashMap<String, String>();
             root.put(DEFAULT_PORT_STRING, Integer.toString(LocalQueryServer.PORT));

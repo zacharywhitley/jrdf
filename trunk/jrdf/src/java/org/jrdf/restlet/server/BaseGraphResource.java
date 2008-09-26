@@ -166,10 +166,10 @@ public class BaseGraphResource extends Resource {
         try {
             Configuration cfg = new Configuration();
             final String curDir = System.getProperty("user.dir");
-            final File dir = new File(curDir);
-            System.err.println("dir = " + dir.getCanonicalPath());
+            File resourceDir = new File(new File(curDir), "resources");
+            System.err.println("dir = " + resourceDir.getCanonicalPath());
             cfg.setObjectWrapper(new DefaultObjectWrapper());
-            cfg.setDirectoryForTemplateLoading(dir);
+            cfg.setDirectoryForTemplateLoading(resourceDir);
             Template template = cfg.getTemplate("queryPage.ftl");
             Map<String, String> root = new HashMap<String, String>();
             root.put(GRAPH_NAME, graphName);

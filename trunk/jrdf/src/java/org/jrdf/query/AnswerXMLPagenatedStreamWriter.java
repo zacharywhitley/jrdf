@@ -70,53 +70,60 @@ import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_OBJECT_NAME;
 import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_PREDICATE_NAME;
 import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_SUBJECT_NAME;
+import org.jrdf.util.EmptyClosableIterator;
 
 import javax.xml.stream.XMLOutputFactory;
 import static javax.xml.stream.XMLOutputFactory.newInstance;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URI;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
+public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
     private static final String ENCODING_DEFAULT = "UTF-8";
     private static final String VERSION_NUMBER = "1.0";
     private static final XMLOutputFactory FACTORY = newInstance();
     private static final int MAX_RESULT = 20;
 
-    private final Set<Attribute> heading;
-    private final Relation results;
-    private final XMLStreamWriter streamWriter;
-    private int counter;
+    private Set<Attribute> heading;
+    private Relation results;
+    private XMLStreamWriter streamWriter;
+    private int maxResults;
     private Writer writer;
-    private boolean hasMore;
+    private Iterator<Tuple> tupleIterator;
 
-    public AnswerXMLStreamWriterImpl(Set<Attribute> heading, Relation results, Writer writer)
+    private AnswerXMLPagenatedStreamWriter() {
+    }
+
+    public AnswerXMLPagenatedStreamWriter(Set<Attribute> heading, Relation results, Writer writer)
         throws XMLStreamException {
         this.heading = heading;
         this.results = results;
         this.writer = writer;
-        streamWriter = FACTORY.createXMLStreamWriter(this.writer);
-        hasMore = true;
+        this.streamWriter = FACTORY.createXMLStreamWriter(this.writer);
+        if (results != null) {
+            tupleIterator = this.results.getSortedTuples().iterator();
+        } else {
+            tupleIterator = new EmptyClosableIterator<Tuple>();
+        }
+        this.maxResults = MAX_RESULT;
     }
 
-    public void write() throws XMLStreamException {
-        counter = 0;
-        writeStartDocument();
-        System.err.println("before writing body");
-        writeBody();
-        System.err.println("after writing body");
-        streamWriter.writeEndDocument();
-        hasMore = false;
+    public AnswerXMLPagenatedStreamWriter(Set<Attribute> heading, Relation results, int maxResults, OutputStream out)
+        throws XMLStreamException {
+        this(heading, results, new OutputStreamWriter(out));
+        this.maxResults = maxResults;
     }
 
     public void close() throws XMLStreamException, IOException {
@@ -129,21 +136,22 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
     }
 
     public boolean hasMoreResults() {
-        return hasMore;
+        return tupleIterator.hasNext();
+    }
+
+    public void write() throws XMLStreamException {
+        writeStartDocument();
+        writeStartSparqlElement();
+        writeVariables();
+        writePartResults();
+        streamWriter.writeEndElement();
+        streamWriter.writeEndDocument();
     }
 
     private void writeStartDocument() throws XMLStreamException {
         streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
         String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
         streamWriter.writeProcessingInstruction("xml-stylesheet", target);
-    }
-
-    private void writeBody() throws XMLStreamException {
-        writeStartSparqlElement();
-        writeVariables();
-        streamWriter.flush();
-        writeResults();
-        streamWriter.writeEndElement();
     }
 
     private void writeStartSparqlElement() throws XMLStreamException {
@@ -153,19 +161,16 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
         streamWriter.writeAttribute("xsi:schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
     }
 
-    private void writeResults() throws XMLStreamException {
+    private void writePartResults() throws XMLStreamException {
         streamWriter.writeStartElement(RESULTS);
-        if (results != null) {
-            SortedSet<Tuple> sortedTuples = results.getSortedTuples();
-            for (Tuple tuple : sortedTuples) {
-                writeOneResult(tuple);
-                counter++;
-                if (counter % MAX_RESULT == 0) {
-                    streamWriter.flush();
-                }
-            }
+        int count = 0;
+        while (tupleIterator.hasNext() && count < maxResults) {
+            final Tuple tuple = tupleIterator.next();
+            writeOneResult(tuple);
+            count++;
         }
         streamWriter.writeEndElement();
+        streamWriter.flush();
     }
 
     private void writeOneResult(Tuple tuple) throws XMLStreamException {
@@ -183,6 +188,19 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
         streamWriter.writeAttribute(NAME, getVariableName(headingAttribute));
         final Node node = avps.get(headingAttribute).getValue();
         writeOneNode(node);
+        streamWriter.writeEndElement();
+    }
+
+    private void writeVariables() throws XMLStreamException {
+        streamWriter.writeStartElement(HEAD);
+        if (heading != null) {
+            for (Attribute attribute : heading) {
+                final String variableName = getVariableName(attribute);
+                streamWriter.writeStartElement(VARIABLE);
+                streamWriter.writeAttribute(NAME, variableName);
+                streamWriter.writeEndElement();
+            }
+        }
         streamWriter.writeEndElement();
     }
 
@@ -223,19 +241,6 @@ public class AnswerXMLStreamWriterImpl implements AnswerXMLWriter {
             nodeType = LITERAL;
         }
         return nodeType;
-    }
-
-    private void writeVariables() throws XMLStreamException {
-        streamWriter.writeStartElement(HEAD);
-        if (heading != null) {
-            for (Attribute attribute : heading) {
-                final String variableName = getVariableName(attribute);
-                streamWriter.writeStartElement(VARIABLE);
-                streamWriter.writeAttribute(NAME, variableName);
-                streamWriter.writeEndElement();
-            }
-        }
-        streamWriter.writeEndElement();
     }
 
     private String getVariableName(Attribute attribute) {

@@ -57,73 +57,40 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.util;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
+import java.util.NoSuchElementException;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public interface AnswerXMLWriter {
-    /**
-     * The XML -> HTML XSLT.
-     */
-    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
-    /**
-     * The sparql keyword.
-     */
-    String SPARQL = "sparql";
-    /**
-     * The element "head".
-     */
-    String HEAD = "head";
-    /**
-     * The element "variable".
-     */
-    String VARIABLE = "variable";
-    /**
-     * The element "name".
-     */
-    String NAME = "name";
-    /**
-     * The element "results".
-     */
-    String RESULTS = "results";
-    /**
-     * The element "result".
-     */
-    String RESULT = "result";
-    /**
-     * The element "binding".
-     */
-    String BINDING = "binding";
-    /**
-     * The element "bnode".
-     */
-    String BNODE = "bnode";
-    /**
-     * The element "literal".
-     */
-    String LITERAL = "literal";
-    /**
-     * The element "uri".
-     */
-    String URI = "uri";
-    /**
-     * The element "datatype".
-     */
-    String DATATYPE = "datatype";
-    /**
-     * The element "xml:lang".
-     */
-    String XML_LANG = "xml:lang";
+public class EmptyClosableIterator<E> implements ClosableIterator<E> {
+    public boolean hasNext() {
+        return false;
+    }
 
-    void write() throws XMLStreamException, IOException;
+    /**
+     * Never returns anything.  A call to this will throw NoSuchElementException.
+     *
+     * @return will not return.
+     * @throws java.util.NoSuchElementException always.
+     */
+    public E next() throws NoSuchElementException {
+        throw new NoSuchElementException();
+    }
 
-    void close() throws XMLStreamException, IOException;
+    /**
+     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
+     *
+     * @throws UnsupportedOperationException always.
+     */
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 
-    boolean hasMoreResults();
+    public boolean close() {
+        return true;
+    }
 }

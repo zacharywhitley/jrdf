@@ -59,48 +59,14 @@
 
 package org.jrdf.util;
 
-import java.util.NoSuchElementException;
-
 /**
  * An iterator that returns no long values.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class LongEmptyClosableIterator implements ClosableIterator<Long> {
+public final class LongEmptyClosableIterator extends EmptyClosableIterator<Long> implements ClosableIterator<Long> {
 
     public LongEmptyClosableIterator() {
-    }
-
-    /**
-     * Returns false.
-     *
-     * @return <code>false</code>.
-     */
-    public boolean hasNext() {
-        return false;
-    }
-
-    /**
-     * Never returns anything.  A call to this will throw NoSuchElementException.
-     *
-     * @return will not return.
-     * @throws java.util.NoSuchElementException always.
-     */
-    public Long next() throws NoSuchElementException {
-        throw new NoSuchElementException();
-    }
-
-    /**
-     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
-     *
-     * @throws UnsupportedOperationException always.
-     */
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean close() {
-        return true;
     }
 }

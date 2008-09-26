@@ -57,73 +57,71 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.restlet.server;
 
+import static org.jrdf.query.AnswerXMLWriter.XSLT_URL_STRING;
+
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
+import java.util.Queue;
+import java.util.LinkedList;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public interface AnswerXMLWriter {
-    /**
-     * The XML -> HTML XSLT.
-     */
-    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
-    /**
-     * The sparql keyword.
-     */
-    String SPARQL = "sparql";
-    /**
-     * The element "head".
-     */
-    String HEAD = "head";
-    /**
-     * The element "variable".
-     */
-    String VARIABLE = "variable";
-    /**
-     * The element "name".
-     */
-    String NAME = "name";
-    /**
-     * The element "results".
-     */
-    String RESULTS = "results";
-    /**
-     * The element "result".
-     */
-    String RESULT = "result";
-    /**
-     * The element "binding".
-     */
-    String BINDING = "binding";
-    /**
-     * The element "bnode".
-     */
-    String BNODE = "bnode";
-    /**
-     * The element "literal".
-     */
-    String LITERAL = "literal";
-    /**
-     * The element "uri".
-     */
-    String URI = "uri";
-    /**
-     * The element "datatype".
-     */
-    String DATATYPE = "datatype";
-    /**
-     * The element "xml:lang".
-     */
-    String XML_LANG = "xml:lang";
+public class XMLTransformer {
+    private static final TransformerFactory TRANSFORM_FACTORY = TransformerFactory.newInstance();
+    private static final Source XSLT_SOURCE = new StreamSource(XSLT_URL_STRING);
 
-    void write() throws XMLStreamException, IOException;
+    private int counter;
+    private Source source;
+    private Result result;
+    private XMLEventReader reader;
+    private XMLEventWriter writer;
+    private Templates template;
+    private Transformer transformer;
+    private ByteArrayOutputStream resultStream;
+    private ByteArrayOutputStream byteOutputStream;
+    private Queue<XMLEvent> startEventQueue;
 
-    void close() throws XMLStreamException, IOException;
+    public XMLTransformer(int counter, String xmlString) throws TransformerConfigurationException, XMLStreamException {
+        this.counter = counter;
+        this.source = new StreamSource(new StringReader(xmlString));
+        template = TRANSFORM_FACTORY.newTemplates(XSLT_SOURCE);
+        transformer = template.newTransformer();
+        reader = XMLInputFactory.newInstance().createXMLEventReader(new ByteArrayInputStream(xmlString.getBytes()));
+        byteOutputStream = new ByteArrayOutputStream();
+        writer = XMLOutputFactory.newInstance().createXMLEventWriter(byteOutputStream);
+        startEventQueue = new LinkedList<XMLEvent>();
+    }
 
-    boolean hasMoreResults();
+    private void getStart() throws XMLStreamException {
+        while (reader.hasNext()) {
+            XMLEvent e = reader.nextEvent();
+            while (reader.hasNext() && !(e instanceof StartElement)) {
+                startEventQueue.offer(e);
+                e = reader.nextEvent();
+            }
+            while (reader.hasNext() && e instanceof StartElement) {
+                StartElement start = (StartElement) e;
+            }
+        }
+    }
 }
