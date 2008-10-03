@@ -75,6 +75,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.AnswerXMLWriter;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.vocabulary.XSD;
@@ -238,7 +239,8 @@ public class JrdfExample {
         final Answer answer = connection.executeQuery(graph, "SELECT ?s ?p ?o WHERE { ?s ?p ?o }");
         System.out.println("Query Result:\n" + answer);
         StringWriter writer = new StringWriter();
-        answer.writeXML(writer);
+        final AnswerXMLWriter answerXMLWriter = answer.getXMLWriter(writer);
+        answerXMLWriter.write(writer);
         String xmlString = writer.toString();
         System.out.printf("Query result xml:\n" + xmlString);
     }

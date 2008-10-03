@@ -71,14 +71,13 @@ import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_OBJECT_
 import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_PREDICATE_NAME;
 import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_SUBJECT_NAME;
 import org.jrdf.util.EmptyClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLOutputFactory;
 import static javax.xml.stream.XMLOutputFactory.newInstance;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.util.Iterator;
@@ -94,14 +93,12 @@ public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
     private static final String ENCODING_DEFAULT = "UTF-8";
     private static final String VERSION_NUMBER = "1.0";
     private static final XMLOutputFactory FACTORY = newInstance();
-    private static final int MAX_RESULT = 20;
 
     private Set<Attribute> heading;
     private Relation results;
     private XMLStreamWriter streamWriter;
-    private int maxResults;
-    private Writer writer;
     private Iterator<Tuple> tupleIterator;
+    private Tuple currentTuple;
 
     private AnswerXMLPagenatedStreamWriter() {
     }
@@ -110,29 +107,24 @@ public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
         throws XMLStreamException {
         this.heading = heading;
         this.results = results;
-        this.writer = writer;
-        this.streamWriter = FACTORY.createXMLStreamWriter(this.writer);
         if (results != null) {
             tupleIterator = this.results.getSortedTuples().iterator();
         } else {
             tupleIterator = new EmptyClosableIterator<Tuple>();
         }
-        this.maxResults = MAX_RESULT;
-    }
-
-    public AnswerXMLPagenatedStreamWriter(Set<Attribute> heading, Relation results, int maxResults, OutputStream out)
-        throws XMLStreamException {
-        this(heading, results, new OutputStreamWriter(out));
-        this.maxResults = maxResults;
+        streamWriter = FACTORY.createXMLStreamWriter(writer);
     }
 
     public void close() throws XMLStreamException, IOException {
-        try {
-            writer.close();
-        } finally {
+        if (streamWriter != null) {
             streamWriter.flush();
             streamWriter.close();
         }
+    }
+
+    public void setWriter(Writer writer) throws XMLStreamException, IOException {
+        close();
+        streamWriter = FACTORY.createXMLStreamWriter(writer);
     }
 
     public boolean hasMoreResults() {
@@ -140,46 +132,66 @@ public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
     }
 
     public void write() throws XMLStreamException {
+        checkNotNull(streamWriter);
+        doWrite();
+    }
+
+    public void write(Writer writer) throws XMLStreamException {
+        streamWriter = FACTORY.createXMLStreamWriter(writer);
+        doWrite();
+    }
+
+    private void doWrite() throws XMLStreamException {
         writeStartDocument();
-        writeStartSparqlElement();
         writeVariables();
-        writePartResults();
+        writeAllResults();
+        writeEndDocument();
+    }
+
+    public void writeEndDocument() throws XMLStreamException {
         streamWriter.writeEndElement();
         streamWriter.writeEndDocument();
     }
 
-    private void writeStartDocument() throws XMLStreamException {
+    public void writeStartDocument() throws XMLStreamException {
         streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
         String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
         streamWriter.writeProcessingInstruction("xml-stylesheet", target);
-    }
 
-    private void writeStartSparqlElement() throws XMLStreamException {
         streamWriter.writeStartElement(SPARQL);
-        streamWriter.writeAttribute("xmlns", "http://www.w3.org/2005/sparql-results#");
+        streamWriter.writeAttribute("xmlns", SPARQL_NS);
         streamWriter.writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         streamWriter.writeAttribute("xsi:schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
     }
 
-    private void writePartResults() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULTS);
-        int count = 0;
-        while (tupleIterator.hasNext() && count < maxResults) {
-            final Tuple tuple = tupleIterator.next();
-            writeOneResult(tuple);
-            count++;
+    private void writeAllResults() throws XMLStreamException {
+        writeStartResults();
+        while (tupleIterator.hasNext()) {
+            currentTuple = tupleIterator.next();
+            writeResult();
         }
-        streamWriter.writeEndElement();
+        writeEndResults();
         streamWriter.flush();
     }
 
-    private void writeOneResult(Tuple tuple) throws XMLStreamException {
-        streamWriter.writeStartElement(RESULT);
-        final Map<Attribute, ValueOperation> avps = tuple.getAttributeValues();
-        for (Attribute headingAttribute : heading) {
-            writeOneBinding(avps, headingAttribute);
-        }
+    public void writeStartResults() throws XMLStreamException {
+        streamWriter.writeStartElement(RESULTS);
+    }
+
+    public void writeEndResults() throws XMLStreamException {
         streamWriter.writeEndElement();
+    }
+
+    public void writeResult() throws XMLStreamException {
+        if (tupleIterator.hasNext()) {
+            currentTuple = tupleIterator.next();
+            streamWriter.writeStartElement(RESULT);
+            final Map<Attribute, ValueOperation> avps = currentTuple.getAttributeValues();
+            for (Attribute headingAttribute : heading) {
+                writeOneBinding(avps, headingAttribute);
+            }
+            streamWriter.writeEndElement();
+        }
     }
 
     private void writeOneBinding(Map<Attribute, ValueOperation> avps, Attribute headingAttribute)
@@ -191,7 +203,7 @@ public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
         streamWriter.writeEndElement();
     }
 
-    private void writeVariables() throws XMLStreamException {
+    public void writeVariables() throws XMLStreamException {
         streamWriter.writeStartElement(HEAD);
         if (heading != null) {
             for (Attribute attribute : heading) {

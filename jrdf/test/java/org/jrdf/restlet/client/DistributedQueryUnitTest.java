@@ -129,14 +129,14 @@ public class DistributedQueryUnitTest extends TestCase {
         final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
         final BlankNode b1 = elementFactory.createBlankNode();
         final BlankNode b2 = elementFactory.createBlankNode();
-        graph.add(b1, p, b2);
-        graph.add(b2, p, b1);
+        graph.add(b1, p, b1);
+        graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
         CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
         queryClient.postQuery(FOO, QUERY_STRING);
         String answer = queryClient.call();
-        checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
-    }                                            
+        checkAnswerXML(answer, 1, b1.toString(), p.toString(), b2.toString());
+    }
 
     public void testEmptyDistributedClient() throws Exception {
         DistributedQueryServer server = new DistributedQueryServer();
@@ -163,7 +163,7 @@ public class DistributedQueryUnitTest extends TestCase {
         final String queryString = QUERY_STRING;
         client.postQuery(FOO, queryString);
         final String answer = client.executeQuery();
-        checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
+        checkAnswerXML(answer, 1, b1.toString(), p.toString(), b2.toString());
     }
 
     private void checkAnswerXML(String answer, int resultSize, String... strings) throws SAXException, IOException {

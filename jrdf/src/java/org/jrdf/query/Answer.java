@@ -78,7 +78,6 @@ public interface Answer {
 
     long getTimeTaken();
 
-    void writeXML(Writer writer) throws XMLStreamException, IOException;
+    AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException;
 
-    AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException;
 }

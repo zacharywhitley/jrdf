@@ -59,20 +59,19 @@
 
 package org.jrdf.restlet.client;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.jrdf.util.param.ParameterUtil;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * @author Yuan-Fang Li
@@ -84,18 +83,18 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
     private Collection<CallableGraphQueryClient> queryClients;
     private Collection<String> serverAddresses;
     private int localPort;
+    private AnswerXMLAggregator aggregator;
+    private Set<Future<String>> set;
 
-    public DistributedQueryClientImpl(int localPort, String... servers) {
+    public DistributedQueryClientImpl(int localPort, Collection<String> servers) {
         this.localPort = localPort;
-        serverAddresses = new LinkedList<String>();
-        for (String server : servers) {
-            serverAddresses.add(server);
-        }
+        serverAddresses = servers;
         queryClients = new LinkedList<CallableGraphQueryClient>();
         for (String server : serverAddresses) {
             queryClients.add(new GraphClientImpl(server, this.localPort));
         }
         executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
+        aggregator = new AnswerXMLDOMAggregator();
     }
 
     public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
@@ -114,16 +113,10 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
     public String executeQuery() throws IOException {
         ParameterUtil.checkNotNull(queryClients);
         StringBuilder builder = new StringBuilder();
-        AnswerXMLAggregator aggregator = new AnswerXMLDOMAggregator();
+        set = new HashSet<Future<String>>();
         try {
-            for (CallableGraphQueryClient queryClient : queryClients) {
-                System.err.println("Starting client: " + queryClient.toString());
-                Future<String> future = executor.submit(queryClient);
-                while (!future.isDone()) {
-                    String answer = future.get(2, SECONDS);
-                    aggregator.aggregate(answer);
-                }
-            }
+            executeQuries();
+            aggregateResults();
             builder.append(aggregator.getXML());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -131,9 +124,24 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
         return builder.toString();
     }
 
-    private void writeStringToXML(String content) throws IOException, SAXException {
-        DOMParser parser = new DOMParser();
-        parser.parse(new InputSource(new StringReader(content)));
-        parser.getDocument();
+    private void aggregateResults() throws InterruptedException, ExecutionException, IOException, SAXException {
+        for (Future<String> future : set) {
+            final String xmlAnswer = future.get();
+            aggregator.aggregate(xmlAnswer);
+        }
+    }
+
+    private void executeQuries() {
+        for (CallableGraphQueryClient queryClient : queryClients) {
+            System.err.println("Starting client: " + queryClient.toString());
+            Future<String> future = executor.submit(queryClient);
+            set.add(future);
+        }
+    }
+
+    public void cancelExecution() {
+        for (Future<String> future : set) {
+            future.cancel(true);
+        }
     }
 }
