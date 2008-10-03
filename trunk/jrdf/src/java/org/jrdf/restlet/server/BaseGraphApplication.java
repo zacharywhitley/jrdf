@@ -62,6 +62,7 @@ package org.jrdf.restlet.server;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.UserDefinedDirHandler;
 import org.restlet.Application;
+import org.restlet.resource.ResourceException;
 
 /**
  * @author Yuan-Fang Li
@@ -70,8 +71,28 @@ import org.restlet.Application;
 
 public abstract class BaseGraphApplication extends Application {
     protected static final DirectoryHandler HANDLER = new UserDefinedDirHandler("perstMoleculeGraph");
+    protected String maxRows;
+    protected String format;
 
     public static DirectoryHandler getHandler() {
         return HANDLER;
+    }
+
+    public void setMaxRows(String maxRows) {
+        this.maxRows = maxRows;
+    }
+
+    public abstract void answerQuery(String graphName, String queryString) throws ResourceException;
+
+    public String getMaxRows() {
+        return maxRows;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public String getFormat() {
+        return format;
     }
 }

@@ -59,14 +59,20 @@
 
 package org.jrdf.restlet.server.distributed;
 
+import org.jrdf.restlet.client.DistributedQueryClientImpl;
+import org.jrdf.restlet.client.GraphQueryClient;
 import org.jrdf.restlet.server.BaseGraphApplication;
 import org.jrdf.restlet.server.GraphsResource;
 import org.jrdf.restlet.server.local.LocalQueryServer;
 import org.restlet.Restlet;
 import org.restlet.Router;
+import org.restlet.resource.ResourceException;
 
+import java.io.InputStream;
+import java.io.IOException;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
@@ -74,12 +80,14 @@ import java.util.LinkedList;
  */
 
 public class DistributedQueryGraphApplication extends BaseGraphApplication {
-    private Collection<String> servers;
+    private Set<String> servers;
     private int portNumber;
+    private GraphQueryClient client;
+    private InputStream inputStream;
 
     public DistributedQueryGraphApplication() {
         portNumber = LocalQueryServer.PORT;
-        servers = new LinkedList<String>();
+        servers = new HashSet<String>();
     }
 
     public void addServers(String... servers) {
@@ -96,6 +104,23 @@ public class DistributedQueryGraphApplication extends BaseGraphApplication {
 
     public Collection<String> getServers() {
         return servers;
+    }
+
+    public void answerQuery(String graphName, String queryString) throws ResourceException {
+
+        try {
+            if (client == null) {
+                client = new DistributedQueryClientImpl(portNumber, servers);
+            }
+            client.postQuery(graphName, queryString);
+            //return client.executeQuery();
+        } catch (IOException e) {
+            throw new ResourceException(e);
+        }
+    }
+
+    public String getAnswer() throws IOException {
+        return client.executeQuery();
     }
 
     public void setPort(int port) {

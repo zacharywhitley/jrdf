@@ -62,7 +62,6 @@ package org.jrdf.query;
 import javax.xml.stream.XMLStreamException;
 import java.io.Serializable;
 import java.io.Writer;
-import java.io.IOException;
 
 public final class EmptyAnswer implements Answer, Serializable {
     private static final long serialVersionUID = -7374613298128439580L;
@@ -92,12 +91,6 @@ public final class EmptyAnswer implements Answer, Serializable {
     }
 
     public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException {
-        return new AnswerXMLStreamWriterImpl(null, null, writer);
-    }
-
-    public void writeXML(Writer writer) throws XMLStreamException, IOException {
-        AnswerXMLWriter xmlBuilderWriter = new AnswerXMLStreamWriterImpl(null, null, writer);
-        xmlBuilderWriter.write();
-        xmlBuilderWriter.close();
+        return new AnswerXMLPagenatedStreamWriter(null, null, writer);
     }
 }

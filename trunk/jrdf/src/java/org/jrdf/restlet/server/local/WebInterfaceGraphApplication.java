@@ -61,23 +61,44 @@ package org.jrdf.restlet.server.local;
 
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
-import org.jrdf.restlet.server.GraphsResource;
-import org.jrdf.restlet.server.BaseGraphApplication;
 import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.query.Answer;
+import org.jrdf.query.AnswerXMLWriter;
+import org.jrdf.query.QueryFactory;
+import org.jrdf.query.QueryFactoryImpl;
+import org.jrdf.query.execute.QueryEngine;
+import org.jrdf.restlet.server.BaseGraphApplication;
+import org.jrdf.restlet.server.GraphsResource;
+import org.jrdf.urql.UrqlConnectionImpl;
+import org.jrdf.urql.builder.QueryBuilder;
 import org.restlet.Restlet;
 import org.restlet.Router;
+import org.restlet.resource.ResourceException;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.io.Writer;
 
 public class WebInterfaceGraphApplication extends BaseGraphApplication {
     private static final String LOCAL_SERVER = "127.0.0.1";
 
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
+    private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
+    private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
+
     private final String[] serverAddresses;
+    private UrqlConnectionImpl urqlConnection;
+    private Answer answer;
+    private AnswerXMLWriter xmlWriter;
 
     public WebInterfaceGraphApplication() {
+        this.urqlConnection = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
         serverAddresses = new String[]{LOCAL_SERVER};
     }
 
     public WebInterfaceGraphApplication(String[] serverAddresses) {
+        this.urqlConnection = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
         this.serverAddresses = serverAddresses;
     }
 
@@ -85,7 +106,7 @@ public class WebInterfaceGraphApplication extends BaseGraphApplication {
     public synchronized Restlet createRoot() {
         Router router = new Router(getContext());
         router.attach("/graphs", GraphsResource.class);
-        router.attach("/graphs/{graph}", LocalGraphResource.class);
+        router.attach("/graphs/{graph}", NewLocalGraphResource.class);
         router.attachDefault(GraphsResource.class);
         return router;
     }
@@ -104,5 +125,23 @@ public class WebInterfaceGraphApplication extends BaseGraphApplication {
 
     public String[] getServers() {
         return serverAddresses;
+    }
+
+    public void answerQuery(String graphName, String queryString) throws ResourceException {
+        try {
+            final MoleculeGraph graph = getGraph(graphName);
+            answer = urqlConnection.executeQuery(graph, queryString);
+        } catch (Exception e) {
+            throw new ResourceException(e);
+        }
+    }
+
+    public long getTimeTaken() {
+        return answer.getTimeTaken();
+    }
+
+    public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
+        xmlWriter = answer.getXMLWriter(writer);
+        return xmlWriter;
     }
 }

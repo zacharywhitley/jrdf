@@ -59,93 +59,37 @@
 
 package org.jrdf.query;
 
-import javax.xml.stream.XMLStreamException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public interface AnswerXMLWriter {
-    /**
-     * The XML -> HTML XSLT.
-     */
-    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
-    /**
-     * The sparql keyword.
-     */
-    String SPARQL = "sparql";
-    /**
-     * The element "head".
-     */
-    String HEAD = "head";
-    /**
-     * The element "variable".
-     */
-    String VARIABLE = "variable";
-    /**
-     * The element "name".
-     */
-    String NAME = "name";
-    /**
-     * The element "results".
-     */
-    String RESULTS = "results";
-    /**
-     * The element "result".
-     */
-    String RESULT = "result";
-    /**
-     * The element "binding".
-     */
-    String BINDING = "binding";
-    /**
-     * The element "bnode".
-     */
-    String BNODE = "bnode";
-    /**
-     * The element "literal".
-     */
-    String LITERAL = "literal";
-    /**
-     * The element "uri".
-     */
-    String URI = "uri";
-    /**
-     * The element "datatype".
-     */
-    String DATATYPE = "datatype";
-    /**
-     * The element "xml:lang".
-     */
-    String XML_LANG = "xml:lang";
-    /**
-     * The Sparql namespace.
-     */
-    String SPARQL_NS = "http://www.w3.org/2005/sparql-results#";
+public class StreamAnswerXMLWriter {
+    private static final int EOF_BYTE = -1;
+
+    private PipedOutputStream sinkStream;
+    private PipedInputStream inputStream;
 
 
-    void write(Writer writer) throws XMLStreamException, IOException;
+    public StreamAnswerXMLWriter() throws IOException {
+        sinkStream = new PipedOutputStream();
+        inputStream = new PipedInputStream(sinkStream);
+    }
 
-    void close() throws XMLStreamException, IOException;
+    public void readFromString(String content) throws IOException {
+        InputStream stream = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        int i;
+        while ((i = stream.read()) != EOF_BYTE) {
+            sinkStream.write(i);
+        }
+        sinkStream.write(EOF_BYTE);
+    }
 
-    boolean hasMoreResults();
 
-    void writeStartDocument() throws XMLStreamException;
-
-    void writeVariables() throws XMLStreamException;
-
-    void writeStartResults() throws XMLStreamException;
-
-    void writeEndResults() throws XMLStreamException;
-
-    void writeResult() throws XMLStreamException;
-
-    void writeEndDocument() throws XMLStreamException;
-
-    void write() throws XMLStreamException;
-
-    void setWriter(Writer writer) throws XMLStreamException, IOException;
 }

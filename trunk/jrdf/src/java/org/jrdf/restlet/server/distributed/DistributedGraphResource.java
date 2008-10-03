@@ -59,8 +59,6 @@
 
 package org.jrdf.restlet.server.distributed;
 
-import org.jrdf.restlet.client.DistributedQueryClientImpl;
-import org.jrdf.restlet.client.GraphQueryClient;
 import org.jrdf.restlet.server.BaseGraphResource;
 import org.restlet.Application;
 import org.restlet.Context;
@@ -73,35 +71,18 @@ import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 
-import java.util.Collection;
-
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
 public class DistributedGraphResource extends BaseGraphResource {
-    private int localPort;
     private DistributedQueryGraphApplication application;
-    private Collection<String> servers;
-    private GraphQueryClient client;
 
     public DistributedGraphResource(Context context, Request request, Response response) {
         super(context, request, response);
         System.err.println("graph name = " + graphName);
-        setUpServersAndClients();
-    }
-
-    private void setUpServersAndClients() {
         application = (DistributedQueryGraphApplication) Application.getCurrent();
-        servers = application.getServers();
-        if (servers.size() == 0) {
-            servers.add("127.0.0.1");
-        }
-        localPort = application.getPort();
-        String[] serverArray = new String[servers.size()];
-        serverArray = servers.toArray(serverArray);
-        client = new DistributedQueryClientImpl(localPort, serverArray);
     }
 
     public boolean allowGet() {
@@ -116,10 +97,12 @@ public class DistributedGraphResource extends BaseGraphResource {
         try {
             Form form = new Form(representation);
             String queryString = form.getFirstValue(QUERY_STRING);
-            client.postQuery(graphName, queryString);
-            String answerString = client.executeQuery();
-            String newFormat = form.getFirstValue(FORMAT);
-            format = (newFormat == null) ? FORMAT_XML : newFormat;
+            String newFormat = form.getFirstValue("format");
+            String format = (newFormat == null) ? FORMAT_XML : newFormat;
+            String noRows = form.getFirstValue("noRows");
+
+            application.answerQuery(graphName, queryString);
+            String answerString = application.getAnswer();
             constructAnswerRepresentation(format, answerString);
             getResponse().setStatus(Status.SUCCESS_OK);
         } catch (IllegalArgumentException e) {

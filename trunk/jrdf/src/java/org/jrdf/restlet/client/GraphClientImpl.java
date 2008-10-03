@@ -70,6 +70,7 @@ import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Method;
+import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 
 import java.io.IOException;
@@ -119,12 +120,13 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
     public String executeQuery() throws IOException {
         checkNotNull(client, request);
         Response response = client.handle(request);
-        if (response.getStatus().isSuccess()) {
+        final Status status = response.getStatus();
+        if (status.isSuccess()) {
             Representation output = response.getEntity();
             return output.getText();
         } else {
-            System.err.println("Error: " + response.getStatus().toString());
-            throw new RuntimeException(response.getStatus().toString());
+            System.err.println("Error: " + status.toString());
+            throw new RuntimeException(status.getThrowable());
         }
     }
 

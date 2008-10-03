@@ -91,6 +91,7 @@ public final class AnswerImpl implements Answer, Serializable {
     private transient Relation results;
     private long timeTaken;
     private boolean hasProjected;
+    private transient AnswerXMLWriter xmlWriter;
 
     private AnswerImpl() {
     }
@@ -250,15 +251,12 @@ public final class AnswerImpl implements Answer, Serializable {
         results = relationFactory.getRelation(newAttributes, newTuples);
     }
 
-    public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException {
-        return new AnswerXMLStreamWriterImpl(heading, results, writer);
-    }
-
-    public void writeXML(Writer writer) throws XMLStreamException, IOException {
-        AnswerXMLWriter xmlBuilderWriter = new AnswerXMLStreamWriterImpl(heading, results, writer);
-        if (xmlBuilderWriter.hasMoreResults()) {
-            xmlBuilderWriter.write();
+    public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException {
+        if (xmlWriter == null) {
+            xmlWriter = new AnswerXMLPagenatedStreamWriter(heading, results, writer);
+        } else {
+            xmlWriter.setWriter(writer);
         }
-        xmlBuilderWriter.close();
+        return xmlWriter;
     }
 }

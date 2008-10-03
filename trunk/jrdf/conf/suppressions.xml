@@ -31,6 +31,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="DistributedQueryClientImpl"/>
     <suppress checks="JavaNCSS" files="AnswerImpl"/>
     <suppress checks="JavaNCSS" files="AnswerXMLStreamWriterImpl"/>
+    <suppress checks="JavaNCSS" files="AnswerXMLPagenatedStreamWriter"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
