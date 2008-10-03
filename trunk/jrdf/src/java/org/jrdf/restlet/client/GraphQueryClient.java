@@ -68,7 +68,7 @@ import java.net.MalformedURLException;
  */
 
 public interface GraphQueryClient {
-    void postQuery(String graphName, String queryString) throws IOException;
+    void postQuery(String graphName, String queryString, String noRows) throws IOException;
 
     String executeQuery() throws IOException;
 

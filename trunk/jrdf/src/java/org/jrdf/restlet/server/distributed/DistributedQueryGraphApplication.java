@@ -112,7 +112,7 @@ public class DistributedQueryGraphApplication extends BaseGraphApplication {
             if (client == null) {
                 client = new DistributedQueryClientImpl(portNumber, servers);
             }
-            client.postQuery(graphName, queryString);
+            client.postQuery(graphName, queryString, null);
             //return client.executeQuery();
         } catch (IOException e) {
             throw new ResourceException(e);

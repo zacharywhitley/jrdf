@@ -167,7 +167,6 @@ public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
     private void writeAllResults() throws XMLStreamException {
         writeStartResults();
         while (tupleIterator.hasNext()) {
-            currentTuple = tupleIterator.next();
             writeResult();
         }
         writeEndResults();

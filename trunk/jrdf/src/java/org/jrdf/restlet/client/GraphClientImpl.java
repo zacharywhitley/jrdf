@@ -96,8 +96,8 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         return executeQuery();
     }
 
-    public void postQuery(String graphName, String queryString) throws IOException {
-        request = preparePostRequest(graphName, queryString);
+    public void postQuery(String graphName, String queryString, String noRows) throws IOException {
+        request = preparePostRequest(graphName, queryString, noRows);
     }
 
     public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
@@ -123,7 +123,9 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         final Status status = response.getStatus();
         if (status.isSuccess()) {
             Representation output = response.getEntity();
-            return output.getText();
+            final String answer = output.getText();
+            System.err.println("answer = " + answer);
+            return answer;
         } else {
             System.err.println("Error: " + status.toString());
             throw new RuntimeException(status.getThrowable());
@@ -132,7 +134,7 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
 
     public static void main(String[] args) throws Exception {
         CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
-        queryClient.postQuery("foo", "SELECT * WHERE { ?s ?p ?o. }");
+        queryClient.postQuery("foo", "SELECT * WHERE { ?s ?p ?o. }", "all");
         String answer = queryClient.call();
         System.err.println("Answer = " + answer);
     }

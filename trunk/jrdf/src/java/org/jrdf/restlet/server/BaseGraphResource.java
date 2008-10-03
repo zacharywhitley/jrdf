@@ -116,6 +116,10 @@ public class BaseGraphResource extends Resource {
      * The sparql query result format in HTML.
      */
     public static final String FORMAT_HTML = "html";
+    /**
+     * The field of number of rows.
+     */
+    public static final String NO_ROWS = "noRows";
     protected static final String GRAPH_NAME = "graphName";
     protected static final String DEFAULT_ROWS = "all";
     private static final TransformerFactory TRANSFORM_FACTORY = TransformerFactory.newInstance();

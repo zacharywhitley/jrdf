@@ -100,10 +100,10 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
     public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
     }
 
-    public void postQuery(String graphName, String queryString) {
+    public void postQuery(String graphName, String queryString, String noRows) {
         try {
             for (GraphQueryClient queryClient : queryClients) {
-                queryClient.postQuery(graphName, queryString);
+                queryClient.postQuery(graphName, queryString, noRows);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
