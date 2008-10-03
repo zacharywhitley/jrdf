@@ -131,9 +131,9 @@ public class NewLocalGraphResource extends BaseGraphResource {
         try {
             Form form = new Form(representation);
             String queryString = form.getFirstValue(QUERY_STRING);
-            String newFormat = form.getFirstValue("format");
+            String newFormat = form.getFirstValue(FORMAT);
             String format = (newFormat == null) ? FORMAT_XML : newFormat;
-            String noRows = form.getFirstValue("noRows");
+            String noRows = form.getFirstValue(NO_ROWS);
             processQueryInputs(queryString, format, noRows);
             Representation rep = constructRepresentation(format, noRows);
             getResponse().setEntity(rep);
@@ -156,6 +156,7 @@ public class NewLocalGraphResource extends BaseGraphResource {
             StringWriter writer = new StringWriter();
             xmlWriter = application.getAnswerXMLWriter(writer);
             String xmlString = getXMLString(noRows, writer);
+            System.err.println("string xml = " + xmlString);
             writer.close();
             xmlWriter.close();
             return getAnswerRep(format, xmlString);

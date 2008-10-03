@@ -59,14 +59,15 @@
 
 package org.jrdf.restlet.client;
 
-import org.restlet.data.Request;
-import org.restlet.data.Form;
-import org.restlet.data.Method;
-import static org.restlet.data.Protocol.HTTP;
-import org.restlet.resource.Representation;
-import static org.jrdf.restlet.server.BaseGraphResource.QUERY_STRING;
 import static org.jrdf.restlet.server.BaseGraphResource.FORMAT;
 import static org.jrdf.restlet.server.BaseGraphResource.FORMAT_XML;
+import static org.jrdf.restlet.server.BaseGraphResource.QUERY_STRING;
+import org.jrdf.restlet.server.BaseGraphResource;
+import org.restlet.data.Form;
+import static org.restlet.data.Method.POST;
+import static org.restlet.data.Protocol.HTTP;
+import org.restlet.data.Request;
+import org.restlet.resource.Representation;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -85,14 +86,15 @@ public abstract class BaseClientImpl implements GraphQueryClient {
         serverString = server;
     }
 
-    protected Request preparePostRequest(String graphName, String queryString)
+    protected Request preparePostRequest(String graphName, String queryString, String noRows)
         throws MalformedURLException {
         Form form = new Form();
         form.add(QUERY_STRING, queryString);
         form.add(FORMAT, FORMAT_XML);
+        form.add(BaseGraphResource.NO_ROWS, noRows);
         Representation representation = form.getWebRepresentation();
         String requestURL = makeRequestString(graphName);
-        return new Request(Method.POST, requestURL, representation);
+        return new Request(POST, requestURL, representation);
     }
 
     private String makeRequestString(String graphName) throws MalformedURLException {

@@ -99,7 +99,7 @@ import java.util.Set;
 public class DistributedQueryUnitTest extends TestCase {
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = getHandler();
-    private PersistentGlobalJRDFFactory factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
 
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
@@ -110,8 +110,7 @@ public class DistributedQueryUnitTest extends TestCase {
         super.setUp();
         HANDLER.removeDir();
         HANDLER.makeDir();
-        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-        graph = factory.getGraph(FOO);
+        graph = FACTORY.getGraph(FOO);
         graph.clear();
         elementFactory = graph.getElementFactory();
         localQueryServer = new LocalQueryServer();
@@ -121,7 +120,7 @@ public class DistributedQueryUnitTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         graph.close();
-        factory.close();
+        FACTORY.close();
         localQueryServer.stop();
     }
 
@@ -133,9 +132,9 @@ public class DistributedQueryUnitTest extends TestCase {
         graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
         CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
-        queryClient.postQuery(FOO, QUERY_STRING);
+        queryClient.postQuery(FOO, QUERY_STRING, "all");
         String answer = queryClient.call();
-        checkAnswerXML(answer, 1, b1.toString(), p.toString(), b2.toString());
+        checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
     }
 
     public void testEmptyDistributedClient() throws Exception {
@@ -143,7 +142,7 @@ public class DistributedQueryUnitTest extends TestCase {
         server.start();
         GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
         client.postDistributedServer(PORT, "add", "127.0.0.1");
-        client.postQuery(FOO, QUERY_STRING);
+        client.postQuery(FOO, QUERY_STRING, "all");
         final String answer = client.executeQuery();
         checkAnswerXML(answer, 0);
         server.stop();
@@ -161,9 +160,9 @@ public class DistributedQueryUnitTest extends TestCase {
         GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
         client.postDistributedServer(PORT, "add", "127.0.0.1");
         final String queryString = QUERY_STRING;
-        client.postQuery(FOO, queryString);
+        client.postQuery(FOO, queryString, "all");
         final String answer = client.executeQuery();
-        checkAnswerXML(answer, 1, b1.toString(), p.toString(), b2.toString());
+        checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
     }
 
     private void checkAnswerXML(String answer, int resultSize, String... strings) throws SAXException, IOException {
