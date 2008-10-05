@@ -130,7 +130,7 @@ public interface Graph {
     /**
      * Returns all unique values of a given type.
      *
-     * @param type the node type can be positional (SPO) or node type (URIReference, Literal or BNode).
+     * @param type the node type can be positional (SPO) or node type (Resource, URIReference, Literal or BNode).
      * @return all unique values of a given type.
      */
     ClosableIterable<? extends Node> findNodes(NodeType type);
