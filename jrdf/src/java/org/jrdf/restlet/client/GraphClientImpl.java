@@ -124,10 +124,8 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         if (status.isSuccess()) {
             Representation output = response.getEntity();
             final String answer = output.getText();
-            System.err.println("answer = " + answer);
             return answer;
         } else {
-            System.err.println("Error: " + status.toString());
             throw new RuntimeException(status.getThrowable());
         }
     }
@@ -135,7 +133,6 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
     public static void main(String[] args) throws Exception {
         CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
         queryClient.postQuery("foo", "SELECT * WHERE { ?s ?p ?o. }", "all");
-        String answer = queryClient.call();
-        System.err.println("Answer = " + answer);
+        queryClient.call();
     }
 }

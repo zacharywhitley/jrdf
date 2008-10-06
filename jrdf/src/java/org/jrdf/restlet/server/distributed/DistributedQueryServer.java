@@ -81,7 +81,6 @@ public class DistributedQueryServer {
         component.getServers().add(Protocol.HTTP, PORT);
         component.getDefaultHost().attach(application);
         component.start();
-        System.err.println("Distributed query server started");
     }
 
     public void stop() throws Exception {

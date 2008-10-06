@@ -110,7 +110,6 @@ public class GraphsResource extends Resource {
         }
         handler = BaseGraphApplication.getHandler();
         File file = new File(handler.getDir(), "graphs.nt");
-        System.err.println("Graphs dir = " + file.getPath());
         Graph modelsGraph = parseNTriples(file);
         model = new ModelsImpl(modelsGraph);
         resources = model.getResources();
