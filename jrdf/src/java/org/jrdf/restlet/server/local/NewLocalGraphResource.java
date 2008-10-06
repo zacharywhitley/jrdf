@@ -203,12 +203,11 @@ public class NewLocalGraphResource extends BaseGraphResource {
 
     private Representation constructHTMLAnswerRep(String answerXML)
         throws SAXException, IOException, ParserConfigurationException {
-        Map root = new HashMap();
+        Map<String, Object> root = new HashMap<String, Object>();
         root.put("doc", parse(new InputSource(new StringReader(answerXML))));
         root.put(GRAPH_NAME, graphName);
         root.put("timeTaken", application.getTimeTaken());
         root.put("hasMore", xmlWriter.hasMoreResults());
-        Representation rep = getRepresentation(root, "queryResult.ftl");
-        return rep;
+        return getRepresentation(root, "queryResult.ftl");
     }
 }
