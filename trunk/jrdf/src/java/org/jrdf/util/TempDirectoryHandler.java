@@ -64,9 +64,18 @@ import java.io.File;
 public class TempDirectoryHandler implements DirectoryHandler {
     private static final String USERNAME = System.getProperty("user.name");
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+    private final String dirName;
+
+    public TempDirectoryHandler() {
+        this.dirName = "jrdf_" + USERNAME;
+    }
+
+    public TempDirectoryHandler(String newDirName) {
+        this.dirName = newDirName;
+    }
 
     public File getDir() {
-        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
+        return new File(SYSTEM_TEMP_DIR, dirName);
     }
 
     public File makeDir() {
