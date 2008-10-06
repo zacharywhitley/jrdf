@@ -49,6 +49,7 @@
     <property name="spring.version" value="2.5.5"/>
     <property name="restlet.version" value="1.1rc2"/>
     <property name="freemarker.version" value="2.3.14"/>
+    <property name="bdbje.version" value="3.3.69"/>
 
     <!-- EMMA coverage data output directory: -->
     <property name="coverage.dir" value="${build.dir}/coverage"/>
@@ -106,7 +107,7 @@
         <include name="${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar"/>
         <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/je/je-3.3.62.jar"/>
+        <include name="${lib.dir}/je/je-${bdbje.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
@@ -136,7 +137,7 @@
         <include name="${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar"/>
         <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/je/je-3.3.62.jar"/>
+        <include name="${lib.dir}/je/je-${bdbje.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
