@@ -63,7 +63,7 @@ import org.restlet.Component;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * A server that allows you to deploy JRDF
+ * A server that allows you to deploy JRDF.
  *
  * @author Andrew Newman
  * @version $Id$

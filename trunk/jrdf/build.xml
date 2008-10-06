@@ -42,7 +42,9 @@
             <fileset dir="${prod.src.dir}" includes="**/images.properties"/>
             <fileset dir="${prod.src.dir}" includes="**/messages.properties"/>
             <fileset dir="${prod.src.dir}" includes="**/about.txt"/>
+            <fileset dir="${prod.src.dir}" includes="**/server.properties"/>
             <fileset dir="${conf.dir}" includes="**/gui-wiring.xml"/>
+            <fileset dir="${conf.dir}" includes="**/local-server-wiring.xml"/>
             <!-- Freemarker templates -->
             <fileset dir="${prod.src.dir}" includes="**/*.ftl"/>
         </copy>
