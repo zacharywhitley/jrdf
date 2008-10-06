@@ -60,7 +60,7 @@
 package org.jrdf.restlet.server;
 
 import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.UserDefinedDirHandler;
+import org.jrdf.util.TempDirectoryHandler;
 import org.restlet.Application;
 import org.restlet.resource.ResourceException;
 
@@ -70,7 +70,7 @@ import org.restlet.resource.ResourceException;
  */
 
 public abstract class BaseGraphApplication extends Application {
-    protected static final DirectoryHandler HANDLER = new UserDefinedDirHandler("perstMoleculeGraph");
+    protected static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     protected String maxRows;
     protected String format;
 
