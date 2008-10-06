@@ -502,10 +502,10 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="wstx-asl-3.2.1">
+    <library name="wstx-asl">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/woodstox/stax-api-1.0.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/woodstox/wstx-asl-3.2.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/woodstox/wstx-asl-3.2.7.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
