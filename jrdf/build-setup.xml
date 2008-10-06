@@ -113,6 +113,7 @@
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet.ext.spring_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
@@ -143,6 +144,7 @@
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet.ext.spring_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
