@@ -116,7 +116,7 @@
         <include name="${lib.dir}/restlet/org.restlet.ext.spring_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
-        <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
+        <include name="${lib.dir}/woodstox/wstx-asl-3.2.7.jar"/>
         <include name="${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"/>
     </patternset>
 
@@ -147,7 +147,7 @@
         <include name="${lib.dir}/restlet/org.restlet.ext.spring_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
-        <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
+        <include name="${lib.dir}/woodstox/wstx-asl-3.2.7.jar"/>
         <include name="${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"/>
     </patternset>
 
