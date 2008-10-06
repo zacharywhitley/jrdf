@@ -67,7 +67,7 @@ public final class UrqlGui {
         "/richclient-application-splash.xml";
     private static final String RICHCLIENT_APPLICATION_CONTEXT = ROOT_CONTEXT +
         "/richclient-application-context.xml";
-    private static final String GRAPH_WIRING = "wiring.xml";
+    private static final String GRAPH_WIRING = "gui-wiring.xml";
     private static final String[] ROOT_APPLICATION_CONTEXT = new String[]{RICHCLIENT_APPLICATION_CONTEXT, GRAPH_WIRING};
 
     public static void main(String[] args) {
