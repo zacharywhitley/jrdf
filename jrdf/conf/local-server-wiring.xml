@@ -4,8 +4,12 @@
 
 <beans>
     <bean id="configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations" value="classpath:org/jrdf/restlet/server/local/server.properties"/>
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:org/jrdf/restlet/server/local/server.properties</value>
+            </list>
+        </property>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
     <bean id="application" class="org.jrdf.restlet.server.local.WebInterfaceGraphApplication"/>
@@ -17,6 +21,6 @@
 
     <bean id="server" class="org.restlet.ext.spring.SpringServer">
         <constructor-arg value="http"/>
-        <constructor-arg value="8182"/>
+        <constructor-arg value="${server.port}"/>
     </bean>
 </beans>
