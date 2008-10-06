@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:org/jrdf/restlet/server/local/server.properties"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <bean id="application" class="org.jrdf.restlet.server.local.WebInterfaceGraphApplication"/>
+
+    <bean id="component" class="org.restlet.ext.spring.SpringComponent">
+        <property name="server" ref="server"/>
+        <property name="defaultTarget" ref="application"/>
+    </bean>
+
+    <bean id="server" class="org.restlet.ext.spring.SpringServer">
+        <constructor-arg value="http"/>
+        <constructor-arg value="8182"/>
+    </bean>
+</beans>

@@ -10,6 +10,7 @@ public class LocalQueryServer {
      * The port number of the server(s).
      */
     public static final int PORT = 8182;
+
     /**
      * The media type for sparql result in XML.
      */
