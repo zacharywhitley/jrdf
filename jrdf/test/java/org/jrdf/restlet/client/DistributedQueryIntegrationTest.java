@@ -96,7 +96,7 @@ import java.util.Set;
  * @version :$
  */
 
-public class DistributedQueryUnitTest extends TestCase {
+public class DistributedQueryIntegrationTest extends TestCase {
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = getHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
