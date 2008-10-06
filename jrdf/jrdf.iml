@@ -20,6 +20,11 @@
       <sourceFolder url="file://$MODULE_DIR$/src/sablecc" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test/rdf" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/build/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/build/integration-test-results" />
+      <excludeFolder url="file://$MODULE_DIR$/build/prod-classes" />
+      <excludeFolder url="file://$MODULE_DIR$/build/test-classes" />
+      <excludeFolder url="file://$MODULE_DIR$/build/unit-test-results" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

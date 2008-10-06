@@ -23,12 +23,12 @@ public class LocalQueryServer {
         component.getServers().add(Protocol.HTTP, PORT);
         component.getDefaultHost().attach(graphApplication);
         component.start();
-        System.err.println("Local server started.");
+        System.out.println("Local server started.");
     }
 
     public void stop() throws Exception {
         component.stop();
-        System.err.println("Local server stopped");
+        System.out.println("Local server stopped");
     }
 
     public static void main(String[] args) throws Exception {
