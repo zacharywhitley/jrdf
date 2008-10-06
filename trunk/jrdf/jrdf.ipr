@@ -479,11 +479,11 @@
     <library name="spring">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-logging-1.0.4.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/spring/spring-context-2.0.7.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/spring/spring-core-2.0.7.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/spring/spring-aop-2.0.7.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/spring/spring-dao-2.0.7.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/spring/spring-beans-2.0.7.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-context-2.5.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-beans-2.5.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-core-2.5.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-aop-2.5.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-tx-2.5.5.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -539,25 +539,23 @@
     </library>
     <library name="restlet">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.simple_3.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework.jar!/" />
-        <root url="file://$PROJECT_DIR$" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.freemarker_2.3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.spring_2.5-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.freemarker_2.3-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.simple_3.1-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework_3.1-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5-1.1rc2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="freemarker">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/freemarker-2.3.14/lib/freemarker.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/freemarker/freemarker-2.3.14.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="file://$PROJECT_DIR$/lib/freemarker-2.3.14/src" />
-      </SOURCES>
+      <SOURCES />
     </library>
   </component>
 </project>

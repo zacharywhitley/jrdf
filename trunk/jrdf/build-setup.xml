@@ -46,6 +46,10 @@
     <property name="integration.test.results.dir" value="${build.dir}/integration-test-results"/>
     <property name="integration.test.results" value="${integration.test.results.dir}/Integration-Tests.xml"/>
 
+    <property name="spring.version" value="2.5.5"/>
+    <property name="restlet.version" value="1.1rc2"/>
+    <property name="freemarker.version" value="2.3.14"/>
+
     <!-- EMMA coverage data output directory: -->
     <property name="coverage.dir" value="${build.dir}/coverage"/>
     <!-- EMMA instrumented classes output directory: -->
@@ -93,9 +97,9 @@
     </patternset>
 
     <patternset id="production.classpath.pattern">
-        <include name="${lib.dir}/spring/spring-beans-2.0.7.jar"/>
-        <include name="${lib.dir}/spring/spring-context-2.0.7.jar"/>
-        <include name="${lib.dir}/spring/spring-core-2.0.7.jar"/>
+        <include name="${lib.dir}/spring/spring-beans-${spring.version}.jar"/>
+        <include name="${lib.dir}/spring/spring-context-${spring.version}.jar"/>
+        <include name="${lib.dir}/spring/spring-core-${spring.version}.jar"/>
         <include name="${lib.dir}/spring-rcp/forms-1.0.7.jar"/>
         <include name="${lib.dir}/spring-rcp/looks-2.0.4.jar"/>
         <include name="${lib.dir}/spring-rcp/spring-binding-1.0.jar"/>
@@ -103,15 +107,15 @@
         <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/je/je-3.3.62.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5.jar"/>
-        <include name="${lib.dir}/restlet/org.restlet.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1.jar"/>
-        <include name="${lib.dir}/restlet/org.simpleframework.jar"/>
-        <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
-        <include name="${lib.dir}/freemarker-2.3.14/lib/freemarker.jar"/>
+        <include name="${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"/>
     </patternset>
 
     <patternset id="test.classpath.pattern">
@@ -121,9 +125,11 @@
         <include name="${lib.dir}/easymock/easymock-2.3.0.jar"/>
         <include name="${lib.dir}/easymock/easymockclassextension-2.3.0.jar"/>
         <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
-        <include name="${lib.dir}/spring/spring-beans-2.0.7.jar"/>
-        <include name="${lib.dir}/spring/spring-context-2.0.7.jar"/>
-        <include name="${lib.dir}/spring/spring-core-2.0.7.jar"/>
+        <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
+        <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
+        <include name="${lib.dir}/spring/spring-beans-${spring.version}.jar"/>
+        <include name="${lib.dir}/spring/spring-context-${spring.version}.jar"/>
+        <include name="${lib.dir}/spring/spring-core-${spring.version}.jar"/>
         <include name="${lib.dir}/spring-rcp/forms-1.0.7.jar"/>
         <include name="${lib.dir}/spring-rcp/looks-2.0.4.jar"/>
         <include name="${lib.dir}/spring-rcp/spring-binding-1.0.jar"/>
@@ -131,17 +137,15 @@
         <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/je/je-3.3.62.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5.jar"/>
-        <include name="${lib.dir}/restlet/org.restlet.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1.jar"/>
-        <include name="${lib.dir}/restlet/org.simpleframework.jar"/>
-        <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.6.jar"/>
-        <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
-        <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
-        <include name="${lib.dir}/freemarker-2.3.14/lib/freemarker.jar"/>
+        <include name="${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"/>
     </patternset>
 
     <fileset id="production.code.fileset" dir="${prod.src.dir}">
