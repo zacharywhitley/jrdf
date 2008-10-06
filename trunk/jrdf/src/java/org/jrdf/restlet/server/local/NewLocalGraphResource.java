@@ -156,7 +156,6 @@ public class NewLocalGraphResource extends BaseGraphResource {
             StringWriter writer = new StringWriter();
             xmlWriter = application.getAnswerXMLWriter(writer);
             String xmlString = getXMLString(noRows, writer);
-            System.err.println("string xml = " + xmlString);
             writer.close();
             xmlWriter.close();
             return getAnswerRep(format, xmlString);

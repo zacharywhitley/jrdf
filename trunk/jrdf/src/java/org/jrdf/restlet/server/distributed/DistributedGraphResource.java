@@ -81,7 +81,6 @@ public class DistributedGraphResource extends BaseGraphResource {
 
     public DistributedGraphResource(Context context, Request request, Response response) {
         super(context, request, response);
-        System.err.println("graph name = " + graphName);
         application = (DistributedQueryGraphApplication) Application.getCurrent();
     }
 

@@ -147,9 +147,7 @@ public class BaseGraphResource extends Resource {
     protected Representation renderResult(String format, String xmlString) throws TransformerException {
         Representation rep;
         if (FORMAT_HTML.equalsIgnoreCase(format)) {
-            System.err.println("Start xslt transformation, xml # = " + xmlString.length());
             String transformedXMLString = doXSLTTransformation(xmlString);
-            System.err.println("End xslt transformation");
             rep = new StringRepresentation(transformedXMLString, TEXT_HTML);
         } else {
             rep = new StringRepresentation(xmlString, TEXT_XML);
