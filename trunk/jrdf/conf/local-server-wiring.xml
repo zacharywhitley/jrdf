@@ -12,15 +12,31 @@
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
-    <bean id="application" class="org.jrdf.restlet.server.local.WebInterfaceGraphApplication"/>
-
     <bean id="component" class="org.restlet.ext.spring.SpringComponent">
         <property name="server" ref="server"/>
         <property name="defaultTarget" ref="application"/>
+        <property name="logService" ref="logService"/>
     </bean>
 
     <bean id="server" class="org.restlet.ext.spring.SpringServer">
         <constructor-arg value="http"/>
         <constructor-arg value="${server.port}"/>
+    </bean>
+
+    <bean id="application" class="org.jrdf.restlet.server.local.WebInterfaceGraphApplication"/>
+
+    <bean id="logService" class="org.restlet.service.LogService">
+        <constructor-arg index="0" value="false"/>
+    </bean>
+
+    <bean id="router" class="org.restlet.ext.spring.SpringRouter">
+        <constructor-arg ref="application"/>
+        <property name="attachments">
+            <map>
+                <entry key="" value="org.jrdf.restlet.server.GraphsResource"/>
+                <entry key="/graphs" value="org.jrdf.restlet.server.GraphsResource"/>
+                <entry key="/graphs/{graph}" value="org.jrdf.restlet.server.local.LocalGraphResource"/>
+            </map>
+        </property>
     </bean>
 </beans>

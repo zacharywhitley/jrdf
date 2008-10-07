@@ -1,9 +1,10 @@
 package org.jrdf.restlet.server.local;
 
-import org.restlet.Component;
-import org.restlet.data.MediaType;
-import org.restlet.data.Protocol;
 import org.jrdf.restlet.server.BaseGraphApplication;
+import org.restlet.Component;
+import org.restlet.data.Protocol;
+
+import java.util.logging.Level;
 
 public class LocalQueryServer {
     /**
@@ -16,6 +17,8 @@ public class LocalQueryServer {
     public void start() throws Exception {
         final BaseGraphApplication graphApplication = new WebInterfaceGraphApplication();
         component = new Component();
+        component.getLogService().setEnabled(false);
+        component.getLogger().setLevel(Level.OFF);
         component.getServers().add(Protocol.HTTP, PORT);
         component.getDefaultHost().attach(graphApplication);
         component.start();
