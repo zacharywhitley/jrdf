@@ -11,14 +11,9 @@ public class LocalQueryServer {
      */
     public static final int PORT = 8182;
 
-    /**
-     * The media type for sparql result in XML.
-     */
-    public static final String SPARQL_XML_RESULT_MEDIA_TYPE_STRING = "application/sparql-results+xml";
     protected Component component;
 
     public void start() throws Exception {
-        MediaType.register(SPARQL_XML_RESULT_MEDIA_TYPE_STRING, "SPARQL Query Results");
         final BaseGraphApplication graphApplication = new WebInterfaceGraphApplication();
         component = new Component();
         component.getServers().add(Protocol.HTTP, PORT);
