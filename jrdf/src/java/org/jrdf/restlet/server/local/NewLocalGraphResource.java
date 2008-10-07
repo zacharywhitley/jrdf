@@ -61,10 +61,13 @@ package org.jrdf.restlet.server.local;
 
 import static freemarker.ext.dom.NodeModel.parse;
 import org.jrdf.query.AnswerXMLWriter;
+import org.jrdf.restlet.MediaTypeExtensions;
+import static org.jrdf.restlet.MediaTypeExtensions.SPARQL_XML_RESULT_MEDIA_TYPE_STRING;
 import org.jrdf.restlet.server.BaseGraphResource;
 import org.restlet.Application;
 import org.restlet.Context;
 import org.restlet.data.Form;
+import org.restlet.data.MediaType;
 import static org.restlet.data.MediaType.TEXT_XML;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -92,11 +95,13 @@ import java.util.Map;
  */
 
 public class NewLocalGraphResource extends BaseGraphResource {
+
     private AnswerXMLWriter xmlWriter;
     private WebInterfaceGraphApplication application;
 
     public NewLocalGraphResource(Context context, Request request, Response response) {
         super(context, request, response);
+        MediaType.register(SPARQL_XML_RESULT_MEDIA_TYPE_STRING, "SPARQL Query Results");
         this.application = (WebInterfaceGraphApplication) Application.getCurrent();
     }
 

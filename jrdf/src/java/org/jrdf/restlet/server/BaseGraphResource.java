@@ -64,7 +64,7 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import org.jrdf.query.AnswerXMLWriter;
 import static org.jrdf.query.AnswerXMLWriter.XSLT_URL_STRING;
-import static org.jrdf.restlet.server.local.LocalQueryServer.SPARQL_XML_RESULT_MEDIA_TYPE_STRING;
+import static org.jrdf.restlet.MediaTypeExtensions.SPARQL_XML_RESULT_MEDIA_TYPE_STRING;
 import org.restlet.Context;
 import static org.restlet.data.MediaType.TEXT_HTML;
 import static org.restlet.data.MediaType.TEXT_XML;
