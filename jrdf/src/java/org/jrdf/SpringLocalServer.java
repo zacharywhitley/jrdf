@@ -62,6 +62,8 @@ package org.jrdf;
 import org.restlet.Component;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.logging.Level;
+
 /**
  * A server that allows you to deploy JRDF.
  *
@@ -79,6 +81,7 @@ public final class SpringLocalServer {
     public static void main(String[] args) throws Exception {
         Component component = (Component) BEAN_FACTORY.getBean("component");
         try {
+            component.getLogger().setLevel(Level.OFF);
             component.start();
         } catch (Exception e) {
             component.stop();

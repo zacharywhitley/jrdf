@@ -106,7 +106,7 @@ public class WebInterfaceGraphApplication extends BaseGraphApplication {
     public synchronized Restlet createRoot() {
         Router router = new Router(getContext());
         router.attach("/graphs", GraphsResource.class);
-        router.attach("/graphs/{graph}", NewLocalGraphResource.class);
+        router.attach("/graphs/{graph}", LocalGraphResource.class);
         router.attachDefault(GraphsResource.class);
         return router;
     }
