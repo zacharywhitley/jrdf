@@ -62,6 +62,7 @@ package org.jrdf.query.xml;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
+import java.io.InputStream;
 
 /**
  * @author Yuan-Fang Li
@@ -150,4 +151,6 @@ public interface AnswerXMLWriter {
     void setWriter(Writer writer) throws XMLStreamException, IOException;
 
     void flush() throws XMLStreamException;
+
+    void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
 }

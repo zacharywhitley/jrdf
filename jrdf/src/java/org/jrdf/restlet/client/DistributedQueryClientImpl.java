@@ -135,14 +135,12 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
     private void aggregateResults() throws InterruptedException, ExecutionException, XMLStreamException {
         for (Future<InputStream> future : set) {
             final InputStream stream = future.get();
-            System.err.println("aggregating xml");
             xmlWriter.addStream(stream);
         }
     }
 
     private void executeQuries() {
         for (CallableGraphQueryClient queryClient : queryClients) {
-            System.err.println("Starting client: " + queryClient.toString());
             Future<InputStream> future = executor.submit(queryClient);
             set.add(future);
         }

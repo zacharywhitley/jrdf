@@ -107,6 +107,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
     private GraphElementFactory elementFactory;
     private LocalQueryServer localQueryServer;
     private static final String QUERY_STRING = "SELECT * WHERE { ?s <urn:p> ?o. }";
+    private DistributedQueryServer distributedServer;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -117,6 +118,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         elementFactory = graph.getElementFactory();
         localQueryServer = new LocalQueryServer();
         localQueryServer.start();
+        distributedServer = new DistributedQueryServer();
     }
 
     protected void tearDown() throws Exception {
@@ -140,20 +142,18 @@ public class DistributedQueryIntegrationTest extends TestCase {
     }
 
     public void testEmptyDistributedClient() throws Exception {
-        DistributedQueryServer server = new DistributedQueryServer();
-        server.start();
+        distributedServer.start();
         GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
         client.postDistributedServer(PORT, "add", "127.0.0.1");
         client.postQuery(FOO, QUERY_STRING, "all");
         final InputStream inputStream = client.executeQuery();
         final String answer = readFromInputStream(inputStream);
         checkAnswerXML(answer, 0);
-        server.stop();
+        distributedServer.stop();
     }
 
     public void testDistributedClient() throws Exception {
-        DistributedQueryServer server = new DistributedQueryServer();
-        server.start();
+        distributedServer.start();
         final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
         final BlankNode b1 = elementFactory.createBlankNode();
         final BlankNode b2 = elementFactory.createBlankNode();
@@ -162,10 +162,10 @@ public class DistributedQueryIntegrationTest extends TestCase {
         assertEquals(2, graph.getNumberOfTriples());
         GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
         client.postDistributedServer(PORT, "add", "127.0.0.1");
-        final String queryString = QUERY_STRING;
-        client.postQuery(FOO, queryString, "all");
+        client.postQuery(FOO, QUERY_STRING, "all");
         final String answer = readFromInputStream(client.executeQuery());
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
+        distributedServer.stop();
     }
 
     private void checkAnswerXML(String answer, int resultSize, String... strings) throws SAXException, IOException {
@@ -177,7 +177,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         parser.parse(new InputSource(new StringReader(answer)));
         Document document = parser.getDocument();
         final NodeList list = document.getElementsByTagName(RESULT);
-        assertEquals("One answer", resultSize, list.getLength());
+        assertEquals("Answer size", resultSize, list.getLength());
         for (int i = 0; i < list.getLength(); i++) {
             final Element node = (Element) list.item(i);
             final NodeList bindings = node.getElementsByTagName(BINDING);

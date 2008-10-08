@@ -167,7 +167,11 @@ public class MultiAnswerXMLStreamWriter extends AbstractXMLStreamWriter implemen
         writeEndDocument();
     }
 
-    private void writeAllResults() throws XMLStreamException {
+    public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
+        throw new UnsupportedOperationException("Cannot add stream to this writer.");
+    }
+
+    protected void writeAllResults() throws XMLStreamException {
         writeStartResults();
         while (hasMoreResults()) {
             writeResult();

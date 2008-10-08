@@ -59,6 +59,8 @@
 
 package org.jrdf.query.xml;
 
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -109,4 +111,14 @@ public abstract class AbstractXMLStreamWriter implements AnswerXMLWriter {
     public void flush() throws XMLStreamException {
         streamWriter.flush();
     }
+
+    public void write() throws XMLStreamException {
+        checkNotNull(streamWriter);
+        writeStartDocument();
+        writeVariables();
+        writeAllResults();
+        writeEndDocument();
+    }
+
+    protected abstract void writeAllResults() throws XMLStreamException;
 }

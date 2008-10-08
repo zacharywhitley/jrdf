@@ -76,6 +76,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.Map;
@@ -126,6 +127,10 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
         doWrite();
     }
 
+    public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
+        throw new UnsupportedOperationException("Cannot add a stream to this writer.");
+    }
+
     private void doWrite() throws XMLStreamException {
         writeStartDocument();
         writeVariables();
@@ -133,7 +138,7 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
         writeEndDocument();
     }
 
-    private void writeAllResults() throws XMLStreamException {
+    protected void writeAllResults() throws XMLStreamException {
         writeStartResults();
         while (tupleIterator.hasNext()) {
             writeResult();

@@ -150,9 +150,9 @@ public class LocalGraphResource extends BaseGraphResource {
     }
 
     private void processQueryInputs(String queryString, String format, String noRows) throws ResourceException {
-        application.answerQuery(graphName, queryString);
         application.setFormat(format);
         application.setMaxRows(noRows);
+        application.answerQuery(graphName, queryString);
     }
 
     private Representation constructRepresentation(String format, String noRows) throws ResourceException {
