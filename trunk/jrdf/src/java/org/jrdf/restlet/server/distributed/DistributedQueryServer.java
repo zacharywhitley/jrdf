@@ -62,6 +62,8 @@ package org.jrdf.restlet.server.distributed;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
+import java.net.InetAddress;
+
 /**
  * @author Yuan-Fang Li
  * @version :$
@@ -81,6 +83,9 @@ public class DistributedQueryServer {
         component.getServers().add(Protocol.HTTP, PORT);
         component.getDefaultHost().attach(application);
         component.start();
+        InetAddress addr = InetAddress.getLocalHost();
+        String hostName = addr.getHostName();
+        System.err.println("Distributed query server started at: " + hostName + ":" + PORT);
     }
 
     public void stop() throws Exception {

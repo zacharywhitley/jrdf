@@ -59,23 +59,24 @@
 
 package org.jrdf.restlet.client;
 
-import static org.jrdf.restlet.server.distributed.DistributedQueryResource.PORT_STRING;
-import static org.jrdf.restlet.server.distributed.DistributedQueryResource.ACTION;
 import org.jrdf.restlet.server.distributed.DistributedQueryResource;
+import static org.jrdf.restlet.server.distributed.DistributedQueryResource.ACTION;
+import static org.jrdf.restlet.server.distributed.DistributedQueryResource.PORT_STRING;
 import static org.jrdf.restlet.server.local.LocalQueryServer.PORT;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
 import org.restlet.data.Form;
+import org.restlet.data.Method;
 import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * @author Yuan-Fang Li
@@ -92,7 +93,7 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         client = new Client(HTTP);
     }
 
-    public String call() throws Exception {
+    public InputStream call() throws Exception {
         return executeQuery();
     }
 
@@ -117,15 +118,15 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         }
     }
 
-    public String executeQuery() throws IOException {
+    public InputStream executeQuery() throws IOException {
         checkNotNull(client, request);
         Response response = client.handle(request);
         final Status status = response.getStatus();
         if (status.isSuccess()) {
             Representation output = response.getEntity();
-            final String answer = output.getText();
-            return answer;
+            return output.getStream();
         } else {
+            System.err.println("status = " + status.getCode() + ", " + status.getName());
             throw new RuntimeException(status.getThrowable());
         }
     }

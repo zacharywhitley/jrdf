@@ -59,6 +59,8 @@
 
 package org.jrdf.query;
 
+import org.jrdf.query.xml.AnswerXMLWriter;
+
 import javax.xml.stream.XMLStreamException;
 import java.io.Writer;
 import java.io.IOException;

@@ -59,10 +59,13 @@
 
 package org.jrdf.restlet.server.distributed;
 
+import static freemarker.ext.dom.NodeModel.parse;
+import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.restlet.server.BaseGraphResource;
 import org.restlet.Application;
 import org.restlet.Context;
 import org.restlet.data.Form;
+import static org.restlet.data.MediaType.TEXT_XML;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
@@ -70,6 +73,17 @@ import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
 import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
+import org.restlet.resource.StringRepresentation;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
@@ -78,6 +92,7 @@ import org.restlet.resource.ResourceException;
 
 public class DistributedGraphResource extends BaseGraphResource {
     private DistributedQueryGraphApplication application;
+    private AnswerXMLWriter xmlWriter;
 
     public DistributedGraphResource(Context context, Request request, Response response) {
         super(context, request, response);
@@ -99,15 +114,79 @@ public class DistributedGraphResource extends BaseGraphResource {
             String newFormat = form.getFirstValue("format");
             String format = (newFormat == null) ? FORMAT_XML : newFormat;
             String noRows = form.getFirstValue("noRows");
-
-            application.answerQuery(graphName, queryString);
-            String answerString = application.getAnswer();
-            constructAnswerRepresentation(format, answerString);
+            processQueryInputs(queryString, format, noRows);
+            Representation rep = constructRepresentation(format, noRows);
+            getResponse().setEntity(rep);
             getResponse().setStatus(Status.SUCCESS_OK);
         } catch (IllegalArgumentException e) {
             getResponse().setStatus(CLIENT_ERROR_BAD_REQUEST, e);
         } catch (Exception e) {
             getResponse().setStatus(SERVER_ERROR_INTERNAL, e);
         }
+    }
+
+    private void processQueryInputs(String queryString, String format, String noRows) throws ResourceException {
+        application.setFormat(format);
+        application.setMaxRows(noRows);
+        application.answerQuery(graphName, queryString);
+    }
+
+    private Representation constructRepresentation(String format, String noRows) throws ResourceException {
+        StringWriter writer = new StringWriter();
+        try {
+            xmlWriter = application.getAnswerXMLWriter(writer);
+            String xmlString = getXMLString(noRows, writer);
+            writer.close();
+            xmlWriter.close();
+            return getAnswerRep(format, xmlString);
+        } catch (Exception e) {
+            throw new ResourceException(e);
+        }
+    }
+
+    private String getXMLString(String noRows, StringWriter writer) throws XMLStreamException {
+        String  xmlString;
+        try {
+            int maxRows = Integer.parseInt(noRows);
+            generatePartialXMLString(maxRows);
+        } catch (NumberFormatException e) {
+            xmlWriter.write();
+        }
+        xmlString = writer.toString();
+        return xmlString;
+    }
+
+    private void generatePartialXMLString(int maxRows) throws XMLStreamException {
+        int count = 0;
+        xmlWriter.writeStartDocument();
+        xmlWriter.writeVariables();
+        xmlWriter.writeStartResults();
+        while (xmlWriter.hasMoreResults() && count < maxRows) {
+            xmlWriter.writeResult();
+            count++;
+        }
+        xmlWriter.writeEndResults();
+        xmlWriter.writeEndDocument();
+    }
+
+    private Representation getAnswerRep(String format, String answerXML) throws SAXException,
+            IOException, ParserConfigurationException {
+        Representation rep;
+        if (format.equalsIgnoreCase(FORMAT_XML)) {
+            rep = new StringRepresentation(answerXML, TEXT_XML);
+        } else {
+            rep = constructHTMLAnswerRep(answerXML);
+        }
+        return rep;
+    }
+
+    private Representation constructHTMLAnswerRep(String answerXML)
+        throws SAXException, IOException, ParserConfigurationException {
+        Map<String, Object> root = new HashMap<String, Object>();
+        root.put("doc", parse(new InputSource(new StringReader(answerXML))));
+        root.put(GRAPH_NAME, graphName);
+        root.put("timeTaken", "-1");
+        root.put("hasMore", xmlWriter.hasMoreResults());
+        return getRepresentation(root, "queryResult.ftl");
     }
 }

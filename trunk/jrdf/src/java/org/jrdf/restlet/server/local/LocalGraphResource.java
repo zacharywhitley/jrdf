@@ -60,7 +60,7 @@
 package org.jrdf.restlet.server.local;
 
 import static freemarker.ext.dom.NodeModel.parse;
-import org.jrdf.query.AnswerXMLWriter;
+import org.jrdf.query.xml.AnswerXMLWriter;
 import static org.jrdf.restlet.MediaTypeExtensions.SPARQL_XML_RESULT_MEDIA_TYPE_STRING;
 import org.jrdf.restlet.server.BaseGraphResource;
 import org.restlet.Application;

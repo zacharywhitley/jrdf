@@ -63,7 +63,7 @@ import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.Answer;
-import org.jrdf.query.AnswerXMLWriter;
+import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;

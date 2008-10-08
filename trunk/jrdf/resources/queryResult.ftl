@@ -43,12 +43,13 @@
         </#list>
     </table>
 </div>
+<#if $timeTaken >= 0>
 <div>
 <p/>
 <p/>
 Time taken to answer query: ${timeTaken} milliseconds.
 </div>
-
+</#if>
 <#if hasMore>
 <div>
     <p/>

@@ -60,6 +60,7 @@
 package org.jrdf.restlet.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 
 /**
@@ -70,7 +71,7 @@ import java.net.MalformedURLException;
 public interface GraphQueryClient {
     void postQuery(String graphName, String queryString, String noRows) throws IOException;
 
-    String executeQuery() throws IOException;
+    InputStream executeQuery() throws IOException;
 
     void postDistributedServer(int port, String action, String servers) throws MalformedURLException;
 }

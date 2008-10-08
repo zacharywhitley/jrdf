@@ -71,6 +71,10 @@ import org.restlet.resource.Representation;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * @author Yuan-Fang Li
@@ -78,8 +82,10 @@ import java.net.URL;
  */
 
 public abstract class BaseClientImpl implements GraphQueryClient {
-    protected String serverString;
+    private static final String NEW_LINE = System.getProperty("line.separator");
+
     protected int serverPort;
+    protected String serverString;
 
     public BaseClientImpl(int portNumber, String server) {
         serverPort = portNumber;
@@ -101,4 +107,19 @@ public abstract class BaseClientImpl implements GraphQueryClient {
         URL url = new URL(HTTP.getSchemeName(), serverString, serverPort, "/graphs/" + graphName);
         return url.toString();
     }
+
+    public static String readFromInputStream(InputStream stream) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader din = new BufferedReader(new InputStreamReader(stream));
+            String line;
+            while ((line = din.readLine()) != null) {
+                sb.append(line + NEW_LINE);
+            }
+        } finally {
+            stream.close();
+        }
+        return sb.toString();
+    }
+
 }

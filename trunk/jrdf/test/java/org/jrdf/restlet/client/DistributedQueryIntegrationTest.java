@@ -67,11 +67,12 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.query.AnswerXMLWriter;
-import static org.jrdf.query.AnswerXMLWriter.BINDING;
-import static org.jrdf.query.AnswerXMLWriter.BNODE;
-import static org.jrdf.query.AnswerXMLWriter.LITERAL;
-import static org.jrdf.query.AnswerXMLWriter.RESULT;
+import org.jrdf.query.xml.AnswerXMLWriter;
+import static org.jrdf.query.xml.AnswerXMLWriter.BINDING;
+import static org.jrdf.query.xml.AnswerXMLWriter.BNODE;
+import static org.jrdf.query.xml.AnswerXMLWriter.LITERAL;
+import static org.jrdf.query.xml.AnswerXMLWriter.RESULT;
+import static org.jrdf.restlet.client.BaseClientImpl.readFromInputStream;
 import static org.jrdf.restlet.server.BaseGraphApplication.getHandler;
 import org.jrdf.restlet.server.distributed.DistributedQueryServer;
 import org.jrdf.restlet.server.local.LocalQueryServer;
@@ -87,6 +88,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
@@ -133,7 +135,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         assertEquals(2, graph.getNumberOfTriples());
         CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
         queryClient.postQuery(FOO, QUERY_STRING, "all");
-        String answer = queryClient.call();
+        String answer = readFromInputStream(queryClient.call());
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
     }
 
@@ -143,7 +145,8 @@ public class DistributedQueryIntegrationTest extends TestCase {
         GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
         client.postDistributedServer(PORT, "add", "127.0.0.1");
         client.postQuery(FOO, QUERY_STRING, "all");
-        final String answer = client.executeQuery();
+        final InputStream inputStream = client.executeQuery();
+        final String answer = readFromInputStream(inputStream);
         checkAnswerXML(answer, 0);
         server.stop();
     }
@@ -161,7 +164,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         client.postDistributedServer(PORT, "add", "127.0.0.1");
         final String queryString = QUERY_STRING;
         client.postQuery(FOO, queryString, "all");
-        final String answer = client.executeQuery();
+        final String answer = readFromInputStream(client.executeQuery());
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
     }
 
