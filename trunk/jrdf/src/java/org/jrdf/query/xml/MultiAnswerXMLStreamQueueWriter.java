@@ -59,8 +59,6 @@
 
 package org.jrdf.query.xml;
 
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -90,8 +88,10 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
     private Set<String> variables;
     private boolean gotVariables;
     private InputStream currentStream;
+    private boolean hasMore;
 
     public MultiAnswerXMLStreamQueueWriter(InputStream... streams) throws InterruptedException, XMLStreamException {
+        hasMore = false;
         variables = new HashSet<String>();
         streamQueue = new LinkedBlockingQueue<InputStream>();
         for (InputStream stream : streams) {
@@ -100,31 +100,43 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
         setupNextParser();
     }
 
+    public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
+        streamQueue.put(stream);
+        if (!hasMore) {
+            setupNextParser();
+        }
+    }
+
     private void setupNextParser() throws XMLStreamException {
         currentStream = streamQueue.poll();
-        if (parser == null || !parser.hasNext()) {
+        if (currentStream != null) {
             getNextStreamParser();
+            gotVariables = getVariables();
+            if (!hasMore) {
+                hasMore = hasMore();
+            }
+        } else {
+            parser = null;
+        }
+    }
+
+    private boolean hasMore() {
+        try {
+            return parser != null && getToNextStreamResult();
+        } catch (XMLStreamException e) {
+            return false;
         }
     }
 
     private void getNextStreamParser() throws XMLStreamException {
-        if (currentStream != null) {
-            parser = INPUT_FACTORY.createXMLEventReader(currentStream);
+        if (parser != null) {
+            parser.close();
         }
-    }
-
-    public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
-        streamQueue.put(stream);
-        setupNextParser();
+        parser = INPUT_FACTORY.createXMLEventReader(currentStream);
     }
 
     public boolean hasMoreResults() {
-        try {
-            setupNextParser();
-            return parser != null && getToNextResult();
-        } catch (XMLStreamException e) {
-            return false;
-        }
+        return hasMore;
     }
 
     public void writeVariables() throws XMLStreamException {
@@ -142,7 +154,7 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
 
     private boolean getVariables() throws XMLStreamException {
         boolean gotVar = false;
-        while (parser.hasNext()) {
+        while (parser != null && parser.hasNext()) {
             final XMLEvent event = parser.nextEvent();
             if (event.isStartElement()) {
                 final String tagName = getElementTagName(event);
@@ -159,7 +171,6 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
                 }
             }
         }
-        setupNextParser();
         return gotVar;
     }
 
@@ -189,8 +200,21 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
                 }
             }
         }
-        setupNextParser();
         return false;
+    }
+
+    private boolean getToNextStreamResult() throws XMLStreamException {
+        boolean gotNext = false;
+        while (parser != null && !gotNext) {
+            gotNext = getToNextResult();
+            if (!gotNext) {
+                setupNextParser();
+            }
+        }
+        /*while ((parser != null) && !(gotNext = getToNextResult())) {
+            setupNextParser();
+        }*/
+        return gotNext;
     }
 
     public void writeResult() throws XMLStreamException {
@@ -209,8 +233,8 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
                 }
             }
         }
-        setupNextParser();
         streamWriter.writeEndElement();
+        hasMore = hasMore();
     }
 
     public void setWriter(Writer writer) throws XMLStreamException, IOException {
@@ -225,17 +249,9 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
         write();
     }
 
-    public void write() throws XMLStreamException {
-        checkNotNull(streamWriter, parser);
-        writeStartDocument();
-        writeVariables();
-        writeAllResults();
-        writeEndDocument();
-    }
-
-    private void writeAllResults() throws XMLStreamException {
+    protected void writeAllResults() throws XMLStreamException {
         writeStartResults();
-        while (hasMoreResults()) {
+        while (hasMore) {
             writeResult();
         }
         writeEndResults();
@@ -270,7 +286,6 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
                 }
             }
         }
-        setupNextParser();
     }
 
     private void writeLiteralAttributes(StartElement event) throws XMLStreamException {
@@ -286,7 +301,11 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
 
     public void close() throws XMLStreamException {
         if (streamWriter != null) {
-            streamWriter.close();
+            try {
+                streamWriter.close();
+            } catch (XMLStreamException e) {
+                ;
+            }
         }
         if (parser != null) {
             parser.close();

@@ -59,7 +59,10 @@
 
 package org.jrdf.query.xml;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 
 /**
  * @author Yuan-Fang Li
@@ -73,12 +76,60 @@ public class MultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXMLSt
         super.setUp();
         stream1 = url.openStream();
         stream2 = url.openStream();
-        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1, stream2);
+        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1);
         xmlWriter.setWriter(writer);
     }
 
     protected void tearDown() throws Exception {
         stream1.close();
         stream2.close();
+    }
+
+    public void testIncomingStreams() throws XMLStreamException, InterruptedException {
+        int count = 0;
+        xmlWriter.writeStartResults();
+        while (xmlWriter.hasMoreResults()) {
+            count++;
+            xmlWriter.writeResult();
+        }
+        assertEquals(2, count);
+        assertFalse(xmlWriter.hasMoreResults());
+        xmlWriter.addStream(stream2);
+        assertTrue(xmlWriter.hasMoreResults());
+        while (xmlWriter.hasMoreResults()) {
+            count++;
+            xmlWriter.writeResult();
+        }
+        xmlWriter.writeEndResults();
+        assertEquals(4, count);
+    }
+
+    public void test2Streams() throws XMLStreamException, InterruptedException {
+        int count = 0;
+        xmlWriter.addStream(stream2);
+        xmlWriter.writeStartResults();
+        while (xmlWriter.hasMoreResults()) {
+            count++;
+            xmlWriter.writeResult();
+        }
+        assertEquals(4, count);
+        xmlWriter.writeEndResults();
+    }
+
+    public void test2StreamsConstructor() throws XMLStreamException, InterruptedException, IOException {
+        stream1.close();
+        stream1 = url.openStream();
+        xmlWriter.close();
+        writer = new StringWriter();
+        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1, stream2);
+        xmlWriter.setWriter(writer);
+        int count = 0;
+        xmlWriter.writeStartResults();
+        while (xmlWriter.hasMoreResults()) {
+            count++;
+            xmlWriter.writeResult();
+        }
+        assertEquals(4, count);
+        xmlWriter.writeEndResults();
     }
 }
