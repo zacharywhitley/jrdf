@@ -75,14 +75,14 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.AnswerXMLWriter;
+import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.vocabulary.XSD;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.StringWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URI;
 import static java.net.URI.create;
 

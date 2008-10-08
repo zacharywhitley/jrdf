@@ -57,12 +57,10 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.restlet.client;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
 /**
@@ -70,26 +68,32 @@ import java.io.PipedOutputStream;
  * @version :$
  */
 
-public class StreamAnswerXMLWriter {
-    private static final int EOF_BYTE = -1;
+public class RunnableStreamConverter implements Runnable {
+    private PipedOutputStream outputStream;
+    private InputStream inputStream;
 
-    private PipedOutputStream sinkStream;
-    private PipedInputStream inputStream;
-
-
-    public StreamAnswerXMLWriter() throws IOException {
-        sinkStream = new PipedOutputStream();
-        inputStream = new PipedInputStream(sinkStream);
+    public RunnableStreamConverter(PipedOutputStream outputStream, InputStream inputStream) {
+        this.outputStream = outputStream;
+        this.inputStream = inputStream;
     }
 
-    public void readFromString(String content) throws IOException {
-        InputStream stream = new ByteArrayInputStream(content.getBytes("UTF-8"));
+    public void run() {
+        //BufferedOutputStream output = new BufferedOutputStream(outputStream);
         int i;
-        while ((i = stream.read()) != EOF_BYTE) {
-            sinkStream.write(i);
+        try {
+            while ((i = inputStream.read()) != -1) {
+                outputStream.write(i);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                inputStream.close();
+                notifyAll();
+                //output.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        sinkStream.write(EOF_BYTE);
     }
-
-
 }

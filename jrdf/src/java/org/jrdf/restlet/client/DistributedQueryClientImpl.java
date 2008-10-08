@@ -59,10 +59,14 @@
 
 package org.jrdf.restlet.client;
 
-import org.jrdf.util.param.ParameterUtil;
-import org.xml.sax.SAXException;
+import org.jrdf.query.xml.AnswerXMLWriter;
+import org.jrdf.query.xml.MultiAnswerXMLStreamQueueWriter;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -79,14 +83,15 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  */
 
 public class DistributedQueryClientImpl implements GraphQueryClient {
+    private int localPort;
     private ExecutorService executor;
     private Collection<CallableGraphQueryClient> queryClients;
     private Collection<String> serverAddresses;
-    private int localPort;
-    private AnswerXMLAggregator aggregator;
-    private Set<Future<String>> set;
+    private Set<Future<InputStream>> set;
+    private MultiAnswerXMLStreamQueueWriter xmlWriter;
 
-    public DistributedQueryClientImpl(int localPort, Collection<String> servers) {
+    public DistributedQueryClientImpl(int localPort, Collection<String> servers)
+        throws XMLStreamException, InterruptedException {
         this.localPort = localPort;
         serverAddresses = servers;
         queryClients = new LinkedList<CallableGraphQueryClient>();
@@ -94,10 +99,15 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
             queryClients.add(new GraphClientImpl(server, this.localPort));
         }
         executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
-        aggregator = new AnswerXMLDOMAggregator();
+        xmlWriter = new MultiAnswerXMLStreamQueueWriter();
     }
 
     public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
+    }
+
+    public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException {
+        xmlWriter.setWriter(writer);
+        return xmlWriter;
     }
 
     public void postQuery(String graphName, String queryString, String noRows) {
@@ -110,37 +120,36 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
         }
     }
 
-    public String executeQuery() throws IOException {
-        ParameterUtil.checkNotNull(queryClients);
-        StringBuilder builder = new StringBuilder();
-        set = new HashSet<Future<String>>();
+    public InputStream executeQuery() throws IOException {
+        checkNotNull(queryClients);
+        set = new HashSet<Future<InputStream>>();
         try {
             executeQuries();
             aggregateResults();
-            builder.append(aggregator.getXML());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return builder.toString();
+        return null;
     }
 
-    private void aggregateResults() throws InterruptedException, ExecutionException, IOException, SAXException {
-        for (Future<String> future : set) {
-            final String xmlAnswer = future.get();
-            aggregator.aggregate(xmlAnswer);
+    private void aggregateResults() throws InterruptedException, ExecutionException, XMLStreamException {
+        for (Future<InputStream> future : set) {
+            final InputStream stream = future.get();
+            System.err.println("aggregating xml");
+            xmlWriter.addStream(stream);
         }
     }
 
     private void executeQuries() {
         for (CallableGraphQueryClient queryClient : queryClients) {
             System.err.println("Starting client: " + queryClient.toString());
-            Future<String> future = executor.submit(queryClient);
+            Future<InputStream> future = executor.submit(queryClient);
             set.add(future);
         }
     }
 
     public void cancelExecution() {
-        for (Future<String> future : set) {
+        for (Future<InputStream> future : set) {
             future.cancel(true);
         }
     }

@@ -59,6 +59,7 @@
 
 package org.jrdf.restlet.client;
 
+import java.io.InputStream;
 import java.util.concurrent.Callable;
 
 /**
@@ -66,5 +67,5 @@ import java.util.concurrent.Callable;
  * @version :$
  */
 
-public interface CallableGraphQueryClient extends GraphQueryClient, Callable<String> {
+public interface CallableGraphQueryClient extends GraphQueryClient, Callable<InputStream> {
 }

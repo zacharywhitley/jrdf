@@ -57,71 +57,28 @@
  *
  */
 
-package org.jrdf.restlet.server;
+package org.jrdf.query.xml;
 
-import static org.jrdf.query.xml.AnswerXMLWriter.XSLT_URL_STRING;
-
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Templates;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.StringReader;
-import java.util.Queue;
-import java.util.LinkedList;
+import java.io.InputStream;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class XMLTransformer {
-    private static final TransformerFactory TRANSFORM_FACTORY = TransformerFactory.newInstance();
-    private static final Source XSLT_SOURCE = new StreamSource(XSLT_URL_STRING);
+public class MultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXMLStreamWriterUnitTest {
+    private InputStream stream1, stream2;
 
-    private int counter;
-    private Source source;
-    private Result result;
-    private XMLEventReader reader;
-    private XMLEventWriter writer;
-    private Templates template;
-    private Transformer transformer;
-    private ByteArrayOutputStream resultStream;
-    private ByteArrayOutputStream byteOutputStream;
-    private Queue<XMLEvent> startEventQueue;
-
-    public XMLTransformer(int counter, String xmlString) throws TransformerConfigurationException, XMLStreamException {
-        this.counter = counter;
-        this.source = new StreamSource(new StringReader(xmlString));
-        template = TRANSFORM_FACTORY.newTemplates(XSLT_SOURCE);
-        transformer = template.newTransformer();
-        reader = XMLInputFactory.newInstance().createXMLEventReader(new ByteArrayInputStream(xmlString.getBytes()));
-        byteOutputStream = new ByteArrayOutputStream();
-        writer = XMLOutputFactory.newInstance().createXMLEventWriter(byteOutputStream);
-        startEventQueue = new LinkedList<XMLEvent>();
+    protected void setUp() throws Exception {
+        super.setUp();
+        stream1 = url.openStream();
+        stream2 = url.openStream();
+        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1, stream2);
+        xmlWriter.setWriter(writer);
     }
 
-    private void getStart() throws XMLStreamException {
-        while (reader.hasNext()) {
-            XMLEvent e = reader.nextEvent();
-            while (reader.hasNext() && !(e instanceof StartElement)) {
-                startEventQueue.offer(e);
-                e = reader.nextEvent();
-            }
-            while (reader.hasNext() && e instanceof StartElement) {
-                StartElement start = (StartElement) e;
-            }
-        }
+    protected void tearDown() throws Exception {
+        stream1.close();
+        stream2.close();
     }
 }

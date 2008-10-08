@@ -65,6 +65,8 @@ import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.xml.AnswerXMLPagenatedStreamWriter;
+import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 

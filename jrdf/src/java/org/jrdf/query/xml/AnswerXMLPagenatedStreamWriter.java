@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.query.xml;
 
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
@@ -73,10 +73,7 @@ import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_SUBJECT
 import org.jrdf.util.EmptyClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import javax.xml.stream.XMLOutputFactory;
-import static javax.xml.stream.XMLOutputFactory.newInstance;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
@@ -89,14 +86,9 @@ import java.util.Set;
  * @version :$
  */
 
-public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
-    private static final String ENCODING_DEFAULT = "UTF-8";
-    private static final String VERSION_NUMBER = "1.0";
-    private static final XMLOutputFactory FACTORY = newInstance();
-
+public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter implements AnswerXMLWriter {
     private Set<Attribute> heading;
     private Relation results;
-    private XMLStreamWriter streamWriter;
     private Iterator<Tuple> tupleIterator;
     private Tuple currentTuple;
 
@@ -112,19 +104,12 @@ public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
         } else {
             tupleIterator = new EmptyClosableIterator<Tuple>();
         }
-        streamWriter = FACTORY.createXMLStreamWriter(writer);
-    }
-
-    public void close() throws XMLStreamException, IOException {
-        if (streamWriter != null) {
-            streamWriter.flush();
-            streamWriter.close();
-        }
+        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
     public void setWriter(Writer writer) throws XMLStreamException, IOException {
         close();
-        streamWriter = FACTORY.createXMLStreamWriter(writer);
+        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
     public boolean hasMoreResults() {
@@ -137,7 +122,7 @@ public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
     }
 
     public void write(Writer writer) throws XMLStreamException {
-        streamWriter = FACTORY.createXMLStreamWriter(writer);
+        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
         doWrite();
     }
 
@@ -148,22 +133,6 @@ public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
         writeEndDocument();
     }
 
-    public void writeEndDocument() throws XMLStreamException {
-        streamWriter.writeEndElement();
-        streamWriter.writeEndDocument();
-    }
-
-    public void writeStartDocument() throws XMLStreamException {
-        streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
-        String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
-        streamWriter.writeProcessingInstruction("xml-stylesheet", target);
-
-        streamWriter.writeStartElement(SPARQL);
-        streamWriter.writeAttribute("xmlns", SPARQL_NS);
-        streamWriter.writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        streamWriter.writeAttribute("xsi:schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
-    }
-
     private void writeAllResults() throws XMLStreamException {
         writeStartResults();
         while (tupleIterator.hasNext()) {
@@ -171,14 +140,6 @@ public class AnswerXMLPagenatedStreamWriter implements AnswerXMLWriter {
         }
         writeEndResults();
         streamWriter.flush();
-    }
-
-    public void writeStartResults() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULTS);
-    }
-
-    public void writeEndResults() throws XMLStreamException {
-        streamWriter.writeEndElement();
     }
 
     public void writeResult() throws XMLStreamException {

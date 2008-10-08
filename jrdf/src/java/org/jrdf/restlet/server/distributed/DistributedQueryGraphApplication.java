@@ -59,6 +59,7 @@
 
 package org.jrdf.restlet.server.distributed;
 
+import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.restlet.client.DistributedQueryClientImpl;
 import org.jrdf.restlet.client.GraphQueryClient;
 import org.jrdf.restlet.server.BaseGraphApplication;
@@ -68,8 +69,9 @@ import org.restlet.Restlet;
 import org.restlet.Router;
 import org.restlet.resource.ResourceException;
 
-import java.io.InputStream;
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -83,7 +85,7 @@ public class DistributedQueryGraphApplication extends BaseGraphApplication {
     private Set<String> servers;
     private int portNumber;
     private GraphQueryClient client;
-    private InputStream inputStream;
+    private AnswerXMLWriter xmlWriter;
 
     public DistributedQueryGraphApplication() {
         portNumber = LocalQueryServer.PORT;
@@ -107,20 +109,15 @@ public class DistributedQueryGraphApplication extends BaseGraphApplication {
     }
 
     public void answerQuery(String graphName, String queryString) throws ResourceException {
-
         try {
             if (client == null) {
                 client = new DistributedQueryClientImpl(portNumber, servers);
             }
             client.postQuery(graphName, queryString, null);
-            //return client.executeQuery();
-        } catch (IOException e) {
+            client.executeQuery();
+        } catch (Exception e) {
             throw new ResourceException(e);
         }
-    }
-
-    public String getAnswer() throws IOException {
-        return client.executeQuery();
     }
 
     public void setPort(int port) {
@@ -138,5 +135,10 @@ public class DistributedQueryGraphApplication extends BaseGraphApplication {
         router.attach("/graphs/{graph}", DistributedGraphResource.class);
         router.attachDefault(DistributedQueryResource.class);
         return router;
+    }
+
+    public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
+        xmlWriter = ((DistributedQueryClientImpl) client).getXMLWriter(writer);
+        return xmlWriter;
     }
 }
