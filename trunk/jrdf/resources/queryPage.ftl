@@ -7,15 +7,21 @@
     Sparql query for graph <i>${graphName}</i>
   </h1>
   <div>
-  Query:
   <form id="sparql" name="sparqlForm" method="post" action="${graphName}/result.html">
+  Query:
+  <br/>
     <textarea id="sparqlText" name="queryString" rows="6" cols="70">
 SELECT *
 WHERE {
     ?s ?p ?o .
 }
     </textarea>
-    <p/>
+    <br/>
+    <input type="reset" value="Reset"/>
+    <input type="button" value="Clear" onclick="document.sparqlForm.queryString.value=''"/>
+    <br/>
+    <br/>
+    <br/>
     <fieldset style="width: 240px;">
     <legend>Result format</legend>
     <div>

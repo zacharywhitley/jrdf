@@ -208,9 +208,7 @@ public class LocalGraphResource extends BaseGraphResource {
         Map<String, Object> root = new HashMap<String, Object>();
         root.put("doc", parse(new InputSource(new StringReader(answerXML))));
         root.put(GRAPH_NAME, graphName);
-        final long timeTaken = application.getTimeTaken();
-        System.err.println("time taken = " + timeTaken);
-        root.put("timeTaken", timeTaken);
+        root.put("timeTaken", application.getTimeTaken());
         root.put("hasMore", xmlWriter.hasMoreResults());
         return getRepresentation(root, "queryResult.ftl");
     }
