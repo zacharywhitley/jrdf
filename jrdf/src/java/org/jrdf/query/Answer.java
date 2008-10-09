@@ -82,4 +82,5 @@ public interface Answer {
 
     AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException;
 
+    AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException, IOException;
 }

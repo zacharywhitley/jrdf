@@ -81,6 +81,10 @@ import java.io.Writer;
 
 public class WebInterfaceGraphApplication extends BaseGraphApplication {
     private static final String LOCAL_SERVER = "127.0.0.1";
+    /**
+     * The max no. of rows of answers that will be transfomred into xml.
+     */
+    public static final int MAX_ROWS = 1000;
 
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
@@ -91,6 +95,7 @@ public class WebInterfaceGraphApplication extends BaseGraphApplication {
     private UrqlConnectionImpl urqlConnection;
     private Answer answer;
     private AnswerXMLWriter xmlWriter;
+    private boolean tooManyRows;
 
     public WebInterfaceGraphApplication() {
         this.urqlConnection = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
@@ -131,6 +136,7 @@ public class WebInterfaceGraphApplication extends BaseGraphApplication {
         try {
             final MoleculeGraph graph = getGraph(graphName);
             answer = urqlConnection.executeQuery(graph, queryString);
+            tooManyRows = answer.numberOfTuples() > MAX_ROWS;
         } catch (Exception e) {
             throw new ResourceException(e);
         }
@@ -140,8 +146,16 @@ public class WebInterfaceGraphApplication extends BaseGraphApplication {
         return answer.getTimeTaken();
     }
 
+    public boolean isTooManyRows() {
+        return tooManyRows;
+    }
+
     public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
-        xmlWriter = answer.getXMLWriter(writer);
+        if (tooManyRows) {
+            xmlWriter = answer.getXMLWriter(writer, MAX_ROWS);
+        } else {
+            xmlWriter = answer.getXMLWriter(writer);
+        }
         return xmlWriter;
     }
 }

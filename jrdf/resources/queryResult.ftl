@@ -46,6 +46,9 @@
 <#if (timeTaken >= 0)>
 <div>
 <br/>
+<#if tooManyRows>
+Too many answers returned by query engine, only returning ${maxRows} results.
+</#if>
 Time taken to answer query: ${timeTaken} milliseconds.
 </div>
 </#if>
@@ -55,10 +58,13 @@ Time taken to answer query: ${timeTaken} milliseconds.
     <a href="/graphs/${graphName}/result.html?next=true">More results</a>
 </div>
 </#if>
+
 <div>
 <br/>
 <br/>
 <a href="/graphs/${graphName}">Write a new query</a>
+<br/>
+<br/>
 </div>
 </body>
 </html>

@@ -113,7 +113,6 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         Request request = new Request(Method.POST, requestURL, representation);
         Response response = client.handle(request);
         if (!response.getStatus().isSuccess()) {
-            System.err.println("Error: " + response.getStatus().toString());
             throw new RuntimeException(response.getStatus().toString());
         }
     }
@@ -126,7 +125,6 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
             Representation output = response.getEntity();
             return output.getStream();
         } else {
-            System.err.println("status = " + status.getCode() + ", " + status.getName());
             throw new RuntimeException(status.getThrowable());
         }
     }

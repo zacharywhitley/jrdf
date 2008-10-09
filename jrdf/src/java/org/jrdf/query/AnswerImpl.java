@@ -261,4 +261,13 @@ public final class AnswerImpl implements Answer, Serializable {
         }
         return xmlWriter;
     }
+
+    public AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException, IOException {
+        if (xmlWriter == null) {
+            xmlWriter = new AnswerXMLPagenatedStreamWriter(heading, results, writer, maxRows);
+        } else {
+            xmlWriter.setWriter(writer);
+        }
+        return xmlWriter;
+    }
 }

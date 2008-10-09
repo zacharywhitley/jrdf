@@ -85,11 +85,12 @@ public class DistributedQueryServer {
         component.start();
         InetAddress addr = InetAddress.getLocalHost();
         String hostName = addr.getHostName();
-        System.err.println("Distributed query server started at: " + hostName + ":" + PORT);
+        System.out.println("Distributed query server started at: " + hostName + ":" + PORT);
     }
 
     public void stop() throws Exception {
         component.stop();
+        System.out.println("Distributed query server stopped");
     }
 
     public static void main(String[] args) throws Exception {

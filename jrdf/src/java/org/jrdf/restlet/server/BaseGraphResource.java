@@ -146,6 +146,7 @@ public class BaseGraphResource extends Resource {
     }
 
     public void setGraphApplication(WebInterfaceGraphApplication newApplication) {
+        System.err.println("set application: " + newApplication);
         this.application = newApplication;
     }
 

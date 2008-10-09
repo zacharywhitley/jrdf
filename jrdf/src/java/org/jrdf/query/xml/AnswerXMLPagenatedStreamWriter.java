@@ -92,6 +92,8 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
     private Relation results;
     private Iterator<Tuple> tupleIterator;
     private Tuple currentTuple;
+    private int maxRows;
+    private int count;
 
     private AnswerXMLPagenatedStreamWriter() {
     }
@@ -102,10 +104,19 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
         this.results = results;
         if (results != null) {
             tupleIterator = this.results.getSortedTuples().iterator();
+            maxRows = results.getTuples().size();
         } else {
             tupleIterator = new EmptyClosableIterator<Tuple>();
+            maxRows = 0;
         }
         streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
+        count = 0;
+    }
+
+    public AnswerXMLPagenatedStreamWriter(Set<Attribute> heading, Relation results, Writer writer, int maxRows)
+        throws XMLStreamException {
+        this(heading, results, writer);
+        this.maxRows = maxRows;
     }
 
     public void setWriter(Writer writer) throws XMLStreamException, IOException {
@@ -114,7 +125,7 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
     }
 
     public boolean hasMoreResults() {
-        return tupleIterator.hasNext();
+        return tupleIterator.hasNext() && count < maxRows;
     }
 
     public void write() throws XMLStreamException {
@@ -140,7 +151,7 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
 
     protected void writeAllResults() throws XMLStreamException {
         writeStartResults();
-        while (tupleIterator.hasNext()) {
+        while (hasMoreResults()) {
             writeResult();
         }
         writeEndResults();
@@ -156,6 +167,7 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
                 writeOneBinding(avps, headingAttribute);
             }
             streamWriter.writeEndElement();
+            count++;
         }
     }
 

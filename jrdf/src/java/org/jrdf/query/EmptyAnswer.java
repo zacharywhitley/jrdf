@@ -64,6 +64,7 @@ import org.jrdf.query.xml.AnswerXMLWriter;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.io.Writer;
 
 public final class EmptyAnswer implements Answer, Serializable {
@@ -95,5 +96,16 @@ public final class EmptyAnswer implements Answer, Serializable {
 
     public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException {
         return new AnswerXMLPagenatedStreamWriter(null, null, writer);
+    }
+
+    public static String getEmptyAnswerXML() throws XMLStreamException {
+        StringWriter writer = new StringWriter();
+        AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(null, null, writer);
+        xmlWriter.write();
+        return writer.toString();
+    }
+
+    public AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException {
+        return getXMLWriter(writer);
     }
 }
