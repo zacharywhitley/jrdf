@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-<beans>
     <bean id="configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
@@ -14,7 +14,7 @@
 
     <bean id="component" class="org.restlet.ext.spring.SpringComponent">
         <property name="server" ref="server"/>
-        <property name="defaultTarget" ref="application"/>
+        <property name="defaultTarget" ref="router"/>
         <property name="logService" ref="logService"/>
     </bean>
 
@@ -23,20 +23,38 @@
         <constructor-arg value="${server.port}"/>
     </bean>
 
-    <bean id="application" class="org.jrdf.restlet.server.local.WebInterfaceGraphApplication"/>
-
     <bean id="logService" class="org.restlet.service.LogService">
         <constructor-arg index="0" value="false"/>
     </bean>
 
     <bean id="router" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="application"/>
         <property name="attachments">
             <map>
-                <entry key="" value="org.jrdf.restlet.server.GraphsResource"/>
-                <entry key="/graphs" value="org.jrdf.restlet.server.GraphsResource"/>
-                <entry key="/graphs/{graph}" value="org.jrdf.restlet.server.local.LocalGraphResource"/>
+                <entry key="">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="graphs"/>
+                    </bean>
+                </entry>
+                <entry key="/graphs">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="graphs"/>
+                    </bean>
+                </entry>
+                <entry key="/graphs/{graph}">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="localGraphResource"/>
+                    </bean>
+                </entry>
             </map>
         </property>
     </bean>
+
+    <bean id="graphs" class="org.jrdf.restlet.server.GraphsResource" scope="prototype">
+        <property name="graphApplication" ref="webApplication"/>
+    </bean>
+    <bean id="localGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
+        <property name="graphApplication" ref="webApplication"/>
+    </bean>
+
+    <bean id="webApplication" class="org.jrdf.restlet.server.local.WebInterfaceGraphApplication" scope="singleton"/>
 </beans>

@@ -1,24 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
     <!--Globalized in memory, graph classes -->
 
     <!-- Localized in memory, graph classes -->
 
-    <bean id="memIndex" class="org.jrdf.graph.local.index.longindex.mem.LongIndexMem" singleton="false"/>
-    <bean id="moleculeIndex" class="org.jrdf.graph.global.index.adapter.LongIndexAdapter" singleton="false">
+    <bean id="memIndex" class="org.jrdf.graph.local.index.longindex.mem.LongIndexMem" scope="prototype"/>
+    <bean id="moleculeIndex" class="org.jrdf.graph.global.index.adapter.LongIndexAdapter" scope="prototype">
         <constructor-arg>
-            <bean class="org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem" singleton="false"/>
+            <bean class="org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem" scope="prototype"/>
         </constructor-arg>
     </bean>
 
-    <bean class="org.jrdf.collection.MemCollectionFactory" singleton="true"/>
+    <bean class="org.jrdf.collection.MemCollectionFactory" scope="singleton"/>
 
-    <bean class="org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory" singleton="true"/>
+    <bean class="org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory" scope="singleton"/>
 
-    <bean id="graphFactory" class="org.jrdf.graph.local.OrderedGraphFactoryImpl" singleton="false">
+    <bean id="graphFactory" class="org.jrdf.graph.local.OrderedGraphFactoryImpl" scope="prototype">
         <constructor-arg>
             <list>
                 <ref bean="memIndex"/>

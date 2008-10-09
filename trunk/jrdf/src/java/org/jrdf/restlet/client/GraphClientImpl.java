@@ -62,7 +62,6 @@ package org.jrdf.restlet.client;
 import org.jrdf.restlet.server.distributed.DistributedQueryResource;
 import static org.jrdf.restlet.server.distributed.DistributedQueryResource.ACTION;
 import static org.jrdf.restlet.server.distributed.DistributedQueryResource.PORT_STRING;
-import static org.jrdf.restlet.server.local.LocalQueryServer.PORT;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
 import org.restlet.data.Form;
@@ -84,6 +83,7 @@ import java.net.URL;
  */
 
 public class GraphClientImpl extends BaseClientImpl implements CallableGraphQueryClient {
+    private static final int PORT = 8182;
     private Client client;
     protected Request request;
     protected String answer;

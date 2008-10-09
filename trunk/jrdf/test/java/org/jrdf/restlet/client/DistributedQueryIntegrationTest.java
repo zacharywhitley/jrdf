@@ -63,6 +63,7 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import junit.framework.TestCase;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import org.jrdf.SpringLocalServer;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.URIReference;
@@ -75,8 +76,6 @@ import static org.jrdf.query.xml.AnswerXMLWriter.RESULT;
 import static org.jrdf.restlet.client.BaseClientImpl.readFromInputStream;
 import static org.jrdf.restlet.server.BaseGraphApplication.getHandler;
 import org.jrdf.restlet.server.distributed.DistributedQueryServer;
-import org.jrdf.restlet.server.local.LocalQueryServer;
-import static org.jrdf.restlet.server.local.LocalQueryServer.PORT;
 import org.jrdf.util.DirectoryHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -87,8 +86,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
@@ -102,10 +101,11 @@ public class DistributedQueryIntegrationTest extends TestCase {
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = getHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-
+    private static final int PORT = 8182;
+    
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
-    private LocalQueryServer localQueryServer;
+    private SpringLocalServer localQueryServer;
     private static final String QUERY_STRING = "SELECT * WHERE { ?s <urn:p> ?o. }";
     private DistributedQueryServer distributedServer;
 
@@ -116,7 +116,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph = FACTORY.getGraph(FOO);
         graph.clear();
         elementFactory = graph.getElementFactory();
-        localQueryServer = new LocalQueryServer();
+        localQueryServer = new SpringLocalServer();
         localQueryServer.start();
         distributedServer = new DistributedQueryServer();
     }
