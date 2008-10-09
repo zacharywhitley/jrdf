@@ -59,28 +59,34 @@
 
 package org.jrdf.restlet.server;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import static org.jrdf.parser.Reader.parseNTriples;
+import org.jrdf.restlet.server.local.WebInterfaceGraphApplication;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
 import org.jrdf.util.ModelsImpl;
 import static org.jrdf.util.ModelsImpl.JRDF_NAMESPACE;
+import org.restlet.Application;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
+import static org.restlet.data.MediaType.TEXT_HTML;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
+import static org.restlet.data.Status.SUCCESS_OK;
+import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.resource.Representation;
-import org.restlet.resource.Resource;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.StringRepresentation;
 import org.restlet.resource.Variant;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import static java.net.URI.create;
 import java.util.HashMap;
@@ -92,14 +98,14 @@ import java.util.Set;
  * @version :$
  */
 
-public class GraphsResource extends Resource {
+public class GraphsResource extends BaseGraphResource {
     private static final URI NAME = create(JRDF_NAMESPACE + "name");
     private static final URI ID = create(JRDF_NAMESPACE + "id");
+    private static final DirectoryHandler HANDLER = BaseGraphApplication.getHandler();
 
-    private Models model;
+    private String path;
+    private BaseGraphApplication application;
     private Set<org.jrdf.graph.Resource> resources;
-    private DirectoryHandler handler;
-    protected String path;
 
     public GraphsResource(Context context, Request request, Response response) {
         super(context, request, response);
@@ -108,10 +114,14 @@ public class GraphsResource extends Resource {
         if (!path.endsWith("/")) {
             path += "/";
         }
-        handler = BaseGraphApplication.getHandler();
-        File file = new File(handler.getDir(), "graphs.nt");
-        Graph modelsGraph = parseNTriples(file);
-        model = new ModelsImpl(modelsGraph);
+        application = (WebInterfaceGraphApplication) Application.getCurrent();
+        refreshGraphsModel();
+    }
+
+    private void refreshGraphsModel() {
+        final File file = new File(HANDLER.getDir(), "graphs.nt");
+        final Graph modelsGraph = parseNTriples(file);
+        final Models model = new ModelsImpl(modelsGraph);
         resources = model.getResources();
     }
 
@@ -120,23 +130,51 @@ public class GraphsResource extends Resource {
         return true;
     }
 
+    public void handleGet() {
+        final String ss = getRequest().getResourceRef().getPath();
+        if (ss != null && !"/graphs".equals(ss)) {
+            getResponse().redirectPermanent("/graphs");
+        } else {
+            try {
+                Map<String, String> map = populateIdNameMap();
+                getResponse().setEntity(constructRepresentation(map));
+                getResponse().setStatus(SUCCESS_OK);
+            } catch (Exception e) {
+                getResponse().setStatus(SERVER_ERROR_INTERNAL, e);
+            }
+        }
+    }
+
     @Override
     public Representation represent(Variant variant) throws ResourceException {
         Map<String, String> map = populateIdNameMap();
-        StringBuilder builder = new StringBuilder();
-        for (String key : map.keySet()) {
-            String name = map.get(key);
-            builder.append("ID = " + key + ",\t" + "Name = " + path + name + "\n");
+        Representation rep = null;
+        try {
+            rep = constructRepresentation(map);
+            getResponse().setStatus(SUCCESS_OK);
+        } catch (IOException e) {
+            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage());
         }
-        return new StringRepresentation(builder, MediaType.TEXT_PLAIN);
+        return rep;
+    }
+
+    private Representation constructRepresentation(Map<String, String> map) throws IOException {
+        Map root = new HashMap();
+        root.put("dirName", application.getGraphsDir());
+        root.put("graphs", map);
+        root.put("rand", Math.random());
+        Configuration cfg = getConfiguration();
+        Template template = cfg.getTemplate("graphsPage.ftl");
+        return new TemplateRepresentation(template, root, TEXT_HTML);
     }
 
     private Map<String, String> populateIdNameMap() throws ResourceException {
+        refreshGraphsModel();
         Map<String, String> idNameMap = new HashMap<String, String>();
         try {
             for (org.jrdf.graph.Resource resource : resources) {
-                String name = getStringValue(resource, NAME);
                 String id = getStringValue(resource, ID);
+                String name = getStringValue(resource, NAME);
                 idNameMap.put(id, name);
             }
         } catch (Exception e) {

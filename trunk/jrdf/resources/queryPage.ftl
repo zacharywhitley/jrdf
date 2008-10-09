@@ -4,11 +4,17 @@
 </head>
 <body>
   <h1>
-    Enter the Sparql query below and click "Submit" to get the answer.
+    Sparql query for graph <i>${graphName}</i>
   </h1>
-  Sparql query:
+  <div>
+  Query:
   <form id="sparql" name="sparqlForm" method="post" action="${graphName}">
-    <textarea id="sparqlText" name="queryString" rows="6" cols="70"></textarea>
+    <textarea id="sparqlText" name="queryString" rows="6" cols="70">
+SELECT *
+WHERE {
+    ?s ?p ?o .
+}
+    </textarea>
     <p/>
     <fieldset style="width: 240px;">
     <legend>Result format</legend>
@@ -31,5 +37,9 @@
     <p/>
     <input type="submit" value="Submit" />
 </form>
+</div>
+<div>
+<a href="/graphs">Select another graph<a/>
+</div>
 </body>
 </html>
