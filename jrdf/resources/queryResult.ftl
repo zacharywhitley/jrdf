@@ -52,13 +52,13 @@ Time taken to answer query: ${timeTaken} milliseconds.
 <#if hasMore>
 <div>
 <br/>
-    <a href="${graphName}?next=true">More results</a>
+    <a href="/graphs/${graphName}/result.html?next=true">More results</a>
 </div>
 </#if>
 <div>
 <br/>
 <br/>
-<a href="${graphName}>Write a new query</a>
+<a href="/graphs/${graphName}">Write a new query</a>
 </div>
 </body>
 </html>
