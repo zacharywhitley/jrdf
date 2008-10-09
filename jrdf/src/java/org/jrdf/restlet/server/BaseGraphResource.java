@@ -76,6 +76,7 @@ import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Resource;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.StringRepresentation;
 import org.restlet.resource.Variant;
 
@@ -167,7 +168,7 @@ public class BaseGraphResource extends Resource {
     }
 
     @Override
-    public Representation represent(Variant variant) {
+    public Representation represent(Variant variant) throws ResourceException {
         Representation rep = null;
         try {
             rep = constructBaseRep();
@@ -199,7 +200,9 @@ public class BaseGraphResource extends Resource {
         Configuration cfg = new Configuration();
         final String curDir = System.getProperty("user.dir");
         File resourceDir = new File(new File(curDir), "resources");
-        cfg.setObjectWrapper(new DefaultObjectWrapper());
+        final DefaultObjectWrapper wrapper = new DefaultObjectWrapper();
+        wrapper.setSimpleMapWrapper(true);
+        cfg.setObjectWrapper(wrapper);
         cfg.setDirectoryForTemplateLoading(resourceDir);
         return cfg;
     }

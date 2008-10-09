@@ -95,4 +95,8 @@ public abstract class BaseGraphApplication extends Application {
     public String getFormat() {
         return format;
     }
+
+    public String getGraphsDir() {
+        return HANDLER.getDir().getName();
+    }
 }

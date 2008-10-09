@@ -43,24 +43,21 @@
         </#list>
     </table>
 </div>
-<#if $timeTaken >= 0>
+<#if (timeTaken >= 0)>
 <div>
-<p/>
-<p/>
+<br/>
 Time taken to answer query: ${timeTaken} milliseconds.
 </div>
 </#if>
 <#if hasMore>
 <div>
-    <p/>
-    <p/>
+<br/>
     <a href="${graphName}?next=true">More results</a>
 </div>
 </#if>
-
 <div>
-<p/>
-<p/>
+<br/>
+<br/>
 <a href="${graphName}>Write a new query</a>
 </div>
 </body>
