@@ -8,7 +8,7 @@
   </h1>
   <div>
   Query:
-  <form id="sparql" name="sparqlForm" method="post" action="${graphName}">
+  <form id="sparql" name="sparqlForm" method="post" action="${graphName}/result.html">
     <textarea id="sparqlText" name="queryString" rows="6" cols="70">
 SELECT *
 WHERE {
