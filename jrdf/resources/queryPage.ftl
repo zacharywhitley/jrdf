@@ -1,23 +1,6 @@
 <html>
 <head>
   <title>Sparql Query Page -- Graph ${graphName}</title>
-<script type="text/javascript">
-function clearForm(formIdent) {
-  var formname = formIdent;
-  var inp = document.getElementsByTagName('input');
-	for(var i = 0; i < inp.length; i++) {
-		if(inp[i].type == 'text') {
-			inp[i].value = '';
-		}
-	}
-  var inp = document.getElementsByTagName('select');
-	for(var i = 0; i < inp.length; i++) {
-		inp[i].selectedIndex=0
-	}
-  document.listsearch.submit();
-
-}
-</script>
 </head>
 <body>
   <h1>
