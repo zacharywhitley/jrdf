@@ -59,7 +59,7 @@
 
 package org.jrdf.restlet.server;
 
-import org.jrdf.restlet.server.local.LocalQueryServer;
+import org.jrdf.SpringLocalServer;
 import org.jrdf.restlet.server.distributed.DistributedQueryServer;
 
 /**
@@ -68,11 +68,11 @@ import org.jrdf.restlet.server.distributed.DistributedQueryServer;
  */
 
 public class SparqlQueryServer {
-    private LocalQueryServer localServer;
+    private SpringLocalServer localServer;
     private DistributedQueryServer distributedServer;
 
     public void startLocal() throws Exception {
-        localServer = new LocalQueryServer();
+        localServer = new SpringLocalServer();
         localServer.start();
     }
 

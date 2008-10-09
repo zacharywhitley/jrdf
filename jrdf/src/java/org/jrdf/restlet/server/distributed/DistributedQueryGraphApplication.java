@@ -64,7 +64,6 @@ import org.jrdf.restlet.client.DistributedQueryClientImpl;
 import org.jrdf.restlet.client.GraphQueryClient;
 import org.jrdf.restlet.server.BaseGraphApplication;
 import org.jrdf.restlet.server.GraphsResource;
-import org.jrdf.restlet.server.local.LocalQueryServer;
 import org.restlet.Restlet;
 import org.restlet.Router;
 import org.restlet.resource.ResourceException;
@@ -82,13 +81,13 @@ import java.util.Set;
  */
 
 public class DistributedQueryGraphApplication extends BaseGraphApplication {
+    private static final int PORT_NUMBER = 8182;
     private Set<String> servers;
-    private int portNumber;
+    private int portNumber = PORT_NUMBER;
     private GraphQueryClient client;
     private AnswerXMLWriter xmlWriter;
 
     public DistributedQueryGraphApplication() {
-        portNumber = LocalQueryServer.PORT;
         servers = new HashSet<String>();
     }
 

@@ -62,7 +62,6 @@ package org.jrdf.restlet.server.distributed;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
-import org.jrdf.restlet.server.local.LocalQueryServer;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Application;
 import org.restlet.Context;
@@ -91,6 +90,7 @@ import java.util.StringTokenizer;
  */
 
 public class DistributedQueryResource extends Resource {
+    private static final int PORT_NUMBER = 8182;
     protected DistributedQueryGraphApplication application;
     private static final String DEFAULT_PORT_STRING = "defaultPort";
     /**
@@ -128,7 +128,7 @@ public class DistributedQueryResource extends Resource {
             cfg.setDirectoryForTemplateLoading(resourcesDir);
             cfg.setObjectWrapper(new DefaultObjectWrapper());
             Map<String, String> root = new HashMap<String, String>();
-            root.put(DEFAULT_PORT_STRING, Integer.toString(LocalQueryServer.PORT));
+            root.put(DEFAULT_PORT_STRING, Integer.toString(PORT_NUMBER));
             root.put(ACTION, "action");
             Template template = cfg.getTemplate("distributedStartPage.ftl");
             rep = new TemplateRepresentation(template, root, TEXT_HTML);

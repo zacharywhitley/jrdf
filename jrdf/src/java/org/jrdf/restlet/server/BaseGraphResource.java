@@ -65,6 +65,7 @@ import freemarker.template.Template;
 import org.jrdf.query.xml.AnswerXMLWriter;
 import static org.jrdf.query.xml.AnswerXMLWriter.XSLT_URL_STRING;
 import static org.jrdf.restlet.MediaTypeExtensions.SPARQL_XML_RESULT_MEDIA_TYPE_STRING;
+import org.jrdf.restlet.server.local.WebInterfaceGraphApplication;
 import org.restlet.Context;
 import static org.restlet.data.MediaType.TEXT_HTML;
 import static org.restlet.data.MediaType.TEXT_XML;
@@ -126,13 +127,26 @@ public class BaseGraphResource extends Resource {
     private static final TransformerFactory TRANSFORM_FACTORY = TransformerFactory.newInstance();
     protected String graphName;
     protected AnswerXMLWriter xmlWriter;
-    protected BaseGraphApplication application;
+    protected WebInterfaceGraphApplication application;
+
+    public BaseGraphResource() {
+    }
 
     public BaseGraphResource(Context context, Request request, Response response) {
         super(context, request, response);
+        init(context, request, response);
+    }
+
+    @Override
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
         getVariants().add(new Variant(valueOf(SPARQL_XML_RESULT_MEDIA_TYPE_STRING)));
         getVariants().add(new Variant(TEXT_HTML));
         graphName = (String) this.getRequest().getAttributes().get("graph");
+    }
+
+    public void setGraphApplication(WebInterfaceGraphApplication newApplication) {
+        this.application = newApplication;
     }
 
     @Override
@@ -143,6 +157,46 @@ public class BaseGraphResource extends Resource {
     @Override
     public boolean allowPost() {
         return true;
+    }
+
+    @Override
+    public Representation represent(Variant variant) throws ResourceException {
+        Representation rep = null;
+        try {
+            rep = constructBaseRep();
+            getResponse().setStatus(SUCCESS_OK);
+        } catch (Exception e) {
+            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage());
+        }
+        return rep;
+    }
+
+    protected Representation constructBaseRep() throws IOException {
+        Map<String, Object> root = new HashMap<String, Object>();
+        root.put(GRAPH_NAME, graphName);
+        return getRepresentation(root, "queryPage.ftl");
+    }
+
+    protected Representation getRepresentation(Map<String, Object> root, String templateName) throws IOException {
+        Configuration cfg = getConfiguration();
+        Template template = cfg.getTemplate(templateName);
+        return new TemplateRepresentation(template, root, TEXT_HTML);
+    }
+
+    protected Configuration getConfiguration() throws IOException {
+        Configuration cfg = new Configuration();
+        final String curDir = System.getProperty("user.dir");
+        File resourceDir = new File(new File(curDir), "resources");
+        final DefaultObjectWrapper wrapper = new DefaultObjectWrapper();
+        wrapper.setSimpleMapWrapper(true);
+        cfg.setObjectWrapper(wrapper);
+        cfg.setDirectoryForTemplateLoading(resourceDir);
+        return cfg;
+    }
+
+    protected void constructAnswerRepresentation(String format, String xmlString) throws TransformerException {
+        Representation rep = renderResult(format, xmlString);
+        getResponse().setEntity(rep);
     }
 
     protected Representation renderResult(String format, String xmlString) throws TransformerException {
@@ -165,46 +219,6 @@ public class BaseGraphResource extends Resource {
         Transformer transformer = template.newTransformer();
         transformer.transform(xmlSource, result);
         return resultStream.toString();
-    }
-
-    @Override
-    public Representation represent(Variant variant) throws ResourceException {
-        Representation rep = null;
-        try {
-            rep = constructBaseRep();
-            getResponse().setStatus(SUCCESS_OK);
-        } catch (Exception e) {
-            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage());
-        }
-        return rep;
-    }
-
-    protected Representation constructBaseRep() throws IOException {
-        Map<String, String> root = new HashMap<String, String>();
-        root.put(GRAPH_NAME, graphName);
-        return getRepresentation(root, "queryPage.ftl");
-    }
-
-    protected Representation getRepresentation(Map root, String templateName) throws IOException {
-        Configuration cfg = getConfiguration();
-        Template template = cfg.getTemplate(templateName);
-        return new TemplateRepresentation(template, root, TEXT_HTML);
-    }
-
-    protected void constructAnswerRepresentation(String format, String xmlString) throws TransformerException {
-        Representation rep = renderResult(format, xmlString);
-        getResponse().setEntity(rep);
-    }
-
-    protected Configuration getConfiguration() throws IOException {
-        Configuration cfg = new Configuration();
-        final String curDir = System.getProperty("user.dir");
-        File resourceDir = new File(new File(curDir), "resources");
-        final DefaultObjectWrapper wrapper = new DefaultObjectWrapper();
-        wrapper.setSimpleMapWrapper(true);
-        cfg.setObjectWrapper(wrapper);
-        cfg.setDirectoryForTemplateLoading(resourceDir);
-        return cfg;
     }
 
 }

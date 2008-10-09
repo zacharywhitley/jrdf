@@ -63,16 +63,15 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.Value;
 import static org.jrdf.parser.Reader.parseNTriples;
-import org.jrdf.restlet.server.local.WebInterfaceGraphApplication;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
 import org.jrdf.util.ModelsImpl;
 import static org.jrdf.util.ModelsImpl.JRDF_NAMESPACE;
-import org.restlet.Application;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import static org.restlet.data.MediaType.TEXT_HTML;
@@ -102,19 +101,17 @@ public class GraphsResource extends BaseGraphResource {
     private static final URI NAME = create(JRDF_NAMESPACE + "name");
     private static final URI ID = create(JRDF_NAMESPACE + "id");
     private static final DirectoryHandler HANDLER = BaseGraphApplication.getHandler();
-
     private String path;
-    private BaseGraphApplication application;
-    private Set<org.jrdf.graph.Resource> resources;
+    private Set<Resource> resources;
 
-    public GraphsResource(Context context, Request request, Response response) {
-        super(context, request, response);
+    @Override
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
         getVariants().add(new Variant(MediaType.TEXT_PLAIN));
-        path = this.getRequest().getResourceRef().toString();
-        if (!path.endsWith("/")) {
-            path += "/";
+        this.path = this.getRequest().getResourceRef().toString();
+        if (!this.path.endsWith("/")) {
+            this.path += "/";
         }
-        application = (WebInterfaceGraphApplication) Application.getCurrent();
         refreshGraphsModel();
     }
 
@@ -122,14 +119,15 @@ public class GraphsResource extends BaseGraphResource {
         final File file = new File(HANDLER.getDir(), "graphs.nt");
         final Graph modelsGraph = parseNTriples(file);
         final Models model = new ModelsImpl(modelsGraph);
-        resources = model.getResources();
+        this.resources = model.getResources();
     }
 
     @Override
-    public boolean allowGet() {
-        return true;
+    public boolean allowPost() {
+        return false;
     }
 
+    @Override
     public void handleGet() {
         final String ss = getRequest().getResourceRef().getPath();
         if (ss != null && !"/graphs".equals(ss)) {
@@ -158,21 +156,11 @@ public class GraphsResource extends BaseGraphResource {
         return rep;
     }
 
-    private Representation constructRepresentation(Map<String, String> map) throws IOException {
-        Map root = new HashMap();
-        root.put("dirName", application.getGraphsDir());
-        root.put("graphs", map);
-        root.put("rand", Math.random());
-        Configuration cfg = getConfiguration();
-        Template template = cfg.getTemplate("graphsPage.ftl");
-        return new TemplateRepresentation(template, root, TEXT_HTML);
-    }
-
     private Map<String, String> populateIdNameMap() throws ResourceException {
         refreshGraphsModel();
         Map<String, String> idNameMap = new HashMap<String, String>();
         try {
-            for (org.jrdf.graph.Resource resource : resources) {
+            for (Resource resource : resources) {
                 String id = getStringValue(resource, ID);
                 String name = getStringValue(resource, NAME);
                 idNameMap.put(id, name);
@@ -183,12 +171,22 @@ public class GraphsResource extends BaseGraphResource {
         return idNameMap;
     }
 
-    private String getStringValue(org.jrdf.graph.Resource resource, URI pred) throws GraphException {
+    private Representation constructRepresentation(Map<String, String> map) throws IOException {
+        Map<String, Object> root = new HashMap<String, Object>();
+        root.put("dirName", application.getGraphsDir());
+        root.put("graphs", map);
+        root.put("rand", Math.random());
+        Configuration cfg = getConfiguration();
+        Template template = cfg.getTemplate("graphsPage.ftl");
+        return new TemplateRepresentation(template, root, TEXT_HTML);
+    }
+
+    private String getStringValue(Resource resource, URI pred) throws GraphException {
         final ClosableIterator<ObjectNode> iterator = resource.getObjects(pred);
         try {
             String name = "";
             if (iterator.hasNext()) {
-                name = ((Literal) iterator.next()).getValue().toString();
+                name = ((Value) iterator.next()).getValue().toString();
             }
             return name;
         } finally {
