@@ -106,7 +106,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
-    private static final String QUERY_STRING = "SELECT * WHERE { ?s <urn:p> ?o. }";
+    private static final String QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
     private DistributedQueryServer distributedServer;
 
     protected void setUp() throws Exception {
@@ -142,6 +142,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
     }
 
     public void testEmptyDistributedClient() throws Exception {
+        assertEquals(0, graph.getNumberOfTriples());
         distributedServer.start();
         GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
         client.postDistributedServer(PORT, "add", "127.0.0.1");
@@ -167,6 +168,28 @@ public class DistributedQueryIntegrationTest extends TestCase {
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
         distributedServer.stop();
     }
+
+    /*public void testPerformance() throws Exception {
+        distributedServer.start();
+        testAddTriples();
+        GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
+        client.postDistributedServer(PORT, "add", "127.0.0.1");
+        client.postQuery(FOO, QUERY_STRING, "all");
+        final String answer = readFromInputStream(client.executeQuery());
+        System.err.println("answer #= " + answer.length());
+        distributedServer.stop();
+    }
+
+    private void testAddTriples() throws GraphException {
+        final int loops = 90000;
+        for (int i = 0; i < loops; i++) {
+            final URIReference p = elementFactory.createURIReference(URI.create("urn:p" + i));
+            final BlankNode b1 = elementFactory.createBlankNode();
+            final BlankNode b2 = elementFactory.createBlankNode();
+            graph.add(b1, p, b2);
+        }
+        assertEquals(loops, graph.getNumberOfTriples());
+    }*/
 
     private void checkAnswerXML(String answer, int resultSize, String... strings) throws SAXException, IOException {
         Set<String> set = new HashSet<String>();
