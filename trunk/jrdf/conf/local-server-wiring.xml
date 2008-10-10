@@ -79,7 +79,7 @@
 
     <!-- List the graphs -->
     <bean id="graphs" class="org.jrdf.restlet.server.GraphsResource" scope="prototype">
-        <property name="graphLister" ref="graphsDoer"/>
+        <property name="graphLister" ref="graphListImpl"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
             <map>
@@ -93,7 +93,7 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="graphsDoer" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
+    <bean id="graphListImpl" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
         <constructor-arg ref="webApplication"/>
     </bean>
 
