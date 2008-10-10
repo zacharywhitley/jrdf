@@ -86,6 +86,7 @@ public class DistributedQueryGraphApplication extends BaseGraphApplication {
     private int portNumber = PORT_NUMBER;
     private GraphQueryClient client;
     private AnswerXMLWriter xmlWriter;
+    private static final int INVALID_TIME_TAKEN = -1;
 
     public DistributedQueryGraphApplication() {
         servers = new HashSet<String>();
@@ -139,5 +140,9 @@ public class DistributedQueryGraphApplication extends BaseGraphApplication {
     public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
         xmlWriter = ((DistributedQueryClientImpl) client).getXMLWriter(writer);
         return xmlWriter;
+    }
+
+    public long getTimeTaken() {
+        return INVALID_TIME_TAKEN;
     }
 }

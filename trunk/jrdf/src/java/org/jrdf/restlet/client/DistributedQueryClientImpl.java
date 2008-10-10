@@ -72,7 +72,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -123,19 +122,19 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
     public InputStream executeQuery() throws IOException {
         checkNotNull(queryClients);
         set = new HashSet<Future<InputStream>>();
-        try {
-            executeQuries();
-            aggregateResults();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        executeQuries();
+        aggregateResults();
         return null;
     }
 
-    private void aggregateResults() throws InterruptedException, ExecutionException, XMLStreamException {
+    private void aggregateResults() {
         for (Future<InputStream> future : set) {
-            final InputStream stream = future.get();
-            xmlWriter.addStream(stream);
+            try {
+                final InputStream stream = future.get();
+                xmlWriter.addStream(stream);
+            } catch (Exception e) {
+                cancelExecution(future);
+            }
         }
     }
 
@@ -148,7 +147,11 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
 
     public void cancelExecution() {
         for (Future<InputStream> future : set) {
-            future.cancel(true);
+            cancelExecution(future);
         }
+    }
+
+    private void cancelExecution(Future<InputStream> future) {
+        future.cancel(true);
     }
 }
