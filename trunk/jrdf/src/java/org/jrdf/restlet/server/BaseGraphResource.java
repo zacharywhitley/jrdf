@@ -102,6 +102,9 @@ import java.util.Map;
  */
 
 public class BaseGraphResource extends Resource {
+    private static final String GRAPH_VALUE = "graph";
+    private static final TransformerFactory TRANSFORM_FACTORY = TransformerFactory.newInstance();
+
     /**
      * The form name for the query string.
      */
@@ -124,7 +127,6 @@ public class BaseGraphResource extends Resource {
     public static final String NO_ROWS = "noRows";
     protected static final String GRAPH_NAME = "graphName";
     protected static final String DEFAULT_ROWS = "all";
-    private static final TransformerFactory TRANSFORM_FACTORY = TransformerFactory.newInstance();
     protected String graphName;
     protected AnswerXMLWriter xmlWriter;
     protected WebInterfaceGraphApplication application;
@@ -142,11 +144,10 @@ public class BaseGraphResource extends Resource {
         super.init(context, request, response);
         getVariants().add(new Variant(valueOf(SPARQL_XML_RESULT_MEDIA_TYPE_STRING)));
         getVariants().add(new Variant(TEXT_HTML));
-        graphName = (String) this.getRequest().getAttributes().get("graph");
+        graphName = (String) this.getRequest().getAttributes().get(GRAPH_VALUE);
     }
 
     public void setGraphApplication(WebInterfaceGraphApplication newApplication) {
-        System.err.println("set application: " + newApplication);
         this.application = newApplication;
     }
 
