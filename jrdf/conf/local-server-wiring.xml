@@ -7,6 +7,9 @@
     <bean id="org.restlet.data.MediaType.TEXT_HTML"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
+    <bean id="org.restlet.data.MediaType.APPLICATION_JSON"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
     <bean id="org.restlet.Redirector.MODE_CLIENT_PERMANENT"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
@@ -84,6 +87,7 @@
         <property name="representationTemplates">
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="graphsResourceHtml"/>
+                <entry key-ref="org.restlet.data.MediaType.APPLICATION_JSON" value-ref="jsonRepresentationFactory"/>
             </map>
         </property>
     </bean>
@@ -101,4 +105,6 @@
     <bean id="localGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="webApplication"/>
     </bean>
+
+    <bean id="jsonRepresentationFactory" class="org.jrdf.restlet.server.JsonRepresentationFactory"/>
 </beans>
