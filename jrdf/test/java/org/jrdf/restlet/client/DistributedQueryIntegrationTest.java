@@ -77,6 +77,12 @@ import static org.jrdf.restlet.client.BaseClientImpl.readFromInputStream;
 import static org.jrdf.restlet.server.BaseGraphApplication.getHandler;
 import org.jrdf.restlet.server.distributed.DistributedQueryServer;
 import org.jrdf.util.DirectoryHandler;
+import org.restlet.Client;
+import org.restlet.data.Method;
+import static org.restlet.data.Protocol.HTTP;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.resource.StringRepresentation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -89,6 +95,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URI;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -126,6 +133,16 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.close();
         FACTORY.close();
         localQueryServer.stop();
+    }
+
+    public void testDistributedServerGraphsResource() throws Exception {
+        distributedServer.start();
+        URL url = new URL(HTTP.getSchemeName(), "127.0.0.1", DistributedQueryServer.PORT, "/graphs");
+        Request request = new Request(Method.GET, url.toString(), new StringRepresentation(""));
+        Client client = new Client(HTTP);
+        final Response response = client.handle(request);
+        //assertEquals(Status.SUCCESS_OK, response.getStatus());
+        distributedServer.stop();
     }
 
     public void testGraphClient() throws Exception {
