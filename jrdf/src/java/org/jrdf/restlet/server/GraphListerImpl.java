@@ -65,7 +65,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Value;
 import static org.jrdf.parser.Reader.parseNTriples;
-import org.jrdf.restlet.server.local.WebInterfaceGraphApplication;
+import org.jrdf.restlet.server.local.GraphApplication;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
@@ -85,23 +85,15 @@ import java.util.Set;
  * @author Andrew Newman
  * @version :$
  */
-
-public class GraphsResourceDoer {
+public class GraphListerImpl implements GraphLister {
     private static final URI NAME = create(JRDF_NAMESPACE + "name");
     private static final URI ID = create(JRDF_NAMESPACE + "id");
     private static final DirectoryHandler HANDLER = BaseGraphApplication.getHandler();
     private Set<Resource> resources;
-    private WebInterfaceGraphApplication application;
+    private GraphApplication application;
 
-    public void setGraphApplication(WebInterfaceGraphApplication newApplication) {
+    public GraphListerImpl(GraphApplication newApplication) {
         this.application = newApplication;
-    }
-
-    public void refreshGraphsModel() {
-        final File file = new File(HANDLER.getDir(), "graphs.nt");
-        final Graph modelsGraph = parseNTriples(file);
-        final Models model = new ModelsImpl(modelsGraph);
-        this.resources = model.getResources();
     }
 
     public Map<String, String> populateIdNameMap() throws ResourceException {
@@ -121,6 +113,13 @@ public class GraphsResourceDoer {
 
     public String dirName() {
         return application.getGraphsDir();
+    }
+
+    private void refreshGraphsModel() {
+        final File file = new File(HANDLER.getDir(), "graphs.nt");
+        final Graph modelsGraph = parseNTriples(file);
+        final Models model = new ModelsImpl(modelsGraph);
+        this.resources = model.getResources();
     }
 
     private String getStringValue(Resource resource, URI pred) throws GraphException {

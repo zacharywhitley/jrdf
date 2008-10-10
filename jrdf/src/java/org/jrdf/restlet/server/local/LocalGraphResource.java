@@ -63,7 +63,7 @@ import static freemarker.ext.dom.NodeModel.parse;
 import org.jrdf.query.xml.AnswerXMLWriter;
 import static org.jrdf.restlet.MediaTypeExtensions.SPARQL_XML_RESULT_MEDIA_TYPE_STRING;
 import org.jrdf.restlet.server.BaseGraphResource;
-import static org.jrdf.restlet.server.local.WebInterfaceGraphApplication.MAX_ROWS;
+import static org.jrdf.restlet.server.local.GraphApplicationImpl.MAX_ROWS;
 import org.restlet.Context;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
