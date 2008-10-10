@@ -3,6 +3,8 @@
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
+    <bean id="org.restlet.data.MediaType.TEXT_HTML" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
     <bean id="configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
@@ -50,8 +52,23 @@
     </bean>
 
     <bean id="graphs" class="org.jrdf.restlet.server.GraphsResource" scope="prototype">
+        <property name="available" value="true"/>
+        <property name="representationTemplates">
+            <map>
+                <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="graphsResourceHtml"/>
+            </map>
+        </property>
         <property name="graphApplication" ref="webApplication"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    </bean>
+
+    <bean id="graphsResourceHtml" class="org.jrdf.restlet.FreemarkerRepresentationFactory">
+        <property name="templateName" value="graphsPage.ftl"/>
+        <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    </bean>
+
+    <bean id="graphsDoer" class="org.jrdf.restlet.server.GraphsResourceDoer" scope="prototype">
+        <property name="graphApplication" ref="webApplication"/>
     </bean>
 
     <bean id="localGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
