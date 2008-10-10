@@ -89,11 +89,11 @@ public class ResourceWriterImpl implements ResourceWriter {
     private Exception exception;
 
     public ResourceWriterImpl(final RdfNamespaceMap names, final BlankNodeRegistry newRegistry,
-        final XMLStreamWriter newXmlStreamWriter) {
+        final XMLStreamWriter newXmlStreamWriter, XmlLiteralWriter xmlLiteralWriter) {
         checkNotNull(names, newRegistry, newXmlStreamWriter);
         this.registry = newRegistry;
         this.xmlStreamWriter = newXmlStreamWriter;
-        this.statement = new PredicateObjectWriterImpl(names, registry, xmlStreamWriter);
+        this.statement = new PredicateObjectWriterImpl(names, registry, xmlStreamWriter, xmlLiteralWriter);
     }
 
     public void setTriple(final Triple triple) {

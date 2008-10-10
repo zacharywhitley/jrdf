@@ -60,9 +60,14 @@ package org.jrdf.writer.rdfxml;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.operation.mem.ComparisonImpl;
 import org.jrdf.graph.operation.Comparison;
@@ -91,6 +96,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
 
     private static final String GROUNDED = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
     private static final String UNGROUNDED = "org/jrdf/writer/rdfxml/data/rdf/ungrounded.rdf";
+    private static final String LITERALPARSETYPE = "org/jrdf/writer/rdfxml/data/rdf/literalParseType.rdf";
     private Comparison comparison;
 
     public void setUp() {
@@ -107,6 +113,22 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
         assertEquals(graph.getNumberOfTriples(), read.getNumberOfTriples());
         assertTrue(comparison.areIsomorphic(graph, read));
+    }
+
+    public void testReadWriteParseType() throws Exception {
+        Graph graph = readGraph(LITERALPARSETYPE);
+        System.err.println("Input is: " + graph);
+        Literal literal1 = null;
+        Literal literal2 = null;
+        for (Triple triple : graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE)) {
+            literal1 = (Literal) triple.getObject();
+        }
+        StringWriter out = writeGraph(graph);
+        Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
+        for (Triple triple : read.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE)) {
+            literal2 = (Literal) triple.getObject();
+        }
+        assertEquals(literal1, literal2);
     }
 
     public void testReadWriteGrounded() throws Exception {
@@ -136,8 +158,8 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         assertFalse("Output graph should not be grounded", comparison.isGrounded(read));
         assertEquals("Output graph and input graph should have the same number of statements.",
             graph.getNumberOfTriples(), read.getNumberOfTriples());
-// TODO (AN) Put this back in when ungrounded isomorphism is complete.
-//        assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
+        // TODO (AN) Put this back in when ungrounded isomorphism is complete.
+        //        assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
     }
 
     private Graph readGraph(String document) throws Exception {

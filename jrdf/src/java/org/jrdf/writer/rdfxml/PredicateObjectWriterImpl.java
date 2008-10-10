@@ -65,11 +65,12 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
+import org.jrdf.vocabulary.RDF;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
-import org.jrdf.writer.WriteException;
 import org.jrdf.writer.RdfWriter;
+import org.jrdf.writer.WriteException;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -83,12 +84,14 @@ import javax.xml.stream.XMLStreamWriter;
 public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     private final RdfNamespaceMap names;
     private final BlankNodeRegistry registry;
+    private final XmlLiteralWriter xmlLiteralWriter;
     private XMLStreamWriter xmlStreamWriter;
     private Exception exception;
 
     public PredicateObjectWriterImpl(final RdfNamespaceMap newNames, final BlankNodeRegistry newBlankNodeRegistry,
-        final XMLStreamWriter newXmlStreamWriter) {
-        checkNotNull(newNames, newBlankNodeRegistry, newXmlStreamWriter);
+        final XMLStreamWriter newXmlStreamWriter, final XmlLiteralWriter xmlLiteralWriter) {
+        checkNotNull(newNames, newBlankNodeRegistry, newXmlStreamWriter, xmlLiteralWriter);
+        this.xmlLiteralWriter = xmlLiteralWriter;
         this.names = newNames;
         this.registry = newBlankNodeRegistry;
         this.xmlStreamWriter = newXmlStreamWriter;
@@ -129,12 +132,16 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     public void visitLiteral(Literal literal) {
         checkNotNull(literal);
         try {
-            if (literal.isLanguageLiteral()) {
-                xmlStreamWriter.writeAttribute("xml:lang", literal.getLanguage());
-            } else if (literal.isDatatypedLiteral()) {
-                xmlStreamWriter.writeAttribute("rdf:datatype", literal.getDatatypeURI().toString());
+            if (literal.isDatatypedLiteral() && literal.getDatatypeURI().equals(RDF.XML_LITERAL)) {
+                xmlLiteralWriter.write(literal);
+            } else {
+                if (literal.isDatatypedLiteral()) {
+                    xmlStreamWriter.writeAttribute("rdf:datatype", literal.getDatatypeURI().toString());
+                } else if (literal.isLanguageLiteral()) {
+                    xmlStreamWriter.writeAttribute("xml:lang", literal.getLanguage());
+                }
+                xmlStreamWriter.writeCharacters(literal.getLexicalForm());
             }
-            xmlStreamWriter.writeCharacters(literal.getLexicalForm());
         } catch (XMLStreamException e) {
             exception = e;
         }

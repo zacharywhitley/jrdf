@@ -188,7 +188,8 @@ public class RdfXmlWriter implements RdfWriter {
             iterator();
         try {
             final IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
-            final ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter);
+            final ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter,
+                new XmlLiteralWriterImpl(xmlStreamWriter));
             while (stack.hasNext()) {
                 final Triple currentTriple = stack.pop();
                 writer.setTriple(currentTriple);

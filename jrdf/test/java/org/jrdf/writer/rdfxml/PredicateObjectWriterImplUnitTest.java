@@ -87,7 +87,7 @@ import java.net.URI;
 
 public class PredicateObjectWriterImplUnitTest extends TestCase {
     private static final Class<?>[] PARAM_TYPES = new Class[]{RdfNamespaceMap.class, BlankNodeRegistry.class,
-        XMLStreamWriter.class};
+        XMLStreamWriter.class, XmlLiteralWriter.class};
     private static final String NODE_ID = "foo";
     private static final XMLStreamException EXPECTED_EXCEPTION = new XMLStreamException();
     private static final String LANGUAGE = "en-au";
@@ -99,12 +99,14 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
     private BlankNodeRegistry blankNodeRegistry;
     private XMLStreamWriter xmlStreamWriter;
     private PredicateObjectWriter writer;
+    private XmlLiteralWriter xmlLiteralWriter;
 
     public void setUp() {
         map = factory.createMock(RdfNamespaceMap.class);
         blankNodeRegistry = factory.createMock(BlankNodeRegistry.class);
         xmlStreamWriter = factory.createMock(XMLStreamWriter.class);
-        writer = new PredicateObjectWriterImpl(map, blankNodeRegistry, xmlStreamWriter);
+        xmlLiteralWriter = factory.createMock(XmlLiteralWriter.class);
+        writer = new PredicateObjectWriterImpl(map, blankNodeRegistry, xmlStreamWriter, xmlLiteralWriter);
     }
 
     public void testClassProperties() {
@@ -156,6 +158,7 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
 
     public void testVisitLanguageLiteral() throws Exception {
         Literal node = factory.createMock(Literal.class);
+        expect(node.isDatatypedLiteral()).andReturn(false).times(2);
         expect(node.isLanguageLiteral()).andReturn(true);
         expect(node.getLanguage()).andReturn(LANGUAGE);
         xmlStreamWriter.writeAttribute("xml:lang", LANGUAGE);
@@ -168,8 +171,8 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
 
     public void testVisitDatatypeLiteral() throws Exception {
         Literal node = factory.createMock(Literal.class);
-        expect(node.isLanguageLiteral()).andReturn(false);
-        expect(node.isDatatypedLiteral()).andReturn(true);
+        expect(node.isDatatypedLiteral()).andReturn(true).times(2);
+        expect(node.getDatatypeURI()).andReturn(URI.create(DATA_TYPE));
         expect(node.getDatatypeURI()).andReturn(URI.create(DATA_TYPE));
         xmlStreamWriter.writeAttribute("rdf:datatype", DATA_TYPE);
         expect(node.getLexicalForm()).andReturn("foo^^xsd:int");
