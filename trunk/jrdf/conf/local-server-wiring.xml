@@ -10,6 +10,9 @@
     <bean id="org.restlet.data.MediaType.APPLICATION_JSON"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
+    <bean id="org.restlet.data.MediaType.APPLICATION_XML"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
     <bean id="org.restlet.Redirector.MODE_CLIENT_PERMANENT"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
