@@ -68,11 +68,8 @@ import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.restlet.server.BaseGraphApplication;
-import org.jrdf.restlet.server.GraphsResource;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
-import org.restlet.Restlet;
-import org.restlet.Router;
 import org.restlet.resource.ResourceException;
 
 import javax.xml.stream.XMLStreamException;
