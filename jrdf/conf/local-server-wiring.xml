@@ -3,8 +3,14 @@
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean id="org.restlet.data.MediaType.TEXT_HTML" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+    <!-- Beans for constant values -->
+    <bean id="org.restlet.data.MediaType.TEXT_HTML"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
+    <bean id="org.restlet.Redirector.MODE_CLIENT_PERMANENT"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <!-- Properties -->
     <bean id="configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
@@ -14,28 +20,41 @@
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
-    <bean id="component" class="org.restlet.ext.spring.SpringComponent">
+    <!-- Context for non-Springifed Restlet -->
+    <bean id="component.context" class="org.springframework.beans.factory.config.PropertyPathFactoryBean"/>
+    <bean id="component.childContext" scope="prototype" factory-bean="component.context" factory-method="createChildContext"/>
+
+    <!-- Main web application -->
+    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl" scope="singleton"/>
+
+    <bean id="component" class="org.restlet.ext.spring.SpringComponent" scope="singleton">
         <property name="server" ref="server"/>
         <property name="defaultTarget" ref="router"/>
         <property name="logService" ref="logService"/>
     </bean>
 
-    <bean id="server" class="org.restlet.ext.spring.SpringServer">
+    <bean id="server" class="org.restlet.ext.spring.SpringServer" scope="singleton">
         <constructor-arg value="http"/>
         <constructor-arg value="${server.port}"/>
     </bean>
 
-    <bean id="logService" class="org.restlet.service.LogService">
+    <bean id="logService" class="org.restlet.service.LogService" scope="singleton">
         <constructor-arg value="true"/>
     </bean>
 
-    <bean id="router" class="org.restlet.ext.spring.SpringRouter">
+    <!-- Freemarker -->
+    <bean id="freemarkerConfig" class="freemarker.template.Configuration">
+        <property name="directoryForTemplateLoading" value="${user.dir}/resources"/>
+        <property name="objectWrapper">
+            <bean class="freemarker.template.DefaultObjectWrapper"/>
+        </property>
+    </bean>
+
+    <!-- Router for Resources -->
+    <bean id="router" class="org.restlet.ext.spring.SpringRouter" scope="singleton">
         <property name="attachments">
             <map>
-                <entry key="">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="graphs"/>
-                    </bean>
+                <entry key="" value-ref="redirector">
                 </entry>
                 <entry key="/graphs">
                     <bean class="org.restlet.ext.spring.SpringFinder">
@@ -51,6 +70,14 @@
         </property>
     </bean>
 
+    <!-- Redirector -->
+    <bean id="redirector" class="org.restlet.Redirector">
+        <constructor-arg ref="component.childContext"/>
+        <constructor-arg value="/graphs"/>
+        <constructor-arg ref="org.restlet.Redirector.MODE_CLIENT_PERMANENT"/>
+    </bean>
+
+    <!-- List the graphs -->
     <bean id="graphs" class="org.jrdf.restlet.server.GraphsResource" scope="prototype">
         <property name="graphLister" ref="graphsDoer"/>
         <property name="available" value="true"/>
@@ -70,16 +97,8 @@
         <constructor-arg ref="webApplication"/>
     </bean>
 
+    <!-- Do the SPARQL query -->
     <bean id="localGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="webApplication"/>
-    </bean>
-
-    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl" scope="singleton"/>
-
-    <bean id="freemarkerConfig" class="freemarker.template.Configuration">
-        <property name="directoryForTemplateLoading" value="${user.dir}/resources"/>
-        <property name="objectWrapper">
-            <bean class="freemarker.template.DefaultObjectWrapper"/>
-        </property>
     </bean>
 </beans>
