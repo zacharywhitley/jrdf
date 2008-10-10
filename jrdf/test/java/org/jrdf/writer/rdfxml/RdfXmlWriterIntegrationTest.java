@@ -117,7 +117,6 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
 
     public void testReadWriteParseType() throws Exception {
         Graph graph = readGraph(LITERALPARSETYPE);
-        System.err.println("Input is: " + graph);
         Literal literal1 = null;
         Literal literal2 = null;
         for (Triple triple : graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE)) {
