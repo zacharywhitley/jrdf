@@ -189,7 +189,6 @@ public class BaseGraphResource extends Resource {
         Configuration cfg = new Configuration();
         final String curDir = System.getProperty("user.dir");
         File resourceDir = new File(new File(curDir), "resources");
-        System.err.println("Resource dir:" + resourceDir);
         final DefaultObjectWrapper wrapper = new DefaultObjectWrapper();
         wrapper.setSimpleMapWrapper(true);
         cfg.setObjectWrapper(wrapper);

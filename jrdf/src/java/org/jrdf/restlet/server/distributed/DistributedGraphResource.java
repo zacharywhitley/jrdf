@@ -185,8 +185,10 @@ public class DistributedGraphResource extends BaseGraphResource {
         Map<String, Object> root = new HashMap<String, Object>();
         root.put("doc", parse(new InputSource(new StringReader(answerXML))));
         root.put(GRAPH_NAME, graphName);
-        root.put("timeTaken", "-1");
+        root.put("timeTaken", application.getTimeTaken());
         root.put("hasMore", xmlWriter.hasMoreResults());
+//        root.put("tooManyRows", application.isTooManyRows());
+//        root.put("maxRows", MAX_ROWS);
         return getRepresentation(root, "queryResult.ftl");
     }
 }
