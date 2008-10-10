@@ -61,20 +61,20 @@ package org.jrdf.restlet.client;
 
 import static org.jrdf.restlet.server.BaseGraphResource.FORMAT;
 import static org.jrdf.restlet.server.BaseGraphResource.FORMAT_XML;
+import static org.jrdf.restlet.server.BaseGraphResource.NO_ROWS;
 import static org.jrdf.restlet.server.BaseGraphResource.QUERY_STRING;
-import org.jrdf.restlet.server.BaseGraphResource;
 import org.restlet.data.Form;
 import static org.restlet.data.Method.POST;
 import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
 import org.restlet.resource.Representation;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 /**
  * @author Yuan-Fang Li
@@ -97,7 +97,7 @@ public abstract class BaseClientImpl implements GraphQueryClient {
         Form form = new Form();
         form.add(QUERY_STRING, queryString);
         form.add(FORMAT, FORMAT_XML);
-        form.add(BaseGraphResource.NO_ROWS, noRows);
+        form.add(NO_ROWS, noRows);
         Representation representation = form.getWebRepresentation();
         String requestURL = makeRequestString(graphName);
         return new Request(POST, requestURL, representation);
