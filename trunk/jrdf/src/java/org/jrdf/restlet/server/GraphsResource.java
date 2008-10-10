@@ -67,6 +67,8 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Value;
 import static org.jrdf.parser.Reader.parseNTriples;
+import org.jrdf.restlet.ConfigurableRestletResource;
+import org.jrdf.restlet.server.local.WebInterfaceGraphApplication;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
@@ -97,12 +99,22 @@ import java.util.Set;
  * @version :$
  */
 
-public class GraphsResource extends BaseGraphResource {
+public class GraphsResource extends ConfigurableRestletResource {
     private static final URI NAME = create(JRDF_NAMESPACE + "name");
     private static final URI ID = create(JRDF_NAMESPACE + "id");
     private static final DirectoryHandler HANDLER = BaseGraphApplication.getHandler();
     private String path;
     private Set<Resource> resources;
+    private WebInterfaceGraphApplication application;
+    private Configuration freemarkerConfig;
+
+    public void setGraphApplication(WebInterfaceGraphApplication newApplication) {
+        this.application = newApplication;
+    }
+
+    public void setFreemarkerConfig(final Configuration freemarkerConfig) {
+        this.freemarkerConfig = freemarkerConfig;
+    }
 
     @Override
     public void init(Context context, Request request, Response response) {
@@ -176,8 +188,7 @@ public class GraphsResource extends BaseGraphResource {
         root.put("dirName", application.getGraphsDir());
         root.put("graphs", map);
         root.put("rand", Math.random());
-        Configuration cfg = getConfiguration();
-        Template template = cfg.getTemplate("graphsPage.ftl");
+        Template template = freemarkerConfig.getTemplate("graphsPage.ftl");
         return new TemplateRepresentation(template, root, TEXT_HTML);
     }
 

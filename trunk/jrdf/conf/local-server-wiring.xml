@@ -51,10 +51,19 @@
 
     <bean id="graphs" class="org.jrdf.restlet.server.GraphsResource" scope="prototype">
         <property name="graphApplication" ref="webApplication"/>
+        <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
+
     <bean id="localGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="webApplication"/>
     </bean>
 
     <bean id="webApplication" class="org.jrdf.restlet.server.local.WebInterfaceGraphApplication" scope="singleton"/>
+
+    <bean id="freemarkerConfig" class="freemarker.template.Configuration">
+        <property name="directoryForTemplateLoading" value="${user.dir}/resources"/>
+        <property name="objectWrapper">
+            <bean class="freemarker.template.DefaultObjectWrapper"/>
+        </property>
+    </bean>
 </beans>
