@@ -198,6 +198,7 @@ public class LocalGraphResource extends BaseGraphResource {
         root.put(GRAPH_NAME, graphName);
         root.put("timeTaken", application.getTimeTaken());
         root.put("hasMore", xmlWriter.hasMoreResults());
+        root.put("tooManyRows", application.isTooManyRows());
         return getRepresentation(root, "queryResult.ftl");
     }
 }
