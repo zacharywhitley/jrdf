@@ -75,9 +75,9 @@ import java.util.Map;
  */
 
 public class GraphsResource extends ConfigurableRestletResource {
-    private GraphListerImpl doer;
+    private GraphLister doer;
 
-    public void setGraphLister(GraphListerImpl newDoer) {
+    public void setGraphLister(GraphLister newDoer) {
         this.doer = newDoer;
     }
 
@@ -98,7 +98,6 @@ public class GraphsResource extends ConfigurableRestletResource {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         dataModel.put("dirName", doer.dirName());
         dataModel.put("graphs", map);
-        dataModel.put("rand", Math.random());
         return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }
 }
