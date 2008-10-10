@@ -59,11 +59,14 @@
 
 package org.jrdf.restlet;
 
+import org.restlet.data.MediaType;
+
 public final class MediaTypeExtensions {
     /**
      * The media type for sparql result in XML.
      */
-    public static final String SPARQL_XML_RESULT_MEDIA_TYPE_STRING = "application/sparql-results+xml";
+    public static final MediaType APPLICATION_SPARQL = MediaType.register("application/sparql-results+xml",
+        "SPARQL Query Results");
 
     private MediaTypeExtensions() {
     }

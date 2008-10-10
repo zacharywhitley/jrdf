@@ -64,13 +64,12 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import org.jrdf.query.xml.AnswerXMLWriter;
 import static org.jrdf.query.xml.AnswerXMLWriter.XSLT_URL_STRING;
-import static org.jrdf.restlet.MediaTypeExtensions.SPARQL_XML_RESULT_MEDIA_TYPE_STRING;
+import static org.jrdf.restlet.MediaTypeExtensions.APPLICATION_SPARQL;
 import org.jrdf.restlet.server.local.GraphApplication;
 import org.jrdf.restlet.server.local.GraphApplicationImpl;
 import org.restlet.Context;
 import static org.restlet.data.MediaType.TEXT_HTML;
 import static org.restlet.data.MediaType.TEXT_XML;
-import static org.restlet.data.MediaType.valueOf;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
@@ -143,7 +142,7 @@ public class BaseGraphResource extends Resource {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        getVariants().add(new Variant(valueOf(SPARQL_XML_RESULT_MEDIA_TYPE_STRING)));
+        getVariants().add(new Variant(APPLICATION_SPARQL));
         getVariants().add(new Variant(TEXT_HTML));
         graphName = (String) this.getRequest().getAttributes().get(GRAPH_VALUE);
     }
