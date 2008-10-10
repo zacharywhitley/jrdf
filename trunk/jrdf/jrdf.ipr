@@ -508,11 +508,7 @@
         <root url="jar://$PROJECT_DIR$/lib/woodstox/wstx-asl-3.2.7.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/woodstox/wstx-src-3.2.7.zip!/src" />
-        <root url="jar://$PROJECT_DIR$/lib/woodstox/wstx-src-3.2.7.zip!/src/test" />
-        <root url="jar://$PROJECT_DIR$/lib/woodstox/wstx-src-3.2.7.zip!/src/java" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="je">
       <CLASSES>
@@ -548,6 +544,8 @@
         <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework_3.1-1.1rc2.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5-1.1rc2.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.spring_2.5-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.json_2.0-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.json-1.1rc2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>

@@ -112,6 +112,8 @@
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet.ext.json_2.0-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.json-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet.ext.spring_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
@@ -143,6 +145,8 @@
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet.ext.json_2.0-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.json-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.restlet.ext.spring_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
