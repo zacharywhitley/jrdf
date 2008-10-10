@@ -65,7 +65,8 @@ import freemarker.template.Template;
 import org.jrdf.query.xml.AnswerXMLWriter;
 import static org.jrdf.query.xml.AnswerXMLWriter.XSLT_URL_STRING;
 import static org.jrdf.restlet.MediaTypeExtensions.SPARQL_XML_RESULT_MEDIA_TYPE_STRING;
-import org.jrdf.restlet.server.local.WebInterfaceGraphApplication;
+import org.jrdf.restlet.server.local.GraphApplication;
+import org.jrdf.restlet.server.local.GraphApplicationImpl;
 import org.restlet.Context;
 import static org.restlet.data.MediaType.TEXT_HTML;
 import static org.restlet.data.MediaType.TEXT_XML;
@@ -129,7 +130,7 @@ public class BaseGraphResource extends Resource {
     protected static final String DEFAULT_ROWS = "all";
     protected String graphName;
     protected AnswerXMLWriter xmlWriter;
-    protected WebInterfaceGraphApplication application;
+    protected GraphApplication application;
 
     public BaseGraphResource() {
     }
@@ -147,7 +148,7 @@ public class BaseGraphResource extends Resource {
         graphName = (String) this.getRequest().getAttributes().get(GRAPH_VALUE);
     }
 
-    public void setGraphApplication(WebInterfaceGraphApplication newApplication) {
+    public void setGraphApplication(GraphApplicationImpl newApplication) {
         this.application = newApplication;
     }
 

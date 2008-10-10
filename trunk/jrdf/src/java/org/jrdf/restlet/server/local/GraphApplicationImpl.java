@@ -63,10 +63,10 @@ import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.Answer;
+import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.restlet.server.BaseGraphApplication;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
@@ -76,7 +76,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
 
-public class WebInterfaceGraphApplication extends BaseGraphApplication {
+public class GraphApplicationImpl extends BaseGraphApplication implements GraphApplication {
     private static final String LOCAL_SERVER = "127.0.0.1";
     /**
      * The max no. of rows of answers that will be transfomred into xml.
@@ -94,12 +94,12 @@ public class WebInterfaceGraphApplication extends BaseGraphApplication {
     private AnswerXMLWriter xmlWriter;
     private boolean tooManyRows;
 
-    public WebInterfaceGraphApplication() {
+    public GraphApplicationImpl() {
         this.urqlConnection = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
         serverAddresses = new String[]{LOCAL_SERVER};
     }
 
-    public WebInterfaceGraphApplication(String[] serverAddresses) {
+    public GraphApplicationImpl(String[] serverAddresses) {
         this.urqlConnection = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
         this.serverAddresses = serverAddresses;
     }

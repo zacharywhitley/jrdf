@@ -26,7 +26,7 @@
     </bean>
 
     <bean id="logService" class="org.restlet.service.LogService">
-        <constructor-arg index="0" value="false"/>
+        <constructor-arg value="true"/>
     </bean>
 
     <bean id="router" class="org.restlet.ext.spring.SpringRouter">
@@ -52,14 +52,13 @@
     </bean>
 
     <bean id="graphs" class="org.jrdf.restlet.server.GraphsResource" scope="prototype">
+        <property name="graphLister" ref="graphsDoer"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="graphsResourceHtml"/>
             </map>
         </property>
-        <property name="graphApplication" ref="webApplication"/>
-        <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
     <bean id="graphsResourceHtml" class="org.jrdf.restlet.FreemarkerRepresentationFactory">
@@ -67,15 +66,15 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="graphsDoer" class="org.jrdf.restlet.server.GraphsResourceDoer" scope="prototype">
-        <property name="graphApplication" ref="webApplication"/>
+    <bean id="graphsDoer" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
+        <constructor-arg ref="webApplication"/>
     </bean>
 
     <bean id="localGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="webApplication"/>
     </bean>
 
-    <bean id="webApplication" class="org.jrdf.restlet.server.local.WebInterfaceGraphApplication" scope="singleton"/>
+    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl" scope="singleton"/>
 
     <bean id="freemarkerConfig" class="freemarker.template.Configuration">
         <property name="directoryForTemplateLoading" value="${user.dir}/resources"/>
