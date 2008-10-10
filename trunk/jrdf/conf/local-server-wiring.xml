@@ -97,7 +97,7 @@
         <constructor-arg ref="webApplication"/>
     </bean>
 
-    <!-- Do the SPARQL query -->
+    <!-- Do SPARQL queries -->
     <bean id="localGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="webApplication"/>
     </bean>
