@@ -96,7 +96,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
 
     private static final String GROUNDED = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
     private static final String UNGROUNDED = "org/jrdf/writer/rdfxml/data/rdf/ungrounded.rdf";
-    private static final String LITERALPARSETYPE = "org/jrdf/writer/rdfxml/data/rdf/literalParseType.rdf";
+    private static final String RDF_LITERAL_PARSE_TYPE = "org/jrdf/writer/rdfxml/data/rdf/literalParseType.rdf";
     private Comparison comparison;
 
     public void setUp() {
@@ -116,7 +116,8 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
     }
 
     public void testReadWriteParseType() throws Exception {
-        Graph graph = readGraph(LITERALPARSETYPE);
+        Graph graph = readGraph(RDF_LITERAL_PARSE_TYPE);
+        System.err.println("Graph " + graph);
         Literal literal1 = null;
         Literal literal2 = null;
         for (Triple triple : graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE)) {
