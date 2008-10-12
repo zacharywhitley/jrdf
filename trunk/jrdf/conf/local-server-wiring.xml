@@ -111,6 +111,7 @@
     <bean id="graphListImpl" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
         <constructor-arg ref="directoryHandler"/>
         <constructor-arg ref="webApplication"/>
+        <constructor-arg value="${graphs.file}"/>
     </bean>
 
     <!-- Do SPARQL queries -->

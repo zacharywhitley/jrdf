@@ -91,8 +91,10 @@ public class GraphListerImpl implements GraphLister {
     private final DirectoryHandler handler;
     private final GraphApplication application;
     private Set<Resource> resources;
+    private String graphsFile;
 
-    public GraphListerImpl(DirectoryHandler newHandler, GraphApplication newApplication) {
+    public GraphListerImpl(DirectoryHandler newHandler, GraphApplication newApplication, String newGraphsFile) {
+        this.graphsFile = newGraphsFile;
         this.handler = newHandler;
         this.application = newApplication;
     }
@@ -117,7 +119,7 @@ public class GraphListerImpl implements GraphLister {
     }
 
     private void refreshGraphsModel() {
-        final File file = new File(handler.getDir(), "graphs.nt");
+        final File file = new File(handler.getDir(), graphsFile);
         final Graph modelsGraph = parseNTriples(file);
         final Models model = new ModelsImpl(modelsGraph);
         this.resources = model.getResources();
