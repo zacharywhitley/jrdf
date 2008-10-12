@@ -74,6 +74,8 @@ public abstract class BaseGraphApplication extends Application {
     protected String maxRows;
     protected String format;
 
+    public abstract void answerQuery(String graphName, String queryString) throws ResourceException;
+
     public static DirectoryHandler getHandler() {
         return HANDLER;
     }
@@ -81,8 +83,6 @@ public abstract class BaseGraphApplication extends Application {
     public void setMaxRows(String maxRows) {
         this.maxRows = maxRows;
     }
-
-    public abstract void answerQuery(String graphName, String queryString) throws ResourceException;
 
     public String getMaxRows() {
         return maxRows;

@@ -34,7 +34,12 @@
     <bean id="component.childContext" scope="prototype" factory-bean="component.context" factory-method="createChildContext"/>
 
     <!-- Main web application -->
-    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl" scope="singleton"/>
+    <bean id="directoryHandler" class="org.jrdf.util.TempDirectoryHandler">
+        <constructor-arg value="${persistent.directory}"/>
+    </bean>
+    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl" scope="singleton">
+        <constructor-arg ref="directoryHandler"/>
+    </bean>
 
     <bean id="component" class="org.restlet.ext.spring.SpringComponent" scope="singleton">
         <property name="server" ref="server"/>
@@ -104,6 +109,7 @@
     </bean>
 
     <bean id="graphListImpl" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
+        <constructor-arg ref="directoryHandler"/>
         <constructor-arg ref="webApplication"/>
     </bean>
 
