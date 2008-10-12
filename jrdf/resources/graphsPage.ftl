@@ -10,12 +10,12 @@
         <th>Graph ID</th>
         <th>Graph name</th>
     </tr>
+    <#list graphs?keys as graph>
     <tr>
-        <#list graphs?keys as graph>
-            <td>${graph}</td>
-            <td><a href="/graphs/${graphs[graph]}">${graphs[graph]}</a></td>
-        </#list>
+        <td>${graph}</td>
+        <td><a href="/graphs/${graphs[graph]}">${graphs[graph]}</a></td>
     </tr>
+    </#list>
 </table>
 <div>
 <br/>
