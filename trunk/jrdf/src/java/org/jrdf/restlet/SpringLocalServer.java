@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf;
+package org.jrdf.restlet;
 
 import org.restlet.Component;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
