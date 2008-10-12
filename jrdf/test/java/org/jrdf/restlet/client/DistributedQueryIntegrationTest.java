@@ -63,7 +63,7 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import junit.framework.TestCase;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
-import org.jrdf.SpringLocalServer;
+import org.jrdf.restlet.SpringLocalServer;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.URIReference;

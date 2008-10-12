@@ -59,7 +59,7 @@
 
 package org.jrdf.restlet.server;
 
-import org.jrdf.SpringLocalServer;
+import org.jrdf.restlet.SpringLocalServer;
 import org.jrdf.restlet.server.distributed.DistributedQueryServer;
 
 /**
