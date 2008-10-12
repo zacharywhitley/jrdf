@@ -155,6 +155,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
         queryClient.postQuery(FOO, QUERY_STRING, "all");
         String answer = readFromInputStream(queryClient.call());
+        System.err.println("Answer: " + answer);
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
     }
 

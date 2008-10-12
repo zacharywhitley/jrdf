@@ -63,57 +63,62 @@ import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.Answer;
-import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.restlet.server.BaseGraphApplication;
+import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.util.DirectoryHandler;
+import org.restlet.Application;
 import org.restlet.resource.ResourceException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
 
-public class GraphApplicationImpl extends BaseGraphApplication implements GraphApplication {
+public class GraphApplicationImpl extends Application implements GraphApplication {
     private static final String LOCAL_SERVER = "127.0.0.1";
     /**
      * The max no. of rows of answers that will be transfomred into xml.
      */
     public static final int MAX_ROWS = 1000;
 
-    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
 
+    private final PersistentGlobalJRDFFactory factory;
     private final String[] serverAddresses;
     private UrqlConnectionImpl urqlConnection;
     private Answer answer;
     private AnswerXMLWriter xmlWriter;
     private boolean tooManyRows;
+    private DirectoryHandler handler;
+    private String maxRows;
+    private String format;
 
-    public GraphApplicationImpl() {
-        this.urqlConnection = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
-        serverAddresses = new String[]{LOCAL_SERVER};
+    public GraphApplicationImpl(DirectoryHandler newHandler) {
+        this(newHandler, new String[]{LOCAL_SERVER});
     }
 
-    public GraphApplicationImpl(String[] serverAddresses) {
+    public GraphApplicationImpl(DirectoryHandler newHandler, String[] serverAddresses) {
+        this.handler = newHandler;
+        this.factory = PersistentGlobalJRDFFactoryImpl.getFactory(handler);
         this.urqlConnection = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
         this.serverAddresses = serverAddresses;
     }
 
     public void close() {
-        FACTORY.close();
+        factory.close();
     }
 
     public MoleculeGraph getGraph(String name) {
-        return FACTORY.getGraph(name);
+        return factory.getGraph(name);
     }
 
     public MoleculeGraph getGraph() {
-        return FACTORY.getGraph();
+        return factory.getGraph();
     }
 
     public String[] getServers() {
@@ -145,5 +150,29 @@ public class GraphApplicationImpl extends BaseGraphApplication implements GraphA
             xmlWriter = answer.getXMLWriter(writer);
         }
         return xmlWriter;
+    }
+
+    public DirectoryHandler getHandler() {
+        return handler;
+    }
+
+    public void setMaxRows(String maxRows) {
+        this.maxRows = maxRows;
+    }
+
+    public String getMaxRows() {
+        return maxRows;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public String getGraphsDir() {
+        return handler.getDir().getName();
     }
 }

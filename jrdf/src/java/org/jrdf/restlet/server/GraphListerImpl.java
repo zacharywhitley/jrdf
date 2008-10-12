@@ -88,11 +88,12 @@ import java.util.Set;
 public class GraphListerImpl implements GraphLister {
     private static final URI NAME = create(JRDF_NAMESPACE + "name");
     private static final URI ID = create(JRDF_NAMESPACE + "id");
-    private static final DirectoryHandler HANDLER = BaseGraphApplication.getHandler();
+    private final DirectoryHandler handler;
+    private final GraphApplication application;
     private Set<Resource> resources;
-    private GraphApplication application;
 
-    public GraphListerImpl(GraphApplication newApplication) {
+    public GraphListerImpl(DirectoryHandler newHandler, GraphApplication newApplication) {
+        this.handler = newHandler;
         this.application = newApplication;
     }
 
@@ -116,7 +117,7 @@ public class GraphListerImpl implements GraphLister {
     }
 
     private void refreshGraphsModel() {
-        final File file = new File(HANDLER.getDir(), "graphs.nt");
+        final File file = new File(handler.getDir(), "graphs.nt");
         final Graph modelsGraph = parseNTriples(file);
         final Models model = new ModelsImpl(modelsGraph);
         this.resources = model.getResources();
