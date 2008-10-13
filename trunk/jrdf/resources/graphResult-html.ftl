@@ -11,7 +11,8 @@
     <table border="1">
         <tr>
             <#list answer.columnNames as columnName>
-            <th>${columnName}</th>
+            <#assign foo = columnName?split("|")>
+            <th>${foo[0]}</th>
             </#list>
         </tr>
         <#list answer.columnValues as columnValue>
