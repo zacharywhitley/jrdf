@@ -108,4 +108,9 @@ public final class EmptyAnswer implements Answer, Serializable {
     public AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException {
         return getXMLWriter(writer);
     }
+
+    @Override
+    public String toString() {
+        return "";
+    }
 }

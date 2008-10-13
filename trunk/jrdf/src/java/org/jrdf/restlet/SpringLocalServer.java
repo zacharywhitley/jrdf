@@ -65,7 +65,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.util.logging.Level;
 
 /**
- * A server that allows you to deploy JRDF.
+ * A server that allows you to deploy JRDF server.
  *
  * @author Andrew Newman
  * @version $Id$

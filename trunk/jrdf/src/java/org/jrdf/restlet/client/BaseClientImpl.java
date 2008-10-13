@@ -122,7 +122,7 @@ public abstract class BaseClientImpl implements GraphQueryClient {
     private void setAcceptedMediaTypes(Request request) {
         ClientInfo clientInfo = new ClientInfo();
         Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
-        clientInfo.setAcceptedMediaTypes(Arrays.asList(preference));
+        clientInfo.setAcceptedMediaTypes(Arrays.<Preference<MediaType>>asList(preference));
         request.setClientInfo(clientInfo);
     }
 
