@@ -50,7 +50,7 @@
     </bean>
 
     <bean id="logService" class="org.restlet.service.LogService">
-        <constructor-arg value="true"/>
+        <constructor-arg value="false"/>
     </bean>
 
     <!-- Freemarker -->
@@ -98,7 +98,7 @@
         <constructor-arg ref="queryEngine"/>
     </bean>
 
-    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl">
+    <bean id="graphApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl">
         <constructor-arg ref="directoryHandler"/>
         <constructor-arg ref="urqlConnection"/>
     </bean>
@@ -106,8 +106,12 @@
     <!-- List the graphs -->
     <bean id="graphLister" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
         <constructor-arg ref="directoryHandler"/>
-        <constructor-arg ref="webApplication"/>
+        <constructor-arg ref="graphApplication"/>
         <constructor-arg value="${graphs.file}"/>
+    </bean>
+
+    <bean id="newDoer" class="org.jrdf.restlet.server.local.NewLocalGraphResourceDoerImpl" scope="prototype">
+        <constructor-arg ref="graphApplication"/>
     </bean>
 
     <!-- Resources for displaying -->
@@ -125,11 +129,26 @@
     </bean>
 
     <bean id="graphsResourceHtml" class="org.jrdf.restlet.FreemarkerRepresentationFactory">
-        <property name="templateName" value="graphsPage.ftl"/>
+        <property name="templateName" value="graphsLists-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
     <bean id="localQueryGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
-        <property name="graphApplication" ref="webApplication"/>
+        <property name="graphApplication" ref="graphApplication"/>
+    </bean>
+
+    <bean id="newLocalQueryGraphResource" class="org.jrdf.restlet.server.local.NewLocalGraphResource" scope="prototype">
+        <property name="doer" ref="newDoer"/>
+        <property name="available" value="true"/>
+        <property name="representationTemplates">
+            <map>
+                <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="localGraphsResourceHtml"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="localGraphsResourceHtml" class="org.jrdf.restlet.FreemarkerRepresentationFactory">
+        <property name="templateName" value="queryPage.ftl"/>
+        <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 </beans>
