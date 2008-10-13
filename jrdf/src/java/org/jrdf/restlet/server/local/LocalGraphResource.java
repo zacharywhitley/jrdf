@@ -198,6 +198,6 @@ public class LocalGraphResource extends BaseGraphResource {
         root.put("hasMore", xmlWriter.hasMoreResults());
         root.put("tooManyRows", application.isTooManyRows());
         root.put("maxRows", DEFAULT_MAX_ROWS);
-        return getRepresentation(root, "queryResult.ftl");
+        return getRepresentation(root, "query-html.ftl");
     }
 }

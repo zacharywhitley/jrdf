@@ -189,6 +189,6 @@ public class DistributedGraphResource extends BaseGraphResource {
         root.put("hasMore", xmlWriter.hasMoreResults());
 //        root.put("tooManyRows", application.isTooManyRows());
 //        root.put("maxRows", MAX_ROWS);
-        return getRepresentation(root, "queryResult.ftl");
+        return getRepresentation(root, "query-html.ftl");
     }
 }
