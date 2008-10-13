@@ -114,7 +114,6 @@ public abstract class BaseClientImpl implements GraphQueryClient {
         form.add(NO_ROWS, noRows);
         Representation representation = form.getWebRepresentation();
         String requestURL = makeRequestString(graphName);
-        System.err.println("Request url: " + requestURL);
         return new Request(POST, requestURL, representation);
     }
 
