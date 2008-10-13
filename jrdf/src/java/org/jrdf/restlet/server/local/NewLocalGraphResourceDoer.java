@@ -1,10 +1,7 @@
 package org.jrdf.restlet.server.local;
 
-import org.jrdf.query.xml.AnswerXMLWriter;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.StringWriter;
-import java.io.IOException;
+import org.jrdf.query.Answer;
+import org.restlet.resource.ResourceException;
 
 public interface NewLocalGraphResourceDoer {
     String getMaxRows();
@@ -13,5 +10,5 @@ public interface NewLocalGraphResourceDoer {
 
     boolean isTooManyRows();
 
-    AnswerXMLWriter getAnswerXMLWriter(StringWriter writer) throws XMLStreamException, IOException;
+    Answer answerQuery(String graphName, String queryString) throws ResourceException;
 }

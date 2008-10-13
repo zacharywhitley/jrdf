@@ -59,11 +59,8 @@
 
 package org.jrdf.restlet.server.local;
 
-import org.jrdf.query.xml.AnswerXMLWriter;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.StringWriter;
-import java.io.IOException;
+import org.jrdf.query.Answer;
+import org.restlet.resource.ResourceException;
 
 /**
  * @author Yuan-Fang Li
@@ -89,7 +86,7 @@ public class NewLocalGraphResourceDoerImpl implements NewLocalGraphResourceDoer 
         return application.isTooManyRows();
     }
 
-    public AnswerXMLWriter getAnswerXMLWriter(StringWriter writer) throws XMLStreamException, IOException {
-        return application.getAnswerXMLWriter(writer);
+    public Answer answerQuery(String graphName, String queryString) throws ResourceException {
+        return application.answerQuery2(graphName, queryString);
     }
 }

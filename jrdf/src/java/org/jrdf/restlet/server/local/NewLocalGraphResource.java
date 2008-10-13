@@ -59,23 +59,16 @@
 
 package org.jrdf.restlet.server.local;
 
-import static freemarker.ext.dom.NodeModel.parse;
-import org.jrdf.query.xml.AnswerXMLWriter;
-import static org.jrdf.restlet.server.local.GraphApplicationImpl.DEFAULT_MAX_ROWS;
+import org.jrdf.query.Answer;
 import org.jrdf.restlet.ConfigurableRestletResource;
+import static org.jrdf.restlet.server.local.GraphApplicationImpl.DEFAULT_MAX_ROWS;
 import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,9 +80,9 @@ import java.util.Map;
 public class NewLocalGraphResource extends ConfigurableRestletResource {
     private static final String GRAPH_VALUE = "graph";
     private static final String GRAPH_NAME = "graphName";
-    private AnswerXMLWriter xmlWriter;
     private NewLocalGraphResourceDoer doer;
     private String graphName;
+    private String queryString;
 
     public void setDoer(NewLocalGraphResourceDoer newDoer) {
         this.doer = newDoer;
@@ -99,16 +92,19 @@ public class NewLocalGraphResource extends ConfigurableRestletResource {
     public Representation represent(Variant variant) {
         Representation rep = null;
         try {
-            String getNext = getRequest().getResourceRef().getQueryAsForm().getFirstValue("next");
-            graphName = (String) this.getRequest().getAttributes().get(GRAPH_VALUE);
-            if (getNext == null || !getNext.equalsIgnoreCase("true")) {
+            graphName = (String) getRequest().getAttributes().get(GRAPH_VALUE);
+            if (getRequest().getResourceRef().hasQuery()) {
+                queryString = getRequest().getResourceRef().getQueryAsForm().getFirst("queryString").getValue();
+            }
+            if (queryString == null) {
                 rep = queryPageRepresentation(variant);
             } else {
-                rep = queryResultRepresentation(variant, doer.getMaxRows());
+                rep = queryResultRepresentation(variant);
             }
             getResponse().setStatus(SUCCESS_OK);
         } catch (Exception e) {
-            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage());
+            e.printStackTrace();
+            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
         }
         return rep;
     }
@@ -119,51 +115,20 @@ public class NewLocalGraphResource extends ConfigurableRestletResource {
         return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }
 
-    private Representation queryResultRepresentation(Variant variant, String noRows) throws ResourceException {
+    private Representation queryResultRepresentation(Variant variant) throws ResourceException {
         try {
-            StringWriter writer = new StringWriter();
-            xmlWriter = doer.getAnswerXMLWriter(writer);
-            String xmlString = getXMLString(noRows, writer);
-            writer.close();
-            xmlWriter.close();
-            return constructHTMLAnswerRep(variant, xmlString);
+            return constructHTMLAnswerRep(variant, doer.answerQuery(graphName, queryString));
         } catch (Exception e) {
             throw new ResourceException(e);
         }
     }
 
-    private String getXMLString(String noRows, StringWriter writer) throws XMLStreamException {
-        String  xmlString;
-        try {
-            int maxRows = Integer.parseInt(noRows);
-            generatePartialXMLString(maxRows);
-        } catch (NumberFormatException e) {
-            xmlWriter.write();
-        }
-        xmlString = writer.toString();
-        return xmlString;
-    }
-
-    private void generatePartialXMLString(int maxRows) throws XMLStreamException {
-        int count = 0;
-        xmlWriter.writeStartDocument();
-        xmlWriter.writeVariables();
-        xmlWriter.writeStartResults();
-        while (xmlWriter.hasMoreResults() && count < maxRows) {
-            xmlWriter.writeResult();
-            count++;
-        }
-        xmlWriter.writeEndResults();
-        xmlWriter.writeEndDocument();
-    }
-
-    private Representation constructHTMLAnswerRep(Variant variant, String answerXML) throws SAXException, IOException,
-        ParserConfigurationException {
+    private Representation constructHTMLAnswerRep(Variant variant, Answer answer) {
         Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put("doc", parse(new InputSource(new StringReader(answerXML))));
+        dataModel.put("queryString", queryString);
+        dataModel.put("answer", answer);
         dataModel.put(GRAPH_NAME, graphName);
         dataModel.put("timeTaken", doer.getTimeTaken());
-        dataModel.put("hasMore", xmlWriter.hasMoreResults());
         dataModel.put("tooManyRows", doer.isTooManyRows());
         dataModel.put("maxRows", DEFAULT_MAX_ROWS);
         return createTemplateRepresentation(variant.getMediaType(), dataModel);

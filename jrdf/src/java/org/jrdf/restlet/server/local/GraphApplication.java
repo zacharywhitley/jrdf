@@ -2,6 +2,7 @@ package org.jrdf.restlet.server.local;
 
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.xml.AnswerXMLWriter;
+import org.jrdf.query.Answer;
 import org.restlet.resource.ResourceException;
 
 import javax.xml.stream.XMLStreamException;
@@ -35,4 +36,6 @@ public interface GraphApplication {
     boolean isTooManyRows();
 
     AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException;
+
+    Answer answerQuery2(String graphName, String queryString) throws ResourceException;
 }
