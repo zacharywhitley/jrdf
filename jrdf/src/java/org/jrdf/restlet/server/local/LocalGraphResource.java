@@ -62,7 +62,7 @@ package org.jrdf.restlet.server.local;
 import static freemarker.ext.dom.NodeModel.parse;
 import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.restlet.server.BaseGraphResource;
-import static org.jrdf.restlet.server.local.GraphApplicationImpl.MAX_ROWS;
+import static org.jrdf.restlet.server.local.GraphApplicationImpl.*;
 import org.restlet.Context;
 import org.restlet.data.Form;
 import static org.restlet.data.MediaType.TEXT_XML;
@@ -197,7 +197,7 @@ public class LocalGraphResource extends BaseGraphResource {
         root.put("timeTaken", application.getTimeTaken());
         root.put("hasMore", xmlWriter.hasMoreResults());
         root.put("tooManyRows", application.isTooManyRows());
-        root.put("maxRows", MAX_ROWS);
+        root.put("maxRows", DEFAULT_MAX_ROWS);
         return getRepresentation(root, "queryResult.ftl");
     }
 }
