@@ -108,7 +108,6 @@ public abstract class BaseClientImpl implements GraphQueryClient {
 
     protected Request preparePostRequest(String graphName, String queryString, String noRows)
         throws MalformedURLException {
-        new Throwable().printStackTrace();
         Form form = new Form();
         form.add(QUERY_STRING, queryString);
         form.add(FORMAT, FORMAT_XML);
