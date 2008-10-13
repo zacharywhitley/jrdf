@@ -74,7 +74,7 @@
                 </entry>
                 <entry key="/graphs/{graph}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="localQueryGraphResource"/>
+                        <lookup-method name="createResource" bean="newLocalQueryGraphResource"/>
                     </bean>
                 </entry>
             </map>
@@ -144,12 +144,14 @@
         <property name="representationTemplates">
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="localGraphsResourceHtml"/>
+                <entry key-ref="org.restlet.data.MediaType.APPLICATION_XML" value-ref="sparqlXmlRepresentationFactory"/>
+                <entry key-ref="org.jrdf.restlet.MediaTypeExtensions.APPLICATION_SPARQL" value-ref="sparqlXmlRepresentationFactory"/>
             </map>
         </property>
     </bean>
 
     <bean id="localGraphsResourceHtml" class="org.jrdf.restlet.FreemarkerRepresentationFactory">
-        <property name="templateName" value="queryPage.ftl"/>
+        <property name="templateName" value="graph-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 </beans>

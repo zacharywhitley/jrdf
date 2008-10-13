@@ -112,7 +112,7 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
     public void postQuery(String graphName, String queryString, String noRows) {
         try {
             for (GraphQueryClient queryClient : queryClients) {
-                queryClient.postQuery(graphName, queryString, noRows);
+                queryClient.getQuery(graphName, queryString, noRows);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -125,6 +125,9 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
         executeQuries();
         aggregateResults();
         return null;
+    }
+
+    public void getQuery(String graphName, String queryString, String noRows) throws IOException {
     }
 
     private void aggregateResults() {

@@ -59,13 +59,17 @@
 
 package org.jrdf.restlet.client;
 
-import org.jrdf.restlet.server.distributed.DistributedQueryResource;
+import static org.jrdf.restlet.MediaTypeExtensions.APPLICATION_SPARQL;
 import static org.jrdf.restlet.server.distributed.DistributedQueryResource.ACTION;
 import static org.jrdf.restlet.server.distributed.DistributedQueryResource.PORT_STRING;
+import static org.jrdf.restlet.server.distributed.DistributedQueryResource.SERVERS_STRING;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
+import org.restlet.data.ClientInfo;
 import org.restlet.data.Form;
+import org.restlet.data.MediaType;
 import org.restlet.data.Method;
+import org.restlet.data.Preference;
 import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -76,6 +80,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 /**
  * @author Yuan-Fang Li
@@ -97,6 +102,10 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         return executeQuery();
     }
 
+    public void getQuery(String graphName, String queryString, String noRows) throws IOException {
+        request = prepareGetRequest(graphName, queryString, noRows);
+    }
+
     public void postQuery(String graphName, String queryString, String noRows) throws IOException {
         request = preparePostRequest(graphName, queryString, noRows);
     }
@@ -106,7 +115,7 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         Form form = new Form();
         form.add(PORT_STRING, Integer.toString(port));
         form.add(ACTION, action);
-        form.add(DistributedQueryResource.SERVERS_STRING, servers);
+        form.add(SERVERS_STRING, servers);
         Representation representation = form.getWebRepresentation();
         URL url = new URL(HTTP.getSchemeName(), serverString, serverPort, "/");
         String requestURL = url.toString();
@@ -119,6 +128,7 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
 
     public InputStream executeQuery() throws IOException {
         checkNotNull(client, request);
+        setAcceptedMediaTypes(request);
         Response response = client.handle(request);
         final Status status = response.getStatus();
         if (status.isSuccess()) {
@@ -127,6 +137,13 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         } else {
             throw new RuntimeException(status.getThrowable());
         }
+    }
+
+    private void setAcceptedMediaTypes(Request theRequest) {
+        ClientInfo clientInfo = new ClientInfo();
+        Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
+        clientInfo.setAcceptedMediaTypes(Arrays.asList(preference));
+        theRequest.setClientInfo(clientInfo);
     }
 
     public static void main(String[] args) throws Exception {

@@ -59,13 +59,19 @@
 
 package org.jrdf.restlet.client;
 
+import static org.jrdf.restlet.MediaTypeExtensions.APPLICATION_SPARQL;
 import static org.jrdf.restlet.server.BaseGraphResource.FORMAT;
 import static org.jrdf.restlet.server.BaseGraphResource.FORMAT_XML;
 import static org.jrdf.restlet.server.BaseGraphResource.NO_ROWS;
 import static org.jrdf.restlet.server.BaseGraphResource.QUERY_STRING;
+import org.restlet.data.ClientInfo;
 import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import static org.restlet.data.Method.GET;
 import static org.restlet.data.Method.POST;
+import org.restlet.data.Preference;
 import static org.restlet.data.Protocol.HTTP;
+import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.resource.Representation;
 
@@ -74,7 +80,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Arrays;
 
 /**
  * @author Yuan-Fang Li
@@ -92,20 +98,45 @@ public abstract class BaseClientImpl implements GraphQueryClient {
         serverString = server;
     }
 
+    protected Request prepareGetRequest(String graphName, String queryString, String noRows) {
+        Representation representation = new Form().getWebRepresentation();
+        String requestURL = makeRequestString(graphName, queryString);
+        Request request = new Request(GET, requestURL, representation);
+        setAcceptedMediaTypes(request);
+        return request;
+    }
+
     protected Request preparePostRequest(String graphName, String queryString, String noRows)
         throws MalformedURLException {
+        new Throwable().printStackTrace();
         Form form = new Form();
         form.add(QUERY_STRING, queryString);
         form.add(FORMAT, FORMAT_XML);
         form.add(NO_ROWS, noRows);
         Representation representation = form.getWebRepresentation();
         String requestURL = makeRequestString(graphName);
+        System.err.println("Request url: " + requestURL);
         return new Request(POST, requestURL, representation);
     }
 
-    private String makeRequestString(String graphName) throws MalformedURLException {
-        URL url = new URL(HTTP.getSchemeName(), serverString, serverPort, "/graphs/" + graphName);
-        return url.toString();
+    private void setAcceptedMediaTypes(Request request) {
+        ClientInfo clientInfo = new ClientInfo();
+        Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
+        clientInfo.setAcceptedMediaTypes(Arrays.asList(preference));
+        request.setClientInfo(clientInfo);
+    }
+
+    private String makeRequestString(String graphName) {
+        Reference ref = new Reference(HTTP.getSchemeName(), serverString, serverPort, "/graphs/" + graphName, null,
+            null);
+        return ref.toString();
+    }
+
+    private String makeRequestString(String graphName, String queryString) {
+        String query = "queryString=" + queryString;
+        Reference ref = new Reference(HTTP.getSchemeName(), serverString, serverPort, "/graphs/" + graphName, query,
+            null);
+        return ref.toString();
     }
 
     public static String readFromInputStream(InputStream stream) throws IOException {
