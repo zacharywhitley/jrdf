@@ -52,6 +52,7 @@
         <!-- Test data used by the RDF/XML Parser and Writer and NTriples Reader -->
         <copy todir="${test.classes.dir}">
             <fileset dir="${test.src.dir}" includes="**/*.rdf"/>
+            <fileset dir="${test.src.dir}" includes="**/xml/data/*.xml"/>
             <fileset dir="${test.src.dir}" includes="**/*.nt"/>
         </copy>
     </target>
