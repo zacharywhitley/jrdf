@@ -37,22 +37,19 @@
     <bean id="directoryHandler" class="org.jrdf.util.TempDirectoryHandler">
         <constructor-arg value="${persistent.directory}"/>
     </bean>
-    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl" scope="singleton">
-        <constructor-arg ref="directoryHandler"/>
-    </bean>
 
-    <bean id="component" class="org.restlet.ext.spring.SpringComponent" scope="singleton">
+    <bean id="component" class="org.restlet.ext.spring.SpringComponent">
         <property name="server" ref="server"/>
         <property name="defaultTarget" ref="router"/>
         <property name="logService" ref="logService"/>
     </bean>
 
-    <bean id="server" class="org.restlet.ext.spring.SpringServer" scope="singleton">
+    <bean id="server" class="org.restlet.ext.spring.SpringServer">
         <constructor-arg value="http"/>
         <constructor-arg value="${server.port}"/>
     </bean>
 
-    <bean id="logService" class="org.restlet.service.LogService" scope="singleton">
+    <bean id="logService" class="org.restlet.service.LogService">
         <constructor-arg value="true"/>
     </bean>
 
@@ -65,7 +62,7 @@
     </bean>
 
     <!-- Router for Resources -->
-    <bean id="router" class="org.restlet.ext.spring.SpringRouter" scope="singleton">
+    <bean id="router" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
             <map>
                 <entry key="" value-ref="redirector">
@@ -115,6 +112,19 @@
     </bean>
 
     <!-- Do SPARQL queries -->
+    <bean id="queryFactory" class="org.jrdf.query.QueryFactoryImpl"/>
+    <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
+    <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
+
+    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
+        <constructor-arg ref="queryBuilder"/>
+        <constructor-arg ref="queryEngine"/>
+    </bean>
+
+    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl">
+        <constructor-arg ref="directoryHandler"/>
+        <constructor-arg ref="urqlConnection"/>
+    </bean>
     <bean id="localGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="webApplication"/>
     </bean>
