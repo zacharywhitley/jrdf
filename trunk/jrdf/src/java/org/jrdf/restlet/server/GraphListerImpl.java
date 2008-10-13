@@ -65,7 +65,6 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Value;
 import static org.jrdf.parser.Reader.parseNTriples;
-import org.jrdf.restlet.server.GraphApplication;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
