@@ -75,18 +75,17 @@ import java.util.Map;
  */
 
 public class GraphsResource extends ConfigurableRestletResource {
-    private GraphLister doer;
+    private GraphLister graphLister;
 
-    public void setGraphLister(GraphLister newDoer) {
-        this.doer = newDoer;
+    public void setGraphLister(GraphLister newGraphLister) {
+        this.graphLister = newGraphLister;
     }
 
     @Override
     public Representation represent(Variant variant) throws ResourceException {
-        Map<String, String> map = doer.populateIdNameMap();
         Representation rep = null;
         try {
-            rep = constructRepresentation(map, variant);
+            rep = constructRepresentation(variant);
             getResponse().setStatus(SUCCESS_OK);
         } catch (Exception e) {
             getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage());
@@ -94,10 +93,10 @@ public class GraphsResource extends ConfigurableRestletResource {
         return rep;
     }
 
-    private Representation constructRepresentation(Map<String, String> map, Variant variant) {
+    private Representation constructRepresentation(Variant variant) throws ResourceException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put("dirName", doer.dirName());
-        dataModel.put("graphs", map);
+        dataModel.put("dirName", graphLister.dirName());
+        dataModel.put("graphs", graphLister.populateIdNameMap());
         return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }
 }
