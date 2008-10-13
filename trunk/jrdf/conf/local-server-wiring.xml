@@ -134,7 +134,7 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="newLocalQueryGraphResource" class="org.jrdf.restlet.server.local.NewLocalGraphResource" scope="prototype">
+    <bean id="newLocalQueryGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
         <property name="doer" ref="newDoer"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
