@@ -60,16 +60,15 @@
 package org.jrdf.query.xml;
 
 import javax.xml.stream.XMLStreamException;
-import java.net.URL;
-import java.io.IOException;
-import java.io.PipedOutputStream;
-import java.io.PipedInputStream;
-import java.io.StringWriter;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.StringWriter;
 
 /**
  * @author Yuan-Fang Li
@@ -140,7 +139,7 @@ public class MultiAnswerXMLStreamWriterUnitTest extends AbstractAnswerXMLStreamW
         }
 
         void writeStream() throws IOException {
-            stream = new URL("http://www.w3.org/TR/rdf-sparql-XMLres/output.srx").openStream();
+            stream = getClass().getClassLoader().getResource("org/jrdf/query/xml/data/output.xml").openStream();
             for (int i; (i = stream.read()) != -1;) {
                 outputStream.write(i);
             }
