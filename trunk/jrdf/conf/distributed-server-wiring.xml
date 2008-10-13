@@ -82,7 +82,7 @@
     <bean id="configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:org/jrdf/restlet/server/local/server.properties</value>
+                <value>classpath:org/jrdf/query/server/local/server.properties</value>
             </list>
         </property>
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
