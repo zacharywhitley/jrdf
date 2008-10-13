@@ -10,7 +10,7 @@
     <bean id="org.restlet.data.MediaType.APPLICATION_JSON"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
-    <bean id="org.jrdf.restlet.MediaTypeExtensions.APPLICATION_SPARQL"
+    <bean id="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
     <bean id="org.restlet.data.MediaType.APPLICATION_XML"
@@ -98,23 +98,23 @@
         <constructor-arg ref="queryEngine"/>
     </bean>
 
-    <bean id="graphApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl">
+    <bean id="graphApplication" class="org.jrdf.query.server.local.GraphApplicationImpl">
         <constructor-arg ref="directoryHandler"/>
         <constructor-arg ref="urqlConnection"/>
     </bean>
 
     <!-- List the graphs -->
-    <bean id="graphLister" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
+    <bean id="graphLister" class="org.jrdf.query.server.GraphListerImpl" scope="prototype">
         <constructor-arg ref="directoryHandler"/>
         <constructor-arg ref="graphApplication"/>
         <constructor-arg value="${graphs.file}"/>
     </bean>
 
     <!-- Resources for displaying -->
-    <bean id="jsonRepresentationFactory" class="org.jrdf.restlet.server.JsonRepresentationFactory"/>
-    <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.restlet.server.SparqlXmlRepresentationFactory"/>
+    <bean id="jsonRepresentationFactory" class="org.jrdf.query.server.JsonRepresentationFactory"/>
+    <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.query.server.SparqlXmlRepresentationFactory"/>
 
-    <bean id="listGraphsResource" class="org.jrdf.restlet.server.ListGraphsResource" scope="prototype">
+    <bean id="listGraphsResource" class="org.jrdf.query.server.ListGraphsResource" scope="prototype">
         <property name="graphLister" ref="graphLister"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
@@ -125,12 +125,12 @@
         </property>
     </bean>
 
-    <bean id="graphsResourceHtml" class="org.jrdf.restlet.FreemarkerRepresentationFactory">
+    <bean id="graphsResourceHtml" class="org.jrdf.query.FreemarkerRepresentationFactory">
         <property name="templateName" value="graphsLists-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="newLocalQueryGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
+    <bean id="newLocalQueryGraphResource" class="org.jrdf.query.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="graphApplication"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
@@ -138,12 +138,12 @@
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="localGraphsResourceHtml"/>
                 <entry key-ref="org.restlet.data.MediaType.APPLICATION_JSON" value-ref="jsonRepresentationFactory"/>
                 <entry key-ref="org.restlet.data.MediaType.APPLICATION_XML" value-ref="sparqlXmlRepresentationFactory"/>
-                <entry key-ref="org.jrdf.restlet.MediaTypeExtensions.APPLICATION_SPARQL" value-ref="sparqlXmlRepresentationFactory"/>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL" value-ref="sparqlXmlRepresentationFactory"/>
             </map>
         </property>
     </bean>
 
-    <bean id="localGraphsResourceHtml" class="org.jrdf.restlet.FreemarkerRepresentationFactory">
+    <bean id="localGraphsResourceHtml" class="org.jrdf.query.FreemarkerRepresentationFactory">
         <property name="templateName" value="graph-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
