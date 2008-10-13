@@ -83,9 +83,9 @@
 
     <!-- Redirector -->
     <bean id="redirector" class="org.restlet.Redirector">
-        <constructor-arg ref="component.childContext"/>
-        <constructor-arg value="/graphs"/>
-        <constructor-arg ref="org.restlet.Redirector.MODE_CLIENT_PERMANENT"/>
+        <constructor-arg index="0" ref="component.childContext"/>
+        <constructor-arg index="1" value="/graphs"/>
+        <constructor-arg index="2" ref="org.restlet.Redirector.MODE_CLIENT_PERMANENT"/>
     </bean>
 
     <!-- Do SPARQL and Graphs queries -->
@@ -134,16 +134,13 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="localQueryGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
-        <property name="graphApplication" ref="graphApplication"/>
-    </bean>
-
     <bean id="newLocalQueryGraphResource" class="org.jrdf.restlet.server.local.NewLocalGraphResource" scope="prototype">
         <property name="doer" ref="newDoer"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="localGraphsResourceHtml"/>
+                <entry key-ref="org.restlet.data.MediaType.APPLICATION_JSON" value-ref="jsonRepresentationFactory"/>
                 <entry key-ref="org.restlet.data.MediaType.APPLICATION_XML" value-ref="sparqlXmlRepresentationFactory"/>
                 <entry key-ref="org.jrdf.restlet.MediaTypeExtensions.APPLICATION_SPARQL" value-ref="sparqlXmlRepresentationFactory"/>
             </map>

@@ -97,6 +97,7 @@ public class AttributeBinding extends TupleBinding implements Serializable {
         return o;
     }
 
+    @SuppressWarnings({ "unchecked" })
     public void objectToEntry(Object o, TupleOutput tupleOutput) {
         Attribute object = (Attribute) o;
         if (object instanceof AttributeImpl) {
