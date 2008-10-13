@@ -63,12 +63,8 @@ import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.Answer;
-import org.jrdf.query.QueryFactory;
-import org.jrdf.query.QueryFactoryImpl;
-import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.xml.AnswerXMLWriter;
-import org.jrdf.urql.UrqlConnectionImpl;
-import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.restlet.Application;
 import org.restlet.resource.ResourceException;
@@ -84,13 +80,9 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
      */
     public static final int MAX_ROWS = 1000;
 
-    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
-    private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
-    private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-
     private final PersistentGlobalJRDFFactory factory;
     private final String[] serverAddresses;
-    private UrqlConnectionImpl urqlConnection;
+    private final UrqlConnection urqlConnection;
     private Answer answer;
     private AnswerXMLWriter xmlWriter;
     private boolean tooManyRows;
@@ -98,14 +90,14 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
     private String maxRows;
     private String format;
 
-    public GraphApplicationImpl(DirectoryHandler newHandler) {
-        this(newHandler, new String[]{LOCAL_SERVER});
+    public GraphApplicationImpl(DirectoryHandler newHandler, UrqlConnection newConnection) {
+        this(newHandler, newConnection, new String[]{LOCAL_SERVER});
     }
 
-    public GraphApplicationImpl(DirectoryHandler newHandler, String[] serverAddresses) {
+    public GraphApplicationImpl(DirectoryHandler newHandler, UrqlConnection newConnection, String[] serverAddresses) {
         this.handler = newHandler;
         this.factory = PersistentGlobalJRDFFactoryImpl.getFactory(handler);
-        this.urqlConnection = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
+        this.urqlConnection = newConnection;
         this.serverAddresses = serverAddresses;
     }
 
