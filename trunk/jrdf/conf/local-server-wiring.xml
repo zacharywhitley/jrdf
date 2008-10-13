@@ -116,6 +116,7 @@
 
     <!-- Resources for displaying -->
     <bean id="jsonRepresentationFactory" class="org.jrdf.restlet.server.JsonRepresentationFactory"/>
+    <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.restlet.server.SparqlXmlRepresentationFactory"/>
 
     <bean id="listGraphsResource" class="org.jrdf.restlet.server.ListGraphsResource" scope="prototype">
         <property name="graphLister" ref="graphLister"/>

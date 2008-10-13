@@ -102,7 +102,8 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         writer = new StringWriter();        
-        url = new URL("http://www.w3.org/TR/rdf-sparql-XMLres/output.srx");
+        //url = new URL("http://www.w3.org/TR/rdf-sparql-XMLres/output.srx");
+        url = getClass().getClassLoader().getResource("org/jrdf/query/xml/data/output.xml");
         stream = url.openStream();
     }
 
