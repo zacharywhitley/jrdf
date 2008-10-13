@@ -169,10 +169,6 @@
         <constructor-arg value="${graphs.file}"/>
     </bean>
 
-    <bean id="newDoer" class="org.jrdf.restlet.server.local.NewLocalGraphResourceDoerImpl" scope="prototype">
-        <constructor-arg ref="graphApplication"/>
-    </bean>
-
     <!-- Resources for displaying -->
     <bean id="jsonRepresentationFactory" class="org.jrdf.restlet.server.JsonRepresentationFactory"/>
     <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.restlet.server.SparqlXmlRepresentationFactory"/>
@@ -194,7 +190,7 @@
     </bean>
 
     <bean id="newLocalQueryGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
-        <property name="doer" ref="newDoer"/>
+        <property name="graphApplication" ref="graphApplication"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
             <map>
