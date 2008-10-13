@@ -74,19 +74,18 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class GraphApplicationImpl extends Application implements GraphApplication {
-    private static final String LOCAL_SERVER = "127.0.0.1";
     /**
      * The max no. of rows of answers that will be transfomred into xml.
      */
-    public static final int MAX_ROWS = 1000;
-
+    public static final int DEFAULT_MAX_ROWS = 1000;
+    private static final String LOCAL_SERVER = "127.0.0.1";
+    private final DirectoryHandler handler;
     private final PersistentGlobalJRDFFactory factory;
-    private final String[] serverAddresses;
     private final UrqlConnection urqlConnection;
+    private final String[] serverAddresses;
     private Answer answer;
     private AnswerXMLWriter xmlWriter;
     private boolean tooManyRows;
-    private DirectoryHandler handler;
     private String maxRows;
     private String format;
 
@@ -121,7 +120,7 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
         try {
             final MoleculeGraph graph = getGraph(graphName);
             answer = urqlConnection.executeQuery(graph, queryString);
-            tooManyRows = answer.numberOfTuples() > MAX_ROWS;
+            tooManyRows = answer.numberOfTuples() > DEFAULT_MAX_ROWS;
         } catch (Exception e) {
             throw new ResourceException(e);
         }
@@ -137,7 +136,7 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
 
     public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
         if (tooManyRows) {
-            xmlWriter = answer.getXMLWriter(writer, MAX_ROWS);
+            xmlWriter = answer.getXMLWriter(writer, DEFAULT_MAX_ROWS);
         } else {
             xmlWriter = answer.getXMLWriter(writer);
         }

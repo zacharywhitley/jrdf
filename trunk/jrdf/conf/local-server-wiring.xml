@@ -69,12 +69,12 @@
                 </entry>
                 <entry key="/graphs">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="graphs"/>
+                        <lookup-method name="createResource" bean="listGraphsResource"/>
                     </bean>
                 </entry>
                 <entry key="/graphs/{graph}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="localGraphResource"/>
+                        <lookup-method name="createResource" bean="localQueryGraphResource"/>
                     </bean>
                 </entry>
             </map>
@@ -88,8 +88,32 @@
         <constructor-arg ref="org.restlet.Redirector.MODE_CLIENT_PERMANENT"/>
     </bean>
 
+    <!-- Do SPARQL and Graphs queries -->
+    <bean id="queryFactory" class="org.jrdf.query.QueryFactoryImpl"/>
+    <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
+    <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
+
+    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
+        <constructor-arg ref="queryBuilder"/>
+        <constructor-arg ref="queryEngine"/>
+    </bean>
+
+    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl">
+        <constructor-arg ref="directoryHandler"/>
+        <constructor-arg ref="urqlConnection"/>
+    </bean>
+
     <!-- List the graphs -->
-    <bean id="graphs" class="org.jrdf.restlet.server.GraphsResource" scope="prototype">
+    <bean id="graphListImpl" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
+        <constructor-arg ref="directoryHandler"/>
+        <constructor-arg ref="webApplication"/>
+        <constructor-arg value="${graphs.file}"/>
+    </bean>
+
+    <!-- Resources for displaying -->
+    <bean id="jsonRepresentationFactory" class="org.jrdf.restlet.server.JsonRepresentationFactory"/>
+
+    <bean id="listGraphsResource" class="org.jrdf.restlet.server.GraphsResource" scope="prototype">
         <property name="graphLister" ref="graphListImpl"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
@@ -105,29 +129,7 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="graphListImpl" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
-        <constructor-arg ref="directoryHandler"/>
-        <constructor-arg ref="webApplication"/>
-        <constructor-arg value="${graphs.file}"/>
-    </bean>
-
-    <!-- Do SPARQL queries -->
-    <bean id="queryFactory" class="org.jrdf.query.QueryFactoryImpl"/>
-    <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
-    <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
-
-    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
-        <constructor-arg ref="queryBuilder"/>
-        <constructor-arg ref="queryEngine"/>
-    </bean>
-
-    <bean id="webApplication" class="org.jrdf.restlet.server.local.GraphApplicationImpl">
-        <constructor-arg ref="directoryHandler"/>
-        <constructor-arg ref="urqlConnection"/>
-    </bean>
-    <bean id="localGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
+    <bean id="localQueryGraphResource" class="org.jrdf.restlet.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="webApplication"/>
     </bean>
-
-    <bean id="jsonRepresentationFactory" class="org.jrdf.restlet.server.JsonRepresentationFactory"/>
 </beans>
