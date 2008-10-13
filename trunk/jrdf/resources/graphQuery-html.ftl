@@ -24,7 +24,7 @@ WHERE {
     <legend>Result format</legend>
     <div>
     HTML: <input type="radio" name="format" value="html" checked="checked"/>, or
-    Raw XML: <input type="radio" name="format" value="xml">
+    Raw XML: <input type="radio" name="format" value="xml"/>
     <p/>
     </div>
     </fieldset>

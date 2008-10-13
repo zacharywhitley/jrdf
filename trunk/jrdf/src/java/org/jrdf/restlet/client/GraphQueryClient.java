@@ -73,5 +73,7 @@ public interface GraphQueryClient {
 
     InputStream executeQuery() throws IOException;
 
+    void getQuery(String graphName, String queryString, String noRows) throws IOException;
+
     void postDistributedServer(int port, String action, String servers) throws MalformedURLException;
 }

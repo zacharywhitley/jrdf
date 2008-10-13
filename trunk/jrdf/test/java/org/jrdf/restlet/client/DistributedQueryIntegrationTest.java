@@ -104,6 +104,9 @@ import java.util.Set;
  * @version :$
  */
 
+// TODO AN/YF Change the start/top in setup and teardown - if there's an exception it will cause the other tests to
+// fail.
+
 public class DistributedQueryIntegrationTest extends TestCase {
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = getHandler();
@@ -153,9 +156,8 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
         CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
-        queryClient.postQuery(FOO, QUERY_STRING, "all");
+        queryClient.getQuery(FOO, QUERY_STRING, "all");
         String answer = readFromInputStream(queryClient.call());
-        System.err.println("Answer: " + answer);
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
     }
 
@@ -182,7 +184,8 @@ public class DistributedQueryIntegrationTest extends TestCase {
         GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
         client.postDistributedServer(PORT, "add", "127.0.0.1");
         client.postQuery(FOO, QUERY_STRING, "all");
-        final String answer = readFromInputStream(client.executeQuery());
+        InputStream inputStream = client.executeQuery();
+        final String answer = readFromInputStream(inputStream);
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
         distributedServer.stop();
     }
