@@ -63,7 +63,7 @@ import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.restlet.client.DistributedQueryClientImpl;
 import org.jrdf.restlet.client.GraphQueryClient;
 import org.jrdf.restlet.server.BaseGraphApplication;
-import org.jrdf.restlet.server.GraphsResource;
+import org.jrdf.restlet.server.ListGraphsResource;
 import org.restlet.Restlet;
 import org.restlet.Router;
 import org.restlet.resource.ResourceException;
@@ -131,7 +131,7 @@ public class DistributedQueryGraphApplication extends BaseGraphApplication {
     public synchronized Restlet createRoot() {
         Router router = new Router(getContext());
         router.attach("/", DistributedQueryResource.class);
-        router.attach("/graphs", GraphsResource.class);
+        router.attach("/graphs", ListGraphsResource.class);
         router.attach("/graphs/{graph}", DistributedGraphResource.class);
         router.attachDefault(DistributedQueryResource.class);
         return router;
