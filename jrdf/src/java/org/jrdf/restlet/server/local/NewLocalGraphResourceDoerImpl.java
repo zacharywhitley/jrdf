@@ -60,6 +60,7 @@
 package org.jrdf.restlet.server.local;
 
 import org.jrdf.query.Answer;
+import org.jrdf.restlet.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 
 /**
