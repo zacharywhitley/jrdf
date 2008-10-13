@@ -50,7 +50,7 @@
     </bean>
 
     <bean id="logService" class="org.restlet.service.LogService">
-        <constructor-arg value="true"/>
+        <constructor-arg value="false"/>
     </bean>
 
     <!-- Freemarker -->
