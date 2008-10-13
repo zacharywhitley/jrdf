@@ -61,6 +61,7 @@ package org.jrdf.restlet.server.local;
 
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import org.jrdf.restlet.server.GraphApplication;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.Answer;
 import org.jrdf.query.xml.AnswerXMLWriter;

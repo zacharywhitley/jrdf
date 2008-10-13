@@ -61,9 +61,9 @@ package org.jrdf.restlet.server.local;
 
 import org.jrdf.query.Answer;
 import org.jrdf.restlet.ConfigurableRestletResource;
-import static org.jrdf.restlet.server.local.GraphApplicationImpl.DEFAULT_MAX_ROWS;
-import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
-import static org.restlet.data.Status.SUCCESS_OK;
+import org.jrdf.restlet.server.GraphApplication;
+import static org.jrdf.restlet.server.local.GraphApplicationImpl.*;
+import static org.restlet.data.Status.*;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
@@ -80,12 +80,12 @@ import java.util.Map;
 public class LocalGraphResource extends ConfigurableRestletResource {
     private static final String GRAPH_VALUE = "graph";
     private static final String GRAPH_NAME = "graphName";
-    private NewLocalGraphResourceDoer doer;
     private String graphName;
     private String queryString;
+    private GraphApplication graphApplication;
 
-    public void setDoer(NewLocalGraphResourceDoer newDoer) {
-        this.doer = newDoer;
+    public void setGraphApplication(GraphApplication graphApplication) {
+        this.graphApplication = graphApplication;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class LocalGraphResource extends ConfigurableRestletResource {
 
     private Representation queryResultRepresentation(Variant variant) throws ResourceException {
         try {
-            return constructHTMLAnswerRep(variant, doer.answerQuery(graphName, queryString));
+            return constructHTMLAnswerRep(variant, graphApplication.answerQuery2(graphName, queryString));
         } catch (Exception e) {
             throw new ResourceException(e);
         }
@@ -128,8 +128,8 @@ public class LocalGraphResource extends ConfigurableRestletResource {
         dataModel.put("queryString", queryString);
         dataModel.put("answer", answer);
         dataModel.put(GRAPH_NAME, graphName);
-        dataModel.put("timeTaken", doer.getTimeTaken());
-        dataModel.put("tooManyRows", doer.isTooManyRows());
+        dataModel.put("timeTaken", graphApplication.getTimeTaken());
+        dataModel.put("tooManyRows", graphApplication.isTooManyRows());
         dataModel.put("maxRows", DEFAULT_MAX_ROWS);
         return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }

@@ -59,82 +59,42 @@
 
 package org.jrdf.restlet.server;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.Value;
-import static org.jrdf.parser.Reader.parseNTriples;
-import org.jrdf.restlet.server.GraphApplication;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.Models;
-import org.jrdf.util.ModelsImpl;
-import static org.jrdf.util.ModelsImpl.JRDF_NAMESPACE;
-import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
+import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.query.xml.AnswerXMLWriter;
+import org.jrdf.query.Answer;
 import org.restlet.resource.ResourceException;
 
-import java.io.File;
-import java.net.URI;
-import static java.net.URI.create;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import javax.xml.stream.XMLStreamException;
+import java.io.Writer;
+import java.io.IOException;
 
-/**
- * @author Andrew Newman
- * @version :$
- */
-public class GraphListerImpl implements GraphLister {
-    private static final URI NAME = create(JRDF_NAMESPACE + "name");
-    private static final URI ID = create(JRDF_NAMESPACE + "id");
-    private final DirectoryHandler handler;
-    private final GraphApplication application;
-    private Set<Resource> resources;
-    private String graphsFile;
+public interface GraphApplication {
 
-    public GraphListerImpl(DirectoryHandler newHandler, GraphApplication newApplication, String newGraphsFile) {
-        this.graphsFile = newGraphsFile;
-        this.handler = newHandler;
-        this.application = newApplication;
-    }
+    String getGraphsDir();
 
-    public Map<String, String> populateIdNameMap() throws ResourceException {
-        refreshGraphsModel();
-        Map<String, String> idNameMap = new HashMap<String, String>();
-        try {
-            for (Resource resource : resources) {
-                String id = getStringValue(resource, ID);
-                String name = getStringValue(resource, NAME);
-                idNameMap.put(id, name);
-            }
-        } catch (Exception e) {
-            throw new ResourceException(SERVER_ERROR_INTERNAL, e);
-        }
-        return idNameMap;
-    }
+    String getFormat();
 
-    public String dirName() {
-        return application.getGraphsDir();
-    }
+    void setFormat(String format);
 
-    private void refreshGraphsModel() {
-        final File file = new File(handler.getDir(), graphsFile);
-        final Graph modelsGraph = parseNTriples(file);
-        final Models model = new ModelsImpl(modelsGraph);
-        this.resources = model.getResources();
-    }
+    String getMaxRows();
 
-    private String getStringValue(Resource resource, URI pred) throws GraphException {
-        final ClosableIterator<ObjectNode> iterator = resource.getObjects(pred);
-        try {
-            String name = "";
-            if (iterator.hasNext()) {
-                name = ((Value) iterator.next()).getValue().toString();
-            }
-            return name;
-        } finally {
-            iterator.close();
-        }
-    }
+    void setMaxRows(String rows);
+
+    void close();
+
+    MoleculeGraph getGraph(String name);
+
+    MoleculeGraph getGraph();
+
+    String[] getServers();
+
+    void answerQuery(String graphName, String queryString) throws ResourceException;
+
+    long getTimeTaken();
+
+    boolean isTooManyRows();
+
+    AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException;
+
+    Answer answerQuery2(String graphName, String queryString) throws ResourceException;
 }
