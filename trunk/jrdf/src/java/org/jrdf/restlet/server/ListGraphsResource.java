@@ -74,7 +74,7 @@ import java.util.Map;
  * @version :$
  */
 
-public class GraphsResource extends ConfigurableRestletResource {
+public class ListGraphsResource extends ConfigurableRestletResource {
     private GraphLister graphLister;
 
     public void setGraphLister(GraphLister newGraphLister) {

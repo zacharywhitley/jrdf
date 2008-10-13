@@ -104,7 +104,7 @@
     </bean>
 
     <!-- List the graphs -->
-    <bean id="graphListImpl" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
+    <bean id="graphLister" class="org.jrdf.restlet.server.GraphListerImpl" scope="prototype">
         <constructor-arg ref="directoryHandler"/>
         <constructor-arg ref="webApplication"/>
         <constructor-arg value="${graphs.file}"/>
@@ -113,8 +113,8 @@
     <!-- Resources for displaying -->
     <bean id="jsonRepresentationFactory" class="org.jrdf.restlet.server.JsonRepresentationFactory"/>
 
-    <bean id="listGraphsResource" class="org.jrdf.restlet.server.GraphsResource" scope="prototype">
-        <property name="graphLister" ref="graphListImpl"/>
+    <bean id="listGraphsResource" class="org.jrdf.restlet.server.ListGraphsResource" scope="prototype">
+        <property name="graphLister" ref="graphLister"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
             <map>
