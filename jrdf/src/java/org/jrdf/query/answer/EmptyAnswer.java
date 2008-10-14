@@ -61,8 +61,6 @@ package org.jrdf.query.answer;
 
 import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.mem.AttributeImpl;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.Serializable;
@@ -82,10 +80,6 @@ public final class EmptyAnswer implements Answer, Serializable {
 
     public String[] getVariableNames() {
         return new String[0];
-    }
-
-    public Attribute[] getColumns() {
-        return new AttributeImpl[0];
     }
 
     public String[][] getColumnValues() {

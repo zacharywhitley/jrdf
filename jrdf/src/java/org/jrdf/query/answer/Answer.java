@@ -60,21 +60,27 @@
 package org.jrdf.query.answer;
 
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
-import org.jrdf.query.relation.Attribute;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 /**
- * An answer to a query.
+ * An answer to a SPARQL query.  A SPARQL query does not represent and RDF graph or relation but a series of variables
+ * and bindings to those variables.
  *
  * @version $Id$
  */
 public interface Answer {
 
-    Attribute[] getColumns();
+    /**
+     * Returns the variable names (the value after the question mark in a SPARQL query).
+     *
+     * @return the variable names.
+     */
+    String[] getVariableNames();
 
+    
     String[][] getColumnValues();
 
     long numberOfTuples();
@@ -84,6 +90,4 @@ public interface Answer {
     AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException;
 
     AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException, IOException;
-
-    String[] getVariableNames();
 }
