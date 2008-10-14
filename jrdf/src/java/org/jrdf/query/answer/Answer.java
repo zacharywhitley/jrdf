@@ -64,6 +64,7 @@ import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 
 /**
  * An answer to a SPARQL query.  A SPARQL query does not represent and RDF graph or relation but a series of variables
@@ -80,11 +81,34 @@ public interface Answer {
      */
     String[] getVariableNames();
 
+    /**
+     * Returns a stream of results, where each value in the array is a value for the matching variable from the
+     * {@link #getVariableNames()} call.
+     *
+     * @return a stream of results.
+     */
+    Iterator<String[]> columnValuesIterator();
 
+    /**
+     * Creates an in memory string array of results, where each value in the array is a value for the matching variable
+     * from the {@link #getVariableNames()} call.
+     *
+     * @return an in memory array of the result.
+     */
     String[][] getColumnValues();
 
+    /**
+     * The number of tuples in the result.
+     *
+     * @return the number of tuples in the result.
+     */
     long numberOfTuples();
 
+    /**
+     * The time taken to execute and create the result for the query which lead to this result.
+     *
+     * @return the time taken to execute and create the result for the query which lead to this result.
+     */
     long getTimeTaken();
 
     AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException;

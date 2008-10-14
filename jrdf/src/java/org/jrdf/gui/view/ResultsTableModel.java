@@ -72,6 +72,7 @@ import javax.swing.table.AbstractTableModel;
 public class ResultsTableModel extends AbstractTableModel {
     private static final long serialVersionUID = -7636712377178626351L;
     private String[] columnNames = {"Subject", "Predicate", "Object"};
+    private int noResults;
     private String[][] data = {};
 
     public void setResults(Answer answer) {
@@ -81,7 +82,7 @@ public class ResultsTableModel extends AbstractTableModel {
     }
 
     public int getRowCount() {
-        return data.length;
+        return noResults;
     }
 
     public int getColumnCount() {
@@ -98,6 +99,7 @@ public class ResultsTableModel extends AbstractTableModel {
 
     private void updateTableData(Answer answer) {
         columnNames = answer.getVariableNames();
+        noResults = (int) answer.numberOfTuples();
         data = answer.getColumnValues();
     }
 }
