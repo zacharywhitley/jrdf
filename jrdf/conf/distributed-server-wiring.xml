@@ -124,7 +124,10 @@
     <bean id="router" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
             <map>
-                <entry key="" value-ref="redirector">
+                <entry key="/">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="distributedQueryResource"/>
+                    </bean>
                 </entry>
                 <entry key="/graphs">
                     <bean class="org.restlet.ext.spring.SpringFinder">
@@ -133,18 +136,20 @@
                 </entry>
                 <entry key="/graphs/{graph}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="newLocalQueryGraphResource"/>
+                        <lookup-method name="createResource" bean="localQueryGraphResource"/>
                     </bean>
                 </entry>
             </map>
         </property>
     </bean>
 
-    <!-- Redirector -->
-    <bean id="redirector" class="org.restlet.Redirector">
-        <constructor-arg index="0" ref="component.childContext"/>
-        <constructor-arg index="1" value="/graphs"/>
-        <constructor-arg index="2" ref="org.restlet.Redirector.MODE_CLIENT_PERMANENT"/>
+    <bean id="distributedQueryResource" class="org.jrdf.query.server.distributed.NewDistributedQueryResource">
+        <property name="available" value="true"/>
+        <property name="representationTemplates">
+            <map>
+                <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="distributedStartPage"/>
+            </map>
+        </property>
     </bean>
 
     <!-- Do SPARQL and Graphs queries -->
@@ -184,12 +189,17 @@
         </property>
     </bean>
 
+    <bean id="distributedStartPage" class="org.jrdf.query.FreemarkerRepresentationFactory">
+        <property name="templateName" value="distributedStartPage.ftl"/>
+        <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    </bean>
+
     <bean id="graphsResourceHtml" class="org.jrdf.query.FreemarkerRepresentationFactory">
         <property name="templateName" value="graphsLists-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="newLocalQueryGraphResource" class="org.jrdf.query.server.local.LocalGraphResource" scope="prototype">
+    <bean id="localQueryGraphResource" class="org.jrdf.query.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="graphApplication"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
