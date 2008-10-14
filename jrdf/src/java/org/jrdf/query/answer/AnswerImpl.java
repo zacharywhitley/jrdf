@@ -59,6 +59,7 @@
 
 package org.jrdf.query.answer;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
@@ -80,7 +81,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * Default implementation of {@link Answer}.
@@ -117,7 +117,7 @@ public final class AnswerImpl implements Answer, Serializable {
     }
 
     public String[][] getColumnValues() {
-        SortedSet<Tuple> sortedTuples = results.getSortedTuples();
+        Set<Tuple> sortedTuples = results.getTuples();
         String table[][] = new String[sortedTuples.size()][heading.size()];
         int index = 0;
         for (Tuple sortedTuple : sortedTuples) {
@@ -193,16 +193,8 @@ public final class AnswerImpl implements Answer, Serializable {
         String[] results = new String[heading.size()];
         int index = 0;
         for (Attribute headingAttribute : heading) {
-            boolean foundValue = false;
-            for (Attribute attribute : avps.keySet()) {
-                if (attribute.equals(headingAttribute)) {
-                    results[index] = avps.get(attribute).getValue().toString();
-                    foundValue = true;
-                }
-            }
-            if (!foundValue) {
-                results[index] = "";
-            }
+            Node value = avps.get(headingAttribute).getValue();
+            results[index] = value.toString();
             index++;
         }
         return results;

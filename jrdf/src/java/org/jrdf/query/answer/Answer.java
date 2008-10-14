@@ -80,7 +80,7 @@ public interface Answer {
      */
     String[] getVariableNames();
 
-    
+
     String[][] getColumnValues();
 
     long numberOfTuples();
