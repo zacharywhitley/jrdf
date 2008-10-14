@@ -59,7 +59,7 @@
 
 package org.jrdf.gui.view;
 
-import org.jrdf.query.Answer;
+import org.jrdf.query.answer.Answer;
 
 /**
  * A builder that always throws exceptions.

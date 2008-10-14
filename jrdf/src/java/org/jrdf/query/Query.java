@@ -61,6 +61,7 @@ package org.jrdf.query;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.execute.QueryEngine;
+import org.jrdf.query.answer.Answer;
 
 /**
  * A query to a graph.

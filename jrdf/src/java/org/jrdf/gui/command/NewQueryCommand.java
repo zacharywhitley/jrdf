@@ -61,7 +61,7 @@ package org.jrdf.gui.command;
 
 import org.jrdf.gui.view.QueryPanelView;
 import org.jrdf.gui.view.ResultsPanelView;
-import static org.jrdf.query.EmptyAnswer.EMPTY_ANSWER;
+import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**

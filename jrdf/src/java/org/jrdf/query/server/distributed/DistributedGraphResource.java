@@ -60,7 +60,7 @@
 package org.jrdf.query.server.distributed;
 
 import static freemarker.ext.dom.NodeModel.parse;
-import org.jrdf.query.xml.AnswerXMLWriter;
+import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.jrdf.query.server.BaseGraphResource;
 import org.restlet.Application;
 import org.restlet.Context;

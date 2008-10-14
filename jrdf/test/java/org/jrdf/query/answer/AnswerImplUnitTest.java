@@ -57,30 +57,48 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.query.answer;
 
-import org.jrdf.query.xml.AnswerXMLWriter;
+import junit.framework.TestCase;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.Relation;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.test.MockFactory;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.Writer;
-import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.util.LinkedHashSet;
 
 /**
- * An answer to a query.
+ * Unit test for {@link AnswerImpl}.
  *
- * @version $Id$
+ * @author Tom Adams
+ * @version $Revision$
  */
-public interface Answer {
+public final class AnswerImplUnitTest extends TestCase {
+    private static final Class<?>[] PARAM_TYPES =
+        new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE, Boolean.TYPE};
+    private MockFactory factory = new MockFactory();
 
-    String[] getColumnNames();
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
+        checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
+        checkConstructor(AnswerImpl.class, Modifier.PUBLIC, PARAM_TYPES);
+        checkConstructNullAssertion(AnswerImpl.class, PARAM_TYPES);
+    }
 
-    String[][] getColumnValues();
+    public void testSerialVersionUid() {
+        checkSerialialVersionUid(AnswerImpl.class, 3778815984074679718L);
+    }
 
-    long numberOfTuples();
-
-    long getTimeTaken();
-
-    AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException;
-
-    AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException, IOException;
+    public void testNullArgument() {
+        Relation relation = factory.createMock(Relation.class);
+        LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
+        factory.replay();
+        new AnswerImpl(heading, relation, 100, true);
+        factory.verify();
+    }
 }

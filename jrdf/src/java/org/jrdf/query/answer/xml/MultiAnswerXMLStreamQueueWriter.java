@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query.xml;
+package org.jrdf.query.answer.xml;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;

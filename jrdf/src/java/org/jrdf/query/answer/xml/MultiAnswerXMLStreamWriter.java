@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query.xml;
+package org.jrdf.query.answer.xml;
 
 import static com.ctc.wstx.api.WstxInputProperties.PARSING_MODE_DOCUMENTS;
 import static com.ctc.wstx.api.WstxInputProperties.P_INPUT_PARSING_MODE;

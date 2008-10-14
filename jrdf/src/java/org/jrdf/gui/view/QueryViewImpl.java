@@ -63,7 +63,7 @@ import org.jrdf.gui.command.InvalidQueryCommand;
 import org.jrdf.gui.command.QueryRanCommand;
 import org.jrdf.gui.command.RdfFailedToLoadCommand;
 import org.jrdf.gui.command.RdfLoadedCommand;
-import org.jrdf.query.Answer;
+import org.jrdf.query.answer.Answer;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.richclient.application.PageComponentContext;

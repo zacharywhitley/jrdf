@@ -60,7 +60,7 @@
 package org.jrdf.gui.view;
 
 import org.jdesktop.swingx.JXTable;
-import org.jrdf.query.Answer;
+import org.jrdf.query.answer.Answer;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;

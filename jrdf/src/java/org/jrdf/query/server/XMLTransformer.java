@@ -59,7 +59,7 @@
 
 package org.jrdf.query.server;
 
-import static org.jrdf.query.xml.AnswerXMLWriter.XSLT_URL_STRING;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.XSLT_URL_STRING;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;

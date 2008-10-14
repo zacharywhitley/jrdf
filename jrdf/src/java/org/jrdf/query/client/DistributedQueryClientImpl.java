@@ -59,8 +59,8 @@
 
 package org.jrdf.query.client;
 
-import org.jrdf.query.xml.AnswerXMLWriter;
-import org.jrdf.query.xml.MultiAnswerXMLStreamQueueWriter;
+import org.jrdf.query.answer.xml.AnswerXMLWriter;
+import org.jrdf.query.answer.xml.MultiAnswerXMLStreamQueueWriter;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;

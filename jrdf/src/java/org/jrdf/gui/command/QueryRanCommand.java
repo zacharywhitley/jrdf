@@ -60,7 +60,7 @@
 package org.jrdf.gui.command;
 
 import org.jrdf.gui.view.QueryView;
-import org.jrdf.query.Answer;
+import org.jrdf.query.answer.Answer;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**

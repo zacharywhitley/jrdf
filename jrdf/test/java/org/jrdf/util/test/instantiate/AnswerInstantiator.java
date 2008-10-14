@@ -59,7 +59,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.AnswerImpl;
+import org.jrdf.query.answer.AnswerImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
@@ -69,7 +69,7 @@ import org.jrdf.util.test.ReflectTestUtil;
 import java.util.LinkedHashSet;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.AnswerImpl}.
+ * {@link Instantiator} for {@link org.jrdf.query.answer.AnswerImpl}.
  *
  * @version $Id$
  */

@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query.xml;
+package org.jrdf.query.answer.xml;
 
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
@@ -67,7 +67,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.query.Answer;
+import org.jrdf.query.answer.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;

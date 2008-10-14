@@ -57,48 +57,30 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.query.answer;
 
-import junit.framework.TestCase;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
-import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
+import org.jrdf.query.answer.xml.AnswerXMLWriter;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
-import java.util.LinkedHashSet;
+import javax.xml.stream.XMLStreamException;
+import java.io.Writer;
+import java.io.IOException;
 
 /**
- * Unit test for {@link AnswerImpl}.
+ * An answer to a query.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
-public final class AnswerImplUnitTest extends TestCase {
-    private static final Class<?>[] PARAM_TYPES =
-        new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE, Boolean.TYPE};
-    private MockFactory factory = new MockFactory();
+public interface Answer {
 
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
-        checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
-        checkConstructor(AnswerImpl.class, Modifier.PUBLIC, PARAM_TYPES);
-        checkConstructNullAssertion(AnswerImpl.class, PARAM_TYPES);
-    }
+    String[] getColumnNames();
 
-    public void testSerialVersionUid() {
-        checkSerialialVersionUid(AnswerImpl.class, 3778815984074679718L);
-    }
+    String[][] getColumnValues();
 
-    public void testNullArgument() {
-        Relation relation = factory.createMock(Relation.class);
-        LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
-        factory.replay();
-        new AnswerImpl(heading, relation, 100, true);
-        factory.verify();
-    }
+    long numberOfTuples();
+
+    long getTimeTaken();
+
+    AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException;
+
+    AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException, IOException;
 }

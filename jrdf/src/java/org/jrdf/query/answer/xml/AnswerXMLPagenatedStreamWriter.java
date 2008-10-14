@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query.xml;
+package org.jrdf.query.answer.xml;
 
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;

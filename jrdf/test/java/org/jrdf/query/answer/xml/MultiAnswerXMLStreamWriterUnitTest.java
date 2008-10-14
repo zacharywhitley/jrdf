@@ -57,11 +57,17 @@
  *
  */
 
-package org.jrdf.query.xml;
+package org.jrdf.query.answer.xml;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.StringWriter;
 
 /**
@@ -69,59 +75,92 @@ import java.io.StringWriter;
  * @version :$
  */
 
-public class MultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXMLStreamWriterUnitTest {
-    private InputStream stream1, stream2;
+public class MultiAnswerXMLStreamWriterUnitTest extends AbstractAnswerXMLStreamWriterUnitTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        stream1 = url.openStream();
-        stream2 = url.openStream();
-        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1);
+        xmlWriter = new MultiAnswerXMLStreamWriter(stream);
         xmlWriter.setWriter(writer);
     }
 
     protected void tearDown() throws Exception {
-        stream1.close();
-        stream2.close();
-    }
-
-    public void testIncomingStreams() throws XMLStreamException, InterruptedException {
-        int count = 0;
-        xmlWriter.writeStartResults();
-        while (xmlWriter.hasMoreResults()) {
-            count++;
-            xmlWriter.writeResult();
-        }
-        assertEquals(2, count);
-        assertFalse(xmlWriter.hasMoreResults());
-        xmlWriter.addStream(stream2);
-        assertTrue(xmlWriter.hasMoreResults());
-        while (xmlWriter.hasMoreResults()) {
-            count++;
-            xmlWriter.writeResult();
-        }
-        xmlWriter.writeEndResults();
-        assertEquals(4, count);
-    }
-
-    public void test2Streams() throws XMLStreamException, InterruptedException {
-        int count = 0;
-        xmlWriter.addStream(stream2);
-        xmlWriter.writeStartResults();
-        while (xmlWriter.hasMoreResults()) {
-            count++;
-            xmlWriter.writeResult();
-        }
-        assertEquals(4, count);
-        xmlWriter.writeEndResults();
-    }
-
-    public void test2StreamsConstructor() throws XMLStreamException, InterruptedException, IOException {
-        stream1.close();
-        stream1 = url.openStream();
         xmlWriter.close();
+    }
+
+    public void testIncomingStream() throws IOException, XMLStreamException, InterruptedException {
+        PipedOutputStream outputStream = new PipedOutputStream();
+        PipedInputStream inputStream = new PipedInputStream(outputStream);
+        long start = System.currentTimeMillis();
+        RunnableStreamWriter sWriter = new RunnableStreamWriter(outputStream, 2);
+        Thread thread = new Thread(sWriter);
+        thread.start();
+
+        xmlWriter = new MultiAnswerXMLStreamWriter(inputStream);
         writer = new StringWriter();
-        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1, stream2);
+        xmlWriter.setWriter(writer);
+        Thread wThread = new Thread((Runnable) xmlWriter);
+        wThread.start();
+
+        int count = 0;
+        xmlWriter.writeStartResults();
+        while (xmlWriter.hasMoreResults()) {
+            count++;
+            xmlWriter.writeResult();
+        }
+        xmlWriter.writeEndResults();
+        assertEquals(4, count);
+        inputStream.close();
+        long end = System.currentTimeMillis();
+        System.err.println("Time taken: " + ((end - start) / 1000));
+        wThread.join();
+        thread.join();
+    }
+
+    class RunnableStreamWriter implements Runnable {
+        private InputStream stream;
+        private OutputStream outputStream;
+        private int loops;
+
+        RunnableStreamWriter(OutputStream outuputStream, int count) {
+            this.outputStream = outuputStream;
+            this.loops = count;
+        }
+
+        void writeFromMultipleStreams() throws IOException, InterruptedException {
+            for (int i = 0; i < loops; i++) {
+                writeStream();
+                if (i == loops - 1) {
+                    synchronized(this) {
+                        this.wait(1000);
+                    }
+                }
+            }
+            outputStream.close();
+        }
+
+        void writeStream() throws IOException {
+            stream = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml").openStream();
+            for (int i; (i = stream.read()) != -1;) {
+                outputStream.write(i);
+            }
+            stream.close();
+        }
+
+        public void run() {
+            try {
+                writeFromMultipleStreams();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void testMultipleInputs() throws XMLStreamException, IOException {
+        String xml = readStreamIntoString();
+        xml += xml;
+        InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
+        writer = new StringWriter();
+        xmlWriter = new MultiAnswerXMLStreamWriter(inputStream);
         xmlWriter.setWriter(writer);
         int count = 0;
         xmlWriter.writeStartResults();
@@ -129,7 +168,22 @@ public class MultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXMLSt
             count++;
             xmlWriter.writeResult();
         }
-        assertEquals(4, count);
         xmlWriter.writeEndResults();
+        assertEquals(4, count);
+        xmlWriter.flush();
+        inputStream.close();
+    }
+
+    private String readStreamIntoString() throws IOException {
+        final InputStream stream1 = url.openStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream1));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+        br.close();
+        stream1.close();
+        return sb.toString();
     }
 }

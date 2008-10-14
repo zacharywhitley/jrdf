@@ -64,7 +64,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.query.Answer;
+import org.jrdf.query.answer.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.EscapeURL;

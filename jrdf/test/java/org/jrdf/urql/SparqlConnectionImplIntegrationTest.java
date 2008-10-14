@@ -69,7 +69,7 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
-import org.jrdf.query.Answer;
+import org.jrdf.query.answer.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.Attribute;
