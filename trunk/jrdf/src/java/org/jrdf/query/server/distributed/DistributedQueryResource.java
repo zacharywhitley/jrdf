@@ -91,7 +91,7 @@ import java.util.StringTokenizer;
 
 public class DistributedQueryResource extends Resource {
     private static final int PORT_NUMBER = 8182;
-    protected DistributedQueryGraphApplication application;
+    protected DistributedQueryGraphApplicationImpl application;
     private static final String DEFAULT_PORT_STRING = "defaultPort";
     /**
      * The name of the radio button for action.
@@ -109,7 +109,7 @@ public class DistributedQueryResource extends Resource {
     public DistributedQueryResource(Context context, Request request, Response response) {
         super(context, request, response);
         getVariants().add(new Variant(TEXT_HTML));
-        application = (DistributedQueryGraphApplication) Application.getCurrent();
+        application = (DistributedQueryGraphApplicationImpl) Application.getCurrent();
     }
 
     public boolean allowGet() {

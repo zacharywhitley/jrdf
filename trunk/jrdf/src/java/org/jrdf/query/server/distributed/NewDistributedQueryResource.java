@@ -102,7 +102,7 @@ public class NewDistributedQueryResource extends ConfigurableRestletResource {
      */
     public static final String PORT_STRING = "port";
 
-    public void setApplication(DistributedQueryGraphApplication newApplication) {
+    public void setDistributedQueryGraphApplication(DistributedQueryGraphApplication newApplication) {
         this.application = newApplication;
     }
 

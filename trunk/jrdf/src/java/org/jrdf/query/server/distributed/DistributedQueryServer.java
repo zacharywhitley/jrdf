@@ -60,6 +60,7 @@
 package org.jrdf.query.server.distributed;
 
 import org.restlet.Component;
+import org.restlet.Restlet;
 import org.restlet.data.Protocol;
 
 import java.net.InetAddress;
@@ -78,10 +79,10 @@ public class DistributedQueryServer {
     private Component component;
 
     public void start() throws Exception {
-        final DistributedQueryGraphApplication application = new DistributedQueryGraphApplication();
+        final DistributedQueryGraphApplication application = new DistributedQueryGraphApplicationImpl();
         component = new Component();
         component.getServers().add(Protocol.HTTP, PORT);
-        component.getDefaultHost().attach(application);
+        component.getDefaultHost().attach((Restlet) application);
         component.start();
         InetAddress addr = InetAddress.getLocalHost();
         String hostName = addr.getHostName();
