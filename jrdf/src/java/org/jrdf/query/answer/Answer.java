@@ -90,7 +90,7 @@ public interface Answer {
     Iterator<String[]> columnValuesIterator();
 
     /**
-     * Creates an in string array of results, where each value in the array is a value for the matching variable
+     * Creates a string array of results, where each value in the array is a value for the matching variable
      * from the {@link #getVariableNames()} call.
      *
      * @return an in memory array of the result.
