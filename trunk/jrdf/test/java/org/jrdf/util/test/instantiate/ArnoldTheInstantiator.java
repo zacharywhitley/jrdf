@@ -67,7 +67,7 @@ import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.BlankNodeImpl;
 import org.jrdf.graph.local.LiteralImpl;
 import org.jrdf.graph.local.URIReferenceImpl;
-import org.jrdf.query.AnswerImpl;
+import org.jrdf.query.answer.AnswerImpl;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.urql.parser.node.ATriple;

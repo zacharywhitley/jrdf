@@ -72,6 +72,8 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.AnswerImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.LinkedHashSet;

@@ -61,7 +61,7 @@ package org.jrdf.gui.model;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
+import org.jrdf.query.answer.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 
 import java.net.URL;

@@ -60,6 +60,7 @@
 package org.jrdf.query;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.query.answer.Answer;
 
 /**
  * Executes queries against a graph.

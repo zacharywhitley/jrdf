@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.query.answer;
 
 import com.gargoylesoftware.base.testing.TestUtil;
 import junit.framework.TestCase;
@@ -67,6 +67,7 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.mem.TupleImplUnitTest;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.RESOURCE_1;
+import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.util.test.ReflectTestUtil;
 
 import java.util.HashSet;

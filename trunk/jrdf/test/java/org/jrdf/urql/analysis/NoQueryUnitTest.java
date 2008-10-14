@@ -61,7 +61,7 @@ package org.jrdf.urql.analysis;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
-import org.jrdf.query.EmptyAnswer;
+import org.jrdf.query.answer.EmptyAnswer;
 import org.jrdf.query.Query;
 import org.jrdf.query.execute.QueryEngine;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;

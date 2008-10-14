@@ -60,8 +60,8 @@
 package org.jrdf.query.server.distributed;
 
 import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.query.Answer;
-import org.jrdf.query.xml.AnswerXMLWriter;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.jrdf.query.client.DistributedQueryClientImpl;
 import org.jrdf.query.client.GraphQueryClient;
 import org.jrdf.query.server.GraphApplication;

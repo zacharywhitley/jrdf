@@ -62,7 +62,7 @@ package org.jrdf.gui.command;
 import org.jrdf.graph.GraphException;
 import org.jrdf.gui.model.JRDFModel;
 import org.jrdf.gui.view.QueryPanelView;
-import org.jrdf.query.Answer;
+import org.jrdf.query.answer.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.springframework.richclient.application.PageComponent;
 import org.springframework.richclient.application.PageComponentContext;

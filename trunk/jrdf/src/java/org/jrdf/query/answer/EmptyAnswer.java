@@ -57,36 +57,60 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.query.answer;
 
-import junit.framework.TestCase;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPublicConstant;
-import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
+import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
+import org.jrdf.query.answer.xml.AnswerXMLWriter;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.Serializable;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
+import java.io.StringWriter;
+import java.io.Writer;
 
-public class EmptyAnswerUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = {};
+public final class EmptyAnswer implements Answer, Serializable {
+    private static final long serialVersionUID = -7374613298128439580L;
 
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(Answer.class, EmptyAnswer.class);
-        checkImplementationOfInterfaceAndFinal(Serializable.class, EmptyAnswer.class);
-        checkConstructor(EmptyAnswer.class, Modifier.PRIVATE, PARAM_TYPES);
-        checkFieldPublicConstant(EmptyAnswer.class, "EMPTY_ANSWER");
-        checkSerialialVersionUid(EmptyAnswer.class, -7374613298128439580L);
+    /**
+     * An empty answer the returns no columns, values and 0 time taken.
+     */
+    public static final Answer EMPTY_ANSWER = new EmptyAnswer();
+
+    private EmptyAnswer() {
     }
 
-    public void testEmptyAnswerValues() {
-        Answer answer = EmptyAnswer.EMPTY_ANSWER;
-        assertNotNull(answer);
-        assertTrue(Arrays.equals(new String[]{}, answer.getColumnNames()));
-        assertTrue(Arrays.equals(new String[][]{}, answer.getColumnValues()));
-        assertEquals(0, answer.getTimeTaken());
-        assertEquals(0, answer.numberOfTuples());
-        assertEquals(EmptyAnswer.EMPTY_ANSWER, EmptyAnswer.EMPTY_ANSWER);
+    public String[] getColumnNames() {
+        return new String[0];
+    }
+
+    public String[][] getColumnValues() {
+        return new String[0][];
+    }
+
+    public long numberOfTuples() {
+        return 0;
+    }
+
+    public long getTimeTaken() {
+        return 0;
+    }
+
+    public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException {
+        return new AnswerXMLPagenatedStreamWriter(null, null, writer);
+    }
+
+    public static String getEmptyAnswerXML() throws XMLStreamException {
+        StringWriter writer = new StringWriter();
+        AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(null, null, writer);
+        xmlWriter.write();
+        return writer.toString();
+    }
+
+    public AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException {
+        return getXMLWriter(writer);
+    }
+
+    @Override
+    public String toString() {
+        return "";
     }
 }

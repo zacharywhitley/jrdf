@@ -57,68 +57,100 @@
  *
  */
 
-package org.jrdf.query.xml;
+package org.jrdf.query.answer.xml;
 
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.io.InputStream;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public abstract class AbstractXMLStreamWriter implements AnswerXMLWriter {
-    protected static final String ENCODING_DEFAULT = "UTF-8";
-    protected static final String VERSION_NUMBER = "1.0";
-    protected static final XMLOutputFactory OUTPUT_FACTORY = javax.xml.stream.XMLOutputFactory.newInstance();
-    protected XMLStreamWriter streamWriter;
+public interface AnswerXMLWriter {
+    /**
+     * The XML -> HTML XSLT.
+     */
+    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
+    /**
+     * The sparql keyword.
+     */
+    String SPARQL = "sparql";
+    /**
+     * The element "head".
+     */
+    String HEAD = "head";
+    /**
+     * The element "variable".
+     */
+    String VARIABLE = "variable";
+    /**
+     * The element "name".
+     */
+    String NAME = "name";
+    /**
+     * The element "results".
+     */
+    String RESULTS = "results";
+    /**
+     * The element "result".
+     */
+    String RESULT = "result";
+    /**
+     * The element "binding".
+     */
+    String BINDING = "binding";
+    /**
+     * The element "bnode".
+     */
+    String BNODE = "bnode";
+    /**
+     * The element "literal".
+     */
+    String LITERAL = "literal";
+    /**
+     * The element "uri".
+     */
+    String URI = "uri";
+    /**
+     * The element "datatype".
+     */
+    String DATATYPE = "datatype";
+    /**
+     * The element "xml:lang".
+     */
+    String XML_LANG = "xml:lang";
+    /**
+     * The Sparql namespace.
+     */
+    String SPARQL_NS = "http://www.w3.org/2005/sparql-results#";
 
-    public void writeStartDocument() throws XMLStreamException {
-        streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
-        String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
-        streamWriter.writeProcessingInstruction("xml-stylesheet", target);
 
-        streamWriter.writeStartElement(SPARQL);
-        streamWriter.writeAttribute("xmlns", SPARQL_NS);
-        streamWriter.writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        streamWriter.writeAttribute("xsi:schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
-    }
+    void write(Writer writer) throws XMLStreamException, IOException;
 
-    public void writeEndDocument() throws XMLStreamException {
-        streamWriter.writeEndElement();
-        streamWriter.writeEndDocument();
-    }
+    void close() throws XMLStreamException, IOException;
 
-    public void writeStartResults() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULTS);
-    }
+    boolean hasMoreResults();
 
-    public void writeEndResults() throws XMLStreamException {
-        streamWriter.writeEndElement();
-    }
+    void writeStartDocument() throws XMLStreamException;
 
-    public void close() throws XMLStreamException, IOException {
-        if (streamWriter != null) {
-            streamWriter.flush();
-            streamWriter.close();
-        }
-    }
+    void writeVariables() throws XMLStreamException;
 
-    public void flush() throws XMLStreamException {
-        streamWriter.flush();
-    }
+    void writeStartResults() throws XMLStreamException;
 
-    public void write() throws XMLStreamException {
-        checkNotNull(streamWriter);
-        writeStartDocument();
-        writeVariables();
-        writeAllResults();
-        writeEndDocument();
-    }
+    void writeEndResults() throws XMLStreamException;
 
-    protected abstract void writeAllResults() throws XMLStreamException;
+    void writeResult() throws XMLStreamException;
+
+    void writeEndDocument() throws XMLStreamException;
+
+    void write() throws XMLStreamException;
+
+    void setWriter(Writer writer) throws XMLStreamException, IOException;
+
+    void flush() throws XMLStreamException;
+
+    void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
 }

@@ -57,16 +57,16 @@
  *
  */
 
-package org.jrdf.query.xml;
+package org.jrdf.query.answer.xml;
 
 import com.ctc.wstx.api.WstxInputProperties;
 import junit.framework.TestCase;
-import static org.jrdf.query.xml.AnswerXMLWriter.BINDING;
-import static org.jrdf.query.xml.AnswerXMLWriter.HEAD;
-import static org.jrdf.query.xml.AnswerXMLWriter.NAME;
-import static org.jrdf.query.xml.AnswerXMLWriter.RESULT;
-import static org.jrdf.query.xml.AnswerXMLWriter.RESULTS;
-import static org.jrdf.query.xml.AnswerXMLWriter.VARIABLE;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.BINDING;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.HEAD;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.NAME;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULTS;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.VARIABLE;
 
 import javax.xml.stream.XMLInputFactory;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -102,7 +102,7 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         writer = new StringWriter();
-        url = getClass().getClassLoader().getResource("org/jrdf/query/xml/data/output.xml");
+        url = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml");
         stream = url.openStream();
     }
 
