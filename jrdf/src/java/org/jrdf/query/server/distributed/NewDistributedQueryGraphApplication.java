@@ -89,10 +89,7 @@ public class NewDistributedQueryGraphApplication implements DistributedQueryGrap
 
     public NewDistributedQueryGraphApplication(GraphApplication newApplication) {
         this.application = newApplication;
-    }
-
-    public NewDistributedQueryGraphApplication() {
-        servers = new HashSet<String>();
+        this.servers = new HashSet<String>();
     }
 
     public void addServers(String... servers) {
