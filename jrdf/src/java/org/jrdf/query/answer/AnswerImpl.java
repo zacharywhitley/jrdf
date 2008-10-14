@@ -116,10 +116,6 @@ public final class AnswerImpl implements Answer, Serializable {
         return resultColumnNames;
     }
 
-    public Attribute[] getColumns() {
-        return heading.toArray(new Attribute[heading.size()]);
-    }
-
     public String[][] getColumnValues() {
         SortedSet<Tuple> sortedTuples = results.getSortedTuples();
         String table[][] = new String[sortedTuples.size()][heading.size()];
