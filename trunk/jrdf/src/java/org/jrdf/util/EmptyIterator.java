@@ -57,66 +57,37 @@
  *
  */
 
-package org.jrdf.query.answer;
+package org.jrdf.util;
 
-import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
-import org.jrdf.util.EmptyIterator;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public final class EmptyAnswer implements Answer, Serializable {
-    private static final long serialVersionUID = -7374613298128439580L;
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
+
+public class EmptyIterator<E> implements Iterator<E> {
+    public boolean hasNext() {
+        return false;
+    }
 
     /**
-     * An empty answer the returns no columns, values and 0 time taken.
+     * Never returns anything.  A call to this will throw NoSuchElementException.
+     *
+     * @return will not return.
+     * @throws java.util.NoSuchElementException always.
      */
-    public static final Answer EMPTY_ANSWER = new EmptyAnswer();
-
-    private EmptyAnswer() {
+    public E next() throws NoSuchElementException {
+        throw new NoSuchElementException();
     }
 
-    public String[] getVariableNames() {
-        return new String[0];
-    }
-
-    public Iterator<String[]> columnValuesIterator() {
-        return new EmptyIterator<String[]>();
-    }
-
-    public String[][] getColumnValues() {
-        return new String[0][];
-    }
-
-    public long numberOfTuples() {
-        return 0;
-    }
-
-    public long getTimeTaken() {
-        return 0;
-    }
-
-    public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException {
-        return new AnswerXMLPagenatedStreamWriter(null, null, writer);
-    }
-
-    public static String getEmptyAnswerXML() throws XMLStreamException {
-        StringWriter writer = new StringWriter();
-        AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(null, null, writer);
-        xmlWriter.write();
-        return writer.toString();
-    }
-
-    public AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException {
-        return getXMLWriter(writer);
-    }
-
-    @Override
-    public String toString() {
-        return "";
+    /**
+     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
+     *
+     * @throws UnsupportedOperationException always.
+     */
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }

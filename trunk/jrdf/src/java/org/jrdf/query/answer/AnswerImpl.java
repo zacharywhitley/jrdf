@@ -78,6 +78,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -116,13 +117,17 @@ public final class AnswerImpl implements Answer, Serializable {
         return resultColumnNames;
     }
 
-    public String[][] getColumnValues() {
+    public Iterator<String[]> columnValuesIterator() {
         Set<Tuple> sortedTuples = results.getTuples();
-        String table[][] = new String[sortedTuples.size()][heading.size()];
+        return new AnswerIterator(heading, sortedTuples.iterator());
+    }
+
+    public String[][] getColumnValues() {
+        String table[][] = new String[(int) numberOfTuples()][heading.size()];
         int index = 0;
-        for (Tuple sortedTuple : sortedTuples) {
-            Map<Attribute, ValueOperation> avps = sortedTuple.getAttributeValues();
-            table[index] = getDataWithValues(avps);
+        Iterator<String[]> iterator = columnValuesIterator();
+        while (iterator.hasNext()) {
+            table[index] = iterator.next();
             index++;
         }
         return table;
