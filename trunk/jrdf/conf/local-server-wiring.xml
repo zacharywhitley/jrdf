@@ -74,7 +74,7 @@
                 </entry>
                 <entry key="/graphs/{graph}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="newLocalQueryGraphResource"/>
+                        <lookup-method name="createResource" bean="localQueryGraphResource"/>
                     </bean>
                 </entry>
             </map>
@@ -130,7 +130,7 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="newLocalQueryGraphResource" class="org.jrdf.query.server.local.LocalGraphResource" scope="prototype">
+    <bean id="localQueryGraphResource" class="org.jrdf.query.server.local.LocalGraphResource" scope="prototype">
         <property name="graphApplication" ref="graphApplication"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
