@@ -140,7 +140,7 @@ public class NewDistributedQueryGraphApplication implements DistributedQueryGrap
         return servers.toArray(new String[servers.size()]);
     }
 
-    public Answer answerQuery2(String graphName, String queryString) throws ResourceException {
+    public Answer answerQuery2(String graphName, String queryString) {
         throw new UnsupportedOperationException();
     }
 
