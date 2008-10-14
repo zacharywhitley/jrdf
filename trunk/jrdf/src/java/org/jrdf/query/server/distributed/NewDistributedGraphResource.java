@@ -59,99 +59,66 @@
 
 package org.jrdf.query.server.distributed;
 
-import org.jrdf.query.client.DistributedQueryClientImpl;
-import org.jrdf.query.client.GraphQueryClient;
-import org.jrdf.query.server.BaseGraphApplication;
-import org.jrdf.query.server.ListGraphsResource;
-import org.jrdf.query.xml.AnswerXMLWriter;
-import org.jrdf.query.Answer;
-import org.restlet.Restlet;
-import org.restlet.Router;
-import org.restlet.resource.ResourceException;
+import org.jrdf.query.ConfigurableRestletResource;
+import static org.jrdf.query.server.local.GraphApplicationImpl.DEFAULT_MAX_ROWS;
+import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
+import static org.restlet.data.Status.SUCCESS_OK;
+import org.restlet.resource.Representation;
+import org.restlet.resource.Variant;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class DistributedQueryGraphApplicationImpl extends BaseGraphApplication
-    implements DistributedQueryGraphApplication {
-    private static final int PORT_NUMBER = 8182;
-    private Set<String> servers;
-    private int portNumber = PORT_NUMBER;
-    private GraphQueryClient client;
-    private AnswerXMLWriter xmlWriter;
-    private static final int INVALID_TIME_TAKEN = -1;
+public class NewDistributedGraphResource extends ConfigurableRestletResource {
+    private static final String GRAPH_VALUE = "graph";
+    private static final String GRAPH_NAME = "graphName";
+    private DistributedQueryGraphApplication graphApplication;
+    private String graphName;
+    private String queryString;
 
-    public DistributedQueryGraphApplicationImpl() {
-        servers = new HashSet<String>();
+    public void setDistributeQueryGraphApplication(DistributedQueryGraphApplication newApplication) {
+        this.graphApplication = newApplication;
     }
 
-    public void addServers(String... servers) {
-        for (String server : servers) {
-            this.servers.add(server);
-        }
-    }
-
-    public void removeServers(String... servers) {
-        for (String server : servers) {
-            this.servers.remove(server);
-        }
-    }
-
-    public String[] getServers() {
-        return servers.toArray(new String[servers.size()]);
-    }
-
-    public void answerQuery(String graphName, String queryString) throws ResourceException {
+    @Override
+    public Representation represent(Variant variant) {
+        Representation rep = null;
         try {
-            if (client == null) {
-                client = new DistributedQueryClientImpl(portNumber, servers);
+            graphName = (String) getRequest().getAttributes().get(GRAPH_VALUE);
+            if (getRequest().getResourceRef().hasQuery()) {
+                queryString = getRequest().getResourceRef().getQueryAsForm().getFirst("queryString").getValue();
             }
-            client.postQuery(graphName, queryString, null);
-            client.executeQuery();
+            if (queryString == null) {
+                rep = queryPageRepresentation(variant);
+            } else {
+                rep = queryResultRepresentation(variant);
+            }
+            getResponse().setStatus(SUCCESS_OK);
         } catch (Exception e) {
-            throw new ResourceException(e);
+            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
         }
+        return rep;
     }
 
-    public void setPort(int port) {
-        portNumber = port;
+    private Representation queryPageRepresentation(Variant variant) {
+        Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put(GRAPH_NAME, graphName);
+        return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }
 
-    public int getPort() {
-        return portNumber;
-    }
-
-    public synchronized Restlet createRoot() {
-        Router router = new Router(getContext());
-        router.attach("/", DistributedQueryResource.class);
-        router.attach("/graphs", ListGraphsResource.class);
-        router.attach("/graphs/{graph}", DistributedGraphResource.class);
-        router.attachDefault(DistributedQueryResource.class);
-        return router;
-    }
-
-    public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
-        xmlWriter = ((DistributedQueryClientImpl) client).getXMLWriter(writer);
-        return xmlWriter;
-    }
-
-    public long getTimeTaken() {
-        return INVALID_TIME_TAKEN;
-    }
-
-    public boolean isTooManyRows() {
-        return false;
-    }
-
-    public Answer answerQuery2(String graphName, String queryString) {
-        return null;
+    private Representation queryResultRepresentation(Variant variant) {
+        Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put("queryString", queryString);
+        dataModel.put("answer", graphApplication.answerQuery2(graphName, queryString));
+        dataModel.put(GRAPH_NAME, graphName);
+        dataModel.put("timeTaken", graphApplication.getTimeTaken());
+        dataModel.put("tooManyRows", graphApplication.isTooManyRows());
+        dataModel.put("maxRows", DEFAULT_MAX_ROWS);
+        return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }
 }

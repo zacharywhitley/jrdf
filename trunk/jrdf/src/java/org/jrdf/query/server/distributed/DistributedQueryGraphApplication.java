@@ -1,11 +1,12 @@
 package org.jrdf.query.server.distributed;
 
-import org.restlet.resource.ResourceException;
+import org.jrdf.query.Answer;
 import org.jrdf.query.xml.AnswerXMLWriter;
+import org.restlet.resource.ResourceException;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 public interface DistributedQueryGraphApplication {
     void addServers(String... servers);
@@ -23,4 +24,8 @@ public interface DistributedQueryGraphApplication {
     AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException;
 
     long getTimeTaken();
+
+    boolean isTooManyRows();
+
+    Answer answerQuery2(String graphName, String queryString);
 }

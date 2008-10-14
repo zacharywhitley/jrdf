@@ -59,7 +59,6 @@
 
 package org.jrdf.query.server.local;
 
-import org.jrdf.query.Answer;
 import org.jrdf.query.ConfigurableRestletResource;
 import org.jrdf.query.server.GraphApplication;
 import static org.jrdf.query.server.local.GraphApplicationImpl.*;
@@ -103,7 +102,6 @@ public class LocalGraphResource extends ConfigurableRestletResource {
             }
             getResponse().setStatus(SUCCESS_OK);
         } catch (Exception e) {
-            e.printStackTrace();
             getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
         }
         return rep;
@@ -116,17 +114,9 @@ public class LocalGraphResource extends ConfigurableRestletResource {
     }
 
     private Representation queryResultRepresentation(Variant variant) throws ResourceException {
-        try {
-            return constructHTMLAnswerRep(variant, graphApplication.answerQuery2(graphName, queryString));
-        } catch (Exception e) {
-            throw new ResourceException(e);
-        }
-    }
-
-    private Representation constructHTMLAnswerRep(Variant variant, Answer answer) {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         dataModel.put("queryString", queryString);
-        dataModel.put("answer", answer);
+        dataModel.put("answer", graphApplication.answerQuery2(graphName, queryString));
         dataModel.put(GRAPH_NAME, graphName);
         dataModel.put("timeTaken", graphApplication.getTimeTaken());
         dataModel.put("tooManyRows", graphApplication.isTooManyRows());
