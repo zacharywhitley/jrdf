@@ -60,6 +60,7 @@
 package org.jrdf.query.answer;
 
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
+import org.jrdf.query.relation.Attribute;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.Writer;
@@ -72,7 +73,7 @@ import java.io.IOException;
  */
 public interface Answer {
 
-    String[] getColumnNames();
+    Attribute[] getColumns();
 
     String[][] getColumnValues();
 
@@ -83,4 +84,6 @@ public interface Answer {
     AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException;
 
     AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException, IOException;
+
+    String[] getVariableNames();
 }

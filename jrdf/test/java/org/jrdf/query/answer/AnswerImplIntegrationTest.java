@@ -81,7 +81,8 @@ import java.util.Set;
  * @version $Revision: 1510 $
  */
 public final class AnswerImplIntegrationTest extends TestCase {
-    private static final String FOO_SUBJECT = "foo1 | Subject";
+    private static final String FOO_SUBJECT_ATTRIBUTE = "Subject|foo1";
+    private static final String FOO_SUBJECT_VARIABLE = "foo1";
 
     public void testSerialization() throws Exception {
         RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
@@ -90,17 +91,20 @@ public final class AnswerImplIntegrationTest extends TestCase {
         Set<Tuple> tuples = new HashSet<Tuple>();
         tuples.add(TupleImplUnitTest.TEST_TUPLE_1);
         Answer answer = new AnswerImpl(heading, relationFactory.getRelation(tuples), 1000L, true);
-        checkAnswer(answer, FOO_SUBJECT, RESOURCE_1.toString(), 1000L, true);
+        checkAnswer(answer, FOO_SUBJECT_ATTRIBUTE, FOO_SUBJECT_VARIABLE, RESOURCE_1.toString(), 1000L, true);
         Answer answer2 = (Answer) TestUtil.copyBySerialization(answer);
         // read the graph
-        checkAnswer(answer2, FOO_SUBJECT, RESOURCE_1.toString(), 1000L, true);
+        checkAnswer(answer2, FOO_SUBJECT_ATTRIBUTE, FOO_SUBJECT_VARIABLE, RESOURCE_1.toString(), 1000L, true);
     }
 
-    private void checkAnswer(Answer answer, String expectedColumnName, String expectedValue, long expectedTimeTaken,
-        boolean expectedProjected) {
-        String[] strings = answer.getColumnNames();
-        assertTrue(strings.length == 1);
-        assertEquals(expectedColumnName, strings[0]);
+    private void checkAnswer(Answer answer, String expectedAttribute, String expectedVariable, String expectedValue,
+        long expectedTimeTaken, boolean expectedProjected) {
+        String[] variableNames = answer.getVariableNames();
+        Attribute[] attributes = answer.getColumns();
+        assertTrue(variableNames.length == 1);
+        assertTrue(attributes.length == 1);
+        assertEquals(expectedVariable, variableNames[0]);
+        assertEquals(expectedAttribute, attributes[0].toString());
         String[][] values = answer.getColumnValues();
         assertEquals(1, values.length);
         assertEquals(1, values[0].length);

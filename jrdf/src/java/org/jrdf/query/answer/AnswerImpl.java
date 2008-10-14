@@ -59,15 +59,14 @@
 
 package org.jrdf.query.answer;
 
+import org.jrdf.query.QueryFactoryImpl;
+import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
+import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
-import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -107,15 +106,18 @@ public final class AnswerImpl implements Answer, Serializable {
         this.hasProjected = hasProjected;
     }
 
-    public String[] getColumnNames() {
+    public String[] getVariableNames() {
         String[] resultColumnNames = new String[heading.size()];
         int index = 0;
         for (Attribute attribute : heading) {
-            AttributeName attributeName = attribute.getAttributeName();
-            resultColumnNames[index] = attributeName.toString() + " | " + attribute.getType().getName();
+            resultColumnNames[index] = attribute.getAttributeName().getLiteral();
             index++;
         }
         return resultColumnNames;
+    }
+
+    public Attribute[] getColumns() {
+        return heading.toArray(new Attribute[heading.size()]);
     }
 
     public String[][] getColumnValues() {
@@ -141,7 +143,7 @@ public final class AnswerImpl implements Answer, Serializable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String[] columnNames = getColumnNames();
+        String[] columnNames = getVariableNames();
         String[][] columnValues = getColumnValues();
         printColumns(builder, columnNames);
         printRows(builder, columnNames, columnValues);

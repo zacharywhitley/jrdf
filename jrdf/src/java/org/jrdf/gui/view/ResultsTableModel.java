@@ -97,7 +97,7 @@ public class ResultsTableModel extends AbstractTableModel {
     }
 
     private void updateTableData(Answer answer) {
-        columnNames = answer.getColumnNames();
+        columnNames = answer.getVariableNames();
         data = answer.getColumnValues();
     }
 }
