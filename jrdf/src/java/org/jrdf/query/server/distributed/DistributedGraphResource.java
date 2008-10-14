@@ -91,12 +91,12 @@ import java.util.Map;
  */
 
 public class DistributedGraphResource extends BaseGraphResource {
-    private DistributedQueryGraphApplication application;
+    private DistributedQueryGraphApplicationImpl application;
     private AnswerXMLWriter xmlWriter;
 
     public DistributedGraphResource(Context context, Request request, Response response) {
         super(context, request, response);
-        application = (DistributedQueryGraphApplication) Application.getCurrent();
+        application = (DistributedQueryGraphApplicationImpl) Application.getCurrent();
     }
 
     public boolean allowGet() {

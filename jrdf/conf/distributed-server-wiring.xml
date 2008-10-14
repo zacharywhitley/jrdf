@@ -82,7 +82,7 @@
     <bean id="configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:org/jrdf/query/server/local/server.properties</value>
+                <value>classpath:org/jrdf/query/server/distributed/server.properties</value>
             </list>
         </property>
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
@@ -143,7 +143,18 @@
         </property>
     </bean>
 
+    <!-- Do SPARQL and Graphs queries -->
+    <bean id="graphApplication" class="org.jrdf.query.server.local.GraphApplicationImpl">
+        <constructor-arg ref="directoryHandler"/>
+        <constructor-arg ref="urqlConnection"/>
+    </bean>
+
+    <bean id="distributedGraphApplication" class="org.jrdf.query.server.distributed.NewDistributedQueryGraphApplication">
+        <constructor-arg ref="graphApplication"/>
+    </bean>
+
     <bean id="distributedQueryResource" class="org.jrdf.query.server.distributed.NewDistributedQueryResource">
+        <property name="distributedQueryGraphApplication" ref="distributedGraphApplication"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
             <map>
@@ -152,7 +163,7 @@
         </property>
     </bean>
 
-    <!-- Do SPARQL and Graphs queries -->
+    <!-- Old -->
     <bean id="queryFactory" class="org.jrdf.query.QueryFactoryImpl"/>
     <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
     <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
@@ -160,11 +171,6 @@
     <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
         <constructor-arg ref="queryBuilder"/>
         <constructor-arg ref="queryEngine"/>
-    </bean>
-
-    <bean id="graphApplication" class="org.jrdf.query.server.local.GraphApplicationImpl">
-        <constructor-arg ref="directoryHandler"/>
-        <constructor-arg ref="urqlConnection"/>
     </bean>
 
     <!-- List the graphs -->

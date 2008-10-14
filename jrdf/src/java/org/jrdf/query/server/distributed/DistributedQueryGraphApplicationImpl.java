@@ -59,12 +59,13 @@
 
 package org.jrdf.query.server.distributed;
 
-import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.query.Answer;
-import org.jrdf.query.xml.AnswerXMLWriter;
 import org.jrdf.query.client.DistributedQueryClientImpl;
 import org.jrdf.query.client.GraphQueryClient;
-import org.jrdf.query.server.GraphApplication;
+import org.jrdf.query.server.BaseGraphApplication;
+import org.jrdf.query.server.ListGraphsResource;
+import org.jrdf.query.xml.AnswerXMLWriter;
+import org.restlet.Restlet;
+import org.restlet.Router;
 import org.restlet.resource.ResourceException;
 
 import javax.xml.stream.XMLStreamException;
@@ -78,20 +79,16 @@ import java.util.Set;
  * @version :$
  */
 
-public class NewDistributedQueryGraphApplication implements DistributedQueryGraphApplication {
+public class DistributedQueryGraphApplicationImpl extends BaseGraphApplication
+    implements DistributedQueryGraphApplication {
     private static final int PORT_NUMBER = 8182;
     private Set<String> servers;
     private int portNumber = PORT_NUMBER;
     private GraphQueryClient client;
     private AnswerXMLWriter xmlWriter;
     private static final int INVALID_TIME_TAKEN = -1;
-    private GraphApplication application;
 
-    public NewDistributedQueryGraphApplication(GraphApplication newApplication) {
-        this.application = newApplication;
-    }
-
-    public NewDistributedQueryGraphApplication() {
+    public DistributedQueryGraphApplicationImpl() {
         servers = new HashSet<String>();
     }
 
@@ -107,44 +104,8 @@ public class NewDistributedQueryGraphApplication implements DistributedQueryGrap
         }
     }
 
-    public String getGraphsDir() {
-        return application.getGraphsDir();
-    }
-
-    public String getFormat() {
-        return application.getFormat();
-    }
-
-    public void setFormat(String format) {
-        application.setFormat(format);
-    }
-
-    public String getMaxRows() {
-        return application.getMaxRows();
-    }
-
-    public void setMaxRows(String rows) {
-        application.setMaxRows(rows);
-    }
-
-    public void close() {
-        application.close();
-    }
-
-    public MoleculeGraph getGraph(String name) {
-        return application.getGraph(name);
-    }
-
-    public MoleculeGraph getGraph() {
-        return application.getGraph();
-    }
-
     public String[] getServers() {
         return servers.toArray(new String[servers.size()]);
-    }
-
-    public Answer answerQuery2(String graphName, String queryString) throws ResourceException {
-        throw new UnsupportedOperationException();
     }
 
     public void answerQuery(String graphName, String queryString) throws ResourceException {
@@ -167,6 +128,15 @@ public class NewDistributedQueryGraphApplication implements DistributedQueryGrap
         return portNumber;
     }
 
+    public synchronized Restlet createRoot() {
+        Router router = new Router(getContext());
+        router.attach("/", DistributedQueryResource.class);
+        router.attach("/graphs", ListGraphsResource.class);
+        router.attach("/graphs/{graph}", DistributedGraphResource.class);
+        router.attachDefault(DistributedQueryResource.class);
+        return router;
+    }
+
     public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
         xmlWriter = ((DistributedQueryClientImpl) client).getXMLWriter(writer);
         return xmlWriter;
@@ -174,9 +144,5 @@ public class NewDistributedQueryGraphApplication implements DistributedQueryGrap
 
     public long getTimeTaken() {
         return INVALID_TIME_TAKEN;
-    }
-
-    public boolean isTooManyRows() {
-        return application.isTooManyRows();
     }
 }
