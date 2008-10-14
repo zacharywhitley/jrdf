@@ -62,8 +62,6 @@ package org.jrdf.query;
 import org.restlet.Component;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.logging.Level;
-
 /**
  * A server that allows you to deploy a local JRDF server.
  *
@@ -78,7 +76,7 @@ public final class SpringDistributedServer {
 
     public SpringDistributedServer() {
         component = (Component) BEAN_FACTORY.getBean("component");
-        component.getLogger().setLevel(Level.OFF);
+        //component.getLogger().setLevel(Level.OFF);
     }
 
     public void start() throws Exception {

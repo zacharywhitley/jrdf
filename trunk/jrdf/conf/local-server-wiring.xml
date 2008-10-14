@@ -61,6 +61,10 @@
         </property>
     </bean>
 
+    <!-- Resources for displaying -->
+    <bean id="jsonRepresentationFactory" class="org.jrdf.query.server.JsonRepresentationFactory"/>
+    <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.query.server.SparqlXmlRepresentationFactory"/>
+
     <!-- Router for Resources -->
     <bean id="router" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
@@ -109,10 +113,6 @@
         <constructor-arg ref="graphApplication"/>
         <constructor-arg value="${graphs.file}"/>
     </bean>
-
-    <!-- Resources for displaying -->
-    <bean id="jsonRepresentationFactory" class="org.jrdf.query.server.JsonRepresentationFactory"/>
-    <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.query.server.SparqlXmlRepresentationFactory"/>
 
     <bean id="listGraphsResource" class="org.jrdf.query.server.ListGraphsResource" scope="prototype">
         <property name="graphLister" ref="graphLister"/>

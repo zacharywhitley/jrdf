@@ -120,6 +120,10 @@
         </property>
     </bean>
 
+    <!-- Resources for displaying -->
+    <bean id="jsonRepresentationFactory" class="org.jrdf.query.server.JsonRepresentationFactory"/>
+    <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.query.server.SparqlXmlRepresentationFactory"/>
+
     <!-- Router for Resources -->
     <bean id="router" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
@@ -163,26 +167,12 @@
         </property>
     </bean>
 
-    <!-- Old -->
-    <bean id="queryFactory" class="org.jrdf.query.QueryFactoryImpl"/>
-    <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
-    <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
-
-    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
-        <constructor-arg ref="queryBuilder"/>
-        <constructor-arg ref="queryEngine"/>
-    </bean>
-
     <!-- List the graphs -->
     <bean id="graphLister" class="org.jrdf.query.server.GraphListerImpl" scope="prototype">
         <constructor-arg ref="directoryHandler"/>
         <constructor-arg ref="graphApplication"/>
         <constructor-arg value="${graphs.file}"/>
     </bean>
-
-    <!-- Resources for displaying -->
-    <bean id="jsonRepresentationFactory" class="org.jrdf.query.server.JsonRepresentationFactory"/>
-    <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.query.server.SparqlXmlRepresentationFactory"/>
 
     <bean id="listGraphsResource" class="org.jrdf.query.server.ListGraphsResource" scope="prototype">
         <property name="graphLister" ref="graphLister"/>
@@ -193,6 +183,16 @@
                 <entry key-ref="org.restlet.data.MediaType.APPLICATION_JSON" value-ref="jsonRepresentationFactory"/>
             </map>
         </property>
+    </bean>
+
+    <!-- Old -->
+    <bean id="queryFactory" class="org.jrdf.query.QueryFactoryImpl"/>
+    <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
+    <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
+
+    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
+        <constructor-arg ref="queryBuilder"/>
+        <constructor-arg ref="queryEngine"/>
     </bean>
 
     <bean id="distributedStartPage" class="org.jrdf.query.FreemarkerRepresentationFactory">
