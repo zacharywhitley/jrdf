@@ -1,13 +1,16 @@
 package org.jrdf.query.answer.xml;
 
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.BINDING;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.BNODE;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.DATATYPE;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.HEAD;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.LITERAL;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.NAME;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.URI;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.VARIABLE;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.*;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.XML_LANG;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.XML_NS;
 import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
@@ -19,20 +22,19 @@ import javax.xml.stream.XMLStreamReader;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 // TODO AN/YF Refactor out the getResults, getOneBinding, getOneNode
 public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     private XMLStreamReader parser;
     private boolean hasMore;
-    private Set<String> variables = new LinkedHashSet<String>();
+    private LinkedHashSet<String> variables = new LinkedHashSet<String>();
     private boolean finishedVariableParsing;
 
     public SparqlAnswerParserImpl(XMLStreamReader newParser) {
         this.parser = newParser;
     }
 
-    public Set<String> getVariables() {
+    public LinkedHashSet<String> getVariables() {
         if (!finishedVariableParsing) {
             try {
                 parseAnswerToGetVariables();

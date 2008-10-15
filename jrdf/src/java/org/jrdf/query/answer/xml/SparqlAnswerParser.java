@@ -1,9 +1,9 @@
 package org.jrdf.query.answer.xml;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 public interface SparqlAnswerParser {
-    Set<String> getVariables();
+    LinkedHashSet<String> getVariables();
 
     boolean hasMoreResults();
 
