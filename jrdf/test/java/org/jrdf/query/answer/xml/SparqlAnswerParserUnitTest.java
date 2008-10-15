@@ -40,7 +40,7 @@ public class SparqlAnswerParserUnitTest extends TestCase {
         URL resource = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml");
         InputStream stream = resource.openStream();
         XMLStreamReader streamReader = INPUT_FACTORY.createXMLStreamReader(stream);
-        parser = new SparqlAnswerParser(streamReader);
+        parser = new SparqlAnswerParserImpl(streamReader);
         assertTrue(parser.hasMoreResults());
         Set<String> expectedVariables = asSet("x", "hpage", "name", "mbox", "age", "blurb", "friend");
         assertEquals(expectedVariables, parser.getVariables());
