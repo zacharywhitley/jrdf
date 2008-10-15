@@ -23,5 +23,6 @@ public class SparqlAnswerParserUnitTest extends TestCase {
         assertTrue(parser.hasMoreResults());
         assertTrue(parser.hasMoreResults());
         TypeValue[] results = parser.getResults();
+        //System.err.println("Results " + Arrays.asList(results));
     }
 }
