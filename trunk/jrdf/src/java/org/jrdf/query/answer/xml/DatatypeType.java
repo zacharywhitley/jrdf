@@ -2,7 +2,12 @@ package org.jrdf.query.answer.xml;
 
 public enum DatatypeType {
     /**
-     * The indicates that a literal has a datatype.
+     *  Indicates that a literal has no type (language or literal).
+     */
+    NONE("none"),
+
+    /**
+     * Indicates that a literal has a datatype.
      */
     DATATYPE("datatype"),
 

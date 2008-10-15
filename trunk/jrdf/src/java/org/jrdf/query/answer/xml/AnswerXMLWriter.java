@@ -70,58 +70,77 @@ import java.io.InputStream;
  */
 
 public interface AnswerXMLWriter {
+
     /**
      * The XML -> HTML XSLT.
      */
     String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
+
     /**
      * The sparql keyword.
      */
     String SPARQL = "sparql";
+
     /**
      * The element "head".
      */
     String HEAD = "head";
+
     /**
      * The element "variable".
      */
     String VARIABLE = "variable";
+
     /**
      * The element "name".
      */
     String NAME = "name";
+
     /**
      * The element "results".
      */
     String RESULTS = "results";
+
     /**
      * The element "result".
      */
     String RESULT = "result";
+
     /**
      * The element "binding".
      */
     String BINDING = "binding";
+
     /**
      * The element "bnode".
      */
     String BNODE = "bnode";
+
     /**
      * The element "literal".
      */
     String LITERAL = "literal";
+
     /**
      * The element "uri".
      */
     String URI = "uri";
+
     /**
      * The element "datatype".
      */
     String DATATYPE = "datatype";
+
     /**
-     * The element "xml:lang".
+     * The element "lang".
      */
-    String XML_LANG = "xml:lang";
+    String XML_LANG = "lang";
+
+    /**
+     * The Sparql namespace.
+     */
+    String XML_NS = "http://www.w3.org/XML/1998/namespace";
+
     /**
      * The Sparql namespace.
      */

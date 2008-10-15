@@ -2,6 +2,11 @@ package org.jrdf.query.answer.xml;
 
 public enum SparqlResultType {
     /**
+     * Result is unbound.
+     */
+    UNBOUND("unbound"),
+
+    /**
      * Result is a blank node.
      */
     BLANK_NODE("bnode"),
