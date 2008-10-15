@@ -21,10 +21,10 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+// TODO AN/YF Refactor out the getResults, getOneBinding, getOneNode
 public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     private XMLStreamReader parser;
     private boolean hasMore;
-    private int currentEvent;
     private Set<String> variables = new LinkedHashSet<String>();
     private boolean finishedVariableParsing;
 
@@ -32,9 +32,13 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
         this.parser = newParser;
     }
 
-    public Set<String> getVariables() throws XMLStreamException {
+    public Set<String> getVariables() {
         if (!finishedVariableParsing) {
-            parseAnswerToGetVariables();
+            try {
+                parseAnswerToGetVariables();
+            } catch (XMLStreamException e) {
+                ;
+            }
         }
         return variables;
     }
@@ -48,10 +52,20 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
         return hasMore;
     }
 
-    public TypeValue[] getResults() throws XMLStreamException {
+    public TypeValue[] getResults() {
+        Map<String, TypeValue> variableToValue;
+        try {
+            variableToValue = tryGetResults();
+        } catch (XMLStreamException e) {
+            variableToValue = new HashMap<String, TypeValue>();
+        }
+        return getResults(variableToValue);
+    }
+
+    private Map<String, TypeValue> tryGetResults() throws XMLStreamException {
         Map<String, TypeValue> variableToValue = new HashMap<String, TypeValue>();
         while (parser.hasNext()) {
-            currentEvent = parser.getEventType();
+            int currentEvent = parser.getEventType();
             if (currentEvent == START_ELEMENT && BINDING.equals(parser.getLocalName())) {
                 getOneBinding(variableToValue);
             } else if (currentEvent == END_ELEMENT && RESULT.equals(parser.getLocalName())) {
@@ -60,7 +74,7 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
             parser.next();
         }
         hasMore = getToNextResult();
-        return getResults(variableToValue);
+        return variableToValue;
     }
 
     private TypeValue[] getResults(Map<String, TypeValue> variableToValue) {
@@ -69,7 +83,7 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
         for (String variable : variables) {
             TypeValue value = variableToValue.get(variable);
             if (value == null) {
-                result [index] = new TypeValue();
+                result [index] = new TypeValueImpl();
             } else {
                 result[index] = value;
             }
@@ -88,7 +102,7 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
 
     private void parseAnswerToGetVariables() throws XMLStreamException {
         while (parser.hasNext()) {
-            currentEvent = parser.getEventType();
+            int currentEvent = parser.getEventType();
             if (currentEvent == START_ELEMENT && VARIABLE.equals(parser.getLocalName())) {
                 variables.add(parser.getAttributeValue(null, NAME));
             } else if (currentEvent == END_ELEMENT) {
@@ -124,9 +138,9 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     }
 
     private TypeValue getOneNode() throws XMLStreamException {
-        currentEvent = parser.next();
+        parser.next();
         String tagName = parser.getLocalName();
-        TypeValue typeValue = new TypeValue();
+        TypeValue typeValue = new TypeValueImpl();
         if (URI.equals(tagName)) {
             typeValue = createURI(parser.getElementText());
         } else if (LITERAL.equals(tagName)) {
@@ -138,7 +152,7 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     }
 
     private TypeValue createURI(String elementText) {
-        return new TypeValue(URI_REFERENCE, elementText);
+        return new TypeValueImpl(URI_REFERENCE, elementText);
     }
 
     private TypeValue createLiteral() throws XMLStreamException {
@@ -156,19 +170,19 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     }
 
     private TypeValue createLiteral(String elementText) {
-        return new TypeValue(SparqlResultType.LITERAL, elementText);
+        return new TypeValueImpl(SparqlResultType.LITERAL, elementText);
     }
 
     private TypeValue createLanguageLiteral(String elementText, String language) {
-        return new TypeValue(SparqlResultType.LITERAL, elementText, false, language);
+        return new TypeValueImpl(SparqlResultType.LITERAL, elementText, false, language);
     }
 
     private TypeValue createDatatypeLiteral(String elementText, String datatype) {
-        return new TypeValue(TYPED_LITERAL, elementText, true, datatype);
+        return new TypeValueImpl(TYPED_LITERAL, elementText, true, datatype);
     }
 
     private TypeValue createBNode(String elementText) {
-        return new TypeValue(BLANK_NODE, elementText);
+        return new TypeValueImpl(BLANK_NODE, elementText);
     }
 
 }

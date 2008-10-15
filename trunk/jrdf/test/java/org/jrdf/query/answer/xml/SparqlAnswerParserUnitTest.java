@@ -18,22 +18,22 @@ import java.util.Set;
 
 public class SparqlAnswerParserUnitTest extends TestCase {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
-    private static final TypeValue R1C1 = new TypeValue(BLANK_NODE, "r1");
-    private static final TypeValue R2C1 = new TypeValue(BLANK_NODE, "r2");
-    private static final TypeValue R1C2 = new TypeValue(URI_REFERENCE, "http://work.example.org/alice/");
-    private static final TypeValue R2C2 = new TypeValue(URI_REFERENCE, "http://work.example.org/bob/");
-    private static final TypeValue R1C3 = new TypeValue(LITERAL, "Alice");
-    private static final TypeValue R2C3 = new TypeValue(LITERAL, "Bob", false, "en");
-    private static final TypeValue R1C4 = new TypeValue(LITERAL, "");
-    private static final TypeValue R2C4 = new TypeValue(URI_REFERENCE, "mailto:bob@work.example.org");
-    private static final TypeValue R1C5 = new TypeValue();
-    private static final TypeValue R2C5 = new TypeValue(TYPED_LITERAL, "30", true, "http://www.w3.org/2001/XMLSchema#integer");
-    private static final TypeValue R1C6 = new TypeValue(TYPED_LITERAL, "&lt;p xmlns=\"http://www.w3.org/1999/xhtml\"&gt;My name is &lt;b&gt;alice&lt;/b&gt;&lt;/p&gt;", true, "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral");
-    private static final TypeValue R2C6 = new TypeValue();
-    private static final TypeValue R1C7 = new TypeValue(BLANK_NODE, "r2");
-    private static final TypeValue R2C7 = new TypeValue(BLANK_NODE, "r1");
-    private static final List<TypeValue> ROW_1 = Arrays.asList(R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7);
-    private static final List<TypeValue> ROW_2 = Arrays.asList(R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7);
+    private static final TypeValueImpl R1C1 = new TypeValueImpl(BLANK_NODE, "r1");
+    private static final TypeValueImpl R2C1 = new TypeValueImpl(BLANK_NODE, "r2");
+    private static final TypeValueImpl R1C2 = new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/");
+    private static final TypeValueImpl R2C2 = new TypeValueImpl(URI_REFERENCE, "http://work.example.org/bob/");
+    private static final TypeValueImpl R1C3 = new TypeValueImpl(LITERAL, "Alice");
+    private static final TypeValueImpl R2C3 = new TypeValueImpl(LITERAL, "Bob", false, "en");
+    private static final TypeValueImpl R1C4 = new TypeValueImpl(LITERAL, "");
+    private static final TypeValueImpl R2C4 = new TypeValueImpl(URI_REFERENCE, "mailto:bob@work.example.org");
+    private static final TypeValueImpl R1C5 = new TypeValueImpl();
+    private static final TypeValueImpl R2C5 = new TypeValueImpl(TYPED_LITERAL, "30", true, "http://www.w3.org/2001/XMLSchema#integer");
+    private static final TypeValueImpl R1C6 = new TypeValueImpl(TYPED_LITERAL, "&lt;p xmlns=\"http://www.w3.org/1999/xhtml\"&gt;My name is &lt;b&gt;alice&lt;/b&gt;&lt;/p&gt;", true, "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral");
+    private static final TypeValueImpl R2C6 = new TypeValueImpl();
+    private static final TypeValueImpl R1C7 = new TypeValueImpl(BLANK_NODE, "r2");
+    private static final TypeValueImpl R2C7 = new TypeValueImpl(BLANK_NODE, "r1");
+    private static final List<TypeValueImpl> ROW_1 = Arrays.asList(R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7);
+    private static final List<TypeValueImpl> ROW_2 = Arrays.asList(R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7);
     private SparqlAnswerParser parser;
 
     public void testParse() throws Exception {
@@ -50,14 +50,14 @@ public class SparqlAnswerParserUnitTest extends TestCase {
         assertFalse(parser.hasMoreResults());
     }
 
-    private void checkHasMoreAndGetResult(List<TypeValue> row) throws XMLStreamException {
+    private void checkHasMoreAndGetResult(List<TypeValueImpl> row) throws XMLStreamException {
         assertTrue(parser.hasMoreResults());
         assertTrue(parser.hasMoreResults());
         TypeValue[] results = parser.getResults();
         checkRow(results, row);
     }
 
-    private void checkRow(TypeValue[] actualResults, List<TypeValue> execptedResults) {
+    private void checkRow(TypeValue[] actualResults, List<TypeValueImpl> execptedResults) {
         for (int i = 0; i < execptedResults.size(); i++) {
             assertEquals(execptedResults.get(i), actualResults[i]);
         }
