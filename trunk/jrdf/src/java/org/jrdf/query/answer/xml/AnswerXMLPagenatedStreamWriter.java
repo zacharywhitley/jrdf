@@ -220,6 +220,7 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
         }
     }
 
+    // TODO AN/YF Change this to use visitor rather than class.
     private String getNodeType(Node node) {
         String nodeType;
         if (BlankNode.class.isAssignableFrom(node.getClass())) {
