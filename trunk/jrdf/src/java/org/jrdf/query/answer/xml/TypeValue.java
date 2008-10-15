@@ -1,34 +1,36 @@
 package org.jrdf.query.answer.xml;
 
+import static org.jrdf.query.answer.xml.DatatypeType.*;
+
 public class TypeValue {
-    private String type;
+    private SparqlResultType type;
     private String value;
     private String suffix;
-    private String suffixType;
+    private DatatypeType suffixType;
 
     public TypeValue() {
     }
 
-    public TypeValue(String type, String value) {
+    public TypeValue(SparqlResultType type, String value) {
         setValues(type, value, null, null);
     }
 
-    public TypeValue(String type, String value, boolean isDatatype, String suffix) {
+    public TypeValue(SparqlResultType type, String value, boolean isDatatype, String suffix) {
         if (isDatatype) {
-            setValues(type, value, "datatype", suffix);
+            setValues(type, value, DATATYPE, suffix);
         } else {
-            setValues(type, value, "xml:lang", suffix);
+            setValues(type, value, XML_LANG, suffix);
         }
     }
 
-    private void setValues(String type, String value, String suffixType, String suffix) {
+    private void setValues(SparqlResultType type, String value, DatatypeType suffixType, String suffix) {
         this.type = type;
         this.value = value;
         this.suffixType = suffixType;
         this.suffix = suffix;
     }
 
-    public String getType() {
+    public SparqlResultType getType() {
         return type;
     }
 
@@ -36,7 +38,7 @@ public class TypeValue {
         return value;
     }
 
-    public String getSuffixType() {
+    public DatatypeType getSuffixType() {
         return suffixType;
     }
 

@@ -8,6 +8,9 @@ import static org.jrdf.query.answer.xml.AnswerXMLWriter.NAME;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.VARIABLE;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.XML_LANG;
+import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
+import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
+import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -135,7 +138,7 @@ public class SparqlAnswerParser {
     }
 
     private TypeValue createURI(String elementText) {
-        return new TypeValue("uri", elementText);
+        return new TypeValue(URI_REFERENCE, elementText);
     }
 
     private TypeValue createLiteral() throws XMLStreamException {
@@ -153,19 +156,19 @@ public class SparqlAnswerParser {
     }
 
     private TypeValue createLiteral(String elementText) {
-        return new TypeValue("literal", elementText);
+        return new TypeValue(SparqlResultType.LITERAL, elementText);
     }
 
     private TypeValue createLanguageLiteral(String elementText, String language) {
-        return new TypeValue("literal", elementText, false, language);
+        return new TypeValue(SparqlResultType.LITERAL, elementText, false, language);
     }
 
     private TypeValue createDatatypeLiteral(String elementText, String datatype) {
-        return new TypeValue("typed-literal", elementText, true, datatype);
+        return new TypeValue(TYPED_LITERAL, elementText, true, datatype);
     }
 
     private TypeValue createBNode(String elementText) {
-        return new TypeValue("bnode", elementText);
+        return new TypeValue(BLANK_NODE, elementText);
     }
 
 }
