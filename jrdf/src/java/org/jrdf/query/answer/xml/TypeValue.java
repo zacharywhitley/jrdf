@@ -21,10 +21,6 @@ public class TypeValue {
         }
     }
 
-    public TypeValue(String type, String value, String datatype) {
-        setValues(type, value, null, datatype);
-    }
-
     private void setValues(String type, String value, String suffixType, String suffix) {
         this.type = type;
         this.value = value;
