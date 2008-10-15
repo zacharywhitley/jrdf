@@ -12,6 +12,7 @@ public class TypeValueImpl implements TypeValue {
     private String value;
     private String suffix;
     private DatatypeType suffixType;
+    private static final int PRIME = 31;
 
     public TypeValueImpl() {
         setValues(UNBOUND, "", NONE, "");
@@ -52,6 +53,16 @@ public class TypeValueImpl implements TypeValue {
         return suffix;
     }
 
+    public int hashCode() {
+        int result;
+        result = (type != null ? type.hashCode() : 0);
+        result = PRIME * result + (value != null ? value.hashCode() : 0);
+        result = PRIME * result + (suffix != null ? suffix.hashCode() : 0);
+        result = PRIME * result + (suffixType != null ? suffixType.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (isNull(obj)) {
             return false;
@@ -61,11 +72,18 @@ public class TypeValueImpl implements TypeValue {
         }
         try {
             TypeValue typeValue = (TypeValue) obj;
-            return typeValue.getType().equals(getType()) && typeValue.getValue().equals(typeValue.getValue()) &&
-                typeValue.getSuffixType().equals(getSuffixType()) && typeValue.getSuffix().equals(getSuffix());
+            return compareTypeAndValue(typeValue) && compareSuffixAndSuffixType(typeValue);
         } catch (ClassCastException cce) {
             return false;
         }
+    }
+
+    private boolean compareTypeAndValue(TypeValue typeValue) {
+        return typeValue.getType().equals(getType()) && typeValue.getValue().equals(typeValue.getValue());
+    }
+
+    private boolean compareSuffixAndSuffixType(TypeValue typeValue) {
+        return typeValue.getSuffixType().equals(getSuffixType()) && typeValue.getSuffix().equals(getSuffix());
     }
 
     @Override
