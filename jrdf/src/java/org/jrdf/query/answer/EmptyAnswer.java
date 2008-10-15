@@ -61,7 +61,7 @@ package org.jrdf.query.answer;
 
 import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
-import org.jrdf.util.EmptyIterator;
+import org.jrdf.util.EmptyClosableIterator;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.Serializable;
@@ -85,7 +85,7 @@ public final class EmptyAnswer implements Answer, Serializable {
     }
 
     public Iterator<String[]> columnValuesIterator() {
-        return new EmptyIterator<String[]>();
+        return new EmptyClosableIterator<String[]>();
     }
 
     public String[][] getColumnValues() {
