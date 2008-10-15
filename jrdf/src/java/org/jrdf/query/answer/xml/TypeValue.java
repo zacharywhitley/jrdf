@@ -1,6 +1,11 @@
 package org.jrdf.query.answer.xml;
 
+import static org.jrdf.query.answer.xml.DatatypeType.DATATYPE;
+import static org.jrdf.query.answer.xml.DatatypeType.XML_LANG;
 import static org.jrdf.query.answer.xml.DatatypeType.*;
+import static org.jrdf.query.answer.xml.SparqlResultType.*;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 public class TypeValue {
     private SparqlResultType type;
@@ -9,10 +14,11 @@ public class TypeValue {
     private DatatypeType suffixType;
 
     public TypeValue() {
+        setValues(UNBOUND, "", NONE, "");
     }
 
     public TypeValue(SparqlResultType type, String value) {
-        setValues(type, value, null, null);
+        setValues(type, value, NONE, "");
     }
 
     public TypeValue(SparqlResultType type, String value, boolean isDatatype, String suffix) {
@@ -44,6 +50,22 @@ public class TypeValue {
 
     public String getSuffix() {
         return suffix;
+    }
+
+    public boolean equals(Object obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        try {
+            TypeValue typeValue = (TypeValue) obj;
+            return typeValue.getType().equals(getType()) && typeValue.getValue().equals(typeValue.getValue()) &&
+                typeValue.getSuffixType().equals(getSuffixType()) && typeValue.getSuffix().equals(getSuffix());
+        } catch (ClassCastException cce) {
+            return false;
+        }
     }
 
     @Override

@@ -7,7 +7,7 @@ import static org.jrdf.query.answer.xml.AnswerXMLWriter.LITERAL;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.NAME;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.VARIABLE;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.XML_LANG;
+import static org.jrdf.query.answer.xml.AnswerXMLWriter.*;
 import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
@@ -127,11 +127,11 @@ public class SparqlAnswerParser {
         currentEvent = parser.next();
         String tagName = parser.getLocalName();
         TypeValue typeValue = new TypeValue();
-        if (AnswerXMLWriter.URI.equals(tagName)) {
+        if (URI.equals(tagName)) {
             typeValue = createURI(parser.getElementText());
         } else if (LITERAL.equals(tagName)) {
             typeValue = createLiteral();
-        } else if (AnswerXMLWriter.BNODE.equals(tagName)) {
+        } else if (BNODE.equals(tagName)) {
             typeValue = createBNode(parser.getElementText());
         }
         return typeValue;
@@ -144,7 +144,7 @@ public class SparqlAnswerParser {
     private TypeValue createLiteral() throws XMLStreamException {
         TypeValue typeValue;
         String datatype = parser.getAttributeValue(null, DATATYPE);
-        String language = parser.getAttributeValue(null, XML_LANG);
+        String language = parser.getAttributeValue(XML_NS, XML_LANG);
         if (datatype != null) {
             typeValue = createDatatypeLiteral(parser.getElementText(), datatype);
         } else if (language != null) {
