@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class SparqlAnswerParserUnitTest extends TestCase {
+public class SparqlAnswerParserImplUnitTest extends TestCase {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     private static final TypeValueImpl R1C1 = new TypeValueImpl(BLANK_NODE, "r1");
     private static final TypeValueImpl R2C1 = new TypeValueImpl(BLANK_NODE, "r2");
