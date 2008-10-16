@@ -63,53 +63,42 @@ import static org.jrdf.query.answer.xml.DatatypeType.NONE;
 import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
 
 import static javax.xml.XMLConstants.XML_NS_PREFIX;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter implements AnswerXMLWriter {
-    private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
-    private SparqlAnswerParser parser;
-    private BlockingQueue<InputStream> streamQueue;
-    private LinkedHashSet<String> variables;
-    private boolean gotVariables;
-    private boolean hasMore;
+public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter {
+    private SparqlAnswerParserStream streamParser;
 
     public MultiAnswerXMLStreamQueueWriter(InputStream... streams) throws InterruptedException, XMLStreamException {
-        hasMore = false;
-        variables = new LinkedHashSet<String>();
-        streamQueue = new LinkedBlockingQueue<InputStream>();
-        for (InputStream stream : streams) {
-            streamQueue.put(stream);
-        }
-        setupNextParser();
+        this.streamParser = new SparqlAnswerParserStreamImpl(streams);
     }
 
     public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
-        streamQueue.put(stream);
-        if (!hasMore) {
-            setupNextParser();
+        this.streamParser.addStream(stream);
+    }
+
+    public void setWriter(Writer writer) throws XMLStreamException, IOException {
+        if (streamWriter != null) {
+            streamWriter.close();
         }
+        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
     public boolean hasMoreResults() {
-        return hasMore;
+        return streamParser.hasMoreResults();
     }
 
     public void writeVariables() throws XMLStreamException {
         streamWriter.writeStartElement(HEAD);
-        for (String variable : variables) {
+        for (String variable : streamParser.getVariables()) {
             streamWriter.writeStartElement(VARIABLE);
             streamWriter.writeAttribute(NAME, variable);
             streamWriter.writeEndElement();
@@ -118,10 +107,10 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
     }
 
     public void writeResult() throws XMLStreamException {
-        if (parser.hasMoreResults()) {
+        if (streamParser.hasMoreResults()) {
             streamWriter.writeStartElement(RESULT);
-            TypeValue[] results = parser.getResults();
-            Iterator<String> currentVariableIterator = variables.iterator();
+            TypeValue[] results = streamParser.getResults();
+            Iterator<String> currentVariableIterator = streamParser.getVariables().iterator();
             for (TypeValue result : results) {
                 String currentVariable = currentVariableIterator.next();
                 if (!result.getType().equals(UNBOUND)) {
@@ -131,14 +120,6 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
             streamWriter.writeEndElement();
         }
         streamWriter.flush();
-        hasMore = hasMore();
-    }
-
-    public void setWriter(Writer writer) throws XMLStreamException, IOException {
-        if (streamWriter != null) {
-            streamWriter.close();
-        }
-        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
     public void write(Writer writer) throws XMLStreamException, IOException {
@@ -153,31 +134,8 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
             } catch (XMLStreamException e) {
                 ;
             } finally {
-                if (parser != null) {
-                    parser.close();
-                }
-                streamQueue.clear();
+                streamParser.close();
             }
-        }
-    }
-
-    private void setupNextParser() throws XMLStreamException {
-        InputStream currentStream = streamQueue.poll();
-        if (currentStream != null) {
-            if (parser != null) {
-                parser.close();
-            }
-            parser = new SparqlAnswerParserImpl(INPUT_FACTORY.createXMLStreamReader(currentStream));
-            LinkedHashSet<String> newVariables = parser.getVariables();
-            if (!gotVariables) {
-                variables = newVariables;
-                gotVariables = true;
-            }
-            if (!hasMore) {
-                hasMore = hasMore();
-            }
-        } else {
-            parser = null;
         }
     }
 
@@ -199,28 +157,9 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
 
     protected void writeAllResults() throws XMLStreamException {
         writeStartResults();
-        while (hasMore) {
+        while (streamParser.hasMoreResults()) {
             writeResult();
         }
         writeEndResults();
-    }
-
-    private boolean hasMore() {
-        try {
-            return parser != null && getToNextStreamResult();
-        } catch (XMLStreamException e) {
-            return false;
-        }
-    }
-
-    private boolean getToNextStreamResult() throws XMLStreamException {
-        boolean gotNext = false;
-        while (parser != null && !gotNext) {
-            gotNext = parser.hasMoreResults();
-            if (!gotNext) {
-                setupNextParser();
-            }
-        }
-        return gotNext;
     }
 }
