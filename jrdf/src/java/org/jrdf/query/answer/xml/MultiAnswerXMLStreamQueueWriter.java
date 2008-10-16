@@ -59,20 +59,17 @@
 
 package org.jrdf.query.answer.xml;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLEventReader;
+import static org.jrdf.query.answer.xml.DatatypeType.NONE;
+import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
+
+import static javax.xml.XMLConstants.XML_NS_PREFIX;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.Characters;
-import javax.xml.stream.events.EndElement;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -83,26 +80,25 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter implements AnswerXMLWriter {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
-    private XMLEventReader parser;
+    private SparqlAnswerParser parser;
     private BlockingQueue<InputStream> streamQueue;
-    private Set<String> variables;
+    private LinkedHashSet<String> variables;
     private boolean gotVariables;
-    private InputStream currentStream;
     private boolean hasMore;
 
     public MultiAnswerXMLStreamQueueWriter(InputStream... streams) throws InterruptedException, XMLStreamException {
-        this.hasMore = false;
-        this.variables = new HashSet<String>();
-        this.streamQueue = new LinkedBlockingQueue<InputStream>();
+        hasMore = false;
+        variables = new LinkedHashSet<String>();
+        streamQueue = new LinkedBlockingQueue<InputStream>();
         for (InputStream stream : streams) {
-            this.streamQueue.put(stream);
+            streamQueue.put(stream);
         }
         setupNextParser();
     }
 
     public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
-        this.streamQueue.put(stream);
-        if (!this.hasMore) {
+        streamQueue.put(stream);
+        if (!hasMore) {
             setupNextParser();
         }
     }
@@ -112,9 +108,6 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
     }
 
     public void writeVariables() throws XMLStreamException {
-        if (!gotVariables) {
-            getVariables();
-        }
         streamWriter.writeStartElement(HEAD);
         for (String variable : variables) {
             streamWriter.writeStartElement(VARIABLE);
@@ -125,22 +118,19 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
     }
 
     public void writeResult() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULT);
-        while (parser.hasNext()) {
-            final XMLEvent event = parser.nextEvent();
-            if (event.isStartElement()) {
-                final String tagName = getElementTagName(event);
-                if (BINDING.equals(tagName)) {
-                    writeOneBinding(event);
-                }
-            } else if (event.isEndElement()) {
-                final String tagName = getElementTagName(event);
-                if (RESULT.equals(tagName)) {
-                    break;
+        if (parser.hasMoreResults()) {
+            streamWriter.writeStartElement(RESULT);
+            TypeValue[] results = parser.getResults();
+            Iterator<String> currentVariableIterator = variables.iterator();
+            for (TypeValue result : results) {
+                String currentVariable = currentVariableIterator.next();
+                if (!result.getType().equals(UNBOUND)) {
+                    writeBinding(result, currentVariable);
                 }
             }
+            streamWriter.writeEndElement();
         }
-        streamWriter.writeEndElement();
+        streamWriter.flush();
         hasMore = hasMore();
     }
 
@@ -162,19 +152,27 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
                 streamWriter.close();
             } catch (XMLStreamException e) {
                 ;
+            } finally {
+                if (parser != null) {
+                    parser.close();
+                }
+                streamQueue.clear();
             }
         }
-        if (parser != null) {
-            parser.close();
-        }
-        streamQueue.clear();
     }
 
     private void setupNextParser() throws XMLStreamException {
-        currentStream = streamQueue.poll();
+        InputStream currentStream = streamQueue.poll();
         if (currentStream != null) {
-            getNextStreamParser();
-            gotVariables = getVariables();
+            if (parser != null) {
+                parser.close();
+            }
+            parser = new SparqlAnswerParserImpl(INPUT_FACTORY.createXMLStreamReader(currentStream));
+            LinkedHashSet<String> newVariables = parser.getVariables();
+            if (!gotVariables) {
+                variables = newVariables;
+                gotVariables = true;
+            }
             if (!hasMore) {
                 hasMore = hasMore();
             }
@@ -183,84 +181,20 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
         }
     }
 
-    private boolean hasMore() {
-        try {
-            return parser != null && getToNextStreamResult();
-        } catch (XMLStreamException e) {
-            return false;
-        }
-    }
-
-    private void getNextStreamParser() throws XMLStreamException {
-        if (parser != null) {
-            parser.close();
-        }
-        parser = INPUT_FACTORY.createXMLEventReader(currentStream);
-    }
-
-    private boolean getVariables() throws XMLStreamException {
-        boolean gotVar = false;
-        while (parser != null && parser.hasNext()) {
-            final XMLEvent event = parser.nextEvent();
-            if (event.isStartElement()) {
-                final String tagName = getElementTagName(event);
-                if (VARIABLE.equals(tagName)) {
-                    Attribute attr = ((StartElement) event).getAttributeByName(new QName(NAME));
-                    final String name = attr.getValue();
-                    variables.add(name);
-                    gotVar = true;
-                }
-            } else if (event.isEndElement()) {
-                final String tagName = getElementTagName(event);
-                if (!VARIABLE.equals(tagName)) {
-                    break;
-                }
+    private void writeBinding(TypeValue result, String currentVariable) throws XMLStreamException {
+        streamWriter.writeStartElement(BINDING);
+        streamWriter.writeAttribute(NAME, currentVariable);
+        streamWriter.writeStartElement(result.getType().getXmlElementName());
+        if (result.getSuffixType() != NONE) {
+            if (result.getSuffixType().equals(DatatypeType.DATATYPE)) {
+                streamWriter.writeAttribute(DATATYPE, result.getSuffix());
+            } else if (result.getSuffixType().equals(DatatypeType.XML_LANG)) {
+                streamWriter.writeAttribute(XML_NS_PREFIX + ":lang", result.getSuffix());
             }
         }
-        return gotVar;
-    }
-
-    private String getElementTagName(XMLEvent e) {
-        assert e.isStartElement() || e.isEndElement();
-        if (e.isStartElement()) {
-            return ((StartElement) e).getName().getLocalPart();
-        } else {
-            return ((EndElement) e).getName().getLocalPart();
-        }
-    }
-
-    private boolean getToNextResult() throws XMLStreamException {
-        while (parser.hasNext()) {
-            final XMLEvent event = parser.nextEvent();
-            if (event.isStartElement()) {
-                final String tagName = getElementTagName(event);
-                if (RESULT.equals(tagName)) {
-                    return true;
-                } else if (!gotVariables && HEAD.equals(tagName)) {
-                    gotVariables = getVariables();
-                }
-            } else if (event.isEndElement()) {
-                final String tagName = getElementTagName(event);
-                if (RESULTS.equals(tagName) || SPARQL.equals(tagName)) {
-                    break;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean getToNextStreamResult() throws XMLStreamException {
-        boolean gotNext = false;
-        while (parser != null && !gotNext) {
-            gotNext = getToNextResult();
-            if (!gotNext) {
-                setupNextParser();
-            }
-        }
-        /*while ((parser != null) && !(gotNext = getToNextResult())) {
-            setupNextParser();
-        }*/
-        return gotNext;
+        streamWriter.writeCharacters(result.getValue());
+        streamWriter.writeEndElement();
+        streamWriter.writeEndElement();
     }
 
     protected void writeAllResults() throws XMLStreamException {
@@ -271,45 +205,22 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
         writeEndResults();
     }
 
-    private void writeOneBinding(XMLEvent event) throws XMLStreamException {
-        streamWriter.writeStartElement(BINDING);
-        Attribute nameAttr = ((StartElement) event).getAttributeByName(new QName(NAME));
-        String varName = nameAttr.getValue();
-        streamWriter.writeAttribute(NAME, varName);
-        writeCurrentNode();
-        streamWriter.writeEndElement();
-
+    private boolean hasMore() {
+        try {
+            return parser != null && getToNextStreamResult();
+        } catch (XMLStreamException e) {
+            return false;
+        }
     }
 
-    private void writeCurrentNode() throws XMLStreamException {
-        while (parser.hasNext()) {
-            final XMLEvent event = parser.nextEvent();
-            if (event.isStartElement()) {
-                String tagName = getElementTagName(event);
-                streamWriter.writeStartElement(tagName);
-                if (LITERAL.equals(tagName)) {
-                    writeLiteralAttributes((StartElement) event);
-                }
-            } else if (event.isCharacters()) {
-                streamWriter.writeCharacters(((Characters) event).getData());
-            } else if (event.isEndElement()) {
-                if (BINDING.equals(this.getElementTagName(event))) {
-                    break;
-                } else {
-                    streamWriter.writeEndElement();
-                }
+    private boolean getToNextStreamResult() throws XMLStreamException {
+        boolean gotNext = false;
+        while (parser != null && !gotNext) {
+            gotNext = parser.hasMoreResults();
+            if (!gotNext) {
+                setupNextParser();
             }
         }
-    }
-
-    private void writeLiteralAttributes(StartElement event) throws XMLStreamException {
-        final Attribute datatype = event.getAttributeByName(new QName(DATATYPE));
-        if (datatype != null) {
-            streamWriter.writeAttribute(DATATYPE, datatype.getValue());
-        }
-        final Attribute lang = event.getAttributeByName(new QName(XML_LANG));
-        if (lang != null) {
-            streamWriter.writeAttribute(XML_LANG, lang.getValue());
-        }
+        return gotNext;
     }
 }
