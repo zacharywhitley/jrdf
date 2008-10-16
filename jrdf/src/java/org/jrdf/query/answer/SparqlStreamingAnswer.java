@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.io.Writer;
 import java.io.IOException;
 
+// TODO AN/YF - Can we do time taken and number of tuples (maybe based on how much so far?)
 public class SparqlStreamingAnswer implements Answer {
     private SparqlAnswerParserStream answerStream;
 
@@ -41,11 +42,11 @@ public class SparqlStreamingAnswer implements Answer {
     }
 
     public long numberOfTuples() {
-        return 0;
+        return -1;
     }
 
     public long getTimeTaken() {
-        return 0;
+        return -1;
     }
 
     public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException {
