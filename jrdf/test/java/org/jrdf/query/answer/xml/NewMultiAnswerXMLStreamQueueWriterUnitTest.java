@@ -59,10 +59,18 @@
 
 package org.jrdf.query.answer.xml;
 
+import static org.jrdf.query.answer.xml.SparqlAnswerParserImplUnitTest.EXPECTED_VARIABLES;
+import static org.jrdf.query.answer.xml.SparqlAnswerParserImplUnitTest.ROW_1;
+import static org.jrdf.query.answer.xml.SparqlAnswerParserImplUnitTest.ROW_2;
+import static org.jrdf.query.answer.xml.SparqlAnswerParserImplUnitTest.checkRow;
+
+import static javax.xml.stream.XMLInputFactory.newInstance;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 
 /**
  * @author Yuan-Fang Li
@@ -71,6 +79,7 @@ import java.io.StringWriter;
 
 public class NewMultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXMLStreamWriterUnitTest {
     private InputStream stream1, stream2;
+    private XMLStreamReader streamReader;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -85,7 +94,7 @@ public class NewMultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXM
         stream2.close();
     }
 
-    public void testIncomingStreams() throws XMLStreamException, InterruptedException {
+    public void testIncomingStreams() throws Exception {
         int count = 0;
         xmlWriter.writeStartResults();
         while (xmlWriter.hasMoreResults()) {
@@ -93,6 +102,7 @@ public class NewMultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXM
             xmlWriter.writeResult();
         }
         assertEquals(2, count);
+        checkTwoResults(writer);
         assertFalse(xmlWriter.hasMoreResults());
         xmlWriter.addStream(stream2);
         assertTrue(xmlWriter.hasMoreResults());
@@ -102,9 +112,10 @@ public class NewMultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXM
         }
         xmlWriter.writeEndResults();
         assertEquals(4, count);
+        checkFourResults(writer);
     }
 
-    public void test2Streams() throws XMLStreamException, InterruptedException {
+    public void test2Streams() throws Exception {
         int count = 0;
         xmlWriter.addStream(stream2);
         xmlWriter.writeStartResults();
@@ -114,9 +125,10 @@ public class NewMultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXM
         }
         assertEquals(4, count);
         xmlWriter.writeEndResults();
+        checkFourResults(writer);
     }
 
-    public void test2StreamsConstructor() throws XMLStreamException, InterruptedException, IOException {
+    public void test2StreamsConstructor() throws Exception {
         stream1.close();
         stream1 = url.openStream();
         xmlWriter.close();
@@ -131,5 +143,31 @@ public class NewMultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXM
         }
         assertEquals(4, count);
         xmlWriter.writeEndResults();
+        checkFourResults(writer);
+    }
+
+    private void checkTwoResults(Writer writer) throws Exception {
+        SparqlAnswerResultsParser parser = getParser(writer);
+        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_1);
+        streamReader.next();
+        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_2);
+    }
+
+    private void checkFourResults(Writer writer) throws Exception {
+        SparqlAnswerResultsParser parser = getParser(writer);
+        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_1);
+        streamReader.next();
+        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_2);
+        streamReader.next();
+        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_1);
+        streamReader.next();
+        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_2);
+    }
+
+    private SparqlAnswerResultsParser getParser(Writer writer) throws XMLStreamException {
+        String result = writer.toString();
+        InputStream stringStream = new ByteArrayInputStream(result.getBytes());
+        streamReader = newInstance().createXMLStreamReader(stringStream);
+        return new SparqlAnswerResultsParserImpl(streamReader);
     }
 }
