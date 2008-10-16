@@ -65,6 +65,7 @@ import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
+import org.restlet.resource.ResourceException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -111,7 +112,7 @@ public class NewDistributedGraphResource extends ConfigurableRestletResource {
         return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }
 
-    private Representation queryResultRepresentation(Variant variant) {
+    private Representation queryResultRepresentation(Variant variant) throws ResourceException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         dataModel.put("queryString", queryString);
         dataModel.put("answer", graphApplication.answerQuery2(graphName, queryString));

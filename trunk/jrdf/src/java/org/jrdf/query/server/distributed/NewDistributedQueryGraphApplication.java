@@ -64,6 +64,7 @@ import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.jrdf.query.client.DistributedQueryClientImpl;
 import org.jrdf.query.client.GraphQueryClient;
+import org.jrdf.query.client.NewDistributedQueryClientImpl;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 
@@ -80,11 +81,11 @@ import java.util.Set;
 
 public class NewDistributedQueryGraphApplication implements DistributedQueryGraphApplication {
     private static final int PORT_NUMBER = 8182;
+    private static final int INVALID_TIME_TAKEN = -1;
     private Set<String> servers;
     private int portNumber = PORT_NUMBER;
     private GraphQueryClient client;
     private AnswerXMLWriter xmlWriter;
-    private static final int INVALID_TIME_TAKEN = -1;
     private GraphApplication application;
 
     public NewDistributedQueryGraphApplication(GraphApplication newApplication) {
@@ -140,8 +141,9 @@ public class NewDistributedQueryGraphApplication implements DistributedQueryGrap
         return servers.toArray(new String[servers.size()]);
     }
 
-    public Answer answerQuery2(String graphName, String queryString) {
-        throw new UnsupportedOperationException();
+    public Answer answerQuery2(String graphName, String queryString) throws ResourceException {
+        answerQuery(graphName, queryString);
+        return ((NewDistributedQueryClientImpl) client).getAnswer();
     }
 
     public void answerQuery(String graphName, String queryString) throws ResourceException {
