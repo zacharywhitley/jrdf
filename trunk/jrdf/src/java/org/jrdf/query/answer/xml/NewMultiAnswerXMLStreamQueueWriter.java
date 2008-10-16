@@ -62,6 +62,7 @@ package org.jrdf.query.answer.xml;
 import static org.jrdf.query.answer.xml.DatatypeType.NONE;
 import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
 
+import static javax.xml.XMLConstants.XML_NS_PREFIX;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
@@ -83,7 +84,6 @@ public class NewMultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter 
     private BlockingQueue<InputStream> streamQueue;
     private LinkedHashSet<String> variables;
     private boolean gotVariables;
-    private InputStream currentStream;
     private boolean hasMore;
 
     public NewMultiAnswerXMLStreamQueueWriter(InputStream... streams) throws InterruptedException, XMLStreamException {
@@ -118,8 +118,8 @@ public class NewMultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter 
     }
 
     public void writeResult() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULT);
-        while (parser.hasMoreResults()) {
+        if (parser.hasMoreResults()) {
+            streamWriter.writeStartElement(RESULT);
             TypeValue[] results = parser.getResults();
             Iterator<String> currentVariableIterator = variables.iterator();
             for (TypeValue result : results) {
@@ -128,8 +128,9 @@ public class NewMultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter 
                     writeBinding(result, currentVariable);
                 }
             }
+            streamWriter.writeEndElement();
         }
-        streamWriter.writeEndElement();
+        streamWriter.flush();
         hasMore = hasMore();
     }
 
@@ -161,7 +162,7 @@ public class NewMultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter 
     }
 
     private void setupNextParser() throws XMLStreamException {
-        currentStream = streamQueue.poll();
+        InputStream currentStream = streamQueue.poll();
         if (currentStream != null) {
             if (parser != null) {
                 parser.close();
@@ -188,7 +189,7 @@ public class NewMultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter 
             if (result.getSuffixType().equals(DatatypeType.DATATYPE)) {
                 streamWriter.writeAttribute(DATATYPE, result.getSuffix());
             } else if (result.getSuffixType().equals(DatatypeType.XML_LANG)) {
-                streamWriter.writeAttribute(XML_NS, XML_LANG, result.getSuffix());
+                streamWriter.writeAttribute(XML_NS_PREFIX + ":lang", result.getSuffix());
             }
         }
         streamWriter.writeCharacters(result.getValue());

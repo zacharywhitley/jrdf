@@ -76,7 +76,7 @@ public class NewMultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXM
         super.setUp();
         stream1 = url.openStream();
         stream2 = url.openStream();
-        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1);
+        xmlWriter = new NewMultiAnswerXMLStreamQueueWriter(stream1);
         xmlWriter.setWriter(writer);
     }
 
@@ -121,7 +121,7 @@ public class NewMultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXM
         stream1 = url.openStream();
         xmlWriter.close();
         writer = new StringWriter();
-        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1, stream2);
+        xmlWriter = new NewMultiAnswerXMLStreamQueueWriter(stream1, stream2);
         xmlWriter.setWriter(writer);
         int count = 0;
         xmlWriter.writeStartResults();

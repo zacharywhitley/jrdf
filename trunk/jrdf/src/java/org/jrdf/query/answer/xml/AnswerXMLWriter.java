@@ -139,11 +139,6 @@ public interface AnswerXMLWriter {
     /**
      * The Sparql namespace.
      */
-    String XML_NS = "http://www.w3.org/XML/1998/namespace";
-
-    /**
-     * The Sparql namespace.
-     */
     String SPARQL_NS = "http://www.w3.org/2005/sparql-results#";
 
 

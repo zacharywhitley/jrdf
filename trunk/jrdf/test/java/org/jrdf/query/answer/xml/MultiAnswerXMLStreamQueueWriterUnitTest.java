@@ -85,7 +85,7 @@ public class MultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXMLSt
         stream2.close();
     }
 
-    public void testIncomingStreams() throws XMLStreamException, InterruptedException {
+    public void testIncomingStreams() throws Exception {
         int count = 0;
         xmlWriter.writeStartResults();
         while (xmlWriter.hasMoreResults()) {
@@ -101,7 +101,12 @@ public class MultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXMLSt
             xmlWriter.writeResult();
         }
         xmlWriter.writeEndResults();
+        xmlWriter.flush();
+        xmlWriter.close();
         assertEquals(4, count);
+        writer.flush();
+        writer.close();
+        System.err.println("Got: " + writer.toString());
     }
 
     public void test2Streams() throws XMLStreamException, InterruptedException {
@@ -114,6 +119,7 @@ public class MultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXMLSt
         }
         assertEquals(4, count);
         xmlWriter.writeEndResults();
+        System.err.println("Got: " + writer.toString());
     }
 
     public void test2StreamsConstructor() throws XMLStreamException, InterruptedException, IOException {
@@ -131,5 +137,6 @@ public class MultiAnswerXMLStreamQueueWriterUnitTest extends AbstractAnswerXMLSt
         }
         assertEquals(4, count);
         xmlWriter.writeEndResults();
+        System.err.println("Got: " + writer.toString());
     }
 }
