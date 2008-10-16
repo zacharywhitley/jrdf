@@ -9,7 +9,6 @@ import static org.jrdf.util.test.SetUtil.asSet;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
@@ -32,8 +31,8 @@ public class SparqlAnswerParserUnitTest extends TestCase {
     private static final TypeValueImpl R2C6 = new TypeValueImpl();
     private static final TypeValueImpl R1C7 = new TypeValueImpl(BLANK_NODE, "r2");
     private static final TypeValueImpl R2C7 = new TypeValueImpl(BLANK_NODE, "r1");
-    private static final List<TypeValueImpl> ROW_1 = Arrays.asList(R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7);
-    private static final List<TypeValueImpl> ROW_2 = Arrays.asList(R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7);
+    public static final List<TypeValueImpl> ROW_1 = Arrays.asList(R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7);
+    public static final List<TypeValueImpl> ROW_2 = Arrays.asList(R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7);
     private SparqlAnswerParser parser;
 
     public void testParse() throws Exception {
@@ -50,7 +49,7 @@ public class SparqlAnswerParserUnitTest extends TestCase {
         assertFalse(parser.hasMoreResults());
     }
 
-    private void checkHasMoreAndGetResult(List<TypeValueImpl> row) throws XMLStreamException {
+    private void checkHasMoreAndGetResult(List<TypeValueImpl> row) {
         assertTrue(parser.hasMoreResults());
         assertTrue(parser.hasMoreResults());
         TypeValue[] results = parser.getResults();

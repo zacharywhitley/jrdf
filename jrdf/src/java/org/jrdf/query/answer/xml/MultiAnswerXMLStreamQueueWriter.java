@@ -91,18 +91,18 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter imp
     private boolean hasMore;
 
     public MultiAnswerXMLStreamQueueWriter(InputStream... streams) throws InterruptedException, XMLStreamException {
-        hasMore = false;
-        variables = new HashSet<String>();
-        streamQueue = new LinkedBlockingQueue<InputStream>();
+        this.hasMore = false;
+        this.variables = new HashSet<String>();
+        this.streamQueue = new LinkedBlockingQueue<InputStream>();
         for (InputStream stream : streams) {
-            streamQueue.put(stream);
+            this.streamQueue.put(stream);
         }
         setupNextParser();
     }
 
     public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
-        streamQueue.put(stream);
-        if (!hasMore) {
+        this.streamQueue.put(stream);
+        if (!this.hasMore) {
             setupNextParser();
         }
     }

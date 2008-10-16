@@ -61,6 +61,7 @@ package org.jrdf.query.answer.xml;
 
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -83,9 +84,9 @@ public abstract class AbstractXMLStreamWriter implements AnswerXMLWriter {
         streamWriter.writeProcessingInstruction("xml-stylesheet", target);
 
         streamWriter.writeStartElement(SPARQL);
-        streamWriter.writeAttribute("xmlns", SPARQL_NS);
-        streamWriter.writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        streamWriter.writeAttribute("xsi:schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
+        streamWriter.writeDefaultNamespace(SPARQL_NS);
+        streamWriter.writeNamespace("xsi", W3C_XML_SCHEMA_INSTANCE_NS_URI);
+        streamWriter.writeNamespace("schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
     }
 
     public void writeEndDocument() throws XMLStreamException {
