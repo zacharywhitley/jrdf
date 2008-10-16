@@ -37,8 +37,7 @@ public class SparqlAnswerResultsParserImpl implements SparqlAnswerResultsParser 
             if (startOfBinding(currentEvent)) {
                 resultParser.getOneBinding(variableToValue);
             }
-            parser.next();
-            currentEvent = parser.getEventType();
+            currentEvent = parser.next();
         }
         return variableToValue;
     }
