@@ -33,7 +33,6 @@
     <suppress checks="JavaNCSS" files="AnswerImpl"/>
     <suppress checks="JavaNCSS" files="AnswerXMLStreamWriterImpl"/>
     <suppress checks="JavaNCSS" files="AnswerXMLPagenatedStreamWriter"/>
-    <suppress checks="JavaNCSS" files="MultiAnswerXMLStreamQueueWriter"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
@@ -46,7 +45,6 @@
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>
-    <suppress checks="CyclomaticComplexity" files="MultiAnswerXMLStreamQueueWriter"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
 
     <!-- Cleanup molecule implementation -->
