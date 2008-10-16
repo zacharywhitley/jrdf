@@ -52,19 +52,20 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     }
 
     private boolean hasNextResult() throws XMLStreamException {
+        int eventType = parser.getEventType();
         while (parser.hasNext()) {
-            int eventType = parser.getEventType();
-            if (eventType == START_ELEMENT) {
-                final String tagName = parser.getLocalName();
-                if (RESULT.equals(tagName)) {
-                    return true;
-                } else if (!finishedVariableParsing && VARIABLE.equals(tagName)) {
-                    parseAnswerToGetVariables();
-                }
+            if (startResultElement(eventType)) {
+                return true;
+            } else if (!finishedVariableParsing && VARIABLE.equals(parser.getLocalName())) {
+                parseAnswerToGetVariables();
             }
-            parser.next();
+            eventType = parser.next();
         }
         return false;
+    }
+
+    private boolean startResultElement(int currentEvent) {
+        return currentEvent == START_ELEMENT && RESULT.equals(parser.getLocalName());
     }
 
     private void tryGetVariables() {
