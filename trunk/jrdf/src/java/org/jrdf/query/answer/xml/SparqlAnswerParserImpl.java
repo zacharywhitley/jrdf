@@ -11,7 +11,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.LinkedHashSet;
 
-// TODO AN/YF Refactor out the getResults, getOneBinding, getOneNode
+// TODO AN/YF Refactor out the tryGetVariables
 public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     private final XMLStreamReader parser;
     private final SparqlAnswerResultsParser resultsParser;
@@ -25,19 +25,14 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     }
 
     public LinkedHashSet<String> getVariables() {
-        if (!finishedVariableParsing) {
-            try {
-                parseAnswerToGetVariables();
-            } catch (XMLStreamException e) {
-                ;
-            }
-        }
+        tryGetVariables();
         return variables;
     }
 
     public boolean hasMoreResults() {
         try {
-            hasMore = getToNextResult();
+            tryGetVariables();
+            hasMore = hasNextResult();
         } catch (XMLStreamException e) {
             hasMore = false;
         }
@@ -56,22 +51,7 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
         }
     }
 
-    private void parseAnswerToGetVariables() throws XMLStreamException {
-        while (parser.hasNext()) {
-            int currentEvent = parser.getEventType();
-            if (currentEvent == START_ELEMENT && VARIABLE.equals(parser.getLocalName())) {
-                variables.add(parser.getAttributeValue(null, NAME));
-            } else if (currentEvent == END_ELEMENT) {
-                if (HEAD.equals(parser.getLocalName())) {
-                    break;
-                }
-            }
-            currentEvent = parser.next();
-        }
-        finishedVariableParsing = true;
-    }
-
-    private boolean getToNextResult() throws XMLStreamException {
+    private boolean hasNextResult() throws XMLStreamException {
         while (parser.hasNext()) {
             int eventType = parser.getEventType();
             if (eventType == START_ELEMENT) {
@@ -85,5 +65,35 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
             parser.next();
         }
         return false;
+    }
+
+    private void tryGetVariables() {
+        if (!finishedVariableParsing) {
+            try {
+                parseAnswerToGetVariables();
+            } catch (XMLStreamException e) {
+                ;
+            }
+        }
+    }
+
+    private void parseAnswerToGetVariables() throws XMLStreamException {
+        int currentEvent = parser.getEventType();
+        while (parser.hasNext() && !endOfHeadElement(currentEvent)) {
+            if (startVariableElement(currentEvent)) {
+                String variableName = parser.getAttributeValue(null, NAME);
+                variables.add(variableName);
+            }
+            currentEvent = parser.next();
+        }
+        finishedVariableParsing = true;
+    }
+
+    private boolean startVariableElement(int currentEvent) {
+        return currentEvent == START_ELEMENT && VARIABLE.equals(parser.getLocalName());
+    }
+
+    private boolean endOfHeadElement(int currentEvent) {
+        return currentEvent == END_ELEMENT && HEAD.equals(parser.getLocalName());
     }
 }
