@@ -27,5 +27,5 @@ public interface DistributedQueryGraphApplication {
 
     boolean isTooManyRows();
 
-    Answer answerQuery2(String graphName, String queryString);
+    Answer answerQuery2(String graphName, String queryString) throws ResourceException;
 }
