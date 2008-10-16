@@ -10,7 +10,7 @@
     <h2>Variable Bindings Result</h2>
     <table border="1">
         <tr>
-            <#list answer.columnNames as columnName>
+            <#list answer.variableNames as columnName>
             <#assign foo = columnName?split("|")>
             <th>${foo[0]}</th>
             </#list>
