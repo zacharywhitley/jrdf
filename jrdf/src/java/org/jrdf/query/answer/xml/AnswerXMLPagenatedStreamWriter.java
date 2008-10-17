@@ -59,28 +59,17 @@
 
 package org.jrdf.query.answer.xml;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.URIReference;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_OBJECT_NAME;
-import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_PREDICATE_NAME;
-import static org.jrdf.query.relation.mem.SortedAttributeFactory.DEFAULT_SUBJECT_NAME;
-import org.jrdf.util.EmptyClosableIterator;
+import org.jrdf.query.answer.Answer;
+import static org.jrdf.query.answer.xml.DatatypeType.NONE;
+import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import static javax.xml.XMLConstants.XML_NS_PREFIX;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.io.Writer;
 import java.io.InputStream;
-import java.net.URI;
+import java.io.Writer;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
@@ -88,36 +77,28 @@ import java.util.Set;
  */
 
 public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter implements AnswerXMLWriter {
-    private Set<Attribute> heading;
-    private Relation results;
-    private Iterator<Tuple> tupleIterator;
-    private Tuple currentTuple;
-    private int maxRows;
-    private int count;
+    private long maxRows;
+    private long count;
+    private Answer answer;
+    private Writer writer;
+    private Iterator<TypeValue[]> iterator;
 
     private AnswerXMLPagenatedStreamWriter() {
     }
 
-    public AnswerXMLPagenatedStreamWriter(Set<Attribute> heading, Relation results, Writer writer)
-        throws XMLStreamException {
-        this.heading = heading;
-        this.results = results;
-        if (results != null) {
-            tupleIterator = this.results.getSortedTuples().iterator();
-            maxRows = results.getTuples().size();
-        } else {
-            tupleIterator = new EmptyClosableIterator<Tuple>();
-            maxRows = 0;
-        }
-        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
-        count = 0;
+    public AnswerXMLPagenatedStreamWriter(Answer answer, Writer writer) throws XMLStreamException {
+        this.answer = answer;
+        this.iterator = answer.columnValuesIterator();
+        this.writer = writer;
+        this.maxRows = answer.numberOfTuples();
+        this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
-    public AnswerXMLPagenatedStreamWriter(Set<Attribute> heading, Relation results, Writer writer, int maxRows)
-        throws XMLStreamException {
-        this(heading, results, writer);
+    public AnswerXMLPagenatedStreamWriter(Answer answer, Writer writer, int maxRows) throws XMLStreamException {
+        this(answer, writer);
         this.maxRows = maxRows;
     }
+
 
     public void setWriter(Writer writer) throws XMLStreamException, IOException {
         close();
@@ -125,7 +106,7 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
     }
 
     public boolean hasMoreResults() {
-        return tupleIterator.hasNext() && count < maxRows;
+        return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
     }
 
     public void write() throws XMLStreamException {
@@ -149,6 +130,16 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
         writeEndDocument();
     }
 
+    public void writeVariables() throws XMLStreamException {
+        streamWriter.writeStartElement(HEAD);
+        for (String variable : answer.getVariableNames()) {
+            streamWriter.writeStartElement(VARIABLE);
+            streamWriter.writeAttribute(NAME, variable);
+            streamWriter.writeEndElement();
+        }
+        streamWriter.writeEndElement();
+    }
+
     protected void writeAllResults() throws XMLStreamException {
         writeStartResults();
         while (hasMoreResults()) {
@@ -159,93 +150,37 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
     }
 
     public void writeResult() throws XMLStreamException {
-        if (tupleIterator.hasNext()) {
-            currentTuple = tupleIterator.next();
+        if (iterator.hasNext()) {
             streamWriter.writeStartElement(RESULT);
-            final Map<Attribute, ValueOperation> avps = currentTuple.getAttributeValues();
-            for (Attribute headingAttribute : heading) {
-                writeOneBinding(avps, headingAttribute);
+            TypeValue[] results = iterator.next();
+            String[] currentVariables = answer.getVariableNames();
+            int index = 0;
+            for (TypeValue result : results) {
+                String currentVariable = currentVariables[index];
+                if (!result.getType().equals(UNBOUND)) {
+                    writeBinding(result, currentVariable);
+                }
+                index++;
             }
             streamWriter.writeEndElement();
-            count++;
         }
+        count++;
+        streamWriter.flush();
     }
 
-    private void writeOneBinding(Map<Attribute, ValueOperation> avps, Attribute headingAttribute)
-        throws XMLStreamException {
+    private void writeBinding(TypeValue result, String currentVariable) throws XMLStreamException {
         streamWriter.writeStartElement(BINDING);
-        streamWriter.writeAttribute(NAME, getVariableName(headingAttribute));
-        final Node node = avps.get(headingAttribute).getValue();
-        writeOneNode(node);
-        streamWriter.writeEndElement();
-    }
-
-    public void writeVariables() throws XMLStreamException {
-        streamWriter.writeStartElement(HEAD);
-        if (heading != null) {
-            for (Attribute attribute : heading) {
-                final String variableName = getVariableName(attribute);
-                streamWriter.writeStartElement(VARIABLE);
-                streamWriter.writeAttribute(NAME, variableName);
-                streamWriter.writeEndElement();
+        streamWriter.writeAttribute(NAME, currentVariable);
+        streamWriter.writeStartElement(result.getType().getXmlElementName());
+        if (result.getSuffixType() != NONE) {
+            if (result.getSuffixType().equals(DatatypeType.DATATYPE)) {
+                streamWriter.writeAttribute(DATATYPE, result.getSuffix());
+            } else if (result.getSuffixType().equals(DatatypeType.XML_LANG)) {
+                streamWriter.writeAttribute(XML_NS_PREFIX + ":lang", result.getSuffix());
             }
         }
+        streamWriter.writeCharacters(result.getValue());
         streamWriter.writeEndElement();
-    }
-
-    private void writeOneNode(Node node) throws XMLStreamException {
-        String nodeType;
-        nodeType = getNodeType(node);
-        boolean isLiteral = nodeType.equalsIgnoreCase(LITERAL);
-        streamWriter.writeStartElement(nodeType);
-        String characters;
-        if (isLiteral) {
-            writeLiteralAttributes(node);
-            characters = ((Literal) node).getValue().toString();
-        } else {
-            characters = node.toString();
-        }
-        streamWriter.writeCharacters(characters);
         streamWriter.writeEndElement();
-    }
-
-    private void writeLiteralAttributes(Node node) throws XMLStreamException {
-        final Literal literal = (Literal) node;
-        final URI datatypeURI = literal.getDatatypeURI();
-        final String language = literal.getLanguage();
-        if (datatypeURI != null) {
-            streamWriter.writeAttribute(DATATYPE, datatypeURI.toString());
-        } else if (language != null || !language.equals("")) {
-            streamWriter.writeAttribute(XML_LANG, language);
-        }
-    }
-
-    // TODO AN/YF Change this to use visitor rather than class.
-    private String getNodeType(Node node) {
-        String nodeType;
-        if (BlankNode.class.isAssignableFrom(node.getClass())) {
-            nodeType = BNODE;
-        } else if (URIReference.class.isAssignableFrom(node.getClass())) {
-            nodeType = URI;
-        } else {
-            nodeType = LITERAL;
-        }
-        return nodeType;
-    }
-
-    private String getVariableName(Attribute attribute) {
-        String name = attribute.getAttributeName().toString();
-        if (name.startsWith("?")) {
-            name = name.substring(1);
-        } else {
-            if (name.startsWith(DEFAULT_SUBJECT_NAME)) {
-                name = DEFAULT_SUBJECT_NAME;
-            } else if (name.startsWith(DEFAULT_PREDICATE_NAME)) {
-                name = DEFAULT_PREDICATE_NAME;
-            } else if (name.startsWith(DEFAULT_OBJECT_NAME)) {
-                name = DEFAULT_OBJECT_NAME;
-            }
-        }
-        return name;
     }
 }

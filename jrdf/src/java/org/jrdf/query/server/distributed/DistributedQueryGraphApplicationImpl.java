@@ -62,7 +62,6 @@ package org.jrdf.query.server.distributed;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.client.QueryClient;
-import org.jrdf.query.client.DistributedQueryClient;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 

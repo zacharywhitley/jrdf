@@ -126,7 +126,6 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
             Representation output = response.getEntity();
             return output.getStream();
         } else {
-            System.err.println("Status: " + status);
             throw new RuntimeException(status.getThrowable());
         }
     }

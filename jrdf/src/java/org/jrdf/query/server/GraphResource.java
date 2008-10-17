@@ -57,12 +57,11 @@
  *
  */
 
-package org.jrdf.query.server.local;
+package org.jrdf.query.server;
 
-import org.jrdf.query.server.ConfigurableRestletResource;
-import org.jrdf.query.server.GraphApplication;
-import static org.jrdf.query.server.local.GraphApplicationImpl.*;
-import static org.restlet.data.Status.*;
+import static org.jrdf.query.server.local.GraphApplicationImpl.DEFAULT_MAX_ROWS;
+import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
+import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
@@ -76,7 +75,7 @@ import java.util.Map;
  * @version :$
  */
 
-public class LocalGraphResource extends ConfigurableRestletResource {
+public class GraphResource extends ConfigurableRestletResource {
     private static final String GRAPH_VALUE = "graph";
     private static final String GRAPH_NAME = "graphName";
     private String graphName;
@@ -102,6 +101,7 @@ public class LocalGraphResource extends ConfigurableRestletResource {
             }
             getResponse().setStatus(SUCCESS_OK);
         } catch (Exception e) {
+            e.printStackTrace();
             getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
         }
         return rep;

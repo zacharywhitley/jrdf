@@ -60,8 +60,8 @@
 package org.jrdf.query.answer;
 
 import org.jrdf.query.QueryFactoryImpl;
-import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
+import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
@@ -69,12 +69,10 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.Writer;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -88,10 +86,11 @@ import java.util.Set;
 public final class AnswerImpl implements Answer, Serializable {
     private static final long serialVersionUID = 3778815984074679718L;
     private Set<Attribute> heading;
-    private transient Relation results;
     private long timeTaken;
     private boolean hasProjected;
+    private transient Relation results;
     private transient AnswerXMLWriter xmlWriter;
+    private transient TypeValueToString valueToString = new TypeValueToStringImpl();
 
     private AnswerImpl() {
     }
@@ -114,7 +113,7 @@ public final class AnswerImpl implements Answer, Serializable {
         return resultColumnNames;
     }
 
-    public Iterator<String[]> columnValuesIterator() {
+    public Iterator<TypeValue[]> columnValuesIterator() {
         Set<Tuple> sortedTuples = results.getTuples();
         return new AnswerIterator(heading, sortedTuples.iterator());
     }
@@ -122,9 +121,10 @@ public final class AnswerImpl implements Answer, Serializable {
     public String[][] getColumnValues() {
         String table[][] = new String[(int) numberOfTuples()][heading.size()];
         int index = 0;
-        Iterator<String[]> iterator = columnValuesIterator();
+        Iterator<TypeValue[]> iterator = columnValuesIterator();
         while (iterator.hasNext()) {
-            table[index] = iterator.next();
+            TypeValue[] values = iterator.next();
+            table[index] = valueToString.convert(values);
             index++;
         }
         return table;
@@ -218,6 +218,7 @@ public final class AnswerImpl implements Answer, Serializable {
 
     @SuppressWarnings({"unchecked" })
     private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
+        valueToString = new TypeValueToStringImpl();
         RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
         Set<Attribute> newAttributes = new HashSet<Attribute>();
         Set<Tuple> newTuples = new HashSet<Tuple>();
@@ -233,23 +234,5 @@ public final class AnswerImpl implements Answer, Serializable {
             newTuples.add((Tuple) input.readObject());
         }
         results = relationFactory.getRelation(newAttributes, newTuples);
-    }
-
-    public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException {
-        if (xmlWriter == null) {
-            xmlWriter = new AnswerXMLPagenatedStreamWriter(heading, results, writer);
-        } else {
-            xmlWriter.setWriter(writer);
-        }
-        return xmlWriter;
-    }
-
-    public AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException, IOException {
-        if (xmlWriter == null) {
-            xmlWriter = new AnswerXMLPagenatedStreamWriter(heading, results, writer, maxRows);
-        } else {
-            xmlWriter.setWriter(writer);
-        }
-        return xmlWriter;
     }
 }

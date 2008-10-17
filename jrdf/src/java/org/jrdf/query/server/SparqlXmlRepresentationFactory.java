@@ -60,6 +60,7 @@
 package org.jrdf.query.server;
 
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
@@ -73,17 +74,11 @@ public class SparqlXmlRepresentationFactory implements RepresentationFactory {
         Answer answer = (Answer) dataModel.get("answer");
         try {
             StringWriter writer = new StringWriter();
-            AnswerXMLWriter xmlWriter = answer.getXMLWriter(writer);
-            xmlWriter.writeStartDocument();
-            xmlWriter.writeVariables();
-            xmlWriter.writeStartResults();
-            while (xmlWriter.hasMoreResults()) {
-                xmlWriter.writeResult();
-            }
-            xmlWriter.writeEndResults();
-            xmlWriter.writeEndDocument();
+            AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);
+            xmlWriter.write();
             return new StringRepresentation(writer.toString(), defaultMediaType);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

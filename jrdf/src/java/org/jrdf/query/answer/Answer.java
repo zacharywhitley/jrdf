@@ -59,11 +59,8 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
+import org.jrdf.query.answer.xml.TypeValue;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Iterator;
 
 /**
@@ -87,7 +84,7 @@ public interface Answer {
      *
      * @return a stream of results.
      */
-    Iterator<String[]> columnValuesIterator();
+    Iterator<TypeValue[]> columnValuesIterator();
 
     /**
      * Creates a string array of results, where each value in the array is a value for the matching variable
@@ -110,8 +107,4 @@ public interface Answer {
      * @return the time taken to execute and create the result for the query which lead to this result.
      */
     long getTimeTaken();
-
-    AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException;
-
-    AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException, IOException;
 }
