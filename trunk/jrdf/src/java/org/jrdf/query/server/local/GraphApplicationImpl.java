@@ -61,18 +61,13 @@ package org.jrdf.query.server.local;
 
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
-import org.jrdf.query.server.GraphApplication;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
+import org.jrdf.query.server.GraphApplication;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.restlet.Application;
 import org.restlet.resource.ResourceException;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
 
 public class GraphApplicationImpl extends Application implements GraphApplication {
     /**
