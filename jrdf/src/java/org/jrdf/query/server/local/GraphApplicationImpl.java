@@ -83,7 +83,6 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
     private final PersistentGlobalJRDFFactory factory;
     private final UrqlConnection urqlConnection;
     private Answer answer;
-    private AnswerXMLWriter xmlWriter;
     private boolean tooManyRows;
     private String maxRows;
     private String format;
@@ -133,15 +132,6 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
 
     public boolean isTooManyRows() {
         return tooManyRows;
-    }
-
-    public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
-        if (tooManyRows) {
-            xmlWriter = answer.getXMLWriter(writer, DEFAULT_MAX_ROWS);
-        } else {
-            xmlWriter = answer.getXMLWriter(writer);
-        }
-        return xmlWriter;
     }
 
     public DirectoryHandler getHandler() {

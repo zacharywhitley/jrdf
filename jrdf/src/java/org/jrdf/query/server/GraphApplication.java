@@ -60,13 +60,8 @@
 package org.jrdf.query.server;
 
 import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.jrdf.query.answer.Answer;
 import org.restlet.resource.ResourceException;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.Writer;
-import java.io.IOException;
 
 public interface GraphApplication {
 
@@ -91,8 +86,6 @@ public interface GraphApplication {
     long getTimeTaken();
 
     boolean isTooManyRows();
-
-    AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException;
 
     Answer answerQuery2(String graphName, String queryString) throws ResourceException;
 }

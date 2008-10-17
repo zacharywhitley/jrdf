@@ -83,16 +83,14 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  */
 
 public class NewDistributedQueryClientImpl implements GraphQueryClient {
-    private int localPort;
     private ExecutorService executor;
     private Collection<CallableGraphQueryClient> queryClients;
     private Collection<String> serverAddresses;
     private Set<Future<InputStream>> set;
     private SparqlAnswerParserStream xmlWriter;
 
-    public NewDistributedQueryClientImpl(int localPort, Collection<String> servers)
+    public NewDistributedQueryClientImpl(Collection<String> servers)
         throws XMLStreamException, InterruptedException {
-        this.localPort = localPort;
         this.serverAddresses = servers;
         this.queryClients = new LinkedList<CallableGraphQueryClient>();
         for (String server : serverAddresses) {
