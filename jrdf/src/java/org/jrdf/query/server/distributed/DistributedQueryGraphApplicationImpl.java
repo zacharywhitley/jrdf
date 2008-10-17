@@ -98,12 +98,7 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         return servers.toArray(new String[servers.size()]);
     }
 
-    public Answer answerQuery2(String graphName, String queryString) throws ResourceException {
-        answerQuery(graphName, queryString);
-        return ((DistributedQueryClient) client).getAnswer();
-    }
-
-    public void answerQuery(String graphName, String queryString) throws ResourceException {
+    public Answer answerQuery(String graphName, String queryString) throws ResourceException {
         try {
             if (client == null) {
                 client = new DistributedQueryClient(servers);
@@ -113,6 +108,7 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         } catch (Exception e) {
             throw new ResourceException(e);
         }
+        return ((DistributedQueryClient) client).getAnswer();
     }
 
     public String getGraphsDir() {
