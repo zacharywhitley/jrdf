@@ -153,11 +153,11 @@
         <constructor-arg ref="urqlConnection"/>
     </bean>
 
-    <bean id="distributedGraphApplication" class="org.jrdf.query.server.distributed.NewDistributedQueryGraphApplication">
+    <bean id="distributedGraphApplication" class="org.jrdf.query.server.distributed.DistributedQueryGraphApplicationImpl">
         <constructor-arg ref="graphApplication"/>
     </bean>
 
-    <bean id="distributedQueryResource" class="org.jrdf.query.server.distributed.NewDistributedQueryResource">
+    <bean id="distributedQueryResource" class="org.jrdf.query.server.distributed.DistributedQueryResource">
         <property name="distributedQueryGraphApplication" ref="distributedGraphApplication"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
