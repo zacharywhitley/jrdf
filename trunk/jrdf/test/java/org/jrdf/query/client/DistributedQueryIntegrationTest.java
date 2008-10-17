@@ -160,17 +160,17 @@ public class DistributedQueryIntegrationTest extends TestCase {
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
     }
 
-    public void testEmptyDistributedClient() throws Exception {
-        assertEquals(0, graph.getNumberOfTriples());
-        distributedServer.start();
-        QueryClient client = new GraphClientImpl("127.0.0.1:8183");
-        client.postDistributedServer("add", "127.0.0.1");
-        client.getQuery(FOO, QUERY_STRING, "all");
-        final InputStream inputStream = client.executeQuery();
-        final String answer = readFromInputStream(inputStream);
-        checkAnswerXML(answer, 0);
-        distributedServer.stop();
-    }
+//    public void testEmptyDistributedClient() throws Exception {
+//        assertEquals(0, graph.getNumberOfTriples());
+//        distributedServer.start();
+//        QueryClient client = new GraphClientImpl("127.0.0.1:8183");
+//        client.postDistributedServer("add", "127.0.0.1");
+//        client.getQuery(FOO, QUERY_STRING, "all");
+//        final InputStream inputStream = client.executeQuery();
+//        final String answer = readFromInputStream(inputStream);
+//        checkAnswerXML(answer, 0);
+//        distributedServer.stop();
+//    }
 
     public void testDistributedClient() throws Exception {
         distributedServer.start();
@@ -181,7 +181,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
         QueryClient client = new GraphClientImpl("127.0.0.1:8183");
-        client.postDistributedServer("add", "127.0.0.1:8183");
+        client.postDistributedServer("add", "127.0.0.1");
         client.getQuery(FOO, QUERY_STRING, "all");
         InputStream inputStream = client.executeQuery();
         final String answer = readFromInputStream(inputStream);

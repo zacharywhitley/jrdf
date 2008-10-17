@@ -138,7 +138,7 @@ public class AnswerXMLPagenatedStreamWriterUnitTest extends AbstractAnswerXMLStr
         graph.add(b3, p3, l3);
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = answer.getXMLWriter(writer);
+        xmlWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);
         Set<String> vars = getVariables();
         Set<String> set = new HashSet<String>();
         for (String var : new String[]{"s", "p", "o"}) {
@@ -153,7 +153,7 @@ public class AnswerXMLPagenatedStreamWriterUnitTest extends AbstractAnswerXMLStr
         graph.add(b3, p3, l3);
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = answer.getXMLWriter(writer);
+        xmlWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);
         xmlWriter.writeStartResults();
         int count = 0;
         while (xmlWriter.hasMoreResults()) {

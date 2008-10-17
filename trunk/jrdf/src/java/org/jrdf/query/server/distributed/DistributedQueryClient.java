@@ -57,12 +57,15 @@
  *
  */
 
-package org.jrdf.query.client;
+package org.jrdf.query.server.distributed;
 
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswer;
 import org.jrdf.query.answer.xml.SparqlAnswerParserStream;
 import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
+import org.jrdf.query.client.QueryClient;
+import org.jrdf.query.client.CallableGraphQueryClient;
+import org.jrdf.query.client.GraphClientImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;

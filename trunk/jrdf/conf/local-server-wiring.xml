@@ -130,7 +130,7 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="localQueryGraphResource" class="org.jrdf.query.server.local.LocalGraphResource" scope="prototype">
+    <bean id="localQueryGraphResource" class="org.jrdf.query.server.GraphResource" scope="prototype">
         <property name="graphApplication" ref="graphApplication"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">

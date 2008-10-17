@@ -109,7 +109,7 @@
     </bean>
 
     <bean id="logService" class="org.restlet.service.LogService">
-        <constructor-arg value="false"/>
+        <constructor-arg value="true"/>
     </bean>
 
     <!-- Freemarker -->
@@ -140,14 +140,23 @@
                 </entry>
                 <entry key="/graphs/{graph}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="localQueryGraphResource"/>
+                        <lookup-method name="createResource" bean="distributedQueryGraphResource"/>
                     </bean>
                 </entry>
             </map>
         </property>
     </bean>
 
-    <!-- Do SPARQL and Graphs queries -->
+    <!-- Do SPARQL queries -->
+    <bean id="queryFactory" class="org.jrdf.query.QueryFactoryImpl"/>
+    <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
+    <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
+
+    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
+        <constructor-arg ref="queryBuilder"/>
+        <constructor-arg ref="queryEngine"/>
+    </bean>
+
     <bean id="graphApplication" class="org.jrdf.query.server.local.GraphApplicationImpl">
         <constructor-arg ref="directoryHandler"/>
         <constructor-arg ref="urqlConnection"/>
@@ -157,6 +166,7 @@
         <constructor-arg ref="graphApplication"/>
     </bean>
 
+    <!-- Setup servers to query -->
     <bean id="serversResource" class="org.jrdf.query.server.distributed.ServersResource">
         <property name="distributedQueryGraphApplication" ref="distributedGraphApplication"/>
         <property name="available" value="true"/>
@@ -165,6 +175,11 @@
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="distributedStartPage"/>
             </map>
         </property>
+    </bean>
+
+    <bean id="distributedStartPage" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
+        <property name="templateName" value="distributedStartPage.ftl"/>
+        <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
     <!-- List the graphs -->
@@ -185,28 +200,14 @@
         </property>
     </bean>
 
-    <!-- Old -->
-    <bean id="queryFactory" class="org.jrdf.query.QueryFactoryImpl"/>
-    <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
-    <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
-
-    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
-        <constructor-arg ref="queryBuilder"/>
-        <constructor-arg ref="queryEngine"/>
-    </bean>
-
-    <bean id="distributedStartPage" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
-        <property name="templateName" value="distributedStartPage.ftl"/>
-        <property name="freemarkerConfig" ref="freemarkerConfig"/>
-    </bean>
-
     <bean id="graphsResourceHtml" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
         <property name="templateName" value="graphsLists-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="localQueryGraphResource" class="org.jrdf.query.server.local.LocalGraphResource" scope="prototype">
-        <property name="graphApplication" ref="graphApplication"/>
+    <!-- Interface for distributed queries -->
+    <bean id="distributedQueryGraphResource" class="org.jrdf.query.server.GraphResource" scope="prototype">
+        <property name="graphApplication" ref="distributedGraphApplication"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
             <map>

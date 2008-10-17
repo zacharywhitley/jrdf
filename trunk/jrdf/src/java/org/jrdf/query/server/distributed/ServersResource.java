@@ -127,7 +127,8 @@ public class ServersResource extends ConfigurableRestletResource {
             Template template = cfg.getTemplate("distributedStartPage.ftl");
             rep = new TemplateRepresentation(template, root, TEXT_HTML);
         } catch (IOException e) {
-            getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
+            e.printStackTrace();
+            getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
         }
         return rep;
     }

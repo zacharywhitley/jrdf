@@ -59,14 +59,10 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
+import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.util.EmptyClosableIterator;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Iterator;
 
 public final class EmptyAnswer implements Answer, Serializable {
@@ -84,8 +80,8 @@ public final class EmptyAnswer implements Answer, Serializable {
         return new String[0];
     }
 
-    public Iterator<String[]> columnValuesIterator() {
-        return new EmptyClosableIterator<String[]>();
+    public Iterator<TypeValue[]> columnValuesIterator() {
+        return new EmptyClosableIterator<TypeValue[]>();
     }
 
     public String[][] getColumnValues() {
@@ -98,21 +94,6 @@ public final class EmptyAnswer implements Answer, Serializable {
 
     public long getTimeTaken() {
         return 0;
-    }
-
-    public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException {
-        return new AnswerXMLPagenatedStreamWriter(null, null, writer);
-    }
-
-    public static String getEmptyAnswerXML() throws XMLStreamException {
-        StringWriter writer = new StringWriter();
-        AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(null, null, writer);
-        xmlWriter.write();
-        return writer.toString();
-    }
-
-    public AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException {
-        return getXMLWriter(writer);
     }
 
     @Override
