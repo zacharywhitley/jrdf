@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+// TODO AN/YF - Turn into extension of closableiterator?
 public class SparqlAnswerParserStreamImpl implements SparqlAnswerParserStream {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     private SparqlAnswerParser parser;

@@ -60,7 +60,6 @@
 package org.jrdf.query.answer;
 
 import org.jrdf.query.QueryFactoryImpl;
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
@@ -89,7 +88,6 @@ public final class AnswerImpl implements Answer, Serializable {
     private long timeTaken;
     private boolean hasProjected;
     private transient Relation results;
-    private transient AnswerXMLWriter xmlWriter;
     private transient TypeValueToString valueToString = new TypeValueToStringImpl();
 
     private AnswerImpl() {

@@ -106,6 +106,8 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter {
         streamWriter.writeEndElement();
     }
 
+    // TODO AN/YF This is a duplicate of AnswerXMLPagenatedStreamWriter except uses streamParser instead of iterator.
+    // Same with next method
     public void writeResult() throws XMLStreamException {
         if (streamParser.hasMoreResults()) {
             streamWriter.writeStartElement(RESULT);
