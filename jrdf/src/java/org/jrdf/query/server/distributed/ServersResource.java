@@ -85,7 +85,7 @@ import java.util.StringTokenizer;
  * @version :$
  */
 
-public class DistributedQueryResource extends ConfigurableRestletResource {
+public class ServersResource extends ConfigurableRestletResource {
     private static final int PORT_NUMBER = 8182;
     protected DistributedQueryGraphApplication application;
     private static final String DEFAULT_PORT_STRING = "defaultPort";
