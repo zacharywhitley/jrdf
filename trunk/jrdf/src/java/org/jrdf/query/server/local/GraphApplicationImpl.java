@@ -79,11 +79,9 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
      * The max no. of rows of answers that will be transfomred into xml.
      */
     public static final int DEFAULT_MAX_ROWS = 1000;
-    private static final String LOCAL_SERVER = "127.0.0.1";
     private final DirectoryHandler handler;
     private final PersistentGlobalJRDFFactory factory;
     private final UrqlConnection urqlConnection;
-    private final String[] serverAddresses;
     private Answer answer;
     private AnswerXMLWriter xmlWriter;
     private boolean tooManyRows;
@@ -91,14 +89,9 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
     private String format;
 
     public GraphApplicationImpl(DirectoryHandler newHandler, UrqlConnection newConnection) {
-        this(newHandler, newConnection, new String[]{LOCAL_SERVER});
-    }
-
-    public GraphApplicationImpl(DirectoryHandler newHandler, UrqlConnection newConnection, String[] serverAddresses) {
         this.handler = newHandler;
         this.factory = PersistentGlobalJRDFFactoryImpl.getFactory(handler);
         this.urqlConnection = newConnection;
-        this.serverAddresses = serverAddresses;
     }
 
     public void close() {
@@ -111,10 +104,6 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
 
     public MoleculeGraph getGraph() {
         return factory.getGraph();
-    }
-
-    public String[] getServers() {
-        return serverAddresses;
     }
 
     public Answer answerQuery2(String graphName, String queryString) throws ResourceException {

@@ -86,8 +86,6 @@ public interface GraphApplication {
 
     MoleculeGraph getGraph();
 
-    String[] getServers();
-
     void answerQuery(String graphName, String queryString) throws ResourceException;
 
     long getTimeTaken();
