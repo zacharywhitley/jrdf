@@ -120,16 +120,6 @@ public class NewDistributedQueryClientImpl implements GraphQueryClient {
         }
     }
 
-    public void postQuery(String graphName, String queryString, String noRows) {
-        try {
-            for (GraphQueryClient queryClient : queryClients) {
-                queryClient.getQuery(graphName, queryString, noRows);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public InputStream executeQuery() throws IOException {
         checkNotNull(queryClients);
         set = new HashSet<Future<InputStream>>();

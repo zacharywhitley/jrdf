@@ -106,16 +106,6 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
         return xmlWriter;
     }
 
-    public void postQuery(String graphName, String queryString, String noRows) {
-        try {
-            for (GraphQueryClient queryClient : queryClients) {
-                queryClient.getQuery(graphName, queryString, noRows);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void getQuery(String graphName, String queryString, String noRows) {
         try {
             for (GraphQueryClient queryClient : queryClients) {
