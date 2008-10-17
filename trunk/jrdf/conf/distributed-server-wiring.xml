@@ -130,7 +130,7 @@
             <map>
                 <entry key="/">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="distributedQueryResource"/>
+                        <lookup-method name="createResource" bean="serversResource"/>
                     </bean>
                 </entry>
                 <entry key="/graphs">
@@ -157,7 +157,7 @@
         <constructor-arg ref="graphApplication"/>
     </bean>
 
-    <bean id="distributedQueryResource" class="org.jrdf.query.server.distributed.DistributedQueryResource">
+    <bean id="serversResource" class="org.jrdf.query.server.distributed.ServersResource">
         <property name="distributedQueryGraphApplication" ref="distributedGraphApplication"/>
         <property name="available" value="true"/>
         <property name="representationTemplates">
