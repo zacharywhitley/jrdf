@@ -138,8 +138,6 @@ public class DistributedQueryResource extends ConfigurableRestletResource {
         final String servers = form.getFirstValue(SERVERS_STRING);
         final String action = form.getFirstValue("action");
         processServerList(servers, action);
-        final String port = form.getFirstValue(PORT_STRING);
-        application.setPort(Integer.parseInt(port));
         Representation rep = new StringRepresentation("Servers updated successfully", TEXT_HTML);
         getResponse().setEntity(rep);
         getResponse().setStatus(SUCCESS_OK);

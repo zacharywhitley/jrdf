@@ -81,10 +81,8 @@ import java.util.Set;
  */
 
 public class DistributedQueryGraphApplicationImpl implements DistributedQueryGraphApplication {
-    private static final int PORT_NUMBER = 8182;
     private static final int INVALID_TIME_TAKEN = -1;
     private Set<String> servers;
-    private int portNumber = PORT_NUMBER;
     private GraphQueryClient client;
     private AnswerXMLWriter xmlWriter;
     private GraphApplication application;
@@ -109,14 +107,6 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
     public Answer answerQuery2(String graphName, String queryString) throws ResourceException {
         answerQuery(graphName, queryString);
         return ((NewDistributedQueryClientImpl) client).getAnswer();
-    }
-
-    public void setPort(int port) {
-        portNumber = port;
-    }
-
-    public int getPort() {
-        return portNumber;
     }
 
     public String getGraphsDir() {
@@ -154,7 +144,7 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
     public void answerQuery(String graphName, String queryString) throws ResourceException {
         try {
             if (client == null) {
-                client = new DistributedQueryClientImpl(portNumber, servers);
+                client = new DistributedQueryClientImpl(servers);
             }
             client.postQuery(graphName, queryString, null);
             client.executeQuery();

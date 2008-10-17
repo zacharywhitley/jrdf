@@ -85,13 +85,12 @@ import java.util.Arrays;
  */
 
 public class GraphClientImpl extends BaseClientImpl implements CallableGraphQueryClient {
-    private static final int PORT = 8182;
     private Client client;
     protected Request request;
     protected String answer;
 
-    public GraphClientImpl(String server, int portNumber) {
-        super(portNumber, server);
+    public GraphClientImpl(String server) {
+        super(server);
         client = new Client(HTTP);
     }
 
@@ -107,10 +106,9 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         request = preparePostRequest(graphName, queryString, noRows);
     }
 
-    public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
-        checkNotNull(port, servers);
+    public void postDistributedServer(String action, String servers) throws MalformedURLException {
+        checkNotNull(servers);
         Form form = new Form();
-        form.add("port", Integer.toString(port));
         form.add("action", action);
         form.add("serversString", servers);
         Representation representation = form.getWebRepresentation();
@@ -145,7 +143,7 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
     }
 
     public static void main(String[] args) throws Exception {
-        CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
+        CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1:8182");
         queryClient.postQuery("foo", "SELECT * WHERE { ?s ?p ?o. }", "all");
         queryClient.call();
     }

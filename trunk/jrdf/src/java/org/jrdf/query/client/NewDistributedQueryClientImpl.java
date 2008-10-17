@@ -96,7 +96,7 @@ public class NewDistributedQueryClientImpl implements GraphQueryClient {
         this.serverAddresses = servers;
         this.queryClients = new LinkedList<CallableGraphQueryClient>();
         for (String server : serverAddresses) {
-            queryClients.add(new GraphClientImpl(server, this.localPort));
+            queryClients.add(new GraphClientImpl(server));
         }
         executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
         xmlWriter = new SparqlAnswerParserStreamImpl();
@@ -107,7 +107,7 @@ public class NewDistributedQueryClientImpl implements GraphQueryClient {
         return new SparqlStreamingAnswer(xmlWriter);
     }
 
-    public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
+    public void postDistributedServer(String action, String servers) throws MalformedURLException {
     }
 
     public void postQuery(String graphName, String queryString, String noRows) {
