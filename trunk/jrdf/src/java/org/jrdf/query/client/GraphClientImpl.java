@@ -98,11 +98,11 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         return executeQuery();
     }
 
-    public void getQuery(String graphName, String queryString, String noRows) throws IOException {
+    public void getQuery(String graphName, String queryString, String noRows) {
         request = prepareGetRequest(graphName, queryString, noRows);
     }
 
-    public void postQuery(String graphName, String queryString, String noRows) throws IOException {
+    public void postQuery(String graphName, String queryString, String noRows) {
         request = preparePostRequest(graphName, queryString, noRows);
     }
 
@@ -144,7 +144,7 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
 
     public static void main(String[] args) throws Exception {
         CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1:8182");
-        queryClient.postQuery("foo", "SELECT * WHERE { ?s ?p ?o. }", "all");
+        queryClient.getQuery("foo", "SELECT * WHERE { ?s ?p ?o. }", "all");
         queryClient.call();
     }
 }

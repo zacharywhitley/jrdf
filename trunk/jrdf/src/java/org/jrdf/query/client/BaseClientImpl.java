@@ -79,7 +79,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.util.Arrays;
 
 /**
@@ -112,8 +111,7 @@ public abstract class BaseClientImpl implements GraphQueryClient {
         return request;
     }
 
-    protected Request preparePostRequest(String graphName, String queryString, String noRows)
-        throws MalformedURLException {
+    protected Request preparePostRequest(String graphName, String queryString, String noRows) {
         Form form = new Form();
         form.add(QUERY_STRING, queryString);
         form.add(FORMAT, FORMAT_XML);
