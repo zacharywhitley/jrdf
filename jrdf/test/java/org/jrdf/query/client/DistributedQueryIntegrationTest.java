@@ -75,8 +75,8 @@ import static org.jrdf.query.answer.xml.AnswerXMLWriter.BNODE;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.LITERAL;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
 import static org.jrdf.query.client.BaseClientImpl.readFromInputStream;
-import static org.jrdf.query.server.BaseGraphApplication.getHandler;
 import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 import org.restlet.Client;
 import org.restlet.data.Method;
 import static org.restlet.data.Protocol.HTTP;
@@ -109,7 +109,7 @@ import java.util.Set;
 
 public class DistributedQueryIntegrationTest extends TestCase {
     private static final String FOO = "foo";
-    private static final DirectoryHandler HANDLER = getHandler();
+    private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
 
     private MoleculeGraph graph;
