@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.query.server;
 
 import freemarker.template.Configuration;
 import org.restlet.data.MediaType;

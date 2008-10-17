@@ -59,7 +59,6 @@
 
 package org.jrdf.query.server;
 
-import org.jrdf.query.RepresentationFactory;
 import org.restlet.data.MediaType;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.resource.Representation;

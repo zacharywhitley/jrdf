@@ -59,7 +59,6 @@
 
 package org.jrdf.query.server;
 
-import org.jrdf.query.ConfigurableRestletResource;
 import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;

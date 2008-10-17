@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.query.server;
 
 /**
  * A Spring-configurable Restlet Resource.

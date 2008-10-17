@@ -59,7 +59,7 @@
 
 package org.jrdf.query.server.local;
 
-import org.jrdf.query.ConfigurableRestletResource;
+import org.jrdf.query.server.ConfigurableRestletResource;
 import org.jrdf.query.server.GraphApplication;
 import static org.jrdf.query.server.local.GraphApplicationImpl.*;
 import static org.restlet.data.Status.*;

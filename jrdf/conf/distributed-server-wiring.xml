@@ -195,12 +195,12 @@
         <constructor-arg ref="queryEngine"/>
     </bean>
 
-    <bean id="distributedStartPage" class="org.jrdf.query.FreemarkerRepresentationFactory">
+    <bean id="distributedStartPage" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
         <property name="templateName" value="distributedStartPage.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="graphsResourceHtml" class="org.jrdf.query.FreemarkerRepresentationFactory">
+    <bean id="graphsResourceHtml" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
         <property name="templateName" value="graphsLists-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
@@ -218,7 +218,7 @@
         </property>
     </bean>
 
-    <bean id="localGraphsResourceHtml" class="org.jrdf.query.FreemarkerRepresentationFactory">
+    <bean id="localGraphsResourceHtml" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
         <property name="templateName" value="graph-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>

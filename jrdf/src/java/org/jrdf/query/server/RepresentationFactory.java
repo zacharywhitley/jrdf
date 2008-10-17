@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.query.server;
 
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
