@@ -61,16 +61,11 @@ package org.jrdf.query.server.distributed;
 
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
-import org.jrdf.query.client.DistributedQueryClientImpl;
 import org.jrdf.query.client.GraphQueryClient;
 import org.jrdf.query.client.NewDistributedQueryClientImpl;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
 import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,7 +79,6 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
     private static final int INVALID_TIME_TAKEN = -1;
     private Set<String> servers;
     private GraphQueryClient client;
-    private AnswerXMLWriter xmlWriter;
     private GraphApplication application;
 
     public DistributedQueryGraphApplicationImpl(GraphApplication newApplication) {
@@ -112,7 +106,7 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
     public void answerQuery(String graphName, String queryString) throws ResourceException {
         try {
             if (client == null) {
-                client = new DistributedQueryClientImpl(servers);
+                client = new NewDistributedQueryClientImpl(servers);
             }
             client.getQuery(graphName, queryString, null);
             client.executeQuery();
@@ -151,11 +145,6 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
 
     public MoleculeGraph getGraph() {
         return application.getGraph();
-    }
-
-    public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
-        xmlWriter = ((DistributedQueryClientImpl) client).getXMLWriter(writer);
-        return xmlWriter;
     }
 
     public long getTimeTaken() {
