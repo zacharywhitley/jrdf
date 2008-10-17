@@ -14,7 +14,6 @@
         Remove: <input type="radio" name="${action}" value="remove">
         <p/>
         <p/>
-        Port number: <input type="text" name="port" size="8" value="${defaultPort}"/><p/>
         <input type="submit" value="Submit" />
     </form>
 </body>

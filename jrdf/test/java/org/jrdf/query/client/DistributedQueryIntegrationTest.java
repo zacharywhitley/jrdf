@@ -111,8 +111,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = getHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-    private static final int PORT = 8182;
-    
+
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
@@ -155,7 +154,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.add(b1, p, b1);
         graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
-        CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1", PORT);
+        CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1:8182");
         queryClient.getQuery(FOO, QUERY_STRING, "all");
         String answer = readFromInputStream(queryClient.call());
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
@@ -164,8 +163,8 @@ public class DistributedQueryIntegrationTest extends TestCase {
     public void testEmptyDistributedClient() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
         distributedServer.start();
-        GraphQueryClient client = new GraphClientImpl("127.0.0.1", 8183);
-        client.postDistributedServer(PORT, "add", "127.0.0.1");
+        GraphQueryClient client = new GraphClientImpl("127.0.0.1:8183");
+        client.postDistributedServer("add", "127.0.0.1");
         client.getQuery(FOO, QUERY_STRING, "all");
         final InputStream inputStream = client.executeQuery();
         final String answer = readFromInputStream(inputStream);
@@ -181,8 +180,8 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        GraphQueryClient client = new GraphClientImpl("127.0.0.1", 8183);
-        client.postDistributedServer(PORT, "add", "127.0.0.1");
+        GraphQueryClient client = new GraphClientImpl("127.0.0.1:8183");
+        client.postDistributedServer("add", "127.0.0.1:8183");
         client.getQuery(FOO, QUERY_STRING, "all");
         InputStream inputStream = client.executeQuery();
         final String answer = readFromInputStream(inputStream);

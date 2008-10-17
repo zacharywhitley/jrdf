@@ -88,14 +88,20 @@ import java.util.Arrays;
  */
 
 public abstract class BaseClientImpl implements GraphQueryClient {
+    private static final int DEFAULT_PORT = 8182;
     private static final String NEW_LINE = System.getProperty("line.separator");
-
     protected int serverPort;
     protected String serverString;
 
-    public BaseClientImpl(int portNumber, String server) {
-        serverPort = portNumber;
-        serverString = server;
+    public BaseClientImpl(String server) {
+        String[] hostPort = server.split(":");
+        if (hostPort.length == 1) {
+            serverPort = DEFAULT_PORT;
+            serverString = server;
+        } else {
+            serverPort = Integer.parseInt(hostPort[1]);
+            serverString = hostPort[0];
+        }
     }
 
     protected Request prepareGetRequest(String graphName, String queryString, String noRows) {

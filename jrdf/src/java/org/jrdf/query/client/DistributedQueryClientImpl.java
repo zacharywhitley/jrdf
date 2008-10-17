@@ -89,19 +89,17 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
     private Set<Future<InputStream>> set;
     private MultiAnswerXMLStreamQueueWriter xmlWriter;
 
-    public DistributedQueryClientImpl(int localPort, Collection<String> servers)
-        throws XMLStreamException, InterruptedException {
-        this.localPort = localPort;
-        serverAddresses = servers;
-        queryClients = new LinkedList<CallableGraphQueryClient>();
+    public DistributedQueryClientImpl(Collection<String> servers) throws XMLStreamException, InterruptedException {
+        this.serverAddresses = servers;
+        this.queryClients = new LinkedList<CallableGraphQueryClient>();
         for (String server : serverAddresses) {
-            queryClients.add(new GraphClientImpl(server, this.localPort));
+            this.queryClients.add(new GraphClientImpl(server));
         }
-        executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
-        xmlWriter = new MultiAnswerXMLStreamQueueWriter();
+        this.executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
+        this.xmlWriter = new MultiAnswerXMLStreamQueueWriter();
     }
 
-    public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
+    public void postDistributedServer(String action, String servers) throws MalformedURLException {
     }
 
     public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException {
