@@ -111,11 +111,10 @@ public class DistributedQueryIntegrationTest extends TestCase {
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-
+    private static final String QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
-    private static final String QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
     private SpringDistributedServer distributedServer;
 
     protected void setUp() throws Exception {

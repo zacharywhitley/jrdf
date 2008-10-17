@@ -77,7 +77,6 @@ import java.util.Set;
 public class DistributedQueryGraphApplicationImpl implements DistributedQueryGraphApplication {
     private static final int INVALID_TIME_TAKEN = -1;
     private Set<String> servers;
-    private QueryClient client;
     private GraphApplication application;
 
     public DistributedQueryGraphApplicationImpl(GraphApplication newApplication) {
@@ -99,13 +98,13 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
 
     public Answer answerQuery(String graphName, String queryString) throws ResourceException {
         try {
-            client = new DistributedQueryClient(servers);
+            QueryClient client = new DistributedQueryClient(servers);
             client.getQuery(graphName, queryString, null);
             client.executeQuery();
+            return ((DistributedQueryClient) client).getAnswer();
         } catch (Exception e) {
             throw new ResourceException(e);
         }
-        return ((DistributedQueryClient) client).getAnswer();
     }
 
     public String getGraphsDir() {

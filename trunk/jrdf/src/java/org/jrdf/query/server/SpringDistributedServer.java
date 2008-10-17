@@ -72,21 +72,22 @@ import java.util.logging.Level;
  */
 public final class SpringDistributedServer {
     private static final String DEFAULT_WIRING_CONFIG = "distributed-server-wiring.xml";
-    private static final ClassPathXmlApplicationContext BEAN_FACTORY =
-        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+    private static ClassPathXmlApplicationContext beanFactory;
     private static Component component;
 
     public SpringDistributedServer() {
-        component = (Component) BEAN_FACTORY.getBean("component");
-        component.getLogger().setLevel(Level.OFF);
     }
 
     public void start() throws Exception {
+        beanFactory = new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+        component = (Component) beanFactory.getBean("component");
+        component.getLogger().setLevel(Level.OFF);
         component.start();
     }
 
     public void stop() throws Exception {
         component.stop();
+        beanFactory.destroy();
     }
 
     public static void main(String[] args) throws Exception {
