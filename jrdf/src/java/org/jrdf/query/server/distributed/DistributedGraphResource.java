@@ -72,10 +72,11 @@ import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
+ * @author Andrew Newman
  * @version :$
  */
 
-public class NewDistributedGraphResource extends ConfigurableRestletResource {
+public class DistributedGraphResource extends ConfigurableRestletResource {
     private static final String GRAPH_VALUE = "graph";
     private static final String GRAPH_NAME = "graphName";
     private DistributedQueryGraphApplication graphApplication;

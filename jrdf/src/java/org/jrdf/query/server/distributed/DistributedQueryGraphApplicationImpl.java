@@ -79,7 +79,7 @@ import java.util.Set;
  * @version :$
  */
 
-public class NewDistributedQueryGraphApplication implements DistributedQueryGraphApplication {
+public class DistributedQueryGraphApplicationImpl implements DistributedQueryGraphApplication {
     private static final int PORT_NUMBER = 8182;
     private static final int INVALID_TIME_TAKEN = -1;
     private Set<String> servers;
@@ -88,7 +88,7 @@ public class NewDistributedQueryGraphApplication implements DistributedQueryGrap
     private AnswerXMLWriter xmlWriter;
     private GraphApplication application;
 
-    public NewDistributedQueryGraphApplication(GraphApplication newApplication) {
+    public DistributedQueryGraphApplicationImpl(GraphApplication newApplication) {
         this.application = newApplication;
         this.servers = new HashSet<String>();
     }
