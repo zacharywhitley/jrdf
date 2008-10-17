@@ -71,6 +71,7 @@ import org.restlet.resource.ResourceException;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
+import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -94,15 +95,28 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
     }
 
     public void addServers(String... servers) {
-        for (String server : servers) {
-            this.servers.add(server);
-        }
+        this.servers.addAll(asList(servers));
     }
 
     public void removeServers(String... servers) {
-        for (String server : servers) {
-            this.servers.remove(server);
-        }
+        this.servers.removeAll(asList(servers));
+    }
+
+    public String[] getServers() {
+        return servers.toArray(new String[servers.size()]);
+    }
+
+    public Answer answerQuery2(String graphName, String queryString) throws ResourceException {
+        answerQuery(graphName, queryString);
+        return ((NewDistributedQueryClientImpl) client).getAnswer();
+    }
+
+    public void setPort(int port) {
+        portNumber = port;
+    }
+
+    public int getPort() {
+        return portNumber;
     }
 
     public String getGraphsDir() {
@@ -137,15 +151,6 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         return application.getGraph();
     }
 
-    public String[] getServers() {
-        return servers.toArray(new String[servers.size()]);
-    }
-
-    public Answer answerQuery2(String graphName, String queryString) throws ResourceException {
-        answerQuery(graphName, queryString);
-        return ((NewDistributedQueryClientImpl) client).getAnswer();
-    }
-
     public void answerQuery(String graphName, String queryString) throws ResourceException {
         try {
             if (client == null) {
@@ -156,14 +161,6 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         } catch (Exception e) {
             throw new ResourceException(e);
         }
-    }
-
-    public void setPort(int port) {
-        portNumber = port;
-    }
-
-    public int getPort() {
-        return portNumber;
     }
 
     public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {
