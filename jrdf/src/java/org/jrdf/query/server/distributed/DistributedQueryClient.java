@@ -92,8 +92,7 @@ public class DistributedQueryClient implements QueryClient {
     private Set<Future<InputStream>> set;
     private SparqlAnswerParserStream xmlWriter;
 
-    public DistributedQueryClient(Collection<String> servers)
-        throws XMLStreamException, InterruptedException {
+    public DistributedQueryClient(Collection<String> servers) throws XMLStreamException, InterruptedException {
         this.serverAddresses = servers;
         this.queryClients = new LinkedList<CallableGraphQueryClient>();
         for (String server : serverAddresses) {
