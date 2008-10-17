@@ -1,12 +1,8 @@
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.jrdf.query.answer.xml.SparqlAnswerParserStream;
 import org.jrdf.query.answer.xml.TypeValue;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -49,13 +45,5 @@ public class SparqlStreamingAnswer implements Answer {
 
     public long getTimeTaken() {
         return -1;
-    }
-
-    public AnswerXMLWriter getXMLWriter(Writer writer) throws XMLStreamException, IOException {
-        return null;
-    }
-
-    public AnswerXMLWriter getXMLWriter(Writer writer, int maxRows) throws XMLStreamException, IOException {
-        return null;
     }
 }
