@@ -67,5 +67,5 @@ import java.util.concurrent.Callable;
  * @version :$
  */
 
-public interface CallableGraphQueryClient extends GraphQueryClient, Callable<InputStream> {
+public interface CallableGraphQueryClient extends QueryClient, Callable<InputStream> {
 }

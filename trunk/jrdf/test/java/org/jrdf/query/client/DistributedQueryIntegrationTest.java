@@ -163,7 +163,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
     public void testEmptyDistributedClient() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
         distributedServer.start();
-        GraphQueryClient client = new GraphClientImpl("127.0.0.1:8183");
+        QueryClient client = new GraphClientImpl("127.0.0.1:8183");
         client.postDistributedServer("add", "127.0.0.1");
         client.getQuery(FOO, QUERY_STRING, "all");
         final InputStream inputStream = client.executeQuery();
@@ -180,7 +180,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        GraphQueryClient client = new GraphClientImpl("127.0.0.1:8183");
+        QueryClient client = new GraphClientImpl("127.0.0.1:8183");
         client.postDistributedServer("add", "127.0.0.1:8183");
         client.getQuery(FOO, QUERY_STRING, "all");
         InputStream inputStream = client.executeQuery();
