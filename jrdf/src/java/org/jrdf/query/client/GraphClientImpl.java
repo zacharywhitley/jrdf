@@ -60,9 +60,6 @@
 package org.jrdf.query.client;
 
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
-import static org.jrdf.query.server.distributed.DistributedQueryResource.ACTION;
-import static org.jrdf.query.server.distributed.DistributedQueryResource.PORT_STRING;
-import static org.jrdf.query.server.distributed.DistributedQueryResource.SERVERS_STRING;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
@@ -113,9 +110,9 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
     public void postDistributedServer(int port, String action, String servers) throws MalformedURLException {
         checkNotNull(port, servers);
         Form form = new Form();
-        form.add(PORT_STRING, Integer.toString(port));
-        form.add(ACTION, action);
-        form.add(SERVERS_STRING, servers);
+        form.add("port", Integer.toString(port));
+        form.add("action", action);
+        form.add("serversString", servers);
         Representation representation = form.getWebRepresentation();
         URL url = new URL(HTTP.getSchemeName(), serverString, serverPort, "/");
         String requestURL = url.toString();
@@ -135,6 +132,7 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
             Representation output = response.getEntity();
             return output.getStream();
         } else {
+            System.err.println("Status: " + status);
             throw new RuntimeException(status.getThrowable());
         }
     }

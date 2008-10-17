@@ -63,11 +63,12 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import junit.framework.TestCase;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
-import org.jrdf.query.SpringLocalServer;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.query.SpringDistributedServer;
+import org.jrdf.query.SpringLocalServer;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.BINDING;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.BNODE;
@@ -75,7 +76,6 @@ import static org.jrdf.query.answer.xml.AnswerXMLWriter.LITERAL;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
 import static org.jrdf.query.client.BaseClientImpl.readFromInputStream;
 import static org.jrdf.query.server.BaseGraphApplication.getHandler;
-import org.jrdf.query.server.distributed.DistributedQueryServer;
 import org.jrdf.util.DirectoryHandler;
 import org.restlet.Client;
 import org.restlet.data.Method;
@@ -117,7 +117,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
     private static final String QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
-    private DistributedQueryServer distributedServer;
+    private SpringDistributedServer distributedServer;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -128,7 +128,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         elementFactory = graph.getElementFactory();
         localQueryServer = new SpringLocalServer();
         localQueryServer.start();
-        distributedServer = new DistributedQueryServer();
+        distributedServer = new SpringDistributedServer();
     }
 
     protected void tearDown() throws Exception {
@@ -140,7 +140,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
 
     public void testDistributedServerGraphsResource() throws Exception {
         distributedServer.start();
-        URL url = new URL(HTTP.getSchemeName(), "127.0.0.1", DistributedQueryServer.PORT, "/graphs");
+        URL url = new URL(HTTP.getSchemeName(), "127.0.0.1", 8183, "/graphs");
         Request request = new Request(Method.GET, url.toString(), new StringRepresentation(""));
         Client client = new Client(HTTP);
         final Response response = client.handle(request);
@@ -164,9 +164,9 @@ public class DistributedQueryIntegrationTest extends TestCase {
     public void testEmptyDistributedClient() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
         distributedServer.start();
-        GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
+        GraphQueryClient client = new GraphClientImpl("127.0.0.1", 8183);
         client.postDistributedServer(PORT, "add", "127.0.0.1");
-        client.postQuery(FOO, QUERY_STRING, "all");
+        client.getQuery(FOO, QUERY_STRING, "all");
         final InputStream inputStream = client.executeQuery();
         final String answer = readFromInputStream(inputStream);
         checkAnswerXML(answer, 0);
@@ -181,9 +181,9 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        GraphQueryClient client = new GraphClientImpl("127.0.0.1", DistributedQueryServer.PORT);
+        GraphQueryClient client = new GraphClientImpl("127.0.0.1", 8183);
         client.postDistributedServer(PORT, "add", "127.0.0.1");
-        client.postQuery(FOO, QUERY_STRING, "all");
+        client.getQuery(FOO, QUERY_STRING, "all");
         InputStream inputStream = client.executeQuery();
         final String answer = readFromInputStream(inputStream);
         checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
