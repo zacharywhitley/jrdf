@@ -109,6 +109,18 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         return ((NewDistributedQueryClientImpl) client).getAnswer();
     }
 
+    public void answerQuery(String graphName, String queryString) throws ResourceException {
+        try {
+            if (client == null) {
+                client = new DistributedQueryClientImpl(servers);
+            }
+            client.getQuery(graphName, queryString, null);
+            client.executeQuery();
+        } catch (Exception e) {
+            throw new ResourceException(e);
+        }
+    }
+
     public String getGraphsDir() {
         return application.getGraphsDir();
     }
@@ -139,18 +151,6 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
 
     public MoleculeGraph getGraph() {
         return application.getGraph();
-    }
-
-    public void answerQuery(String graphName, String queryString) throws ResourceException {
-        try {
-            if (client == null) {
-                client = new DistributedQueryClientImpl(servers);
-            }
-            client.postQuery(graphName, queryString, null);
-            client.executeQuery();
-        } catch (Exception e) {
-            throw new ResourceException(e);
-        }
     }
 
     public AnswerXMLWriter getAnswerXMLWriter(Writer writer) throws XMLStreamException, IOException {

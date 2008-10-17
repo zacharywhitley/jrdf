@@ -106,22 +106,22 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
         return factory.getGraph();
     }
 
+    public void answerQuery(String graphName, String queryString) throws ResourceException {
+        try {
+            final MoleculeGraph graph = getGraph(graphName);
+            answer = urqlConnection.executeQuery(graph, queryString);
+            tooManyRows = answer.numberOfTuples() > DEFAULT_MAX_ROWS;
+        } catch (Exception e) {
+            throw new ResourceException(e);
+        }
+    }
+
     public Answer answerQuery2(String graphName, String queryString) throws ResourceException {
         try {
             final MoleculeGraph graph = getGraph(graphName);
             answer = urqlConnection.executeQuery(graph, queryString);
             tooManyRows = answer.numberOfTuples() > DEFAULT_MAX_ROWS;
             return answer;
-        } catch (Exception e) {
-            throw new ResourceException(e);
-        }
-    }
-
-    public void answerQuery(String graphName, String queryString) throws ResourceException {
-        try {
-            final MoleculeGraph graph = getGraph(graphName);
-            answer = urqlConnection.executeQuery(graph, queryString);
-            tooManyRows = answer.numberOfTuples() > DEFAULT_MAX_ROWS;
         } catch (Exception e) {
             throw new ResourceException(e);
         }

@@ -82,7 +82,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  */
 
 public class DistributedQueryClientImpl implements GraphQueryClient {
-    private int localPort;
     private ExecutorService executor;
     private Collection<CallableGraphQueryClient> queryClients;
     private Collection<String> serverAddresses;
@@ -117,15 +116,22 @@ public class DistributedQueryClientImpl implements GraphQueryClient {
         }
     }
 
+    public void getQuery(String graphName, String queryString, String noRows) {
+        try {
+            for (GraphQueryClient queryClient : queryClients) {
+                queryClient.getQuery(graphName, queryString, noRows);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public InputStream executeQuery() throws IOException {
         checkNotNull(queryClients);
         set = new HashSet<Future<InputStream>>();
         executeQuries();
         aggregateResults();
         return null;
-    }
-
-    public void getQuery(String graphName, String queryString, String noRows) throws IOException {
     }
 
     private void aggregateResults() {
