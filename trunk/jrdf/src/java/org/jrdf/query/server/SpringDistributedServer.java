@@ -57,12 +57,10 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.query.server;
 
 import org.restlet.Component;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.util.logging.Level;
 
 /**
  * A server that allows you to deploy a local JRDF server.
@@ -70,15 +68,15 @@ import java.util.logging.Level;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class SpringLocalServer {
-    private static final String DEFAULT_WIRING_CONFIG = "local-server-wiring.xml";
+public final class SpringDistributedServer {
+    private static final String DEFAULT_WIRING_CONFIG = "distributed-server-wiring.xml";
     private static final ClassPathXmlApplicationContext BEAN_FACTORY =
         new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
     private static Component component;
 
-    public SpringLocalServer() {
+    public SpringDistributedServer() {
         component = (Component) BEAN_FACTORY.getBean("component");
-        component.getLogger().setLevel(Level.OFF);
+        //component.getLogger().setLevel(Level.OFF);
     }
 
     public void start() throws Exception {
@@ -90,7 +88,7 @@ public final class SpringLocalServer {
     }
 
     public static void main(String[] args) throws Exception {
-        SpringLocalServer server = new SpringLocalServer();
+        SpringDistributedServer server = new SpringDistributedServer();
         try {
             server.start();
         } catch (Exception e) {

@@ -61,7 +61,6 @@ package org.jrdf.query.server;
 
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
-import org.jrdf.query.RepresentationFactory;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
 import org.restlet.resource.StringRepresentation;

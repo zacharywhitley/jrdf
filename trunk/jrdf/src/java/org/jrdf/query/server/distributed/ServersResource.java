@@ -62,7 +62,7 @@ package org.jrdf.query.server.distributed;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
-import org.jrdf.query.ConfigurableRestletResource;
+import org.jrdf.query.server.ConfigurableRestletResource;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.data.Form;
 import static org.restlet.data.MediaType.TEXT_HTML;
@@ -87,8 +87,8 @@ import java.util.StringTokenizer;
 
 public class ServersResource extends ConfigurableRestletResource {
     private static final int PORT_NUMBER = 8182;
-    protected DistributedQueryGraphApplication application;
     private static final String DEFAULT_PORT_STRING = "defaultPort";
+    private DistributedQueryGraphApplication application;
     /**
      * The name of the radio button for action.
      */
