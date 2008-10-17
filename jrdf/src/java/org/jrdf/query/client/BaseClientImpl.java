@@ -81,7 +81,7 @@ import java.util.Arrays;
  * @version :$
  */
 
-public abstract class BaseClientImpl implements GraphQueryClient {
+public abstract class BaseClientImpl implements QueryClient {
     private static final int DEFAULT_PORT = 8182;
     private static final String NEW_LINE = System.getProperty("line.separator");
     protected int serverPort;

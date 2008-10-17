@@ -61,8 +61,8 @@ package org.jrdf.query.server.distributed;
 
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.client.GraphQueryClient;
-import org.jrdf.query.client.NewDistributedQueryClientImpl;
+import org.jrdf.query.client.QueryClient;
+import org.jrdf.query.client.DistributedQueryClient;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 
@@ -78,7 +78,7 @@ import java.util.Set;
 public class DistributedQueryGraphApplicationImpl implements DistributedQueryGraphApplication {
     private static final int INVALID_TIME_TAKEN = -1;
     private Set<String> servers;
-    private GraphQueryClient client;
+    private QueryClient client;
     private GraphApplication application;
 
     public DistributedQueryGraphApplicationImpl(GraphApplication newApplication) {
@@ -100,13 +100,13 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
 
     public Answer answerQuery2(String graphName, String queryString) throws ResourceException {
         answerQuery(graphName, queryString);
-        return ((NewDistributedQueryClientImpl) client).getAnswer();
+        return ((DistributedQueryClient) client).getAnswer();
     }
 
     public void answerQuery(String graphName, String queryString) throws ResourceException {
         try {
             if (client == null) {
-                client = new NewDistributedQueryClientImpl(servers);
+                client = new DistributedQueryClient(servers);
             }
             client.getQuery(graphName, queryString, null);
             client.executeQuery();
