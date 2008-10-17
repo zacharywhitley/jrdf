@@ -60,15 +60,10 @@
 package org.jrdf.query.client;
 
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
-import static org.jrdf.query.server.BaseGraphResource.FORMAT;
-import static org.jrdf.query.server.BaseGraphResource.FORMAT_XML;
-import static org.jrdf.query.server.BaseGraphResource.NO_ROWS;
-import static org.jrdf.query.server.BaseGraphResource.QUERY_STRING;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import static org.restlet.data.Method.GET;
-import static org.restlet.data.Method.POST;
 import org.restlet.data.Preference;
 import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Reference;
@@ -111,27 +106,11 @@ public abstract class BaseClientImpl implements GraphQueryClient {
         return request;
     }
 
-    protected Request preparePostRequest(String graphName, String queryString, String noRows) {
-        Form form = new Form();
-        form.add(QUERY_STRING, queryString);
-        form.add(FORMAT, FORMAT_XML);
-        form.add(NO_ROWS, noRows);
-        Representation representation = form.getWebRepresentation();
-        String requestURL = makeRequestString(graphName);
-        return new Request(POST, requestURL, representation);
-    }
-
     private void setAcceptedMediaTypes(Request request) {
         ClientInfo clientInfo = new ClientInfo();
         Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
         clientInfo.setAcceptedMediaTypes(Arrays.<Preference<MediaType>>asList(preference));
         request.setClientInfo(clientInfo);
-    }
-
-    private String makeRequestString(String graphName) {
-        Reference ref = new Reference(HTTP.getSchemeName(), serverString, serverPort, "/graphs/" + graphName, null,
-            null);
-        return ref.toString();
     }
 
     private String makeRequestString(String graphName, String queryString) {

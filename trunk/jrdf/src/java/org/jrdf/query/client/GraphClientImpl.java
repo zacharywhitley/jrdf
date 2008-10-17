@@ -102,10 +102,6 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         request = prepareGetRequest(graphName, queryString, noRows);
     }
 
-    public void postQuery(String graphName, String queryString, String noRows) {
-        request = preparePostRequest(graphName, queryString, noRows);
-    }
-
     public void postDistributedServer(String action, String servers) throws MalformedURLException {
         checkNotNull(servers);
         Form form = new Form();
