@@ -116,7 +116,7 @@ public class LocalGraphResource extends ConfigurableRestletResource {
     private Representation queryResultRepresentation(Variant variant) throws ResourceException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         dataModel.put("queryString", queryString);
-        dataModel.put("answer", graphApplication.answerQuery2(graphName, queryString));
+        dataModel.put("answer", graphApplication.answerQuery(graphName, queryString));
         dataModel.put(GRAPH_NAME, graphName);
         dataModel.put("timeTaken", graphApplication.getTimeTaken());
         dataModel.put("tooManyRows", graphApplication.isTooManyRows());

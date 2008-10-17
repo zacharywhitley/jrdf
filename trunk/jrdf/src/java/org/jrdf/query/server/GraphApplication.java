@@ -65,6 +65,8 @@ import org.restlet.resource.ResourceException;
 
 public interface GraphApplication {
 
+    Answer answerQuery(String graphName, String queryString) throws ResourceException;
+
     String getGraphsDir();
 
     String getFormat();
@@ -81,11 +83,7 @@ public interface GraphApplication {
 
     MoleculeGraph getGraph();
 
-    void answerQuery(String graphName, String queryString) throws ResourceException;
-
     long getTimeTaken();
 
     boolean isTooManyRows();
-
-    Answer answerQuery2(String graphName, String queryString) throws ResourceException;
 }
