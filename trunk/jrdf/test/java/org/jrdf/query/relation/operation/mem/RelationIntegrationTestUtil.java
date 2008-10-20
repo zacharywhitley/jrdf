@@ -92,6 +92,7 @@ import static org.jrdf.util.test.NodeTestUtil.createResource;
 import org.jrdf.vocabulary.RDF;
 
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -259,10 +260,6 @@ public class RelationIntegrationTestUtil {
     }
 
     public static Set<Relation> createRelations(Relation... relations) {
-        Set<Relation> tuples = new HashSet<Relation>();
-        for (Relation relation : relations) {
-            tuples.add(relation);
-        }
-        return tuples;
+        return new HashSet<Relation>(asList(relations));
     }
 }
