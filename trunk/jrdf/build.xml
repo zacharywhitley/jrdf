@@ -35,16 +35,19 @@
         </emma>
 
         <!-- Configuration for Wiring up the various components using Spring and other configuration files-->
-        <copy todir="${prod.classes.dir}">
+        <copy todir="${prod.gui.dir}">
             <fileset dir="${prod.src.dir}" includes="**/commands-context.xml"/>
             <fileset dir="${prod.src.dir}" includes="**/richclient-application-splash.xml"/>
             <fileset dir="${prod.src.dir}" includes="**/richclient-application-context.xml"/>
             <fileset dir="${prod.src.dir}" includes="**/images.properties"/>
             <fileset dir="${prod.src.dir}" includes="**/messages.properties"/>
             <fileset dir="${prod.src.dir}" includes="**/about.txt"/>
-            <fileset dir="${prod.src.dir}" includes="**/server.properties"/>
             <fileset dir="${conf.dir}" includes="**/gui-wiring.xml"/>
-            <!-- Server configuration and Freemarker templates -->
+        </copy>
+
+        <!-- Server configuration and Freemarker templates -->
+        <copy todir="${prod.server.dir}">
+            <fileset dir="${prod.src.dir}" includes="**/server.properties"/>
             <fileset dir="${conf.dir}" includes="**/local-server-wiring.xml"/>
             <fileset dir="${conf.dir}" includes="**/distributed-server-wiring.xml"/>
             <fileset dir="${src.dir}/freemarker" includes="**/*.ftl"/>
@@ -117,6 +120,7 @@
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
             <fileset dir="${prod.classes.dir}"/>
+            <fileset dir="${prod.gui.dir}"/>
         </jar>
 
         <!-- Copy required lib jars to ./lib/* -->
@@ -153,6 +157,7 @@
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
             <fileset dir="${prod.classes.dir}"/>
+            <fileset dir="${prod.server.dir}"/>
         </jar>
 
         <!-- Copy required lib jars to ./lib/* -->
