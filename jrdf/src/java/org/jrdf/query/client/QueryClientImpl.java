@@ -62,7 +62,7 @@ package org.jrdf.query.client;
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswer;
-import static org.jrdf.query.client.ServerPort.*;
+import static org.jrdf.query.client.ServerPort.createServerPort;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
@@ -79,7 +79,8 @@ import org.restlet.resource.Representation;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yuan-Fang Li
@@ -139,8 +140,9 @@ public class QueryClientImpl implements CallableGraphQueryClient {
 
     private void setAcceptedMediaTypes(Request theRequest) {
         ClientInfo clientInfo = theRequest.getClientInfo();
-        Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
-        clientInfo.setAcceptedMediaTypes(Arrays.asList(preference));
+        List<Preference<MediaType>> preferenceList = new ArrayList<Preference<MediaType>>();
+        preferenceList.add(new Preference<MediaType>(APPLICATION_SPARQL));
+        clientInfo.setAcceptedMediaTypes(preferenceList);
     }
 
     private String makeRequestString(String graphName, String queryString) {

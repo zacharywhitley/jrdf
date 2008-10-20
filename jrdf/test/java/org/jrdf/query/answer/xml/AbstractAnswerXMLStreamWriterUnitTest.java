@@ -78,8 +78,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -217,7 +219,10 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
                 case END_ELEMENT:
                     tagName = reader.getLocalName();
                     if (RESULT.equals(tagName)) {
-                        checkMaps(actualMap, pos, map1, map2);
+                        List<Map<String, String>> maps = new ArrayList<Map<String, String>>();
+                        maps.add(map1);
+                        maps.add(map2);
+                        checkMaps(actualMap, pos, maps);
                         pos++;
                     } else if (RESULTS.equals(tagName)) {
                         break loop;
@@ -230,8 +235,8 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
         stream1.close();
     }
 
-    private void checkMaps(Map<String, String> actualMap, int pos, Map<String, String>... maps) {
-        Map<String, String> map = maps[pos];
+    private void checkMaps(Map<String, String> actualMap, int pos, List<Map<String, String>> maps) {
+        Map<String, String> map = maps.get(pos);
         assertEquals(map.size(), actualMap.size());
         for (String key: map.keySet()) {
             assertEquals(map.get(key), actualMap.get(key));
@@ -275,6 +280,7 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
                     if (BINDING.equals(tagName)) {
                         break loop;
                     }
+                    break;
                 default:
                     break;
             }
