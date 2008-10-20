@@ -44,9 +44,9 @@
             <fileset dir="${prod.src.dir}" includes="**/about.txt"/>
             <fileset dir="${prod.src.dir}" includes="**/server.properties"/>
             <fileset dir="${conf.dir}" includes="**/gui-wiring.xml"/>
+            <!-- Server configuration and Freemarker templates -->
             <fileset dir="${conf.dir}" includes="**/local-server-wiring.xml"/>
             <fileset dir="${conf.dir}" includes="**/distributed-server-wiring.xml"/>
-            <!-- Freemarker templates -->
             <fileset dir="${src.dir}/freemarker" includes="**/*.ftl"/>
         </copy>
 
