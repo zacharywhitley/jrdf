@@ -103,10 +103,6 @@ public class DistributedQueryClient implements QueryClient {
     }
 
 
-    public Answer getAnswer() {
-        return new SparqlStreamingAnswer(xmlWriter);
-    }
-
     public void postDistributedServer(String action, String servers) throws MalformedURLException {
     }
 
@@ -120,12 +116,12 @@ public class DistributedQueryClient implements QueryClient {
         }
     }
 
-    public InputStream executeQuery() throws IOException {
+    public Answer executeQuery() throws IOException {
         checkNotNull(queryClients);
         set = new HashSet<Future<InputStream>>();
         executeQuries();
         aggregateResults();
-        return null;
+        return new SparqlStreamingAnswer(xmlWriter);
     }
 
     private void aggregateResults() {

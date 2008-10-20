@@ -59,8 +59,9 @@
 
 package org.jrdf.query.client;
 
+import org.jrdf.query.answer.Answer;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 
 /**
@@ -71,7 +72,7 @@ import java.net.MalformedURLException;
 public interface QueryClient {
     void getQuery(String graphName, String queryString, String noRows);
 
-    InputStream executeQuery() throws IOException;
+    Answer executeQuery() throws IOException;
 
     void postDistributedServer(String action, String servers) throws MalformedURLException;
 }

@@ -100,8 +100,7 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         try {
             QueryClient client = new DistributedQueryClient(servers);
             client.getQuery(graphName, queryString, null);
-            client.executeQuery();
-            return ((DistributedQueryClient) client).getAnswer();
+            return client.executeQuery();
         } catch (Exception e) {
             throw new ResourceException(e);
         }

@@ -59,7 +59,6 @@
 
 package org.jrdf.query.client;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import junit.framework.TestCase;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
@@ -67,37 +66,28 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SparqlStreamingAnswer;
+import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
+import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.server.SpringDistributedServer;
 import org.jrdf.query.server.SpringLocalServer;
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.BINDING;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.BNODE;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.LITERAL;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
-import static org.jrdf.query.client.BaseClientImpl.readFromInputStream;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
+import static org.jrdf.util.test.SetUtil.asSet;
 import org.restlet.Client;
 import org.restlet.data.Method;
 import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.StringRepresentation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import static org.w3c.dom.Node.ELEMENT_NODE;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
+import java.util.Iterator;
 
 /**
  * @author Yuan-Fang Li
@@ -127,6 +117,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         localQueryServer = new SpringLocalServer();
         localQueryServer.start();
         distributedServer = new SpringDistributedServer();
+        distributedServer.start();
     }
 
     protected void tearDown() throws Exception {
@@ -134,16 +125,25 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.close();
         FACTORY.close();
         localQueryServer.stop();
+        distributedServer.stop();
     }
 
     public void testDistributedServerGraphsResource() throws Exception {
-        distributedServer.start();
         URL url = new URL(HTTP.getSchemeName(), "127.0.0.1", 8183, "/graphs");
         Request request = new Request(Method.GET, url.toString(), new StringRepresentation(""));
         Client client = new Client(HTTP);
         final Response response = client.handle(request);
-        //assertEquals(Status.SUCCESS_OK, response.getStatus());
-        distributedServer.stop();
+        assertEquals(SUCCESS_OK, response.getStatus());
+        assertNotNull(response);
+    }
+
+    public void testEmptyDistributedClient() throws Exception {
+        assertEquals(0, graph.getNumberOfTriples());
+        QueryClient client = new GraphClientImpl("127.0.0.1:8183");
+        client.postDistributedServer("add", "127.0.0.1");
+        client.getQuery(FOO, QUERY_STRING, "all");
+        final Answer answer = client.executeQuery();
+        checkAnswer(answer, 0, Collections.<String>emptySet());
     }
 
     public void testGraphClient() throws Exception {
@@ -155,24 +155,11 @@ public class DistributedQueryIntegrationTest extends TestCase {
         assertEquals(2, graph.getNumberOfTriples());
         CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1:8182");
         queryClient.getQuery(FOO, QUERY_STRING, "all");
-        String answer = readFromInputStream(queryClient.call());
-        checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
-    }
-
-    public void testEmptyDistributedClient() throws Exception {
-        assertEquals(0, graph.getNumberOfTriples());
-        distributedServer.start();
-        QueryClient client = new GraphClientImpl("127.0.0.1:8183");
-        client.postDistributedServer("add", "127.0.0.1");
-        client.getQuery(FOO, QUERY_STRING, "all");
-        final InputStream inputStream = client.executeQuery();
-        final String answer = readFromInputStream(inputStream);
-        checkAnswerXML(answer, 0);
-        distributedServer.stop();
+        Answer answer = new SparqlStreamingAnswer(new SparqlAnswerParserStreamImpl(queryClient.call()));
+        checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 
     public void testDistributedClient() throws Exception {
-        distributedServer.start();
         final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
         final BlankNode b1 = elementFactory.createBlankNode();
         final BlankNode b2 = elementFactory.createBlankNode();
@@ -182,54 +169,19 @@ public class DistributedQueryIntegrationTest extends TestCase {
         QueryClient client = new GraphClientImpl("127.0.0.1:8183");
         client.postDistributedServer("add", "127.0.0.1");
         client.getQuery(FOO, QUERY_STRING, "all");
-        InputStream inputStream = client.executeQuery();
-        final String answer = readFromInputStream(inputStream);
-        checkAnswerXML(answer, 2, b1.toString(), p.toString(), b2.toString());
-        distributedServer.stop();
+        Answer answer = client.executeQuery();
+        checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 
-    private void checkAnswerXML(String answer, int resultSize, String... strings) throws SAXException, IOException {
-        Set<String> set = new HashSet<String>();
-        for (String s : strings) {
-            set.add(s);
+    private void checkAnswer(Answer answer, int noResults, Set<String> expectedVariableNames) throws Exception {
+        Set<String> actualVariableNames = asSet(answer.getVariableNames());
+        assertEquals(expectedVariableNames, actualVariableNames);
+        Iterator<TypeValue[]> iterator = answer.columnValuesIterator();
+        int counter = 0;
+        while (iterator.hasNext()) {
+            counter++;
+            iterator.next();
         }
-        DOMParser parser = new DOMParser();
-        parser.parse(new InputSource(new StringReader(answer)));
-        Document document = parser.getDocument();
-        final NodeList list = document.getElementsByTagName(RESULT);
-        assertEquals("Answer size", resultSize, list.getLength());
-        for (int i = 0; i < list.getLength(); i++) {
-            final Element node = (Element) list.item(i);
-            final NodeList bindings = node.getElementsByTagName(BINDING);
-            assertEquals("spo", 3, bindings.getLength());
-            checkBindings(bindings, set);
-        }
-    }
-
-    private void checkBindings(NodeList bindings, Set<String> set) {
-        int size = 0;
-        for (int j = 0; j < bindings.getLength(); j++) {
-            final Node node1 = bindings.item(j);
-            if (node1.getNodeType() == ELEMENT_NODE) {
-                size += checkOneBinding(set, node1, BNODE);
-                size += checkOneBinding(set, node1, AnswerXMLWriter.URI);
-                size += checkOneBinding(set, node1, LITERAL);
-            }
-        }
-        assertEquals("Same size", set.size(), size);
-    }
-
-    private int checkOneBinding(Set<String> set, Node node1, String tagName) {
-        int size = 0;
-        NodeList elementsByTagName = ((Element) node1).getElementsByTagName(tagName);
-        for (int k = 0; k < elementsByTagName.getLength(); k++) {
-            final Node node = elementsByTagName.item(k);
-            if (node.getNodeType() == ELEMENT_NODE) {
-                final String s = node.getTextContent();
-                assertTrue("Contains string", set.contains(s));
-                size++;
-            }
-        }
-        return size;
+        assertEquals(noResults, counter);
     }
 }
