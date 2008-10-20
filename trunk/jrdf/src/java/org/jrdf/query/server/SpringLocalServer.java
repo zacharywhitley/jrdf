@@ -86,8 +86,12 @@ public final class SpringLocalServer {
     }
 
     public void stop() throws Exception {
-        component.stop();
-        beanFactory.destroy();
+        if (component != null) {
+            component.stop();
+        }
+        if (beanFactory != null) {
+            beanFactory.destroy();
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -95,6 +99,7 @@ public final class SpringLocalServer {
         try {
             server.start();
         } catch (Exception e) {
+            e.printStackTrace();
             server.stop();
         }
     }

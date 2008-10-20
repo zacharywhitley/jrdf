@@ -5,13 +5,15 @@
     <property name="project.shortname" value="jrdf"/>
     <property name="project.version.major" value="0"/>
     <property name="project.version.minor" value="5.5.4"/>
-    <property name="gui.version" value="0.5.5.4"/>
+    <property name="gui.version" value="${project.version.major}.${project.version.minor}"/>
+    <property name="server.version" value="${project.version.major}.${project.version.minor}"/>
     <property name="version-status" value=""/>
     <property name="project.version.full" value="${project.version.major}.${project.version.minor}${version-status}"/>
     <property name="project.jar" value="${project.shortname}-${project.version.full}.jar"/>
     <property name="project.src.jar" value="${project.shortname}-${project.version.full}-src.jar"/>
     <property name="gui.jar" value="jrdf-gui-${gui.version}.jar"/>
-    <property name="restlet.jar" value="jrdf-restlet-${gui.version}.jar"/>
+    <property name="server.jar" value="jrdf-server-${gui.version}.jar"/>
+    <property name="distributed-server.jar" value="jrdf-distributed-server-${gui.version}.jar"/>
     <property name="build.dir" value="build"/>
     <property name="conf.dir" value="conf"/>
     <property name="doc.dir" value="doc"/>
@@ -120,6 +122,7 @@
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.7.jar"/>
         <include name="${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"/>
+        <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
     </patternset>
 
     <patternset id="test.classpath.pattern">

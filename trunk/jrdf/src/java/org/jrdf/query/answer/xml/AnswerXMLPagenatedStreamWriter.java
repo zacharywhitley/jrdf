@@ -86,6 +86,7 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
     }
 
     public AnswerXMLPagenatedStreamWriter(Answer answer) {
+        checkNotNull(answer);
         this.answer = answer;
         this.iterator = answer.columnValuesIterator();
         this.maxRows = answer.numberOfTuples();

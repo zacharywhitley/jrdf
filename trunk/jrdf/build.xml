@@ -84,7 +84,7 @@
         <antcall target="-dist-jar"/>
         <antcall target="-dist-src-jar"/>
         <antcall target="-dist-gui"/>
-        <antcall target="-dist-restlet"/>
+        <antcall target="-dist-server"/>
     </target>
 
     <target name="-dist-jar">
@@ -141,40 +141,40 @@
         <delete file="${dist.dir}/gui/main.jar"/>
     </target>
 
-    <target name="-dist-restlet">
-        <mkdir dir="${dist.dir}/restlet"/>
+    <target name="-dist-server">
+        <mkdir dir="${dist.dir}/server"/>
         <pathconvert dirsep="/" pathsep=" " property="jar.classpath">
            <map from="${basedir}/lib" to="lib"/>
            <path refid="production.class.path"/>
         </pathconvert>
-        <jar destfile="${dist.dir}/restlet/main.jar">
+        <jar destfile="${dist.dir}/server/main.jar">
             <manifest>
-                <attribute name="Main-Class" value="org.jrdf.restlet.server.SparqlQueryServer"/>
+                <attribute name="Main-Class" value="org.jrdf.query.server.SpringLocalServer"/>
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
             <fileset dir="${prod.classes.dir}"/>
         </jar>
 
         <!-- Copy required lib jars to ./lib/* -->
-        <copy todir="${dist.dir}/restlet">
+        <copy todir="${dist.dir}/server">
             <fileset dir="${basedir}">
                 <patternset refid="production.classpath.pattern"/>
             </fileset>
         </copy>
 
         <!--Create uber jar with one-jar classes and manifest. -->
-        <one-jar destfile="${dist.dir}/restlet/${restlet.jar}" manifest="${conf.dir}/boot-manifest.mf">
-            <main jar="${dist.dir}/restlet/main.jar"/>
+        <one-jar destfile="${dist.dir}/server/${server.jar}" manifest="${conf.dir}/boot-manifest.mf">
+            <main jar="${dist.dir}/server/main.jar"/>
             <lib>
-                <fileset dir="${dist.dir}/restlet/lib"/>
+                <fileset dir="${dist.dir}/server/lib"/>
             </lib>
             <fileset dir="${conf.dir}" includes="**/commons-logging.properties"/>
             <fileset dir="${conf.dir}" includes="**/simplelog.properties"/>
         </one-jar>
 
         <!-- Cleanup -->
-        <delete dir="${dist.dir}/restlet/lib"/>
-        <delete file="${dist.dir}/restlet/main.jar"/>
+        <delete dir="${dist.dir}/server/lib"/>
+        <delete file="${dist.dir}/server/main.jar"/>
     </target>
 
     <target name="javadoc" depends="-compile">
