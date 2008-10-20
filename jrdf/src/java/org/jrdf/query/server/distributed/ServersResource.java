@@ -59,23 +59,17 @@
 
 package org.jrdf.query.server.distributed;
 
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
 import org.jrdf.query.server.ConfigurableRestletResource;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.data.Form;
 import static org.restlet.data.MediaType.TEXT_HTML;
 import org.restlet.data.Status;
 import static org.restlet.data.Status.SUCCESS_OK;
-import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.StringRepresentation;
 import org.restlet.resource.Variant;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -117,17 +111,11 @@ public class ServersResource extends ConfigurableRestletResource {
     public Representation represent(Variant variant) {
         Representation rep = null;
         try {
-            Configuration cfg = new Configuration();
-            File resourcesDir = new File(new File(System.getProperty("user.dir")), "resources");
-            cfg.setDirectoryForTemplateLoading(resourcesDir);
-            cfg.setObjectWrapper(new DefaultObjectWrapper());
-            Map<String, String> root = new HashMap<String, String>();
-            root.put(DEFAULT_PORT_STRING, Integer.toString(PORT_NUMBER));
-            root.put(ACTION, "action");
-            Template template = cfg.getTemplate("distributedStartPage.ftl");
-            rep = new TemplateRepresentation(template, root, TEXT_HTML);
-        } catch (IOException e) {
-            e.printStackTrace();
+            Map<String, Object> dataModel = new HashMap<String, Object>();
+            dataModel.put(DEFAULT_PORT_STRING, Integer.toString(PORT_NUMBER));
+            dataModel.put(ACTION, "action");
+            return createTemplateRepresentation(variant.getMediaType(), dataModel);
+        } catch (Exception e) {
             getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
         }
         return rep;

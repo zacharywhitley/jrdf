@@ -50,6 +50,7 @@
       <entry name="?*.rdf" />
       <entry name="?*.txt" />
       <entry name="?*.nt" />
+      <entry name="?*.ftl" />
     </wildcardResourcePatterns>
   </component>
   <component name="DependenciesAnalyzeManager">

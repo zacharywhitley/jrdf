@@ -87,7 +87,7 @@ public class ListGraphsResource extends ConfigurableRestletResource {
             rep = constructRepresentation(variant);
             getResponse().setStatus(SUCCESS_OK);
         } catch (Exception e) {
-            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage());
+            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
         }
         return rep;
     }

@@ -113,8 +113,13 @@
     </bean>
 
     <!-- Freemarker -->
+    <bean id="classTemplateLoader" class="freemarker.cache.ClassTemplateLoader">
+        <constructor-arg value="org.jrdf.JRDFFactory"/>
+        <constructor-arg value="/"/>
+    </bean>
+
     <bean id="freemarkerConfig" class="freemarker.template.Configuration">
-        <property name="directoryForTemplateLoading" value="${user.dir}/resources"/>
+        <property name="templateLoader" ref="classTemplateLoader"/>
         <property name="objectWrapper">
             <bean class="freemarker.template.DefaultObjectWrapper"/>
         </property>
