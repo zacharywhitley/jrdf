@@ -28,6 +28,8 @@
     <property name="modified.src.dir" value="${build.dir}/jester"/>
     <property name="sablecc.src.dir" value="${src.dir}/sablecc"/>
     <property name="prod.classes.dir" value="${build.dir}/prod-classes"/>
+    <property name="prod.gui.dir" value="${build.dir}/prod-gui"/>
+    <property name="prod.server.dir" value="${build.dir}/prod-server"/>
     <property name="test.classes.dir" value="${build.dir}/test-classes"/>
     <property name="dist.dir" value="${build.dir}/dist"/>
     <property name="javadoc.dir" value="${build.dir}/javadoc"/>
