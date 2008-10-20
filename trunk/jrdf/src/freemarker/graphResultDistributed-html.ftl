@@ -12,6 +12,7 @@
         <tr>
             <#list answer.variableNames as columnName>
             <#assign foo = columnName?split("|")>
+            <th>${columnName}</th>
             <th>${foo[0]}</th>
             </#list>
         </tr>
