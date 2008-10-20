@@ -29,6 +29,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="LongIndexBdb"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ServersResource"/>
     <suppress checks="ClassDataAbstractionCoupling" files="BaseClientImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphClientImpl"/>
     <suppress checks="JavaNCSS" files="AnswerImpl"/>
     <suppress checks="JavaNCSS" files="AnswerXMLStreamWriterImpl"/>
     <suppress checks="JavaNCSS" files="AnswerXMLPagenatedStreamWriter"/>

@@ -60,6 +60,9 @@
 package org.jrdf.query.client;
 
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SparqlStreamingAnswer;
+import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
@@ -95,7 +98,7 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
     }
 
     public InputStream call() throws Exception {
-        return executeQuery();
+        return getRepresentation().getStream();
     }
 
     public void getQuery(String graphName, String queryString, String noRows) {
@@ -117,16 +120,27 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         }
     }
 
-    public InputStream executeQuery() throws IOException {
+    public Answer executeQuery() throws IOException {
+        return tryGetAnswer(getRepresentation());
+    }
+
+    private Representation getRepresentation() {
         checkNotNull(client, request);
         setAcceptedMediaTypes(request);
         Response response = client.handle(request);
         final Status status = response.getStatus();
         if (status.isSuccess()) {
-            Representation output = response.getEntity();
-            return output.getStream();
+            return response.getEntity();
         } else {
             throw new RuntimeException(status.getThrowable());
+        }
+    }
+
+    private Answer tryGetAnswer(Representation output) throws IOException {
+        try {
+            return new SparqlStreamingAnswer(new SparqlAnswerParserStreamImpl(output.getStream()));
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -135,11 +149,5 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
         clientInfo.setAcceptedMediaTypes(Arrays.asList(preference));
         theRequest.setClientInfo(clientInfo);
-    }
-
-    public static void main(String[] args) throws Exception {
-        CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1:8182");
-        queryClient.getQuery("foo", "SELECT * WHERE { ?s ?p ?o. }", "all");
-        queryClient.call();
     }
 }
