@@ -224,7 +224,7 @@
     </bean>
 
     <bean id="localGraphsResourceHtml" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
-        <property name="templateName" value="graph-html.ftl"/>
+        <property name="templateName" value="graphDistributed-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 </beans>
