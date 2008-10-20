@@ -1,8 +1,11 @@
 package org.jrdf.query.answer;
 
 import org.jrdf.query.answer.xml.SparqlAnswerParserStream;
+import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
 import org.jrdf.query.answer.xml.TypeValue;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -10,6 +13,10 @@ import java.util.LinkedHashSet;
 public class SparqlStreamingAnswer implements Answer {
     private SparqlAnswerParserStream answerStream;
     private TypeValueToString typeValueToString = new TypeValueToStringImpl();
+
+    public SparqlStreamingAnswer(InputStream inputStream) throws XMLStreamException, InterruptedException {
+        this(new SparqlAnswerParserStreamImpl(inputStream));
+    }
 
     public SparqlStreamingAnswer(SparqlAnswerParserStream answerStream) {
         this.answerStream = answerStream;

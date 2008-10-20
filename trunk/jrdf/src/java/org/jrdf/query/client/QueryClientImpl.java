@@ -62,13 +62,16 @@ package org.jrdf.query.client;
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswer;
-import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
+import static org.jrdf.query.client.ServerPort.*;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
+import static org.restlet.data.Method.GET;
 import org.restlet.data.Preference;
 import static org.restlet.data.Protocol.HTTP;
+import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
@@ -83,14 +86,15 @@ import java.util.Arrays;
  * @version :$
  */
 
-public class QueryClientImpl extends BaseQueryClient implements CallableGraphQueryClient {
+public class QueryClientImpl implements CallableGraphQueryClient {
+    private static final int DEFAULT_PORT = 8182;
     private Client client;
-    protected Request request;
-    protected String answer;
+    private Request request;
+    private ServerPort serverPort;
 
     public QueryClientImpl(String server) {
-        super(server);
-        client = new Client(HTTP);
+        this.serverPort = createServerPort(server, DEFAULT_PORT);
+        this.client = new Client(HTTP);
     }
 
     public InputStream call() throws Exception {
@@ -117,18 +121,32 @@ public class QueryClientImpl extends BaseQueryClient implements CallableGraphQue
         }
     }
 
+    protected Request prepareGetRequest(String graphName, String queryString) {
+        Representation representation = new Form().getWebRepresentation();
+        String requestURL = makeRequestString(graphName, queryString);
+        Request request = new Request(GET, requestURL, representation);
+        setAcceptedMediaTypes(request);
+        return request;
+    }
+
     private Answer tryGetAnswer(Representation output) throws IOException {
         try {
-            return new SparqlStreamingAnswer(new SparqlAnswerParserStreamImpl(output.getStream()));
+            return new SparqlStreamingAnswer(output.getStream());
         } catch (Exception e) {
             throw new IOException(e.getMessage());
         }
     }
 
     private void setAcceptedMediaTypes(Request theRequest) {
-        ClientInfo clientInfo = new ClientInfo();
+        ClientInfo clientInfo = theRequest.getClientInfo();
         Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
         clientInfo.setAcceptedMediaTypes(Arrays.asList(preference));
-        theRequest.setClientInfo(clientInfo);
+    }
+
+    private String makeRequestString(String graphName, String queryString) {
+        String query = "query" + "=" + queryString;
+        Reference ref = new Reference(HTTP.getSchemeName(), serverPort.getHostname(), serverPort.getPort(),
+            "/graphs/" + graphName, query, null);
+        return ref.toString();
     }
 }
