@@ -63,15 +63,14 @@ import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswer;
 import org.jrdf.query.answer.xml.SparqlAnswerParserStream;
 import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
-import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.CallableGraphQueryClient;
-import org.jrdf.query.client.GraphClientImpl;
+import org.jrdf.query.client.QueryClientImpl;
+import org.jrdf.query.client.QueryClient;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -96,14 +95,10 @@ public class DistributedQueryClient implements QueryClient {
         this.serverAddresses = servers;
         this.queryClients = new LinkedList<CallableGraphQueryClient>();
         for (String server : serverAddresses) {
-            queryClients.add(new GraphClientImpl(server));
+            this.queryClients.add(new QueryClientImpl(server));
         }
-        executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
-        xmlWriter = new SparqlAnswerParserStreamImpl();
-    }
-
-
-    public void postDistributedServer(String action, String servers) throws MalformedURLException {
+        this.executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
+        this.xmlWriter = new SparqlAnswerParserStreamImpl();
     }
 
     public void getQuery(String graphName, String queryString, String noRows) {
