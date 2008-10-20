@@ -64,21 +64,16 @@ import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
-import org.restlet.resource.StringRepresentation;
 
-import java.io.StringWriter;
 import java.util.Map;
 
 public class SparqlXmlRepresentationFactory implements RepresentationFactory {
     public Representation createRepresentation(MediaType defaultMediaType, Map<String, Object> dataModel) {
         Answer answer = (Answer) dataModel.get("answer");
         try {
-            StringWriter writer = new StringWriter();
-            AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);
-            xmlWriter.write();
-            return new StringRepresentation(writer.toString(), defaultMediaType);
+            AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(answer);
+            return new SparqlRepresentation(defaultMediaType, xmlWriter);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

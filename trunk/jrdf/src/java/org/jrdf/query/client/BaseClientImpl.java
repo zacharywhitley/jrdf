@@ -60,6 +60,7 @@
 package org.jrdf.query.client;
 
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -121,6 +122,7 @@ public abstract class BaseClientImpl implements QueryClient {
     }
 
     public static String readFromInputStream(InputStream stream) throws IOException {
+        checkNotNull(stream);
         StringBuilder sb = new StringBuilder();
         try {
             BufferedReader din = new BufferedReader(new InputStreamReader(stream));
