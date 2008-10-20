@@ -142,7 +142,6 @@
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="localGraphsResourceHtml"/>
                 <entry key-ref="org.restlet.data.MediaType.APPLICATION_JSON" value-ref="jsonRepresentationFactory"/>
-                <entry key-ref="org.restlet.data.MediaType.APPLICATION_XML" value-ref="sparqlXmlRepresentationFactory"/>
                 <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL" value-ref="sparqlXmlRepresentationFactory"/>
             </map>
         </property>
