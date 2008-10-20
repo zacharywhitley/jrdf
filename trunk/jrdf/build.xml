@@ -47,7 +47,7 @@
             <fileset dir="${conf.dir}" includes="**/local-server-wiring.xml"/>
             <fileset dir="${conf.dir}" includes="**/distributed-server-wiring.xml"/>
             <!-- Freemarker templates -->
-            <fileset dir="${prod.src.dir}" includes="**/*.ftl"/>
+            <fileset dir="${src.dir}/freemarker" includes="**/*.ftl"/>
         </copy>
 
         <!-- Test data used by the RDF/XML Parser and Writer and NTriples Reader -->
