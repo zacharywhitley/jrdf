@@ -11,15 +11,13 @@
     <table border="1">
         <tr>
             <#list answer.variableNames as columnName>
-            <#assign foo = columnName?split("|")>
             <th>${columnName}</th>
-            <th>${foo[0]}</th>
             </#list>
         </tr>
-        <#list answer.columnValues as columnValue>
+        <#list answer.columnValuesIterator() as columnValue>
         <tr>
           <#list columnValue as value>
-           <td>${value}</td>
+           <td>${value.value}</td>
           </#list>
         </tr>
         </#list>
