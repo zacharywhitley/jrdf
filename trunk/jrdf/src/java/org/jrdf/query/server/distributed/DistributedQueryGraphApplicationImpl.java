@@ -98,7 +98,7 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
 
     public Answer answerQuery(String graphName, String queryString) throws ResourceException {
         try {
-            QueryClient client = new DistributedQueryClient2(servers);
+            QueryClient client = new DistributedQueryClient(servers);
             client.getQuery(graphName, queryString, null);
             return client.executeQuery();
         } catch (Exception e) {
