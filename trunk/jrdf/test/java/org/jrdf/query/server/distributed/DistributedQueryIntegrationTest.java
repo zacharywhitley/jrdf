@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.query.client;
+package org.jrdf.query.server.distributed;
 
 import junit.framework.TestCase;
 import org.jrdf.PersistentGlobalJRDFFactory;
@@ -70,6 +70,9 @@ import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswer;
 import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
 import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.client.CallableGraphQueryClient;
+import org.jrdf.query.client.QueryClient;
+import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.server.SpringDistributedServer;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
@@ -86,8 +89,8 @@ import org.restlet.resource.StringRepresentation;
 import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Set;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
@@ -139,8 +142,9 @@ public class DistributedQueryIntegrationTest extends TestCase {
 
     public void testEmptyDistributedClient() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
-        QueryClient client = new GraphClientImpl("127.0.0.1:8183");
-        client.postDistributedServer("add", "127.0.0.1");
+        DistributedServerClient serverClient = new DistributedServerClient("127.0.0.1:8183");
+        serverClient.postDistributedServer("add", "127.0.0.1");
+        QueryClient client = new QueryClientImpl("127.0.0.1:8183");
         client.getQuery(FOO, QUERY_STRING, "all");
         final Answer answer = client.executeQuery();
         checkAnswer(answer, 0, Collections.<String>emptySet());
@@ -153,7 +157,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.add(b1, p, b1);
         graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
-        CallableGraphQueryClient queryClient = new GraphClientImpl("127.0.0.1:8182");
+        CallableGraphQueryClient queryClient = new QueryClientImpl("127.0.0.1:8182");
         queryClient.getQuery(FOO, QUERY_STRING, "all");
         Answer answer = new SparqlStreamingAnswer(new SparqlAnswerParserStreamImpl(queryClient.call()));
         checkAnswer(answer, 2, asSet("s", "p", "o"));
@@ -166,8 +170,9 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        QueryClient client = new GraphClientImpl("127.0.0.1:8183");
-        client.postDistributedServer("add", "127.0.0.1");
+        DistributedServerClient serverClient = new DistributedServerClient("127.0.0.1:8183");
+        serverClient.postDistributedServer("add", "127.0.0.1");
+        QueryClient client = new QueryClientImpl("127.0.0.1:8183");
         client.getQuery(FOO, QUERY_STRING, "all");
         Answer answer = client.executeQuery();
         checkAnswer(answer, 2, asSet("s", "p", "o"));

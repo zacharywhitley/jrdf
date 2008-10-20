@@ -60,21 +60,22 @@
 package org.jrdf.query.client;
 
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SparqlStreamingAnswer;
+import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.restlet.Client;
 import org.restlet.data.ClientInfo;
-import org.restlet.data.Form;
 import org.restlet.data.MediaType;
-import static org.restlet.data.Method.GET;
 import org.restlet.data.Preference;
 import static org.restlet.data.Protocol.HTTP;
-import org.restlet.data.Reference;
 import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 
 /**
@@ -82,58 +83,52 @@ import java.util.Arrays;
  * @version :$
  */
 
-public abstract class BaseClientImpl implements QueryClient {
-    private static final int DEFAULT_PORT = 8182;
-    private static final String NEW_LINE = System.getProperty("line.separator");
-    protected int serverPort;
-    protected String serverString;
+public class QueryClientImpl extends BaseQueryClient implements CallableGraphQueryClient {
+    private Client client;
+    protected Request request;
+    protected String answer;
 
-    public BaseClientImpl(String server) {
-        String[] hostPort = server.split(":");
-        if (hostPort.length == 1) {
-            serverPort = DEFAULT_PORT;
-            serverString = server;
+    public QueryClientImpl(String server) {
+        super(server);
+        client = new Client(HTTP);
+    }
+
+    public InputStream call() throws Exception {
+        return getRepresentation().getStream();
+    }
+
+    public void getQuery(String graphName, String queryString, String noRows) {
+        request = prepareGetRequest(graphName, queryString);
+    }
+
+    public Answer executeQuery() throws IOException {
+        return tryGetAnswer(getRepresentation());
+    }
+
+    private Representation getRepresentation() {
+        checkNotNull(client, request);
+        setAcceptedMediaTypes(request);
+        Response response = client.handle(request);
+        final Status status = response.getStatus();
+        if (status.isSuccess()) {
+            return response.getEntity();
         } else {
-            serverPort = Integer.parseInt(hostPort[1]);
-            serverString = hostPort[0];
+            throw new RuntimeException(status.getThrowable());
         }
     }
 
-    protected Request prepareGetRequest(String graphName, String queryString, String noRows) {
-        Representation representation = new Form().getWebRepresentation();
-        String requestURL = makeRequestString(graphName, queryString);
-        Request request = new Request(GET, requestURL, representation);
-        setAcceptedMediaTypes(request);
-        return request;
+    private Answer tryGetAnswer(Representation output) throws IOException {
+        try {
+            return new SparqlStreamingAnswer(new SparqlAnswerParserStreamImpl(output.getStream()));
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
-    private void setAcceptedMediaTypes(Request request) {
+    private void setAcceptedMediaTypes(Request theRequest) {
         ClientInfo clientInfo = new ClientInfo();
         Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
-        clientInfo.setAcceptedMediaTypes(Arrays.<Preference<MediaType>>asList(preference));
-        request.setClientInfo(clientInfo);
+        clientInfo.setAcceptedMediaTypes(Arrays.asList(preference));
+        theRequest.setClientInfo(clientInfo);
     }
-
-    private String makeRequestString(String graphName, String queryString) {
-        String query = "queryString=" + queryString;
-        Reference ref = new Reference(HTTP.getSchemeName(), serverString, serverPort, "/graphs/" + graphName, query,
-            null);
-        return ref.toString();
-    }
-
-    public static String readFromInputStream(InputStream stream) throws IOException {
-        checkNotNull(stream);
-        StringBuilder sb = new StringBuilder();
-        try {
-            BufferedReader din = new BufferedReader(new InputStreamReader(stream));
-            String line;
-            while ((line = din.readLine()) != null) {
-                sb.append(line + NEW_LINE);
-            }
-        } finally {
-            stream.close();
-        }
-        return sb.toString();
-    }
-
 }

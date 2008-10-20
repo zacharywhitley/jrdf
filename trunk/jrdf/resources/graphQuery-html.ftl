@@ -10,13 +10,13 @@
   <form id="sparql" name="sparqlForm" method="get" action="${graphName}/">
   Query:
   <br/>
-    <textarea id="sparqlText" name="queryString" rows="6" cols="70">
+    <textarea id="sparqlText" name="query" rows="6" cols="70">
 SELECT *
 WHERE {
     ?s ?p ?o .
 }
     </textarea>
-    <a href="#" onclick="document.sparqlForm.queryString.value='';">Clear</a>
+    <a href="#" onclick="document.sparqlForm.query.value='';">Clear</a>
     <br/>
     <br/>
     <br/>

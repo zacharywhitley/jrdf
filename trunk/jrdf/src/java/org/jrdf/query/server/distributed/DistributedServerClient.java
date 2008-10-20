@@ -57,52 +57,41 @@
  *
  */
 
-package org.jrdf.query.client;
+package org.jrdf.query.server.distributed;
 
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
-import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.SparqlStreamingAnswer;
-import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
-import org.restlet.data.ClientInfo;
 import org.restlet.data.Form;
-import org.restlet.data.MediaType;
 import org.restlet.data.Method;
-import org.restlet.data.Preference;
 import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class GraphClientImpl extends BaseClientImpl implements CallableGraphQueryClient {
+public class DistributedServerClient {
+    private static final int DEFAULT_PORT = 8183;
     private Client client;
-    protected Request request;
-    protected String answer;
+    private int serverPort;
+    private String serverString;
 
-    public GraphClientImpl(String server) {
-        super(server);
+    public DistributedServerClient(String server) {
+        String[] hostPort = server.split(":");
+        if (hostPort.length == 1) {
+            serverPort = DEFAULT_PORT;
+            serverString = server;
+        } else {
+            serverPort = Integer.parseInt(hostPort[1]);
+            serverString = hostPort[0];
+        }
         client = new Client(HTTP);
-    }
-
-    public InputStream call() throws Exception {
-        return getRepresentation().getStream();
-    }
-
-    public void getQuery(String graphName, String queryString, String noRows) {
-        request = prepareGetRequest(graphName, queryString, noRows);
     }
 
     public void postDistributedServer(String action, String servers) throws MalformedURLException {
@@ -118,36 +107,5 @@ public class GraphClientImpl extends BaseClientImpl implements CallableGraphQuer
         if (!response.getStatus().isSuccess()) {
             throw new RuntimeException(response.getStatus().toString());
         }
-    }
-
-    public Answer executeQuery() throws IOException {
-        return tryGetAnswer(getRepresentation());
-    }
-
-    private Representation getRepresentation() {
-        checkNotNull(client, request);
-        setAcceptedMediaTypes(request);
-        Response response = client.handle(request);
-        final Status status = response.getStatus();
-        if (status.isSuccess()) {
-            return response.getEntity();
-        } else {
-            throw new RuntimeException(status.getThrowable());
-        }
-    }
-
-    private Answer tryGetAnswer(Representation output) throws IOException {
-        try {
-            return new SparqlStreamingAnswer(new SparqlAnswerParserStreamImpl(output.getStream()));
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
-        }
-    }
-
-    private void setAcceptedMediaTypes(Request theRequest) {
-        ClientInfo clientInfo = new ClientInfo();
-        Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
-        clientInfo.setAcceptedMediaTypes(Arrays.asList(preference));
-        theRequest.setClientInfo(clientInfo);
     }
 }

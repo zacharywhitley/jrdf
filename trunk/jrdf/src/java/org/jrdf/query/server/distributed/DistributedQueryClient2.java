@@ -57,70 +57,93 @@
  *
  */
 
-package org.jrdf.query.server;
+package org.jrdf.query.server.distributed;
 
-import static org.jrdf.query.server.local.GraphApplicationImpl.DEFAULT_MAX_ROWS;
-import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
-import static org.restlet.data.Status.SUCCESS_OK;
-import org.restlet.resource.Representation;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.Variant;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SparqlStreamingAnswer;
+import org.jrdf.query.answer.xml.SparqlAnswerParserStream;
+import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
+import org.jrdf.query.client.CallableGraphQueryClient;
+import org.jrdf.query.client.QueryClientImpl;
+import org.jrdf.query.client.QueryClient;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class GraphResource extends ConfigurableRestletResource {
-    private static final String GRAPH_VALUE = "graph";
-    private static final String GRAPH_NAME = "graphName";
-    private String graphName;
-    private String queryString;
-    private GraphApplication graphApplication;
+public class DistributedQueryClient2 implements QueryClient {
+    private ExecutorService executor;
+    private Collection<CallableGraphQueryClient> queryClients;
+    private Collection<String> serverAddresses;
+    private Set<Future<InputStream>> set;
+    private SparqlAnswerParserStream xmlWriter;
 
-    public void setGraphApplication(GraphApplication graphApplication) {
-        this.graphApplication = graphApplication;
-    }
-
-    @Override
-    public Representation represent(Variant variant) {
-        Representation rep = null;
-        try {
-            graphName = (String) getRequest().getAttributes().get(GRAPH_VALUE);
-            if (getRequest().getResourceRef().hasQuery()) {
-                queryString = getRequest().getResourceRef().getQueryAsForm().getFirst("query").getValue();
-            }
-            if (queryString == null) {
-                rep = queryPageRepresentation(variant);
-            } else {
-                rep = queryResultRepresentation(variant);
-            }
-            getResponse().setStatus(SUCCESS_OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
+    public DistributedQueryClient2(Collection<String> servers) throws XMLStreamException, InterruptedException {
+        this.serverAddresses = servers;
+        this.queryClients = new LinkedList<CallableGraphQueryClient>();
+        for (String server : serverAddresses) {
+            this.queryClients.add(new QueryClientImpl(server));
         }
-        return rep;
+        this.executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
+        this.xmlWriter = new SparqlAnswerParserStreamImpl();
     }
 
-    protected Representation queryPageRepresentation(Variant variant) throws IOException {
-        Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put(GRAPH_NAME, graphName);
-        return createTemplateRepresentation(variant.getMediaType(), dataModel);
+    public void getQuery(String graphName, String queryString, String noRows) {
+        try {
+            for (QueryClient queryClient : queryClients) {
+                queryClient.getQuery(graphName, queryString, noRows);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private Representation queryResultRepresentation(Variant variant) throws ResourceException {
-        Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put("query", queryString);
-        dataModel.put("answer", graphApplication.answerQuery(graphName, queryString));
-        dataModel.put(GRAPH_NAME, graphName);
-        dataModel.put("timeTaken", graphApplication.getTimeTaken());
-        dataModel.put("tooManyRows", graphApplication.isTooManyRows());
-        dataModel.put("maxRows", DEFAULT_MAX_ROWS);
-        return createTemplateRepresentation(variant.getMediaType(), dataModel);
+    public Answer executeQuery() throws IOException {
+        checkNotNull(queryClients);
+        set = new HashSet<Future<InputStream>>();
+        executeQuries();
+        aggregateResults();
+        return new SparqlStreamingAnswer(xmlWriter);
+    }
+
+    private void aggregateResults() {
+        for (Future<InputStream> future : set) {
+            try {
+                final InputStream stream = future.get();
+                xmlWriter.addStream(stream);
+            } catch (Exception e) {
+                cancelExecution(future);
+            }
+        }
+    }
+
+    private void executeQuries() {
+        for (CallableGraphQueryClient queryClient : queryClients) {
+            Future<InputStream> future = executor.submit(queryClient);
+            set.add(future);
+        }
+    }
+
+    public void cancelExecution() {
+        for (Future<InputStream> future : set) {
+            cancelExecution(future);
+        }
+    }
+
+    private void cancelExecution(Future<InputStream> future) {
+        future.cancel(true);
     }
 }

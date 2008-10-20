@@ -57,70 +57,69 @@
  *
  */
 
-package org.jrdf.query.server;
+package org.jrdf.query.client;
 
-import static org.jrdf.query.server.local.GraphApplicationImpl.DEFAULT_MAX_ROWS;
-import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
-import static org.restlet.data.Status.SUCCESS_OK;
+import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
+import org.restlet.data.ClientInfo;
+import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import static org.restlet.data.Method.GET;
+import org.restlet.data.Preference;
+import static org.restlet.data.Protocol.HTTP;
+import org.restlet.data.Reference;
+import org.restlet.data.Request;
 import org.restlet.resource.Representation;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.Variant;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class GraphResource extends ConfigurableRestletResource {
-    private static final String GRAPH_VALUE = "graph";
-    private static final String GRAPH_NAME = "graphName";
-    private String graphName;
-    private String queryString;
-    private GraphApplication graphApplication;
+public abstract class BaseQueryClient implements QueryClient {
+    private static final int DEFAULT_PORT = 8182;
+    protected int serverPort;
+    protected String serverString;
 
-    public void setGraphApplication(GraphApplication graphApplication) {
-        this.graphApplication = graphApplication;
-    }
-
-    @Override
-    public Representation represent(Variant variant) {
-        Representation rep = null;
-        try {
-            graphName = (String) getRequest().getAttributes().get(GRAPH_VALUE);
-            if (getRequest().getResourceRef().hasQuery()) {
-                queryString = getRequest().getResourceRef().getQueryAsForm().getFirst("query").getValue();
-            }
-            if (queryString == null) {
-                rep = queryPageRepresentation(variant);
-            } else {
-                rep = queryResultRepresentation(variant);
-            }
-            getResponse().setStatus(SUCCESS_OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
+    public BaseQueryClient(String server) {
+        String[] hostPort = server.split(":");
+        if (hostPort.length == 1) {
+            serverPort = DEFAULT_PORT;
+            serverString = server;
+        } else {
+            serverPort = Integer.parseInt(hostPort[1]);
+            serverString = hostPort[0];
         }
-        return rep;
     }
 
-    protected Representation queryPageRepresentation(Variant variant) throws IOException {
-        Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put(GRAPH_NAME, graphName);
-        return createTemplateRepresentation(variant.getMediaType(), dataModel);
+    public int getServerPort() {
+        return serverPort;
     }
 
-    private Representation queryResultRepresentation(Variant variant) throws ResourceException {
-        Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put("query", queryString);
-        dataModel.put("answer", graphApplication.answerQuery(graphName, queryString));
-        dataModel.put(GRAPH_NAME, graphName);
-        dataModel.put("timeTaken", graphApplication.getTimeTaken());
-        dataModel.put("tooManyRows", graphApplication.isTooManyRows());
-        dataModel.put("maxRows", DEFAULT_MAX_ROWS);
-        return createTemplateRepresentation(variant.getMediaType(), dataModel);
+    public String getServerString() {
+        return serverString;
+    }
+
+    protected Request prepareGetRequest(String graphName, String queryString) {
+        Representation representation = new Form().getWebRepresentation();
+        String requestURL = makeRequestString(graphName, queryString);
+        Request request = new Request(GET, requestURL, representation);
+        setAcceptedMediaTypes(request);
+        return request;
+    }
+
+    private void setAcceptedMediaTypes(Request request) {
+        ClientInfo clientInfo = new ClientInfo();
+        Preference<MediaType> preference = new Preference<MediaType>(APPLICATION_SPARQL);
+        clientInfo.setAcceptedMediaTypes(Arrays.<Preference<MediaType>>asList(preference));
+        request.setClientInfo(clientInfo);
+    }
+
+    private String makeRequestString(String graphName, String queryString) {
+        String query = "query" + "=" + queryString;
+        Reference ref = new Reference(HTTP.getSchemeName(), serverString, serverPort, "/graphs/" + graphName, query,
+            null);
+        return ref.toString();
     }
 }
