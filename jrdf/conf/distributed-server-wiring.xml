@@ -183,7 +183,7 @@
     </bean>
 
     <bean id="distributedStartPage" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
-        <property name="templateName" value="distributedStartPage.ftl"/>
+        <property name="templateName" value="distributedStart-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
