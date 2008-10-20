@@ -69,10 +69,14 @@ import java.util.Map;
 
 public class SparqlXmlRepresentationFactory implements RepresentationFactory {
     public Representation createRepresentation(MediaType defaultMediaType, Map<String, Object> dataModel) {
-        Answer answer = (Answer) dataModel.get("answer");
         try {
-            AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(answer);
-            return new SparqlRepresentation(defaultMediaType, xmlWriter);
+            Representation representation = Representation.createEmpty();
+            Answer answer = (Answer) dataModel.get("answer");
+            if (answer != null) {
+                AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(answer);
+                representation = new SparqlRepresentation(defaultMediaType, xmlWriter);
+            }
+            return representation;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
