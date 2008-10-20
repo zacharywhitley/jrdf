@@ -60,6 +60,8 @@
 package org.jrdf.query.server.distributed;
 
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.query.client.ServerPort.createServerPort;
+import org.jrdf.query.client.ServerPort;
 import org.restlet.Client;
 import org.restlet.data.Form;
 import org.restlet.data.Method;
@@ -79,19 +81,11 @@ import java.net.URL;
 public class DistributedServerClient {
     private static final int DEFAULT_PORT = 8183;
     private Client client;
-    private int serverPort;
-    private String serverString;
+    private ServerPort serverPort;
 
     public DistributedServerClient(String server) {
-        String[] hostPort = server.split(":");
-        if (hostPort.length == 1) {
-            serverPort = DEFAULT_PORT;
-            serverString = server;
-        } else {
-            serverPort = Integer.parseInt(hostPort[1]);
-            serverString = hostPort[0];
-        }
-        client = new Client(HTTP);
+        this.serverPort = createServerPort(server, DEFAULT_PORT);
+        this.client = new Client(HTTP);
     }
 
     public void postDistributedServer(String action, String servers) throws MalformedURLException {
@@ -100,7 +94,7 @@ public class DistributedServerClient {
         form.add("action", action);
         form.add("serversString", servers);
         Representation representation = form.getWebRepresentation();
-        URL url = new URL(HTTP.getSchemeName(), serverString, serverPort, "/");
+        URL url = new URL(HTTP.getSchemeName(), serverPort.getHostname(), serverPort.getPort(), "/");
         String requestURL = url.toString();
         Request request = new Request(Method.POST, requestURL, representation);
         Response response = client.handle(request);

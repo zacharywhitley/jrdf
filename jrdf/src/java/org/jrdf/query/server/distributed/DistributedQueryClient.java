@@ -64,8 +64,8 @@ import org.jrdf.query.answer.SparqlStreamingAnswer;
 import org.jrdf.query.answer.xml.SparqlAnswerParserStream;
 import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
 import org.jrdf.query.client.CallableGraphQueryClient;
-import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.client.QueryClient;
+import org.jrdf.query.client.QueryClientImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;
@@ -102,18 +102,14 @@ public class DistributedQueryClient implements QueryClient {
     }
 
     public void getQuery(String graphName, String queryString, String noRows) {
-        try {
-            for (QueryClient queryClient : queryClients) {
-                queryClient.getQuery(graphName, queryString, noRows);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        for (QueryClient queryClient : queryClients) {
+            queryClient.getQuery(graphName, queryString, noRows);
         }
     }
 
     public Answer executeQuery() throws IOException {
         checkNotNull(queryClients);
-        set = new HashSet<Future<InputStream>>();
+        this.set = new HashSet<Future<InputStream>>();
         executeQuries();
         aggregateResults();
         return new SparqlStreamingAnswer(xmlWriter);
