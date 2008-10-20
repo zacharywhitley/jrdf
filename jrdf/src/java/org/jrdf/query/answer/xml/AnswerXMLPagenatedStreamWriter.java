@@ -80,17 +80,19 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
     private long maxRows;
     private long count;
     private Answer answer;
-    private Writer writer;
     private Iterator<TypeValue[]> iterator;
 
     private AnswerXMLPagenatedStreamWriter() {
     }
 
-    public AnswerXMLPagenatedStreamWriter(Answer answer, Writer writer) throws XMLStreamException {
+    public AnswerXMLPagenatedStreamWriter(Answer answer) {
         this.answer = answer;
         this.iterator = answer.columnValuesIterator();
-        this.writer = writer;
         this.maxRows = answer.numberOfTuples();
+    }
+
+    public AnswerXMLPagenatedStreamWriter(Answer answer, Writer writer) throws XMLStreamException {
+        this(answer);
         this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
@@ -102,7 +104,7 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
 
     public void setWriter(Writer writer) throws XMLStreamException, IOException {
         close();
-        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
+        this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
     public boolean hasMoreResults() {
