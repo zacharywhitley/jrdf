@@ -28,9 +28,6 @@
     <suppress checks="ClassDataAbstractionCoupling" files="PersistentGlobalJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="LongIndexBdb"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ServersResource"/>
-    <suppress checks="JavaNCSS" files="AnswerImpl"/>
-    <suppress checks="JavaNCSS" files="AnswerXMLStreamWriterImpl"/>
-    <suppress checks="JavaNCSS" files="AnswerXMLPagenatedStreamWriter"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
