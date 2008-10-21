@@ -61,11 +61,13 @@ package org.jrdf.urql.parser;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
+import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Conjunction;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
@@ -80,6 +82,7 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
+import static org.jrdf.query.relation.mem.BoundAVPOperation.BOUND;
 import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
@@ -117,6 +120,7 @@ import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 import org.jrdf.vocabulary.XSD;
 
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -160,6 +164,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "name", 3);
     private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX,
             "mbox", 4);
+    private static final Expression<ExpressionVisitor> DC_DATE_EXP_2 = createConstraintExpression("x",
+            URI.create("http://purl.org/dc/elements/1.1/date"), "date", 2);
+
     private static final String SELECT_WHERE_S_P_O_AND_EMPTY = "SELECT * WHERE { ?s ?p ?o . {} } ";
     private QueryParser parser;
 
@@ -353,6 +360,27 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
                 filterExpression);
         checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
                 "SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", conjunction);
+    }
+
+    public void testThreePartOptional() throws Exception {
+        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+                "SELECT ?name\n" +
+                "WHERE { ?x foaf:name ?name .\n" +
+                "OPTIONAL { ?x dc:date ?date } .\n" +
+                "FILTER ( bound(?date) ) }";
+
+        Expression<ExpressionVisitor> optionalExpression = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, DC_DATE_EXP_2);
+
+        AttributeName dateVar = new VariableName("date");
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
+        ValueOperation value = new ValueOperationImpl(ANY_NODE, BOUND);
+        avo.put(attribute, value);
+        Expression<ExpressionVisitor> filterExpression = new BoundOperator(avo);
+
+        Expression<ExpressionVisitor> conjunction = new Conjunction<ExpressionVisitor>(optionalExpression, filterExpression);
+        checkConstraintExpression(queryString, conjunction);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) throws Exception {

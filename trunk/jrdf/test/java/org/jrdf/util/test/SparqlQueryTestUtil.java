@@ -133,12 +133,12 @@ public final class SparqlQueryTestUtil {
     public static final String QUERY_OPTION_4 = createSelectClause() +
         "WHERE  { \n" +
         "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_NICK + "> ?nick }} .\n" +
-        "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x  <" + FOAF_MBOX + "> ?mbox }}\n" +
+        "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox }}\n" +
         "}";
     public static final String QUERY_OPTIONAL_5 = createSelectClause() +
         "WHERE  { \n" +
         "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_NICK + "> ?nick }} OPTIONAL\n" +
-        "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x  <" + FOAF_MBOX + "> ?mbox }}\n" +
+        "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox }}\n" +
         "}";
     public static final String QUERY_BOOK_1_AND_2_WITH_PREFIX = "PREFIX examplebook: <http://example.org/book/> \n" +
         "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +

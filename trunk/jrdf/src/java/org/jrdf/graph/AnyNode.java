@@ -93,6 +93,6 @@ public final class AnyNode implements ObjectNode, Serializable {
     }
 
     public void accept(TypedNodeVisitor visitor) {
-        // Do nothing.
+        visitor.visitNode(this);
     }
 }

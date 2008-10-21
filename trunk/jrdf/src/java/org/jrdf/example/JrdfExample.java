@@ -81,10 +81,10 @@ import org.jrdf.util.ClosableIterable;
 import org.jrdf.vocabulary.XSD;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import static java.net.URI.create;
+import java.net.URISyntaxException;
 
 /**
  * An example that performs simple operations on a JRDF Graph.
@@ -234,9 +234,19 @@ public class JrdfExample {
     }
 
     private void performQuery(Graph graph) throws InvalidQuerySyntaxException, GraphException,
-        XMLStreamException, IOException {
+        XMLStreamException, URISyntaxException {
+        final Triple triple = person.asTriple(new URI("http://example.org/terms#hasConfirmed"),
+            new URI("http://example.org/statement#address1"));
+        graph.add(triple);
+        print("Graph now contains: ", graph);
         UrqlConnection connection = JRDF_FACTORY.getNewUrqlConnection();
-        final Answer answer = connection.executeQuery(graph, "SELECT ?s ?p ?o WHERE { ?s ?p ?o }");
+        final String query =
+                "SELECT ?s ?add ?o \n" +
+                "WHERE { \n" +
+                "        ?s <http://example.org/terms#hasConfirmed> ?add . \n" +
+                "        OPTIONAL { ?add <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> ?o } . \n" +
+                "        FILTER ( bound(?o) ) }";
+        final Answer answer = connection.executeQuery(graph, query);
         System.out.println("Query Result:\n" + answer);
         StringWriter writer = new StringWriter();
         AnswerXMLPagenatedStreamWriter answerXMLWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);

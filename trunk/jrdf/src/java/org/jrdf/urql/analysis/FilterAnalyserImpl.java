@@ -1,5 +1,6 @@
 package org.jrdf.urql.analysis;
 
+import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.EmptyOperator;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -8,6 +9,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.urql.parser.node.ABoundBuiltincall;
 import org.jrdf.urql.parser.node.ARelationalExpression;
 import org.jrdf.urql.parser.node.AStrBuiltincall;
 import org.jrdf.urql.parser.parser.ParserException;
@@ -46,5 +48,10 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
     @Override
     public void caseAStrBuiltincall(AStrBuiltincall node) {
         expression = new StrOperator<ExpressionVisitor>(valuePair);
+    }
+
+    @Override
+    public void caseABoundBuiltincall(ABoundBuiltincall node) {
+        expression = new BoundOperator<ExpressionVisitor>(valuePair);
     }
 }

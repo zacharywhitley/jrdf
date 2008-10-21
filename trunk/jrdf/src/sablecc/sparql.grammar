@@ -48,6 +48,7 @@ Tokens
   {def}                is_uri_call      = ('isURI');
   {def}                is_blank_call    = ('isBLANK');
   {def}                is_literal_call  = ('isLITERAL');
+  {def}                bound_call       = ('BOUND' | 'bound');
 
   {def->com}                      hash           = '#';
   {com}                           comment        = [character - [lf + cr]];
@@ -119,7 +120,7 @@ Productions
     lpar graph_pattern rpar ;
 
   graph_pattern =
-    {filtered_basic_graph_pattern} filtered_basic_graph_pattern operation_pattern? ;
+    {filtered_basic_graph_pattern} filtered_basic_graph_pattern operation_pattern* ;
 
   filtered_basic_graph_pattern =
     {block_of_triples} block_of_triples? ;
@@ -131,7 +132,7 @@ Productions
     triple period? ;
 
   operation_pattern =
-     {graph_pattern_or_filter_graph_pattern} graph_pattern_or_filter period? graph_pattern ;
+     {graph_pattern_or_filter_graph_pattern} graph_pattern_or_filter period? filtered_basic_graph_pattern ;
 
   graph_pattern_or_filter =
     {graph_pattern_not_triples} graph_pattern_not_triples |
@@ -222,7 +223,11 @@ Productions
     {isiri} is_iri_call bracketed_expression |
     {isuri} is_uri_call bracketed_expression |
     {isblank} is_blank_call bracketed_expression |
-    {isliteral} is_literal_call bracketed_expression ;
+    {isliteral} is_literal_call bracketed_expression |
+    {bound} bound_call bracketed_var ;
+
+  bracketed_var =
+    lbracket variable rbracket;
 
   bracketed_expression =
     lbracket conditional_or_expression rbracket;

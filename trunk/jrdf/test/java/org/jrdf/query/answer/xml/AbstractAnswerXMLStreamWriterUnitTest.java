@@ -111,7 +111,9 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         stream.close();
-        xmlWriter.close();
+        if (xmlWriter != null) {
+            xmlWriter.close();
+        }
     }
 
     public void testVariables() throws Exception {

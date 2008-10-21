@@ -1,5 +1,6 @@
 package org.jrdf.query.answer;
 
+import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
@@ -10,6 +11,7 @@ import static org.jrdf.query.answer.xml.SparqlResultType.LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
+import static org.jrdf.query.relation.constants.NullaryNode.NULLARY_NODE;
 
 public class NodeToTypeValueImpl implements NodeToTypeValue {
     private TypeValue currentTypeValue;
@@ -32,7 +34,11 @@ public class NodeToTypeValueImpl implements NodeToTypeValue {
     }
 
     public void visitNode(Node node) {
-        badNodeType(node.getClass());
+        if (node == NULLARY_NODE || node == ANY_NODE) {
+            currentTypeValue = new TypeValueImpl();
+        } else {
+            badNodeType(node.getClass());
+        }
     }
 
     public void visitResource(Resource resource) {
