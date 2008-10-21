@@ -109,79 +109,56 @@
     </target>
 
     <target name="-dist-gui">
-        <mkdir dir="${dist.dir}/gui"/>
-        <pathconvert dirsep="/" pathsep=" " property="jar.classpath">
-           <map from="${basedir}/lib" to="lib"/>
-           <path refid="production.class.path"/>
-        </pathconvert>
-        <jar destfile="${dist.dir}/gui/main.jar">
-            <manifest>
-                <attribute name="Main-Class" value="org.jrdf.gui.UrqlGui"/>
-                <attribute name="Class-Path" value="${jar.classpath}"/>
-            </manifest>
-            <fileset dir="${prod.classes.dir}"/>
-            <fileset dir="${prod.gui.dir}"/>
-        </jar>
-
-        <!-- Copy required lib jars to ./lib/* -->
-        <copy todir="${dist.dir}/gui">
-            <fileset dir="${basedir}">
-                <patternset refid="production.classpath.pattern"/>
-            </fileset>
-        </copy>
-
-        <!--Create uber jar with one-jar classes and manifest. -->
-        <one-jar destfile="${dist.dir}/gui/${gui.jar}" manifest="${conf.dir}/boot-manifest.mf">
-            <main jar="${dist.dir}/gui/main.jar"/>
-            <lib>
-                <fileset dir="${dist.dir}/gui/lib"/>
-            </lib>
-            <fileset dir="${conf.dir}" includes="**/commons-logging.properties"/>
-            <fileset dir="${conf.dir}" includes="**/simplelog.properties"/>
-        </one-jar>
-
-        <!-- Cleanup -->
-        <delete dir="${dist.dir}/gui/lib"/>
-        <delete file="${dist.dir}/gui/main.jar"/>
+        <dist.jar mainclass="org.jrdf.gui.UrqlGui" jarname="gui.jar" disttype="gui"/>
     </target>
 
     <target name="-dist-server">
-        <mkdir dir="${dist.dir}/server"/>
-        <pathconvert dirsep="/" pathsep=" " property="jar.classpath">
-           <map from="${basedir}/lib" to="lib"/>
-           <path refid="production.class.path"/>
-        </pathconvert>
-        <jar destfile="${dist.dir}/server/main.jar">
-            <manifest>
-                <attribute name="Main-Class" value="org.jrdf.query.server.SpringLocalServer"/>
-                <attribute name="Class-Path" value="${jar.classpath}"/>
-            </manifest>
-            <fileset dir="${prod.classes.dir}"/>
-            <fileset dir="${prod.server.dir}"/>
-        </jar>
-
-        <!-- Copy required lib jars to ./lib/* -->
-        <copy todir="${dist.dir}/server">
-            <fileset dir="${basedir}">
-                <patternset refid="production.classpath.pattern"/>
-            </fileset>
-        </copy>
-
-        <!--Create uber jar with one-jar classes and manifest. -->
-        <one-jar destfile="${dist.dir}/server/${server.jar}" manifest="${conf.dir}/boot-manifest.mf">
-            <main jar="${dist.dir}/server/main.jar"/>
-            <lib>
-                <fileset dir="${dist.dir}/server/lib"/>
-            </lib>
-            <fileset dir="${conf.dir}" includes="**/commons-logging.properties"/>
-            <fileset dir="${conf.dir}" includes="**/simplelog.properties"/>
-        </one-jar>
-
-        <!-- Cleanup -->
-        <delete dir="${dist.dir}/server/lib"/>
-        <delete file="${dist.dir}/server/main.jar"/>
+        <dist.jar mainclass="org.jrdf.query.server.SpringLocalServer" jarname="server.jar" disttype="server"/>
+        <dist.jar mainclass="org.jrdf.query.server.SpringDistributedServer" jarname="distributed-server.jar" disttype="server"/>
     </target>
 
+    <macrodef name="dist.jar">
+        <attribute name="mainclass"/>
+        <attribute name="jarname"/>
+        <attribute name="disttype"/>
+        <sequential >
+            <mkdir dir="${dist.dir}/@{disttype}"/>
+            <pathconvert dirsep="/" pathsep=" " property="jar.classpath">
+               <map from="${basedir}/lib" to="lib"/>
+               <path refid="production.class.path"/>
+            </pathconvert>
+            <jar destfile="${dist.dir}/@{disttype}/main.jar">
+                <manifest>
+                    <attribute name="Main-Class" value="@{mainclass}"/>
+                    <attribute name="Class-Path" value="${jar.classpath}"/>
+                </manifest>
+                <fileset dir="${prod.classes.dir}"/>
+                <fileset dir="${prod.@{disttype}.dir}"/>
+            </jar>
+
+            <!-- Copy required lib jars to ./lib/* -->
+            <copy todir="${dist.dir}/@{disttype}">
+                <fileset dir="${basedir}">
+                    <patternset refid="production.classpath.pattern"/>
+                </fileset>
+            </copy>
+
+            <!--Create uber jar with one-jar classes and manifest. -->
+            <one-jar destfile="${dist.dir}/@{disttype}/${@{jarname}}" manifest="${conf.dir}/boot-manifest.mf">
+                <main jar="${dist.dir}/@{disttype}/main.jar"/>
+                <lib>
+                    <fileset dir="${dist.dir}/@{disttype}/lib"/>
+                </lib>
+                <fileset dir="${conf.dir}" includes="**/commons-logging.properties"/>
+                <fileset dir="${conf.dir}" includes="**/simplelog.properties"/>
+            </one-jar>
+
+            <!-- Cleanup -->
+            <delete dir="${dist.dir}/@{disttype}/lib"/>
+            <delete file="${dist.dir}/@{disttype}/main.jar"/>
+        </sequential>
+    </macrodef>
+    
     <target name="javadoc" depends="-compile">
         <mkdir dir="${javadoc.dir}"/>
         <javadoc destdir="${javadoc.dir}" author="true" version="true"
