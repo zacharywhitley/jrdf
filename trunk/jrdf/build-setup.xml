@@ -142,28 +142,6 @@
         <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
         <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
-        <include name="${lib.dir}/spring/spring-beans-${spring.version}.jar"/>
-        <include name="${lib.dir}/spring/spring-context-${spring.version}.jar"/>
-        <include name="${lib.dir}/spring/spring-core-${spring.version}.jar"/>
-        <include name="${lib.dir}/spring-rcp/forms-1.0.7.jar"/>
-        <include name="${lib.dir}/spring-rcp/looks-2.0.4.jar"/>
-        <include name="${lib.dir}/spring-rcp/spring-binding-1.0.jar"/>
-        <include name="${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar"/>
-        <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
-        <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/je/je-${bdbje.version}.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet-${restlet.version}.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
-        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
-        <include name="${lib.dir}/restlet/org.restlet-${restlet.version}.jar"/>
-        <include name="${lib.dir}/restlet/org.restlet.ext.json_2.0-${restlet.version}.jar"/>
-        <include name="${lib.dir}/restlet/org.json-${restlet.version}.jar"/>
-        <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar"/>
-        <include name="${lib.dir}/restlet/org.restlet.ext.spring_2.5-${restlet.version}.jar"/>
-        <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
-        <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
-        <include name="${lib.dir}/woodstox/wstx-asl-3.2.7.jar"/>
-        <include name="${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"/>
     </patternset>
 
     <fileset id="production.code.fileset" dir="${prod.src.dir}">
@@ -217,6 +195,9 @@
     </path>
     <path id="test.class.path">
         <fileset dir="${basedir}">
+            <patternset refid="base.production.classpath.pattern"/>
+            <patternset refid="gui.production.classpath.pattern"/>
+            <patternset refid="server.production.classpath.pattern"/>
             <patternset refid="test.classpath.pattern"/>
         </fileset>
         <pathelement location="${out.instr.dir}/classes"/>
