@@ -88,6 +88,6 @@ public final class NullaryNode implements Node, Serializable {
     }
 
     public void accept(TypedNodeVisitor visitor) {
-        // Do nothing.
+        visitor.visitNode(this);
     }
 }

@@ -84,6 +84,7 @@ import org.jrdf.urql.parser.node.ATriple;
 import org.jrdf.urql.parser.node.Node;
 import org.jrdf.urql.parser.node.PGroupGraphPattern;
 import org.jrdf.urql.parser.node.PMoreTriples;
+import org.jrdf.urql.parser.node.POperationPattern;
 import org.jrdf.urql.parser.node.PUnionGraphPattern;
 import org.jrdf.urql.parser.parser.ParserException;
 
@@ -118,10 +119,14 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
 
     @Override
     public void caseAFilteredBasicGraphPatternGraphPattern(AFilteredBasicGraphPatternGraphPattern node) {
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
         if (node.getOperationPattern() != null) {
-            Expression<ExpressionVisitor> lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
-            Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperationPattern().clone());
-            handleExpressions(lhs, rhs);
+            expression = lhs;
+            LinkedList<POperationPattern> list = node.getOperationPattern();
+            for (POperationPattern pOperationPattern : list) {
+                Expression<ExpressionVisitor> rhs = getExpression((Node) pOperationPattern.clone());
+                handleExpressions(expression, rhs);
+            }
         } else {
             super.caseAFilteredBasicGraphPatternGraphPattern(node);
         }
@@ -187,7 +192,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     public void caseAGraphPatternOrFilterGraphPatternOperationPattern(
         AGraphPatternOrFilterGraphPatternOperationPattern node) {
         Expression<ExpressionVisitor> lhs = getExpression((Node) node.getGraphPatternOrFilter().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getGraphPattern().clone());
+        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
         if (lhs != null && rhs != null) {
             expression = handleExistingLhsRhs(lhs, rhs);
         } else if (lhs != null) {
@@ -239,7 +244,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     private void handleOptional(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
         Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
         if (rhsOptional.getLhs() != null) {
-            expression = createNewOptional(lhs, rhsOptional);
+            expression = new Conjunction<ExpressionVisitor>(lhs, rhsOptional);
         } else {
             rhsOptional.setLhs(lhs);
             expression = rhsOptional;

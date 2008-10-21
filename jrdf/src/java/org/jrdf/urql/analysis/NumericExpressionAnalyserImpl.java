@@ -1,5 +1,6 @@
 package org.jrdf.urql.analysis;
 
+import org.jrdf.graph.AnyNode;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
@@ -7,12 +8,14 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.mem.BoundAVPOperation;
 import org.jrdf.query.relation.mem.EqAVPOperation;
 import org.jrdf.query.relation.mem.NeqAVPOperation;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.urql.parser.node.ABoundBuiltincall;
 import org.jrdf.urql.parser.node.AEMoreNumericExpression;
 import org.jrdf.urql.parser.node.ANeMoreNumericExpression;
 import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
@@ -57,6 +60,12 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
     }
 
     @Override
+    public void caseABoundBuiltincall(ABoundBuiltincall node) {
+        this.operation = BoundAVPOperation.BOUND;
+        node.getBracketedVar().apply(this);
+    }
+
+    @Override
     public void caseARdfLiteralPrimaryExpression(ARdfLiteralPrimaryExpression node) {
         try {
             this.value = literalBuilder.createLiteral(node);
@@ -68,5 +77,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
     @Override
     public void caseAVariable(AVariable node) {
         this.attributeName = new VariableName(node.getVariablename().getText());
+        this.value = AnyNode.ANY_NODE;
     }
 }

@@ -5,6 +5,7 @@ import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.relation.constants.NullaryNode;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -33,7 +34,12 @@ public class AnswerIterator implements Iterator<TypeValue[]> {
         TypeValue[] results = new TypeValue[heading.size()];
         int index = 0;
         for (Attribute headingAttribute : heading) {
-            Node value = avps.get(headingAttribute).getValue();
+            Node value;
+            try {
+                value = avps.get(headingAttribute).getValue();
+            } catch (Exception e) {
+                value = NullaryNode.NULLARY_NODE;
+            }
             results[index] = nodeToTypeValue.convert(value);
             index++;
         }
