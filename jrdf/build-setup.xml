@@ -213,6 +213,8 @@
         </fileset>
         <pathelement location="${out.instr.dir}/classes"/>
         <pathelement location="${prod.classes.dir}"/>
+        <pathelement location="${prod.gui.dir}"/>
+        <pathelement location="${prod.server.dir}"/>
         <pathelement location="${test.classes.dir}"/>
         <pathelement location="${test.dir}/rdf"/>
     </path>
