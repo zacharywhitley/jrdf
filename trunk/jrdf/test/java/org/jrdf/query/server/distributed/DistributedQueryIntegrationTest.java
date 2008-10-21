@@ -96,10 +96,6 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version :$
  */
-
-// TODO AN/YF Change the start/top in setup and teardown - if there's an exception it will cause the other tests to
-// fail.
-
 public class DistributedQueryIntegrationTest extends TestCase {
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
