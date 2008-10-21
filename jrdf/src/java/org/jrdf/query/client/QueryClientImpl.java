@@ -59,18 +59,17 @@
 
 package org.jrdf.query.client;
 
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
+import static org.jrdf.query.MediaTypeExtensions.*;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswer;
-import static org.jrdf.query.client.ServerPort.createServerPort;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.query.client.ServerPort.*;
+import static org.jrdf.util.param.ParameterUtil.*;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
-import org.restlet.data.Form;
 import org.restlet.data.MediaType;
-import static org.restlet.data.Method.GET;
+import static org.restlet.data.Method.*;
 import org.restlet.data.Preference;
-import static org.restlet.data.Protocol.HTTP;
+import static org.restlet.data.Protocol.*;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -123,9 +122,8 @@ public class QueryClientImpl implements CallableGraphQueryClient {
     }
 
     protected Request prepareGetRequest(String graphName, String queryString) {
-        Representation representation = new Form().getWebRepresentation();
         String requestURL = makeRequestString(graphName, queryString);
-        Request request = new Request(GET, requestURL, representation);
+        Request request = new Request(GET, requestURL);
         setAcceptedMediaTypes(request);
         return request;
     }
@@ -146,9 +144,9 @@ public class QueryClientImpl implements CallableGraphQueryClient {
     }
 
     private String makeRequestString(String graphName, String queryString) {
-        String query = "query" + "=" + queryString;
         Reference ref = new Reference(HTTP.getSchemeName(), serverPort.getHostname(), serverPort.getPort(),
-            "/graphs/" + graphName, query, null);
+            "/graphs/" + graphName, null, null);
+        ref.addQueryParameter("query", queryString);
         return ref.toString();
     }
 }
