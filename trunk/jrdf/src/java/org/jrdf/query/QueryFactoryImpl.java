@@ -93,9 +93,11 @@ import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine;
 import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
 import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
+import org.jrdf.query.relation.operation.mem.union.MinimumUnionImpl;
 import org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl;
 import org.jrdf.query.relation.operation.mem.union.OuterUnionEngine;
 import org.jrdf.query.relation.operation.mem.union.OuterUnionImpl;
+import org.jrdf.query.relation.operation.mem.union.SubsumptionEngine;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.type.TypeComparatorImpl;
 import org.jrdf.urql.builder.QueryBuilder;
@@ -121,6 +123,9 @@ public class QueryFactoryImpl implements QueryFactory {
         ATTRIBUTE_COMPARATOR);
     private static final RelationFactory RELATION_FACTORY = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR,
         TUPLE_COMPARATOR);
+    private static final RelationHelper RELATION_HELPER = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
+    private static final RelationProcessor RELATION_PROCESSOR = new RelationProcessorImpl(RELATION_FACTORY,
+        TUPLE_COMPARATOR);
 
     public QueryBuilder createQueryBuilder() {
         AttributeValuePairHelper avpHelper = new AttributeValuePairHelperImpl();
@@ -138,14 +143,18 @@ public class QueryFactoryImpl implements QueryFactory {
 
     public QueryEngine createQueryEngine() {
         Project project = new ProjectImpl(TUPLE_FACTORY, RELATION_FACTORY);
-        RelationProcessor relationProcessor = new RelationProcessorImpl(RELATION_FACTORY, TUPLE_COMPARATOR);
-        RelationHelper relationHelper = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
-        TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, relationHelper);
-        TupleEngine unionTupleEngine = new OuterUnionEngine(relationHelper);
-        NadicJoin join = new NadicJoinImpl(relationProcessor, joinTupleEngine);
+        TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER);
+        TupleEngine unionTupleEngine = new OuterUnionEngine(RELATION_HELPER);
+        NadicJoin join = new NadicJoinImpl(RELATION_PROCESSOR, joinTupleEngine);
         Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR);
-        Union union = new OuterUnionImpl(relationProcessor, unionTupleEngine);
-        DyadicJoin leftOuterJoin = new MinimumUnionLeftOuterJoinImpl(join, union);
+        Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
+        DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);
         return new NaiveQueryEngineImpl(project, join, restrict, union, leftOuterJoin);
+    }
+
+    private DyadicJoin getLeftOuterJoin(TupleEngine unionTupleEngine, NadicJoin join) {
+        SubsumptionEngine subsumptionEngine = new SubsumptionEngine(TUPLE_FACTORY, RELATION_HELPER);
+        Union minUnion = new MinimumUnionImpl(RELATION_PROCESSOR, unionTupleEngine, subsumptionEngine);
+        return new MinimumUnionLeftOuterJoinImpl(join, minUnion);
     }
 }
