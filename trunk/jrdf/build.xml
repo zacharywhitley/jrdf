@@ -139,7 +139,8 @@
             <!-- Copy required lib jars to ./lib/* -->
             <copy todir="${dist.dir}/@{disttype}">
                 <fileset dir="${basedir}">
-                    <patternset refid="production.classpath.pattern"/>
+                    <patternset refid="base.production.classpath.pattern"/>
+                    <patternset refid="@{disttype}.production.classpath.pattern"/>
                 </fileset>
             </copy>
 
