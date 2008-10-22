@@ -1,5 +1,24 @@
 JRDF Release 0.5.5.4
 ====================
+* Distribute Server and Local Server for returning SPARQL query results
+ (Feature 2037365, 2059027, and 2148831).
+* Streaming Answer Support (Feature 2165388).
+* BOUND Support for FILTER (Feature 2183625).
+* Configurable temporary directory (Feature 2148621).
+* Automatically close iterator when reaching the end and support
+ iterable (Feature 2072884 and 2072993).
+* Upgraded JAR (Feature 2148830).
+* Increase indexing performance for Molecule Store (Feature 2059023).
+* QueryFactoryImpl produces incorrect LeftOuterJoin (Bug 2183576).
+* SPARQL parser does not support multiple operation patterns (Bug 2173164).
+* RdfXmlWriter failed to support xml literals correctly (Bug 2158131).
+* Graph findResource() doesn't return resource (Bug 2113206).
+* Interfaces made more consistent and use correct return types
+ (Bug 2061469).
+* addNewGraph(String) on persistent graphs creates graphs with the same
+ name (Bug 2059077).
+* Sync() not being called on BTrees (Bug 2059002).
+* Abstract literal did not return datatype (Bug 2052314).
 
 JRDF Release 0.5.5.3
 ====================
