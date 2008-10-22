@@ -167,7 +167,7 @@
         <constructor-arg ref="urqlConnection"/>
     </bean>
 
-    <bean id="distributedGraphApplication" class="org.jrdf.query.server.distributed.DistributedQueryGraphApplicationImpl" scope="prototype">
+    <bean id="distributedGraphApplication" class="org.jrdf.query.server.distributed.DistributedQueryGraphApplicationImpl">
         <constructor-arg ref="graphApplication"/>
     </bean>
 
