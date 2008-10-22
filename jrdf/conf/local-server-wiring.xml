@@ -107,7 +107,7 @@
         <constructor-arg ref="queryEngine"/>
     </bean>
 
-    <bean id="graphApplication" class="org.jrdf.query.server.local.GraphApplicationImpl">
+    <bean id="graphApplication" class="org.jrdf.query.server.local.GraphApplicationImpl" scope="prototype">
         <constructor-arg ref="directoryHandler"/>
         <constructor-arg ref="urqlConnection"/>
     </bean>
