@@ -57,49 +57,60 @@
  *
  */
 
-package org.jrdf.query.expression;
+package org.jrdf.query.expression.logic;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.util.EqualsUtil;
-
-import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class BoundOperator <V extends ExpressionVisitor> implements Operator<V> {
-    private static final long serialVersionUID = -2026129623510467814L;
+public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
+    private static final long serialVersionUID = -1701496085083842700L;
     private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
 
-    private BoundOperator() {
+    // TODO YF should be LogicExpression!
+    private Expression<V> lhs;
+    private Expression<V> rhs;
+
+    private LogicalAndExpression() {
     }
 
-    public BoundOperator(Map<Attribute, ValueOperation> singleAvp) {
-        this.singleAvp = singleAvp;
+    public LogicalAndExpression(Expression<V> lhs, Expression<V> rhs) {
+        this.lhs = lhs;
+        this.rhs = rhs;
     }
 
-    public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitOperator(this);
+    public Expression<V> getLhs() {
+        return lhs;
     }
 
-    public Map<Attribute, ValueOperation> getAttributeValuePair() {
-        return singleAvp;
+    public Expression<V> getRhs() {
+        return rhs;
     }
 
-    @Override
+    public void setLhs(Expression<V> lhs) {
+        this.lhs = lhs;
+    }
+
+    public void setRhs(Expression<V> rhs) {
+        this.rhs = rhs;
+    }
+
+    public void accept(V v) {
+        v.visitLogicalAnd(this);
+    }
+
     public int hashCode() {
+        // FIXME TJA: Test drive out values of triple.hashCode()
         return DUMMY_HASHCODE;
     }
 
-    @Override
     public String toString() {
-        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
-        Attribute attribute = attributeValueOperationEntry.getKey();
-        return "bound (" + attribute + ")";
+        return lhs + " && " + rhs;
     }
 
     public boolean equals(Object obj) {
@@ -112,10 +123,18 @@ public class BoundOperator <V extends ExpressionVisitor> implements Operator<V> 
         if (EqualsUtil.differentClasses(this, obj)) {
             return false;
         }
-        return determineEqualityFromFields(this, (BoundOperator) obj);
+        return determineEqualityFromFields(this, (LogicalAndExpression) obj);
     }
 
-    private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {
-        return s1.singleAvp.equals(s2.singleAvp);
+    private boolean determineEqualityFromFields(LogicalAndExpression o1, LogicalAndExpression o2) {
+        return lhsEqual(o1, o2) && rhsEqual(o1, o2);
+    }
+
+    private boolean rhsEqual(LogicalAndExpression o1, LogicalAndExpression o2) {
+        return o1.getRhs().equals(o2.getRhs());
+    }
+
+    private boolean lhsEqual(LogicalAndExpression o1, LogicalAndExpression o2) {
+        return o1.getLhs().equals(o2.getLhs());
     }
 }

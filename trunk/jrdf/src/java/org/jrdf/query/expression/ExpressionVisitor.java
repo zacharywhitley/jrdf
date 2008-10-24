@@ -59,6 +59,9 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.expression.logic.LogicalAndExpression;
+import org.jrdf.query.expression.logic.LogicalNotExpression;
+
 /**
  * Visits the various expression objects.  Can be used to execute or optimize (transform) expressions.
  *
@@ -79,4 +82,10 @@ public interface ExpressionVisitor {
     <V extends ExpressionVisitor> void visitOptional(Optional<V> optional);
 
     <V extends ExpressionVisitor> void visitOperator(Operator<V> operator);
+
+    <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression);
+
+    <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression);
+
+    <V extends ExpressionVisitor> void visitFilter(Filter<V> filter);
 }

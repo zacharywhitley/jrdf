@@ -29,6 +29,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="LongIndexBdb"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ServersResource"/>
     <suppress checks="ClassDataAbstractionCoupling" files="QueryClientImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
@@ -42,6 +43,7 @@
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
+    <suppress checks="ParameterNumber" files="NaiveQueryEngineImpl"/>
 
     <!-- Cleanup molecule implementation -->
     <suppress checks="BooleanExpressionComplexity" files="FlatteningFiveLongClosableIterator"/>

@@ -64,7 +64,9 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.mem.EqAVPOperation;
+import org.jrdf.query.relation.mem.AVPOperation;
+import static org.jrdf.query.relation.mem.BoundAVPOperation.BOUND;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
@@ -103,29 +105,45 @@ public class NaturalJoinEngine implements TupleEngine {
         for (Attribute attribute : headings) {
             ValueOperation avp1 = tuple1.getValueOperation(attribute);
             ValueOperation avp2 = tuple2.getValueOperation(attribute);
-            contradiction = compareAvps(attribute, avp1, avp2);
-
-            // If we didn't find one for the current heading end early.
+            contradiction = compareAVPs(attribute, avp1, avp2);
             if (contradiction) {
                 break;
             }
         }
 
         // Only add results if we have found more items to add and there wasn't a contradiction in bound values.
-        if (!resultantAttributeValues.isEmpty() && !contradiction) {
+        if (!contradiction && !resultantAttributeValues.isEmpty()) {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
     }
 
-    private boolean compareAvps(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
-        if (avp1 == null) {
-            if (avp2 != null) {
-                resultantAttributeValues.put(attribute, avp2);
-            }
-            return false;
+    private boolean compareAVPs(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
+        boolean result;
+        if (avp1 == null && avp2 == null) {
+            result = false;
         } else {
-            return avp1NotNull(attribute, avp1, avp2);
+            if (avp1 == null) {
+                result = processSingleAVP(attribute, avp2);
+            } else if (avp2 == null) {
+                result = processSingleAVP(attribute, avp1);
+            } else {
+                result = avp1NotNull(attribute, avp1, avp2);
+            }
+        }
+        return result;
+    }
+
+    private boolean processSingleAVP(Attribute attribute, ValueOperation avp) {
+        final AVPOperation avpOperation = avp.getOperation();
+        if (avpOperation.equals(EQUALS)) {
+            resultantAttributeValues.put(attribute, avp);
+            return false;
+        } else if (avpOperation.equals(BOUND)) {
+            resultantAttributeValues.put(attribute, avp);
+            return true;
+        } else {
+            return true;
         }
     }
 
@@ -134,7 +152,7 @@ public class NaturalJoinEngine implements TupleEngine {
             resultantAttributeValues.put(attribute, avp1);
             return false;
         } else {
-            if (!avp1.getOperation().equals(EqAVPOperation.EQUALS)) {
+            if (!avp1.getOperation().equals(EQUALS)) {
                 return avp1.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp1, avp2);
             } else {
                 return avp2.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp2, avp1);

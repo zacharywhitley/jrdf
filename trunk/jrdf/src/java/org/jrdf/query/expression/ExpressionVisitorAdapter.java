@@ -59,6 +59,9 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.expression.logic.LogicalAndExpression;
+import org.jrdf.query.expression.logic.LogicalNotExpression;
+
 /**
  * An adapter for ExpressionVisitor - allows an implementation to avoid having to implement all the methods.
  * Currently, these methods do nothing.
@@ -86,5 +89,14 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
     }
 
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
+    }
+
+    public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
+    }
+
+    public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
+    }
+
+    public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
     }
 }

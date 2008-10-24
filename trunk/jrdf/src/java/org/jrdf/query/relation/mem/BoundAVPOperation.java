@@ -81,6 +81,7 @@ public final class BoundAVPOperation implements AVPOperation {
     private BoundAVPOperation() {
     }
 
+    // TODO YF check whether the bound operator has AnyNode as node, if NullaryNode should return false.
     public boolean addAttributeValuePair(Attribute attribute, Map<Attribute,
         ValueOperation> newAttributeValues, ValueOperation lhs, ValueOperation rhs) {
         if (BoundOperator.class.isAssignableFrom(lhs.getOperation().getClass())) {

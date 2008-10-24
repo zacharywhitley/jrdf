@@ -134,5 +134,4 @@ public final class Conjunction<V extends ExpressionVisitor> implements Expressio
     private boolean lhsEqual(Conjunction o1, Conjunction o2) {
         return o1.getLhs().equals(o2.getLhs());
     }
-
 }
