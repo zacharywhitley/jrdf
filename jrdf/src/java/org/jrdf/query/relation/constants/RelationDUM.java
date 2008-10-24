@@ -62,12 +62,14 @@ package org.jrdf.query.relation.constants;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.ValueOperation;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Map;
 
 /**
  * Dum is a relation with no tuples and is the base relation for FALSE.
@@ -104,6 +106,10 @@ public final class RelationDUM implements Relation, Serializable {
      * @return an empty set of tuples.
      */
     public Set<Tuple> getTuples() {
+        return Collections.emptySet();
+    }
+
+    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
         return Collections.emptySet();
     }
 

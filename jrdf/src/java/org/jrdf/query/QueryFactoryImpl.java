@@ -85,6 +85,7 @@ import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl;
@@ -93,6 +94,7 @@ import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine;
 import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
 import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
+import org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceImpl;
 import org.jrdf.query.relation.operation.mem.union.MinimumUnionImpl;
 import org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl;
 import org.jrdf.query.relation.operation.mem.union.OuterUnionEngine;
@@ -149,7 +151,8 @@ public class QueryFactoryImpl implements QueryFactory {
         Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR);
         Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
         DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);
-        return new NaiveQueryEngineImpl(project, join, restrict, union, leftOuterJoin);
+        SemiDifference diff = new SemiDifferenceImpl(RELATION_PROCESSOR, RELATION_FACTORY, TUPLE_COMPARATOR);
+        return new NaiveQueryEngineImpl(project, join, restrict, union, leftOuterJoin, diff);
     }
 
     private DyadicJoin getLeftOuterJoin(TupleEngine unionTupleEngine, NadicJoin join) {

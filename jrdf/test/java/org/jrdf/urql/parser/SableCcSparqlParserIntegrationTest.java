@@ -64,6 +64,7 @@ import org.jrdf.TestJRDFFactory;
 import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.global.LiteralImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
@@ -72,10 +73,13 @@ import org.jrdf.query.expression.Conjunction;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.Union;
+import org.jrdf.query.expression.logic.LogicalAndExpression;
+import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.ValueOperation;
@@ -83,11 +87,13 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import static org.jrdf.query.relation.mem.BoundAVPOperation.BOUND;
+import org.jrdf.query.relation.mem.EqAVPOperation;
 import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.NodeTestUtil.createLiteral;
@@ -342,10 +348,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
         ValueOperation value = new ValueOperationImpl(createLiteral("unknown"), EQUALS);
         avo.put(attribute, value);
-        Expression<ExpressionVisitor> filterExpression = new StrOperator(avo);
-        Expression<ExpressionVisitor> conjunction = new Conjunction<ExpressionVisitor>(spoExpression,
-                filterExpression);
-        checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\") }", conjunction);
+        Expression<ExpressionVisitor> strExpression = new StrOperator(avo);
+        Expression<ExpressionVisitor> filterExpression = new Filter(spoExpression, strExpression);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\") }", filterExpression);
     }
 
     public void testPrefixInFilter() throws Exception {
@@ -355,11 +360,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
         ValueOperation value = new ValueOperationImpl(createLiteral("unknown", XSD.STRING), EQUALS);
         avo.put(attribute, value);
-        Expression<ExpressionVisitor> filterExpression = new StrOperator(avo);
-        Expression<ExpressionVisitor> conjunction = new Conjunction<ExpressionVisitor>(spoExpression,
-                filterExpression);
+        Expression<ExpressionVisitor> strExpression = new StrOperator(avo);
+        Expression<ExpressionVisitor> filterExpression = new Filter(spoExpression, strExpression);
         checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
-                "SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", conjunction);
+                "SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", filterExpression);
     }
 
     public void testThreePartOptional() throws Exception {
@@ -371,16 +375,75 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
                 "FILTER ( bound(?date) ) }";
 
         Expression<ExpressionVisitor> optionalExpression = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, DC_DATE_EXP_2);
-
         AttributeName dateVar = new VariableName("date");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
         ValueOperation value = new ValueOperationImpl(ANY_NODE, BOUND);
         avo.put(attribute, value);
-        Expression<ExpressionVisitor> filterExpression = new BoundOperator(avo);
+        Expression<ExpressionVisitor> boundExpression = new BoundOperator(avo);
+        Expression<ExpressionVisitor> filterExpression = new Filter(optionalExpression, boundExpression);
+        checkConstraintExpression(queryString, filterExpression);
+    }
 
-        Expression<ExpressionVisitor> conjunction = new Conjunction<ExpressionVisitor>(optionalExpression, filterExpression);
-        checkConstraintExpression(queryString, conjunction);
+    public void testBooleanNotOperator() throws Exception {
+        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+                "SELECT ?name\n" +
+                "WHERE { ?x foaf:name ?name .\n" +
+                "FILTER ( !bound(?name) ) }";
+
+        AttributeName dateVar = new VariableName("name");
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
+        ValueOperation value = new ValueOperationImpl(ANY_NODE, BOUND);
+        avo.put(attribute, value);
+        Expression<ExpressionVisitor> boundExpression = new BoundOperator(avo);
+        Expression<ExpressionVisitor> notExpression = new LogicalNotExpression(boundExpression);
+        Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, notExpression);
+        checkConstraintExpression(queryString, filterExpression);
+    }
+
+    public void testBooleanNotStrOperators() throws Exception {
+        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+                "SELECT ?name\n" +
+                "WHERE { ?x foaf:name ?name .\n" +
+                "FILTER ( !str(?name) = \"abc\") }";
+        AttributeName dateVar = new VariableName("name");
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
+        Literal abcLit = new LiteralImpl("abc");
+        ValueOperation value = new ValueOperationImpl(abcLit, EqAVPOperation.EQUALS);
+        avo.put(attribute, value);
+        Expression<ExpressionVisitor> strOperator = new StrOperator(avo);
+        Expression<ExpressionVisitor> notExp = new LogicalNotExpression(strOperator);
+        Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, notExp);
+        checkConstraintExpression(queryString, filterExpression);
+    }
+
+    public void testBooleanAndExpression() throws Exception {
+        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+                "SELECT ?name\n" +
+                "WHERE { ?x foaf:name ?name .\n" +
+                "FILTER ( str(?name) = \"abc\" && bound(?x) ) }";
+        AttributeName nameVar = new VariableName("name");
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        Attribute attribute = new AttributeImpl(nameVar, new ObjectNodeType());
+        Literal abcLit = new LiteralImpl("abc");
+        ValueOperation value = new ValueOperationImpl(abcLit, EqAVPOperation.EQUALS);
+        avo.put(attribute, value);
+        Expression<ExpressionVisitor> strOperator = new StrOperator(avo);
+
+        AttributeName xVar = new VariableName("x");
+        avo = new HashMap<Attribute, ValueOperation>();
+        attribute = new AttributeImpl(xVar, new SubjectNodeType());
+        value = new ValueOperationImpl(ANY_NODE, BOUND);
+        avo.put(attribute, value);
+        Expression<ExpressionVisitor> boundExpression = new BoundOperator(avo);
+        Expression<ExpressionVisitor> andExpression = new LogicalAndExpression<ExpressionVisitor>(strOperator, boundExpression);
+        Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, andExpression);
+        checkConstraintExpression(queryString, filterExpression);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) throws Exception {

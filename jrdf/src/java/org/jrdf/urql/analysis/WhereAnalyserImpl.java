@@ -65,10 +65,12 @@ import org.jrdf.query.expression.Constraint;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
+import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.builder.LiteralBuilderImpl;
@@ -147,7 +149,10 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             } else if (Constraint.class.isAssignableFrom(rhs.getClass()) &&
                 (Constraint.class.isAssignableFrom(lhs.getClass()))) {
                 expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
-            } else if (Operator.class.isAssignableFrom(rhs.getClass())) {
+            } else if (LogicExpression.class.isAssignableFrom(rhs.getClass()) ||
+                Operator.class.isAssignableFrom(rhs.getClass())) {
+                expression = new Filter<ExpressionVisitor>(lhs, rhs);
+            } else {
                 expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
             }
         } else {
@@ -194,7 +199,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         Expression<ExpressionVisitor> lhs = getExpression((Node) node.getGraphPatternOrFilter().clone());
         Expression<ExpressionVisitor> rhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
         if (lhs != null && rhs != null) {
-            expression = handleExistingLhsRhs(lhs, rhs);
+            expression = handleExistingLhsRhs(rhs, lhs);
         } else if (lhs != null) {
             expression = lhs;
         } else if (rhs != null) {
@@ -206,7 +211,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     public void caseAFilterPatternGraphPatternOrFilter(AFilterPatternGraphPatternOrFilter node) {
         try {
             FilterAnalyser analyser = new FilterAnalyserImpl(new LiteralBuilderImpl(graph.getElementFactory(),
-                    tripleBuilder.getPrefixMap()));
+                    tripleBuilder.getPrefixMap()), collector);
             node.apply(analyser);
             expression = analyser.getExpression();
         } catch (ParserException e) {
@@ -253,6 +258,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
 
     private Expression<ExpressionVisitor> handleExistingLhsRhs(Expression<ExpressionVisitor> lhs,
         Expression<ExpressionVisitor> rhs) {
+        // TODO impossible for both sides to be Optional
         if (lhs instanceof Optional && rhs instanceof Optional) {
             return joinTwoOptionals(lhs, rhs);
         } else if (rhs instanceof Optional) {

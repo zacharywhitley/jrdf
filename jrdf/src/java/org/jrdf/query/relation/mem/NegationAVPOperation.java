@@ -57,11 +57,14 @@
  *
  */
 
-package org.jrdf.query.expression;
+package org.jrdf.query.relation.mem;
 
+import static org.jrdf.graph.AnyNode.ANY_NODE;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.query.relation.constants.NullaryNode.NULLARY_NODE;
 
 import java.util.Map;
 
@@ -70,52 +73,68 @@ import java.util.Map;
  * @version :$
  */
 
-public class BoundOperator <V extends ExpressionVisitor> implements Operator<V> {
-    private static final long serialVersionUID = -2026129623510467814L;
-    private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
+public final class NegationAVPOperation implements AVPOperation {
+    private static final NodeComparator COMPARATOR = new ComparatorFactoryImpl().createNodeComparator();
+    private static final long serialVersionUID = 6132466908097938381L;
 
-    private BoundOperator() {
+    /**
+     * The constant to indicate negation operation.
+     */
+    public static final NegationAVPOperation NEGATION = new NegationAVPOperation();
+
+    private NegationAVPOperation() {
     }
 
-    public BoundOperator(Map<Attribute, ValueOperation> singleAvp) {
-        this.singleAvp = singleAvp;
-    }
-
-    public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitOperator(this);
-    }
-
-    public Map<Attribute, ValueOperation> getAttributeValuePair() {
-        return singleAvp;
-    }
-
-    @Override
     public int hashCode() {
-        return DUMMY_HASHCODE;
+        return super.hashCode();
     }
 
-    @Override
     public String toString() {
-        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
-        Attribute attribute = attributeValueOperationEntry.getKey();
-        return "bound (" + attribute + ")";
+        return "!";
     }
 
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (BoundOperator) obj);
+        return obj == this;
     }
 
-    private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {
-        return s1.singleAvp.equals(s2.singleAvp);
+    public boolean addAttributeValuePair(Attribute attribute, Map<Attribute, ValueOperation> newAttributeValues,
+                                         ValueOperation lhs, ValueOperation rhs) {
+        final AVPOperation operation1 = lhs.getOperation();
+        final AVPOperation operation2 = rhs.getOperation();
+        boolean toNegate = NegationAVPOperation.class.isAssignableFrom(operation1.getClass());
+        toNegate = toNegate && NegationAVPOperation.class.isAssignableFrom(operation2.getClass()) ? false : true;
+        final Node node1 = lhs.getValue();
+        final Node node2 = rhs.getValue();
+
+        boolean result = compareNodes(node1, node2);
+        if (toNegate) {
+            result = !result;
+        }
+        // TODO add to value result pair
+        addAttributeValues(attribute, newAttributeValues, lhs, rhs, result);
+        return result;
+    }
+
+    private void addAttributeValues(Attribute attribute, Map<Attribute, ValueOperation> newAttributeValues,
+                                    ValueOperation lhs, ValueOperation rhs, boolean result) {
+        if (!result) {
+            if (NegationAVPOperation.class.isAssignableFrom(lhs.getOperation().getClass())) {
+                newAttributeValues.put(attribute, rhs);
+            } else {
+                newAttributeValues.put(attribute, lhs);
+            }
+        }
+    }
+
+    private boolean compareNodes(Node node1, Node node2) {
+        boolean result;
+        if (NULLARY_NODE.equals(node1) || NULLARY_NODE.equals(node2)) {
+            result = false;
+        } else if (ANY_NODE.equals(node1) || ANY_NODE.equals(node2)) {
+            result = true;
+        } else {
+            result = COMPARATOR.compare(node1, node2) == 0;
+        }
+        return result;
     }
 }

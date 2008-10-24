@@ -102,6 +102,7 @@
         <constructor-arg ref="restrict"/>
         <constructor-arg ref="outerUnion"/>
         <constructor-arg ref="minLeftOuterJoin"/>
+        <constructor-arg ref="semiDifference"/>
     </bean>
 
     <!-- Relational Operations and Supporting Classes -->

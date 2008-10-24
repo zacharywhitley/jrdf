@@ -240,13 +240,13 @@ public class JrdfExample {
         graph.add(triple);
         print("Graph now contains: ", graph);
         UrqlConnection connection = JRDF_FACTORY.getNewUrqlConnection();
-        final String query =
-                "SELECT ?s ?add ?o \n" +
+        String query =
+                "SELECT ?s ?add \n" +
                 "WHERE { \n" +
-                "        ?s <http://example.org/terms#hasConfirmed> ?add . \n" +
+                "        ?s <http://example.org/terms#hasConfirmed> ?add \n" +
                 "        OPTIONAL { ?add <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> ?o } . \n" +
-                "        FILTER ( bound(?o) ) }";
-        final Answer answer = connection.executeQuery(graph, query);
+                "        FILTER ( bound(?add) && !bound(?o) ) }";
+        Answer answer = connection.executeQuery(graph, query);
         System.out.println("Query Result:\n" + answer);
         StringWriter writer = new StringWriter();
         AnswerXMLPagenatedStreamWriter answerXMLWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);

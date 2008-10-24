@@ -63,6 +63,7 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.util.EqualsUtil.*;
 import static org.jrdf.util.param.ParameterUtil.*;
 
@@ -70,6 +71,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Map;
 
 /**
  * Implementation of relations containing a set of tuples and a set of attributes.  The attribute constitute a heading
@@ -113,6 +115,28 @@ public final class RelationImpl implements Relation {
 
     public Set<Tuple> getTuples() {
         return tuples;
+    }
+
+    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
+        Set<Tuple> set = new TreeSet<Tuple>();
+        for (Tuple tuple : tuples) {
+            final Map<Attribute, ValueOperation> map = tuple.getAttributeValues();
+            if (contains(map, avo)) {
+                set.add(tuple);
+            }
+        }
+        return set;
+    }
+
+    private boolean contains(Map<Attribute, ValueOperation> map, Map<Attribute, ValueOperation> avo) {
+        final Set<Attribute> keys = avo.keySet();
+        for (Attribute attr : keys) {
+            ValueOperation vo = avo.get(attr);
+            if (map.get(attr) == null || !map.get(attr).equals(vo)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // TODO (AN) Test drive me

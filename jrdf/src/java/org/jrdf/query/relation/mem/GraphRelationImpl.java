@@ -59,9 +59,9 @@
 
 package org.jrdf.query.relation.mem;
 
-import static org.jrdf.graph.AnyObjectNode.*;
-import static org.jrdf.graph.AnyPredicateNode.*;
-import static org.jrdf.graph.AnySubjectNode.*;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
@@ -126,6 +126,11 @@ public final class GraphRelationImpl implements GraphRelation {
                 (PredicateNode) nameValues.get(attributes[1]).getValue(),
                 (ObjectNode) nameValues.get(attributes[2]).getValue());
         return getTuplesFromGraph(searchTriple, attributes);
+    }
+
+    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
+        LinkedHashMap<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>(avo);
+        return getTuples(map);
     }
 
     public SortedSet<Attribute> getSortedHeading() {

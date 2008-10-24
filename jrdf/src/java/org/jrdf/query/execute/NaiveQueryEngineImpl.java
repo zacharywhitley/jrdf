@@ -64,11 +64,14 @@ import org.jrdf.query.expression.EmptyConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
+import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
+import org.jrdf.query.expression.logic.LogicalAndExpression;
+import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -77,6 +80,7 @@ import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.HashSet;
@@ -98,15 +102,17 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     private NadicJoin naturalJoin;
     private org.jrdf.query.relation.operation.Union union;
     private DyadicJoin leftOuterJoin;
+    private SemiDifference diff;
     private Map<AttributeName, PositionalNodeType> allVariables;
 
     public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
-        org.jrdf.query.relation.operation.Union union, DyadicJoin leftOuterJoin) {
+        org.jrdf.query.relation.operation.Union union, DyadicJoin leftOuterJoin, SemiDifference diff) {
         this.project = project;
         this.naturalJoin = naturalJoin;
         this.restrict = restrict;
         this.union = union;
         this.leftOuterJoin = leftOuterJoin;
+        this.diff = diff;
     }
 
     public Relation getResult() {
@@ -170,12 +176,31 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
+        Set<Relation> set = new HashSet<Relation>();
+        set.add(result);
         result = restrict.restrict(operator.getAttributeValuePair());
+        set.add(result);
+        result = naturalJoin.join(set);
+    }
+
+    public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
+        result = getExpression(filter.getLhs());
+        result = getExpression(filter.getRhs());
+    }
+
+    public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
+        result = getExpression(andExpression.getLhs());
+        result = getExpression(andExpression.getRhs());
+    }
+
+    public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
+        final Relation excludedResult = getExpression(notExpression.getExpression());
+        result = diff.minus(result, excludedResult);
     }
 
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin, diff);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         expression.accept((V) queryEngine);

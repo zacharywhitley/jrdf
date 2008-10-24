@@ -70,10 +70,10 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.operation.Restrict;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Map;
 
 /**
  * The relational operation that remove tuples that don't meet a specific criteria.
@@ -96,8 +96,10 @@ public class RestrictImpl implements Restrict {
     public Relation restrict(Relation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
         if (relation instanceof GraphRelation) {
             return restrict((GraphRelation) relation, avo);
+        } else {
+            final Set<Tuple> restrictedTuples = relation.getTuples(avo);
+            return relationFactory.getRelation(restrictedTuples);
         }
-        throw new UnsupportedOperationException();
     }
 
     public Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
