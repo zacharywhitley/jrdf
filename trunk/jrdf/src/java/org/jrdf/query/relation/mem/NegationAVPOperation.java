@@ -110,7 +110,6 @@ public final class NegationAVPOperation implements AVPOperation {
         if (toNegate) {
             result = !result;
         }
-        // TODO add to value result pair
         addAttributeValues(attribute, newAttributeValues, lhs, rhs, result);
         return result;
     }

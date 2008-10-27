@@ -116,7 +116,7 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
             for (PMoreValueLogical rhs : list) {
                 rhs.apply(this);
                 LogicExpression<ExpressionVisitor> exp2 = (LogicExpression) getExpression();
-                exp1 = new LogicalAndExpression((LogicExpression) exp1, exp2);
+                exp1 = new LogicalAndExpression<ExpressionVisitor>((LogicExpression) exp1, exp2);
             }
             expression = exp1;
         } catch (ParserException e) {
