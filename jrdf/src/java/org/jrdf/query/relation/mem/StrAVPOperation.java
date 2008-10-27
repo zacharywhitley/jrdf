@@ -57,12 +57,13 @@
  *
  */
 
-package org.jrdf.query.expression;
+package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.expression.logic.LogicExpression;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
 
@@ -71,52 +72,41 @@ import java.util.Map;
  * @version :$
  */
 
-public class BoundOperator <V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
-    private static final long serialVersionUID = -2026129623510467814L;
-    private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
+public final class StrAVPOperation implements AVPOperation {
+    private static final long serialVersionUID = 2960126343260406193L;
 
-    private BoundOperator() {
+    /**
+     * The constant to indicate bound operation.
+     */
+    public static final StrAVPOperation STR = new StrAVPOperation();
+
+    private StrAVPOperation() {
     }
 
-    public BoundOperator(Map<Attribute, ValueOperation> singleAvp) {
-        this.singleAvp = singleAvp;
+    public boolean addAttributeValuePair(Attribute attribute, Map<Attribute,
+        ValueOperation> newAttributeValues, ValueOperation lhs, ValueOperation rhs) {
+        Node literal;
+        if (StrOperator.class.isAssignableFrom(lhs.getOperation().getClass())) {
+            literal = rhs.getValue();
+        } else {
+            literal = lhs.getValue();
+        }
+        if (!Literal.class.isAssignableFrom(literal.getClass())) {
+            return true;
+        }
+        newAttributeValues.put(attribute, rhs);
+        return false;
     }
 
-    public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitOperator(this);
-    }
-
-    public Map<Attribute, ValueOperation> getAttributeValuePair() {
-        return singleAvp;
-    }
-
-    @Override
     public int hashCode() {
-        return DUMMY_HASHCODE;
-    }
-
-    @Override
-    public String toString() {
-        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
-        Attribute attribute = attributeValueOperationEntry.getKey();
-        return "bound (" + attribute + ")";
+        return super.hashCode();
     }
 
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (BoundOperator) obj);
+        return obj == this;
     }
 
-    private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {
-        return s1.singleAvp.equals(s2.singleAvp);
+    public String toString() {
+        return "str";
     }
 }

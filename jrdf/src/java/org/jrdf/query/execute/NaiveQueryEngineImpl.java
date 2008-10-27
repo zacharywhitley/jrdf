@@ -70,8 +70,7 @@ import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
-import org.jrdf.query.expression.logic.LogicalAndExpression;
-import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -185,17 +184,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
 
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
         result = getExpression(filter.getLhs());
-        result = getExpression(filter.getRhs());
-    }
-
-    public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
-        result = getExpression(andExpression.getLhs());
-        result = getExpression(andExpression.getRhs());
-    }
-
-    public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
-        final Relation excludedResult = getExpression(notExpression.getExpression());
-        result = diff.minus(result, excludedResult);
+        result = restrict.restrict(result, (LogicExpression) filter.getRhs());
     }
 
     @SuppressWarnings({ "unchecked" })

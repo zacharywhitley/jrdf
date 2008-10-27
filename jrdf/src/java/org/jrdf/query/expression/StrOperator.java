@@ -50,8 +50,7 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     public String toString() {
         Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
         Attribute attribute = attributeValueOperationEntry.getKey();
-        ValueOperation vo = attributeValueOperationEntry.getValue();
-        return "str ((" + attribute + ") " + vo.getOperation() + " " + vo.getValue() + ") ";
+        return "str (" + attribute + ") ";
     }
 
     private boolean determineEqualityFromFields(StrOperator s1, StrOperator s2) {

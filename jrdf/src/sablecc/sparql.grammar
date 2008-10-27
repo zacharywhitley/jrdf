@@ -265,6 +265,7 @@ Productions
     {primary_expression} primary_expression;
 
   primary_expression =
+    {bracketed_expression} bracketed_expression |
     {rdf_literal} rdf_literal |
     {numeric_literal} numeric_literal |
     {boolean_literal} boolean_literal |

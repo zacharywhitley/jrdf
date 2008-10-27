@@ -9,19 +9,18 @@ import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.BoundAVPOperation;
-import org.jrdf.query.relation.mem.EqAVPOperation;
-import org.jrdf.query.relation.mem.NeqAVPOperation;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
+import org.jrdf.query.relation.mem.StrAVPOperation;
+import org.jrdf.query.relation.mem.EqAVPOperation;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PositionalNodeType;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABoundBuiltincall;
-import org.jrdf.urql.parser.node.AEMoreNumericExpression;
-import org.jrdf.urql.parser.node.ANeMoreNumericExpression;
 import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
 import org.jrdf.urql.parser.node.AVariable;
+import org.jrdf.urql.parser.node.AStrBuiltincall;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.HashMap;
@@ -54,17 +53,18 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         return returnValue;
     }
 
-    @Override
+    /*@Override
     public void caseAEMoreNumericExpression(AEMoreNumericExpression node) {
+        System.err.println("numer equals: " + node);
         this.operation = EqAVPOperation.EQUALS;
         node.getNumericExpression().apply(this);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void caseANeMoreNumericExpression(ANeMoreNumericExpression node) {
         this.operation = NeqAVPOperation.NEQUALS;
         node.getNumericExpression().apply(this);
-    }
+    }*/
 
     @Override
     public void caseABoundBuiltincall(ABoundBuiltincall node) {
@@ -75,6 +75,7 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
     @Override
     public void caseARdfLiteralPrimaryExpression(ARdfLiteralPrimaryExpression node) {
         try {
+            this.operation = EqAVPOperation.EQUALS;
             this.value = literalBuilder.createLiteral(node);
         } catch (ParserException e) {
             exception = e;
@@ -82,16 +83,14 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
     }
 
     @Override
+    public void caseAStrBuiltincall(AStrBuiltincall node) {
+        this.operation = StrAVPOperation.STR;
+        node.getBracketedExpression().apply(this);
+    }
+
+    @Override
     public void caseAVariable(AVariable node) {
         this.attributeName = new VariableName(node.getVariablename().getText());
         this.value = AnyNode.ANY_NODE;
     }
-
-    /*@Override
-    public void caseABooleanNotUnaryExpression(ABooleanNotUnaryExpression node) {
-        System.err.println("not: " + node);
-        System.err.println("not internal: " + node.getPrimaryExpression());
-        node.getPrimaryExpression().apply(this);
-        this.operation = NegationAVPOperation.NEGATION;
-    }*/
 }
