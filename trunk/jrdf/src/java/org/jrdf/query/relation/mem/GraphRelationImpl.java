@@ -184,6 +184,7 @@ public final class GraphRelationImpl implements GraphRelation {
         return false;
     }
 
+    // TODO why case test? efficiency?
     private ClosableIterator<Triple> getIterator(Triple searchTriple) {
         try {
             if (graph instanceof GraphImpl) {
