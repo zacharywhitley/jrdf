@@ -50,6 +50,7 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         Attribute attribute = new AttributeImpl(attributeName, type);
         ValueOperation vo = new ValueOperationImpl(value, operation);
         returnValue.put(attribute, vo);
+        collector.addConstraints(returnValue);
         return returnValue;
     }
 
