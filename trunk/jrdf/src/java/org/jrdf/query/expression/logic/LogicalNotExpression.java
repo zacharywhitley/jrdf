@@ -90,7 +90,7 @@ public class LogicalNotExpression<V extends ExpressionVisitor> implements LogicE
 
     @Override
     public int hashCode() {
-        return DUMMY_HASHCODE;
+        return DUMMY_HASHCODE + expression.hashCode();
     }
 
     public String toString() {

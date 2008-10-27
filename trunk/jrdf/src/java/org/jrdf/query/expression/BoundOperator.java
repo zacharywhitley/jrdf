@@ -93,7 +93,7 @@ public class BoundOperator <V extends ExpressionVisitor> implements Operator<V>,
 
     @Override
     public int hashCode() {
-        return DUMMY_HASHCODE;
+        return DUMMY_HASHCODE + singleAvp.hashCode();
     }
 
     @Override

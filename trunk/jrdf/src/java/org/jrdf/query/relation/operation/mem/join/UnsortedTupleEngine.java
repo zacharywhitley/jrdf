@@ -57,44 +57,23 @@
  *
  */
 
-package org.jrdf.query.relation.operation.mem.union;
+package org.jrdf.query.relation.operation.mem.join;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
-import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
-import java.util.LinkedHashSet;
+import java.util.Set;
 
-public class MinimumUnionImpl implements Union {
-    private RelationProcessor relationProcessor;
-    private TupleEngine unionTupleEngine;
-    private TupleEngine subsumptionTupleEngine;
+/**
+ * Created by IntelliJ IDEA.
+ * User: liyf
+ * Date: Oct 27, 2008
+ * Time: 9:07:59 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public interface UnsortedTupleEngine {
+    Set<Attribute> getHeading(Relation relation1, Relation relation2);
 
-    public MinimumUnionImpl(RelationProcessor relationProcessor, TupleEngine unionTupleEngine,
-        TupleEngine subsumptionTupleEngine) {
-        this.relationProcessor = relationProcessor;
-        this.unionTupleEngine = unionTupleEngine;
-        this.subsumptionTupleEngine = subsumptionTupleEngine;
-    }
-
-    public Relation union(Relation relation1, Relation relation2) {
-        UnionSimplification unionSimplification = new UnionSimplificationImpl();
-        LinkedHashSet<Relation> relations = unionSimplification.simplify(relation1, relation2);
-        if (relations.size() == 1) {
-            return relations.iterator().next();
-        } else {
-            return performMinimumUnion(relations);
-        }
-    }
-
-    private Relation performMinimumUnion(LinkedHashSet<Relation> relations) {
-        Relation relation = relationProcessor.processRelations(relations, unionTupleEngine);
-        Relation subsumptionRelation = relationProcessor.processRelations(relations, subsumptionTupleEngine);
-        for (Tuple tuple : subsumptionRelation.getSortedTuples()) {
-            relation.getTuples().remove(tuple);
-        }
-        return relation;
-    }
+    void process(Set<Attribute> headings, Set<Tuple> result, Tuple tuple1, Tuple tuple2);
 }

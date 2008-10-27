@@ -134,7 +134,7 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
     @Override
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
-        return DUMMY_HASHCODE;
+        return DUMMY_HASHCODE + singleAvp.hashCode();
     }
 
     /**

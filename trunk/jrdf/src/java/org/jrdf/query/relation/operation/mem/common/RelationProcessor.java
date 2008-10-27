@@ -61,6 +61,7 @@ package org.jrdf.query.relation.operation.mem.common;
 
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
+import org.jrdf.query.relation.operation.mem.join.UnsortedTupleEngine;
 
 import java.util.Set;
 
@@ -77,6 +78,8 @@ public interface RelationProcessor {
      * @return the result of calling the tuple engine with all relations given as input.
      */
     Relation processRelations(Set<Relation> relations, TupleEngine tupleEngine);
+
+    Relation processRelations(Set<Relation> relations, UnsortedTupleEngine tupleEngine);
 
     /**
      * Converts a relation with no heading and no tuples to false (TABLE_DUM) and a relation with no heading but some

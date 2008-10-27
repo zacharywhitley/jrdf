@@ -35,7 +35,7 @@ public class EmptyOperator<V extends ExpressionVisitor> implements Operator<V> {
     @Override
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
-        return DUMMY_HASHCODE;
+        return DUMMY_HASHCODE + toString().hashCode();
     }
 
     @Override
