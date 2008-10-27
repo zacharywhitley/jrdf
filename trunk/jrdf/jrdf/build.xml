@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jrdf" default="dist" basedir=".">
+
+    <import file="build-setup.xml"/>
+    <import file="build-urql.xml"/>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="gen-src" depends="gen-urql-parser"/>
+
+    <target name="checkstyle">
+        <checkstyle config="${conf.dir}/checkstyle.xml">
+            <fileset dir="${prod.src.dir}"/>
+        </checkstyle>
+    </target>
+
+    <target name="compile" depends="checkstyle, -compile"/>
+
+    <target name="-compile" depends="gen-src">
+        <compile.macro src.dir="${gen.src.dir}" classpath.ref="gen.class.path" output.dir="${prod.classes.dir}"
+                       code.path="gen.code.path" code.pattern="production.code.pattern"/>
+        <compile.macro src.dir="${prod.src.dir}" classpath.ref="production.class.path" output.dir="${prod.classes.dir}"
+                       code.path="production.code.path" code.pattern="production.code.pattern" compiler.args="-Xlint:all"/>
+        <compile.macro src.dir="${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
+                       code.path="test.code.path" code.pattern="test.code.pattern" compiler.args="-Xlint:all"/>
+
+        <!-- Create emma instrumented classes if turned on -->
+        <emma enabled="${emma.enabled}">
+            <instr instrpath="${prod.classes.dir}" destdir="${out.instr.dir}/classes"
+                   metadatafile="${coverage.dir}/metadata.emma" merge="true">
+                <filter value="${emma.filter}" />
+            </instr>
+        </emma>
+
+        <!-- Configuration for Wiring up the various components using Spring and other configuration files-->
+        <copy todir="${prod.gui.dir}">
+            <fileset dir="${prod.src.dir}" includes="**/commands-context.xml"/>
+            <fileset dir="${prod.src.dir}" includes="**/richclient-application-splash.xml"/>
+            <fileset dir="${prod.src.dir}" includes="**/richclient-application-context.xml"/>
+            <fileset dir="${prod.src.dir}" includes="**/images.properties"/>
+            <fileset dir="${prod.src.dir}" includes="**/messages.properties"/>
+            <fileset dir="${prod.src.dir}" includes="**/about.txt"/>
+            <fileset dir="${conf.dir}" includes="**/gui-wiring.xml"/>
+        </copy>
+
+        <!-- Server configuration and Freemarker templates -->
+        <copy todir="${prod.server.dir}">
+            <fileset dir="${prod.src.dir}" includes="**/server.properties"/>
+            <fileset dir="${conf.dir}" includes="**/local-server-wiring.xml"/>
+            <fileset dir="${conf.dir}" includes="**/distributed-server-wiring.xml"/>
+            <fileset dir="${src.dir}/freemarker" includes="**/*.ftl"/>
+        </copy>
+
+        <!-- Test data used by the RDF/XML Parser and Writer and NTriples Reader -->
+        <copy todir="${test.classes.dir}">
+            <fileset dir="${test.src.dir}" includes="**/*.rdf"/>
+            <fileset dir="${test.src.dir}" includes="**/xml/data/*.xml"/>
+            <fileset dir="${test.src.dir}" includes="**/*.nt"/>
+        </copy>
+    </target>
+
+    <macrodef name="compile.macro">
+        <attribute name="src.dir"/>
+        <attribute name="output.dir"/>
+        <attribute name="classpath.ref"/>
+        <attribute name="code.path"/>
+        <attribute name="code.pattern"/>
+        <attribute name="compiler.args" default="-Xlint"/>
+        <sequential>
+            <mkdir dir="@{output.dir}"/>
+            <javac source="${java.src.version}" srcdir="@{src.dir}" destdir="@{output.dir}"
+                   classpathref="@{classpath.ref}"
+                   debug="${compile.debug}" debuglevel="${compile.debuglevel}" deprecation="${compile.deprecation}"
+                   optimize="${compile.optimize}">
+                <src>
+                    <path refid="@{code.path}"/>
+                </src>
+                <patternset refid="@{code.pattern}"/>
+                <compilerarg value="@{compiler.args}"/>
+            </javac>
+        </sequential>
+    </macrodef>
+
+    <target name="dist" depends="compile,-copy-urql-sablecc-resources">
+        <antcall target="-dist-jar"/>
+        <antcall target="-dist-src-jar"/>
+        <antcall target="-dist-gui"/>
+        <antcall target="-dist-server"/>
+    </target>
+
+    <target name="-dist-jar">
+        <!-- Setup main jar ./main/jrdf-0.x.x.jar -->
+        <mkdir dir="${dist.dir}/jar"/>
+        <jar destfile="${dist.dir}/jar/${project.jar}">
+            <manifest>
+                <attribute name="Main-Class" value="org.jrdf.example.RdfXmlParserExample"/>
+            </manifest>
+            <fileset dir="${prod.classes.dir}"/>
+        </jar>
+    </target>
+
+    <target name="-dist-src-jar">
+        <mkdir dir="${dist.dir}/jar"/>
+        <jar destfile="${dist.dir}/jar/${project.src.jar}">
+            <fileset dir="${prod.src.dir}"/>
+        </jar>
+    </target>
+
+    <target name="-dist-gui">
+        <dist.jar mainclass="org.jrdf.gui.UrqlGui" jarname="gui.jar" disttype="gui"/>
+    </target>
+
+    <target name="-dist-server">
+        <dist.jar mainclass="org.jrdf.query.server.SpringLocalServer" jarname="server.jar" disttype="server"/>
+        <dist.jar mainclass="org.jrdf.query.server.SpringDistributedServer" jarname="distributed-server.jar" disttype="server"/>
+    </target>
+
+    <macrodef name="dist.jar">
+        <attribute name="mainclass"/>
+        <attribute name="jarname"/>
+        <attribute name="disttype"/>
+        <sequential >
+            <mkdir dir="${dist.dir}/@{disttype}"/>
+            <pathconvert dirsep="/" pathsep=" " property="jar.classpath">
+               <map from="${basedir}/lib" to="lib"/>
+               <path refid="production.class.path"/>
+            </pathconvert>
+            <jar destfile="${dist.dir}/@{disttype}/main.jar">
+                <manifest>
+                    <attribute name="Main-Class" value="@{mainclass}"/>
+                    <attribute name="Class-Path" value="${jar.classpath}"/>
+                </manifest>
+                <fileset dir="${prod.classes.dir}"/>
+                <fileset dir="${prod.@{disttype}.dir}"/>
+            </jar>
+
+            <!-- Copy required lib jars to ./lib/* -->
+            <copy todir="${dist.dir}/@{disttype}">
+                <fileset dir="${basedir}">
+                    <patternset refid="base.production.classpath.pattern"/>
+                    <patternset refid="@{disttype}.production.classpath.pattern"/>
+                </fileset>
+            </copy>
+
+            <!--Create uber jar with one-jar classes and manifest. -->
+            <one-jar destfile="${dist.dir}/@{disttype}/${@{jarname}}" manifest="${conf.dir}/boot-manifest.mf">
+                <main jar="${dist.dir}/@{disttype}/main.jar"/>
+                <lib>
+                    <fileset dir="${dist.dir}/@{disttype}/lib"/>
+                </lib>
+                <fileset dir="${conf.dir}" includes="**/commons-logging.properties"/>
+                <fileset dir="${conf.dir}" includes="**/simplelog.properties"/>
+            </one-jar>
+
+            <!-- Cleanup -->
+            <delete dir="${dist.dir}/@{disttype}/lib"/>
+            <delete file="${dist.dir}/@{disttype}/main.jar"/>
+        </sequential>
+    </macrodef>
+    
+    <target name="javadoc" depends="-compile">
+        <mkdir dir="${javadoc.dir}"/>
+        <javadoc destdir="${javadoc.dir}" author="true" version="true"
+                 packagenames="org.jrdf.*"
+                 sourcepath="${prod.src.dir};${gen.src.dir}"
+                 classpath="${prod.classes.dir};${lib.dir}/je/je-${bdbje.version}.jar;${lib.dir}/woodstox/stax-api-1.0.1.jar;${lib.dir}/woodstox/wstx-asl-3.2.7.jar;${lib.dir}/spring-rcp/swingx-0.9.1.jar;${lib.dir}/spring/spring-beans-${spring.version}.jar;${lib.dir}/spring/spring-context-${spring.version}.jar;${lib.dir}/spring/spring-core-${spring.version}.jar;${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar"
+                 failonerror="true"
+                 additionalparam="-breakiterator" Use="true"
+                 source="${java.src.version}"
+                 windowtitle="${project.longname} Framework ${project.version.full}"
+                 doctitle="${project.longname} Framework ${project.version.full}"
+                 excludepackagenames="org.jrdf.urql.parser.analysis.*, org.jrdf.urql.parser.lexer.*, org.jrdf.urql.parser.node.*, org.jrdf.urql.parser.parser.*">
+            <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
+        </javadoc>
+    </target>
+
+    <target name="test" depends="unit-test,integration-test"/>
+    <target name="unit-test" depends="dist">
+        <test.macro type="unit"/>
+    </target>
+    <target name="integration-test" depends="dist">
+        <test.macro type="integration"/>
+    </target>
+    <target name="emma-unit-test" depends="-emma, dist">
+        <test.macro type="unit"/>
+    </target>
+
+    <target name="-emma" description="turns on EMMA instrumentation/reporting">
+        <mkdir dir="${out.instr.dir}"/>
+        <mkdir dir="${coverage.dir}"/>
+        <property name="emma.enabled" value="true"/>
+    </target>
+
+    <macrodef name="test.macro">
+        <attribute name="type"/>
+        <sequential>
+            <mkdir dir="${@{type}.test.results.dir}"/>
+            <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
+                <classpath refid="@{type}.test.class.path"/>
+                <batchtest todir="${@{type}.test.results.dir}">
+                    <fileset refid="@{type}.test.code.fileset"/>
+                </batchtest>
+                <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma"/>
+                <formatter type="xml"/>
+                <formatter type="brief" usefile="false"/>
+            </junit>
+            <fail if="@{type}.test.failed" message="@{type} tests failed."/>
+            <emma enabled="${emma.enabled}">
+                <report sourcepath="${prod.src.dir}" depth="method">
+                    <fileset dir="${coverage.dir}">
+                        <include name="*.emma"/>
+                    </fileset>
+                    <html outfile="${coverage.dir}/coverage.html"/>
+                </report>
+            </emma>
+        </sequential>
+    </macrodef>
+
+    <target name="jester" depends="dist">
+        <delete dir="${modified.src.dir}"/>
+        <copy todir="${modified.src.dir}">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*Test.java"/>
+                <exclude name="**/AllTests.java"/>
+            </fileset>
+        </copy>
+        <java classpathref="test.class.path" classname="jester.TestTester" fork="true">
+            <!-- FIXME TJA: Use the value of a property to collection the classpath here -->
+            <arg value="-cp=lib/junit-3.8.1.jar:lib/jester-1.3.7.jar:build/dist/jrdf-0.4.jar:build/test-classes"/>
+            <arg value="-Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel"/>
+            <arg value="org.jrdf.graph.local.mem.GraphImplUnitTest"/>
+            <arg value="${modified.src.dir}/java"/>
+        </java>
+    </target>
+</project>

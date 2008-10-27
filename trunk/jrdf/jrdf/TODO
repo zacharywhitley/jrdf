@@ -1,0 +1,15 @@
+JRDF TODO List
+
+o Implement SPARQL parser.
+  o Finish SPARQL Grammar.
+    o Currently implements CONJUNCTION (.), UNION, SELECT (* and Variables), PREFIX and some basic FILTER operations.
+      o Put in SPARQL:
+        o SELECT that maintains variable order.
+        o Fully implementation of FILTER.
+        o GRAPH names.
+      o Other extensions:
+        o Difference (-),
+        o AsGraph,
+        o Aggregates (Summarize),
+        o ???
+o Write a pull based RDF/XML parser.
