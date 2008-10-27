@@ -272,17 +272,19 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         Expression<ExpressionVisitor> rhs) {
         Optional<ExpressionVisitor> lhsOptional = (Optional<ExpressionVisitor>) lhs;
         Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
+        Expression<ExpressionVisitor> returnExpression;
         if (lhsOptional.getLhs() == null && rhsOptional.getLhs() == null) {
-            return new Optional<ExpressionVisitor>(lhsOptional.getRhs(), rhsOptional.getRhs());
+            returnExpression = new Optional<ExpressionVisitor>(lhsOptional.getRhs(), rhsOptional.getRhs());
         } else if (rhsOptional.getLhs() == null) {
             rhsOptional.setLhs(lhs);
-            return rhsOptional;
+            returnExpression = rhsOptional;
         } else if (lhsOptional.getLhs() == null) {
             lhsOptional.setLhs(rhs);
-            return lhsOptional;
+            returnExpression = lhsOptional;
         } else {
-            return new Conjunction<ExpressionVisitor>(lhs, rhs);
+            returnExpression = new Conjunction<ExpressionVisitor>(lhs, rhs);
         }
+        return returnExpression;
     }
 
     private Expression<ExpressionVisitor> joinExpressionAndOptional(Expression<ExpressionVisitor> lhs,
