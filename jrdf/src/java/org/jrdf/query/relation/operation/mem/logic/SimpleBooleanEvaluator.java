@@ -1,4 +1,4 @@
-package org.jrdf.query.relation.operation.mem.tempLogic;
+package org.jrdf.query.relation.operation.mem.logic;
 
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.ExpressionVisitor;
