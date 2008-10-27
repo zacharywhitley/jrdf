@@ -60,20 +60,20 @@
 package org.jrdf.query;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.query.execute.QueryEngine;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.AnswerImpl;
 import org.jrdf.query.execute.ExpressionSimplifier;
 import org.jrdf.query.execute.ExpressionSimplifierImpl;
+import org.jrdf.query.execute.QueryEngine;
+import org.jrdf.query.expression.ConstraintCollector;
+import org.jrdf.query.expression.ConstraintCollectorImpl;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
-import org.jrdf.query.expression.ConstraintCollector;
-import org.jrdf.query.expression.ConstraintCollectorImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.AnswerImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.LinkedHashSet;
@@ -118,6 +118,7 @@ public final class QueryImpl implements Query {
         expression.accept(collector);
         ExpressionSimplifier simplifier = new ExpressionSimplifierImpl(collector.getOperators());
         expression.accept(simplifier);
+        expression = simplifier.getExpression();
         expression.accept(queryEngine);
         return queryEngine.getResult();
     }

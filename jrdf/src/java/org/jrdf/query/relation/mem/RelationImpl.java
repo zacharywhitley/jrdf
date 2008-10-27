@@ -120,7 +120,7 @@ public final class RelationImpl implements Relation {
     }
 
     public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
-        Set<Tuple> set = new TreeSet<Tuple>();
+        Set<Tuple> set = new HashSet<Tuple>();
         for (Tuple tuple : tuples) {
             final Map<Attribute, ValueOperation> map = tuple.getAttributeValues();
             if (contains(map, avo)) {

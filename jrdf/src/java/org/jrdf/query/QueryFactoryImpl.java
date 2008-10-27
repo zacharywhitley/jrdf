@@ -126,6 +126,8 @@ public class QueryFactoryImpl implements QueryFactory {
     private static final RelationFactory RELATION_FACTORY = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR,
         TUPLE_COMPARATOR);
     private static final RelationHelper RELATION_HELPER = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
+//    private static final RelationProcessor RELATION_PROCESSOR = new UnsortedRelationProcessorImpl(RELATION_FACTORY,
+//        TUPLE_COMPARATOR);
     private static final RelationProcessor RELATION_PROCESSOR = new RelationProcessorImpl(RELATION_FACTORY,
         TUPLE_COMPARATOR);
 
@@ -145,9 +147,11 @@ public class QueryFactoryImpl implements QueryFactory {
 
     public QueryEngine createQueryEngine() {
         Project project = new ProjectImpl(TUPLE_FACTORY, RELATION_FACTORY);
+//        UnsortedTupleEngine joinTupleEngine = new UnsortedNaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER);
         TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER);
         TupleEngine unionTupleEngine = new OuterUnionEngine(RELATION_HELPER);
         NadicJoin join = new NadicJoinImpl(RELATION_PROCESSOR, joinTupleEngine);
+//        Restrict restrict = new UnsortedRestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR);
         Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR);
         Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
         DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);

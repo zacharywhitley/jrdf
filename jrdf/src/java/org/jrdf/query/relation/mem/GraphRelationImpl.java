@@ -79,6 +79,7 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EqualsUtil;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -117,7 +118,7 @@ public final class GraphRelationImpl implements GraphRelation {
         SortedSet<Attribute> heading = attributeFactory.createHeading();
         Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
         Triple searchTriple = new TripleImpl(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        return getTuplesFromGraph(searchTriple, attributes);
+        return getUnsortedTuplesFromGraph(searchTriple, attributes);
     }
 
     public Set<Tuple> getTuples(LinkedHashMap<Attribute, ValueOperation> nameValues) {
@@ -128,9 +129,12 @@ public final class GraphRelationImpl implements GraphRelation {
         return getTuplesFromGraph(searchTriple, attributes);
     }
 
-    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
-        LinkedHashMap<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>(avo);
-        return getTuples(map);
+    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> nameValues) {
+        Attribute[] attributes = nameValues.keySet().toArray(new Attribute[TRIPLE]);
+        Triple searchTriple = new TripleImpl((SubjectNode) nameValues.get(attributes[0]).getValue(),
+                (PredicateNode) nameValues.get(attributes[1]).getValue(),
+                (ObjectNode) nameValues.get(attributes[2]).getValue());
+        return getUnsortedTuplesFromGraph(searchTriple, attributes);
     }
 
     public SortedSet<Attribute> getSortedHeading() {
@@ -178,6 +182,21 @@ public final class GraphRelationImpl implements GraphRelation {
         }
     }
 
+    private Set<Tuple> getUnsortedTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
+        ClosableIterator<Triple> closableIterator = getIterator(searchTriple);
+        try {
+            Set<Tuple> tuples = new HashSet<Tuple>();
+            while (closableIterator.hasNext()) {
+                Triple triple = closableIterator.next();
+                Map<Attribute, ValueOperation> avo = avpHelper.createAvo(triple, attributes);
+                tuples.add(tupleFactory.getTuple(avo));
+            }
+            return tuples;
+        } finally {
+            closableIterator.close();
+        }
+    }
+
     private boolean determineEqualityFromFields(GraphRelation graphRelation) {
         if (graphRelation.getHeading().equals(getHeading())) {
             if (graphRelation.getTuples().equals(getTuples())) {
@@ -187,7 +206,6 @@ public final class GraphRelationImpl implements GraphRelation {
         return false;
     }
 
-    // TODO why case test? efficiency?
     private ClosableIterator<Triple> getIterator(Triple searchTriple) {
         try {
             if (graph instanceof GraphImpl) {

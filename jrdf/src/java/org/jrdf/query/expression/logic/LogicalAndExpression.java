@@ -104,7 +104,8 @@ public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicE
 
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
-        return DUMMY_HASHCODE;
+        int hash = DUMMY_HASHCODE + lhs.hashCode();
+        return hash * DUMMY_HASHCODE + rhs.hashCode();
     }
 
     public String toString() {

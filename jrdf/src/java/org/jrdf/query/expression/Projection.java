@@ -117,6 +117,10 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         return nextExpression;
     }
 
+    public void setNextExpression(Expression<ExpressionVisitor> expression) {
+        nextExpression = expression;
+    }
+
     public boolean equals(Object obj) {
         if (EqualsUtil.isNull(obj)) {
             return false;
@@ -131,7 +135,8 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
     }
 
     public int hashCode() {
-        return DUMMY_HASHCODE;
+        int hash = DUMMY_HASHCODE + attributes.hashCode();
+        return hash * DUMMY_HASHCODE + nextExpression.hashCode();
     }
 
     /**

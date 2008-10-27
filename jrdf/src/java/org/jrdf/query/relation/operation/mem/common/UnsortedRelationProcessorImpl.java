@@ -64,46 +64,63 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import org.jrdf.query.relation.operation.mem.join.UnsortedTupleEngine;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
- * Common tuple processing code - gets headings and then processes tuples using the tuple engine.
+ * Created by IntelliJ IDEA.
+ * User: liyf
+ * Date: Oct 27, 2008
+ * Time: 8:49:59 PM
+ * To change this template use File | Settings | File Templates.
  */
-public final class RelationProcessorImpl implements RelationProcessor {
+public class UnsortedRelationProcessorImpl implements RelationProcessor {
     private RelationFactory relationFactory;
     private TupleComparator tupleComparator;
 
-    public RelationProcessorImpl(RelationFactory relationFactory, TupleComparator tupleComparator) {
+    public UnsortedRelationProcessorImpl(RelationFactory relationFactory, TupleComparator tupleComparator) {
         checkNotNull(relationFactory, tupleComparator);
         this.relationFactory = relationFactory;
         this.tupleComparator = tupleComparator;
     }
 
-    public Relation processRelations(Set<Relation> relations, TupleEngine tupleEngine) {
+    public Relation processRelations(Set<Relation> relations, UnsortedTupleEngine tupleEngine) {
         Iterator<Relation> iterator = relations.iterator();
         Relation relation1 = iterator.next();
         Relation relation2 = iterator.next();
-        SortedSet<Attribute> headings = tupleEngine.getHeading(relation1, relation2);
-        SortedSet<Tuple> tuples = processTuples(headings, relation1.getSortedTuples(), relation2.getSortedTuples(),
-            tupleEngine);
+        Set<Attribute> headings = tupleEngine.getHeading(relation1, relation2);
+        Set<Tuple> tuples = processTuples(headings, relation1.getTuples(), relation2.getTuples(), tupleEngine);
         Relation resultRelation = relationFactory.getRelation(headings, tuples);
         while (iterator.hasNext()) {
             Relation nextRelation = iterator.next();
             headings = tupleEngine.getHeading(resultRelation, nextRelation);
-            tuples = processTuples(headings, tuples, nextRelation.getSortedTuples(), tupleEngine);
+            tuples = processTuples(headings, tuples, nextRelation.getTuples(), tupleEngine);
             resultRelation = relationFactory.getRelation(headings, tuples);
         }
 
         return convertToConstants(resultRelation);
+    }
+
+    private Set<Tuple> processTuples(Set<Attribute> headings, Set<Tuple> tuples1,
+        Set<Tuple> tuples2, UnsortedTupleEngine tupleEngine) {
+        Set<Tuple> result = new HashSet<Tuple>();
+        for (Tuple tuple1 : tuples1) {
+            for (Tuple tuple2 : tuples2) {
+                tupleEngine.process(headings, result, tuple1, tuple2);
+            }
+        }
+        return result;
+    }
+
+    public Relation processRelations(Set<Relation> relations, TupleEngine tupleEngine) {
+        throw new UnsupportedOperationException();
     }
 
     public Relation convertToConstants(Relation resultRelation) {
@@ -115,20 +132,5 @@ public final class RelationProcessorImpl implements RelationProcessor {
             }
         }
         return resultRelation;
-    }
-
-    private SortedSet<Tuple> processTuples(SortedSet<Attribute> headings, SortedSet<Tuple> tuples1,
-        SortedSet<Tuple> tuples2, TupleEngine tupleEngine) {
-        SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
-        for (Tuple tuple1 : tuples1) {
-            for (Tuple tuple2 : tuples2) {
-                tupleEngine.process(headings, result, tuple1, tuple2);
-            }
-        }
-        return result;
-    }
-
-    public Relation processRelations(Set<Relation> relations, UnsortedTupleEngine tupleEngine) {
-        throw new UnsupportedOperationException();
     }
 }

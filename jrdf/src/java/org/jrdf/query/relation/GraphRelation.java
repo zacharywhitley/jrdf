@@ -59,9 +59,6 @@
 
 package org.jrdf.query.relation;
 
-import java.util.LinkedHashMap;
-import java.util.Set;
-
 /**
  * A marker interface that indicates that the relation is of three columns - subject, predicate and object.
  *
@@ -77,5 +74,5 @@ public interface GraphRelation extends Relation {
      * @param nameValues an ordered list of 3 attribute value pairs in the subject, predicate and object position.
      * @return a set of tuples.
      */
-    Set<Tuple> getTuples(LinkedHashMap<Attribute, ValueOperation> nameValues);
+    //Set<Tuple> getTuples(LinkedHashMap<Attribute, ValueOperation> nameValues);
 }
