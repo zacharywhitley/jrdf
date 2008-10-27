@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jrdf-setup" default="default" basedir=".">
+
+    <property name="project.longname" value="Java RDF API"/>
+    <property name="project.shortname" value="jrdf"/>
+    <property name="project.version.major" value="0"/>
+    <property name="project.version.minor" value="5.5.4"/>
+    <property name="gui.version" value="${project.version.major}.${project.version.minor}"/>
+    <property name="server.version" value="${project.version.major}.${project.version.minor}"/>
+    <property name="version-status" value=""/>
+    <property name="project.version.full" value="${project.version.major}.${project.version.minor}${version-status}"/>
+    <property name="project.jar" value="${project.shortname}-${project.version.full}.jar"/>
+    <property name="project.src.jar" value="${project.shortname}-${project.version.full}-src.jar"/>
+    <property name="gui.jar" value="jrdf-gui-${gui.version}.jar"/>
+    <property name="server.jar" value="jrdf-server-${gui.version}.jar"/>
+    <property name="distributed-server.jar" value="jrdf-distributed-server-${gui.version}.jar"/>
+    <property name="build.dir" value="build"/>
+    <property name="conf.dir" value="conf"/>
+    <property name="doc.dir" value="doc"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="src.dir" value="src"/>
+    <property name="test.dir" value="test"/>
+    <property name="checkstyle.lib.dir" value="${lib.dir}/checkstyle"/>
+    <property name="one-jar.lib.dir" value="${lib.dir}/one-jar"/>
+    <property name="prod.src.dir" value="${src.dir}/java"/>
+    <property name="test.src.dir" value="${test.dir}/java"/>
+    <property name="gen.src.dir" value="${build.dir}/gen"/>
+    <property name="modified.src.dir" value="${build.dir}/jester"/>
+    <property name="sablecc.src.dir" value="${src.dir}/sablecc"/>
+    <property name="prod.classes.dir" value="${build.dir}/prod-classes"/>
+    <property name="prod.gui.dir" value="${build.dir}/prod-gui"/>
+    <property name="prod.server.dir" value="${build.dir}/prod-server"/>
+    <property name="test.classes.dir" value="${build.dir}/test-classes"/>
+    <property name="dist.dir" value="${build.dir}/dist"/>
+    <property name="javadoc.dir" value="${build.dir}/javadoc"/>
+    <property name="test.results.dir" value="${build.dir}/test-results"/>
+    <property name="test.results" value="${test.results.dir}/All-Tests.xml"/>
+    <property name="compile.debug" value="true"/>
+    <property name="compile.debuglevel" value="source,lines,vars"/>
+    <property name="compile.deprecation" value="false"/>
+    <property name="compile.optimize" value="true"/>
+    <property name="java.src.version" value="1.5"/>
+    <property name="web.site.url" value="http://jrdf.sourceforge.net/"/>
+    <property name="unit.test.src.dir" value="${test.src.dir}"/>
+    <property name="unit.test.classes.dir" value="${test.classes.dir}"/>
+    <property name="unit.test.results.dir" value="${build.dir}/unit-test-results"/>
+    <property name="unit.test.results" value="${unit.test.results.dir}/Unit-Tests.xml"/>
+    <property name="integration.test.src.dir" value="${test.src.dir}"/>
+    <property name="integration.test.classes.dir" value="${test.classes.dir}"/>
+    <property name="integration.test.results.dir" value="${build.dir}/integration-test-results"/>
+    <property name="integration.test.results" value="${integration.test.results.dir}/Integration-Tests.xml"/>
+
+    <property name="spring.version" value="2.5.5"/>
+    <property name="restlet.version" value="1.1rc2"/>
+    <property name="freemarker.version" value="2.3.14"/>
+    <property name="bdbje.version" value="3.3.69"/>
+
+    <!-- EMMA coverage data output directory: -->
+    <property name="coverage.dir" value="${build.dir}/coverage"/>
+    <!-- EMMA instrumented classes output directory: -->
+    <property name="out.instr.dir" value="${build.dir}/outinstr"/>
+    <!-- Filter for classes to instrument -->
+    <property name="emma.filter" value="org.jrdf.*"/>
+
+    <patternset id="production.code.pattern">
+        <include name="**/*.java"/>
+        <exclude name="**/*Test*.java"/>
+        <exclude name="**/*Mock*.java"/>
+    </patternset>
+    <patternset id="test.code.pattern">
+        <include name="**/*Test*.java"/>
+        <exclude name="**/*TestUtil*.java"/>
+        <exclude name="**/*TestRunner*.java"/>
+        <exclude name="**/*Mock*.java"/>
+        <exclude name="**/Abstract*"/>
+    </patternset>
+    <patternset id="unit.test.code.pattern">
+        <!-- FIXME TJA: Why do we need to exclude all these, why not just included *UnitTest? -->
+        <!-- FIXME AN: Because of Abstract*UnitTest? -->
+        <!--<include name="**/*UnitTest.java"/>-->
+        <include name="**/*Test*.java"/>
+        <exclude name="**/*IntegrationTest.java"/>
+        <exclude name="**/*TestUtil*.java"/>
+        <exclude name="**/*TestRunner*.java"/>
+        <exclude name="**/*Mock*.java"/>
+        <exclude name="**/Abstract*"/>
+        <exclude name="**/TestJRDFFactory*"/>
+    </patternset>
+    <patternset id="integration.test.code.pattern">
+        <include name="**/*IntegrationTest.java"/>
+        <exclude name="**/Abstract*"/>
+    </patternset>
+    <patternset id="all.code.pattern">
+        <include name="**/*.java"/>
+    </patternset>
+    <patternset id="test.class.pattern">
+        <include name="**/*Test*"/>
+        <exclude name="**/*TestUtil*"/>
+        <exclude name="**/*Mock*"/>
+        <exclude name="**/Abstract*"/>
+        <exclude name="**/TestJRDFFactory*"/>
+    </patternset>
+
+    <patternset id="base.production.classpath.pattern">
+        <include name="${lib.dir}/spring/spring-beans-${spring.version}.jar"/>
+        <include name="${lib.dir}/spring/spring-context-${spring.version}.jar"/>
+        <include name="${lib.dir}/spring/spring-core-${spring.version}.jar"/>
+        <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
+        <include name="${lib.dir}/je/je-${bdbje.version}.jar"/>
+        <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
+        <include name="${lib.dir}/woodstox/wstx-asl-3.2.7.jar"/>
+    </patternset>
+
+    <patternset id="gui.production.classpath.pattern">
+        <include name="${lib.dir}/spring-rcp/forms-1.0.7.jar"/>
+        <include name="${lib.dir}/spring-rcp/looks-2.0.4.jar"/>
+        <include name="${lib.dir}/spring-rcp/spring-binding-1.0.jar"/>
+        <include name="${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar"/>
+        <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
+    </patternset>
+
+    <patternset id="server.production.classpath.pattern">
+        <include name="${lib.dir}/restlet/com.noelios.restlet-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet.ext.json_2.0-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.json-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.restlet.ext.spring_2.5-${restlet.version}.jar"/>
+        <include name="${lib.dir}/restlet/org.simpleframework_3.1-${restlet.version}.jar"/>
+        <include name="${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"/>
+        <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
+    </patternset>
+
+    <patternset id="test.classpath.pattern">
+        <include name="${lib.dir}/junit-3.8.1.jar"/>
+        <include name="${lib.dir}/gsbase-2.0.1.jar"/>
+        <include name="${lib.dir}/jester-1.3.7.jar"/>
+        <include name="${lib.dir}/easymock/easymock-2.4.0.jar"/>
+        <include name="${lib.dir}/easymock/easymockclassextension-2.4.0.jar"/>
+        <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
+        <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
+        <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
+    </patternset>
+
+    <fileset id="production.code.fileset" dir="${prod.src.dir}">
+        <patternset refid="production.code.pattern"/>
+    </fileset>
+    <fileset id="gen.code.fileset" dir="${gen.src.dir}">
+        <patternset refid="production.code.pattern"/>
+    </fileset>
+    <fileset id="test.code.fileset" dir="${test.src.dir}">
+        <patternset refid="test.code.pattern"/>
+    </fileset>
+    <fileset id="unit.test.code.fileset" dir="${unit.test.src.dir}">
+        <patternset refid="unit.test.code.pattern"/>
+    </fileset>
+    <fileset id="integration.test.code.fileset" dir="${integration.test.src.dir}">
+        <patternset refid="integration.test.code.pattern"/>
+    </fileset>
+    <fileset id="all.code.fileset" dir="${prod.src.dir}">
+        <patternset refid="all.code.pattern"/>
+    </fileset>
+
+    <path id="gen.code.path">
+        <pathelement location="${gen.src.dir}"/>
+    </path>
+    <path id="production.code.path">
+        <pathelement location="${prod.src.dir}"/>
+    </path>
+    <path id="test.code.path">
+        <pathelement location="${test.src.dir}"/>
+    </path>
+    <path id="unit.test.code.path">
+        <path refid="test.code.path"/>
+    </path>
+    <path id="integration.test.code.path">
+        <path refid="test.code.path"/>
+    </path>
+    <path id="all.code.path">
+        <path refid="production.code.path"/>
+        <path refid="test.code.path"/>
+        <path refid="gen.code.path"/>
+    </path>
+
+    <path id="gen.class.path"/>
+
+    <path id="production.class.path">
+        <fileset dir="${basedir}">
+            <patternset refid="base.production.classpath.pattern"/>
+            <patternset refid="gui.production.classpath.pattern"/>
+            <patternset refid="server.production.classpath.pattern"/>
+        </fileset>
+    </path>
+    <path id="test.class.path">
+        <fileset dir="${basedir}">
+            <patternset refid="base.production.classpath.pattern"/>
+            <patternset refid="gui.production.classpath.pattern"/>
+            <patternset refid="server.production.classpath.pattern"/>
+            <patternset refid="test.classpath.pattern"/>
+        </fileset>
+        <pathelement location="${out.instr.dir}/classes"/>
+        <pathelement location="${prod.classes.dir}"/>
+        <pathelement location="${prod.gui.dir}"/>
+        <pathelement location="${prod.server.dir}"/>
+        <pathelement location="${test.classes.dir}"/>
+        <pathelement location="${test.dir}/rdf"/>
+    </path>
+
+    <path id="unit.test.class.path">
+        <path refid="test.class.path"/>
+    </path>
+
+    <path id="integration.test.class.path">
+        <path refid="test.class.path"/>
+    </path>
+
+    <taskdef resource="emma_ant.properties" classpathref="test.class.path"/>
+
+    <taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask"
+             classpath="${one-jar.lib.dir}/one-jar-ant-task-0.96.jar" onerror="report"/>
+
+    <taskdef resource="checkstyletask.properties"
+             classpath="${checkstyle.lib.dir}/checkstyle-all-4.4.jar"/>
+
+    <target name="default">
+        <echo message="Nothing to see here..."/>
+    </target>
+
+    <path id="sablecc.class.path">
+        <pathelement location="${lib.dir}/sablecc-3.2.jar"/>
+    </path>
+    <taskdef name="sablecc" classname="org.sablecc.ant.taskdef.Sablecc" classpathref="sablecc.class.path"/>
+
+    <macrodef name="sablecc.macro">
+        <attribute name="grammar.file"/>
+        <sequential>
+            <mkdir dir="${gen.src.dir}"/>
+            <sablecc src="${sablecc.src.dir}" outputdirectory="${gen.src.dir}">
+                <include name="@{grammar.file}"/>
+            </sablecc>
+        </sequential>
+    </macrodef>
+</project>

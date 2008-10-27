@@ -1,0 +1,230 @@
+<!--
+  ~ $Header$
+  ~ $Revision$
+  ~ $Date$
+  ~
+  ~ ====================================================================
+  ~
+  ~ The Apache Software License, Version 1.1
+  ~
+  ~ Copyright (c) 2003-2008 The JRDF Project.  All rights reserved.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions
+  ~ are met:
+  ~
+  ~ 1. Redistributions of source code must retain the above copyright
+  ~    notice, this list of conditions and the following disclaimer.
+  ~
+  ~ 2. Redistributions in binary form must reproduce the above copyright
+  ~    notice, this list of conditions and the following disclaimer in
+  ~    the documentation and/or other materials provided with the
+  ~    distribution.
+  ~
+  ~ 3. The end-user documentation included with the redistribution, if
+  ~    any, must include the following acknowlegement:
+  ~       "This product includes software developed by the
+  ~        the JRDF Project (http://jrdf.sf.net/)."
+  ~    Alternately, this acknowlegement may appear in the software itself,
+  ~    if and wherever such third-party acknowlegements normally appear.
+  ~
+  ~ 4. The names "The JRDF Project" and "JRDF" must not be used to endorse
+  ~    or promote products derived from this software without prior written
+  ~    permission. For written permission, please contact
+  ~    newmana@users.sourceforge.net.
+  ~
+  ~ 5. Products derived from this software may not be called "JRDF"
+  ~    nor may "JRDF" appear in their names without prior written
+  ~    permission of the JRDF Project.
+  ~
+  ~ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+  ~ WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  ~ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~ DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+  ~ ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  ~ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  ~ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+  ~ USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ~ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  ~ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+  ~ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+  ~ SUCH DAMAGE.
+  ~ ====================================================================
+  ~
+  ~ This software consists of voluntary contributions made by many
+  ~ individuals on behalf of the JRDF Project.  For more
+  ~ information on JRDF, please see <http://jrdf.sourceforge.net/>.
+  ~
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <!-- Beans for constant values -->
+    <bean id="org.restlet.data.MediaType.TEXT_HTML"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <bean id="org.restlet.data.MediaType.APPLICATION_JSON"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <bean id="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <bean id="org.restlet.data.MediaType.APPLICATION_XML"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <bean id="org.restlet.Redirector.MODE_CLIENT_PERMANENT"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <!-- Properties -->
+    <bean id="configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:org/jrdf/query/server/distributed/server.properties</value>
+            </list>
+        </property>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    </bean>
+
+    <!-- Context for non-Springifed Restlet -->
+    <bean id="component.context" class="org.springframework.beans.factory.config.PropertyPathFactoryBean"/>
+    <bean id="component.childContext" scope="prototype" factory-bean="component.context" factory-method="createChildContext"/>
+
+    <!-- Main web application -->
+    <bean id="directoryHandler" class="org.jrdf.util.TempDirectoryHandler">
+        <constructor-arg value="${persistent.directory}"/>
+    </bean>
+
+    <bean id="component" class="org.restlet.ext.spring.SpringComponent">
+        <property name="server" ref="server"/>
+        <property name="defaultTarget" ref="router"/>
+        <property name="logService" ref="logService"/>
+    </bean>
+
+    <bean id="server" class="org.restlet.ext.spring.SpringServer">
+        <constructor-arg value="http"/>
+        <constructor-arg value="${server.port}"/>
+    </bean>
+
+    <bean id="logService" class="org.restlet.service.LogService">
+        <constructor-arg value="false"/>
+    </bean>
+
+    <!-- Freemarker -->
+    <bean id="classTemplateLoader" class="freemarker.cache.ClassTemplateLoader">
+        <constructor-arg value="org.jrdf.JRDFFactory"/>
+        <constructor-arg value="/"/>
+    </bean>
+
+    <bean id="freemarkerConfig" class="freemarker.template.Configuration">
+        <property name="templateLoader" ref="classTemplateLoader"/>
+        <property name="objectWrapper">
+            <bean class="freemarker.template.DefaultObjectWrapper"/>
+        </property>
+    </bean>
+
+    <!-- Resources for displaying -->
+    <bean id="jsonRepresentationFactory" class="org.jrdf.query.server.JsonRepresentationFactory"/>
+    <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.query.server.SparqlXmlRepresentationFactory"/>
+
+    <!-- Router for Resources -->
+    <bean id="router" class="org.restlet.ext.spring.SpringRouter">
+        <property name="attachments">
+            <map>
+                <entry key="/">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="serversResource"/>
+                    </bean>
+                </entry>
+                <entry key="/graphs">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="listGraphsResource"/>
+                    </bean>
+                </entry>
+                <entry key="/graphs/{graph}">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="distributedQueryGraphResource"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- Do SPARQL queries -->
+    <bean id="queryFactory" class="org.jrdf.query.QueryFactoryImpl"/>
+    <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
+    <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
+
+    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
+        <constructor-arg ref="queryBuilder"/>
+        <constructor-arg ref="queryEngine"/>
+    </bean>
+
+    <bean id="graphApplication" class="org.jrdf.query.server.local.GraphApplicationImpl" scope="prototype">
+        <constructor-arg ref="directoryHandler"/>
+        <constructor-arg ref="urqlConnection"/>
+    </bean>
+
+    <bean id="distributedGraphApplication" class="org.jrdf.query.server.distributed.DistributedQueryGraphApplicationImpl">
+        <constructor-arg ref="graphApplication"/>
+    </bean>
+
+    <!-- Setup servers to query -->
+    <bean id="serversResource" class="org.jrdf.query.server.distributed.ServersResource">
+        <property name="distributedQueryGraphApplication" ref="distributedGraphApplication"/>
+        <property name="available" value="true"/>
+        <property name="representationTemplates">
+            <map>
+                <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="distributedStartPage"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="distributedStartPage" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
+        <property name="templateName" value="distributedStart-html.ftl"/>
+        <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    </bean>
+
+    <!-- List the graphs -->
+    <bean id="graphLister" class="org.jrdf.query.server.GraphListerImpl" scope="prototype">
+        <constructor-arg ref="directoryHandler"/>
+        <constructor-arg ref="graphApplication"/>
+        <constructor-arg value="${graphs.file}"/>
+    </bean>
+
+    <bean id="listGraphsResource" class="org.jrdf.query.server.ListGraphsResource" scope="prototype">
+        <property name="graphLister" ref="graphLister"/>
+        <property name="available" value="true"/>
+        <property name="representationTemplates">
+            <map>
+                <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="graphsResourceHtml"/>
+                <entry key-ref="org.restlet.data.MediaType.APPLICATION_JSON" value-ref="jsonRepresentationFactory"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="graphsResourceHtml" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
+        <property name="templateName" value="graphsLists-html.ftl"/>
+        <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    </bean>
+
+    <!-- Interface for distributed queries -->
+    <bean id="distributedQueryGraphResource" class="org.jrdf.query.server.GraphResource" scope="prototype">
+        <property name="graphApplication" ref="distributedGraphApplication"/>
+        <property name="available" value="true"/>
+        <property name="representationTemplates">
+            <map>
+                <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="localGraphsResourceHtml"/>
+                <entry key-ref="org.restlet.data.MediaType.APPLICATION_JSON" value-ref="jsonRepresentationFactory"/>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL" value-ref="sparqlXmlRepresentationFactory"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="localGraphsResourceHtml" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
+        <property name="templateName" value="graphDistributed-html.ftl"/>
+        <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    </bean>
+</beans>

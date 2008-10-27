@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE rdf:RDF[
+    <!ENTITY dcterms 'http://purl.org/dc/terms/'>
+    <!ENTITY dc 'http://purl.org/dc/elements/1.1/'>
+    <!ENTITY ns5 'http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#'>
+    <!ENTITY ns6 'http://www.biopax.org/release/biopax-level2.owl#'>
+    <!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+    <!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+    <!ENTITY owl 'http://www.w3.org/2002/07/owl#'>
+ ]><rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns5="http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#" xmlns:ns6="http://www.biopax.org/release/biopax-level2.owl#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:owl="http://www.w3.org/2002/07/owl#">&#xd;
+<rdf:Description rdf:about="http://ebi.ac.uk/publicationXref_52079">
+    <ns6:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></ns6:ID>
+</rdf:Description>
+</rdf:RDF>

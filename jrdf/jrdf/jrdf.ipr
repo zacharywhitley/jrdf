@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project relativePaths="true" version="4">
+  <component name="AntConfiguration">
+    <defaultAnt bundledAnt="true" />
+    <buildFile url="file://$PROJECT_DIR$/build.xml">
+      <additionalClassPath>
+        <entry path="file://$PROJECT_DIR$/lib/junit-3.8.1.jar" />
+        <entry path="file://$PROJECT_DIR$/lib/sablecc-3.2.jar" />
+        <entry path="file://$PROJECT_DIR$/lib/emma/emma-2.0.5312.jar" />
+        <entry path="file://$PROJECT_DIR$/lib/emma/emma_ant-2.0.5312.jar" />
+      </additionalClassPath>
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
+  </component>
+  <component name="BuildJarProjectSettings">
+    <option name="BUILD_JARS_ON_MAKE" value="false" />
+  </component>
+  <component name="CheckStyle-IDEA">
+    <checkstyle-config />
+  </component>
+  <component name="CodeStyleProjectProfileManger">
+    <option name="PROJECT_PROFILE" />
+    <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
+  </component>
+  <component name="CodeStyleSettingsManager">
+    <option name="PER_PROJECT_SETTINGS" />
+    <option name="USE_PER_PROJECT_SETTINGS" value="false" />
+  </component>
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <option name="DEPLOY_AFTER_MAKE" value="0" />
+    <resourceExtensions>
+      <entry name=".+\.(properties|xml|html|dtd|tld)" />
+      <entry name=".+\.(gif|png|jpeg|jpg)" />
+    </resourceExtensions>
+    <wildcardResourcePatterns>
+      <entry name="?*.properties" />
+      <entry name="?*.xml" />
+      <entry name="?*.gif" />
+      <entry name="?*.png" />
+      <entry name="?*.jpeg" />
+      <entry name="?*.jpg" />
+      <entry name="?*.html" />
+      <entry name="?*.dtd" />
+      <entry name="?*.tld" />
+      <entry name="?*.dat" />
+      <entry name="?*.rdf" />
+      <entry name="?*.txt" />
+      <entry name="?*.nt" />
+      <entry name="?*.ftl" />
+    </wildcardResourcePatterns>
+  </component>
+  <component name="DependenciesAnalyzeManager">
+    <option name="myForwardDirection" value="false" />
+  </component>
+  <component name="DependencyValidationManager">
+    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  </component>
+  <component name="EclipseCompilerSettings">
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="true" />
+    <option name="DEPRECATION" value="false" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+    <option name="MAXIMUM_HEAP_SIZE" value="128" />
+  </component>
+  <component name="EclipseEmbeddedCompilerSettings">
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="true" />
+    <option name="DEPRECATION" value="false" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+    <option name="MAXIMUM_HEAP_SIZE" value="128" />
+  </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="EntryPointsManager">
+    <entry_points version="2.0" />
+  </component>
+  <component name="ExportToHTMLSettings">
+    <option name="PRINT_LINE_NUMBERS" value="false" />
+    <option name="OPEN_IN_BROWSER" value="false" />
+    <option name="OUTPUT_DIRECTORY" />
+  </component>
+  <component name="IdProvider" IDEtalkID="5EED68F48DE23A29AADE6128D12CE043" />
+  <component name="InspectionProjectProfileManager">
+    <option name="PROJECT_PROFILE" value="Project Default" />
+    <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
+    <scopes />
+    <profiles>
+      <profile version="1.0" is_locked="false">
+        <option name="myName" value="Project Default" />
+        <option name="myLocal" value="false" />
+      </profile>
+    </profiles>
+    <list size="0" />
+  </component>
+  <component name="JavacSettings">
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="false" />
+    <option name="DEPRECATION" value="true" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+    <option name="MAXIMUM_HEAP_SIZE" value="128" />
+  </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" />
+    <option name="OPTION_SCOPE" value="protected" />
+    <option name="OPTION_HIERARCHY" value="true" />
+    <option name="OPTION_NAVIGATOR" value="true" />
+    <option name="OPTION_INDEX" value="true" />
+    <option name="OPTION_SEPARATE_INDEX" value="true" />
+    <option name="OPTION_DOCUMENT_TAG_USE" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_VERSION" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_DEPRECATED" value="true" />
+    <option name="OPTION_DEPRECATED_LIST" value="true" />
+    <option name="OTHER_OPTIONS" value="" />
+    <option name="HEAP_SIZE" />
+    <option name="LOCALE" />
+    <option name="OPEN_IN_BROWSER" value="true" />
+  </component>
+  <component name="JikesSettings">
+    <option name="JIKES_PATH" value="" />
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="DEPRECATION" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="false" />
+    <option name="IS_EMACS_ERRORS_MODE" value="true" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+  </component>
+  <component name="LogConsolePreferences">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
+  <component name="Palette2">
+    <group name="Swing">
+      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
+      </item>
+      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
+      </item>
+      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
+      </item>
+      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="false" auto-create-binding="false" can-attach-label="true">
+        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
+      </item>
+      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
+        <initial-values>
+          <property name="text" value="Button" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="RadioButton" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="CheckBox" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="Label" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
+      </item>
+      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
+          <preferred-size width="200" height="200" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
+          <preferred-size width="200" height="200" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
+      </item>
+      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
+      </item>
+      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
+      </item>
+      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
+      </item>
+      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
+          <preferred-size width="-1" height="20" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
+      </item>
+      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
+      </item>
+    </group>
+  </component>
+  <component name="ProjectDetails">
+    <option name="projectName" value="jrdf" />
+  </component>
+  <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/jrdf.iml" filepath="$PROJECT_DIR$/jrdf.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/iclasses" />
+  </component>
+  <component name="RUBY_DOC_SETTINGS">
+    <RUBY_DOC NAME="DEFAULTS" VALUE="TRUE" />
+    <RUBY_DOC NAME="NUMBER" VALUE="0" />
+  </component>
+  <component name="ResourceManagerContainer">
+    <option name="myResourceBundles">
+      <value>
+        <list size="0" />
+      </value>
+    </option>
+  </component>
+  <component name="RmicSettings">
+    <option name="IS_EANABLED" value="false" />
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="false" />
+    <option name="GENERATE_IIOP_STUBS" value="false" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://jrdf.svn.sf.net/svnroot/jrdf/branches" />
+                  <option value="https://jrdf.svn.sf.net/svnroot/jrdf/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://jrdf.svn.sf.net/svnroot/jrdf/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="ToggleTest">
+    <toggle from="*" to="*UnitTest" />
+    <toggle from="*" to="*AtomicTest" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="svn" />
+  </component>
+  <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <component name="com.intellij.jsf.UserDefinedFacesConfigs">
+    <option name="USER_DEFINED_CONFIGS">
+      <value>
+        <list size="0" />
+      </value>
+    </option>
+  </component>
+  <component name="copyright">
+    <Base>
+      <setting name="state" value="1" />
+    </Base>
+    <LanguageOptions name="$TEMPLATE$">
+      <option name="templateOptions">
+        <value>
+          <option name="block" value="true" />
+          <option name="separateBefore" value="false" />
+          <option name="separateAfter" value="false" />
+          <option name="prefixLines" value="true" />
+          <option name="lenBefore" value="80" />
+          <option name="lenAfter" value="80" />
+          <option name="box" value="false" />
+          <option name="filler" value=" " />
+        </value>
+      </option>
+      <option name="notice" value="&amp;#36;Header&amp;#36;&#10;&amp;#36;Revision: 982 &amp;#36;&#10;&amp;#36;Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) &amp;#36;&#10;&#10;====================================================================&#10;&#10;The Apache Software License, Version 1.1&#10;&#10;Copyright (c) 2003-2008 The JRDF Project.  All rights reserved.&#10;&#10;Redistribution and use in source and binary forms, with or without&#10;modification, are permitted provided that the following conditions&#10;are met:&#10;&#10;1. Redistributions of source code must retain the above copyright&#10;   notice, this list of conditions and the following disclaimer.&#10;&#10;2. Redistributions in binary form must reproduce the above copyright&#10;   notice, this list of conditions and the following disclaimer in&#10;   the documentation and/or other materials provided with the&#10;   distribution.&#10;&#10;3. The end-user documentation included with the redistribution, if&#10;   any, must include the following acknowlegement:&#10;      &quot;This product includes software developed by the&#10;       the JRDF Project (http://jrdf.sf.net/).&quot;&#10;   Alternately, this acknowlegement may appear in the software itself,&#10;   if and wherever such third-party acknowlegements normally appear.&#10;&#10;4. The names &quot;The JRDF Project&quot; and &quot;JRDF&quot; must not be used to endorse&#10;   or promote products derived from this software without prior written&#10;   permission. For written permission, please contact&#10;   newmana@users.sourceforge.net.&#10;&#10;5. Products derived from this software may not be called &quot;JRDF&quot;&#10;   nor may &quot;JRDF&quot; appear in their names without prior written&#10;   permission of the JRDF Project.&#10;&#10;THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED&#10;WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES&#10;OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE&#10;DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR&#10;ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,&#10;SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT&#10;LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF&#10;USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND&#10;ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,&#10;OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT&#10;OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF&#10;SUCH DAMAGE.&#10;====================================================================&#10;&#10;This software consists of voluntary contributions made by many&#10;individuals on behalf of the JRDF Project.  For more&#10;information on JRDF, please see &lt;http://jrdf.sourceforge.net/&gt;.&#10;" />
+      <option name="keyword" value="Copyright" />
+      <option name="fileTypeOverride" value="4" />
+      <option name="relativeBefore" value="true" />
+      <option name="addBlankAfter" value="true" />
+      <option name="fileLocation" value="1" />
+      <option name="useAlternate" value="false" />
+    </LanguageOptions>
+    <LanguageOptions name="HTML">
+      <option name="templateOptions">
+        <value>
+          <option name="block" value="true" />
+          <option name="separateBefore" value="false" />
+          <option name="separateAfter" value="false" />
+          <option name="prefixLines" value="true" />
+          <option name="lenBefore" value="80" />
+          <option name="lenAfter" value="80" />
+          <option name="box" value="false" />
+          <option name="filler" value=" " />
+        </value>
+      </option>
+      <option name="notice" value="Copyright (c) &amp;#36;today.year, Your Corporation. All Rights Reserved." />
+      <option name="keyword" value="Copyright" />
+      <option name="fileTypeOverride" value="2" />
+      <option name="relativeBefore" value="true" />
+      <option name="addBlankAfter" value="true" />
+      <option name="fileLocation" value="1" />
+      <option name="useAlternate" value="false" />
+    </LanguageOptions>
+    <LanguageOptions name="JAVA">
+      <option name="templateOptions">
+        <value>
+          <option name="block" value="true" />
+          <option name="separateBefore" value="false" />
+          <option name="separateAfter" value="false" />
+          <option name="prefixLines" value="true" />
+          <option name="lenBefore" value="80" />
+          <option name="lenAfter" value="80" />
+          <option name="box" value="false" />
+          <option name="filler" value=" " />
+        </value>
+      </option>
+      <option name="notice" value="Copyright (c) &amp;#36;today.year, Your Corporation. All Rights Reserved." />
+      <option name="keyword" value="Copyright" />
+      <option name="fileTypeOverride" value="2" />
+      <option name="relativeBefore" value="true" />
+      <option name="addBlankAfter" value="true" />
+      <option name="fileLocation" value="1" />
+      <option name="useAlternate" value="false" />
+    </LanguageOptions>
+    <LanguageOptions name="JSP">
+      <option name="templateOptions">
+        <value>
+          <option name="block" value="true" />
+          <option name="separateBefore" value="false" />
+          <option name="separateAfter" value="false" />
+          <option name="prefixLines" value="true" />
+          <option name="lenBefore" value="80" />
+          <option name="lenAfter" value="80" />
+          <option name="box" value="false" />
+          <option name="filler" value=" " />
+        </value>
+      </option>
+      <option name="notice" value="Copyright (c) &amp;#36;today.year, Your Corporation. All Rights Reserved." />
+      <option name="keyword" value="Copyright" />
+      <option name="fileTypeOverride" value="2" />
+      <option name="relativeBefore" value="true" />
+      <option name="addBlankAfter" value="true" />
+      <option name="fileLocation" value="1" />
+      <option name="useAlternate" value="false" />
+    </LanguageOptions>
+    <LanguageOptions name="JavaScript">
+      <option name="templateOptions">
+        <value>
+          <option name="block" value="true" />
+          <option name="separateBefore" value="false" />
+          <option name="separateAfter" value="false" />
+          <option name="prefixLines" value="true" />
+          <option name="lenBefore" value="80" />
+          <option name="lenAfter" value="80" />
+          <option name="box" value="false" />
+          <option name="filler" value=" " />
+        </value>
+      </option>
+      <option name="notice" value="Copyright (c) &amp;#36;today.year, Your Corporation. All Rights Reserved." />
+      <option name="keyword" value="Copyright" />
+      <option name="fileTypeOverride" value="2" />
+      <option name="relativeBefore" value="true" />
+      <option name="addBlankAfter" value="true" />
+      <option name="fileLocation" value="1" />
+      <option name="useAlternate" value="false" />
+    </LanguageOptions>
+    <LanguageOptions name="Properties">
+      <option name="templateOptions">
+        <value>
+          <option name="block" value="true" />
+          <option name="separateBefore" value="false" />
+          <option name="separateAfter" value="false" />
+          <option name="prefixLines" value="true" />
+          <option name="lenBefore" value="80" />
+          <option name="lenAfter" value="80" />
+          <option name="box" value="false" />
+          <option name="filler" value=" " />
+        </value>
+      </option>
+      <option name="notice" value="Copyright (c) &amp;#36;today.year, Your Corporation. All Rights Reserved." />
+      <option name="keyword" value="Copyright" />
+      <option name="fileTypeOverride" value="2" />
+      <option name="relativeBefore" value="true" />
+      <option name="addBlankAfter" value="true" />
+      <option name="fileLocation" value="1" />
+      <option name="useAlternate" value="false" />
+    </LanguageOptions>
+    <LanguageOptions name="XML">
+      <option name="templateOptions">
+        <value>
+          <option name="block" value="true" />
+          <option name="separateBefore" value="false" />
+          <option name="separateAfter" value="false" />
+          <option name="prefixLines" value="true" />
+          <option name="lenBefore" value="80" />
+          <option name="lenAfter" value="80" />
+          <option name="box" value="false" />
+          <option name="filler" value=" " />
+        </value>
+      </option>
+      <option name="notice" value="Copyright (c) &amp;#36;today.year, Your Corporation. All Rights Reserved." />
+      <option name="keyword" value="Copyright" />
+      <option name="fileTypeOverride" value="2" />
+      <option name="relativeBefore" value="true" />
+      <option name="addBlankAfter" value="true" />
+      <option name="fileLocation" value="1" />
+      <option name="useAlternate" value="false" />
+    </LanguageOptions>
+  </component>
+  <component name="libraryTable">
+    <library name="spring">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-logging-1.0.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-context-2.5.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-beans-2.5.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-core-2.5.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-aop-2.5.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring/spring-tx-2.5.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="easymock">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/easymock/easymock-2.4.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/easymock/easymockclassextension-2.4.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/easymock/cglib-nodep-2.1_3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="gsbase-2.0.1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/gsbase-2.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="wstx-asl">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/woodstox/stax-api-1.0.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/woodstox/wstx-asl-3.2.7.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="je">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/je/je-3.3.69.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="spring-rcp">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/spring-binding-1.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/looks-2.0.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/swingx-0.9.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/forms-1.0.7.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-rcp/spring-richclient-full-1.0.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="junit">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/junit-3.8.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="restlet">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.freemarker_2.3-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.simple_3.1-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework_3.1-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.spring_2.5-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.json_2.0-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.json-1.1rc2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.simple_3.1" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.gwt" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.spring_2.5" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.spring_2.5" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.jibx_1.1" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.servlet_2.5" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.freemarker_2.3" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.gwt_1.5" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.atom_1.0" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.json_2.0" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.fileupload_1.2" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.example" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.wadl_1.0" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.velocity_1.5" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.ssl" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.jaxb_2.1" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.net" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.jdbc_3.0" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.httpclient_3.1" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.jetty_6.1" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.jaxrs_0.11" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.oauth_1.0" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.javamail_1.4" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.grizzly_1.8" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.xdb_11.1" />
+      </SOURCES>
+    </library>
+    <library name="freemarker">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/freemarker/freemarker-2.3.14.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
+</project>
+
