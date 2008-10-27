@@ -65,7 +65,6 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Filter;
-import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
@@ -174,17 +173,9 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         result = leftOuterJoin.join(lhs, rhs);
     }
 
-    public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
-        Set<Relation> set = new HashSet<Relation>();
-        set.add(result);
-        result = restrict.restrict(operator.getAttributeValuePair());
-        set.add(result);
-        result = naturalJoin.join(set);
-    }
-
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
         result = getExpression(filter.getLhs());
-        result = restrict.restrict(result, (LogicExpression) filter.getRhs());
+        result = restrict.restrict(result, (LogicExpression<ExpressionVisitor>) filter.getRhs());
     }
 
     @SuppressWarnings({ "unchecked" })
