@@ -59,7 +59,6 @@
 
 package org.jrdf.query.expression.logic;
 
-import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.util.EqualsUtil;
 
@@ -72,13 +71,12 @@ public class LogicalNotExpression<V extends ExpressionVisitor> implements LogicE
     private static final long serialVersionUID = 7468439147872226467L;
     private static final int DUMMY_HASHCODE = 47;
 
-    // TODO YF should be a LogicExpression
-    private Expression<V> expression;
+    private LogicExpression<V> expression;
 
     private LogicalNotExpression() {
     }
 
-    public LogicalNotExpression(Expression<V> exp) {
+    public LogicalNotExpression(LogicExpression<V> exp) {
         expression = exp;
     }
 
@@ -86,7 +84,7 @@ public class LogicalNotExpression<V extends ExpressionVisitor> implements LogicE
         v.visitLogicalNot(this);
     }
 
-    public Expression<V> getExpression() {
+    public LogicExpression<V> getExpression() {
         return expression;
     }
 
