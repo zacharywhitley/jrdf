@@ -59,6 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.restrict;
 
+import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
@@ -67,7 +68,9 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -85,21 +88,19 @@ public class RestrictImpl implements Restrict {
     private final RelationFactory relationFactory;
     private final TupleFactory tupleFactory;
     private final TupleComparator tupleComparator;
+    private final BooleanEvaluator evaluator;
 
     public RestrictImpl(RelationFactory relationFactory, TupleFactory tupleFactory, TupleComparator tupleComparator) {
         this.relationFactory = relationFactory;
         this.tupleFactory = tupleFactory;
         this.tupleComparator = tupleComparator;
+        this.evaluator = new SimpleBooleanEvaluator(relationFactory, tupleFactory);
     }
 
     // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
     public Relation restrict(Relation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
-        if (relation instanceof GraphRelation) {
-            return restrict((GraphRelation) relation, avo);
-        } else {
-            final Set<Tuple> restrictedTuples = relation.getTuples(avo);
-            return relationFactory.getRelation(restrictedTuples);
-        }
+        final Set<Tuple> restrictedTuples = relation.getTuples(avo);
+        return relationFactory.getRelation(restrictedTuples);
     }
 
     public Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
@@ -112,5 +113,16 @@ public class RestrictImpl implements Restrict {
         SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
         resultTuples.add(tuple);
         return relationFactory.getRelation(resultTuples);
+    }
+
+    public Relation restrict(Relation relation, LogicExpression expression) {
+        final Set<Tuple> tuples = relation.getTuples();
+        Set<Tuple> result = new TreeSet<Tuple>();
+        for (Tuple tuple : tuples) {
+            if (evaluator.evaluate(tuple, expression)) {
+                result.add(tuple);
+            }
+        }
+        return relationFactory.getRelation(result);
     }
 }
