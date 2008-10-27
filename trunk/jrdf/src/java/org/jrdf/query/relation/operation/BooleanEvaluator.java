@@ -57,66 +57,17 @@
  *
  */
 
-package org.jrdf.query.expression;
+package org.jrdf.query.relation.operation;
 
 import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.util.EqualsUtil;
-
-import java.util.Map;
+import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.relation.Tuple;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class BoundOperator <V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
-    private static final long serialVersionUID = -2026129623510467814L;
-    private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
-
-    private BoundOperator() {
-    }
-
-    public BoundOperator(Map<Attribute, ValueOperation> singleAvp) {
-        this.singleAvp = singleAvp;
-    }
-
-    public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitOperator(this);
-    }
-
-    public Map<Attribute, ValueOperation> getAttributeValuePair() {
-        return singleAvp;
-    }
-
-    @Override
-    public int hashCode() {
-        return DUMMY_HASHCODE;
-    }
-
-    @Override
-    public String toString() {
-        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
-        Attribute attribute = attributeValueOperationEntry.getKey();
-        return "bound (" + attribute + ")";
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (BoundOperator) obj);
-    }
-
-    private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {
-        return s1.singleAvp.equals(s2.singleAvp);
-    }
+public interface BooleanEvaluator extends ExpressionVisitor {
+    boolean evaluate(Tuple tuple, LogicExpression expression);
 }

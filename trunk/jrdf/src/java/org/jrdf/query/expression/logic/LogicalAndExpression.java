@@ -59,7 +59,6 @@
 
 package org.jrdf.query.expression.logic;
 
-import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.util.EqualsUtil;
 
@@ -72,31 +71,30 @@ public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicE
     private static final long serialVersionUID = -1701496085083842700L;
     private static final int DUMMY_HASHCODE = 47;
 
-    // TODO YF should be LogicExpression!
-    private Expression<V> lhs;
-    private Expression<V> rhs;
+    private LogicExpression<V> lhs;
+    private LogicExpression<V> rhs;
 
     private LogicalAndExpression() {
     }
 
-    public LogicalAndExpression(Expression<V> lhs, Expression<V> rhs) {
+    public LogicalAndExpression(LogicExpression<V> lhs, LogicExpression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
 
-    public Expression<V> getLhs() {
+    public LogicExpression<V> getLhs() {
         return lhs;
     }
 
-    public Expression<V> getRhs() {
+    public LogicExpression<V> getRhs() {
         return rhs;
     }
 
-    public void setLhs(Expression<V> lhs) {
+    public void setLhs(LogicExpression<V> lhs) {
         this.lhs = lhs;
     }
 
-    public void setRhs(Expression<V> rhs) {
+    public void setRhs(LogicExpression<V> rhs) {
         this.rhs = rhs;
     }
 

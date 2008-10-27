@@ -64,14 +64,16 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.util.EqualsUtil.*;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Map;
 
 /**
  * Implementation of relations containing a set of tuples and a set of attributes.  The attribute constitute a heading

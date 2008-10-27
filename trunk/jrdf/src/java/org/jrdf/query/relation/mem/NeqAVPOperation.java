@@ -10,7 +10,7 @@ import java.util.Map;
 public final class NeqAVPOperation implements AVPOperation {
     private static final NodeComparator COMPARATOR = new ComparatorFactoryImpl().createNodeComparator();
     /**
-     * The constant to indicate equals operation.
+     * The constant to indicate not equals operation.
      */
     public static final AVPOperation NEQUALS = new NeqAVPOperation();
     private static final long serialVersionUID = -5281476871321027939L;

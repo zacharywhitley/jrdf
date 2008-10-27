@@ -76,8 +76,9 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
-import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.Union;
+import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.relation.Attribute;
@@ -87,10 +88,10 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import static org.jrdf.query.relation.mem.BoundAVPOperation.BOUND;
-import org.jrdf.query.relation.mem.EqAVPOperation;
 import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
+import static org.jrdf.query.relation.mem.StrAVPOperation.STR;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
@@ -348,9 +349,12 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
         ValueOperation value = new ValueOperationImpl(createLiteral("unknown"), EQUALS);
         avo.put(attribute, value);
-        Expression<ExpressionVisitor> strExpression = new StrOperator(avo);
-        Expression<ExpressionVisitor> filterExpression = new Filter(spoExpression, strExpression);
-        checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\") }", filterExpression);
+        Map<Attribute, ValueOperation> strAvo = new HashMap<Attribute, ValueOperation>();
+        ValueOperation strValue = new ValueOperationImpl(ANY_NODE, STR);
+        strAvo.put(attribute, strValue);
+        LogicExpression<ExpressionVisitor> eqnExpression = new EqualsExpression<ExpressionVisitor>(strAvo, avo);
+        Expression<ExpressionVisitor> filterExpression = new Filter(spoExpression, eqnExpression);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER( str(?o) = \"unknown\" ) }", filterExpression);
     }
 
     public void testPrefixInFilter() throws Exception {
@@ -360,8 +364,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
         ValueOperation value = new ValueOperationImpl(createLiteral("unknown", XSD.STRING), EQUALS);
         avo.put(attribute, value);
-        Expression<ExpressionVisitor> strExpression = new StrOperator(avo);
-        Expression<ExpressionVisitor> filterExpression = new Filter(spoExpression, strExpression);
+        Map<Attribute, ValueOperation> strAvo = new HashMap<Attribute, ValueOperation>();
+        ValueOperation strValue = new ValueOperationImpl(ANY_NODE, STR);
+        strAvo.put(attribute, strValue);
+        LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression(strAvo, avo);
+        Expression<ExpressionVisitor> filterExpression = new Filter(spoExpression, equalsExpression);
         checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
                 "SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", filterExpression);
     }
@@ -397,7 +404,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
         ValueOperation value = new ValueOperationImpl(ANY_NODE, BOUND);
         avo.put(attribute, value);
-        Expression<ExpressionVisitor> boundExpression = new BoundOperator(avo);
+        LogicExpression<ExpressionVisitor> boundExpression = new BoundOperator(avo);
         Expression<ExpressionVisitor> notExpression = new LogicalNotExpression(boundExpression);
         Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, notExpression);
         checkConstraintExpression(queryString, filterExpression);
@@ -408,15 +415,23 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
                 "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
                 "SELECT ?name\n" +
                 "WHERE { ?x foaf:name ?name .\n" +
-                "FILTER ( !str(?name) = \"abc\") }";
+                "FILTER ( !(str(?name) = \"abc\")) }";
         AttributeName dateVar = new VariableName("name");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
         Literal abcLit = new LiteralImpl("abc");
-        ValueOperation value = new ValueOperationImpl(abcLit, EqAVPOperation.EQUALS);
+        ValueOperation value = new ValueOperationImpl(abcLit, EQUALS);
         avo.put(attribute, value);
-        Expression<ExpressionVisitor> strOperator = new StrOperator(avo);
-        Expression<ExpressionVisitor> notExp = new LogicalNotExpression(strOperator);
+
+        AttributeName nameVar = new VariableName("name");
+        Map<Attribute, ValueOperation> nameAvo = new HashMap<Attribute, ValueOperation>();
+        attribute = new AttributeImpl(nameVar, new ObjectNodeType());
+        value = new ValueOperationImpl(ANY_NODE, STR);
+        nameAvo.put(attribute, value);
+
+
+        LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression(nameAvo, avo);
+        Expression<ExpressionVisitor> notExp = new LogicalNotExpression(equalsExpression);
         Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, notExp);
         checkConstraintExpression(queryString, filterExpression);
     }
@@ -431,22 +446,28 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(nameVar, new ObjectNodeType());
         Literal abcLit = new LiteralImpl("abc");
-        ValueOperation value = new ValueOperationImpl(abcLit, EqAVPOperation.EQUALS);
+        ValueOperation value = new ValueOperationImpl(abcLit, EQUALS);
         avo.put(attribute, value);
-        Expression<ExpressionVisitor> strOperator = new StrOperator(avo);
 
         AttributeName xVar = new VariableName("x");
-        avo = new HashMap<Attribute, ValueOperation>();
+        Map<Attribute, ValueOperation> xAvo = new HashMap<Attribute, ValueOperation>();
         attribute = new AttributeImpl(xVar, new SubjectNodeType());
         value = new ValueOperationImpl(ANY_NODE, BOUND);
-        avo.put(attribute, value);
-        Expression<ExpressionVisitor> boundExpression = new BoundOperator(avo);
-        Expression<ExpressionVisitor> andExpression = new LogicalAndExpression<ExpressionVisitor>(strOperator, boundExpression);
+        xAvo.put(attribute, value);
+
+        Map<Attribute, ValueOperation> nameAvo = new HashMap<Attribute, ValueOperation>();
+        attribute = new AttributeImpl(nameVar, new ObjectNodeType());
+        value = new ValueOperationImpl(ANY_NODE, STR);
+        nameAvo.put(attribute, value);
+
+        LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression(nameAvo, avo);
+        LogicExpression<ExpressionVisitor> boundExpression = new BoundOperator(xAvo);
+        Expression<ExpressionVisitor> andExpression = new LogicalAndExpression(equalsExpression, boundExpression);
         Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, andExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
 
-    private void checkConstraintExpression(String queryString, Expression expectedExpression) throws Exception {
+    private void checkConstraintExpression(String queryString, Expression<ExpressionVisitor> expectedExpression) throws Exception {
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
         assertEquals(expectedExpression, actualExpression);
