@@ -70,7 +70,7 @@ import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.query.relation.operation.Restrict;
-import org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator;
+import org.jrdf.query.relation.operation.mem.tempLogic.SimpleBooleanEvaluator;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
