@@ -69,7 +69,6 @@ import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
-import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -173,9 +172,10 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         result = leftOuterJoin.join(lhs, rhs);
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
         result = getExpression(filter.getLhs());
-        result = restrict.restrict(result, (LogicExpression<ExpressionVisitor>) filter.getRhs());
+        result = restrict.restrict(result, filter.getRhs());
     }
 
     @SuppressWarnings({ "unchecked" })

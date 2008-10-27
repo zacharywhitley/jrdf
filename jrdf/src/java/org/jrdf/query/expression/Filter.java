@@ -59,6 +59,7 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.util.EqualsUtil;
 
 import java.io.Serializable;
@@ -72,12 +73,12 @@ public class Filter<V extends ExpressionVisitor> implements Expression<V>, Seria
     private static final long serialVersionUID = 7695585379424077889L;
     private static final int DUMMY_HASHCODE = 47;
     private Expression<V> lhs;
-    private Expression<V> rhs;
+    private LogicExpression<V> rhs;
 
     private Filter() {
     }
 
-    public Filter(Expression<V> lhs, Expression<V> rhs) {
+    public Filter(Expression<V> lhs, LogicExpression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
@@ -86,7 +87,7 @@ public class Filter<V extends ExpressionVisitor> implements Expression<V>, Seria
         return lhs;
     }
 
-    public Expression<V> getRhs() {
+    public LogicExpression<V> getRhs() {
         return rhs;
     }
 
@@ -94,7 +95,7 @@ public class Filter<V extends ExpressionVisitor> implements Expression<V>, Seria
         this.lhs = lhs;
     }
 
-    public void setRhs(Expression<V> rhs) {
+    public void setRhs(LogicExpression<V> rhs) {
         this.rhs = rhs;
     }
 
@@ -107,7 +108,7 @@ public class Filter<V extends ExpressionVisitor> implements Expression<V>, Seria
     }
 
     public String toString() {
-        return lhs + " FILTER ( " + rhs + " )";
+        return "( " + lhs + " )" + " FILTER ( " + rhs + " )";
     }
 
     public boolean equals(Object obj) {

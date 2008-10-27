@@ -134,11 +134,14 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     public SortedSet<Attribute> getSortedHeading() {
-        throw new UnsupportedOperationException();
+        return attributeFactory.createHeading();
     }
 
     public SortedSet<Tuple> getSortedTuples() {
-        throw new UnsupportedOperationException();
+        SortedSet<Attribute> heading = attributeFactory.createHeading();
+        Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
+        Triple searchTriple = new TripleImpl(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        return getTuplesFromGraph(searchTriple, attributes);
     }
 
     @Override
@@ -160,10 +163,10 @@ public final class GraphRelationImpl implements GraphRelation {
         return determineEqualityFromFields((GraphRelation) obj);
     }
 
-    private Set<Tuple> getTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
+    private SortedSet<Tuple> getTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
         ClosableIterator<Triple> closableIterator = getIterator(searchTriple);
         try {
-            Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
+            SortedSet<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
             while (closableIterator.hasNext()) {
                 Triple triple = closableIterator.next();
                 Map<Attribute, ValueOperation> avo = avpHelper.createAvo(triple, attributes);

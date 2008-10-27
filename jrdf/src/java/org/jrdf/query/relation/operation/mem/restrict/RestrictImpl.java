@@ -120,7 +120,7 @@ public class RestrictImpl implements Restrict {
             }
         }
         boolean hasValidVarName = relationHasValidVariableNames(relation);
-        return createRelation(relation, restrictedTuples, hasValidVarName);
+        return createRelation(relation, result, hasValidVarName);
     }
 
     // TODO YF may not get all headings, but should be potentially faster

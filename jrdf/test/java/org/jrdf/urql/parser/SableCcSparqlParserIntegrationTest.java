@@ -387,7 +387,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
         ValueOperation value = new ValueOperationImpl(ANY_NODE, BOUND);
         avo.put(attribute, value);
-        Expression<ExpressionVisitor> boundExpression = new BoundOperator(avo);
+        LogicExpression<ExpressionVisitor> boundExpression = new BoundOperator(avo);
         Expression<ExpressionVisitor> filterExpression = new Filter(optionalExpression, boundExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
@@ -405,7 +405,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         ValueOperation value = new ValueOperationImpl(ANY_NODE, BOUND);
         avo.put(attribute, value);
         LogicExpression<ExpressionVisitor> boundExpression = new BoundOperator(avo);
-        Expression<ExpressionVisitor> notExpression = new LogicalNotExpression(boundExpression);
+        LogicExpression<ExpressionVisitor> notExpression = new LogicalNotExpression(boundExpression);
         Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, notExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
@@ -431,7 +431,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
 
         LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression(nameAvo, avo);
-        Expression<ExpressionVisitor> notExp = new LogicalNotExpression(equalsExpression);
+        LogicExpression<ExpressionVisitor> notExp = new LogicalNotExpression(equalsExpression);
         Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, notExp);
         checkConstraintExpression(queryString, filterExpression);
     }
@@ -462,9 +462,31 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
         LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression(nameAvo, avo);
         LogicExpression<ExpressionVisitor> boundExpression = new BoundOperator(xAvo);
-        Expression<ExpressionVisitor> andExpression = new LogicalAndExpression(equalsExpression, boundExpression);
+        LogicExpression<ExpressionVisitor> andExpression = new LogicalAndExpression(equalsExpression, boundExpression);
         Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, andExpression);
         checkConstraintExpression(queryString, filterExpression);
+    }
+
+    public void testComplexQuery() throws InvalidQuerySyntaxException {
+        String queryString =
+                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" +
+                "PREFIX biopax: <http://www.biopax.org/release/biopax-level2.owl#> \n" +
+                "PREFIX biomanta: <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#> \n" +
+                "PREFIX ncbi: <http://biomanta.sourceforge.net/2007/10/ncbi_taxo.owl#> \n" +
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
+                "SELECT ?name ?id \n" +
+                "WHERE { { ?x rdf:type biopax:physicalEntity . \n" +
+                "        ?x biomanta:fromNCBISpecies ncbi:ncbi_taxo_4932_ind . \n" +
+                "        ?x biomanta:hasPrimaryRef ?y . \n" +
+                "        ?y biopax:DB ?db \n" +
+                "        FILTER (str(?db) = \"uniprotkb\"^^xsd:string) } . \n" +
+                "        \n" +
+                "        { ?y biopax:ID ?id . \n" +
+                "        FILTER (str(?id) = \"o13516\"^^xsd:string) } . \n" +
+                "        ?x biomanta:hasFullName ?name }";
+        Query query = parseQuery(queryString);
+        Expression<ExpressionVisitor> actualExpression = getExpression(query);
+        System.err.println("actualExpression:\n" + actualExpression);
     }
 
     private void checkConstraintExpression(String queryString, Expression<ExpressionVisitor> expectedExpression) throws Exception {
