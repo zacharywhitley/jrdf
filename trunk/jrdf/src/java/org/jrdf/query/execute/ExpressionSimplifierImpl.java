@@ -1,16 +1,16 @@
 package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.Conjunction;
+import org.jrdf.query.expression.EmptyConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Filter;
+import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
-import org.jrdf.query.expression.EmptyConstraint;
-import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
@@ -20,6 +20,7 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.EqAVPOperation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implements ExpressionSimplifier {
@@ -28,6 +29,10 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
 
     public ExpressionSimplifierImpl(Map<Attribute, ValueOperation> newAttributeValues) {
         this.newAttributeValues = newAttributeValues;
+    }
+
+    public ExpressionSimplifierImpl() {
+        this.newAttributeValues = new HashMap<Attribute, ValueOperation>();
     }
 
     public Expression<ExpressionVisitor> getExpression() {

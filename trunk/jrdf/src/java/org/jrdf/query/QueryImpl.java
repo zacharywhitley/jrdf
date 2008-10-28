@@ -65,8 +65,6 @@ import org.jrdf.query.answer.AnswerImpl;
 import org.jrdf.query.execute.ExpressionSimplifier;
 import org.jrdf.query.execute.ExpressionSimplifierImpl;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.query.expression.ConstraintCollector;
-import org.jrdf.query.expression.ConstraintCollectorImpl;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
@@ -114,9 +112,7 @@ public final class QueryImpl implements Query {
     private Relation getResult(Graph graph, QueryEngine queryEngine) {
         GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
         queryEngine.initialiseBaseRelation(entireGraph);
-        ConstraintCollector collector = new ConstraintCollectorImpl();
-        expression.accept(collector);
-        ExpressionSimplifier simplifier = new ExpressionSimplifierImpl(collector.getOperators());
+        ExpressionSimplifier simplifier = new ExpressionSimplifierImpl();
         expression.accept(simplifier);
         expression = simplifier.getExpression();
         expression.accept(queryEngine);
