@@ -113,7 +113,7 @@ public class RestrictImpl implements Restrict {
 
     public Relation restrict(Relation relation, LogicExpression expression) {
         final Set<Tuple> restrictedTuples = relation.getTuples();
-        Set<Tuple> result = new TreeSet<Tuple>();
+        Set<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple : restrictedTuples) {
             if (evaluator.evaluate(tuple, expression)) {
                 result.add(tuple);
