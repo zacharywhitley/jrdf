@@ -70,4 +70,6 @@ import java.io.Serializable;
  */
 public interface Expression<V extends ExpressionVisitor> extends Serializable {
     void accept(V v);
+
+    int size();
 }

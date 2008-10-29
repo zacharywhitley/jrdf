@@ -95,6 +95,10 @@ public final class EmptyConstraint<V extends ExpressionVisitor> implements Const
         return false;
     }
 
+    public int size() {
+        return 0;
+    }
+
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
         return DUMMY_HASHCODE + toString().hashCode();

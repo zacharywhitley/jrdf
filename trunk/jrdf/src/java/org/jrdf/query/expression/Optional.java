@@ -93,6 +93,10 @@ public final class Optional<V extends ExpressionVisitor> implements Expression<V
         return rhs;
     }
 
+    public int size() {
+        return lhs.size() + rhs.size();
+    }
+
     public void accept(V v) {
         v.visitOptional(this);
     }

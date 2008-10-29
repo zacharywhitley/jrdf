@@ -88,6 +88,10 @@ public class LogicalNotExpression<V extends ExpressionVisitor> implements LogicE
         return expression;
     }
 
+    public int size() {
+        return expression.size();
+    }
+
     @Override
     public int hashCode() {
         return DUMMY_HASHCODE + expression.hashCode();

@@ -85,9 +85,12 @@ public final class Union<V extends ExpressionVisitor> implements Expression<V>, 
         return rhs;
     }
 
-
     public void accept(V v) {
         v.visitUnion(this);
+    }
+
+    public int size() {
+        return lhs.size() + rhs.size();
     }
 
     public boolean equals(Object obj) {

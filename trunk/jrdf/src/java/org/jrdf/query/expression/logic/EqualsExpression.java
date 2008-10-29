@@ -98,6 +98,10 @@ public class EqualsExpression<V extends ExpressionVisitor> implements LogicExpre
         v.visitEqualsExpression(this);
     }
 
+    public int size() {
+        return 2;
+    }
+
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
         int hash = DUMMY_HASHCODE + lhs.hashCode();

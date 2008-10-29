@@ -18,6 +18,10 @@ public class EmptyOperator<V extends ExpressionVisitor> implements Operator<V> {
     public void accept(ExpressionVisitor v) {
     }
 
+    public int size() {
+        return 0;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (EqualsUtil.isNull(obj)) {
