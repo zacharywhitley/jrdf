@@ -65,7 +65,6 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AVPOperation;
-import static org.jrdf.query.relation.mem.BoundAVPOperation.BOUND;
 import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
@@ -122,14 +121,12 @@ public class NaturalJoinEngine implements TupleEngine {
         boolean result;
         if (avp1 == null && avp2 == null) {
             result = false;
+        } else if (avp1 == null) {
+            result = processSingleAVP(attribute, avp2);
+        } else if (avp2 == null) {
+            result = processSingleAVP(attribute, avp1);
         } else {
-            if (avp1 == null) {
-                result = processSingleAVP(attribute, avp2);
-            } else if (avp2 == null) {
-                result = processSingleAVP(attribute, avp1);
-            } else {
-                result = avp1NotNull(attribute, avp1, avp2);
-            }
+            result = avp1NotNull(attribute, avp1, avp2);
         }
         return result;
     }
@@ -139,9 +136,6 @@ public class NaturalJoinEngine implements TupleEngine {
         if (avpOperation.equals(EQUALS)) {
             resultantAttributeValues.put(attribute, avp);
             return false;
-        } else if (avpOperation.equals(BOUND)) {
-            resultantAttributeValues.put(attribute, avp);
-            return true;
         } else {
             return true;
         }

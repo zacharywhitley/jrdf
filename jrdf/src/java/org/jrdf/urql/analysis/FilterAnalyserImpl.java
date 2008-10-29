@@ -10,6 +10,10 @@ import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.relation.mem.AVPOperation;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
+import static org.jrdf.query.relation.mem.NeqAVPOperation.NEQUALS;
+import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABooleanNotUnaryExpression;
@@ -18,6 +22,7 @@ import org.jrdf.urql.parser.node.ABracketedExpressionConstraint;
 import org.jrdf.urql.parser.node.AConditionalAndExpression;
 import org.jrdf.urql.parser.node.AEMoreNumericExpression;
 import org.jrdf.urql.parser.node.AMoreValueLogical;
+import org.jrdf.urql.parser.node.ANeMoreNumericExpression;
 import org.jrdf.urql.parser.node.ARelationalExpression;
 import org.jrdf.urql.parser.node.AStrBuiltincall;
 import org.jrdf.urql.parser.node.PMoreNumericExpression;
@@ -133,5 +138,32 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
         } catch (ParserException e) {
             exception = e;
         }
+    }
+
+    @Override
+    public void caseANeMoreNumericExpression(ANeMoreNumericExpression node) {
+        try {
+            node.getNumericExpression().apply(numericExpressionAnalyser);
+            Map<Attribute, ValueOperation> moreValuePair = numericExpressionAnalyser.getSingleAvp();
+            expression = new EqualsExpression<ExpressionVisitor>(valuePair, moreValuePair);
+            boolean changed = negateAVP(valuePair);
+            if (!changed) {
+                negateAVP(moreValuePair);
+            }
+            expression = new EqualsExpression<ExpressionVisitor>(valuePair, moreValuePair);
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    private boolean negateAVP(Map<Attribute, ValueOperation> valuePair) {
+        final Attribute attribute = valuePair.keySet().iterator().next();
+        final ValueOperation valueOperation = valuePair.get(attribute);
+        final AVPOperation avpOperation = valueOperation.getOperation();
+        if (avpOperation.equals(EQUALS)) {
+            valuePair.put(attribute, new ValueOperationImpl(valueOperation.getValue(), NEQUALS));
+            return true;
+        }
+        return false;
     }
 }

@@ -486,7 +486,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
                 "        ?x biomanta:hasFullName ?name }";
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
-        System.err.println("actualExpression:\n" + actualExpression);
     }
 
     private void checkConstraintExpression(String queryString, Expression<ExpressionVisitor> expectedExpression) throws Exception {
