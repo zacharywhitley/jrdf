@@ -109,7 +109,7 @@ public final class RelationProcessorImpl implements RelationProcessor {
         Relation resultRelation = null;
         SortedSet<Attribute> commonHeadings = tupleEngine.getHeading(relation1, relation2);
 //        if (tupleEngine instanceof NaturalJoinEngine && commonHeadings.isEmpty()) {
-//            // do sort-merge join    
+//            // do sort-merge join
 //        } else {
 //            resultRelation = doProcessRelations(tupleEngine, relation1, relation2, headings);
 //        }
@@ -117,14 +117,15 @@ public final class RelationProcessorImpl implements RelationProcessor {
         return resultRelation;
     }
 
-    private Relation doProcessRelations(TupleEngine tupleEngine, Relation relation1, Relation relation2, SortedSet<Attribute> headings) {
+    private Relation doProcessRelations(TupleEngine tupleEngine, Relation relation1, Relation relation2,
+                                        SortedSet<Attribute> headings) {
         SortedSet<Tuple> tuples = processTuples(headings, relation1.getSortedTuples(), relation2.getSortedTuples(),
             tupleEngine);
         return relationFactory.getRelation(headings, tuples);
     }
 
-    private SortedSet<Tuple> sortMergeJoin(SortedSet<Attribute> headings, SortedSet<Attribute> commonHeadings, TupleEngine tupleEngine,
-                                           Relation relation1, Relation relation2) {
+    private SortedSet<Tuple> sortMergeJoin(SortedSet<Attribute> headings, SortedSet<Attribute> commonHeadings,
+                                           TupleEngine tupleEngine, Relation relation1, Relation relation2) {
         for (Attribute attribute : commonHeadings) {
             tupleAVComparator.setAttribute(attribute);
             final Iterator<Tuple> iterator1 = relation1.getSortedTuples(attribute).iterator();
@@ -135,7 +136,6 @@ public final class RelationProcessorImpl implements RelationProcessor {
                 int compare = tupleAVComparator.compare(tuple1, tuple2);
                 if (compare == 0) {
                     tuple1 = advanceIterator(iterator1);
-                    
                 }
             }
         }
