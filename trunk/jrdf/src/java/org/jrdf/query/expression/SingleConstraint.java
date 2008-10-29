@@ -59,6 +59,11 @@
 
 package org.jrdf.query.expression;
 
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -70,7 +75,11 @@ import static org.jrdf.util.EqualsUtil.differentClasses;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.vocabulary.RDF;
+import org.jrdf.vocabulary.RDFS;
+import org.jrdf.vocabulary.XSD;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -83,6 +92,8 @@ import java.util.Map;
 public final class SingleConstraint<V extends ExpressionVisitor> implements Constraint<V> {
     private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
+    private static final String OWL_BASE_URI = "http://www.w3.org/2002/07/owl#";
+
     private LinkedHashMap<Attribute, ValueOperation> singleAvp;
 
     private SingleConstraint() {
@@ -114,7 +125,37 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
     }
 
     public int size() {
-        return 1;
+        return noUsefulNodes();
+    }
+
+    private int noUsefulNodes() {
+        int result = 0;
+        final Iterator<Attribute> iterator = singleAvp.keySet().iterator();
+        while (iterator.hasNext()) {
+            final ValueOperation valueOperation = singleAvp.get(iterator.next());
+            final Node node = valueOperation.getValue();
+            if (!isAnyNode(node) && !isBuiltinNode(node)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    private boolean isAnyNode(Node node) {
+        return ANY_SUBJECT_NODE.equals(node) || ANY_OBJECT_NODE.equals(node) || ANY_PREDICATE_NODE.equals(node);
+    }
+
+    private boolean isBuiltinNode(Node node) {
+        if (URIReference.class.isAssignableFrom(node.getClass())) {
+            final String uri = ((URIReference) node).getURI().toString();
+            if (uri.startsWith(RDF.BASE_URI.toString()) ||
+                uri.startsWith(RDFS.BASE_URI.toString()) ||
+                uri.startsWith(XSD.BASE_URI.toString()) ||
+                uri.startsWith(OWL_BASE_URI)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void accept(V v) {

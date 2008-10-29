@@ -142,15 +142,10 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     private boolean avp1NotNull(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
-        if (avp2 == null) {
-            resultantAttributeValues.put(attribute, avp1);
-            return false;
+        if (!avp1.getOperation().equals(EQUALS)) {
+            return avp1.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp1, avp2);
         } else {
-            if (!avp1.getOperation().equals(EQUALS)) {
-                return avp1.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp1, avp2);
-            } else {
-                return avp2.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp2, avp1);
-            }
+            return avp2.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp2, avp1);
         }
     }
 }

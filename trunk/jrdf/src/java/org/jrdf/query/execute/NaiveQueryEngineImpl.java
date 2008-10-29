@@ -93,14 +93,14 @@ import java.util.Set;
  * @version $Revision:$
  */
 public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements QueryEngine {
-    private Relation result;
-    private Project project;
-    private Restrict restrict;
-    private NadicJoin naturalJoin;
-    private org.jrdf.query.relation.operation.Union union;
-    private DyadicJoin leftOuterJoin;
-    private SemiDifference diff;
-    private Map<AttributeName, PositionalNodeType> allVariables;
+    protected Relation result;
+    protected Project project;
+    protected Restrict restrict;
+    protected NadicJoin naturalJoin;
+    protected org.jrdf.query.relation.operation.Union union;
+    protected DyadicJoin leftOuterJoin;
+    protected SemiDifference diff;
+    protected Map<AttributeName, PositionalNodeType> allVariables;
 
     public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
         org.jrdf.query.relation.operation.Union union, DyadicJoin leftOuterJoin, SemiDifference diff) {
@@ -149,7 +149,6 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         Set<Relation> relations = new HashSet<Relation>();
         relations.add(lhs);
         relations.add(rhs);
-        result = naturalJoin.join(relations);
     }
 
     @Override
@@ -179,7 +178,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @SuppressWarnings({ "unchecked" })
-    private <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
+    protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin, diff);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);

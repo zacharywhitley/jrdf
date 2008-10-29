@@ -120,6 +120,7 @@ public class DistributedQueryClient implements QueryClient {
             try {
                 final InputStream stream = future.get();
                 xmlWriter.addStream(stream);
+                System.err.println("added a stream hash: " + stream.hashCode());
             } catch (Exception e) {
                 cancelExecution(future);
             }
