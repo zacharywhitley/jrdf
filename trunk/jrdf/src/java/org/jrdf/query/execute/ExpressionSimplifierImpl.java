@@ -68,11 +68,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
         Expression<ExpressionVisitor> lhs = getNext(optional.getLhs());
         Expression<ExpressionVisitor> rhs = getNext(optional.getRhs());
-        if (lhs.size() <= rhs.size()) {
-            expression = new Optional<ExpressionVisitor>(lhs, rhs);
-        } else {
-            expression = new Optional<ExpressionVisitor>(rhs, lhs);
-        }
+        expression = new Optional<ExpressionVisitor>(lhs, rhs);
     }
 
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
