@@ -54,19 +54,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         return returnValue;
     }
 
-    /*@Override
-    public void caseAEMoreNumericExpression(AEMoreNumericExpression node) {
-        System.err.println("numer equals: " + node);
-        this.operation = EqAVPOperation.EQUALS;
-        node.getNumericExpression().apply(this);
-    }*/
-
-    /*@Override
-    public void caseANeMoreNumericExpression(ANeMoreNumericExpression node) {
-        this.operation = NeqAVPOperation.NEQUALS;
-        node.getNumericExpression().apply(this);
-    }*/
-
     @Override
     public void caseABoundBuiltincall(ABoundBuiltincall node) {
         this.operation = BoundAVPOperation.BOUND;
