@@ -92,18 +92,21 @@ public final class RelationProcessorImpl implements RelationProcessor {
         Iterator<Relation> iterator = relations.iterator();
         Relation relation1 = iterator.next();
         Relation relation2 = iterator.next();
+        Relation resultRelation = processRelationPairs(tupleEngine, relation1, relation2);
+        while (iterator.hasNext()) {
+            Relation nextRelation = iterator.next();
+            resultRelation = processRelationPairs(tupleEngine, resultRelation, nextRelation);
+        }
+
+        return convertToConstants(resultRelation);
+    }
+
+    private Relation processRelationPairs(TupleEngine tupleEngine, Relation relation1, Relation relation2) {
         SortedSet<Attribute> headings = tupleEngine.getHeading(relation1, relation2);
         SortedSet<Tuple> tuples = processTuples(headings, relation1.getSortedTuples(), relation2.getSortedTuples(),
             tupleEngine);
         Relation resultRelation = relationFactory.getRelation(headings, tuples);
-        while (iterator.hasNext()) {
-            Relation nextRelation = iterator.next();
-            headings = tupleEngine.getHeading(resultRelation, nextRelation);
-            tuples = processTuples(headings, tuples, nextRelation.getSortedTuples(), tupleEngine);
-            resultRelation = relationFactory.getRelation(headings, tuples);
-        }
-
-        return convertToConstants(resultRelation);
+        return resultRelation;
     }
 
     public Relation convertToConstants(Relation resultRelation) {

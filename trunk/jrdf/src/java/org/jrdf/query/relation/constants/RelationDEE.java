@@ -116,9 +116,7 @@ public final class RelationDEE implements Relation, Serializable {
     }
 
     public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
-        SortedSet<Tuple> sorted = new TreeSet<Tuple>(FACTORY.createTupleComparator());
-        sorted.addAll(getTuples());
-        return sorted;
+        return getSortedTuples();
     }
 
     // TODO (AN) Test drive me
@@ -130,6 +128,8 @@ public final class RelationDEE implements Relation, Serializable {
 
     // TODO (AN) Test drive me
     public SortedSet<Tuple> getSortedTuples() {
-        return getSortedTuples();
+        SortedSet<Tuple> sorted = new TreeSet<Tuple>(FACTORY.createTupleComparator());
+        sorted.addAll(getTuples());
+        return sorted;
     }
 }

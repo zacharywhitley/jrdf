@@ -98,6 +98,10 @@ public final class TupleComparatorImpl implements TupleComparator {
         return result;
     }
 
+    public void setAttribute(Attribute attribute) {
+        throw new UnsupportedOperationException();
+    }
+
     private void ifNullThrowException(Tuple tuple1, Tuple tuple2) {
         if (tuple1 == null || tuple2 == null) {
             throw new NullPointerException();
