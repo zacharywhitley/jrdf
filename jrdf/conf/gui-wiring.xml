@@ -96,7 +96,7 @@
 
     <bean id="parserFactory" class="org.jrdf.urql.parser.ParserFactoryImpl"/>
 
-    <bean id="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
+    <bean id="queryEngine" class="org.jrdf.query.execute.OptimizingQueryEngineImpl">
         <constructor-arg ref="project"/>
         <constructor-arg ref="naturalJoin"/>
         <constructor-arg ref="restrict"/>

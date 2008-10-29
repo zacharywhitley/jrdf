@@ -48,7 +48,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         final Expression<ExpressionVisitor> lhs = getNext(conjunction.getLhs());
         final Expression<ExpressionVisitor> rhs = getNext(conjunction.getRhs());
-        if (lhs.size() <= rhs.size()) {
+        if (lhs.size() >= rhs.size()) {
             expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
         } else {
             expression = new Conjunction<ExpressionVisitor>(rhs, lhs);
@@ -58,7 +58,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {
         final Expression<ExpressionVisitor> lhs = getNext(conjunction.getLhs());
         final Expression<ExpressionVisitor> rhs = getNext(conjunction.getRhs());
-        if (lhs.size() <= rhs.size()) {
+        if (lhs.size() >= rhs.size()) {
             expression = new Union<ExpressionVisitor>(lhs, rhs);
         } else {
             expression = new Union<ExpressionVisitor>(rhs, lhs);

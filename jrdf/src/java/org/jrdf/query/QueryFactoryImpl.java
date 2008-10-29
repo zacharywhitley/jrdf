@@ -60,7 +60,7 @@
 package org.jrdf.query;
 
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.execute.NaiveQueryEngineImpl;
+import org.jrdf.query.execute.OptimizingQueryEngineImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.RelationFactory;
@@ -158,7 +158,7 @@ public class QueryFactoryImpl implements QueryFactory {
         Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
         DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);
         SemiDifference diff = new SemiDifferenceImpl(RELATION_PROCESSOR, RELATION_FACTORY, TUPLE_COMPARATOR);
-        return new NaiveQueryEngineImpl(project, join, restrict, union, leftOuterJoin, diff);
+        return new OptimizingQueryEngineImpl(project, join, restrict, union, leftOuterJoin, diff);
     }
 
     private DyadicJoin getLeftOuterJoin(TupleEngine unionTupleEngine, NadicJoin join) {
