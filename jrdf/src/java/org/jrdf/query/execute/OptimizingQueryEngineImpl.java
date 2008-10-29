@@ -72,8 +72,8 @@ import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -92,28 +92,37 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
 
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
-        Set<Expression<V>> set = new HashSet<Expression<V>>();
+        long start = System.currentTimeMillis();
+        System.err.println("conjunction: " + conjunction);
+        Collection<Expression<V>> set = new LinkedList<Expression<V>>();
         SortedSet<Relation> partialResult = new TreeSet<Relation>(relationComparator);
         flattenConjunction(conjunction, set);
         Relation tempRelation = result;
-        for (Expression exp : set) {
-            exp.accept(this);
+        for (Expression<V> exp : set) {
+            exp.accept((V) this);
             partialResult.add(result);
+            if (result.getTuples().size() == 0) {
+                break;
+            }
             result = tempRelation;
         }
         result = naturalJoin.join(partialResult);
+        System.err.println("conjunction finished @ " + (System.currentTimeMillis() - start) + " " +
+            result.getTuples().size());
     }
 
-    private <V extends ExpressionVisitor> void flattenConjunction(Conjunction<V> conjunction, Set<Expression<V>> set) {
+    private <V extends ExpressionVisitor> void flattenConjunction(Conjunction<V> conjunction,
+                                                                  Collection<Expression<V>> set) {
         final Expression<V> lhs = conjunction.getLhs();
         final Expression<V> rhs = conjunction.getRhs();
-        addExpressionToSet(lhs, set);
-        addExpressionToSet(rhs, set);
+        addExpressionToCollection(lhs, set);
+        addExpressionToCollection(rhs, set);
     }
 
-    private <V extends ExpressionVisitor> void addExpressionToSet(Expression<V> expression, Set<Expression<V>> set) {
+    private <V extends ExpressionVisitor> void addExpressionToCollection(Expression<V> expression,
+                                                                         Collection<Expression<V>> set) {
         if (Conjunction.class.isAssignableFrom(expression.getClass())) {
-            flattenConjunction((Conjunction) expression, set);
+            flattenConjunction((Conjunction<V>) expression, set);
         } else {
             set.add(expression);
         }

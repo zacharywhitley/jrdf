@@ -139,16 +139,25 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
 
     @Override
     public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
+        System.err.println("constraint: " + constraint);
+        long start = System.currentTimeMillis();
         result = restrict.restrict(result, constraint.getAvo(allVariables));
+        System.err.println("constraint finished @ " + (System.currentTimeMillis() - start) + " " +
+            result.getTuples().size());
     }
 
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
+        System.err.println("conj: " + conjunction);
+        long start = System.currentTimeMillis();
         Relation lhs = getExpression(conjunction.getLhs());
         Relation rhs = getExpression(conjunction.getRhs());
         Set<Relation> relations = new HashSet<Relation>();
         relations.add(lhs);
         relations.add(rhs);
+        result = naturalJoin.join(relations);
+        System.err.println("conj finished @ " + (System.currentTimeMillis() - start) + " " +
+            result.getTuples().size());
     }
 
     @Override
