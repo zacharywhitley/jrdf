@@ -66,6 +66,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAR_VAR;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAZ_VAR;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
@@ -80,6 +81,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class RelationHelperImplUnitTest extends TestCase {
     private static final Class[] PARAMETERS = {AttributeComparator.class};
@@ -126,6 +128,24 @@ public class RelationHelperImplUnitTest extends TestCase {
         assertTrue(headingUnions.contains(TEST_ATTRIBUTE_FOO_POS));
     }
 
+    public void testGetHeadingIntersections() {
+        RelationHelper relationHelper = new RelationHelperImpl(realAttributeComparator);
+        SortedSet<Attribute> set1 = new TreeSet<Attribute>(realAttributeComparator);
+        set1.add(TEST_ATTRIBUTE_BAR_VAR);
+        set1.add(TEST_ATTRIBUTE_BAZ_VAR);
+        SortedSet<Attribute> set2 = new TreeSet<Attribute>(realAttributeComparator);
+        set2.add(TEST_ATTRIBUTE_FOO_POS);
+        set2.add(TEST_ATTRIBUTE_BAZ_VAR);
+        Relation relation1 = createSortedRelation(set1);
+        Relation relation2 = createSortedRelation(set2);
+        factory.replay();
+        Set<Attribute> headingIntersections = relationHelper.getHeadingIntersections(relation1, relation2);
+        factory.verify();
+        assertTrue(headingIntersections.contains(TEST_ATTRIBUTE_BAZ_VAR));
+        assertFalse(headingIntersections.contains(TEST_ATTRIBUTE_BAR_VAR));
+        assertFalse(headingIntersections.contains(TEST_ATTRIBUTE_FOO_POS));
+    }
+
     private void checkIsSorted(Set<Attribute> headingUnions) {
         assertTrue(headingUnions instanceof SortedSet);
         SortedSet<Attribute> sorted = (SortedSet<Attribute>) headingUnions;
@@ -137,6 +157,13 @@ public class RelationHelperImplUnitTest extends TestCase {
     private Relation createRelation(Set<Attribute> set) {
         Relation relation = factory.createMock(Relation.class);
         expect(relation.getHeading()).andReturn(set);
+        return relation;
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private Relation createSortedRelation(SortedSet<Attribute> set) {
+        Relation relation = factory.createMock(Relation.class);
+        expect(relation.getSortedHeading()).andReturn(set);
         return relation;
     }
 }

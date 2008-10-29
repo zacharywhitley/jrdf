@@ -87,4 +87,14 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
         }
         return attributes;
     }
+
+    public SortedSet<Attribute> getHeadingIntersections(Relation... relations) {
+        TreeSet<Attribute> attributes = new TreeSet<Attribute>(attributeComparator);
+        attributes.addAll(relations[0].getSortedHeading());
+        for (int i = 1; i < relations.length; i++) {
+            Relation relation = relations[i];
+            attributes.retainAll(relation.getSortedHeading());
+        }
+        return attributes;
+    }
 }
