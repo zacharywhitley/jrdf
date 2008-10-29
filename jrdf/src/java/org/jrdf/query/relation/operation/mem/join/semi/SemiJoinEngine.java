@@ -88,6 +88,10 @@ public class SemiJoinEngine implements TupleEngine {
         return relation1.getSortedHeading();
     }
 
+    public SortedSet<Attribute> getHeadingsIntersection(Relation relation1, Relation relation2) {
+        throw new UnsupportedOperationException();
+    }
+
     public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         Map<Attribute, ValueOperation> allAttributeValuePairs = new HashMap<Attribute, ValueOperation>();
         Map<Attribute, ValueOperation> lhsAttributeValuePairs = new HashMap<Attribute, ValueOperation>();

@@ -108,9 +108,7 @@ import org.jrdf.vocabulary.RDF;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URI;
 import static java.net.URI.create;
-import static java.net.URI.*;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -206,8 +204,8 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         assertEquals("Equal molecules", molecule, actualMolecule);
     }
 
-    //TODO fix me!
-    /*public void testMoleculeIndexComplex() throws GraphException, InterruptedException {
+    /*//TODO fix me!
+    public void testMoleculeIndexComplex() throws GraphException, InterruptedException {
         Triple[] triples = new Triple[]{B1R1R1, B1R2R2, B1R1B2, R1R2B2, B2R2R1, B2R2B3, B3R2R3, B3R2R2};
         Molecule molecule = MOLECULE_FACTORY.createMolecule(B1R1R1, B1R2R2, B1R1B2);
         Molecule sm1 = MOLECULE_FACTORY.createMolecule(R1R2B2, B2R2R1, B2R2B3);

@@ -72,4 +72,6 @@ public interface TupleEngine {
     SortedSet<Attribute> getHeading(Relation relation1, Relation relation2);
 
     void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2);
+
+    SortedSet<Attribute> getHeadingsIntersection(Relation relation1, Relation relation2);
 }

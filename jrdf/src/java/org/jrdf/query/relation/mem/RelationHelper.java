@@ -69,4 +69,6 @@ import java.util.SortedSet;
  */
 public interface RelationHelper {
     SortedSet<Attribute> getHeadingUnions(Relation... relations);
+
+    SortedSet<Attribute> getHeadingIntersections(Relation... relations);
 }

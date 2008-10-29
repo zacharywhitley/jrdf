@@ -98,6 +98,10 @@ public class NaturalJoinEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
+    public SortedSet<Attribute> getHeadingsIntersection(Relation relation1, Relation relation2) {
+        return relationHelper.getHeadingIntersections(relation1, relation2);
+    }
+
     public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
         boolean contradiction = false;
