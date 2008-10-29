@@ -78,6 +78,9 @@ public class TupleAttributeValueComparatorImpl implements TupleComparator {
     private NodeComparator nodeComparator;
     private Attribute attribute;
 
+    private TupleAttributeValueComparatorImpl() {
+    }
+
     public TupleAttributeValueComparatorImpl(NodeComparator nodeComparator) {
         this.nodeComparator = nodeComparator;
     }
