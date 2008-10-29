@@ -97,6 +97,10 @@ public final class Conjunction<V extends ExpressionVisitor> implements Expressio
         this.lhs = lhs;
     }
 
+    public int size() {
+        return lhs.size() + rhs.size();
+    }
+
     public void accept(V v) {
         v.visitConjunction(this);
     }

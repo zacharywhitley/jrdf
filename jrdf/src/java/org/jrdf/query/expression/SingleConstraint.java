@@ -113,6 +113,10 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
         return newAvps;
     }
 
+    public int size() {
+        return 1;
+    }
+
     public void accept(V v) {
         v.visitConstraint(this);
     }

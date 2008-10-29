@@ -98,6 +98,10 @@ public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicE
         this.rhs = rhs;
     }
 
+    public int size() {
+        return lhs.size() + rhs.size();
+    }
+
     public void accept(V v) {
         v.visitLogicalAnd(this);
     }

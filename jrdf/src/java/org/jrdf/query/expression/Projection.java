@@ -121,6 +121,10 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         nextExpression = expression;
     }
 
+    public int size() {
+        return nextExpression.size();
+    }
+
     public boolean equals(Object obj) {
         if (EqualsUtil.isNull(obj)) {
             return false;

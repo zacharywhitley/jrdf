@@ -99,6 +99,10 @@ public class Filter<V extends ExpressionVisitor> implements Expression<V>, Seria
         this.rhs = rhs;
     }
 
+    public int size() {
+        return lhs.size() + rhs.size();
+    }
+
     public void accept(V v) {
         v.visitFilter(this);
     }

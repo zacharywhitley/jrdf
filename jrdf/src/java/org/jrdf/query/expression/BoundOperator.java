@@ -91,6 +91,10 @@ public class BoundOperator <V extends ExpressionVisitor> implements Operator<V>,
         return singleAvp;
     }
 
+    public int size() {
+        return 1;
+    }
+
     @Override
     public int hashCode() {
         return DUMMY_HASHCODE + singleAvp.hashCode();

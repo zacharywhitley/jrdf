@@ -40,6 +40,10 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
         return determineEqualityFromFields(this, (StrOperator) obj);
     }
 
+    public int size() {
+        return 1;
+    }
+
     @Override
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()

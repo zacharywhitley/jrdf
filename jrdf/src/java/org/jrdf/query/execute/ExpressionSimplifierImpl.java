@@ -48,19 +48,31 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         final Expression<ExpressionVisitor> lhs = getNext(conjunction.getLhs());
         final Expression<ExpressionVisitor> rhs = getNext(conjunction.getRhs());
-        expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+        if (lhs.size() <= rhs.size()) {
+            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+        } else {
+            expression = new Conjunction<ExpressionVisitor>(rhs, lhs);
+        }
     }
 
     public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {
         final Expression<ExpressionVisitor> lhs = getNext(conjunction.getLhs());
         final Expression<ExpressionVisitor> rhs = getNext(conjunction.getRhs());
-        expression = new Union<ExpressionVisitor>(lhs, rhs);
+        if (lhs.size() <= rhs.size()) {
+            expression = new Union<ExpressionVisitor>(lhs, rhs);
+        } else {
+            expression = new Union<ExpressionVisitor>(rhs, lhs);
+        }
     }
 
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
         Expression<ExpressionVisitor> lhs = getNext(optional.getLhs());
         Expression<ExpressionVisitor> rhs = getNext(optional.getRhs());
-        expression = new Optional<ExpressionVisitor>(lhs, rhs);
+        if (lhs.size() <= rhs.size()) {
+            expression = new Optional<ExpressionVisitor>(lhs, rhs);
+        } else {
+            expression = new Optional<ExpressionVisitor>(rhs, lhs);
+        }
     }
 
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
@@ -78,11 +90,11 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         if (lhs == null && rhs == null) {
             expression = null;
         } else if (lhs == null) {
-            expression = (LogicExpression<ExpressionVisitor>) rhs;
+            expression = rhs;
         } else if (rhs == null) {
-            expression = (LogicExpression<ExpressionVisitor>) lhs;
+            expression = lhs;
         } else {
-            expression = (Expression) andExpression;
+            expression = (Expression<ExpressionVisitor>) andExpression;
         }
     }
 
@@ -112,7 +124,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     }
 
     public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
-        expression = (Expression) notExpression;
+        expression = (Expression<ExpressionVisitor>) notExpression;
     }
 
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
