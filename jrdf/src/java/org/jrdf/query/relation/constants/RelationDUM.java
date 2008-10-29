@@ -113,6 +113,10 @@ public final class RelationDUM implements Relation, Serializable {
         return Collections.emptySet();
     }
 
+    public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
+        return getSortedTuples();
+    }
+
     // TODO (AN) Test drive me
     public SortedSet<Attribute> getSortedHeading() {
         return new TreeSet<Attribute>(getHeading());

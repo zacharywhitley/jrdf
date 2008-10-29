@@ -148,6 +148,14 @@ public final class GraphRelationImpl implements GraphRelation {
         return getTuplesFromGraph(searchTriple, attributes);
     }
 
+    public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
+        ((TupleAttributeValueComparatorImpl) tupleComparator).setAttribute(attribute);
+        SortedSet<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
+        sortedTuples.addAll(getTuples());
+        return sortedTuples;
+    }
+
+
     @Override
     public int hashCode() {
         return graph.hashCode() ^ tupleComparator.hashCode() ^ attributeFactory.hashCode();

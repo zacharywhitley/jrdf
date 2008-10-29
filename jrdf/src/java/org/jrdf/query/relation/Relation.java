@@ -93,4 +93,6 @@ public interface Relation {
     SortedSet<Tuple> getSortedTuples();
 
     Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo);
+
+    SortedSet<Tuple> getSortedTuples(Attribute attribute);
 }

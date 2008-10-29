@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,79 +57,39 @@
  *
  */
 
-package org.jrdf.query.relation.constants;
+package org.jrdf.query.relation.mem;
 
+import org.jrdf.graph.Node;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.query.relation.constants.NullaryTuple.NULLARY_TUPLE;
-import org.jrdf.query.relation.mem.ComparatorFactory;
-import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
-
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.Map;
+import org.jrdf.query.relation.TupleComparator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
- * Dee is a relation with one tuple and is the base relation for NULLARY_TUPLE.
- * <p>It is also the identity with respect to JOIN i.e. JOIN {r, RelationDEE} is DEE and
- * JOIN {} is RelationDEE.</p>
- * <p>Again, this is going to change when operations are more properly filled out.</p>
- *
- * @author Andrew Newman
- * @version $Revision$
+ * Created by IntelliJ IDEA.
+ * User: liyf
+ * Date: Oct 29, 2008
+ * Time: 11:36:02 PM
+ * To change this template use File | Settings | File Templates.
  */
-public final class RelationDEE implements Relation, Serializable {
-    private static final ComparatorFactory FACTORY = new ComparatorFactoryImpl();
-    private static final long serialVersionUID = -8473232661811978990L;
+public class TupleAttributeValueComparatorImpl implements TupleComparator {
+    private static final long serialVersionUID = 5341700779351373234L;
+    private NodeComparator nodeComparator;
+    private Attribute attribute;
 
-    /**
-     * The singleton version of RelationDEE.
-     */
-    public static final Relation RELATION_DEE = new RelationDEE();
-
-    /**
-     * There can be only one RelationDEE.
-     */
-    private RelationDEE() {
+    public TupleAttributeValueComparatorImpl(NodeComparator nodeComparator) {
+        this.nodeComparator = nodeComparator;
     }
 
-    public Set<Attribute> getHeading() {
-        return Collections.emptySet();
+    public void setAttribute(Attribute attribute) {
+        this.attribute = attribute;
     }
 
-    /**
-     * Returns the TUPLE_ZERO.
-     *
-     * @return the TUPLE_ZERO.
-     */
-    public Set<Tuple> getTuples() {
-        return Collections.singleton(NULLARY_TUPLE);
-    }
-
-    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
-        return Collections.singleton(NULLARY_TUPLE);
-    }
-
-    public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
-        SortedSet<Tuple> sorted = new TreeSet<Tuple>(FACTORY.createTupleComparator());
-        sorted.addAll(getTuples());
-        return sorted;
-    }
-
-    // TODO (AN) Test drive me
-    public SortedSet<Attribute> getSortedHeading() {
-        SortedSet<Attribute> heading = new TreeSet<Attribute>(FACTORY.createAttributeComparator());
-        heading.addAll(getHeading());
-        return heading;
-    }
-
-    // TODO (AN) Test drive me
-    public SortedSet<Tuple> getSortedTuples() {
-        return getSortedTuples();
+    public int compare(Tuple tuple, Tuple tuple1) {
+        checkNotNull(attribute);
+        final Node node1 = tuple.getValueOperation(attribute).getValue();
+        final Node node2 = tuple1.getValueOperation(attribute).getValue();
+        return nodeComparator.compare(node1, node2);
     }
 }

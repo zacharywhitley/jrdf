@@ -170,6 +170,13 @@ public final class RelationImpl implements Relation {
         return sortedTuples;
     }
 
+    public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
+        ((TupleAttributeValueComparatorImpl) tupleComparator).setAttribute(attribute);
+        SortedSet<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
+        sortedTuples.addAll(tuples);
+        return sortedTuples;
+    }
+
     public int hashCode() {
         return tuples.hashCode();
     }
