@@ -59,9 +59,11 @@
 
 package org.jrdf.query.execute;
 
+import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.mem.SimpleRelationComparatorImpl;
@@ -71,13 +73,15 @@ import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
-import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 
 import java.util.Collection;
+import java.util.Collections;
 import static java.util.Collections.sort;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -98,7 +102,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         List<Expression<V>> constraintList = flattenAndSortConjunction(conjunction);
-        SortedSet<Relation> partialResult = new TreeSet<Relation>(relationComparator);
+        Set<Relation> partialResult = new TreeSet<Relation>(relationComparator);
         Relation tempRelation = result;
         for (Expression<V> exp : constraintList) {
             exp.accept((V) this);
@@ -108,7 +112,32 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             }
             result = tempRelation;
         }
-        result = naturalJoin.join(partialResult);
+        final LinkedList<Relation> list = new LinkedList<Relation>(partialResult);
+        matchAttributes(list);
+        result = naturalJoin.join(new LinkedHashSet<Relation>(list));
+    }
+
+    private void matchAttributes(List<Relation> partialResults) {
+        if (partialResults.size() >= 3) {
+            Relation first = partialResults.get(0);
+            Relation second = partialResults.get(1);
+            Set<Attribute> headings = getCommonHeadings(first, second);
+            int idx = 2;
+            while (headings.size() != 1 && idx < partialResults.size()) {
+                headings = getCommonHeadings(first, partialResults.get(idx++));
+            }
+            Collections.swap(partialResults, 1, idx - 1);
+            System.err.println("conj operand results");
+            for (Relation rel : partialResults) {
+                System.err.println("rel # = " + rel.getTuples().size());
+            }
+        }
+    }
+
+    private Set<Attribute> getCommonHeadings(Relation rel1, Relation rel2) {
+        final Set<Attribute> set1 = new HashSet<Attribute>(rel1.getHeading());
+        set1.retainAll(rel2.getHeading());
+        return set1;
     }
 
     private <V extends ExpressionVisitor> List<Expression<V>> flattenAndSortConjunction(Conjunction<V> conjunction) {

@@ -109,7 +109,10 @@ public final class RelationProcessorImpl implements RelationProcessor {
     private Relation doProcessRelations(TupleEngine tupleEngine, Relation relation1, Relation relation2,
                                         SortedSet<Attribute> headings) {
         SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
+        long start = System.currentTimeMillis();
+        System.err.println("joining: " + relation1.getTuples().size() + " and " + relation2.getTuples().size());
         tupleEngine.processRelations(headings, relation1, relation2, result);
+        System.err.println("join finished @ " + (System.currentTimeMillis() - start) + " = " + result.size());
         return relationFactory.getRelation(headings, result);
     }
 
