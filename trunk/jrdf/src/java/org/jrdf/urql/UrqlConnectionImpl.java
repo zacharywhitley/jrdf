@@ -61,10 +61,10 @@ package org.jrdf.urql;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.query.answer.Answer;
-import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.answer.Answer;
+import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.builder.QueryBuilder;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;

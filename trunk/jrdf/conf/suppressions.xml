@@ -39,6 +39,7 @@
     <suppress checks="JavaNCSS" files="OWL"/>
     <suppress checks="JavaNCSS" files="BasicOperations"/>
     <suppress checks="JavaNCSS" files="NodeTypeBinding"/>
+    <suppress checks="JavaNCSS" files="SortMergeNaturalJoin"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>

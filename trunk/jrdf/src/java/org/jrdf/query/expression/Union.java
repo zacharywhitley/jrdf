@@ -90,7 +90,7 @@ public final class Union<V extends ExpressionVisitor> implements Expression<V>, 
     }
 
     public int size() {
-        return lhs.size() + rhs.size();
+        return (lhs.size() + rhs.size()) / 2;
     }
 
     public boolean equals(Object obj) {

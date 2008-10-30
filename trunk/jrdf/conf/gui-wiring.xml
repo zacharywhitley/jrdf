@@ -96,7 +96,16 @@
 
     <bean id="parserFactory" class="org.jrdf.urql.parser.ParserFactoryImpl"/>
 
-    <bean id="queryEngine" class="org.jrdf.query.execute.OptimizingQueryEngineImpl">
+    <bean id="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
+        <constructor-arg ref="project"/>
+        <constructor-arg ref="naturalJoin"/>
+        <constructor-arg ref="restrict"/>
+        <constructor-arg ref="outerUnion"/>
+        <constructor-arg ref="minLeftOuterJoin"/>
+        <constructor-arg ref="semiDifference"/>
+    </bean>
+
+    <bean id="optimizingQueryEngine" class="org.jrdf.query.execute.OptimizingQueryEngineImpl">
         <constructor-arg ref="project"/>
         <constructor-arg ref="naturalJoin"/>
         <constructor-arg ref="restrict"/>
@@ -134,6 +143,12 @@
     <bean id="naturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine">
         <constructor-arg ref="tupleFactory"/>
         <constructor-arg ref="relationHelper"/>
+    </bean>
+
+    <bean id="sortMergeNaturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine">
+        <constructor-arg ref="tupleFactory"/>
+        <constructor-arg ref="relationHelper"/>
+        <constructor-arg ref="nodeComparator"/>
     </bean>
 
     <bean id="semiJoinEngine" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinEngine">

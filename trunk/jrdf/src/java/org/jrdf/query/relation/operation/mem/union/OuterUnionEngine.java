@@ -82,8 +82,17 @@ public class OuterUnionEngine implements TupleEngine {
         return relationHelper.getHeadingIntersections(relation1, relation2);
     }
 
-    public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
+    private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         result.add(tuple1);
         result.add(tuple2);
+    }
+
+    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
+                                 SortedSet<Tuple> result) {
+        for (Tuple tuple1 : relation1.getTuples()) {
+            for (Tuple tuple2 : relation2.getTuples()) {
+                process(headings, result, tuple1, tuple2);
+            }
+        }
     }
 }

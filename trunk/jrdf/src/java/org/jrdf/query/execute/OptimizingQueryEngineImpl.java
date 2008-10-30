@@ -73,7 +73,10 @@ import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 
 import java.util.Collection;
+import static java.util.Collections.sort;
+import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -84,6 +87,7 @@ import java.util.TreeSet;
 
 public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
     private final RelationComparator relationComparator = new SimpleRelationComparatorImpl();
+    private final Comparator expressionComparator = new ExpressionComparatorImpl();
 
     public OptimizingQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
         Union union, DyadicJoin leftOuterJoin, SemiDifference diff) {
@@ -93,12 +97,10 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         long start = System.currentTimeMillis();
-        System.err.println("conjunction: " + conjunction);
-        Collection<Expression<V>> set = new LinkedList<Expression<V>>();
+        List<Expression<V>> constraintList = flattenAndSortConjunction(conjunction);
         SortedSet<Relation> partialResult = new TreeSet<Relation>(relationComparator);
-        flattenConjunction(conjunction, set);
         Relation tempRelation = result;
-        for (Expression<V> exp : set) {
+        for (Expression<V> exp : constraintList) {
             exp.accept((V) this);
             partialResult.add(result);
             if (result.getTuples().size() == 0) {
@@ -109,6 +111,13 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         result = naturalJoin.join(partialResult);
         System.err.println("conjunction finished @ " + (System.currentTimeMillis() - start) + " " +
             result.getTuples().size());
+    }
+
+    private <V extends ExpressionVisitor> List<Expression<V>> flattenAndSortConjunction(Conjunction<V> conjunction) {
+        List<Expression<V>> constraintList = new LinkedList<Expression<V>>();
+        flattenConjunction(conjunction, constraintList);
+        sort(constraintList, expressionComparator);
+        return constraintList;
     }
 
     private <V extends ExpressionVisitor> void flattenConjunction(Conjunction<V> conjunction,

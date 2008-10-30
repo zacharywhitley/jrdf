@@ -92,7 +92,7 @@ public class BoundOperator <V extends ExpressionVisitor> implements Operator<V>,
     }
 
     public int size() {
-        return 1;
+        return 0;
     }
 
     @Override
