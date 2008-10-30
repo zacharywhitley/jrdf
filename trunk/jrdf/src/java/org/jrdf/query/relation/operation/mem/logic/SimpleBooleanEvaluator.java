@@ -31,7 +31,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         this.tupleFactory = tupleFactory;
     }
 
-    // TODO only bound operator now.
+    // TODO YF only bound operator now.
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
         final Map<Attribute, ValueOperation> avp = operator.getAttributeValuePair();
         // assuming single avp
