@@ -66,13 +66,6 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Oct 29, 2008
- * Time: 11:36:02 PM
- * To change this template use File | Settings | File Templates.
- */
 public class TupleAttributeValueComparatorImpl implements TupleComparator {
     private static final long serialVersionUID = 5341700779351373234L;
     private NodeComparator nodeComparator;

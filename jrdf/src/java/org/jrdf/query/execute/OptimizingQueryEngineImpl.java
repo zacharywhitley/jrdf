@@ -97,7 +97,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     // TODO YF join those with common attributes first.
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
-        long start = System.currentTimeMillis();
         List<Expression<V>> constraintList = flattenAndSortConjunction(conjunction);
         SortedSet<Relation> partialResult = new TreeSet<Relation>(relationComparator);
         Relation tempRelation = result;
@@ -110,8 +109,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             result = tempRelation;
         }
         result = naturalJoin.join(partialResult);
-        System.err.println("conjunction finished @ " + (System.currentTimeMillis() - start) + " " +
-            result.getTuples().size());
     }
 
     private <V extends ExpressionVisitor> List<Expression<V>> flattenAndSortConjunction(Conjunction<V> conjunction) {

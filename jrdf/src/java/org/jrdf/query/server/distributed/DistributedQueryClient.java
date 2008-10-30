@@ -116,6 +116,7 @@ public class DistributedQueryClient implements QueryClient {
     }
 
     private void aggregateResults() {
+        long start = System.currentTimeMillis();
         for (Future<InputStream> future : set) {
             try {
                 final InputStream stream = future.get();
@@ -125,6 +126,7 @@ public class DistributedQueryClient implements QueryClient {
                 cancelExecution(future);
             }
         }
+        System.err.println("Distributed querying time: " + (System.currentTimeMillis() - start));
     }
 
     private void executeQuries() {

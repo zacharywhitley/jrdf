@@ -147,7 +147,6 @@ public class QueryFactoryImpl implements QueryFactory {
 
     public QueryEngine createQueryEngine() {
         Project project = new ProjectImpl(TUPLE_FACTORY, RELATION_FACTORY);
-//        TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER);
         TupleEngine joinTupleEngine = new SortMergeNaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER, NODE_COMPARATOR);
         TupleEngine unionTupleEngine = new OuterUnionEngine(RELATION_HELPER);
         NadicJoin join = new NadicJoinImpl(RELATION_PROCESSOR, joinTupleEngine);
