@@ -98,6 +98,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         System.err.println("SMJOin headings: " + commonHeadings);
         if (commonHeadings.size() == 1) {
             doSortMergeJoin(headings, relation1, relation2, commonHeadings.iterator().next(), result);
+        } else if (commonHeadings.size() > 1) {
+            ;
         } else {
             doNaturalJoin(headings, relation1.getTuples(), relation2.getTuples(), result);
         }
@@ -117,6 +119,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         SortedSet<Tuple> set1, set2;
         Set<Tuple> unboundTuples1 = new HashSet<Tuple>();
         Set<Tuple> unboundTuples2 = new HashSet<Tuple>();
+        Set<Tuple>[] boundSets = partitionTuples(headings, relation1, relation2, unboundTuples1, unboundTuples2);
+
         tupleAVComparator.setAttribute(attribute);
         long start = System.currentTimeMillis();
         set1 = separateTuples(relation1, unboundTuples1, attribute);
@@ -133,6 +137,29 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         start = System.currentTimeMillis();
         doNaturalJoin(headings, unboundTuples1, unboundTuples2, result);
         System.err.println("left natural join took " + (System.currentTimeMillis() - start));
+    }
+
+    private Set<Tuple>[] partitionTuples(Set<Attribute> commonHadings, Relation rel1, Relation rel2,
+                                             Set<Tuple> unboundSet1, Set<Tuple> unboundSet2) {
+        Set<Tuple> boundSet1 = rel1.getTuples();
+        Set<Tuple> boundSet2 = rel2.getTuples();
+        for (Attribute attribute : commonHadings) {
+            boundSet1 = partitionWithAttribute(attribute, boundSet1, unboundSet1);
+            boundSet2 = partitionWithAttribute(attribute, boundSet2, unboundSet2);
+        }
+        return (Set<Tuple>[]) new Set[] {boundSet1, boundSet2};
+    }
+
+    private Set<Tuple> partitionWithAttribute(Attribute attribute, Set<Tuple> tuples, Set<Tuple> unboundSet) {
+        Set<Tuple> boundSet = new HashSet<Tuple>();
+        for (Tuple tuple : tuples) {
+            if (tuple.getValueOperation(attribute) != null) {
+                boundSet.add(tuple);
+            } else {
+                unboundSet.add(tuple);
+            }
+        }
+        return boundSet;
     }
 
     private SortedSet<Tuple> separateTuples(Relation relation, Set<Tuple> unboundTuples, Attribute attribute) {
@@ -170,6 +197,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         }
     }
 
+    // TODO YF should check for contradiction!
     private void createMatchingTuple(Tuple tuple1, Tuple tuple2) {
         resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
         resultantAttributeValues.putAll(tuple1.getAttributeValues());
