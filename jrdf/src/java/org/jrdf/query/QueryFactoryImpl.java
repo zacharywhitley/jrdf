@@ -60,7 +60,7 @@
 package org.jrdf.query;
 
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.execute.NaiveQueryEngineImpl;
+import org.jrdf.query.execute.OptimizingQueryEngineImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.RelationFactory;
@@ -92,7 +92,7 @@ import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl;
 import org.jrdf.query.relation.operation.mem.join.NadicJoinImpl;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
-import org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine;
+import org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine;
 import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
 import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
 import org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceImpl;
@@ -128,10 +128,8 @@ public class QueryFactoryImpl implements QueryFactory {
     private static final RelationFactory RELATION_FACTORY = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR,
         TUPLE_COMPARATOR);
     private static final RelationHelper RELATION_HELPER = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
-//    private static final RelationProcessor RELATION_PROCESSOR = new UnsortedRelationProcessorImpl(RELATION_FACTORY,
-//        TUPLE_COMPARATOR);
     private static final RelationProcessor RELATION_PROCESSOR = new RelationProcessorImpl(RELATION_FACTORY,
-        TUPLE_COMPARATOR, null);
+        TUPLE_COMPARATOR);
 
     public QueryBuilder createQueryBuilder() {
         AttributeValuePairHelper avpHelper = new AttributeValuePairHelperImpl();
@@ -149,16 +147,15 @@ public class QueryFactoryImpl implements QueryFactory {
 
     public QueryEngine createQueryEngine() {
         Project project = new ProjectImpl(TUPLE_FACTORY, RELATION_FACTORY);
-//        UnsortedTupleEngine joinTupleEngine = new UnsortedNaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER);
-        TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER);
+//        TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER);
+        TupleEngine joinTupleEngine = new SortMergeNaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER, NODE_COMPARATOR);
         TupleEngine unionTupleEngine = new OuterUnionEngine(RELATION_HELPER);
         NadicJoin join = new NadicJoinImpl(RELATION_PROCESSOR, joinTupleEngine);
-//        Restrict restrict = new UnsortedRestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR);
         Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR);
         Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
         DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);
         SemiDifference diff = new SemiDifferenceImpl(RELATION_PROCESSOR, RELATION_FACTORY, TUPLE_COMPARATOR);
-        return new NaiveQueryEngineImpl(project, join, restrict, union, leftOuterJoin, diff);
+        return new OptimizingQueryEngineImpl(project, join, restrict, union, leftOuterJoin, diff);
     }
 
     private DyadicJoin getLeftOuterJoin(TupleEngine unionTupleEngine, NadicJoin join) {

@@ -81,14 +81,11 @@ import java.util.TreeSet;
 public final class RelationProcessorImpl implements RelationProcessor {
     private RelationFactory relationFactory;
     private TupleComparator tupleComparator;
-    private TupleComparator tupleAVComparator;
 
-    public RelationProcessorImpl(RelationFactory relationFactory, TupleComparator tupleComparator,
-                                 TupleComparator tupleAVComparator) {
+    public RelationProcessorImpl(RelationFactory relationFactory, TupleComparator tupleComparator) {
         checkNotNull(relationFactory, tupleComparator);
         this.relationFactory = relationFactory;
         this.tupleComparator = tupleComparator;
-        this.tupleAVComparator = tupleAVComparator;
     }
 
     public Relation processRelations(Set<Relation> relations, TupleEngine tupleEngine) {
@@ -106,48 +103,14 @@ public final class RelationProcessorImpl implements RelationProcessor {
 
     private Relation processRelationPairs(TupleEngine tupleEngine, Relation relation1, Relation relation2) {
         SortedSet<Attribute> headings = tupleEngine.getHeading(relation1, relation2);
-        Relation resultRelation = null;
-        SortedSet<Attribute> commonHeadings = tupleEngine.getHeading(relation1, relation2);
-//        if (tupleEngine instanceof NaturalJoinEngine && commonHeadings.isEmpty()) {
-//            // do sort-merge join
-//        } else {
-//            resultRelation = doProcessRelations(tupleEngine, relation1, relation2, headings);
-//        }
-        resultRelation = doProcessRelations(tupleEngine, relation1, relation2, headings);
-        return resultRelation;
+        return doProcessRelations(tupleEngine, relation1, relation2, headings);
     }
 
     private Relation doProcessRelations(TupleEngine tupleEngine, Relation relation1, Relation relation2,
                                         SortedSet<Attribute> headings) {
-        SortedSet<Tuple> tuples = processTuples(headings, relation1.getSortedTuples(), relation2.getSortedTuples(),
-            tupleEngine);
-        return relationFactory.getRelation(headings, tuples);
-    }
-
-    private SortedSet<Tuple> sortMergeJoin(SortedSet<Attribute> headings, SortedSet<Attribute> commonHeadings,
-                                           TupleEngine tupleEngine, Relation relation1, Relation relation2) {
-        for (Attribute attribute : commonHeadings) {
-            tupleAVComparator.setAttribute(attribute);
-            final Iterator<Tuple> iterator1 = relation1.getSortedTuples(attribute).iterator();
-            final Iterator<Tuple> iterator2 = relation2.getSortedTuples(attribute).iterator();
-            Tuple tuple1 = advanceIterator(iterator1);
-            Tuple tuple2 = advanceIterator(iterator2);
-            while (tuple1 != null && tuple2 != null) {
-                int compare = tupleAVComparator.compare(tuple1, tuple2);
-                if (compare == 0) {
-                    tuple1 = advanceIterator(iterator1);
-                }
-            }
-        }
-        return null;
-    }
-
-    private Tuple advanceIterator(Iterator<Tuple> iterator) {
-        if (iterator.hasNext()) {
-            return iterator.next();
-        } else {
-            return null;
-        }
+        SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
+        tupleEngine.processRelations(headings, relation1, relation2, result);
+        return relationFactory.getRelation(headings, result);
     }
 
     public Relation convertToConstants(Relation resultRelation) {
@@ -159,17 +122,6 @@ public final class RelationProcessorImpl implements RelationProcessor {
             }
         }
         return resultRelation;
-    }
-
-    private SortedSet<Tuple> processTuples(SortedSet<Attribute> headings, SortedSet<Tuple> tuples1,
-        SortedSet<Tuple> tuples2, TupleEngine tupleEngine) {
-        SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
-        for (Tuple tuple1 : tuples1) {
-            for (Tuple tuple2 : tuples2) {
-                tupleEngine.process(headings, result, tuple1, tuple2);
-            }
-        }
-        return result;
     }
 
     public Relation processRelations(Set<Relation> relations, UnsortedTupleEngine tupleEngine) {

@@ -95,7 +95,7 @@ public class SubsumptionEngine implements TupleEngine {
      * @param tuple1
      * @param tuple2
      */
-    public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
+    private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         Map<Attribute, ValueOperation> avps1 = tuple1.getAttributeValues();
         Map<Attribute, ValueOperation> avps2 = tuple2.getAttributeValues();
         int subsumes = subsumes(headings, avps1, avps2);
@@ -178,5 +178,14 @@ public class SubsumptionEngine implements TupleEngine {
 
     private boolean tuple2SubsumesTuple1(int subsumes) {
         return subsumes == -1;
+    }
+
+    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
+                                 SortedSet<Tuple> result) {
+        for (Tuple tuple1 : relation1.getTuples()) {
+            for (Tuple tuple2 : relation2.getTuples()) {
+                process(headings, result, tuple1, tuple2);
+            }
+        }
     }
 }

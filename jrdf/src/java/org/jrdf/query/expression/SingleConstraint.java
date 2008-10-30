@@ -125,10 +125,6 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
     }
 
     public int size() {
-        return noUsefulNodes();
-    }
-
-    private int noUsefulNodes() {
         int result = 0;
         final Iterator<Attribute> iterator = singleAvp.keySet().iterator();
         while (iterator.hasNext()) {

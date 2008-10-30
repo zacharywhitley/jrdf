@@ -92,7 +92,7 @@ public class SemiJoinEngine implements TupleEngine {
         throw new UnsupportedOperationException();
     }
 
-    public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
+    private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         Map<Attribute, ValueOperation> allAttributeValuePairs = new HashMap<Attribute, ValueOperation>();
         Map<Attribute, ValueOperation> lhsAttributeValuePairs = new HashMap<Attribute, ValueOperation>();
         boolean contradiction = false;
@@ -166,5 +166,14 @@ public class SemiJoinEngine implements TupleEngine {
         Map<Attribute, ValueOperation> lhsAttributeValuePairs) {
         resultantAttributeValues.put(attribute, avp);
         lhsAttributeValuePairs.put(attribute, avp);
+    }
+
+    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
+                                 SortedSet<Tuple> result) {
+        for (Tuple tuple1 : relation1.getTuples()) {
+            for (Tuple tuple2 : relation2.getTuples()) {
+                process(headings, result, tuple1, tuple2);
+            }
+        }
     }
 }

@@ -72,6 +72,7 @@ import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.Set;
 
 /**
  * Combines two relations attributes if they have common tuple values.  The
@@ -84,9 +85,9 @@ import java.util.SortedSet;
  * <p/>
  */
 public class NaturalJoinEngine implements TupleEngine {
-    private final TupleFactory tupleFactory;
-    private final RelationHelper relationHelper;
-    private Map<Attribute, ValueOperation> resultantAttributeValues;
+    protected final TupleFactory tupleFactory;
+    protected final RelationHelper relationHelper;
+    protected Map<Attribute, ValueOperation> resultantAttributeValues;
 
     public NaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper) {
         this.tupleFactory = newTupleFactory;
@@ -102,7 +103,7 @@ public class NaturalJoinEngine implements TupleEngine {
         return relationHelper.getHeadingIntersections(relation1, relation2);
     }
 
-    public void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
+    private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
         boolean contradiction = false;
         for (Attribute attribute : headings) {
@@ -150,6 +151,26 @@ public class NaturalJoinEngine implements TupleEngine {
             return avp1.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp1, avp2);
         } else {
             return avp2.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp2, avp1);
+        }
+    }
+
+    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
+                                 SortedSet<Tuple> result) {
+        final Set<Tuple> tuples1 = relation1.getTuples();
+        final Set<Tuple> tuples2 = relation2.getTuples();
+        if (tuples1.size() < tuples2.size()) {
+            startDoubleLoopProcessing(headings, result, tuples1, tuples2);
+        } else {
+            startDoubleLoopProcessing(headings, result, tuples2, tuples1);
+        }
+    }
+
+    protected void startDoubleLoopProcessing(SortedSet<Attribute> headings, SortedSet<Tuple> result,
+                                           Set<Tuple> tuples1, Set<Tuple> tuples2) {
+        for (Tuple tuple1 : tuples1) {
+            for (Tuple tuple2 : tuples2) {
+                process(headings, result, tuple1, tuple2);
+            }
         }
     }
 }

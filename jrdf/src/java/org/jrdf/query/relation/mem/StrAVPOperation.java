@@ -86,15 +86,18 @@ public final class StrAVPOperation implements AVPOperation {
     public boolean addAttributeValuePair(Attribute attribute, Map<Attribute,
         ValueOperation> newAttributeValues, ValueOperation lhs, ValueOperation rhs) {
         Node literal;
+        ValueOperation litVO;
         if (StrOperator.class.isAssignableFrom(lhs.getOperation().getClass())) {
             literal = rhs.getValue();
+            litVO = rhs;
         } else {
             literal = lhs.getValue();
+            litVO = lhs;
         }
         if (!Literal.class.isAssignableFrom(literal.getClass())) {
             return true;
         }
-        newAttributeValues.put(attribute, rhs);
+        newAttributeValues.put(attribute, litVO);
         return false;
     }
 

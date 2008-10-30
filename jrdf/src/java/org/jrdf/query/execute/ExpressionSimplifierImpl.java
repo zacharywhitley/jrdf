@@ -20,15 +20,18 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.EqAVPOperation;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implements ExpressionSimplifier {
     private Map<Attribute, ValueOperation> newAttributeValues;
     private Expression<ExpressionVisitor> expression;
+    private Comparator expressionComparator;
 
     public ExpressionSimplifierImpl(Map<Attribute, ValueOperation> newAttributeValues) {
         this.newAttributeValues = newAttributeValues;
+        expressionComparator = new ExpressionComparatorImpl();
     }
 
     public ExpressionSimplifierImpl() {
@@ -48,7 +51,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         final Expression<ExpressionVisitor> lhs = getNext(conjunction.getLhs());
         final Expression<ExpressionVisitor> rhs = getNext(conjunction.getRhs());
-        if (lhs.size() >= rhs.size()) {
+        if (expressionComparator.compare(lhs, rhs) <= 0) {
             expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
         } else {
             expression = new Conjunction<ExpressionVisitor>(rhs, lhs);
@@ -58,7 +61,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {
         final Expression<ExpressionVisitor> lhs = getNext(conjunction.getLhs());
         final Expression<ExpressionVisitor> rhs = getNext(conjunction.getRhs());
-        if (lhs.size() >= rhs.size()) {
+        if (expressionComparator.compare(lhs, rhs) <= 0) {
             expression = new Union<ExpressionVisitor>(lhs, rhs);
         } else {
             expression = new Union<ExpressionVisitor>(rhs, lhs);
@@ -98,10 +101,10 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         Map<Attribute, ValueOperation> lhs = equalsExpression.getLhs();
         Map<Attribute, ValueOperation> rhs = equalsExpression.getRhs();
         Attribute attribute = lhs.keySet().iterator().next();
-        ValueOperation valueOperation = lhs.get(attribute);
-        AVPOperation operation = valueOperation.getOperation();
-        if (EqAVPOperation.EQUALS.equals(operation)) {
-            newAttributeValues.put(attribute, valueOperation);
+        ValueOperation lvo = lhs.get(attribute);
+        AVPOperation lAVP = lvo.getOperation();
+        if (EqAVPOperation.EQUALS.equals(lAVP)) {
+            newAttributeValues.put(attribute, lvo);
         } else {
             newAttributeValues.put(attribute, rhs.get(attribute));
         }
@@ -119,6 +122,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         expression = (Expression) constraint;
     }
 
+    // Skip logical not now.
     public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
         expression = (Expression<ExpressionVisitor>) notExpression;
     }
