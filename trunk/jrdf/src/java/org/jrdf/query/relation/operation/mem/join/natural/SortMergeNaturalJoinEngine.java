@@ -95,6 +95,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
                                  SortedSet<Tuple> result) {
         SortedSet<Attribute> commonHeadings = getHeadingsIntersection(relation1, relation2);
+        System.err.println("SMJOin headings: " + commonHeadings);
         if (commonHeadings.size() == 1) {
             doSortMergeJoin(headings, relation1, relation2, commonHeadings.iterator().next(), result);
         } else {
@@ -117,14 +118,21 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         Set<Tuple> unboundTuples1 = new HashSet<Tuple>();
         Set<Tuple> unboundTuples2 = new HashSet<Tuple>();
         tupleAVComparator.setAttribute(attribute);
+        long start = System.currentTimeMillis();
         set1 = separateTuples(relation1, unboundTuples1, attribute);
         set2 = separateTuples(relation2, unboundTuples2, attribute);
+        System.err.println("sorting took " + (System.currentTimeMillis() - start) + " = " +
+            set1.size() + " & " + set2.size());
+        start = System.currentTimeMillis();
         if (set1.size() <= set2.size()) {
             doProperSortMergeJoin(result, set1, set2);
         } else {
             doProperSortMergeJoin(result, set2, set1);
         }
+        System.err.println("SMJoin took " + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
         doNaturalJoin(headings, unboundTuples1, unboundTuples2, result);
+        System.err.println("left natural join took " + (System.currentTimeMillis() - start));
     }
 
     private SortedSet<Tuple> separateTuples(Relation relation, Set<Tuple> unboundTuples, Attribute attribute) {

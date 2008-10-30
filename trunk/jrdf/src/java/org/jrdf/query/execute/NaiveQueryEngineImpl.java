@@ -139,7 +139,11 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
 
     @Override
     public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
+        long start = System.currentTimeMillis();
+        System.err.println("constraint: " + constraint);
         result = restrict.restrict(result, constraint.getAvo(allVariables));
+        System.err.println("constraint finished @ " + (System.currentTimeMillis() - start) +
+            " = " + result.getTuples().size() + "\n");
     }
 
     @Override
