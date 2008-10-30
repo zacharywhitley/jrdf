@@ -43,6 +43,7 @@
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>
+    <suppress checks="CyclomaticComplexity" files="OptimizingQueryEngineImpl"/>
     <suppress checks="ParameterNumber" files="NaiveQueryEngineImpl"/>
     <suppress checks="ParameterNumber" files="OptimizingQueryEngineImpl"/>
 
