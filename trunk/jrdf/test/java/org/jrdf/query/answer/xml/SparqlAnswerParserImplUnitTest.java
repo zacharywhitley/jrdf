@@ -60,19 +60,10 @@
 package org.jrdf.query.answer.xml;
 
 import junit.framework.TestCase;
-import org.jrdf.PersistentGlobalJRDFFactory;
-import org.jrdf.PersistentGlobalJRDFFactoryImpl;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.answer.Answer;
 import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.xml.SparqlResultType.LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
-import org.jrdf.urql.UrqlConnection;
-import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.TempDirectoryHandler;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -127,35 +118,5 @@ public class SparqlAnswerParserImplUnitTest extends TestCase {
         for (int i = 0; i < execptedResults.size(); i++) {
             assertEquals(execptedResults.get(i), actualResults[i]);
         }
-    }
-
-    public static void testPerstMoleculeGraph() throws InvalidQuerySyntaxException, GraphException {
-        DirectoryHandler handler = new TempDirectoryHandler("perstMoleculeGraph");
-        final PersistentGlobalJRDFFactory factory = PersistentGlobalJRDFFactoryImpl.getFactory(handler);
-        MoleculeGraph graph = factory.getGraph("perstMoleculeGraph");
-        System.err.println("graph # = " + graph.getNumberOfTriples());
-        UrqlConnection connection = factory.getNewUrqlConnection();
-        String query =
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" +
-                "PREFIX biopax: <http://www.biopax.org/release/biopax-level2.owl#> \n" +
-                "PREFIX biomanta: <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#> \n" +
-                "PREFIX ncbi: <http://biomanta.sourceforge.net/2007/10/ncbi_taxo.owl#> \n" +
-                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
-                "SELECT ?name ?id \n" +
-                "WHERE { { ?x rdf:type biopax:physicalEntity . \n" +
-                "        ?x biomanta:fromNCBISpecies ncbi:ncbi_taxo_4932_ind . \n" +
-                "        ?x biomanta:hasPrimaryRef ?y . \n" +
-                "        ?y biopax:DB ?db \n" +
-                "        FILTER (str(?db) = \"uniprotkb\"^^xsd:string) } . \n" +
-                "        \n" +
-                "        { ?y biopax:ID ?id . \n" +
-                "        FILTER (str(?id) = \"o13516\"^^xsd:string) } . \n" +
-                "        ?x biomanta:hasFullName ?name }";
-        Answer answer = connection.executeQuery(graph, query);
-        System.err.println("answer time taken = " + answer.getTimeTaken());
-        System.err.println("answer # = " + answer.numberOfTuples());
-        System.err.println(answer);
-        graph.close();
-        factory.close();
     }
 }
