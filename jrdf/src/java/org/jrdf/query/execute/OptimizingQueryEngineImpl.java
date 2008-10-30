@@ -71,10 +71,10 @@ import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
+import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 
 import java.util.Collection;
 import static java.util.Collections.sort;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -87,13 +87,14 @@ import java.util.TreeSet;
 
 public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
     private final RelationComparator relationComparator = new SimpleRelationComparatorImpl();
-    private final Comparator expressionComparator = new ExpressionComparatorImpl();
+    private final ExpressionComparator expressionComparator = EXPRESSION_COMPARATOR;
 
     public OptimizingQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
         Union union, DyadicJoin leftOuterJoin, SemiDifference diff) {
         super(project, naturalJoin, restrict, union, leftOuterJoin, diff);
     }
 
+    // TODO YF join those with common attributes first.
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         long start = System.currentTimeMillis();
@@ -103,7 +104,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         for (Expression<V> exp : constraintList) {
             exp.accept((V) this);
             partialResult.add(result);
-            if (result.getTuples().size() == 0) {
+            if (result.getTuples().isEmpty()) {
                 break;
             }
             result = tempRelation;

@@ -74,18 +74,23 @@ import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
 
-import java.io.Serializable;
-import java.util.Comparator;
-
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class ExpressionComparatorImpl extends ExpressionVisitorAdapter
-    implements ExpressionVisitor, Serializable, Comparator<Expression> {
+public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter
+        implements ExpressionVisitor, ExpressionComparator {
     private static final long serialVersionUID = 4884876904025513571L;
     private int result;
+
+    /**
+     * The singleton expression comparator.
+     */
+    public static final ExpressionComparator EXPRESSION_COMPARATOR = new ExpressionComparatorImpl();
+
+    private ExpressionComparatorImpl() {
+    }
 
     public int compare(Expression lhs, Expression rhs) {
         int lhsValue = getNext(lhs);
@@ -139,25 +144,29 @@ public class ExpressionComparatorImpl extends ExpressionVisitorAdapter
         result = (lhs + rhs) / 2;
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
         result = operator.size();
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
         result = andExpression.size();
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
         result = notExpression.size();
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression) {
         result = equalsExpression.size();
     }
 
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor> int getNext(Expression<V> expression) {
-        ExpressionComparatorImpl comparator = new ExpressionComparatorImpl();
+        ExpressionComparator comparator = new ExpressionComparatorImpl();
         expression.accept((V) comparator);
         return comparator.getVariableEstimate();
     }

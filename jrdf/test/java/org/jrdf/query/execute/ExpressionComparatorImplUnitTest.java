@@ -60,6 +60,7 @@
 package org.jrdf.query.execute;
 
 import junit.framework.TestCase;
+import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 import org.jrdf.query.expression.Conjunction;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
@@ -69,13 +70,8 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.ANY_SPO;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_3_DC_TITLE_ID_3;
-import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
-import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
 import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
-
-import java.net.URI;
-import java.util.Comparator;
 
 /**
  * @author Yuan-Fang Li
@@ -91,39 +87,16 @@ public class ExpressionComparatorImplUnitTest extends TestCase {
             = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_UNION
             = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_EMPTY_UNION
-            = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, EMPTY_CONSTRAINT);
-    private static final Expression<ExpressionVisitor> EMPTY_AND_BOOK1_AND_2_UNION
-            = new Union<ExpressionVisitor>(new Union<ExpressionVisitor>(EMPTY_CONSTRAINT, BOOK_1_DC_TITLE_ID_1),
-            BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> ALL_AND_EMPTY = new Conjunction<ExpressionVisitor>(ANY_SPO,
             EMPTY_CONSTRAINT);
     private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
             "name", 1);
-    private static final Expression<ExpressionVisitor> FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK,
-            "nick", 2);
-    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_2 = createConstraintExpression("x", FOAF_NICK,
-            "alias", 2);
-    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
-            "mbox", 3);
-    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
-            "alias", 3);
-    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_3 = createConstraintExpression("x", FOAF_NAME,
-            "name", 3);
-    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX,
-            "mbox", 4);
-    private static final Expression<ExpressionVisitor> DC_DATE_EXP_2 = createConstraintExpression("x",
-            URI.create("http://purl.org/dc/elements/1.1/date"), "date", 2);
 
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
 
-    private Comparator expressionComparator;
-
-    protected void setUp() throws Exception {
-        expressionComparator = new ExpressionComparatorImpl();
-    }
+    private final ExpressionComparator expressionComparator = EXPRESSION_COMPARATOR;
 
     public void testSimpleConjunctionSize() {
         final int size = BOOK1_AND_2_CONJUNCTION.size();
@@ -160,6 +133,11 @@ public class ExpressionComparatorImplUnitTest extends TestCase {
     public void testConjunction() {
         final int compare = expressionComparator.compare(BOOK1_AND_2_CONJUNCTION, BOOK1_AND_2_AND_3_CONJUNCTION);
         assertEquals(EQUAL, compare);
+    }
+
+    public void testEmptyConjunction() {
+        final int compare = expressionComparator.compare(ALL_AND_EMPTY, BOOK1_AND_2_CONJUNCTION);
+        assertEquals(AFTER, compare);
     }
 
     public void testDiffConjunction() {
