@@ -75,8 +75,8 @@ import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 
 import java.util.Collection;
-import java.util.Collections;
 import static java.util.Collections.sort;
+import static java.util.Collections.swap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -108,29 +108,42 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             exp.accept((V) this);
             partialResult.add(result);
             if (result.getTuples().isEmpty()) {
-                break;
+                return;
             }
             result = tempRelation;
         }
-        final LinkedList<Relation> list = new LinkedList<Relation>(partialResult);
-        matchAttributes(list);
-        result = naturalJoin.join(new LinkedHashSet<Relation>(list));
+        final Set<Relation> relations = matchAttributes(new LinkedList<Relation>(partialResult));
+        result = naturalJoin.join(relations);
     }
 
-    private void matchAttributes(List<Relation> partialResults) {
-        if (partialResults.size() >= 3) {
-            Relation first = partialResults.get(0);
-            Relation second = partialResults.get(1);
-            Set<Attribute> headings = getCommonHeadings(first, second);
-            int idx = 2;
-            while (headings.size() != 1 && idx < partialResults.size()) {
-                headings = getCommonHeadings(first, partialResults.get(idx++));
+    private Set<Relation> matchAttributes(List<Relation> partialResults) {
+        for (Relation rel : partialResults) {
+            System.err.println("old rel # = " + rel.getTuples().size());
+        }
+        System.err.println("");
+        for (int i = 0; i < partialResults.size(); i++) {
+            matchAttributes(partialResults, i);
+        }
+        for (Relation rel : partialResults) {
+            System.err.println("new rel # = " + rel.getTuples().size());
+        }
+        return new LinkedHashSet<Relation>(partialResults);
+    }
+
+    private void matchAttributes(List<Relation> relations, int pos) {
+        Relation first = relations.get(pos);
+        int idx, badPos = -1;
+        for (idx = pos + 1; idx < relations.size(); idx++) {
+            final Relation nextRel = relations.get(idx);
+            final Set<Attribute> headings = getCommonHeadings(first, nextRel);
+            if (headings.size() == 1) {
+                break;
+            } else if (badPos < 0) {
+                badPos = idx;
             }
-            Collections.swap(partialResults, 1, idx - 1);
-            System.err.println("conj operand results");
-            for (Relation rel : partialResults) {
-                System.err.println("rel # = " + rel.getTuples().size());
-            }
+        }
+        if (badPos > 0 && idx < relations.size() && idx - badPos > 1) {
+            swap(relations, badPos, idx);
         }
     }
 
