@@ -112,8 +112,8 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             }
             result = tempRelation;
         }
-        final Set<Relation> relations = matchAttributes(new LinkedList<Relation>(partialResult));
-        result = naturalJoin.join(relations);
+        partialResult = matchAttributes(new LinkedList<Relation>(partialResult));
+        result = naturalJoin.join(partialResult);
     }
 
     private Set<Relation> matchAttributes(List<Relation> partialResults) {
@@ -136,7 +136,8 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         for (idx = pos + 1; idx < relations.size(); idx++) {
             final Relation nextRel = relations.get(idx);
             final Set<Attribute> headings = getCommonHeadings(first, nextRel);
-            if (headings.size() == 1) {
+            if (headings.size() >= 1) {
+                System.err.println("found common # " + headings.size());
                 break;
             } else if (badPos < 0) {
                 badPos = idx;

@@ -112,7 +112,7 @@ public final class RelationProcessorImpl implements RelationProcessor {
         long start = System.currentTimeMillis();
         System.err.println("joining: " + relation1.getTuples().size() + " and " + relation2.getTuples().size());
         tupleEngine.processRelations(headings, relation1, relation2, result);
-        System.err.println("join finished @ " + (System.currentTimeMillis() - start) + " = " + result.size());
+        System.err.println("join finished @ " + (System.currentTimeMillis() - start) + " = " + result.size() + "\n");
         return relationFactory.getRelation(headings, result);
     }
 
