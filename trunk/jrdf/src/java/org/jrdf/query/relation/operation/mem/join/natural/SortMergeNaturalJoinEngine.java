@@ -113,20 +113,15 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
             doSortMergeJoin(boundSets[0], boundSets[1], commonHeadings.iterator().next(), result);
         } else if (commonHeadings.size() > 1) {
             // do multi merge join
-            doMultiSortMergeJoin(boundSets[0], boundSets[1],
-                    commonHeadings, result);
+            doMultiSortMergeJoin(boundSets[0], boundSets[1], commonHeadings, result);
         }
         // do natural join
-        doNaturalJoin(headings, relation1.getTuples(), relation2.getTuples(), result);
+        doNaturalJoin(headings, unboundTuples1, unboundTuples2, result);
     }
 
     private void doMultiSortMergeJoin(Set<Tuple> bound1, Set<Tuple> bound2, SortedSet<Attribute> commonHeadings,
                                       SortedSet<Tuple> result) {
         doMultiHeadingMergeJoin(bound1, bound2, commonHeadings, result);
-        /*// do natural join
-        long start = System.currentTimeMillis();
-        doNaturalJoin(headings, unbound1, unbound2, result);
-        System.err.println("natural join took " + (System.currentTimeMillis() - start));*/
     }
 
     private void doMultiHeadingMergeJoin(Set<Tuple> bound1, Set<Tuple> bound2, SortedSet<Attribute> commonHeadings,
@@ -141,11 +136,10 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private void compareAndAddToResult(SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result,
-                                          Tuple t1, Tuple t2) {
+                                       Tuple t1, Tuple t2) {
         boolean contradiction = false;
         for (Attribute attribute : commonHeadings) {
-            contradiction = this.compareAVPs(attribute, t1.getValueOperation(attribute),
-                t2.getValueOperation(attribute));
+            contradiction = compareAVPs(attribute, t1.getValueOperation(attribute), t2.getValueOperation(attribute));
             if (contradiction) {
                 break;
             }
