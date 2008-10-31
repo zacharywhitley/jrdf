@@ -103,10 +103,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         Set<Tuple>[] boundSets = partitionTuples(commonHeadings, relation1, relation2, unboundTuples1, unboundTuples2);
         System.err.println("total tuple # = " + (relation1.getTuples().size() + relation2.getTuples().size()));
         for (Set<Tuple> tuples : boundSets) {
-            System.err.println("bound # = " + tuples.size());
+            System.err.println("bound & unbound # = " + tuples.size());
         }
-        System.err.println("unbound1 # " + unboundTuples1.size());
-        System.err.println("unbound2 # " + unboundTuples2.size());
         System.err.println("SMJOin headings: " + commonHeadings);
         if (commonHeadings.size() == 1) {
             // do sort merge join
@@ -116,7 +114,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
             doMultiSortMergeJoin(boundSets[0], boundSets[1], commonHeadings, result);
         }
         // do natural join
-        doNaturalJoin(headings, unboundTuples1, unboundTuples2, result);
+        doNaturalJoin(headings, boundSets[2], boundSets[3], result);
     }
 
     private void doMultiSortMergeJoin(Set<Tuple> bound1, Set<Tuple> bound2, SortedSet<Attribute> commonHeadings,
@@ -174,11 +172,13 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     private void doNaturalJoin(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
                                SortedSet<Tuple> result) {
+        long start = System.currentTimeMillis();
         if (tuples1.size() < tuples2.size()) {
             startDoubleLoopProcessing(headings, result, tuples1, tuples2);
         } else {
             startDoubleLoopProcessing(headings, result, tuples2, tuples1);
         }
+        System.err.println("natural join took " + (System.currentTimeMillis() - start));
     }
 
     private Set<Tuple>[] partitionTuples(Set<Attribute> commonHeadings, Relation rel1, Relation rel2,
@@ -186,15 +186,13 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         Set<Tuple> boundSet1 = new HashSet<Tuple>();
         Set<Tuple> boundSet2 = new HashSet<Tuple>();
         if (commonHeadings.isEmpty()) {
-            unboundSet1 = rel1.getTuples();
-            unboundSet2 = rel2.getTuples();
-            return (Set<Tuple>[]) new Set[] {boundSet1, boundSet2};
+            return (Set<Tuple>[]) new Set[] {boundSet1, boundSet2, rel1.getTuples(), rel2.getTuples()};
         } else {
             for (Attribute attribute : commonHeadings) {
                 boundSet1 = partitionWithAttribute(attribute, rel1, boundSet1, unboundSet1);
                 boundSet2 = partitionWithAttribute(attribute, rel2, boundSet2, unboundSet2);
             }
-            return (Set<Tuple>[]) new Set[]{boundSet1, boundSet2};
+            return (Set<Tuple>[]) new Set[]{boundSet1, boundSet2, unboundSet1, unboundSet2};
         }
     }
 
@@ -204,6 +202,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
             if (tuple.getValueOperation(attribute) != null) {
                 boundSet.add(tuple);
             } else if (!boundSet.contains(tuple)) {
+                System.err.println("unbound + " + tuple);
                 unboundSet.add(tuple);
             }
         }

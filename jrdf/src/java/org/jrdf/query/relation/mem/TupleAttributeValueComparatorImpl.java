@@ -84,17 +84,24 @@ public class TupleAttributeValueComparatorImpl implements TupleComparator {
     }
 
     public int compare(Tuple tuple, Tuple tuple1) {
+        System.err.println(attribute + " compare: " + tuple + " and " + tuple1);
         checkNotNull(attribute);
         final ValueOperation vo1 = tuple.getValueOperation(attribute);
         final ValueOperation vo2 = tuple1.getValueOperation(attribute);
-        int opCom = compareOperations(vo1, vo2);
-        return (opCom == 0) ? opCom : nodeComparator.compare(vo1.getValue(), vo2.getValue());
-    }
-
-    private int compareOperations(ValueOperation vo1, ValueOperation vo2) {
-        if (!vo1.getOperation().equals(vo2.getOperation()) || !vo1.getOperation().equals(EQUALS)) {
+        final boolean valid = validOps(vo1, vo2);
+        if (valid) {
+            return nodeComparator.compare(vo1.getValue(), vo2.getValue());
+        } else {
             return 0;
         }
-        return -1;
+    }
+
+    private boolean validOps(ValueOperation vo1, ValueOperation vo2) {
+        final AVPOperation op1 = vo1.getOperation();
+        final AVPOperation op2 = vo2.getOperation();
+        if (op1.equals(EQUALS) && op2.equals(EQUALS)) {
+            return true;
+        }
+        return false;
     }
 }
