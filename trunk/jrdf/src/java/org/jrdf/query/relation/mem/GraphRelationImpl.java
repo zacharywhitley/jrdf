@@ -149,7 +149,7 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
-        ((TupleAttributeValueComparatorImpl) tupleComparator).setAttribute(attribute);
+        tupleComparator.setAttribute(attribute);
         SortedSet<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
         sortedTuples.addAll(getTuples());
         return sortedTuples;
@@ -175,6 +175,7 @@ public final class GraphRelationImpl implements GraphRelation {
         return determineEqualityFromFields((GraphRelation) obj);
     }
 
+    //TODO YF change this to a disk-based set to make it more scalable
     private SortedSet<Tuple> getTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
         ClosableIterator<Triple> closableIterator = getIterator(searchTriple);
         try {
@@ -190,6 +191,7 @@ public final class GraphRelationImpl implements GraphRelation {
         }
     }
 
+    //TODO YF change this to a disk-based set to make it more scalable
     private Set<Tuple> getUnsortedTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
         ClosableIterator<Triple> closableIterator = getIterator(searchTriple);
         try {

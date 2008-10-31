@@ -115,16 +115,14 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         }
         // do natural join
         doNaturalJoin(headings, boundSets[2], boundSets[3], result);
+        doNaturalJoin(headings, boundSets[0], boundSets[3], result);
+        doNaturalJoin(headings, boundSets[1], boundSets[2], result);
     }
 
     private void doMultiSortMergeJoin(Set<Tuple> bound1, Set<Tuple> bound2, SortedSet<Attribute> commonHeadings,
                                       SortedSet<Tuple> result) {
-        doMultiHeadingMergeJoin(bound1, bound2, commonHeadings, result);
-    }
-
-    private void doMultiHeadingMergeJoin(Set<Tuple> bound1, Set<Tuple> bound2, SortedSet<Attribute> commonHeadings,
-                                         SortedSet<Tuple> result) {
         long start = System.currentTimeMillis();
+        System.err.println("multi join start: " + bound1.size() + " and " + bound2.size());
         for (Tuple t1 : bound1) {
             for (Tuple t2 : bound2) {
                 compareAndAddToResult(commonHeadings, result, t1, t2);
@@ -149,6 +147,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     private void doSortMergeJoin(Set<Tuple> bound1, Set<Tuple> bound2, Attribute attribute, SortedSet<Tuple> result) {
         long start = System.currentTimeMillis();
+        System.err.println("SM join start: " + bound1.size() + " and " + bound2.size());
         final Set<Tuple> set1 = sortSetOfTuples(bound1, attribute);
         final Set<Tuple> set2 = sortSetOfTuples(bound2, attribute);
         System.err.println("sorting took " + (System.currentTimeMillis() - start) + " = " +
@@ -173,6 +172,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     private void doNaturalJoin(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
                                SortedSet<Tuple> result) {
         long start = System.currentTimeMillis();
+        System.err.println("natural join start: " + tuples1.size() + " and " + tuples2.size());
         if (tuples1.size() < tuples2.size()) {
             startDoubleLoopProcessing(headings, result, tuples1, tuples2);
         } else {
