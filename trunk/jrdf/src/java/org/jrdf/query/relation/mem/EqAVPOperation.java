@@ -18,6 +18,7 @@ public final class EqAVPOperation implements AVPOperation {
     private EqAVPOperation() {
     }
 
+    //TODO YF/AN comparing hashValues for blank nodes may not be a good idea
     public boolean addAttributeValuePair(Attribute attribute, Map<Attribute, ValueOperation> newAttributeValues,
         ValueOperation lhs, ValueOperation rhs) {
         Node lhsValue = lhs.getValue();

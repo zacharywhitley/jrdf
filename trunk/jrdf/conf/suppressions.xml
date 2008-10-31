@@ -46,6 +46,7 @@
     <suppress checks="CyclomaticComplexity" files="OptimizingQueryEngineImpl"/>
     <suppress checks="ParameterNumber" files="NaiveQueryEngineImpl"/>
     <suppress checks="ParameterNumber" files="OptimizingQueryEngineImpl"/>
+    <suppress checks="ParameterNumber" files="NewSortMergeNaturalJoinEngine"/>
 
     <!-- Cleanup molecule implementation -->
     <suppress checks="BooleanExpressionComplexity" files="FlatteningFiveLongClosableIterator"/>

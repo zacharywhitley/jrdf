@@ -86,6 +86,8 @@ public interface Relation {
      */
     Set<Tuple> getTuples();
 
+    Set<Tuple> getTuples(Attribute attribute);
+
     // TODO (AN) Test drive me
     SortedSet<Attribute> getSortedHeading();
 

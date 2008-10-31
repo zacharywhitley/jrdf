@@ -60,9 +60,9 @@
 package org.jrdf.query.relation.mem;
 
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.datatype.LexicalComparatorImpl;
 import org.jrdf.graph.datatype.SemanticLiteralComparator;
 import org.jrdf.graph.datatype.SemanticLiteralComparatorImpl;
-import org.jrdf.graph.datatype.LexicalComparatorImpl;
 import org.jrdf.graph.local.BlankNodeComparator;
 import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.LocalizedNodeComparatorImpl;

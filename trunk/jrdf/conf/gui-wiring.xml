@@ -145,7 +145,7 @@
         <constructor-arg ref="relationHelper"/>
     </bean>
 
-    <bean id="sortMergeNaturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine">
+    <bean id="sortMergeNaturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.NewSortMergeNaturalJoinEngine">
         <constructor-arg ref="tupleFactory"/>
         <constructor-arg ref="relationHelper"/>
         <constructor-arg ref="nodeComparator"/>

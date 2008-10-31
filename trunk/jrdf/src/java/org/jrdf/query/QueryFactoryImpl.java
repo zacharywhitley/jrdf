@@ -92,7 +92,7 @@ import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl;
 import org.jrdf.query.relation.operation.mem.join.NadicJoinImpl;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
-import org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine;
+import org.jrdf.query.relation.operation.mem.join.natural.NewSortMergeNaturalJoinEngine;
 import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
 import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
 import org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceImpl;
@@ -147,7 +147,8 @@ public class QueryFactoryImpl implements QueryFactory {
 
     public QueryEngine createQueryEngine() {
         Project project = new ProjectImpl(TUPLE_FACTORY, RELATION_FACTORY);
-        TupleEngine joinTupleEngine = new SortMergeNaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER, NODE_COMPARATOR);
+        TupleEngine joinTupleEngine =
+            new NewSortMergeNaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER, NODE_COMPARATOR);
         TupleEngine unionTupleEngine = new OuterUnionEngine(RELATION_HELPER);
         NadicJoin join = new NadicJoinImpl(RELATION_PROCESSOR, joinTupleEngine);
         Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR);
