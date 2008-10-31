@@ -129,6 +129,10 @@ public final class GraphRelationImpl implements GraphRelation {
         return getTuplesFromGraph(searchTriple, attributes);
     }
 
+    public Set<Tuple> getTuples(Attribute attribute) {
+        throw new UnsupportedOperationException("Cannot find tuples with attribute in graph relation.");
+    }
+
     public Set<Tuple> getTuples(Map<Attribute, ValueOperation> nameValues) {
         Attribute[] attributes = nameValues.keySet().toArray(new Attribute[TRIPLE]);
         Triple searchTriple = new TripleImpl((SubjectNode) nameValues.get(attributes[0]).getValue(),

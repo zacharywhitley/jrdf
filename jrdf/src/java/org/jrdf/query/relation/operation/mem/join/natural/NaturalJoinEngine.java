@@ -107,9 +107,7 @@ public class NaturalJoinEngine implements TupleEngine {
         resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
         boolean contradiction = false;
         for (Attribute attribute : headings) {
-            ValueOperation avp1 = tuple1.getValueOperation(attribute);
-            ValueOperation avp2 = tuple2.getValueOperation(attribute);
-            contradiction = compareAVPs(attribute, avp1, avp2);
+            contradiction = processTuplePair(tuple1, tuple2, attribute);
             if (contradiction) {
                 break;
             }
@@ -120,6 +118,14 @@ public class NaturalJoinEngine implements TupleEngine {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
+    }
+
+    protected boolean processTuplePair(Tuple tuple1, Tuple tuple2, Attribute attribute) {
+        boolean contradiction;
+        ValueOperation avp1 = tuple1.getValueOperation(attribute);
+        ValueOperation avp2 = tuple2.getValueOperation(attribute);
+        contradiction = compareAVPs(attribute, avp1, avp2);
+        return contradiction;
     }
 
     protected boolean compareAVPs(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {

@@ -130,6 +130,16 @@ public final class RelationImpl implements Relation {
         return set;
     }
 
+    public Set<Tuple> getTuples(Attribute attribute) {
+        Set<Tuple> set = new HashSet<Tuple>();
+        for (Tuple tuple : tuples) {
+            if (tuple.getValueOperation(attribute) != null) {
+                set.add(tuple);
+            }
+        }
+        return set;
+    }
+
     private boolean contains(Map<Attribute, ValueOperation> map, Map<Attribute, ValueOperation> avo) {
         final Set<Attribute> keys = avo.keySet();
         for (Attribute attr : keys) {

@@ -129,6 +129,7 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         Set<Long[]> indicesToRemove = new HashSet<Long[]>();
         indicesToRemove = deleteChildMolecules(mids, indicesToRemove);
         getIndicesToRemove(headTripleMid, indicesToRemove);
+        //indicesToRemove = getIndicesToRemove(headTripleMid, indicesToRemove);
         for (Long[] index : indicesToRemove) {
             writableIndex.remove(index);
         }
