@@ -181,6 +181,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         System.err.println("natural join took " + (System.currentTimeMillis() - start));
     }
 
+    //TODO YF check whether this partitioning is necessary at all
     private Set<Tuple>[] partitionTuples(Set<Attribute> commonHeadings, Relation rel1, Relation rel2,
                                          Set<Tuple> unboundSet1, Set<Tuple> unboundSet2) {
         Set<Tuple> boundSet1 = new HashSet<Tuple>();
@@ -202,7 +203,6 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
             if (tuple.getValueOperation(attribute) != null) {
                 boundSet.add(tuple);
             } else if (!boundSet.contains(tuple)) {
-                System.err.println("unbound + " + tuple);
                 unboundSet.add(tuple);
             }
         }
