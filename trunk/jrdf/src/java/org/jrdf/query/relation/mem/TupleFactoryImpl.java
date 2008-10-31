@@ -64,6 +64,7 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.ValueOperation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -80,5 +81,13 @@ public final class TupleFactoryImpl implements TupleFactory {
 
     public Tuple getTuple(Map<Attribute, ValueOperation> avo) {
         return new TupleImpl(avo);
+    }
+
+    public Tuple getTuple(Tuple... tuples) {
+        Map<Attribute, ValueOperation> map = new HashMap<Attribute, ValueOperation>();
+        for (Tuple t : tuples) {
+            map.putAll(t.getAttributeValues());
+        }
+        return new TupleImpl(map);
     }
 }

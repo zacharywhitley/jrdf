@@ -122,7 +122,7 @@ public class NaturalJoinEngine implements TupleEngine {
         }
     }
 
-    private boolean compareAVPs(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
+    protected boolean compareAVPs(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
         boolean result;
         if (avp1 == null && avp2 == null) {
             result = false;
@@ -146,7 +146,7 @@ public class NaturalJoinEngine implements TupleEngine {
         }
     }
 
-    private boolean avp1NotNull(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
+    protected boolean avp1NotNull(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
         if (!avp1.getOperation().equals(EQUALS)) {
             return avp1.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp1, avp2);
         } else {

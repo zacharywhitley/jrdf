@@ -75,6 +75,8 @@ import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
+import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.analysis.VariableCollector;
@@ -143,6 +145,10 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (NadicJoin) BEAN_FACTORY.getBean("naturalJoin");
     }
 
+    public TupleEngine getNewSortMergeNaturalJoinEngine() {
+        return (TupleEngine) BEAN_FACTORY.getBean("sortMergeNaturalJoinEngine");
+    }
+
     public DyadicJoin getNewSemiJoin() {
         return (DyadicJoin) BEAN_FACTORY.getBean("semiJoin");
     }
@@ -177,6 +183,10 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public ParserFactory getNewParserFactory() {
         return (ParserFactory) BEAN_FACTORY.getBean("parserFactory");
+    }
+
+    public RelationProcessor getNewRelationProcessor() {
+        return (RelationProcessor) BEAN_FACTORY.getBean("relationProcessor");
     }
 
     public RelationFactory getNewRelationFactory() {

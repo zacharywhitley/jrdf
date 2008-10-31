@@ -71,4 +71,6 @@ import java.util.Map;
  */
 public interface TupleFactory extends Serializable {
     Tuple getTuple(Map<Attribute, ValueOperation> avo);
+
+    Tuple getTuple(Tuple... tuples);
 }

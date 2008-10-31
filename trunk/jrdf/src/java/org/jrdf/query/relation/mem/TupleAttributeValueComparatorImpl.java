@@ -59,11 +59,12 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class TupleAttributeValueComparatorImpl implements TupleComparator {
@@ -84,8 +85,16 @@ public class TupleAttributeValueComparatorImpl implements TupleComparator {
 
     public int compare(Tuple tuple, Tuple tuple1) {
         checkNotNull(attribute);
-        final Node node1 = tuple.getValueOperation(attribute).getValue();
-        final Node node2 = tuple1.getValueOperation(attribute).getValue();
-        return nodeComparator.compare(node1, node2);
+        final ValueOperation vo1 = tuple.getValueOperation(attribute);
+        final ValueOperation vo2 = tuple1.getValueOperation(attribute);
+        int opCom = compareOperations(vo1, vo2);
+        return (opCom == 0) ? opCom : nodeComparator.compare(vo1.getValue(), vo2.getValue());
+    }
+
+    private int compareOperations(ValueOperation vo1, ValueOperation vo2) {
+        if (!vo1.getOperation().equals(vo2.getOperation()) || !vo1.getOperation().equals(EQUALS)) {
+            return 0;
+        }
+        return -1;
     }
 }
