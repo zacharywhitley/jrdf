@@ -80,7 +80,7 @@
     <!-- Query Classes -->
     <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl">
         <constructor-arg ref="queryBuilder"/>
-        <constructor-arg ref="queryEngine"/>
+        <constructor-arg ref="optimizingQueryEngine"/>
     </bean>
 
     <bean id="queryBuilder" class="org.jrdf.urql.builder.UrqlQueryBuilder">
@@ -167,7 +167,7 @@
 
     <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.join.NadicJoinImpl">
         <constructor-arg ref="relationProcessor"/>
-        <constructor-arg ref="naturalJoinEngine"/>
+        <constructor-arg ref="sortMergeNaturalJoinEngine"/>
     </bean>
 
     <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinImpl">

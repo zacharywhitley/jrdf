@@ -23,7 +23,7 @@ public final class NeqAVPOperation implements AVPOperation {
         Node lhsValue = lhs.getValue();
         Node rhsValue = rhs.getValue();
         if (COMPARATOR.compare(lhsValue, rhsValue) != 0) {
-            newAttributeValues.put(attribute, rhs);
+            newAttributeValues.put(attribute, lhs);
             return false;
         }
         return true;

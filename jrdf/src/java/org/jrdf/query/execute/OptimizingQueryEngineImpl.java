@@ -137,13 +137,16 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             final Relation nextRel = relations.get(idx);
             final Set<Attribute> headings = getCommonHeadings(first, nextRel);
             if (headings.size() >= 1) {
-                System.err.println("found common # " + headings.size());
+                System.err.println("found common # " + headings.size() +
+                    " for " + first.getTuples().size() + " and " + nextRel.getTuples().size());
                 break;
             } else if (badPos < 0) {
                 badPos = idx;
             }
         }
-        if (badPos > 0 && idx < relations.size() && idx - badPos > 1) {
+        if (badPos > 0 && idx < relations.size()) {
+            System.err.println("swap " + relations.get(badPos).getTuples().size() +
+                " and " + relations.get(idx).getTuples().size());
             swap(relations, badPos, idx);
         }
     }

@@ -119,6 +119,7 @@ public final class TupleComparatorImpl implements TupleComparator {
         return result;
     }
 
+    // TODO YF doesn't take into consideration different AVPOperations
     private int compareAttributeValues(Map<Attribute, ValueOperation> attributeValues1,
         Map<Attribute, ValueOperation> attributeValues2) {
         int result = 0;
