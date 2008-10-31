@@ -84,7 +84,6 @@ public class TupleAttributeValueComparatorImpl implements TupleComparator {
     }
 
     public int compare(Tuple tuple, Tuple tuple1) {
-        System.err.println(attribute + " compare: " + tuple + " and " + tuple1);
         checkNotNull(attribute);
         final ValueOperation vo1 = tuple.getValueOperation(attribute);
         final ValueOperation vo2 = tuple1.getValueOperation(attribute);
