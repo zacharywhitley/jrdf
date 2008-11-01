@@ -93,7 +93,7 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         final List<Tuple> list2 = sortSetOfTuples(bound2, attribute);
         System.err.println("sorting took " + (System.currentTimeMillis() - start) + " = " +
             list1.size() + " & " + list2.size());
-        if (bound1.size() <= bound2.size()) {
+        if (list1.size() <= list2.size()) {
             doProperSortMergeJoin(attribute, remainingHeadings, result, list1, list2);
         } else {
             doProperSortMergeJoin(attribute, remainingHeadings, result, list2, list1);
@@ -101,7 +101,7 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         doNaturalJoin(headings, bound1, unbound2, result);
         doNaturalJoin(headings, bound2, unbound1, result);
         doNaturalJoin(headings, unbound1, unbound2, result);
-        System.err.println("SMJoin took " + (System.currentTimeMillis() - start) + "\n");
+        System.err.println("SMJoin took " + (System.currentTimeMillis() - start));
     }
 
     private List<Tuple> sortSetOfTuples(Set<Tuple> tuples, Attribute attribute) {
@@ -138,6 +138,9 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
 
     private void doProperSortMergeJoin(Attribute attribute, Set<Attribute> commonHeadings, SortedSet<Tuple> result,
                                        List<Tuple> list1, List<Tuple> list2) {
+        if (list1.size() == 0 || list2.size() == 0) {
+            return;
+        }
         long start = System.currentTimeMillis();
         tupleAVComparator.setAttribute(attribute);
         Tuple tuple1, tuple2;
@@ -154,10 +157,8 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
                 tuple1 = getTupleFromList(list1, newInds[0]);
                 tuple2 = getTupleFromList(list2, newInds[1]);
             } else if (compare > 0) {
-//                j++;
                 tuple2 = getTupleFromList(list2, ++j);
             } else {
-//                i++;
                 tuple1 = getTupleFromList(list1, ++i);
             }
         }
