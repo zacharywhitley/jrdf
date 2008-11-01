@@ -94,12 +94,18 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_B1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_B2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT;
 
 import java.util.Collections;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 
 /**
  * Tests the integration between process and other classes such as RelationDEE, RelationDUM and other relations.
@@ -277,6 +283,22 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R5, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
         resultTuple.addAll(tmpTuple);
         checkJoin(createRelation(heading, resultTuple), createRelation(tuple1, tuple2));
+    }
+
+    public void testMultiJoin() {
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_B1, POS_FOO2_PREDICATE_R2);
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
+        tuple2.addAll(tuple1);
+        Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_B2, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
+        tuple4.addAll(tuple3);
+        final Relation relation1 = createRelation(tuple2);
+        final Relation relation2 = createRelation(tuple4);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4, POS_BAR3_OBJECT_R1);
+        Set<Attribute> headings = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE, VAR_BAR2_PREDICATE ,
+            POS_FOO3_OBJECT, POS_BAR3_OBJECT);
+        List<Relation> rels = Arrays.asList(new Relation[]{relation1, relation2});
+        checkJoin(createRelation(headings, resultTuple), rels);
     }
 
     private void checkJoin(Relation expectedResult, List<Relation> relations) {
