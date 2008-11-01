@@ -68,7 +68,11 @@ import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.NadicJoin;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_B1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_B2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE;
@@ -84,28 +88,29 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_NOT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R5;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_B1;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_B2;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R4;
 
+import java.util.Arrays;
 import java.util.Collections;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Arrays;
 
 /**
  * Tests the integration between process and other classes such as RelationDEE, RelationDUM and other relations.
@@ -286,18 +291,24 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
     }
 
     public void testMultiJoin() {
-        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_B1, POS_FOO2_PREDICATE_R2);
-        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
-        tuple2.addAll(tuple1);
-        Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_B2, POS_FOO3_OBJECT_R3);
-        Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
-        tuple4.addAll(tuple3);
-        final Relation relation1 = createRelation(tuple2);
-        final Relation relation2 = createRelation(tuple4);
-        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4, POS_BAR3_OBJECT_R1);
+        final Tuple tp1 = createTuple(POS_FOO1_SUBJECT_B1, POS_FOO2_PREDICATE_R2);
+        final Tuple tp2 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
+        final Tuple tp3 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_OBJECT_R4);
+        final Tuple tp4 = createTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_OBJECT_R4);
+        Relation rel1 = createRelation(new HashSet<Tuple>(Arrays.asList(new Tuple[]{tp1, tp2, tp3, tp4})));
+        final Tuple tq1 = createTuple(POS_FOO1_SUBJECT_B2, POS_FOO3_OBJECT_R3);
+        final Tuple tq2 = createTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
+        final Tuple tq3 = createTuple(POS_FOO1_SUBJECT_R1, POS_FOO5_OBJECT_R4);
+        final Tuple tq4 = createTuple(POS_FOO1_SUBJECT_R4, POS_FOO5_OBJECT_R4);
+        Relation rel2 = createRelation(new HashSet<Tuple>(Arrays.asList(new Tuple[]{tq1, tq2, tq3, tq4})));
+        final Tuple tr1 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4, POS_BAR3_OBJECT_R1);
+        final Tuple tr2 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4, POS_FOO5_OBJECT_R4);
+        final Tuple tr3 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_OBJECT_R4, POS_BAR3_OBJECT_R1);
+        final Tuple tr4 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_OBJECT_R4, POS_FOO5_OBJECT_R4);
+        Set<Tuple> resultTuple = new HashSet<Tuple>(Arrays.asList(new Tuple[]{tr1, tr2, tr3, tr4}));
         Set<Attribute> headings = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE, VAR_BAR2_PREDICATE ,
-            POS_FOO3_OBJECT, POS_BAR3_OBJECT);
-        List<Relation> rels = Arrays.asList(new Relation[]{relation1, relation2});
+                POS_FOO3_OBJECT, POS_BAR3_OBJECT, POS_FOO5_OBJECT, VAR_BAR1_OBJECT);
+        List<Relation> rels = Arrays.asList(new Relation[]{rel1, rel2});
         checkJoin(createRelation(headings, resultTuple), rels);
     }
 
