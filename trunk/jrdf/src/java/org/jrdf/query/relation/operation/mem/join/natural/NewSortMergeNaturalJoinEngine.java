@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -93,7 +92,7 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         final List<Tuple> list1 = sortSetOfTuples(bound1, attribute);
         final List<Tuple> list2 = sortSetOfTuples(bound2, attribute);
         System.err.println("sorting took " + (System.currentTimeMillis() - start) + " = " +
-            bound1.size() + " & " + bound2.size());
+            list1.size() + " & " + list2.size());
         if (bound1.size() <= bound2.size()) {
             doProperSortMergeJoin(attribute, remainingHeadings, result, list1, list2);
         } else {
@@ -102,7 +101,7 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         doNaturalJoin(headings, bound1, unbound2, result);
         doNaturalJoin(headings, bound2, unbound1, result);
         doNaturalJoin(headings, unbound1, unbound2, result);
-        System.err.println("SMJoin took " + (System.currentTimeMillis() - start));
+        System.err.println("SMJoin took " + (System.currentTimeMillis() - start) + "\n");
     }
 
     private List<Tuple> sortSetOfTuples(Set<Tuple> tuples, Attribute attribute) {
@@ -139,34 +138,49 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
 
     private void doProperSortMergeJoin(Attribute attribute, Set<Attribute> commonHeadings, SortedSet<Tuple> result,
                                        List<Tuple> list1, List<Tuple> list2) {
+        long start = System.currentTimeMillis();
         tupleAVComparator.setAttribute(attribute);
         Tuple tuple1, tuple2;
-        int posJ = 0;
-        for (int i = 0; i < list1.size(); i++) {
-            tuple1 = list1.get(i);
-            for (int j = posJ; j < list2.size(); j++) {
-                tuple2 = list2.get(j);
-                int compare = tupleAVComparator.compare(tuple1, tuple2);
-                if (compare == 0) {
-                    int[] newInds = processSameTuples(list1, list2, attribute, result, commonHeadings, i, j, tuple1);
-                    i = newInds[0];
-                    j = newInds[1];
-                } else {
-                    posJ = j + 1;
-                    break;
-                }
+        int i = 0;
+        int j = 0;
+        tuple1 = list1.get(i);
+        tuple2 = list2.get(j);
+        while (tuple1 != null && tuple2 != null) {
+            int compare = tupleAVComparator.compare(tuple1, tuple2);
+            if (compare == 0) {
+                int[] newInds = processSameTuples(list1, list2, attribute, result, commonHeadings, i, j, tuple1);
+                i = newInds[0];
+                j = newInds[1];
+                tuple1 = getTupleFromList(list1, newInds[0]);
+                tuple2 = getTupleFromList(list2, newInds[1]);
+            } else if (compare > 0) {
+//                j++;
+                tuple2 = getTupleFromList(list2, ++j);
+            } else {
+//                i++;
+                tuple1 = getTupleFromList(list1, ++i);
             }
         }
+        System.err.println("actual sort merge join took " + (System.currentTimeMillis() - start) +
+            " = " + result.size());
+    }
+
+    private Tuple getTupleFromList(List<Tuple> list, int idx) {
+        if (idx < list.size()) {
+            return list.get(idx);
+        }
+        return null;
     }
 
     private int[] processSameTuples(List<Tuple> l1, List<Tuple> l2, Attribute attribute, SortedSet<Tuple> result,
                                     Set<Attribute> commonHeadings, int pos1, int pos2, Tuple pivot) {
         Tuple t1, t2;
-        int newPos2 = pos2;
+        int newPos1 = pos1 + 1;
+        int newPos2 = pos2 + 1;
         for (int i = pos1; i < l1.size(); i++) {
-            pos1 = i;
             t1 = l1.get(i);
             if (tupleAVComparator.compare(t1, pivot) != 0) {
+                newPos1 = i;
                 break;
             }
             for (int j = pos2; j < l2.size(); j++) {
@@ -178,7 +192,7 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
                 addToResult(attribute, result, t1, t2, commonHeadings);
             }
         }
-        return new int[] {pos1, newPos2};
+        return new int[] {newPos1, newPos2};
     }
 
     private void addToResult(Attribute attribute, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2,
@@ -202,12 +216,5 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         }
         return contradiction;
 
-    }
-
-    private Tuple advanceIterator(Iterator<Tuple> iterator) {
-        if (iterator.hasNext()) {
-            return iterator.next();
-        }
-        return null;
     }
 }
