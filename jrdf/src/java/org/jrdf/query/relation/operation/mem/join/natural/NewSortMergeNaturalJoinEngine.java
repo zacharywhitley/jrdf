@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -91,14 +90,14 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         Set<Tuple> unbound1 = sets1[1];
         Set<Tuple> unbound2 = sets2[1];
         System.err.println("New SM join start: " + bound1.size() + " and " + bound2.size());
-        final Set<Tuple> set1 = sortSetOfTuples(bound1, attribute);
-        final Set<Tuple> set2 = sortSetOfTuples(bound2, attribute);
+        final List<Tuple> list1 = sortSetOfTuples(bound1, attribute);
+        final List<Tuple> list2 = sortSetOfTuples(bound2, attribute);
         System.err.println("sorting took " + (System.currentTimeMillis() - start) + " = " +
             bound1.size() + " & " + bound2.size());
         if (bound1.size() <= bound2.size()) {
-            doProperSortMergeJoin(attribute, result, set1, set2, remainingHeadings);
+            doProperSortMergeJoin(attribute, remainingHeadings, result, list1, list2);
         } else {
-            doProperSortMergeJoin(attribute, result, set2, set1, remainingHeadings);
+            doProperSortMergeJoin(attribute, remainingHeadings, result, list2, list1);
         }
         doNaturalJoin(headings, bound1, unbound2, result);
         doNaturalJoin(headings, bound2, unbound1, result);
@@ -106,13 +105,11 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         System.err.println("SMJoin took " + (System.currentTimeMillis() - start));
     }
 
-    private Set<Tuple> sortSetOfTuples(Set<Tuple> tuples, Attribute attribute) {
+    private List<Tuple> sortSetOfTuples(Set<Tuple> tuples, Attribute attribute) {
         tupleAVComparator.setAttribute(attribute);
         List<Tuple> list = new ArrayList<Tuple>(tuples);
         Collections.sort(list, tupleAVComparator);
-        final Set<Tuple> treeSet = new LinkedHashSet<Tuple>(list);
-        treeSet.addAll(tuples);
-        return treeSet;
+        return list;
     }
 
     private void doNaturalJoin(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
@@ -140,26 +137,48 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         return (Set<Tuple> []) new Set[] {boundSet, unboundSet};
     }
 
-    private void doProperSortMergeJoin(Attribute attribute, SortedSet<Tuple> result, Set<Tuple> set1, Set<Tuple> set2,
-                                       Set<Attribute> commonHeadings) {
-        final Iterator<Tuple> iterator1 = set1.iterator();
-        final Iterator<Tuple> iterator2 = set2.iterator();
-        Tuple tuple1 = advanceIterator(iterator1);
-        Tuple tuple2 = advanceIterator(iterator2);
-        while (tuple1 != null) {
-            while (tuple2 != null) {
+    private void doProperSortMergeJoin(Attribute attribute, Set<Attribute> commonHeadings, SortedSet<Tuple> result,
+                                       List<Tuple> list1, List<Tuple> list2) {
+        tupleAVComparator.setAttribute(attribute);
+        Tuple tuple1, tuple2;
+        int posJ = 0;
+        for (int i = 0; i < list1.size(); i++) {
+            tuple1 = list1.get(i);
+            for (int j = posJ; j < list2.size(); j++) {
+                tuple2 = list2.get(j);
                 int compare = tupleAVComparator.compare(tuple1, tuple2);
-                if (compare > 0) {
-                    tuple2 = advanceIterator(iterator2);
-                } else if (compare == 0) {
-                    addToResult(attribute, result, tuple1, tuple2, commonHeadings);
-                    tuple2 = advanceIterator(iterator2);
+                if (compare == 0) {
+                    int[] newInds = processSameTuples(list1, list2, attribute, result, commonHeadings, i, j, tuple1);
+                    i = newInds[0];
+                    j = newInds[1];
                 } else {
+                    posJ = j + 1;
                     break;
                 }
             }
-            tuple1 = advanceIterator(iterator1);
         }
+    }
+
+    private int[] processSameTuples(List<Tuple> l1, List<Tuple> l2, Attribute attribute, SortedSet<Tuple> result,
+                                    Set<Attribute> commonHeadings, int pos1, int pos2, Tuple pivot) {
+        Tuple t1, t2;
+        int newPos2 = pos2;
+        for (int i = pos1; i < l1.size(); i++) {
+            pos1 = i;
+            t1 = l1.get(i);
+            if (tupleAVComparator.compare(t1, pivot) != 0) {
+                break;
+            }
+            for (int j = pos2; j < l2.size(); j++) {
+                newPos2 = j;
+                t2 = l2.get(j);
+                if (tupleAVComparator.compare(t1, t2) != 0) {
+                    break;
+                }
+                addToResult(attribute, result, t1, t2, commonHeadings);
+            }
+        }
+        return new int[] {pos1, newPos2};
     }
 
     private void addToResult(Attribute attribute, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2,

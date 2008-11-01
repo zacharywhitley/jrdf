@@ -107,7 +107,7 @@
 
     <bean id="optimizingQueryEngine" class="org.jrdf.query.execute.OptimizingQueryEngineImpl">
         <constructor-arg ref="project"/>
-        <constructor-arg ref="naturalJoin"/>
+        <constructor-arg ref="sortMergeNaturalJoin"/>
         <constructor-arg ref="restrict"/>
         <constructor-arg ref="outerUnion"/>
         <constructor-arg ref="minLeftOuterJoin"/>
@@ -166,6 +166,11 @@
     </bean>
 
     <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.join.NadicJoinImpl">
+        <constructor-arg ref="relationProcessor"/>
+        <constructor-arg ref="naturalJoinEngine"/>
+    </bean>
+
+    <bean id="sortMergeNaturalJoin" class="org.jrdf.query.relation.operation.mem.join.NadicJoinImpl">
         <constructor-arg ref="relationProcessor"/>
         <constructor-arg ref="sortMergeNaturalJoinEngine"/>
     </bean>

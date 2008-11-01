@@ -60,9 +60,11 @@
 package org.jrdf.query.relation.operation.mem;
 
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.local.BlankNodeImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
@@ -100,6 +102,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.UUID;
 
 public class RelationIntegrationTestUtil {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
@@ -142,12 +145,16 @@ public class RelationIntegrationTestUtil {
     public static final URIReference RESOURCE_6 = createResource(RDF.PREDICATE);
     public static final Literal LITERAL_1 = NodeTestUtil.createLiteral("hello");
     public static final Literal LITERAL_2 = NodeTestUtil.createLiteral("there");
+    public static final BlankNode BNODE_1 = new BlankNodeImpl(UUID.randomUUID().toString(), 0L);
+    public static final BlankNode BNODE_2 = new BlankNodeImpl(UUID.randomUUID().toString(), 1L);
 
     public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_R1 = createAvo(POS_FOO1_SUBJECT, RESOURCE_1);
     public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_R3 = createAvo(POS_FOO1_SUBJECT, RESOURCE_3);
     public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_R4 = createAvo(POS_FOO1_SUBJECT, RESOURCE_4);
     public static final Map<Attribute, ValueOperation> POS_BAR1_SUBJECT_R1 = createAvo(POS_BAR1_SUBJECT, RESOURCE_1);
     public static final Map<Attribute, ValueOperation> POS_BAR1_SUBJECT_R3 = createAvo(POS_BAR1_SUBJECT, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_B1 = createAvo(POS_FOO1_SUBJECT, BNODE_1);
+    public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_B2 = createAvo(POS_FOO1_SUBJECT, BNODE_2);
 
     public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R2 = createAvo(POS_FOO2_PREDICATE, RESOURCE_1);
     public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R4 = createAvo(POS_FOO2_PREDICATE, RESOURCE_3);
