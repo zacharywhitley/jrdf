@@ -231,7 +231,7 @@
     </bean>
 
     <bean id="minLeftOuterJoin" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl">
-        <constructor-arg ref="naturalJoin"/>
+        <constructor-arg ref="sortMergeNaturalJoin"/>
         <constructor-arg ref="minimumUnion"/>
     </bean>
 </beans>
