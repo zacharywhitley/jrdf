@@ -215,7 +215,7 @@
 
     <bean id="leftOuterJoin" class="org.jrdf.query.relation.operation.mem.join.outer.LeftOuterJoinImpl">
         <constructor-arg ref="antiJoin"/>
-        <constructor-arg ref="naturalJoin"/>
+        <constructor-arg ref="sortMergeNaturalJoin"/>
         <constructor-arg ref="outerUnion"/>
     </bean>
 
