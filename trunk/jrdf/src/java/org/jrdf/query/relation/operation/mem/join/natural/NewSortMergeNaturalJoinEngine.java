@@ -39,8 +39,6 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
     public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
                                  SortedSet<Tuple> result) {
         SortedSet<Attribute> commonHeadings = getHeadingsIntersection(relation1, relation2);
-        System.err.println("total tuple # = " + (relation1.getTuples().size() + relation2.getTuples().size()));
-        System.err.println("SMJOin headings: " + commonHeadings);
         if (commonHeadings.size() == 1) {
             // do sort merge join
             doSortMergeJoin(headings, relation1, relation2, commonHeadings.iterator().next(),
@@ -56,12 +54,9 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
 
     private void doMultiSortMergeJoin(SortedSet<Attribute> headings, Relation rel1, Relation rel2,
                                       SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result) {
-        long start = System.currentTimeMillis();
-        System.err.println("multi join start: " + rel1.getTuples().size() + " and " + rel2.getTuples().size());
         Attribute attr = chooseACommonHeading(headings, rel1, rel2);
         commonHeadings.remove(attr);
         doSortMergeJoin(headings, rel1, rel2, attr, commonHeadings, result);
-        System.err.println("Multi join took " + (System.currentTimeMillis() - start));
     }
 
     private Attribute chooseACommonHeading(Set<Attribute> headings, Relation rel1, Relation rel2) {
@@ -81,18 +76,14 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
 
     private void doSortMergeJoin(SortedSet<Attribute> headings, Relation rel1, Relation rel2,
                                  Attribute attribute, Set<Attribute> remainingHeadings, SortedSet<Tuple> result) {
-        long start = System.currentTimeMillis();
         final Set<Tuple>[] sets1 = partitionWithAttribute(attribute, rel1);
         final Set<Tuple>[] sets2 = partitionWithAttribute(attribute, rel2);
         Set<Tuple> bound1 = sets1[0];
         Set<Tuple> bound2 = sets2[0];
         Set<Tuple> unbound1 = sets1[1];
         Set<Tuple> unbound2 = sets2[1];
-        System.err.println("New SM join start: " + bound1.size() + " and " + bound2.size());
         final List<Tuple> list1 = sortSetOfTuples(bound1, attribute);
         final List<Tuple> list2 = sortSetOfTuples(bound2, attribute);
-        System.err.println("sorting took " + (System.currentTimeMillis() - start) + " = " +
-            list1.size() + " & " + list2.size());
         if (list1.size() <= list2.size()) {
             doProperSortMergeJoin(attribute, remainingHeadings, result, list1, list2);
         } else {
@@ -101,7 +92,6 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         doNaturalJoin(headings, bound1, unbound2, result);
         doNaturalJoin(headings, bound2, unbound1, result);
         doNaturalJoin(headings, unbound1, unbound2, result);
-        System.err.println("SMJoin took " + (System.currentTimeMillis() - start));
     }
 
     private List<Tuple> sortSetOfTuples(Set<Tuple> tuples, Attribute attribute) {
@@ -113,14 +103,11 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
 
     private void doNaturalJoin(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
                                SortedSet<Tuple> result) {
-        long start = System.currentTimeMillis();
-        System.err.println("natural join start: " + tuples1.size() + " and " + tuples2.size());
         if (tuples1.size() < tuples2.size()) {
             startDoubleLoopProcessing(headings, result, tuples1, tuples2);
         } else {
             startDoubleLoopProcessing(headings, result, tuples2, tuples1);
         }
-        System.err.println("natural join took " + (System.currentTimeMillis() - start));
     }
 
     private Set<Tuple>[] partitionWithAttribute(Attribute attribute, Relation rel) {
@@ -141,7 +128,6 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         if (list1.size() == 0 || list2.size() == 0) {
             return;
         }
-        long start = System.currentTimeMillis();
         tupleAVComparator.setAttribute(attribute);
         Tuple tuple1, tuple2;
         int i = 0;
@@ -162,8 +148,6 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
                 tuple1 = getTupleFromList(list1, ++i);
             }
         }
-        System.err.println("actual sort merge join took " + (System.currentTimeMillis() - start) +
-            " = " + result.size());
     }
 
     private Tuple getTupleFromList(List<Tuple> list, int idx) {
