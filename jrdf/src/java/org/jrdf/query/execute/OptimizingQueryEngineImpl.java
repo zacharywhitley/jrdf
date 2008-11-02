@@ -117,15 +117,8 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     private Set<Relation> matchAttributes(List<Relation> partialResults) {
-        for (Relation rel : partialResults) {
-            System.err.println("old rel # = " + rel.getTuples().size());
-        }
-        System.err.println("");
         for (int i = 0; i < partialResults.size(); i++) {
             matchAttributes(partialResults, i);
-        }
-        for (Relation rel : partialResults) {
-            System.err.println("new rel # = " + rel.getTuples().size());
         }
         return new LinkedHashSet<Relation>(partialResults);
     }
@@ -137,16 +130,12 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             final Relation nextRel = relations.get(idx);
             final Set<Attribute> headings = getCommonHeadings(first, nextRel);
             if (headings.size() >= 1) {
-                System.err.println("found common # " + headings.size() +
-                    " for " + first.getTuples().size() + " and " + nextRel.getTuples().size());
                 break;
             } else if (badPos < 0) {
                 badPos = idx;
             }
         }
         if (badPos > 0 && idx < relations.size()) {
-            System.err.println("swap " + relations.get(badPos).getTuples().size() +
-                " and " + relations.get(idx).getTuples().size());
             swap(relations, badPos, idx);
         }
     }
