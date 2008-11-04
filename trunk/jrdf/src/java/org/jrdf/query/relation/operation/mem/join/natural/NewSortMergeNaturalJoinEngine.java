@@ -125,15 +125,12 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
 
     private void doProperSortMergeJoin(Attribute attribute, Set<Attribute> commonHeadings, SortedSet<Tuple> result,
                                        List<Tuple> list1, List<Tuple> list2) {
-        if (list1.size() == 0 || list2.size() == 0) {
-            return;
-        }
         tupleAVComparator.setAttribute(attribute);
         Tuple tuple1, tuple2;
         int i = 0;
         int j = 0;
-        tuple1 = list1.get(i);
-        tuple2 = list2.get(j);
+        tuple1 = getTupleFromList(list1, i);
+        tuple2 = getTupleFromList(list2, j);
         while (tuple1 != null && tuple2 != null) {
             int compare = tupleAVComparator.compare(tuple1, tuple2);
             if (compare == 0) {
