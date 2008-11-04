@@ -89,37 +89,4 @@ public final class QueryImplUnitTest extends TestCase {
             }
         });
     }
-
-//    public void testPerformance() throws InvalidQuerySyntaxException, GraphException {
-//        String queryString =
-//                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-//                        "PREFIX biopax: <http://www.biopax.org/release/biopax-level2.owl#>\n" +
-//                        "PREFIX biomanta:\n" +
-//                        "<http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#>\n" +
-//                        "PREFIX ncbi: <http://biomanta.sourceforge.net/2007/10/ncbi_taxo.owl#>\n" +
-//                        "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
-//                        "SELECT ?name ?id\n" +
-//                        "WHERE {\n" +
-//                        "{\n" +
-//                        "?x rdf:type biopax:physicalEntity .\n" +
-//                        "?x biomanta:fromNCBISpecies ncbi:ncbi_taxo_4932_ind .\n" +
-//                        "?x biomanta:hasPrimaryRef ?y .\n" +
-//                        "?y biopax:DB ?db .\n" +
-//                        "FILTER (str(?db) = \"uniprotkb\"^^xsd:string) } .\n" +
-//                        "{?y biopax:ID ?id .\n" +
-//                        "FILTER (str(?id) = \"o13516\"^^xsd:string) } .\n" +
-//                        "?x biomanta:hasFullName ?name .\n" +
-//                        "}";
-//        DirectoryHandler handler = new TempDirectoryHandler("perstMoleculeGraph");
-//        System.err.println("handler: " + handler.getDir().toString());
-//        PersistentGlobalJRDFFactory factory = PersistentGlobalJRDFFactoryImpl.getFactory(handler);
-//        MoleculeGraph graph = factory.getGraph("perstMoleculeGraph");
-//        System.err.println("graph # = " + graph.getNumberOfTriples());
-//        UrqlConnection connection = factory.getNewUrqlConnection();
-//        Answer answer = connection.executeQuery(graph, queryString);
-//        System.err.println("answer # = " + answer.numberOfTuples());
-//        System.err.println("answer time: " + answer.getTimeTaken());
-//        graph.close();
-//        factory.close();
-//    }
 }
