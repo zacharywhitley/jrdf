@@ -108,8 +108,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     /**
      * Returns an array of two sets. The first is a bound set and the second is the unbound set.
-     * @param attribute
-     * @param rel
+     * @param attribute The attribute used to test for boundness.
+     * @param rel The relation to be partitioned. 
      * @return
      */
     private Set<Tuple>[] partitionWithAttribute(Attribute attribute, Relation rel) {
@@ -139,8 +139,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
                 int[] newInds = processSameTuples(list1, list2, attribute, result, commonHeadings, i, j, tuple1);
                 i = newInds[0];
                 j = newInds[1];
-                tuple1 = getTupleFromList(list1, newInds[0]);
-                tuple2 = getTupleFromList(list2, newInds[1]);
+                tuple1 = getTupleFromList(list1, i);
+                tuple2 = getTupleFromList(list2, j);
             } else if (compare > 0) {
                 tuple2 = getTupleFromList(list2, ++j);
             } else {
