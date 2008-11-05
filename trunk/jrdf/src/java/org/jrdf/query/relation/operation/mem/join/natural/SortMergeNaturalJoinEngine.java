@@ -24,12 +24,12 @@ import java.util.SortedSet;
  * @version :$
  */
 
-public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements TupleEngine {
+public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements TupleEngine {
     private static final Set<Attribute> EMPTY_ATTRIBUTE_SET = Collections.emptySet();
 
     private TupleComparator tupleAVComparator;
 
-    public NewSortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
+    public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
                                          NodeComparator nodeComparator) {
         super(newTupleFactory, newRelationHelper);
         this.resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
@@ -78,20 +78,16 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
                                  Attribute attribute, Set<Attribute> remainingHeadings, SortedSet<Tuple> result) {
         final Set<Tuple>[] sets1 = partitionWithAttribute(attribute, rel1);
         final Set<Tuple>[] sets2 = partitionWithAttribute(attribute, rel2);
-        Set<Tuple> bound1 = sets1[0];
-        Set<Tuple> bound2 = sets2[0];
-        Set<Tuple> unbound1 = sets1[1];
-        Set<Tuple> unbound2 = sets2[1];
-        final List<Tuple> list1 = sortSetOfTuples(bound1, attribute);
-        final List<Tuple> list2 = sortSetOfTuples(bound2, attribute);
+        final List<Tuple> list1 = sortSetOfTuples(sets1[0], attribute);
+        final List<Tuple> list2 = sortSetOfTuples(sets2[0], attribute);
         if (list1.size() <= list2.size()) {
             doProperSortMergeJoin(attribute, remainingHeadings, result, list1, list2);
         } else {
             doProperSortMergeJoin(attribute, remainingHeadings, result, list2, list1);
         }
-        doNaturalJoin(headings, bound1, unbound2, result);
-        doNaturalJoin(headings, bound2, unbound1, result);
-        doNaturalJoin(headings, unbound1, unbound2, result);
+        doNaturalJoin(headings, sets1[0], sets2[1], result);
+        doNaturalJoin(headings, sets2[0], sets1[1], result);
+        doNaturalJoin(headings, sets1[1], sets2[1], result);
     }
 
     private List<Tuple> sortSetOfTuples(Set<Tuple> tuples, Attribute attribute) {
@@ -110,6 +106,12 @@ public class NewSortMergeNaturalJoinEngine extends NaturalJoinEngine implements 
         }
     }
 
+    /**
+     * Returns an array of two sets. The first is a bound set and the second is the unbound set.
+     * @param attribute
+     * @param rel
+     * @return
+     */
     private Set<Tuple>[] partitionWithAttribute(Attribute attribute, Relation rel) {
         Set<Tuple> boundSet = new HashSet<Tuple>();
         Set<Tuple> unboundSet = new HashSet<Tuple>();
