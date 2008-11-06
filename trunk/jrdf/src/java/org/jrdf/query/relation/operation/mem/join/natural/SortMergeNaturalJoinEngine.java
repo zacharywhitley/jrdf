@@ -65,7 +65,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         final Attribute[] list = headings.toArray(new Attribute[headings.size()]);
         for (int i = 0; i < headings.size(); i++) {
             Attribute attr = list[i];
-            int totalSize = rel1.getTuples(attr).size() + rel2.getTuples(attr).size();
+            int totalSize = rel1.getTuples(attr).size() * rel2.getTuples(attr).size();
             if (max < totalSize) {
                 max = totalSize;
                 pos = i;
@@ -110,7 +110,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
      * Returns an array of two sets. The first is a bound set and the second is the unbound set.
      * @param attribute The attribute used to test for boundness.
      * @param rel The relation to be partitioned.
-     * @return
+     * @return two sets of tuples, firrst is the bound and the 2nd is the unbound.
      */
     private Set<Tuple>[] partitionWithAttribute(Attribute attribute, Relation rel) {
         Set<Tuple> boundSet = new HashSet<Tuple>();
@@ -199,6 +199,5 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
             }
         }
         return contradiction;
-
     }
 }
