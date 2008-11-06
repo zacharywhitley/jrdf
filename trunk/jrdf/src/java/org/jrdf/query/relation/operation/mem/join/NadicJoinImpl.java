@@ -77,28 +77,16 @@ import java.util.Set;
 public final class NadicJoinImpl implements NadicJoin {
     private final TupleEngine tupleEngine;
     private final RelationProcessor relationProcessor;
-    private final UnsortedTupleEngine unsortedTupleEngine;
 
     public NadicJoinImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
         this.tupleEngine = tupleEngine;
         this.relationProcessor = relationProcessor;
-        this.unsortedTupleEngine = null;
-    }
-
-    public NadicJoinImpl(RelationProcessor relationProcessor, UnsortedTupleEngine tupleEngine) {
-        this.unsortedTupleEngine = tupleEngine;
-        this.relationProcessor = relationProcessor;
-        this.tupleEngine = null;
     }
 
     public Relation join(Set<Relation> relations) {
         Relation relation = isDeeDumOrSingle(relations);
         if (relation == null) {
-            if (unsortedTupleEngine == null) {
-                relation = relationProcessor.processRelations(relations, tupleEngine);
-            } else {
-                relation = relationProcessor.processRelations(relations, unsortedTupleEngine);
-            }
+            relation = relationProcessor.processRelations(relations, tupleEngine);
         }
         return relation;
     }
