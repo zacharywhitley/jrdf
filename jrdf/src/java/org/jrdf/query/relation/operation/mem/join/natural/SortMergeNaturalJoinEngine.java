@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.Iterator;
 
 /**
  * @author Yuan-Fang Li
@@ -26,7 +27,6 @@ import java.util.SortedSet;
 
 public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements TupleEngine {
     private static final Set<Attribute> EMPTY_ATTRIBUTE_SET = Collections.emptySet();
-
     private TupleComparator tupleAVComparator;
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
@@ -60,18 +60,30 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private Attribute chooseACommonHeading(Set<Attribute> headings, Relation rel1, Relation rel2) {
-        int max = 0;
-        int pos = 0;
-        final Attribute[] list = headings.toArray(new Attribute[headings.size()]);
-        for (int i = 0; i < headings.size(); i++) {
-            Attribute attr = list[i];
-            int totalSize = rel1.getTuples(attr).size() * rel2.getTuples(attr).size();
-            if (max < totalSize) {
-                max = totalSize;
-                pos = i;
+        final Iterator<Attribute> iterator = headings.iterator();
+        Attribute attribute = iterator.next();
+        Attribute result = attribute;
+        long curMin = estimateJoinCost(attribute, rel1, rel2);
+        while (iterator.hasNext()) {
+            attribute = iterator.next();
+            long cost = estimateJoinCost(attribute, rel1, rel2);
+            if (curMin > cost) {
+                curMin = cost;
+                result = attribute;
             }
         }
-        return list[pos];
+        return result;
+    }
+
+    private long estimateJoinCost(Attribute attribute, Relation rel1, Relation rel2) {
+        int b1, b2, ub1, ub2;
+        int size1 = rel1.getTuples().size();
+        int size2 = rel2.getTuples().size();
+        b1 = rel1.getTuples(attribute).size();
+        b2 = rel2.getTuples(attribute).size();
+        ub1 = size1 - b1;
+        ub2 = size2 - b2;
+        return (long) b1 + b2 + (b1 * ub2) + (b2 * ub1) + (ub1 * ub2);
     }
 
     private void doSortMergeJoin(SortedSet<Attribute> headings, Relation rel1, Relation rel2,
