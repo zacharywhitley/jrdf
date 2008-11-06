@@ -109,7 +109,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     /**
      * Returns an array of two sets. The first is a bound set and the second is the unbound set.
      * @param attribute The attribute used to test for boundness.
-     * @param rel The relation to be partitioned. 
+     * @param rel The relation to be partitioned.
      * @return
      */
     private Set<Tuple>[] partitionWithAttribute(Attribute attribute, Relation rel) {

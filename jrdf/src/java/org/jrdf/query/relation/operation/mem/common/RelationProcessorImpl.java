@@ -67,7 +67,6 @@ import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
-import org.jrdf.query.relation.operation.mem.join.UnsortedTupleEngine;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
@@ -123,9 +122,5 @@ public final class RelationProcessorImpl implements RelationProcessor {
             }
         }
         return resultRelation;
-    }
-
-    public Relation processRelations(Set<Relation> relations, UnsortedTupleEngine tupleEngine) {
-        throw new UnsupportedOperationException();
     }
 }
