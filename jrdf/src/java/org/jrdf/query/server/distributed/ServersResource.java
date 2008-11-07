@@ -72,7 +72,6 @@ import org.restlet.resource.Variant;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * @author Yuan-Fang Li
@@ -111,6 +110,8 @@ public class ServersResource extends ConfigurableRestletResource {
     public Representation represent(Variant variant) {
         Representation rep = null;
         try {
+            final String[] servers = application.getServers();
+            
             Map<String, Object> dataModel = new HashMap<String, Object>();
             dataModel.put(DEFAULT_PORT_STRING, Integer.toString(PORT_NUMBER));
             dataModel.put(ACTION, "action");
@@ -134,17 +135,21 @@ public class ServersResource extends ConfigurableRestletResource {
 
     private void processServerList(String servers, String action) {
         checkNotNull(servers, action);
-        StringTokenizer tokenizer = new StringTokenizer(servers);
+        final String[] strings = servers.split("[\\s,;]");
+        for (String server : strings) {
+            if (server.length() > 0) {
+                processServerString(server, action);
+            }
+        }
+    }
+
+    private void processServerString(String server, String action) {
         if ("add".equalsIgnoreCase(action)) {
-            while (tokenizer.hasMoreTokens()) {
-                final String server = tokenizer.nextToken();
-                application.addServers(server);
-            }
+            application.addServers(server);
         } else if ("remove".equalsIgnoreCase(action)) {
-            while (tokenizer.hasMoreTokens()) {
-                final String server = tokenizer.nextToken();
-                application.removeServers(server);
-            }
+            application.removeServers(server);
+        } else {
+            getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST, "Unknown action on server list: " + action);
         }
     }
 }
