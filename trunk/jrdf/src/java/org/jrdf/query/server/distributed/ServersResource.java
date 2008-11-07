@@ -111,7 +111,6 @@ public class ServersResource extends ConfigurableRestletResource {
         Representation rep = null;
         try {
             final String[] servers = application.getServers();
-            
             Map<String, Object> dataModel = new HashMap<String, Object>();
             dataModel.put(DEFAULT_PORT_STRING, Integer.toString(PORT_NUMBER));
             dataModel.put(ACTION, "action");
