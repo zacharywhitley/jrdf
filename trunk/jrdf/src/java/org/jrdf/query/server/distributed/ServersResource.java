@@ -60,14 +60,14 @@
 package org.jrdf.query.server.distributed;
 
 import org.jrdf.query.server.ConfigurableRestletResource;
+import org.jrdf.query.server.FreemarkerRepresentationFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.data.Form;
-import static org.restlet.data.MediaType.TEXT_HTML;
+import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.StringRepresentation;
 import org.restlet.resource.Variant;
 
 import java.util.HashMap;
@@ -82,6 +82,7 @@ public class ServersResource extends ConfigurableRestletResource {
     private static final int PORT_NUMBER = 8182;
     private static final String DEFAULT_PORT_STRING = "defaultPort";
     private DistributedQueryGraphApplication application;
+    private FreemarkerRepresentationFactory factory;
     /**
      * The name of the radio button for action.
      */
@@ -90,13 +91,20 @@ public class ServersResource extends ConfigurableRestletResource {
      * The form name for the servers.
      */
     public static final String SERVERS_STRING = "serversString";
+
     /**
      * The form name for the port number.
      */
     public static final String PORT_STRING = "port";
 
+    private static final String SERVER_LIST = "serverList";
+
     public void setDistributedQueryGraphApplication(DistributedQueryGraphApplication newApplication) {
         this.application = newApplication;
+    }
+
+    public void setResultRepresentation(FreemarkerRepresentationFactory factory) {
+        this.factory = factory;
     }
 
     public boolean allowGet() {
@@ -110,10 +118,11 @@ public class ServersResource extends ConfigurableRestletResource {
     public Representation represent(Variant variant) {
         Representation rep = null;
         try {
-            final String[] servers = application.getServers();
             Map<String, Object> dataModel = new HashMap<String, Object>();
             dataModel.put(DEFAULT_PORT_STRING, Integer.toString(PORT_NUMBER));
-            dataModel.put(ACTION, "action");
+            dataModel.put(ACTION, ACTION);
+            final String[] servers = application.getServers();
+            dataModel.put(SERVER_LIST, servers);
             return createTemplateRepresentation(variant.getMediaType(), dataModel);
         } catch (Exception e) {
             getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
@@ -127,7 +136,9 @@ public class ServersResource extends ConfigurableRestletResource {
         final String servers = form.getFirstValue(SERVERS_STRING);
         final String action = form.getFirstValue("action");
         processServerList(servers, action);
-        Representation rep = new StringRepresentation("Servers updated successfully", TEXT_HTML);
+        Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put(SERVER_LIST, application.getServers());
+        Representation rep = factory.createRepresentation(MediaType.TEXT_HTML, dataModel);
         getResponse().setEntity(rep);
         getResponse().setStatus(SUCCESS_OK);
     }
