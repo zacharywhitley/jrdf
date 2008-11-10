@@ -22,5 +22,8 @@
 <br/>
 <a href="javascript:window.location.reload()">Refresh</a>
 </div>
+<p/>
+<p/>
+<a href="/">Go back</a>
 </body>
 </html>
