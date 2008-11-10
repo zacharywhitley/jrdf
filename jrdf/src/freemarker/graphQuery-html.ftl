@@ -20,7 +20,7 @@ WHERE {
     <br/>
     <br/>
     <br/>
-    <!--fieldset style="width: 240px;">
+    <fieldset style="width: 240px;">
     <legend>Result format</legend>
     <div>
     HTML: <input type="radio" name="format" value="html" checked="checked"/>, or
@@ -36,7 +36,7 @@ WHERE {
         <option value="100">100</option>
         <option value="all">All</option>
     </select>
-    </fieldset-->
+    </fieldset>
     <p/>
     <p/>
     <input type="submit" value="Submit" />
