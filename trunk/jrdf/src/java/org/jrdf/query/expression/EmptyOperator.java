@@ -2,11 +2,12 @@ package org.jrdf.query.expression;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
 
-public class EmptyOperator<V extends ExpressionVisitor> implements Operator<V> {
+public class EmptyOperator<V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
     private static final long serialVersionUID = 4636572000909954329L;
     private static final int DUMMY_HASHCODE = 47;
 

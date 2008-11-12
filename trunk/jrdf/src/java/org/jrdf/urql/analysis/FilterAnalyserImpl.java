@@ -2,7 +2,6 @@ package org.jrdf.urql.analysis;
 
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.EmptyOperator;
-import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
@@ -33,7 +32,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstAdapter implements FilterAnalyser {
-    private Expression<V> expression = new EmptyOperator<V>();
+    private LogicExpression<V> expression = new EmptyOperator<V>();
     private ParserException exception;
     private LiteralBuilder literalBuilder;
     private VariableCollector collector;
@@ -46,7 +45,7 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
         this.numericExpressionAnalyser = new NumericExpressionAnalyserImpl(literalBuilder, collector);
     }
 
-    public Expression<V> getExpression() throws ParserException {
+    public LogicExpression<V> getExpression() throws ParserException {
         if (exception != null) {
             throw exception;
         }
@@ -100,7 +99,7 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     public void caseABooleanNotUnaryExpression(ABooleanNotUnaryExpression node) {
         try {
             node.getPrimaryExpression().apply(this);
-            final LogicExpression<V> exp = (LogicExpression<V>) this.getExpression();
+            final LogicExpression<V> exp = this.getExpression();
             expression = new LogicalNotExpression<V>(exp);
         } catch (ParserException e) {
             exception = e;
@@ -116,11 +115,11 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     public void caseAConditionalAndExpression(AConditionalAndExpression node) {
         try {
             node.getValueLogical().apply(this);
-            LogicExpression<V> exp1 = (LogicExpression<V>) expression;
+            LogicExpression<V> exp1 = expression;
             final LinkedList<PMoreValueLogical> list = node.getMoreValueLogical();
             for (PMoreValueLogical rhs : list) {
                 rhs.apply(this);
-                final LogicExpression<V> exp2 = (LogicExpression<V>) getExpression();
+                final LogicExpression<V> exp2 = getExpression();
                 exp1 = new LogicalAndExpression<V>(exp1, exp2);
             }
             expression = exp1;
