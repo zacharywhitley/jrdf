@@ -64,50 +64,13 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
-import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import static org.jrdf.query.relation.constants.RelationDEE.*;
+import static org.jrdf.query.relation.constants.RelationDUM.*;
 import org.jrdf.query.relation.operation.NadicJoin;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_B1;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_B2;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R5;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_NOT_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R5;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.*;
 
 import java.util.Arrays;
-import java.util.Collections;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
+import static java.util.Collections.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -116,13 +79,11 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version :$
  */
-
-public class AbstractNaturalJoinIntegrationTest extends TestCase {
+public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
+    protected static final Set<Relation> EMPTY = emptySet();
+    protected static final Set<Tuple> EMPTY_SET = emptySet();
     protected static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     protected NadicJoin nadicJoin;
-    
-    protected static final Set<Relation> EMPTY = emptySet();
-    protected static final Set<Tuple> EMPTY_SET = Collections.emptySet();
 
     public void testRelationDEEandDUM() {
         // The natural process of empty is DEE.
