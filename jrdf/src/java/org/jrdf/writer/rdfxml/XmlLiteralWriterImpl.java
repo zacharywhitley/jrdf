@@ -105,10 +105,7 @@ public class XmlLiteralWriterImpl implements XmlLiteralWriter {
     }
 
     private void handleStartElement(XMLStreamReader reader, XMLStreamWriter writer) throws XMLStreamException {
-        String prefix = "";
-        if (reader.getPrefix() != null) {
-            prefix = reader.getPrefix();
-        }
+        String prefix = toEmpty(reader.getPrefix());
         for (int i = 0; i < reader.getNamespaceCount(); i++) {
             writer.writeNamespace(reader.getNamespacePrefix(i), toEmpty(reader.getNamespaceURI(i)));
         }

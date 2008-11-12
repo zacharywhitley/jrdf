@@ -95,7 +95,6 @@ import java.net.URL;
 // TODO (AN) Add a test for when there are no triples in the graph - seems to produce something strange.
 
 public class RdfXmlWriterIntegrationTest extends TestCase {
-
     private static final String GROUNDED = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
     private static final String UNGROUNDED = "org/jrdf/writer/rdfxml/data/rdf/ungrounded.rdf";
     private static final String RDF_LITERAL_PARSE_TYPE = "org/jrdf/writer/rdfxml/data/rdf/literalParseType.rdf";
