@@ -92,7 +92,7 @@ public class XmlLiteralWriterImpl implements XmlLiteralWriter {
 
     private void translateAndWrite(XMLStreamReader reader, XMLStreamWriter writer) throws XMLStreamException {
         if (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
-            handleStartElement(reader, writer);
+            handleStartElementAndAttributes(reader, writer);
         } else if (reader.getEventType() == XMLStreamConstants.END_ELEMENT) {
             handleEndElement(writer);
         } else if (reader.getEventType() == XMLStreamConstants.PROCESSING_INSTRUCTION) {
@@ -104,19 +104,30 @@ public class XmlLiteralWriterImpl implements XmlLiteralWriter {
         }
     }
 
+    private void handleStartElementAndAttributes(XMLStreamReader reader, XMLStreamWriter writer)
+        throws XMLStreamException {
+        handleStartElement(reader, writer);
+        handleAttributes(reader, writer);
+    }
+
     private void handleStartElement(XMLStreamReader reader, XMLStreamWriter writer) throws XMLStreamException {
         String prefix = toEmpty(reader.getPrefix());
         for (int i = 0; i < reader.getNamespaceCount(); i++) {
             writer.writeNamespace(reader.getNamespacePrefix(i), toEmpty(reader.getNamespaceURI(i)));
         }
         writer.writeStartElement(prefix, reader.getLocalName(), toEmpty(reader.getNamespaceURI()));
+    }
+
+    private void handleAttributes(XMLStreamReader reader, XMLStreamWriter writer) throws XMLStreamException {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
-            if (reader.getAttributePrefix(i) != null && reader.getAttributeNamespace(i) != null) {
-                writer.writeAttribute(reader.getAttributePrefix(i), reader.getAttributeNamespace(i),
-                        reader.getAttributeLocalName(i), reader.getAttributeValue(i));
-            } else if (reader.getAttributeNamespace(i) != null) {
-                writer.writeAttribute(reader.getAttributeNamespace(i), reader.getAttributeLocalName(i),
-                        reader.getAttributeValue(i));
+            if (reader.getAttributeNamespace(i) != null) {
+                if (reader.getAttributePrefix(i) != null) {
+                    writer.writeAttribute(reader.getAttributePrefix(i), reader.getAttributeNamespace(i),
+                            reader.getAttributeLocalName(i), reader.getAttributeValue(i));
+                } else {
+                    writer.writeAttribute(reader.getAttributeNamespace(i), reader.getAttributeLocalName(i),
+                            reader.getAttributeValue(i));
+                }
             } else {
                 writer.writeAttribute(reader.getAttributeLocalName(i), reader.getAttributeValue(i));
             }

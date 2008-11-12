@@ -66,7 +66,7 @@ public final class StringUtil {
     private StringUtil() {
     }
 
-    public static final String toEmpty(String notNullableString) {
+    public static String toEmpty(String notNullableString) {
         if (notNullableString == null) {
             return "";
         } else {
