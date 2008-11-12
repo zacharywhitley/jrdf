@@ -67,6 +67,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.operation.mem.ComparisonImpl;
@@ -74,6 +75,7 @@ import org.jrdf.graph.operation.Comparison;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import static org.jrdf.vocabulary.RDF.*;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
@@ -97,6 +99,12 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
     private static final String GROUNDED = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
     private static final String UNGROUNDED = "org/jrdf/writer/rdfxml/data/rdf/ungrounded.rdf";
     private static final String RDF_LITERAL_PARSE_TYPE = "org/jrdf/writer/rdfxml/data/rdf/literalParseType.rdf";
+    private static final String GOOD_XML =
+            "<gml:Point srsName=\"SDO:4326\" xmlns:gml=\"http://www.opengis.net/gml\">\n" +
+            "   <gml:coordinates decimal=\".\" cs=\",\" ts=\" \">\n" +
+            "      18.0656775655457,59.3739111863681\n" +
+            "   </gml:coordinates>\n" +
+            "</gml:Point>";
     private Comparison comparison;
 
     public void setUp() {
@@ -128,6 +136,13 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
             literal2 = (Literal) triple.getObject();
         }
         assertEquals(literal1, literal2);
+    }
+
+    public void testWriteParseType2() throws Exception {
+        Graph graph = TestJRDFFactory.getFactory().getGraph();
+        Resource resource = graph.getElementFactory().createResource();
+        resource.addValue(URI.create("urn:foo"), GOOD_XML, XML_LITERAL);
+        writeGraph(graph);
     }
 
     public void testReadWriteGrounded() throws Exception {
