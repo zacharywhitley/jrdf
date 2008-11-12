@@ -60,6 +60,7 @@
 package org.jrdf.writer.rdfxml;
 
 import org.jrdf.graph.Literal;
+import static org.jrdf.util.param.StringUtil.*;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -109,11 +110,11 @@ public class XmlLiteralWriterImpl implements XmlLiteralWriter {
             prefix = reader.getPrefix();
         }
         for (int i = 0; i < reader.getNamespaceCount(); i++) {
-            writer.writeNamespace(reader.getNamespacePrefix(i), reader.getNamespaceURI(i));
+            writer.writeNamespace(reader.getNamespacePrefix(i), toEmpty(reader.getNamespaceURI(i)));
         }
-        writer.writeStartElement(prefix, reader.getLocalName(), reader.getNamespaceURI());
+        writer.writeStartElement(prefix, reader.getLocalName(), toEmpty(reader.getNamespaceURI()));
         for (int i = 0; i < reader.getAttributeCount(); i++) {
-            if (reader.getAttributePrefix(i) != null) {
+            if (reader.getAttributePrefix(i) != null && reader.getAttributeNamespace(i) != null) {
                 writer.writeAttribute(reader.getAttributePrefix(i), reader.getAttributeNamespace(i),
                         reader.getAttributeLocalName(i), reader.getAttributeValue(i));
             } else if (reader.getAttributeNamespace(i) != null) {
