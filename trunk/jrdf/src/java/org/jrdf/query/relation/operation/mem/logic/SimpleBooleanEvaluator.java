@@ -16,8 +16,6 @@ import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.mem.AVPOperation;
-import org.jrdf.query.relation.mem.EqAVPOperation;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
 
 import java.util.Map;
@@ -32,6 +30,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     // TODO YF only bound operator now.
+    @Override
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
         final Map<Attribute, ValueOperation> avp = operator.getAttributeValuePair();
         // assuming single avp
@@ -42,6 +41,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         }
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
         andExpression.getLhs().accept((V) this);
         boolean lhsBoolean = contradiction;
@@ -49,6 +49,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         contradiction = lhsBoolean || contradiction;
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
         notExpression.getExpression().accept((V) this);
         contradiction = !contradiction;
@@ -60,7 +61,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         final Map<Attribute, ValueOperation> rhs = equalsExpression.getRhs();
         final Attribute lhsAttr = lhs.keySet().iterator().next();
         final Attribute rhsAttr = rhs.keySet().iterator().next();
-        contradiction = (lhs.hashCode() != rhs.hashCode()) || (compareValueOperation(lhsAttr, rhsAttr, lhs, rhs) != 0);
+        contradiction = (compareValueOperation(lhsAttr, rhsAttr, lhs, rhs) != 0);
     }
 
     @Override
@@ -109,19 +110,6 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
             }
         }
         return node;
-    }
-
-    private boolean determineEquality(Attribute attribute, Map<Attribute, ValueOperation> lhs,
-                                      Map<Attribute, ValueOperation> rhs) {
-        final ValueOperation lhsVO = lhs.get(attribute);
-        final ValueOperation rhsVO = rhs.get(attribute);
-        final AVPOperation op1 = lhsVO.getOperation();
-        final AVPOperation op2 = rhsVO.getOperation();
-        if (!op1.equals(EqAVPOperation.EQUALS)) {
-            return op1.addAttributeValuePair(attribute, tuple.getAttributeValues(), lhsVO, rhsVO);
-        } else {
-            return op2.addAttributeValuePair(attribute, tuple.getAttributeValues(), lhsVO, rhsVO);
-        }
     }
 
     public boolean evaluate(Tuple tuple, LogicExpression expression) {
