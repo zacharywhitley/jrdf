@@ -70,22 +70,22 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfIn
 import java.lang.reflect.Modifier;
 
 /**
- * Unit test for {@link QueryImpl}.
+ * Unit test for {@link SelectQueryImpl}.
  *
  * @author Tom Adams
  * @version $Revision$
  */
-public final class QueryImplUnitTest extends TestCase {
+public final class SelectQueryImplUnitTest extends TestCase {
 
     public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(Query.class, QueryImpl.class);
-        checkConstructor(QueryImpl.class, Modifier.PUBLIC, Expression.class, GraphRelationFactory.class);
+        checkImplementationOfInterfaceAndFinal(Query.class, SelectQueryImpl.class);
+        checkConstructor(SelectQueryImpl.class, Modifier.PUBLIC, Expression.class, GraphRelationFactory.class);
     }
 
     public void testNullsInConstructorThrowException() {
         assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new QueryImpl(null, null);
+                new SelectQueryImpl(null, null);
             }
         });
     }
