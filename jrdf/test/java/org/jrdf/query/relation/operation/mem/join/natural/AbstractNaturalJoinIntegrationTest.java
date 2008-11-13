@@ -113,7 +113,7 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version :$Id: $
+ * @version : $Id: $
  */
 
 public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
