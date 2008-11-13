@@ -93,7 +93,7 @@ public class AssertThrows {
     public static void assertThrows(Class exceptionClass, Block block) {
         try {
             block.execute();
-            Assert.fail("Failed to throw exception: " + exceptionClass);
+            Assert.fail("Failed to throw any exception: " + exceptionClass);
         }
         catch (AssertionFailedError e) {
             throw e;

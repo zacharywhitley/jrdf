@@ -89,9 +89,11 @@ public abstract class AbstractResourceUnitTest extends TestCase {
 
     public abstract GraphElementFactory getElementFactory();
 
-    public abstract Resource createBlankNodeResource(ReadWriteGraph graph, GraphElementFactory factory) throws Exception;
+    public abstract Resource createBlankNodeResource(ReadWriteGraph graph, GraphElementFactory factory)
+        throws Exception;
 
-    public abstract Resource createURIReferenceResource(ReadWriteGraph graph, GraphElementFactory factory, URI uri) throws Exception;
+    public abstract Resource createURIReferenceResource(ReadWriteGraph graph, GraphElementFactory factory, URI uri)
+        throws Exception;
 
     public void setUp() throws Exception {
         elementFactory = getElementFactory();

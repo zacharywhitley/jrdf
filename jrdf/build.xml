@@ -14,16 +14,22 @@
     </target>
 
     <target name="checkstyle-production">
-        <checkstyle config="${conf.dir}/checkstyle.xml">
-            <fileset dir="${prod.src.dir}"/>
-        </checkstyle>
+        <checkstyle.macro checkstyle.configuration="checkstyle.xml" src.dir="${prod.src.dir}"/>
     </target>
 
     <target name="checkstyle-test">
-        <checkstyle config="${conf.dir}/checkstyle.xml">
-            <fileset dir="${test.src.dir}"/>
-        </checkstyle>
+        <checkstyle.macro checkstyle.configuration="checkstyle-test.xml" src.dir="${test.src.dir}"/>
     </target>
+
+    <macrodef name="checkstyle.macro">
+        <attribute name="checkstyle.configuration"/>
+        <attribute name="src.dir"/>
+        <sequential>
+            <checkstyle config="${conf.dir}/@{checkstyle.configuration}">
+                <fileset dir="@{src.dir}"/>
+            </checkstyle>
+        </sequential>
+    </macrodef>
 
     <target name="compile" depends="checkstyle, -compile"/>
 
