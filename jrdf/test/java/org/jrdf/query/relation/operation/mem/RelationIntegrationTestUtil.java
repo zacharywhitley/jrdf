@@ -145,6 +145,7 @@ public class RelationIntegrationTestUtil {
     public static final URIReference RESOURCE_6 = createResource(RDF.PREDICATE);
     public static final Literal LITERAL_1 = NodeTestUtil.createLiteral("hello");
     public static final Literal LITERAL_2 = NodeTestUtil.createLiteral("there");
+    public static final Literal LITERAL_3 = NodeTestUtil.createLiteral("world");
     public static final BlankNode BNODE_1 = new BlankNodeImpl(UUID.randomUUID().toString(), 0L);
     public static final BlankNode BNODE_2 = new BlankNodeImpl(UUID.randomUUID().toString(), 1L);
 
@@ -183,6 +184,7 @@ public class RelationIntegrationTestUtil {
     public static final Map<Attribute, ValueOperation> VAR_BAR1_OBJECT_R3 = createAvo(VAR_BAR1_OBJECT, RESOURCE_3);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_OBJECT_R4 = createAvo(VAR_BAR1_OBJECT, RESOURCE_4);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_LITERAL_L1 = createAvo(VAR_BAR1_LITERAL, LITERAL_1);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_LITERAL_L3 = createAvo(VAR_BAR1_LITERAL, LITERAL_3);
     public static final Map<Attribute, ValueOperation> VAR_FOO1_LITERAL_L1 = createAvo(VAR_FOO1_LITERAL, LITERAL_1);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_LITERAL_L2 = createAvo(VAR_BAR1_LITERAL, LITERAL_2);
     public static final Map<Attribute, ValueOperation> VAR_FOO1_LITERAL_L2 = createAvo(VAR_FOO1_LITERAL, LITERAL_2);

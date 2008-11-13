@@ -59,9 +59,11 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
-import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.NEqualsExpression;
 
 /**
  * Visits the various expression objects.  Can be used to execute or optimize (transform) expressions.
@@ -91,4 +93,8 @@ public interface ExpressionVisitor {
     <V extends ExpressionVisitor> void visitFilter(Filter<V> filter);
 
     <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression);
+
+    <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression);
+
+    <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression);
 }

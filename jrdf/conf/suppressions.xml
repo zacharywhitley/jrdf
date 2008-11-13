@@ -30,6 +30,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="ServersResource"/>
     <suppress checks="ClassDataAbstractionCoupling" files="QueryClientImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="FilterAnalyserImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>

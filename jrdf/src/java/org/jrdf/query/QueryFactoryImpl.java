@@ -88,6 +88,7 @@ import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
+import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl;
 import org.jrdf.query.relation.operation.mem.join.NadicJoinImpl;
@@ -101,6 +102,7 @@ import org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl
 import org.jrdf.query.relation.operation.mem.union.OuterUnionEngine;
 import org.jrdf.query.relation.operation.mem.union.OuterUnionImpl;
 import org.jrdf.query.relation.operation.mem.union.SubsumptionEngine;
+import org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.type.TypeComparatorImpl;
 import org.jrdf.urql.builder.QueryBuilder;
@@ -151,7 +153,8 @@ public class QueryFactoryImpl implements QueryFactory {
             new SortMergeNaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER, NODE_COMPARATOR);
         TupleEngine unionTupleEngine = new OuterUnionEngine(RELATION_HELPER);
         NadicJoin join = new NadicJoinImpl(RELATION_PROCESSOR, joinTupleEngine);
-        Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR);
+        BooleanEvaluator evaluator = new SimpleBooleanEvaluator(NODE_COMPARATOR);
+        Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR, evaluator);
         Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
         DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);
         SemiDifference diff = new SemiDifferenceImpl(RELATION_PROCESSOR, RELATION_FACTORY, TUPLE_COMPARATOR);

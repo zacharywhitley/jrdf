@@ -113,13 +113,15 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version :$Id:$
  */
+
 public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
-    protected static final Set<Relation> EMPTY = emptySet();
-    protected static final Set<Tuple> EMPTY_SET = emptySet();
     protected static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     protected NadicJoin nadicJoin;
+
+    protected static final Set<Relation> EMPTY = emptySet();
+    protected static final Set<Tuple> EMPTY_SET = emptySet();
 
     public void testRelationDEEandDUM() {
         // The natural process of empty is DEE.

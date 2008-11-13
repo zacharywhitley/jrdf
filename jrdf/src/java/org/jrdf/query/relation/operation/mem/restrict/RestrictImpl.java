@@ -71,7 +71,6 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.query.relation.operation.Restrict;
-import org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -91,18 +90,23 @@ public class RestrictImpl implements Restrict {
     private final TupleComparator tupleComparator;
     private final BooleanEvaluator evaluator;
 
-    public RestrictImpl(RelationFactory relationFactory, TupleFactory tupleFactory, TupleComparator tupleComparator) {
+    public RestrictImpl(RelationFactory relationFactory, TupleFactory tupleFactory,
+                        TupleComparator tupleComparator, BooleanEvaluator evaluator) {
         this.relationFactory = relationFactory;
         this.tupleFactory = tupleFactory;
         this.tupleComparator = tupleComparator;
-        this.evaluator = new SimpleBooleanEvaluator(relationFactory, tupleFactory);
+        this.evaluator = evaluator;
     }
 
     // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
     public Relation restrict(Relation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
-        final Set<Tuple> restrictedTuples = relation.getTuples(avo);
-        boolean hasValidVarName = relationHasValidVariableNames(relation);
-        return createRelation(relation, restrictedTuples, hasValidVarName);
+        if (relation instanceof GraphRelation) {
+            return restrict((GraphRelation) relation, avo);
+        } else {
+            final Set<Tuple> restrictedTuples = relation.getTuples(avo);
+            boolean hasValidVarName = relationHasValidVariableNames(relation);
+            return createRelation(relation, restrictedTuples, hasValidVarName);
+        }
     }
 
     public Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
