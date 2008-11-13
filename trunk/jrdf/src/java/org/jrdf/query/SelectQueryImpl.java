@@ -61,7 +61,7 @@ package org.jrdf.query;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.AnswerImpl;
+import org.jrdf.query.answer.SelectAnswerImpl;
 import org.jrdf.query.execute.ExpressionSimplifier;
 import org.jrdf.query.execute.ExpressionSimplifierImpl;
 import org.jrdf.query.execute.QueryEngine;
@@ -82,11 +82,11 @@ import java.util.LinkedHashSet;
  * @author Tom Adams
  * @version $Revision$
  */
-public final class QueryImpl implements Query {
+public final class SelectQueryImpl implements Query {
     private Expression<ExpressionVisitor> expression;
     private final GraphRelationFactory graphRelationFactory;
 
-    public QueryImpl(Expression<ExpressionVisitor> expression, GraphRelationFactory graphRelationFactory) {
+    public SelectQueryImpl(Expression<ExpressionVisitor> expression, GraphRelationFactory graphRelationFactory) {
         checkNotNull(expression, graphRelationFactory);
         this.expression = expression;
         this.graphRelationFactory = graphRelationFactory;
@@ -97,7 +97,7 @@ public final class QueryImpl implements Query {
         long timeStarted = System.currentTimeMillis();
         Relation result = getResult(graph, queryEngine);
         LinkedHashSet<Attribute> heading = getHeading(result);
-        return new AnswerImpl(heading, result, System.currentTimeMillis() - timeStarted, hasProjected());
+        return new SelectAnswerImpl(heading, result, System.currentTimeMillis() - timeStarted, hasProjected());
     }
 
     private LinkedHashSet<Attribute> getHeading(Relation relation) {

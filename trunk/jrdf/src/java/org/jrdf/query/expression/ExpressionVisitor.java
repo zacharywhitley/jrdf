@@ -97,4 +97,6 @@ public interface ExpressionVisitor {
     <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression);
 
     <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression);
+
+    <V extends ExpressionVisitor> void visitAsk(Ask<V> ask);
 }

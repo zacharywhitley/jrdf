@@ -90,7 +90,6 @@
     <bean id="sparqlParser" class="org.jrdf.urql.parser.SableCcSparqllParser">
         <constructor-arg ref="parserFactory"/>
         <constructor-arg ref="graphRelationFactory"/>
-        <constructor-arg ref="attributeValuePairHelper"/>
         <constructor-arg ref="sortedAttributeFactory"/>
     </bean>
 

@@ -60,10 +60,12 @@
 package org.jrdf.urql.analysis;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.urql.builder.TripleBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.urql.parser.node.AAskQueryStart;
 import org.jrdf.urql.parser.node.APrefixdeclProlog;
 import org.jrdf.urql.parser.node.AVariableListSelectClause;
 import org.jrdf.urql.parser.node.AWildcardSelectClause;
@@ -99,6 +101,23 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
     @Override
     public void caseAVariableListSelectClause(AVariableListSelectClause node) {
         expression = analyseProjectClause(node);
+    }
+
+    @Override
+    public void caseAAskQueryStart(AAskQueryStart node) {
+        try {
+            WhereAnalyser analyzer = analyseWhereClause(node.getWhereClause());
+            expression = new Ask(analyzer.getExpression());
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    private WhereAnalyser analyseWhereClause(Node node) {
+        VariableCollector variableCollector = new AttributeCollectorImpl();
+        WhereAnalyser analyser = new WhereAnalyserImpl(tripleBuilder, graph, variableCollector);
+        node.apply(analyser);
+        return analyser;
     }
 
     @Override

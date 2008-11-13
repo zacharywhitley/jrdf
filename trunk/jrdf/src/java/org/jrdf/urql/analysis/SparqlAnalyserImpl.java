@@ -60,10 +60,13 @@
 package org.jrdf.urql.analysis;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.query.AskQueryImpl;
 import org.jrdf.query.Query;
-import org.jrdf.query.QueryImpl;
+import org.jrdf.query.SelectQueryImpl;
+import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.urql.analysis.NoQuery.NO_QUERY;
 import org.jrdf.urql.builder.TripleBuilder;
@@ -101,7 +104,11 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
             throw exception;
         }
         if (expression != null && query == NO_QUERY) {
-            query = new QueryImpl(expression, graphRelationFactory);
+            if (expression instanceof Projection) {
+                query = new SelectQueryImpl(expression, graphRelationFactory);
+            } else if (expression instanceof Ask) {
+                query = new AskQueryImpl(expression, graphRelationFactory);
+            }
         }
         return query;
     }

@@ -75,12 +75,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Unit test for {@link AnswerImpl}.
+ * Unit test for {@link SelectAnswerImpl}.
  *
  * @author Tom Adams
  * @version $Revision: 1510 $
  */
-public final class AnswerImplIntegrationTest extends TestCase {
+public final class SelectAnswerImplIntegrationTest extends TestCase {
     private static final String FOO_SUBJECT_VARIABLE = "foo1";
 
     public void testSerialization() throws Exception {
@@ -89,14 +89,14 @@ public final class AnswerImplIntegrationTest extends TestCase {
         heading.add(POS_FOO1_SUBJECT);
         Set<Tuple> tuples = new HashSet<Tuple>();
         tuples.add(TupleImplUnitTest.TEST_TUPLE_1);
-        Answer answer = new AnswerImpl(heading, relationFactory.getRelation(tuples), 1000L, true);
+        SelectAnswer answer = new SelectAnswerImpl(heading, relationFactory.getRelation(tuples), 1000L, true);
         checkAnswer(answer, FOO_SUBJECT_VARIABLE, RESOURCE_1.toString(), 1000L, true);
-        Answer answer2 = (Answer) TestUtil.copyBySerialization(answer);
+        SelectAnswer answer2 = (SelectAnswer) TestUtil.copyBySerialization(answer);
         // read the graph
         checkAnswer(answer2, FOO_SUBJECT_VARIABLE, RESOURCE_1.toString(), 1000L, true);
     }
 
-    private void checkAnswer(Answer answer, String expectedVariable, String expectedValue,
+    private void checkAnswer(SelectAnswer answer, String expectedVariable, String expectedValue,
         long expectedTimeTaken, boolean expectedProjected) {
         String[] variableNames = answer.getVariableNames();
         assertTrue(variableNames.length == 1);

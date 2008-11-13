@@ -82,7 +82,7 @@ import java.util.Set;
  *
  * @version $Revision$
  */
-public final class AnswerImpl implements Answer, Serializable {
+public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     private static final long serialVersionUID = 3778815984074679718L;
     private Set<Attribute> heading;
     private long timeTaken;
@@ -90,10 +90,11 @@ public final class AnswerImpl implements Answer, Serializable {
     private transient Relation results;
     private transient TypeValueToString valueToString = new TypeValueToStringImpl();
 
-    private AnswerImpl() {
+    private SelectAnswerImpl() {
     }
 
-    public AnswerImpl(LinkedHashSet<Attribute> newHeading, Relation newResults, long timeTaken, boolean hasProjected) {
+    public SelectAnswerImpl(LinkedHashSet<Attribute> newHeading, Relation newResults,
+                            long timeTaken, boolean hasProjected) {
         checkNotNull(newHeading, newResults);
         this.heading = newHeading;
         this.results = newResults;
@@ -183,13 +184,13 @@ public final class AnswerImpl implements Answer, Serializable {
         if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-        if (EqualsUtil.differentClasses(AnswerImpl.class, obj.getClass())) {
+        if (EqualsUtil.differentClasses(SelectAnswerImpl.class, obj.getClass())) {
             return false;
         }
-        return determineEqualityFromFields((AnswerImpl) obj);
+        return determineEqualityFromFields((SelectAnswerImpl) obj);
     }
 
-    private boolean determineEqualityFromFields(AnswerImpl answer) {
+    private boolean determineEqualityFromFields(SelectAnswerImpl answer) {
         if (answer.getTimeTaken() == getTimeTaken()) {
             if (answer.results.equals(results)) {
                 return true;

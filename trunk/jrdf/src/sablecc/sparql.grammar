@@ -37,6 +37,8 @@ States
 Tokens
   {def}                prefix           = ('PREFIX' | 'prefix');
   {def}                select           = ('SELECT' | 'select');
+  {def}                ask              = ('ASK' | 'ask');
+  {def}                describe         = ('DESCRIBE' | 'describe');
   {def}                where            = ('WHERE' | 'where');
   {def}                union            = ('UNION' | 'union');
   {def}                optional         = ('OPTIONAL' | 'optional');
@@ -102,7 +104,8 @@ Ignored Tokens
 
 Productions
   start =
-    {query} prolog select_clause where_clause?;
+    {select_query} prolog select_clause where_clause |
+    {ask_query} prolog ask_clause where_clause;
 
   prolog =
     {prefixdecl} prefixdecl* ;
@@ -113,6 +116,9 @@ Productions
   select_clause =
     {variable_list} select variable+ |
     {wildcard} select asterisk ;
+
+  ask_clause =
+    ask ;
 
   where_clause =
     where? group_graph_pattern;
