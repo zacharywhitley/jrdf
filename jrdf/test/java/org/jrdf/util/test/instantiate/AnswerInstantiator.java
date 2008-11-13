@@ -59,7 +59,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.answer.AnswerImpl;
+import org.jrdf.query.answer.SelectAnswerImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
@@ -69,13 +69,13 @@ import org.jrdf.util.test.ReflectTestUtil;
 import java.util.LinkedHashSet;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.answer.AnswerImpl}.
+ * {@link Instantiator} for {@link org.jrdf.query.answer.SelectAnswerImpl}.
  *
  * @version $Id$
  */
 final class AnswerInstantiator implements Instantiator {
 
-    private static final Class<AnswerImpl> CLASS_DEFAULT_ANSWER = AnswerImpl.class;
+    private static final Class<SelectAnswerImpl> CLASS_DEFAULT_ANSWER = SelectAnswerImpl.class;
 
     public Object instantiate() {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_ANSWER, createParams());

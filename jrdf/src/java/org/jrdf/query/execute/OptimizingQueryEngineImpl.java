@@ -170,6 +170,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         }
     }
 
+    @Override
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,

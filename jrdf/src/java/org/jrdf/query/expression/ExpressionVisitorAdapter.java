@@ -111,4 +111,7 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
 
     public <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression) {
     }
+
+    public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
+    }
 }

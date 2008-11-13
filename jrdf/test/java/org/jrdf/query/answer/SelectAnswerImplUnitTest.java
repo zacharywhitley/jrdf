@@ -73,32 +73,32 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedHashSet;
 
 /**
- * Unit test for {@link AnswerImpl}.
+ * Unit test for {@link SelectAnswerImpl}.
  *
  * @author Tom Adams
  * @version $Revision$
  */
-public final class AnswerImplUnitTest extends TestCase {
+public final class SelectAnswerImplUnitTest extends TestCase {
     private static final Class<?>[] PARAM_TYPES =
         new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE, Boolean.TYPE};
     private MockFactory factory = new MockFactory();
 
     public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
-        checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
-        checkConstructor(AnswerImpl.class, Modifier.PUBLIC, PARAM_TYPES);
-        checkConstructNullAssertion(AnswerImpl.class, PARAM_TYPES);
+        checkImplementationOfInterfaceAndFinal(Answer.class, SelectAnswerImpl.class);
+        checkImplementationOfInterfaceAndFinal(Serializable.class, SelectAnswerImpl.class);
+        checkConstructor(SelectAnswerImpl.class, Modifier.PUBLIC, PARAM_TYPES);
+        checkConstructNullAssertion(SelectAnswerImpl.class, PARAM_TYPES);
     }
 
     public void testSerialVersionUid() {
-        checkSerialialVersionUid(AnswerImpl.class, 3778815984074679718L);
+        checkSerialialVersionUid(SelectAnswerImpl.class, 3778815984074679718L);
     }
 
     public void testNullArgument() {
         Relation relation = factory.createMock(Relation.class);
         LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
         factory.replay();
-        new AnswerImpl(heading, relation, 100, true);
+        new SelectAnswerImpl(heading, relation, 100, true);
         factory.verify();
     }
 }

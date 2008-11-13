@@ -22,6 +22,11 @@ public enum SparqlResultType {
     LITERAL("literal"),
 
     /**
+     * Result is a boolean value (for ask queries).
+     */
+    BOOLEAN("boolean"),
+
+    /**
      * Result is a typed literal.
      */
     TYPED_LITERAL("typed-literal", "literal");

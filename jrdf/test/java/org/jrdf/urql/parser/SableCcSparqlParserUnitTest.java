@@ -63,11 +63,10 @@ import junit.framework.TestCase;
 import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.urql.parser.lexer.LexerException;
-import org.jrdf.urql.parser.node.AQueryStart;
+import org.jrdf.urql.parser.node.ASelectQueryStart;
 import org.jrdf.urql.parser.node.EOF;
 import org.jrdf.urql.parser.node.PStart;
 import org.jrdf.urql.parser.node.Start;
@@ -98,7 +97,6 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     private Graph graph;
     private ParserFactory parserFactory;
     private GraphRelationFactory graphRelationFactory;
-    private AttributeValuePairHelper avpHelper;
     private SortedAttributeFactory attributeFactory;
 
     public void setUp() {
@@ -106,14 +104,13 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         graph = mockFactory.createMock(Graph.class);
         parserFactory = mockFactory.createMock(ParserFactory.class);
         graphRelationFactory = mockFactory.createMock(GraphRelationFactory.class);
-        avpHelper = mockFactory.createMock(AttributeValuePairHelper.class);
         attributeFactory = mockFactory.createMock(SortedAttributeFactory.class);
     }
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqllParser.class);
         checkConstructor(SableCcSparqllParser.class, Modifier.PUBLIC, ParserFactory.class, GraphRelationFactory.class,
-            AttributeValuePairHelper.class, SortedAttributeFactory.class);
+            SortedAttributeFactory.class);
     }
 
     public void testParseQueryFailsWithBadInput() {
@@ -145,7 +142,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     private Start createStart() {
         Start start = new Start();
-        PStart pStart = new AQueryStart();
+        PStart pStart = new ASelectQueryStart();
         EOF eof = new EOF();
         start.setPStart(pStart);
         start.setEOF(eof);
@@ -179,7 +176,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     private SableCcSparqllParser createSableCcSparqlParser(ParserFactory parserFactory) {
-        return new SableCcSparqllParser(parserFactory, graphRelationFactory, avpHelper, attributeFactory);
+        return new SableCcSparqllParser(parserFactory, graphRelationFactory, attributeFactory);
     }
 
     private void checkThrowsException(Exception exception, String errorMsg)

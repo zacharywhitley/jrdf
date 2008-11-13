@@ -138,8 +138,8 @@ public class QueryFactoryImpl implements QueryFactory {
         GraphRelationFactory graphRelationFactory = new GraphRelationFactoryImpl(ATTRIBUTE_FACTORY, avpHelper,
             TUPLE_COMPARATOR, TUPLE_FACTORY);
         ParserFactory parserFactory = new ParserFactoryImpl();
-        SparqlParser sparqlParser = new SableCcSparqllParser(parserFactory, graphRelationFactory, avpHelper,
-            ATTRIBUTE_FACTORY);
+        SparqlParser sparqlParser = new SableCcSparqllParser(parserFactory, graphRelationFactory,
+                ATTRIBUTE_FACTORY);
         return new UrqlQueryBuilder(sparqlParser);
     }
 

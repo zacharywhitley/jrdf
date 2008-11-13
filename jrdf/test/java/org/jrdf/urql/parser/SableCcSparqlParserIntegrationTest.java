@@ -65,9 +65,11 @@ import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.global.LiteralImpl;
+import org.jrdf.query.AskQueryImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.query.QueryImpl;
+import org.jrdf.query.SelectQueryImpl;
+import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Conjunction;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
@@ -182,7 +184,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
         parser = new SableCcSparqllParser(FACTORY.getNewParserFactory(), FACTORY.getNewGraphRelationFactory(),
-                FACTORY.getNewAttributeValuePairHelper(), newSortedAttributeFactory);
+                newSortedAttributeFactory);
     }
 
     public void testSingleConstraint() throws Exception {
@@ -317,9 +319,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Literal negOnePointThreeZeroZeroZero = createLiteral("-1.300", XSD.DECIMAL);
         Expression<ExpressionVisitor> spOnePointThree = createConstraintExpression("s", "p", onePointThree, 1);
         Expression<ExpressionVisitor> spOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
-            onePointThreeZeroZeroZero, 2);
+                onePointThreeZeroZeroZero, 2);
         Expression<ExpressionVisitor> spNegOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
-            negOnePointThreeZeroZeroZero, 3);
+                negOnePointThreeZeroZeroZero, 3);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.3 }", spOnePointThree);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.300 }", spOnePointThreeZeroZeroZero);
         checkConstraintExpression("SELECT * WHERE { ?s ?p -1.300 }", spNegOnePointThreeZeroZeroZero);
@@ -496,22 +498,27 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void testComplexQuery() throws InvalidQuerySyntaxException {
         String queryString =
                 "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" +
-                "PREFIX biopax: <http://www.biopax.org/release/biopax-level2.owl#> \n" +
-                "PREFIX biomanta: <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#> \n" +
-                "PREFIX ncbi: <http://biomanta.sourceforge.net/2007/10/ncbi_taxo.owl#> \n" +
-                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
-                "SELECT ?name ?id \n" +
-                "WHERE { { ?x rdf:type biopax:physicalEntity . \n" +
-                "        ?x biomanta:fromNCBISpecies ncbi:ncbi_taxo_4932_ind . \n" +
-                "        ?x biomanta:hasPrimaryRef ?y . \n" +
-                "        ?y biopax:DB ?db \n" +
-                "        FILTER (str(?db) = \"uniprotkb\"^^xsd:string) } . \n" +
-                "        \n" +
-                "        { ?y biopax:ID ?id . \n" +
-                "        FILTER (str(?id) = \"o13516\"^^xsd:string) } . \n" +
-                "        ?x biomanta:hasFullName ?name }";
+                        "PREFIX biopax: <http://www.biopax.org/release/biopax-level2.owl#> \n" +
+                        "PREFIX biomanta: <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#> \n" +
+                        "PREFIX ncbi: <http://biomanta.sourceforge.net/2007/10/ncbi_taxo.owl#> \n" +
+                        "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
+                        "SELECT ?name ?id \n" +
+                        "WHERE { { ?x rdf:type biopax:physicalEntity . \n" +
+                        "        ?x biomanta:fromNCBISpecies ncbi:ncbi_taxo_4932_ind . \n" +
+                        "        ?x biomanta:hasPrimaryRef ?y . \n" +
+                        "        ?y biopax:DB ?db \n" +
+                        "        FILTER (str(?db) = \"uniprotkb\"^^xsd:string) } . \n" +
+                        "        \n" +
+                        "        { ?y biopax:ID ?id . \n" +
+                        "        FILTER (str(?id) = \"o13516\"^^xsd:string) } . \n" +
+                        "        ?x biomanta:hasFullName ?name }";
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
+    }
+
+    public void testSimpleAskQuery() throws Exception {
+        Expression<ExpressionVisitor> spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
+        checkConstraintExpression("ASK WHERE { ?s ?p 'The Pragmatic Programmer' } ", spPrag1);
     }
 
     private void checkConstraintExpression(String queryString, Expression<ExpressionVisitor> expectedExpression) throws Exception {
@@ -522,8 +529,15 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private Expression<ExpressionVisitor> getExpression(Query query) {
         try {
-            Expression<ExpressionVisitor> expression = getExpressionField(query, QueryImpl.class, "expression");
-            return getExpressionField(expression, Projection.class, "nextExpression");
+            if (query instanceof SelectQueryImpl) {
+                Expression<ExpressionVisitor> expression = getExpressionField(query, SelectQueryImpl.class, "expression");
+                return getExpressionField(expression, Projection.class, "nextExpression");
+            } else if (query instanceof AskQueryImpl) {
+                Expression<ExpressionVisitor> expression = getExpressionField(query, AskQueryImpl.class, "expression");
+                return getExpressionField(expression, Ask.class, "nextExpression");
+            } else {
+                throw new IllegalArgumentException();
+            }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

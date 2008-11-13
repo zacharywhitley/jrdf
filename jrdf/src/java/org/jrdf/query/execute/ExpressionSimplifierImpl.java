@@ -1,10 +1,11 @@
 package org.jrdf.query.execute;
 
+import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
+import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.EmptyConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
@@ -21,14 +22,13 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.EqAVPOperation;
-import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implements ExpressionSimplifier {
+public class ExpressionSimplifierImpl implements ExpressionSimplifier {
     private Map<Attribute, ValueOperation> newAttributeValues;
-    private Expression<ExpressionVisitor> expression;
+    private Expression expression;
     private final ExpressionComparator expressionComparator = EXPRESSION_COMPARATOR;
 
     public ExpressionSimplifierImpl(Map<Attribute, ValueOperation> newAttributeValues) {
@@ -43,14 +43,12 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return expression;
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
         Expression<ExpressionVisitor> next = getNext(projection.getNextExpression());
         projection.setNextExpression(next);
-        expression = (Expression) projection;
+        expression = projection;
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         final Expression<ExpressionVisitor> lhs = getNext(conjunction.getLhs());
         final Expression<ExpressionVisitor> rhs = getNext(conjunction.getRhs());
@@ -61,7 +59,6 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         }
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {
         final Expression<ExpressionVisitor> lhs = getNext(conjunction.getLhs());
         final Expression<ExpressionVisitor> rhs = getNext(conjunction.getRhs());
@@ -72,14 +69,12 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         }
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
         Expression<ExpressionVisitor> lhs = getNext(optional.getLhs());
         Expression<ExpressionVisitor> rhs = getNext(optional.getRhs());
         expression = new Optional<ExpressionVisitor>(lhs, rhs);
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
         LogicExpression<ExpressionVisitor> logicExpression =
             (LogicExpression< ExpressionVisitor>) getNext(filter.getRhs());
@@ -89,7 +84,6 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         }
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
         Expression<ExpressionVisitor> lhs = getNext(andExpression.getLhs());
         Expression<ExpressionVisitor> rhs = getNext(andExpression.getRhs());
@@ -100,11 +94,10 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         } else if (rhs == null) {
             expression = lhs;
         } else {
-            expression = (Expression<ExpressionVisitor>) andExpression;
+            expression = andExpression;
         }
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression) {
         Map<Attribute, ValueOperation> lhs = equalsExpression.getLhs();
         Map<Attribute, ValueOperation> rhs = equalsExpression.getRhs();
@@ -119,38 +112,36 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         expression = null;
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
         for (Attribute attribute : newAttributeValues.keySet()) {
             constraint.setAvo(attribute, newAttributeValues.get(attribute));
         }
-        expression = (Expression) constraint;
+        expression = constraint;
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitEmptyConstraint(EmptyConstraint<V> constraint) {
-        expression = (Expression) constraint;
+        expression = constraint;
     }
 
     // Skip logical not now.
-    @Override
     public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
-        expression = (Expression<ExpressionVisitor>) notExpression;
+        expression = notExpression;
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
-        expression = (Expression) operator;
+        expression = operator;
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression) {
-        expression = (Expression) lessThanExpression;
+        expression = lessThanExpression;
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression) {
-        expression = (Expression) nEqualsExpression;
+        expression = nEqualsExpression;
+    }
+
+    public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
+        expression = ask;
     }
 
     @SuppressWarnings({ "unchecked" })

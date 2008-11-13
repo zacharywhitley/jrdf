@@ -59,17 +59,17 @@
 
 package org.jrdf.query.client;
 
-import static org.jrdf.query.MediaTypeExtensions.*;
+import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswer;
-import static org.jrdf.query.client.ServerPort.*;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.query.client.ServerPort.createServerPort;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
-import static org.restlet.data.Method.*;
+import static org.restlet.data.Method.GET;
 import org.restlet.data.Preference;
-import static org.restlet.data.Protocol.*;
+import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -148,5 +148,9 @@ public class QueryClientImpl implements CallableGraphQueryClient {
             "/graphs/" + graphName, null, null);
         ref.addQueryParameter("query", queryString);
         return ref.toString();
+    }
+
+    public String toString() {
+        return serverPort.getHostname() + ":" + serverPort.getPort();
     }
 }
