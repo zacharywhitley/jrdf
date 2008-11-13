@@ -70,6 +70,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class BdbMapFactoryIntegrationTest extends TestCase {
+    private static final int NO_STRINGS = 100;
     private final DirectoryHandler directoryHandler = new TempDirectoryHandler();
     private final BdbEnvironmentHandler mapHandler = new BdbEnvironmentHandlerImpl(directoryHandler);
     private MapFactory factory;
@@ -82,7 +83,7 @@ public class BdbMapFactoryIntegrationTest extends TestCase {
     public void testCreateStringLong() {
         factory = new BdbMapFactory(mapHandler, "testDb2");
         Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < NO_STRINGS; i++) {
             stringPool.put("Foo" + i, new Long(i));
             Long aLong = stringPool.get("Foo" + i);
             assertEquals(new Long(i).longValue(), aLong.longValue());
@@ -92,7 +93,7 @@ public class BdbMapFactoryIntegrationTest extends TestCase {
     public void testCreateLongString() {
         factory = new BdbMapFactory(mapHandler, "testDb3");
         Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < NO_STRINGS; i++) {
             stringPool.put(new Long(i), "Foo" + i);
             String value = stringPool.get(new Long(i));
             assertEquals("Foo" + i, value);
@@ -102,7 +103,7 @@ public class BdbMapFactoryIntegrationTest extends TestCase {
     public void testCreateLongArrayList() {
         factory = new BdbMapFactory(mapHandler, "testDb4");
         Map<Long, LinkedList<Long[]>> tripleStore = factory.createMap(Long.class, LinkedList.class);
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < NO_STRINGS; i++) {
             LinkedList<Long[]> list = new LinkedList<Long[]>();
             list.add(new Long[]{new Long(i + 1), new Long(i + 2)});
             tripleStore.put(new Long(i), list);

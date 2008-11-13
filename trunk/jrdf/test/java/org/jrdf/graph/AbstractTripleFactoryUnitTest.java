@@ -309,8 +309,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         // test for double insertion
         testCanInsert(t);
         // test for insertion with a a used blank reference
-        testCantInsert(tripleFactory.createTriple(blank1, ref3, blank2),
-            u.getURI());
+        testCantInsert(tripleFactory.createTriple(blank1, ref3, blank2), u.getURI());
         // test that the graph did not change with the invalid insertions
         assertEquals(30, graph.getNumberOfTriples());
 

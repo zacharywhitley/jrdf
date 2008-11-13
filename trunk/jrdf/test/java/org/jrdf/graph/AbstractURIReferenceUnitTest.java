@@ -68,6 +68,7 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfIn
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 import org.jrdf.util.test.URIReference1;
 import org.jrdf.util.test.URIReference2;
+import static org.jrdf.util.test.AssertThrows.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -234,7 +235,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     }
 
     private void checkCreateException(AssertThrows.Block block) {
-        AssertThrows.assertThrows(IllegalArgumentException.class, "\"" + notAbsURI + "\" is not absolute", block);
+        assertThrows(IllegalArgumentException.class, "\"" + notAbsURI + "\" is not absolute", block);
     }
 
     private void checkEqualObjectsReturnSameHashCode() {
