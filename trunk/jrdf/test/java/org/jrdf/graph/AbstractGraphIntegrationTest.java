@@ -69,8 +69,8 @@ import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
 import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIterable;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
@@ -346,31 +346,28 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         assertEquals(1, graph.getNumberOfTriples());
 
         // delete the wrong triple
-        try {
-            graph.remove(blank2, ref1, blank1);
-            assertTrue(false);
-        }
-        catch (GraphException e) { /* no-op */
-        }
+        assertThrows(GraphException.class, new Block() {
+            public void execute() throws Throwable {
+                graph.remove(blank2, ref1, blank1);
+            }
+        });
         assertEquals(1, graph.getNumberOfTriples());
 
         // delete a triple that never existed
-        try {
-            graph.remove(blank2, ref2, l2);
-            assertTrue(false);
-        }
-        catch (GraphException e) { /* no-op */
-        }
+        assertThrows(GraphException.class, new Block() {
+            public void execute() throws Throwable {
+                graph.remove(blank2, ref2, l2);
+            }
+        });
         assertEquals(1, graph.getNumberOfTriples());
 
         // and delete with a triple object
         t1 = tripleFactory.createTriple(blank2, ref1, blank1);
-        try {
-            graph.remove(t1);
-            assertTrue(false);
-        }
-        catch (GraphException e) { /* no-op */
-        }
+        assertThrows(GraphException.class, new Block() {
+            public void execute() throws Throwable {
+                graph.remove(t1);
+            }
+        });
         assertEquals(1, graph.getNumberOfTriples());
 
         // now clear out the graph

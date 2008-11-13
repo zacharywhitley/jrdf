@@ -10,9 +10,18 @@
 
     <target name="gen-src" depends="gen-urql-parser"/>
 
-    <target name="checkstyle">
+    <target name="checkstyle" depends="checkstyle-production">
+    </target>
+
+    <target name="checkstyle-production">
         <checkstyle config="${conf.dir}/checkstyle.xml">
             <fileset dir="${prod.src.dir}"/>
+        </checkstyle>
+    </target>
+
+    <target name="checkstyle-test">
+        <checkstyle config="${conf.dir}/checkstyle.xml">
+            <fileset dir="${test.src.dir}"/>
         </checkstyle>
     </target>
 
@@ -159,7 +168,7 @@
             <delete file="${dist.dir}/@{disttype}/main.jar"/>
         </sequential>
     </macrodef>
-    
+
     <target name="javadoc" depends="-compile">
         <mkdir dir="${javadoc.dir}"/>
         <javadoc destdir="${javadoc.dir}" author="true" version="true"
