@@ -189,6 +189,7 @@
         <constructor-arg ref="relationFactory"/>
         <constructor-arg ref="tupleFactory"/>
         <constructor-arg ref="tupleComparator"/>
+        <constructor-arg ref="booleanEvaluator"/>
     </bean>
 
     <bean id="outerUnion" class="org.jrdf.query.relation.operation.mem.union.OuterUnionImpl">
@@ -233,5 +234,8 @@
     <bean id="minLeftOuterJoin" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl">
         <constructor-arg ref="sortMergeNaturalJoin"/>
         <constructor-arg ref="minimumUnion"/>
+    </bean>
+    <bean id="booleanEvaluator" class="org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator">
+        <constructor-arg ref="nodeComparator"/>
     </bean>
 </beans>

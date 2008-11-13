@@ -81,6 +81,7 @@ import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.ValueOperation;
@@ -433,6 +434,31 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression(nameAvo, avo);
         LogicExpression<ExpressionVisitor> notExp = new LogicalNotExpression(equalsExpression);
         Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, notExp);
+        checkConstraintExpression(queryString, filterExpression);
+    }
+
+    public void testNeqExpression() throws Exception {
+        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+                "SELECT ?name\n" +
+                "WHERE { ?x foaf:name ?name .\n" +
+                "FILTER ( str(?name) != \"abc\") }";
+        AttributeName dateVar = new VariableName("name");
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
+        Literal abcLit = new LiteralImpl("abc");
+        ValueOperation value = new ValueOperationImpl(abcLit, EQUALS);
+        avo.put(attribute, value);
+
+        AttributeName nameVar = new VariableName("name");
+        Map<Attribute, ValueOperation> nameAvo = new HashMap<Attribute, ValueOperation>();
+        attribute = new AttributeImpl(nameVar, new ObjectNodeType());
+        value = new ValueOperationImpl(ANY_NODE, STR);
+        nameAvo.put(attribute, value);
+
+
+        LogicExpression<ExpressionVisitor> neqExpression = new NEqualsExpression(nameAvo, avo);
+        Expression<ExpressionVisitor> filterExpression = new Filter(FOAF_NAME_EXP_1, neqExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
 

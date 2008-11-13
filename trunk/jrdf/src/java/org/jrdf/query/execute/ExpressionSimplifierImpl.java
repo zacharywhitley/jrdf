@@ -12,9 +12,11 @@ import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AVPOperation;
@@ -139,6 +141,16 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     @Override
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
         expression = (Expression) operator;
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression) {
+        expression = (Expression) lessThanExpression;
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression) {
+        expression = (Expression) nEqualsExpression;
     }
 
     @SuppressWarnings({ "unchecked" })

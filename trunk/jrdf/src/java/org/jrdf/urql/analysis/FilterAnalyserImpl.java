@@ -4,14 +4,16 @@ import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.EmptyOperator;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AVPOperation;
-import static org.jrdf.query.relation.mem.EqAVPOperation.*;
-import static org.jrdf.query.relation.mem.NeqAVPOperation.*;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
+import static org.jrdf.query.relation.mem.NeqAVPOperation.NEQUALS;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
@@ -20,6 +22,7 @@ import org.jrdf.urql.parser.node.ABoundBuiltincall;
 import org.jrdf.urql.parser.node.ABracketedExpressionConstraint;
 import org.jrdf.urql.parser.node.AConditionalAndExpression;
 import org.jrdf.urql.parser.node.AEMoreNumericExpression;
+import org.jrdf.urql.parser.node.ALtMoreNumericExpression;
 import org.jrdf.urql.parser.node.AMoreValueLogical;
 import org.jrdf.urql.parser.node.ANeMoreNumericExpression;
 import org.jrdf.urql.parser.node.ARelationalExpression;
@@ -144,7 +147,18 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
         try {
             node.getNumericExpression().apply(numericExpressionAnalyser);
             Map<Attribute, ValueOperation> moreValuePair = numericExpressionAnalyser.getSingleAvp();
-            expression = new EqualsExpression<V>(valuePair, moreValuePair);
+            expression = new NEqualsExpression<V>(valuePair, moreValuePair);
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseALtMoreNumericExpression(ALtMoreNumericExpression node) {
+        try {
+            node.getNumericExpression().apply(numericExpressionAnalyser);
+            Map<Attribute, ValueOperation> moreValuePair = numericExpressionAnalyser.getSingleAvp();
+            expression = new LessThanExpression<V>(valuePair, moreValuePair);
             boolean changed = negateAVP(valuePair);
             if (!changed) {
                 negateAVP(moreValuePair);
