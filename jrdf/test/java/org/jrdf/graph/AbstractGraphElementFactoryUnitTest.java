@@ -63,8 +63,11 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.local.index.nodepool.ExternalBlankNodeException;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.net.URI;
@@ -94,6 +97,8 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      * Global graph object.
      */
     private Graph graph;
+    private static final String TEST_STR_1 = "A test string";
+    private static final String TEST_STR_2 = "Another test string";
 
     /**
      * Create test instance.
@@ -149,30 +154,27 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      * @throws Exception if query fails when it should have succeeded
      */
     public void testCreateLiterals() throws Exception {
-        final String TEST_STR1 = "A test string";
-        final String TEST_STR2 = "Another test string";
-
         // createLiteral(String lexicalValue)
-        Literal l1 = elementFactory.createLiteral(TEST_STR1);
-        Literal l2 = elementFactory.createLiteral(TEST_STR2);
-        Literal l3 = elementFactory.createLiteral(TEST_STR1);
+        Literal l1 = elementFactory.createLiteral(TEST_STR_1);
+        Literal l2 = elementFactory.createLiteral(TEST_STR_2);
+        Literal l3 = elementFactory.createLiteral(TEST_STR_1);
         assertFalse(l1.equals(l2));
         assertEquals(l1, l3);
         assertEquals(getDefaultLiteralType(), l1.getDatatypeURI());
         assertEquals("", l1.getLanguage());
-        assertEquals(TEST_STR1, l1.getLexicalForm());
+        assertEquals(TEST_STR_1, l1.getLexicalForm());
 
         // createLiteral(String lexicalValue, String languageType)
-        l1 = elementFactory.createLiteral(TEST_STR1, "it");
-        l2 = elementFactory.createLiteral(TEST_STR2, "it");
-        l3 = elementFactory.createLiteral(TEST_STR1, "it");
-        Literal l4 = elementFactory.createLiteral(TEST_STR1);
+        l1 = elementFactory.createLiteral(TEST_STR_1, "it");
+        l2 = elementFactory.createLiteral(TEST_STR_2, "it");
+        l3 = elementFactory.createLiteral(TEST_STR_1, "it");
+        Literal l4 = elementFactory.createLiteral(TEST_STR_1);
         assertFalse(l1.equals(l2));
         assertFalse(l1.equals(l4));
         assertEquals(l1, l3);
         assertEquals(getDefaultLiteralType(), l1.getDatatypeURI());
         assertEquals("it", l1.getLanguage());
-        assertEquals(TEST_STR1, l1.getLexicalForm());
+        assertEquals(TEST_STR_1, l1.getLexicalForm());
 
         // createLiteral(String lexicalValue, URI datatypeURI)
         URI type = new URI("xsd:long");
@@ -231,7 +233,6 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      * @throws Exception if query fails when it should have succeeded
      */
     public void testCreateTriples() throws Exception {
-
         BlankNode blank1 = elementFactory.createBlankNode();
         BlankNode blank2 = elementFactory.createBlankNode();
 
@@ -240,8 +241,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         URIReference ref1 = elementFactory.createURIReference(uri1);
         URIReference ref2 = elementFactory.createURIReference(uri2);
 
-        final String TEST_STR1 = "A test string";
-        Literal l1 = elementFactory.createLiteral(TEST_STR1);
+        Literal l1 = elementFactory.createLiteral(TEST_STR_1);
 
         // test ordinary creation
         Triple triple = tripleFactory.createTriple(blank1, ref1, blank2);
@@ -270,7 +270,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
         URIReference ref4 = elementFactory.createURIReference(uri1);
         URIReference ref5 = elementFactory.createURIReference(uri2);
-        Literal l3 = elementFactory.createLiteral(TEST_STR1);
+        Literal l3 = elementFactory.createLiteral(TEST_STR_1);
         assertEquals(ref4, ref1);
         assertEquals(ref5, ref2);
         assertEquals(l1, l3);
@@ -298,23 +298,21 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      */
     public void testTwoGraphs() throws Exception {
         Graph g1 = newGraph();
-        Graph g2 = newGraph();
+        final Graph g2 = newGraph();
 
-        final String TEST_STR1 = "A test string";
-        final String TEST_STR2 = "Foo 2";
         URI uri1 = new URI("http://namespace#somevalue1");
         URI uri2 = new URI("http://namespace#somevalue2");
         URI uri3 = new URI("http://namespace#foo");
 
         GraphElementFactory gef1 = g1.getElementFactory();
         URIReference g1u1 = gef1.createURIReference(uri1);
-        URIReference g1u2 = gef1.createURIReference(uri2);
+        final URIReference g1u2 = gef1.createURIReference(uri2);
         URIReference g1u3 = gef1.createURIReference(uri3);
-        BlankNode g1b1 = gef1.createBlankNode();
+        final BlankNode g1b1 = gef1.createBlankNode();
 
         GraphElementFactory gef2 = g2.getElementFactory();
-        Literal g2l1 = gef2.createLiteral(TEST_STR1);
-        Literal g2l2 = gef2.createLiteral(TEST_STR2);
+        Literal g2l1 = gef2.createLiteral(TEST_STR_1);
+        Literal g2l2 = gef2.createLiteral(TEST_STR_2);
         URIReference g2u1 = gef2.createURIReference(uri2);
 
         g2.add(new TripleImpl(g1u1, g1u1, g2l1));
@@ -326,11 +324,11 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         g2.add(g2u1, g1u2, g1u2);
         assertTrue(g2.contains(g2u1, g1u2, g1u2));
 
-        try {
-            g2.add(g1b1, g1u2, g1b1);
-            fail("Should not allow foreign blank nodes into the graph");
-        } catch (GraphException ge) {
-        }
+        assertThrows(ExternalBlankNodeException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                g2.add(g1b1, g1u2, g1b1);
+            }
+        });
         assertFalse(g2.contains(g1b1, g1u2, g1b1));
 
         // Test inserting a predicate and object that come from another graph but
