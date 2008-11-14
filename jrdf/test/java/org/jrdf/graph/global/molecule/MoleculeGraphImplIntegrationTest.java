@@ -362,21 +362,6 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         }
     }
 
-    private String getAsString(URL resource) throws IOException {
-        final InputStream inputStream = resource.openStream();
-        StringBuffer fileData = new StringBuffer(1000);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        char[] buf = new char[1024];
-        int numRead;
-        while ((numRead = reader.read(buf)) != -1) {
-            String readData = String.valueOf(buf, 0, numRead);
-            fileData.append(readData);
-            buf = new char[1024];
-        }
-        reader.close();
-        return fileData.toString();
-    }
-
     public void testMoleculeGraphToTextToMolecule() {
         Molecule molecule = MOLECULE_FACTORY.createMolecule();
         Molecule sm1 = MOLECULE_FACTORY.createMolecule(B2R2B3);
@@ -437,5 +422,20 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         iterator = GRAPH.findMolecules(triple);
         assertFalse(iterator.hasNext());
         iterator.close();
+    }
+
+    private String getAsString(URL resource) throws IOException {
+        final InputStream inputStream = resource.openStream();
+        StringBuffer fileData = new StringBuffer(1000);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        char[] buf = new char[1024];
+        int numRead;
+        while ((numRead = reader.read(buf)) != -1) {
+            String readData = String.valueOf(buf, 0, numRead);
+            fileData.append(readData);
+            buf = new char[1024];
+        }
+        reader.close();
+        return fileData.toString();
     }
 }
