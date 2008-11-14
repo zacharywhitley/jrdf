@@ -84,67 +84,70 @@ import java.net.URI;
 
 public class MoleculeGraphTestUtil {
     public static GlobalJRDFFactory factory;
-    public static TripleComparator COMPARATOR, GLOBAL_COMPARATOR;
-    public static MoleculeComparator MOLECULE_COMPARATOR, GLOBAL_MOLECULE_COMPARATOR;
-    public static MoleculeFactory MOLECULE_FACTORY;
+    public static TripleComparator comparator, globalComparator;
+    public static MoleculeComparator moleculeComparator, globalMoleculeComparator;
+    public static MoleculeFactory moleculeFactory;
 
-    public static MoleculeGraph GRAPH;
-    public static GraphElementFactory ELEMENT_FACTORY;
-    public static TripleFactory TRIPLE_FACTORY;
-    public static BlankNode BNODE1;
-    public static BlankNode BNODE2;
-    public static BlankNode BNODE3;
+    public static MoleculeGraph graph;
+    public static GraphElementFactory elementFactory;
+    public static TripleFactory tripleFactory;
+    public static BlankNode bnode1;
+    public static BlankNode bnode2;
+    public static BlankNode bnode3;
 
 
-    public static Triple B3R2R2;
-    public static Triple B3R2R3;
-    public static Triple B2R2B3;
-    public static Triple B2R2R1;
-    public static Triple R1R2B2;
-    public static Triple B1R1B2;
-    public static Triple B1R2R2;
-    public static Triple B1R1R1;
+    public static Triple b3r2r2;
+    public static Triple b3r2r3;
+    public static Triple b2r2b3;
+    public static Triple b2r2r1;
+    public static Triple r1r2b2;
+    public static Triple b1r1b2;
+    public static Triple b1r2r2;
+    public static Triple b1r1r1;
 
-    public static URIReference REF1;
-    public static URIReference REF2;
-    public static URIReference REF3;
+    public static URIReference ref1;
+    public static URIReference ref2;
+    public static URIReference ref3;
+
+    private MoleculeGraphTestUtil() {
+    }
 
     public static void setUp() throws GraphElementFactoryException {
-        COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
-        GLOBAL_COMPARATOR = new GroundedTripleComparatorFactoryImpl().newComparator();
-        GLOBAL_MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(GLOBAL_COMPARATOR);
+        comparator = new TripleComparatorFactoryImpl().newComparator();
+        globalComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+        globalMoleculeComparator = new MoleculeHeadTripleComparatorImpl(globalComparator);
 
-        MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(COMPARATOR);
-        MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
+        moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
+        moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
 
         new TempDirectoryHandler().removeDir();
         factory = SortedDiskGlobalJRDFFactory.getFactory();
-        GRAPH = factory.getGraph();
-        GRAPH.clear();
-        ELEMENT_FACTORY = GRAPH.getElementFactory();
-        TRIPLE_FACTORY = GRAPH.getTripleFactory();
+        graph = factory.getGraph();
+        graph.clear();
+        elementFactory = graph.getElementFactory();
+        tripleFactory = graph.getTripleFactory();
 
-        REF1 = ELEMENT_FACTORY.createURIReference(URI.create("urn:ref1"));
-        REF2 = ELEMENT_FACTORY.createURIReference(URI.create("urn:ref2"));
-        REF3 = ELEMENT_FACTORY.createURIReference(URI.create("urn:ref3"));
+        ref1 = elementFactory.createURIReference(URI.create("urn:ref1"));
+        ref2 = elementFactory.createURIReference(URI.create("urn:ref2"));
+        ref3 = elementFactory.createURIReference(URI.create("urn:ref3"));
 
-        BNODE1 = ELEMENT_FACTORY.createBlankNode();
-        BNODE2 = ELEMENT_FACTORY.createBlankNode();
-        BNODE3 = ELEMENT_FACTORY.createBlankNode();
+        bnode1 = elementFactory.createBlankNode();
+        bnode2 = elementFactory.createBlankNode();
+        bnode3 = elementFactory.createBlankNode();
 
-        B1R1R1 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, REF1);
-        B1R2R2 = TRIPLE_FACTORY.createTriple(BNODE1, REF2, REF2);
-        B1R1B2 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, BNODE2);
-        R1R2B2 = TRIPLE_FACTORY.createTriple(REF1, REF2, BNODE2);
-        B2R2R1 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, REF1);
-        B2R2B3 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, BNODE3);
-        B3R2R3 = TRIPLE_FACTORY.createTriple(BNODE3, REF2, REF3);
-        B3R2R2 = TRIPLE_FACTORY.createTriple(BNODE3, REF2, REF2);
+        b1r1r1 = tripleFactory.createTriple(bnode1, ref1, ref1);
+        b1r2r2 = tripleFactory.createTriple(bnode1, ref2, ref2);
+        b1r1b2 = tripleFactory.createTriple(bnode1, ref1, bnode2);
+        r1r2b2 = tripleFactory.createTriple(ref1, ref2, bnode2);
+        b2r2r1 = tripleFactory.createTriple(bnode2, ref2, ref1);
+        b2r2b3 = tripleFactory.createTriple(bnode2, ref2, bnode3);
+        b3r2r3 = tripleFactory.createTriple(bnode3, ref2, ref3);
+        b3r2r2 = tripleFactory.createTriple(bnode3, ref2, ref2);
     }
 
     public static void close() {
-        GRAPH.clear();
-        GRAPH.close();
+        graph.clear();
+        graph.close();
         factory.close();
     }
 }

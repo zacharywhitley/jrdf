@@ -61,30 +61,36 @@ package org.jrdf.graph.global.molecule.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.molecule.BlankNodeMapper;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R1B4;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B5R1B6;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B6R1B7;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B7R1B8;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B7R2B8;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE3;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE4;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE5;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE6;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE7;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE8;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.REF1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.REF2;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
@@ -98,23 +104,9 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     private final MoleculeComparator moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
     private final MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
     private BlankNodeMapper mapper;
-    private BlankNode BNODE4;
-    private BlankNode BNODE5;
-    private BlankNode BNODE6;
-    private BlankNode BNODE7;
-    private BlankNode BNODE8;
-    private GraphElementFactory fac;
-    private TripleFactory tFac;
 
     public void setUp() throws Exception {
         mapper = new BlankNodeMapperImpl();
-        fac = GRAPH.getElementFactory();
-        tFac = GRAPH.getTripleFactory();
-        BNODE4 = fac.createBlankNode();
-        BNODE5 = fac.createBlankNode();
-        BNODE6 = fac.createBlankNode();
-        BNODE7 = fac.createBlankNode();
-        BNODE8 = fac.createBlankNode();
     }
 
     public void testIncompatibleMolecules() {
@@ -156,12 +148,7 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     }
 
     public void test3LvlNodes() throws GraphException {
-        Triple B2R1B3 = tFac.createTriple(BNODE2, REF1, BNODE3);
-        Triple B3R1B4 = tFac.createTriple(BNODE3, REF1, BNODE4);
         Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
-        Triple B5R1B6 = tFac.createTriple(BNODE5, REF1, BNODE6);
-        Triple B6R1B7 = tFac.createTriple(BNODE6, REF1, BNODE7);
-        Triple B7R1B8 = tFac.createTriple(BNODE7, REF1, BNODE8);
         Molecule m2 = createMultiLevelMolecule(asSet(B5R1B6), asSet(B6R1B7), asSet(B7R1B8));
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertFalse(blankNodeMap.isEmpty());
@@ -173,23 +160,14 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     }
 
     public void testConflicting3Lvl() {
-        Triple B2R1B3 = tFac.createTriple(BNODE2, REF1, BNODE3);
-        Triple B3R1B4 = tFac.createTriple(BNODE3, REF1, BNODE4);
         Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
-        Triple B5R1B6 = tFac.createTriple(BNODE5, REF1, BNODE6);
-        Triple B6R1B7 = tFac.createTriple(BNODE6, REF1, BNODE7);
-        Triple B7R2B8 = tFac.createTriple(BNODE7, REF2, BNODE8);
         Molecule m2 = createMultiLevelMolecule(asSet(B5R1B6), asSet(B6R1B7), asSet(B7R2B8));
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertTrue(blankNodeMap.isEmpty());
     }
 
     public void testSubsumingDirections() {
-        Triple B2R1B3 = tFac.createTriple(BNODE2, REF1, BNODE3);
-        Triple B3R1B4 = tFac.createTriple(BNODE3, REF1, BNODE4);
         Molecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R1B3), asSet(B3R1B4));
-        Triple B5R1B6 = tFac.createTriple(BNODE5, REF1, BNODE6);
-        Triple B6R1B7 = tFac.createTriple(BNODE6, REF1, BNODE7);
         Molecule m2 = createMultiLevelMolecule(asSet(B5R1B6), asSet(B6R1B7), Collections.<Triple>emptySet());
         Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m2, m1);
         assertTrue(blankNodeMap.isEmpty());
