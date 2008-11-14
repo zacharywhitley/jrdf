@@ -73,6 +73,7 @@
             <fileset dir="${test.src.dir}" includes="**/*.rdf"/>
             <fileset dir="${test.src.dir}" includes="**/xml/data/*.xml"/>
             <fileset dir="${test.src.dir}" includes="**/*.nt"/>
+            <fileset dir="${test.src.dir}" includes="**/*.txt"/>
         </copy>
     </target>
 

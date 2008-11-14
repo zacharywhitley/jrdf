@@ -116,21 +116,25 @@ public class RdfXmlWriter implements RdfWriter {
         this.names = newNames;
     }
 
-    public void write(Graph graph, OutputStream stream)
-        throws IOException, WriteException, GraphException, XMLStreamException {
+    public void write(Graph graph, OutputStream stream) throws WriteException, GraphException {
         final OutputStreamWriter writer = new OutputStreamWriter(stream);
         try {
             write(graph, writer);
         } finally {
-            writer.close();
+            try {
+                writer.close();
+            } catch (IOException e) {
+                throw new WriteException(e);
+            }
         }
     }
 
-    public void write(Graph graph, Writer writer)
-        throws IOException, WriteException, GraphException, XMLStreamException {
+    public void write(Graph graph, Writer writer) throws WriteException, GraphException {
         printWriter = new PrintWriter(writer);
         try {
             write(graph, (String) null);
+        } catch (XMLStreamException e) {
+            throw new WriteException(e);
         } finally {
             printWriter.close();
         }

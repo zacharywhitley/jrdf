@@ -106,9 +106,13 @@ import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import org.jrdf.vocabulary.RDF;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import static java.net.URI.create;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -153,7 +157,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         GRAPH.add(molecule2);
         assertEquals(2, GRAPH.getNumberOfTriples());
         ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
-            iterator();
+                iterator();
         assertTrue(iterator.hasNext());
         GRAPH.delete(molecule);
         assertEquals(1, GRAPH.getNumberOfTriples());
@@ -174,7 +178,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         GRAPH.add(molecule2);
         assertEquals(2, GRAPH.getNumberOfTriples());
         ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
-            iterator();
+                iterator();
         assertTrue(iterator.hasNext());
         GRAPH.delete(molecule);
         assertEquals(1, GRAPH.getNumberOfTriples());
@@ -324,7 +328,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         final GraphElementFactory destElementFactory = destGraph.getElementFactory();
         URIReference typePredicate = destElementFactory.createURIReference(RDF.TYPE);
         URIReference object = destElementFactory.createURIReference(
-            create("http://www.biopax.org/release/biopax-level2.owl#physicalInteraction"));
+                create("http://www.biopax.org/release/biopax-level2.owl#physicalInteraction"));
         ClosableIterator<Triple> interactions = destGraph.find(ANY_SUBJECT_NODE, typePredicate, object).iterator();
         try {
             assertTrue(interactions.hasNext());
@@ -337,47 +341,8 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     }
 
     private void readTextToGraph() throws IOException {
-        String text =
-                "[\n" +
-                        "  _:a45 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#experimentalMethod> _:a58 .\n" +
-                        "  [\n" +
-                        "    _:a58 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#hasLocalId> \"18004\"^^<http://www.w3.org/2001/XMLSchema#int> .\n" +
-                        "    _:a58 <http://www.biopax.org/release/biopax-level2.owl#DB> \"psi-mi\" .\n" +
-                        "    _:a58 <http://www.biopax.org/release/biopax-level2.owl#ID> \"MI:0019\" .\n" +
-                        "    _:a58 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#ExperimentMethod> .\n" +
-                        "  ]\n" +
-                        "  _:a45 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#observedInteraction> _:a48 .\n" +
-                        "  [\n" +
-                        "    _:a48 <http://www.biopax.org/release/biopax-level2.owl#PARTICIPANT> _:a50 .\n" +
-                        "    [\n" +
-                        "      _:a50 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#hasLocalId> \"18006\"^^<http://www.w3.org/2001/XMLSchema#int> .\n" +
-                        "      _:a50 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.biopax.org/release/biopax-level2.owl#physicalEntity> .\n" +
-                        "    ]\n" +
-                        "    _:a48 <http://www.biopax.org/release/biopax-level2.owl#PARTICIPANT> _:a51 .\n" +
-                        "    [\n" +
-                        "      _:a51 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#hasLocalId> \"18008\"^^<http://www.w3.org/2001/XMLSchema#int> .\n" +
-                        "      _:a51 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.biopax.org/release/biopax-level2.owl#physicalEntity> .\n" +
-                        "    ]\n" +
-                        "    _:a48 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.biopax.org/release/biopax-level2.owl#physicalInteraction> .\n" +
-                        "  ]\n" +
-                        "  _:a45 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#referenceForObservation> _:a47 .\n" +
-                        "  [\n" +
-                        "    _:a47 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#aboutLocalId> \"18004\"^^<http://www.w3.org/2001/XMLSchema#int> .\n" +
-                        "    _:a47 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#link> \"http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PUBMED&amp;cmd=Retrieve&amp;list_uids=9412461\" .\n" +
-                        "    _:a47 <http://www.biopax.org/release/biopax-level2.owl#DB> \"PUBMED\"^^<http://www.w3.org/2001/XMLSchema#string> .\n" +
-                        "    _:a47 <http://www.biopax.org/release/biopax-level2.owl#ID> \"9412461\"^^<http://www.w3.org/2001/XMLSchema#string> .\n" +
-                        "    _:a47 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.biopax.org/release/biopax-level2.owl#publicationXref> .\n" +
-                        "  ]\n" +
-                        "  _:a45 <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#sourceOfData> _:a53 .\n" +
-                        "  [\n" +
-                        "    _:a53 <http://www.biopax.org/release/biopax-level2.owl#DB> \"mips\"^^<http://www.w3.org/2001/XMLSchema#string> .\n" +
-                        "    _:a53 <http://www.biopax.org/release/biopax-level2.owl#ID> \"41\"^^<http://www.w3.org/2001/XMLSchema#string> .\n" +
-                        "    _:a53 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.biopax.org/release/biopax-level2.owl#unificationXref> .\n" +
-                        "  ]\n" +
-                        "  _:a45 <http://www.biopax.org/release/biopax-level2.owl#DB> \"http://ebi.ac.uk/\"^^<http://www.w3.org/2001/XMLSchema#string> .\n" +
-                        "  _:a45 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#ExperimentalObservation> .\n" +
-                        "]";
-
+        final URL resource = getClass().getClassLoader().getResource("org/jrdf/graph/global/molecule/mem/result.txt");
+        String text = getAsString(resource);
         destGraph = FACTORY.getGraph();
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
@@ -387,7 +352,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         final BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         final LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
         final LiteralParser literalParser = new LiteralParserImpl(destElementFactory, literalMatcher);
-        TripleParser tripleParser = new TripleParserImpl(referenceParser, blankNodeParser, literalParser, 
+        TripleParser tripleParser = new TripleParserImpl(referenceParser, blankNodeParser, literalParser,
                 destGraph.getTripleFactory());
         TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, MOLECULE_FACTORY);
         TextToMoleculeGraph graphBuilder = new TextToMoleculeGraph(textToMolecule);
@@ -395,6 +360,21 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         while (graphBuilder.hasNext()) {
             destGraph.add(graphBuilder.next());
         }
+    }
+
+    private String getAsString(URL resource) throws IOException {
+        final InputStream inputStream = resource.openStream();
+        StringBuffer fileData = new StringBuffer(1000);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        char[] buf = new char[1024];
+        int numRead;
+        while ((numRead = reader.read(buf)) != -1) {
+            String readData = String.valueOf(buf, 0, numRead);
+            fileData.append(readData);
+            buf = new char[1024];
+        }
+        reader.close();
+        return fileData.toString();
     }
 
     public void testMoleculeGraphToTextToMolecule() {
@@ -426,7 +406,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
         //GRAPH.add(molecule1);
         Molecule newMolecule = GRAPH.addRootTriple(molecule, R1R2B2);
         assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(molecule.add(R1R2B2), newMolecule));
-    }                                        
+    }
 
     public void testRemoveRootTripleFromMolecule() throws GraphException {
         Molecule molecule = MOLECULE_FACTORY.createMolecule(B2R2B3);

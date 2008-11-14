@@ -74,7 +74,6 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.writer.WriteException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -87,18 +86,20 @@ public class NTriplesWriterImpl implements NTriplesWriter {
     private PrintWriter printWriter;
     private WriteException exception;
 
-    public void write(Graph graph, OutputStream stream)
-        throws WriteException, GraphException, IOException, XMLStreamException {
+    public void write(Graph graph, OutputStream stream) throws WriteException, GraphException {
         final OutputStreamWriter writer = new OutputStreamWriter(stream);
         try {
             write(graph, writer);
         } finally {
-            writer.close();
+            try {
+                writer.close();
+            } catch (IOException e) {
+                throw new WriteException(e);
+            }
         }
     }
 
-    public void write(Graph graph, Writer writer)
-        throws WriteException, GraphException, IOException, XMLStreamException {
+    public void write(Graph graph, Writer writer) throws WriteException, GraphException {
         printWriter = new PrintWriter(writer);
         try {
             write(graph, (String) null);

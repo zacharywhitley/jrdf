@@ -61,8 +61,6 @@ package org.jrdf.writer;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
@@ -85,9 +83,8 @@ public interface RdfWriter {
      * @param stream OutputStream output. Caller is responsible for closing stream.
      * @throws WriteException If the writer encounters an unrecoverable error.
      * @throws GraphException If an exception occurrs while reading the graph.
-     * @throws IOException    If output cannot be written.
      */
-    void write(Graph graph, OutputStream stream) throws WriteException, GraphException, IOException, XMLStreamException;
+    void write(Graph graph, OutputStream stream) throws WriteException, GraphException;
 
     /**
      * Writes the Graph contents to the Writer.
@@ -96,7 +93,6 @@ public interface RdfWriter {
      * @param writer Writer output. Caller is responsible for closing writers.
      * @throws WriteException If the writer encounters an unrecoverable error.
      * @throws GraphException If an exception occurrs while reading the graph.
-     * @throws IOException    If output cannot be written.
      */
-    void write(Graph graph, Writer writer) throws WriteException, GraphException, IOException, XMLStreamException;
+    void write(Graph graph, Writer writer) throws WriteException, GraphException;
 }
