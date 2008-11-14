@@ -66,7 +66,7 @@ import org.jrdf.graph.global.MoleculeGraph;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R2R2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B2R2B3;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.FACTORY;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.factory;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GLOBAL_MOLECULE_COMPARATOR;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_FACTORY;
@@ -109,7 +109,7 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         MoleculeGraphTestUtil.setUp();
-        destGraph = FACTORY.getGraph();
+        destGraph = factory.getGraph();
         destElementFactory = destGraph.getElementFactory();
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);

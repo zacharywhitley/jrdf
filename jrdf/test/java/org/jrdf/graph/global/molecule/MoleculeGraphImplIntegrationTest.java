@@ -80,7 +80,7 @@ import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B3R2R2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B3R2R3;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.BNODE2;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.ELEMENT_FACTORY;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.FACTORY;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.factory;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GLOBAL_MOLECULE_COMPARATOR;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_COMPARATOR;
@@ -343,7 +343,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     private void readTextToGraph() throws IOException {
         final URL resource = getClass().getClassLoader().getResource("org/jrdf/graph/global/molecule/mem/result.txt");
         String text = getAsString(resource);
-        destGraph = FACTORY.getGraph();
+        destGraph = factory.getGraph();
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
         final GraphElementFactory destElementFactory = destGraph.getElementFactory();

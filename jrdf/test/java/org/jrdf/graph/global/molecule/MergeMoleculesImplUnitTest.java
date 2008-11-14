@@ -60,11 +60,11 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r1r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r3b3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r1r3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r2r3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R1R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R2R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R3B3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B3R1R3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B3R2R3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkMoluculeContainsRootTriples;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkSubmoleculesContainsHeadTriples;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
@@ -75,12 +75,12 @@ public class MergeMoleculesImplUnitTest extends TestCase {
     private MergeMolecules mergeMolecules = new MergeMoleculesImpl();
 
     public void testMerge() {
-        Molecule m1 = createMolecule(b2r1r2, b2r2r2, b2r3b3);
-        Molecule m2 = createMolecule(b3r1r3, b3r2r3);
+        Molecule m1 = createMolecule(B2R1R2, B2R2R2, B2R3B3);
+        Molecule m2 = createMolecule(B3R1R3, B3R2R3);
         Molecule newMolecule = mergeMolecules.merge(m1, m2);
-        checkMoluculeContainsRootTriples(newMolecule, b2r1r2, b2r2r2, b2r3b3);
-        Set<Molecule> subMolecules = newMolecule.getSubMolecules(b2r3b3);
+        checkMoluculeContainsRootTriples(newMolecule, B2R1R2, B2R2R2, B2R3B3);
+        Set<Molecule> subMolecules = newMolecule.getSubMolecules(B2R3B3);
         assertEquals(1, subMolecules.size());
-        checkSubmoleculesContainsHeadTriples(subMolecules, b3r1r3);
+        checkSubmoleculesContainsHeadTriples(subMolecules, B3R1R3);
     }
 }

@@ -64,23 +64,23 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1b2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1b3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2b2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2r3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r1r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2b3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r3b3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r3r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r1r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r1r3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r2r3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r3r3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R1B3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R1R1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R2B2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R2R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R2R3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R3R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R3R3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R1R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R2B3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R2R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R3B3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R3R1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B3R1R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B3R1R3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B3R3R3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkMoluculeContainsRootTriples;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkSubmoleculesContainsHeadTriples;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
@@ -112,52 +112,52 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
     }
 
     public void testMergeMolecules() {
-        Molecule molecule1 = createMolecule(b1r1r1, b1r2r2, b1r3r3);
-        Molecule molecule2 = createMolecule(b1r1r1, b1r2r3, b1r3r2);
+        Molecule molecule1 = createMolecule(B1R1R1, B1R2R2, B1R3R3);
+        Molecule molecule2 = createMolecule(B1R1R1, B1R2R3, B1R3R2);
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        checkMoluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r3r3, b1r2r3, b1r3r2);
+        checkMoluculeContainsRootTriples(newMolecule, B1R1R1, B1R2R2, B1R3R3, B1R2R3, B1R3R2);
     }
 
     public void testMergeHeadMoleculesWithSubMolecules() {
-        Molecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
-        Molecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
+        Molecule molecule1 = createMoleculeWithSubmolecule(B1R1R1, B1R2R2);
+        Molecule molecule2 = createMoleculeWithSubmolecule(B1R1R1, B1R3R3);
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
+        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(B1R1R1), B1R2R2, B1R3R3);
     }
 
     // TOODO While there is no way to construct this - the answer should be b1r1b2, b2r2r2 and b1r1b2, b3r1r2.
     public void testMergeTwoMolecules() {
-        Molecule molecule1 = createMoleculeWithSubmolecule(b1r1b2, b2r2r2);
-        Molecule molecule2 = createMoleculeWithSubmolecule(b1r1b3, b3r1r2);
+        Molecule molecule1 = createMoleculeWithSubmolecule(B1R1B2, B2R2R2);
+        Molecule molecule2 = createMoleculeWithSubmolecule(B1R1B3, B3R1R2);
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        Molecule expectedMolecule = createMultiLevelMolecule(asSet(b1r1b2, b1r1b3), Collections.<Triple>emptySet(),
+        Molecule expectedMolecule = createMultiLevelMolecule(asSet(B1R1B2, B1R1B3), Collections.<Triple>emptySet(),
             Collections.<Triple>emptySet());
-        expectedMolecule.add(b1r1b2, createMolecule(b2r2r2));
-        expectedMolecule.add(b1r1b3, createMolecule(b3r1r2));
+        expectedMolecule.add(B1R1B2, createMolecule(B2R2R2));
+        expectedMolecule.add(B1R1B3, createMolecule(B3R1R2));
         assertEquals(expectedMolecule, newMolecule);
     }
 
     public void testMergeM1SubsumesM2() {
-        Molecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r2r2), asSet(b2r1r2, b2r2r2, b2r3b3),
-            asSet(b3r1r3, b3r2r3));
-        Molecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2, b2r3b3), asSet(b3r1r3));
+        Molecule molecule1 = createMultiLevelMolecule(asSet(B1R1R1, B1R2B2, B1R2R2), asSet(B2R1R2, B2R2R2, B2R3B3),
+            asSet(B3R1R3, B3R2R3));
+        Molecule molecule2 = createMultiLevelMolecule(asSet(B1R1R1, B1R2B2), asSet(B2R1R2, B2R3B3), asSet(B3R1R3));
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
         assertEquals(molecule1, newMolecule);
     }
 
     public void testMerge() {
-        Molecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r2r2), asSet(b2r1r2, b2r2r2, b2r3b3),
-            asSet(b3r1r3, b3r2r3));
-        Molecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r3r3), asSet(b2r1r2, b2r3b3, b2r3r1),
-            asSet(b3r1r3, b3r3r3));
+        Molecule molecule1 = createMultiLevelMolecule(asSet(B1R1R1, B1R2B2, B1R2R2), asSet(B2R1R2, B2R2R2, B2R3B3),
+            asSet(B3R1R3, B3R2R3));
+        Molecule molecule2 = createMultiLevelMolecule(asSet(B1R1R1, B1R2B2, B1R3R3), asSet(B2R1R2, B2R3B3, B2R3R1),
+            asSet(B3R1R3, B3R3R3));
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        assertEquals(createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r2r2, b1r3r3), asSet(b2r1r2, b2r2r2, b2r3b3,
-            b2r3r1), asSet(b3r1r3, b3r2r3, b3r3r3)), newMolecule);
+        assertEquals(createMultiLevelMolecule(asSet(B1R1R1, B1R2B2, B1R2R2, B1R3R3), asSet(B2R1R2, B2R2R2, B2R3B3,
+            B2R3R1), asSet(B3R1R3, B3R2R3, B3R3R3)), newMolecule);
     }
 
     public void testMergeUnmatchedHeadTriples() {
-        final Molecule molecule1 = createMolecule(b1r1r1, b1r2b2, b1r2r2);
-        final Molecule molecule2 = createMolecule(b1r2b2, b1r3r3);
+        final Molecule molecule1 = createMolecule(B1R1R1, B1R2B2, B1R2R2);
+        final Molecule molecule2 = createMolecule(B1R2B2, B1R3R3);
         assertThrows(IllegalArgumentException.class, "Cannot merge molecules with different head triples.",
             new AssertThrows.Block() {
                 public void execute() throws Throwable {
@@ -189,12 +189,12 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
 //    }
 
     public void testMoleculeSubsumption() {
-        Molecule molecule1 = createMultiLevelMolecule(asSet(b2r2b3), Collections.<Triple>emptySet(),
+        Molecule molecule1 = createMultiLevelMolecule(asSet(B2R2B3), Collections.<Triple>emptySet(),
             Collections.<Triple>emptySet());
-        Molecule molecule2 = createMultiLevelMolecule(asSet(b2r2b3, b2r1r2), Collections.<Triple>emptySet(),
+        Molecule molecule2 = createMultiLevelMolecule(asSet(B2R2B3, B2R1R2), Collections.<Triple>emptySet(),
             Collections.<Triple>emptySet());
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        Molecule expectedMolecule = createMultiLevelMolecule(asSet(b2r2b3, b2r2b3, b2r1r2),
+        Molecule expectedMolecule = createMultiLevelMolecule(asSet(B2R2B3, B2R2B3, B2R1R2),
             Collections.<Triple>emptySet(), Collections.<Triple>emptySet());
         assertEquals(expectedMolecule, newMolecule);
     }
@@ -209,11 +209,11 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
 //    }
 
     public void testMergeSubmolecules() {
-        Molecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
-        Molecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
-        Molecule newMolecule = mergeSubmolecules.merge(b1r1r1, molecule1, molecule2);
-        assertEquals("Expected head triple to be", b1r1r1, newMolecule.getHeadTriple());
-        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
+        Molecule molecule1 = createMoleculeWithSubmolecule(B1R1R1, B1R2R2);
+        Molecule molecule2 = createMoleculeWithSubmolecule(B1R1R1, B1R3R3);
+        Molecule newMolecule = mergeSubmolecules.merge(B1R1R1, molecule1, molecule2);
+        assertEquals("Expected head triple to be", B1R1R1, newMolecule.getHeadTriple());
+        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(B1R1R1), B1R2R2, B1R3R3);
     }
 
     // TODO AN Support this and other more complicated merge examples!

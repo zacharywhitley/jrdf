@@ -83,7 +83,7 @@ import java.net.URI;
  */
 
 public class MoleculeGraphTestUtil {
-    public static GlobalJRDFFactory FACTORY;
+    public static GlobalJRDFFactory factory;
     public static TripleComparator COMPARATOR, GLOBAL_COMPARATOR;
     public static MoleculeComparator MOLECULE_COMPARATOR, GLOBAL_MOLECULE_COMPARATOR;
     public static MoleculeFactory MOLECULE_FACTORY;
@@ -118,8 +118,8 @@ public class MoleculeGraphTestUtil {
         MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
 
         new TempDirectoryHandler().removeDir();
-        FACTORY = SortedDiskGlobalJRDFFactory.getFactory();
-        GRAPH = FACTORY.getGraph();
+        factory = SortedDiskGlobalJRDFFactory.getFactory();
+        GRAPH = factory.getGraph();
         GRAPH.clear();
         ELEMENT_FACTORY = GRAPH.getElementFactory();
         TRIPLE_FACTORY = GRAPH.getTripleFactory();
@@ -145,6 +145,6 @@ public class MoleculeGraphTestUtil {
     public static void close() {
         GRAPH.clear();
         GRAPH.close();
-        FACTORY.close();
+        factory.close();
     }
 }
