@@ -196,7 +196,8 @@ public class LocalMergeSubmoleculesImplUnitTest extends TestCase {
 //    public void testMergeUnmatchedLevelTriples() {
 //        Molecule molecule1 = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2), triplesAsSet(b2r3r1),
 //                Collections.<Triple>emptySet());
-//        Molecule molecule2 = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2), triplesAsSet(b2r1r2, b2r2r2, b2r3b3),
+//        Molecule molecule2 = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2), triplesAsSet(b2r1r2, b2r2r2,
+// b2r3b3),
 //            asSet(b3r1r3));
 //        Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
 //        Molecule expectedMolecule = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2),

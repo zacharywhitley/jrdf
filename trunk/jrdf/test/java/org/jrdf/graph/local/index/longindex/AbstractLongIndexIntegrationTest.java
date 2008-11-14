@@ -121,7 +121,7 @@ public abstract class AbstractLongIndexIntegrationTest extends TestCase {
     public void testRemove() throws Exception {
         longIndex.add(1L, 2L, 3L);
         longIndex.add(3L, 4L, 3L);
-        assertThrows(GraphException.class, new AssertThrows.Block(){
+        assertThrows(GraphException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 longIndex.remove(1L, 1L, 1L);
             }

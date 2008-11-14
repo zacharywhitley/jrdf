@@ -72,7 +72,7 @@ import java.lang.reflect.InvocationTargetException;
  * Tests the contract of a method or constructor so that the methods throw IllegalArgumentException if null is passed.
  */
 public class ArgumentTestUtil {
-    private static final MockFactory factory = new MockFactory();
+    private static final MockFactory FACTORY = new MockFactory();
     private static final String CANNOT_BE_NULL = " cannot be null";
     private static final String CANNOT_BE_EMPTY = " cannot be the empty string";
 
@@ -89,7 +89,7 @@ public class ArgumentTestUtil {
     }
 
     public static void checkConstructorSetsFields(Class[] paramTypes, Class<?> clazz, String[] parameterNames) {
-        Object[] args = factory.createArgs(paramTypes, -1);
+        Object[] args = FACTORY.createArgs(paramTypes, -1);
         ParamSpec spec = new ParamSpec(paramTypes, args);
         Object obj = createInstanceUsingConstructor(clazz, spec);
         for (int index = 0; index < parameterNames.length; index++) {
@@ -107,7 +107,7 @@ public class ArgumentTestUtil {
         for (int index = 0; index < paramTypes.length; index++) {
             if (!paramTypes[index].isPrimitive()) {
                 String message = "Parameter " + (index + 1) + CANNOT_BE_NULL;
-                Object[] args = factory.createArgs(paramTypes, index);
+                Object[] args = FACTORY.createArgs(paramTypes, index);
                 final ParamSpec params = new ParamSpec(paramTypes, args);
                 assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
                     public void execute() throws Throwable {
@@ -143,7 +143,7 @@ public class ArgumentTestUtil {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
         for (int index = 0; index < parameterTypes.length; index++) {
             if (checkParameter[index]) {
-                final Object[] args = factory.createArgs(parameterTypes, index);
+                final Object[] args = FACTORY.createArgs(parameterTypes, index);
                 String message = "Parameter " + (index + 1) + CANNOT_BE_NULL;
                 checkThrowsIllegalArgumentException(message, obj, methodName, parameterTypes, args);
             }
@@ -155,7 +155,7 @@ public class ArgumentTestUtil {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
         for (int index = 0; index < parameterTypes.length; index++) {
             if (checkParameter[index] && parameterTypes[index].equals(String.class)) {
-                final Object[] args = factory.createArgs(parameterTypes, index);
+                final Object[] args = FACTORY.createArgs(parameterTypes, index);
                 String message = "Parameter " + (paramDefinition.getParameterNames()[index]);
                 checkThrowsIllegalArgumentException(message + CANNOT_BE_NULL, obj, methodName, parameterTypes, args);
                 args[index] = "";

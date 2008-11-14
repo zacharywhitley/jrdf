@@ -76,6 +76,8 @@ import org.jrdf.graph.local.mem.CollectionImpl;
 import org.jrdf.graph.local.mem.SequenceImpl;
 import org.jrdf.vocabulary.RDF;
 
+import java.util.Arrays;
+
 /**
  * Implementation of {@link AbstractTripleFactoryUnitTest} test
  * case.
@@ -99,8 +101,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     public PredicateNode getReifySubject() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.SUBJECT);
-        }
-        catch (GraphElementFactoryException gefe) {
+        } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
     }
@@ -109,8 +110,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     public PredicateNode getReifyPredicate() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.PREDICATE);
-        }
-        catch (GraphElementFactoryException gefe) {
+        } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
     }
@@ -119,8 +119,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     public PredicateNode getReifyObject() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.OBJECT);
-        }
-        catch (GraphElementFactoryException gefe) {
+        } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
     }
@@ -129,8 +128,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     public PredicateNode getRdfType() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.TYPE);
-        }
-        catch (GraphElementFactoryException gefe) {
+        } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
     }
@@ -139,8 +137,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     public ObjectNode getRdfStatement() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.STATEMENT);
-        }
-        catch (GraphElementFactoryException gefe) {
+        } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
     }
@@ -148,36 +145,28 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     @Override
     public Collection createCollection(ObjectNode[] objects) {
         Collection collection = new CollectionImpl();
-        for (ObjectNode object : objects) {
-            collection.add(object);
-        }
+        collection.addAll(Arrays.asList(objects));
         return collection;
     }
 
     @Override
     public Alternative createAlternative(ObjectNode[] objects) {
         Alternative alternative = new AlternativeImpl();
-        for (ObjectNode object : objects) {
-            alternative.add(object);
-        }
+        alternative.addAll(Arrays.asList(objects));
         return alternative;
     }
 
     @Override
     public Bag createBag(ObjectNode[] objects) {
         Bag bag = new BagImpl();
-        for (ObjectNode object : objects) {
-            bag.add(object);
-        }
+        bag.addAll(Arrays.asList(objects));
         return bag;
     }
 
     @Override
     public Sequence createSequence(ObjectNode[] objects) {
         Sequence sequence = new SequenceImpl();
-        for (ObjectNode object : objects) {
-            sequence.add(object);
-        }
+        sequence.addAll(Arrays.asList(objects));
         return sequence;
     }
 }

@@ -123,7 +123,8 @@ public class TripleTestUtil {
 
     public static Expression<ExpressionVisitor> createBookDcTitleExpression(URI bookUri, long suffix) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
-        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(dcTitleTriple, createAttributes(suffix));
+        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(dcTitleTriple,
+            createAttributes(suffix));
         return new SingleConstraint<ExpressionVisitor>(avp);
     }
 
@@ -231,10 +232,10 @@ public class TripleTestUtil {
     }
 
     private static Attribute[] createAttributes(AttributeName subject, AttributeName predicate, AttributeName object) {
-        Attribute ATT_1 = new AttributeImpl(subject, new SubjectNodeType());
-        Attribute ATT_2 = new AttributeImpl(predicate, new PredicateNodeType());
-        Attribute ATT_3 = new AttributeImpl(object, new ObjectNodeType());
-        return new Attribute[]{ATT_1, ATT_2, ATT_3};
+        Attribute att1 = new AttributeImpl(subject, new SubjectNodeType());
+        Attribute att2 = new AttributeImpl(predicate, new PredicateNodeType());
+        Attribute att3 = new AttributeImpl(object, new ObjectNodeType());
+        return new Attribute[]{att1, att2, att3};
     }
 
     private static class SimpleClosableIterator<Triple> implements ClosableIterator<Triple> {

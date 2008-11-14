@@ -85,11 +85,11 @@ public final class URIReferenceImplUnitTest extends AbstractURIReferenceUnitTest
     }
 
     public URIReference createResource(URI uri) throws Exception {
-        return new URIReferenceImpl(uri, 1l);
+        return new URIReferenceImpl(uri, 1L);
     }
 
     public URIReference createResource(URI uri, boolean validate) throws Exception {
-        return new URIReferenceImpl(uri, validate, 1l);
+        return new URIReferenceImpl(uri, validate, 1L);
     }
 
     public void testClassProperties() {
