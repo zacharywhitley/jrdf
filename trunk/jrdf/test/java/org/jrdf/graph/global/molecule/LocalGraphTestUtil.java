@@ -93,6 +93,8 @@ public class LocalGraphTestUtil {
     public static final BlankNode BNODE4;
     public static final BlankNode BNODE5;
     public static final BlankNode BNODE6;
+    public static final BlankNode BNODE7;
+    public static final BlankNode BNODE8;
     public static final Triple R1R1R1;
     public static final Triple R1R1B1;
     public static final Triple R1R1B3;
@@ -133,6 +135,10 @@ public class LocalGraphTestUtil {
     public static final Triple B4R2B3;
     public static final Triple B5R2B3;
     public static final Triple B5R1B4;
+    public static final Triple B5R1B6;
+    public static final Triple B6R1B7;
+    public static final Triple B7R1B8;
+    public static final Triple B7R2B8;
 
 
     static {
@@ -146,6 +152,8 @@ public class LocalGraphTestUtil {
             BNODE4 = ELEMENT_FACTORY.createBlankNode();
             BNODE5 = ELEMENT_FACTORY.createBlankNode();
             BNODE6 = ELEMENT_FACTORY.createBlankNode();
+            BNODE7 = ELEMENT_FACTORY.createBlankNode();
+            BNODE8 = ELEMENT_FACTORY.createBlankNode();
             R1R1R1 = TRIPLE_FACTORY.createTriple(REF1, REF1, REF1);
             R1R1B1 = TRIPLE_FACTORY.createTriple(REF1, REF1, BNODE1);
             R1R1B2 = TRIPLE_FACTORY.createTriple(REF1, REF1, BNODE2);
@@ -186,6 +194,10 @@ public class LocalGraphTestUtil {
             B4R2B3 = TRIPLE_FACTORY.createTriple(BNODE4, REF2, BNODE3);
             B5R2B3 = TRIPLE_FACTORY.createTriple(BNODE5, REF2, BNODE3);
             B5R1B4 = TRIPLE_FACTORY.createTriple(BNODE5, REF1, BNODE4);
+            B5R1B6 = TRIPLE_FACTORY.createTriple(BNODE5, REF1, BNODE6);
+            B6R1B7 = TRIPLE_FACTORY.createTriple(BNODE6, REF1, BNODE7);
+            B7R1B8 = TRIPLE_FACTORY.createTriple(BNODE7, REF1, BNODE8);
+            B7R2B8 = TRIPLE_FACTORY.createTriple(BNODE7, REF2, BNODE8);
         } catch (GraphElementFactoryException e) {
             throw new ExceptionInInitializerError("Failed to create required resources");
         }

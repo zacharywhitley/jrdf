@@ -106,10 +106,10 @@ public class TextToMoleculeUnitTest extends TestCase {
     private static final TripleComparator TRIPLE_COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
     private static final TripleComparator COMPARATOR = new GroundedTripleComparatorImpl(TRIPLE_COMPARATOR);
     private static final MoleculeComparator MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(COMPARATOR);
-
-    private static final TripleComparator GLOBAL_TRIPLE_COMPARATOR = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private static final MoleculeComparator GLOBAL_MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(GLOBAL_TRIPLE_COMPARATOR);
-
+    private static final TripleComparator GLOBAL_TRIPLE_COMPARATOR = new GroundedTripleComparatorFactoryImpl().
+        newComparator();
+    private static final MoleculeComparator GLOBAL_MOLECULE_COMPARATOR = new MoleculeHeadTripleComparatorImpl(
+        GLOBAL_TRIPLE_COMPARATOR);
     private static final MoleculeFactoryImpl FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
 
     public void setUp() throws Exception {

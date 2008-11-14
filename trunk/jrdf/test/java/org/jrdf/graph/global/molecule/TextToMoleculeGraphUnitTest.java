@@ -60,18 +60,17 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.MoleculeGraph;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R1B2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B1R2R2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.B2R2B3;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b1r1b2;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b1r2r2;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b2r2b3;
 import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.factory;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GLOBAL_MOLECULE_COMPARATOR;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.GRAPH;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.MOLECULE_FACTORY;
-import org.jrdf.graph.global.molecule.mem.MoleculeTraverserImpl;
-import org.jrdf.collection.MemMapFactory;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.globalMoleculeComparator;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.graph;
+import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.moleculeFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
@@ -102,7 +101,6 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
     private MoleculeGraph destGraph;
     private TextToMolecule textToMolecule;
     private TripleParserImpl tripleParser;
-    private MoleculeTraverser traverser;
     private TextToMoleculeGraph graphBuilder;
     private GraphElementFactory destElementFactory;
 
@@ -114,13 +112,14 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
         URIReferenceParser referenceParser = new URIReferenceParserImpl(destElementFactory, nTripleUtil);
-        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(), destElementFactory);
+        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
+            destElementFactory);
         final BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         final LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
         final LiteralParser literalParser = new LiteralParserImpl(destElementFactory, literalMatcher);
-        traverser = new MoleculeTraverserImpl();
-        tripleParser = new TripleParserImpl(referenceParser, blankNodeParser, literalParser, destGraph.getTripleFactory());
-        textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, MOLECULE_FACTORY);
+        tripleParser = new TripleParserImpl(referenceParser, blankNodeParser, literalParser,
+            destGraph.getTripleFactory());
+        textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, moleculeFactory);
         graphBuilder = new TextToMoleculeGraph(textToMolecule);
     }
 
@@ -131,38 +130,38 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
     }
 
     public void testOneMoleculeGraph() throws IOException {
-        Molecule m1 = MOLECULE_FACTORY.createMolecule(B1R1B2);
-        GRAPH.add(m1);
-        graphBuilder.parse(new StringReader(GRAPH.toString()));
+        Molecule m1 = moleculeFactory.createMolecule(b1r1b2);
+        graph.add(m1);
+        graphBuilder.parse(new StringReader(graph.toString()));
         assertTrue(graphBuilder.hasNext());
         Molecule mol = graphBuilder.next();
-        assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(m1, mol));
+        assertEquals("Same molecule", 0, globalMoleculeComparator.compare(m1, mol));
         assertFalse(graphBuilder.hasNext());
     }
 
     public void testTwoLevelMolecule() throws IOException {
-        Molecule m1 = MOLECULE_FACTORY.createMolecule(B1R1B2);
-        Molecule m2 = MOLECULE_FACTORY.createMolecule(B2R2B3);
-        m1.add(B1R1B2, m2);
+        Molecule m1 = moleculeFactory.createMolecule(b1r1b2);
+        Molecule m2 = moleculeFactory.createMolecule(b2r2b3);
+        m1.add(b1r1b2, m2);
         Set<Molecule> mols = new HashSet<Molecule>();
         mols.add(m1);
-        GRAPH.add(m1);
-        graphBuilder.parse(new StringReader(GRAPH.toString()));
+        graph.add(m1);
+        graphBuilder.parse(new StringReader(graph.toString()));
         assertTrue(graphBuilder.hasNext());
         Molecule mol = graphBuilder.next();
-        assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(m1, mol));
+        assertEquals("Same molecule", 0, globalMoleculeComparator.compare(m1, mol));
         assertFalse(graphBuilder.hasNext());
     }
 
     public void testTwoMolecules() throws IOException, GraphException {
-        Molecule m1 = MOLECULE_FACTORY.createMolecule(B1R1B2);
-        Molecule m2 = MOLECULE_FACTORY.createMolecule(B1R2R2);
-        GRAPH.add(m1);
-        GRAPH.add(m2);
+        Molecule m1 = moleculeFactory.createMolecule(b1r1b2);
+        Molecule m2 = moleculeFactory.createMolecule(b1r2r2);
+        graph.add(m1);
+        graph.add(m2);
         Set<Molecule> mols = new HashSet<Molecule>();
         mols.add(m1);
         mols.add(m2);
-        graphBuilder.parse(new StringReader(GRAPH.toString()));
+        graphBuilder.parse(new StringReader(graph.toString()));
         int size = 0;
         while (graphBuilder.hasNext()) {
             Molecule mol = graphBuilder.next();
@@ -175,7 +174,7 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
 
     private boolean setContainsMolecule(Set<Molecule> set, Molecule molecule) {
         for (Molecule mol : set) {
-            if (GLOBAL_MOLECULE_COMPARATOR.compare(mol, molecule) == 0) {
+            if (globalMoleculeComparator.compare(mol, molecule) == 0) {
                 return true;
             }
         }
