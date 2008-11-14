@@ -149,7 +149,6 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         return start;
     }
 
-    @SuppressWarnings({"unchecked"})
     private Parser createParser(Start start) throws Exception {
         Parser parser = mockFactory.createMock(Parser.class);
         parser.parse();
@@ -165,7 +164,6 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
 
-    @SuppressWarnings({"unchecked"})
     private ParserFactory createParserFactory(Parser parser) {
         ParserFactory parserFactory = mockFactory.createMock(ParserFactory.class);
         parserFactory.getParser(QUERY_BOOK_1_DC_TITLE);

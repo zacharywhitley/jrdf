@@ -86,10 +86,7 @@ public final class ClassPropertiesTestUtil {
 
     public static boolean isPublicInstance(Method method) {
         int modifiers = method.getModifiers();
-        if (!Modifier.isPublic(modifiers)) {
-            return false;
-        }
-        return !Modifier.isStatic(modifiers);
+        return Modifier.isPublic(modifiers) && !Modifier.isStatic(modifiers);
     }
 
     public static boolean isClassAbstract(Class<?> cls) {
@@ -121,14 +118,14 @@ public final class ClassPropertiesTestUtil {
     }
 
     public static void checkImplementationOfInterfaceAndFinal(Class<?> targetInterface, Class implementationClass) {
-        Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of "
-            + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
+        Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of " +
+            targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
         Assert.assertTrue(implementationClass.getSimpleName() + " must be final", isClassFinal(implementationClass));
     }
 
     public static void checkImplementationOfInterface(Class<?> targetInterface, Class implementationClass) {
-        Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of "
-            + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
+        Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of " +
+            targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
     }
 
     public static void checkExtensionOf(Class<?> superClass, Class subClass) {

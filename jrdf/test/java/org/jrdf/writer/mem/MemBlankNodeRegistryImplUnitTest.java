@@ -75,9 +75,9 @@ import org.jrdf.writer.BlankNodeRegistry;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public class MemBlankNodeRegistryImplUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
+    private static final MockFactory FACTORY = new MockFactory();
     private static final String[] PARAM_NAMES = {"node"};
     private static final Class[] PARAM_TYPES = {BlankNode.class};
     private static final ParameterDefinition GET_NODEID_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
@@ -122,17 +122,17 @@ public class MemBlankNodeRegistryImplUnitTest extends TestCase {
     }
 
     private void setUpMocks() {
-        factory.reset();
+        FACTORY.reset();
         nodeRegistry = new MemBlankNodeRegistryImpl();
-        bNodes = factory.createMock(List.class);
-        blankNode = factory.createMock(BlankNode.class);
+        bNodes = FACTORY.createMock(List.class);
+        blankNode = FACTORY.createMock(BlankNode.class);
     }
 
     private void insertFieldAndCall(int nodeId) {
         insertFieldValue(nodeRegistry, FIELD_1_NAME, bNodes);
-        factory.replay();
+        FACTORY.replay();
         String s = nodeRegistry.getNodeId(blankNode);
-        factory.verify();
+        FACTORY.verify();
         assertEquals("bNode_" + nodeId, s);
     }
 }

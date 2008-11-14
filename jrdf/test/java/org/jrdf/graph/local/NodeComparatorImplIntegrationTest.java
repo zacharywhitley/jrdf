@@ -65,7 +65,6 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.datatype.SemanticLiteralComparatorImpl;
 import org.jrdf.graph.datatype.SemanticLiteralComparator;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
@@ -82,10 +81,10 @@ import java.util.Comparator;
  * @version $Id$
  */
 public class NodeComparatorImplIntegrationTest extends TestCase {
-    public static final URIReference URI_1 = new URIReferenceImpl(RDF.ALT, 1l);
-    public static final URIReference URI_2 = new URIReferenceImpl(RDF.BAG, 2l);
-    public static final BlankNode BNODE_1 = new BlankNodeImpl("a", 1l);
-    public static final BlankNode BNODE_2 = new BlankNodeImpl("b", 2l);
+    public static final URIReference URI_1 = new URIReferenceImpl(RDF.ALT, 1L);
+    public static final URIReference URI_2 = new URIReferenceImpl(RDF.BAG, 2L);
+    public static final BlankNode BNODE_1 = new BlankNodeImpl("a", 1L);
+    public static final BlankNode BNODE_2 = new BlankNodeImpl("b", 2L);
     public static final Literal LITERAL_1 = new LiteralImpl("bar");
     public static final Literal LITERAL_2 = new LiteralImpl("foo");
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
@@ -131,13 +130,13 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
     public void testBlankNodeComparison() {
         assertEquals(BEFORE, nodeComparator.compare(BNODE_1, BNODE_2));
         assertEquals(AFTER, nodeComparator.compare(BNODE_2, BNODE_1));
-        assertEquals(EQUAL, nodeComparator.compare(BNODE_2, new BlankNodeImpl("b", 2l)));
+        assertEquals(EQUAL, nodeComparator.compare(BNODE_2, new BlankNodeImpl("b", 2L)));
     }
 
     public void testURIComparisonByString() {
         assertEquals(BEFORE, nodeComparator.compare(URI_1, URI_2));
         assertEquals(AFTER, nodeComparator.compare(URI_2, URI_1));
-        assertEquals(EQUAL, nodeComparator.compare(URI_2, new URIReferenceImpl(RDF.BAG, 2l)));
+        assertEquals(EQUAL, nodeComparator.compare(URI_2, new URIReferenceImpl(RDF.BAG, 2L)));
     }
 
     public void testLiteralComparisonByString() {

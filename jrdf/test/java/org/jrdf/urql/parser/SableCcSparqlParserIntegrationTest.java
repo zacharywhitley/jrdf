@@ -134,48 +134,46 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings({"unchecked"})
 public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     // FIXME TJA: Triangulate on variables.
     // FIXME TJA: Triangulate on expression expression.
     // FIXME TJA: Write tests to force trimming of query string.
-    // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Projection.ALL_VARIABLES is the empty list.
-
+    // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the
+    // Projection.ALL_VARIABLES is the empty list.
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getGraph();
     private static final Literal LITERAL = createLiteral("The Pragmatic Programmer");
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_CONJUNCTION
-            = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+        = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_CONJUNCTION
-            = new Conjunction<ExpressionVisitor>(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
+        = new Conjunction<ExpressionVisitor>(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_UNION
-            = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+        = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_UNION
-            = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
+        = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_EMPTY_UNION
-            = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, EMPTY_CONSTRAINT);
-    private static final Expression<ExpressionVisitor> EMPTY_AND_BOOK1_AND_2_UNION
-            = new Union<ExpressionVisitor>(new Union<ExpressionVisitor>(EMPTY_CONSTRAINT, BOOK_1_DC_TITLE_ID_1),
-            BOOK_2_DC_TITLE_ID_2);
+        = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, EMPTY_CONSTRAINT);
+    private static final Expression<ExpressionVisitor> EMPTY_AND_BOOK1_AND_2_UNION = new Union<ExpressionVisitor>(
+        new Union<ExpressionVisitor>(EMPTY_CONSTRAINT, BOOK_1_DC_TITLE_ID_1), BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> ALL_AND_EMPTY = new Conjunction<ExpressionVisitor>(ANY_SPO,
-            EMPTY_CONSTRAINT);
+        EMPTY_CONSTRAINT);
     private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
-            "name", 1);
+        "name", 1);
     private static final Expression<ExpressionVisitor> FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK,
-            "nick", 2);
+        "nick", 2);
     private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_2 = createConstraintExpression("x", FOAF_NICK,
-            "alias", 2);
+        "alias", 2);
     private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
-            "mbox", 3);
+        "mbox", 3);
     private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
-            "alias", 3);
+        "alias", 3);
     private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_3 = createConstraintExpression("x", FOAF_NAME,
-            "name", 3);
+        "name", 3);
     private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX,
-            "mbox", 4);
+        "mbox", 4);
     private static final Expression<ExpressionVisitor> DC_DATE_EXP_2 = createConstraintExpression("x",
-            URI.create("http://purl.org/dc/elements/1.1/date"), "date", 2);
+        URI.create("http://purl.org/dc/elements/1.1/date"), "date", 2);
 
     private static final String SELECT_WHERE_S_P_O_AND_EMPTY = "SELECT * WHERE { ?s ?p ?o . {} } ";
     private QueryParser parser;
@@ -184,7 +182,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
         parser = new SableCcSparqllParser(FACTORY.getNewParserFactory(), FACTORY.getNewGraphRelationFactory(),
-                newSortedAttributeFactory);
+            newSortedAttributeFactory);
     }
 
     public void testSingleConstraint() throws Exception {
@@ -290,9 +288,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Expression<ExpressionVisitor> spHello3 = createConstraintExpression("s", "p", helloString, 3);
         checkConstraintExpression("SELECT * WHERE { ?s ?p '1'^^<http://www.w3.org/2001/XMLSchema#integer> }", spHello1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'^^<http://www.w3.org/2001/XMLSchema#string> }",
-                spHello2);
+            spHello2);
         checkConstraintExpression("PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>" +
-                " SELECT * WHERE { ?s ?p 'hello'^^xsd:string }", spHello3);
+            " SELECT * WHERE { ?s ?p 'hello'^^xsd:string }", spHello3);
     }
 
     public void testLiteralWithIncorrectPrefix() {
@@ -319,9 +317,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Literal negOnePointThreeZeroZeroZero = createLiteral("-1.300", XSD.DECIMAL);
         Expression<ExpressionVisitor> spOnePointThree = createConstraintExpression("s", "p", onePointThree, 1);
         Expression<ExpressionVisitor> spOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
-                onePointThreeZeroZeroZero, 2);
+            onePointThreeZeroZeroZero, 2);
         Expression<ExpressionVisitor> spNegOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
-                negOnePointThreeZeroZeroZero, 3);
+            negOnePointThreeZeroZeroZero, 3);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.3 }", spOnePointThree);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.300 }", spOnePointThreeZeroZeroZero);
         checkConstraintExpression("SELECT * WHERE { ?s ?p -1.300 }", spNegOnePointThreeZeroZeroZero);
@@ -373,18 +371,19 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression(strAvo, avo);
         Expression<ExpressionVisitor> filterExpression = new Filter(spoExpression, equalsExpression);
         checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
-                "SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", filterExpression);
+            "SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", filterExpression);
     }
 
     public void testThreePartOptional() throws Exception {
         String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-                "SELECT ?name\n" +
-                "WHERE { ?x foaf:name ?name .\n" +
-                "OPTIONAL { ?x dc:date ?date } .\n" +
-                "FILTER ( bound(?date) ) }";
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+            "SELECT ?name\n" +
+            "WHERE { ?x foaf:name ?name .\n" +
+            "OPTIONAL { ?x dc:date ?date } .\n" +
+            "FILTER ( bound(?date) ) }";
 
-        Expression<ExpressionVisitor> optionalExpression = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, DC_DATE_EXP_2);
+        Expression<ExpressionVisitor> optionalExpression = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1,
+            DC_DATE_EXP_2);
         AttributeName dateVar = new VariableName("date");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
@@ -397,10 +396,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testBooleanNotOperator() throws Exception {
         String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-                "SELECT ?name\n" +
-                "WHERE { ?x foaf:name ?name .\n" +
-                "FILTER ( !bound(?name) ) }";
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+            "SELECT ?name\n" +
+            "WHERE { ?x foaf:name ?name .\n" +
+            "FILTER ( !bound(?name) ) }";
 
         AttributeName dateVar = new VariableName("name");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
@@ -415,10 +414,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testBooleanNotStrOperators() throws Exception {
         String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-                "SELECT ?name\n" +
-                "WHERE { ?x foaf:name ?name .\n" +
-                "FILTER ( !(str(?name) = \"abc\")) }";
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+            "SELECT ?name\n" +
+            "WHERE { ?x foaf:name ?name .\n" +
+            "FILTER ( !(str(?name) = \"abc\")) }";
         AttributeName dateVar = new VariableName("name");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
@@ -441,10 +440,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testNeqExpression() throws Exception {
         String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-                "SELECT ?name\n" +
-                "WHERE { ?x foaf:name ?name .\n" +
-                "FILTER ( str(?name) != \"abc\") }";
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+            "SELECT ?name\n" +
+            "WHERE { ?x foaf:name ?name .\n" +
+            "FILTER ( str(?name) != \"abc\") }";
         AttributeName dateVar = new VariableName("name");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
@@ -466,10 +465,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testBooleanAndExpression() throws Exception {
         String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-                "SELECT ?name\n" +
-                "WHERE { ?x foaf:name ?name .\n" +
-                "FILTER ( str(?name) = \"abc\" && bound(?x) ) }";
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+            "SELECT ?name\n" +
+            "WHERE { ?x foaf:name ?name .\n" +
+            "FILTER ( str(?name) = \"abc\" && bound(?x) ) }";
         AttributeName nameVar = new VariableName("name");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(nameVar, new ObjectNodeType());
@@ -497,21 +496,21 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testComplexQuery() throws InvalidQuerySyntaxException {
         String queryString =
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" +
-                        "PREFIX biopax: <http://www.biopax.org/release/biopax-level2.owl#> \n" +
-                        "PREFIX biomanta: <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#> \n" +
-                        "PREFIX ncbi: <http://biomanta.sourceforge.net/2007/10/ncbi_taxo.owl#> \n" +
-                        "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
-                        "SELECT ?name ?id \n" +
-                        "WHERE { { ?x rdf:type biopax:physicalEntity . \n" +
-                        "        ?x biomanta:fromNCBISpecies ncbi:ncbi_taxo_4932_ind . \n" +
-                        "        ?x biomanta:hasPrimaryRef ?y . \n" +
-                        "        ?y biopax:DB ?db \n" +
-                        "        FILTER (str(?db) = \"uniprotkb\"^^xsd:string) } . \n" +
-                        "        \n" +
-                        "        { ?y biopax:ID ?id . \n" +
-                        "        FILTER (str(?id) = \"o13516\"^^xsd:string) } . \n" +
-                        "        ?x biomanta:hasFullName ?name }";
+            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" +
+                "PREFIX biopax: <http://www.biopax.org/release/biopax-level2.owl#> \n" +
+                "PREFIX biomanta: <http://biomanta.sourceforge.net/2007/07/biomanta_extension_02.owl#> \n" +
+                "PREFIX ncbi: <http://biomanta.sourceforge.net/2007/10/ncbi_taxo.owl#> \n" +
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
+                "SELECT ?name ?id \n" +
+                "WHERE { { ?x rdf:type biopax:physicalEntity . \n" +
+                "        ?x biomanta:fromNCBISpecies ncbi:ncbi_taxo_4932_ind . \n" +
+                "        ?x biomanta:hasPrimaryRef ?y . \n" +
+                "        ?y biopax:DB ?db \n" +
+                "        FILTER (str(?db) = \"uniprotkb\"^^xsd:string) } . \n" +
+                "        \n" +
+                "        { ?y biopax:ID ?id . \n" +
+                "        FILTER (str(?id) = \"o13516\"^^xsd:string) } . \n" +
+                "        ?x biomanta:hasFullName ?name }";
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
     }
@@ -521,7 +520,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression("ASK WHERE { ?s ?p 'The Pragmatic Programmer' } ", spPrag1);
     }
 
-    private void checkConstraintExpression(String queryString, Expression<ExpressionVisitor> expectedExpression) throws Exception {
+    private void checkConstraintExpression(String queryString, Expression<ExpressionVisitor> expectedExpression) throws
+        Exception {
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
         assertEquals(expectedExpression, actualExpression);
@@ -530,7 +530,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private Expression<ExpressionVisitor> getExpression(Query query) {
         try {
             if (query instanceof SelectQueryImpl) {
-                Expression<ExpressionVisitor> expression = getExpressionField(query, SelectQueryImpl.class, "expression");
+                Expression<ExpressionVisitor> expression = getExpressionField(query, SelectQueryImpl.class,
+                    "expression");
                 return getExpressionField(expression, Projection.class, "nextExpression");
             } else if (query instanceof AskQueryImpl) {
                 Expression<ExpressionVisitor> expression = getExpressionField(query, AskQueryImpl.class, "expression");
@@ -544,7 +545,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     private Expression<ExpressionVisitor> getExpressionField(Object obj, Class<?> cls, String fieldName)
-            throws IllegalAccessException {
+        throws IllegalAccessException {
         Field field = ReflectTestUtil.getField(cls, fieldName);
         field.setAccessible(true);
         return (Expression<ExpressionVisitor>) field.get(obj);

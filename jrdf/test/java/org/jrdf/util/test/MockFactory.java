@@ -79,11 +79,11 @@ public class MockFactory {
     private static final ArnoldTheInstantiator INSTANTIATOR = new ArnoldTheInstantiator();
     private List<IMocksControl> controls = new ArrayList<IMocksControl>();
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public <T> T createMock(Class<T> clazz) {
         if (clazz.isPrimitive()) {
             if (clazz.equals(Long.TYPE)) {
-                return (T) new Long(1l);
+                return (T) new Long(1L);
             } else if (clazz.equals(Boolean.TYPE)) {
                 return (T) Boolean.TRUE;
             } else if (clazz.equals(Integer.TYPE)) {
@@ -116,10 +116,10 @@ public class MockFactory {
      * Creates mocked implementations of the parameter type given.
      *
      * @param parameterTypes the types to create.
-     * @param index          the index to use in which to create a null Object - can be -1 and will not create any nulls.
+     * @param index the index to use in which to create a null Object - can be -1 and will not create any nulls.
      * @return an array of created types.
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public Object[] createArgs(Class[] parameterTypes, int index) {
         Object[] objects = new Object[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {

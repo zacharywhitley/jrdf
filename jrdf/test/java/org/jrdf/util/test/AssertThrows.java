@@ -80,11 +80,9 @@ public class AssertThrows {
         try {
             block.execute();
             Assert.fail("Failed to throw exception: " + exceptionClass + " with message: " + message);
-        }
-        catch (AssertionFailedError e) {
+        } catch (AssertionFailedError e) {
             throw e;
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             checkExceptionClass(exceptionClass, t);
             Assert.assertEquals(message, t.getMessage());
         }
@@ -94,11 +92,9 @@ public class AssertThrows {
         try {
             block.execute();
             Assert.fail("Failed to throw any exception: " + exceptionClass);
-        }
-        catch (AssertionFailedError e) {
+        } catch (AssertionFailedError e) {
             throw e;
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             checkExceptionClass(exceptionClass, t);
         }
     }
@@ -111,7 +107,6 @@ public class AssertThrows {
     }
 
     public interface Block {
-
         void execute() throws Throwable;
     }
 }

@@ -68,7 +68,7 @@ import junit.framework.Assert;
  * @version $Revision:$
  */
 public class ExceptionTestUtil {
-    private static final MockFactory factory = new MockFactory();
+    private static final MockFactory FACTORY = new MockFactory();
     private static final String FIRST_MESSAGE = "foo";
     private static final String FIRST_SECOND = "bar";
 
@@ -90,12 +90,12 @@ public class ExceptionTestUtil {
     }
 
     public static void testMessageAndThrowableConstructor(Class<?> clazz) {
-        checkGetMessageAndThrowable(clazz, FIRST_MESSAGE, factory.createMock(Throwable.class));
-        checkGetMessageAndThrowable(clazz, FIRST_SECOND, factory.createMock(Throwable.class));
+        checkGetMessageAndThrowable(clazz, FIRST_MESSAGE, FACTORY.createMock(Throwable.class));
+        checkGetMessageAndThrowable(clazz, FIRST_SECOND, FACTORY.createMock(Throwable.class));
     }
 
     public static void testThrowableConstructor(Class<?> clazz) {
-        checkGetThrowable(clazz, factory.createMock(Throwable.class));
+        checkGetThrowable(clazz, FACTORY.createMock(Throwable.class));
     }
 
     private static void checkGetMessageAndThrowable(Class<?> clazz, String message, Throwable t) {
