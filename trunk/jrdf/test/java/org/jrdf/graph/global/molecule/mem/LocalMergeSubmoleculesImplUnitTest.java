@@ -63,7 +63,26 @@ import junit.framework.TestCase;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.molecule.GlobalGraphTestUtil;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R1B3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R1R1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R2B2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R2R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R3R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B1R3R3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R1R1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R1R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R2R2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B2R3B3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B3R1R3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.BNODE1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.BNODE2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkMoluculeContainsRootTriples;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkSubmoleculesContainsHeadTriples;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMoleculeWithSubmolecule;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 import org.jrdf.graph.global.molecule.LocalGraphTestUtil;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
 import org.jrdf.graph.global.molecule.Molecule;
@@ -71,7 +90,7 @@ import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.global.molecule.MoleculeSubsumption;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
-import org.jrdf.util.test.SetUtil;
+import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -87,65 +106,55 @@ public class LocalMergeSubmoleculesImplUnitTest extends TestCase {
         MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
         MoleculeFactory factory = new MoleculeFactoryImpl(moleculeComparator);
         MergeSubmolecules globalMerger = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory,
-            subsumption);
+                subsumption);
         mergeSubmolecules = new LocalMergeSubmoleculesImpl(globalMerger, factory);
         map = new HashMap<BlankNode, BlankNode>();
     }
 
     public void testMergeMoleculesSameBlankNodes() {
-        Molecule molecule1 = GlobalGraphTestUtil.createMolecule(LocalGraphTestUtil.B1R1R1, LocalGraphTestUtil.B1R2R2);
-        Molecule molecule2 = GlobalGraphTestUtil.createMolecule(LocalGraphTestUtil.B1R1R1, LocalGraphTestUtil.B1R3R2);
+        Molecule molecule1 = createMolecule(LocalGraphTestUtil.B1R1R1, LocalGraphTestUtil.B1R2R2);
+        Molecule molecule2 = createMolecule(LocalGraphTestUtil.B1R1R1, LocalGraphTestUtil.B1R3R2);
         map.put(LocalGraphTestUtil.BNODE1, LocalGraphTestUtil.BNODE1);
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2, map);
-        GlobalGraphTestUtil.checkMoluculeContainsRootTriples(newMolecule, GlobalGraphTestUtil.b1r1r1,
-            GlobalGraphTestUtil.b1r2r2, GlobalGraphTestUtil.b1r3r2);
+        checkMoluculeContainsRootTriples(newMolecule, B1R1R1, B1R2R2, B1R3R2);
     }
 
     public void testMergeMoleculesDifferentBlankNodes() {
-        Molecule molecule1 = GlobalGraphTestUtil.createMolecule(LocalGraphTestUtil.B1R1R1, LocalGraphTestUtil.B1R2R2);
-        Molecule molecule2 = GlobalGraphTestUtil.createMolecule(LocalGraphTestUtil.B2R1R1, LocalGraphTestUtil.B2R2R1);
+        Molecule molecule1 = createMolecule(LocalGraphTestUtil.B1R1R1, LocalGraphTestUtil.B1R2R2);
+        Molecule molecule2 = createMolecule(LocalGraphTestUtil.B2R1R1, LocalGraphTestUtil.B2R2R1);
         map.put(LocalGraphTestUtil.BNODE2, LocalGraphTestUtil.BNODE1);
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2, map);
-        GlobalGraphTestUtil.checkMoluculeContainsRootTriples(newMolecule, GlobalGraphTestUtil.b1r1r1,
-            GlobalGraphTestUtil.b1r2r2, GlobalGraphTestUtil.b1r1r1);
+        checkMoluculeContainsRootTriples(newMolecule, B1R1R1, B1R2R2, B1R1R1);
     }
 
     public void testMergeHeadMoleculesWithSubMolecules() {
-        Molecule molecule1 = GlobalGraphTestUtil.createMoleculeWithSubmolecule(GlobalGraphTestUtil.b1r1r1,
-            GlobalGraphTestUtil.b1r2r2);
-        Molecule molecule2 = GlobalGraphTestUtil.createMoleculeWithSubmolecule(GlobalGraphTestUtil.b1r1r1,
-            GlobalGraphTestUtil.b1r3r3);
+        Molecule molecule1 = createMoleculeWithSubmolecule(B1R1R1, B1R2R2);
+        Molecule molecule2 = createMoleculeWithSubmolecule(B1R1R1, B1R3R3);
         map.put(LocalGraphTestUtil.BNODE1, LocalGraphTestUtil.BNODE1);
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2, map);
-        GlobalGraphTestUtil.checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(GlobalGraphTestUtil.b1r1r1),
-            GlobalGraphTestUtil.b1r2r2, GlobalGraphTestUtil.b1r3r3);
+        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(B1R1R1), B1R2R2, B1R3R3);
     }
 
     public void testMergeTwoMolecules() {
-        Molecule molecule1 = GlobalGraphTestUtil.createMoleculeWithSubmolecule(LocalGraphTestUtil.B1R1B2,
-            LocalGraphTestUtil.B2R2R2);
-        Molecule molecule2 = GlobalGraphTestUtil.createMoleculeWithSubmolecule(LocalGraphTestUtil.B1R1B3,
-            LocalGraphTestUtil.B3R1R1);
-        map.put(LocalGraphTestUtil.BNODE1, GlobalGraphTestUtil.BNODE1);
-        map.put(LocalGraphTestUtil.BNODE2, GlobalGraphTestUtil.BNODE2);
-        map.put(LocalGraphTestUtil.BNODE3, GlobalGraphTestUtil.BNODE2);
-        Molecule expectedMolecule = GlobalGraphTestUtil.createMultiLevelMolecule(SetUtil.asSet(GlobalGraphTestUtil.b1r1b2,
-            GlobalGraphTestUtil.b1r1b3), Collections.<Triple>emptySet(),
-            Collections.<Triple>emptySet());
-        expectedMolecule.add(GlobalGraphTestUtil.b1r1b2, GlobalGraphTestUtil.createMolecule(GlobalGraphTestUtil.b2r2r2));
-        expectedMolecule.add(GlobalGraphTestUtil.b1r1b2, GlobalGraphTestUtil.createMolecule(GlobalGraphTestUtil.b2r1r1));
+        Molecule molecule1 = createMoleculeWithSubmolecule(LocalGraphTestUtil.B1R1B2,
+                LocalGraphTestUtil.B2R2R2);
+        Molecule molecule2 = createMoleculeWithSubmolecule(LocalGraphTestUtil.B1R1B3,
+                LocalGraphTestUtil.B3R1R1);
+        map.put(LocalGraphTestUtil.BNODE1, BNODE1);
+        map.put(LocalGraphTestUtil.BNODE2, BNODE2);
+        map.put(LocalGraphTestUtil.BNODE3, BNODE2);
+        Molecule expectedMolecule = createMultiLevelMolecule(asSet(B1R1B2, B1R1B3), Collections.<Triple>emptySet(),
+                Collections.<Triple>emptySet());
+        expectedMolecule.add(B1R1B2, createMolecule(B2R2R2));
+        expectedMolecule.add(B1R1B2, createMolecule(B2R1R1));
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2, map);
         assertEquals(expectedMolecule, newMolecule);
     }
 
     public void testMergeM1SubsumesM2() {
-        Molecule molecule1 = GlobalGraphTestUtil.createMultiLevelMolecule(SetUtil.asSet(GlobalGraphTestUtil.b1r1r1,
-            GlobalGraphTestUtil.b1r2b2, GlobalGraphTestUtil.b1r2r2), SetUtil.asSet(GlobalGraphTestUtil.b2r1r2,
-            GlobalGraphTestUtil.b2r2r2, GlobalGraphTestUtil.b2r3b3),
-            SetUtil.asSet(GlobalGraphTestUtil.b3r1r3, GlobalGraphTestUtil.b3r2r3));
-        Molecule molecule2 = GlobalGraphTestUtil.createMultiLevelMolecule(SetUtil.asSet(GlobalGraphTestUtil.b1r1r1,
-            GlobalGraphTestUtil.b1r2b2), SetUtil.asSet(GlobalGraphTestUtil.b2r1r2, GlobalGraphTestUtil.b2r3b3), SetUtil.asSet(
-            GlobalGraphTestUtil.b3r1r3));
+        Molecule molecule1 = createMultiLevelMolecule(asSet(B1R1R1, B1R2B2, B1R2R2), asSet(B2R1R2, B2R2R2, B2R3B3),
+                asSet(B3R1R3, B3R2R3));
+        Molecule molecule2 = createMultiLevelMolecule(asSet(B1R1R1, B1R2B2), asSet(B2R1R2, B2R3B3), asSet(B3R1R3));
         map.put(LocalGraphTestUtil.BNODE1, LocalGraphTestUtil.BNODE1);
         map.put(LocalGraphTestUtil.BNODE2, LocalGraphTestUtil.BNODE2);
         Molecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2, map);
