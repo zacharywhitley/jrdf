@@ -81,7 +81,6 @@ import java.net.URI;
  * @version $Revision$
  */
 public abstract class AbstractURIReferenceUnitTest extends TestCase {
-
     private URI uri1 = URI.create("http://foo/bar");
     private URI uri2 = URI.create("http://bar/baz");
     private URI uri3 = URI.create("ftp://bar/baz");
@@ -222,8 +221,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     private void checkNotAbsoluteURINoCheck() throws Exception {
         try {
             createResource(notAbsURI, false);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail("Should not throw an exception when an relative URI is given and checking is off.");
         }
         checkCreateException(new AssertThrows.Block() {

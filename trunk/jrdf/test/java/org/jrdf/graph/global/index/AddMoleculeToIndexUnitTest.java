@@ -62,7 +62,6 @@ package org.jrdf.graph.global.index;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.MoleculeLocalizer;
@@ -112,7 +111,7 @@ public class AddMoleculeToIndexUnitTest extends TestCase {
     private MoleculeHandler handler;
     private MoleculeTraverser traverser;
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void setUp() {
         moleculeIndex = factory.createMock(WritableIndex.class);
         localizer = factory.createStrictMock(MoleculeLocalizer.class);

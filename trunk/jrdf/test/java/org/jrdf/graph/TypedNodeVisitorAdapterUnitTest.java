@@ -75,10 +75,10 @@ import java.lang.reflect.Modifier;
  * @version $Revision:$
  */
 public class TypedNodeVisitorAdapterUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
-    private static final BlankNode BLANK_NODE = factory.createMock(BlankNode.class);
-    private static final Literal LITERAL = factory.createMock(Literal.class);
-    private static final URIReference URI_REFERENCE = factory.createMock(URIReference.class);
+    private static final MockFactory FACTORY = new MockFactory();
+    private static final BlankNode BLANK_NODE = FACTORY.createMock(BlankNode.class);
+    private static final Literal LITERAL = FACTORY.createMock(Literal.class);
+    private static final URIReference URI_REFERENCE = FACTORY.createMock(URIReference.class);
 
     public void testClassProperties() {
         checkClassPublic(TypedNodeVisitorAdapter.class);

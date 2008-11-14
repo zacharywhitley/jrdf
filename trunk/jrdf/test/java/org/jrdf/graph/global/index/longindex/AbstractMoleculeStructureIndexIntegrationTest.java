@@ -164,7 +164,8 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
         index.add(2L, 2L, 2L, 5L, 6L);
         index.add(2L, 4L, 5L, 6L, 7L);
         ClosableIterator<Long[]> subIndex = index.getSubSubIndex(1L, 1L);
-        Set<Long[]> results = asSet(new Long[]{2L, 3L, 4L}, new Long[]{2L, 4L, 5L}, new Long[]{2L, 5L, 6L}, new Long[]{3L, 3L, 4L});
+        Set<Long[]> results = asSet(new Long[]{2L, 3L, 4L}, new Long[]{2L, 4L, 5L}, new Long[]{2L, 5L, 6L},
+            new Long[]{3L, 3L, 4L});
         checkResults(subIndex, results);
     }
 

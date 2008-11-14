@@ -319,8 +319,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
         try {
             tripleFactory.reifyTriple(ref3, ref3, ref3, b);
-        }
-        catch (AlreadyReifiedException e) {
+        } catch (AlreadyReifiedException e) {
             fail("Should allow reification of an existing");
         }
     }
@@ -598,8 +597,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     private void testCanInsert(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws Exception {
         try {
             tripleFactory.reifyTriple(subject, predicate, object, elementFactory.createBlankNode());
-        }
-        catch (AlreadyReifiedException e) {
+        } catch (AlreadyReifiedException e) {
             fail("Threw exception when refying triple: " + e.toString());
         }
     }
