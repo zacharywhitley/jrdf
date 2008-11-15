@@ -91,9 +91,8 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 
 public final class TripleBuilderImplUnitTest extends TestCase {
-
-    // FIXME TJA: Add test for subject and predicate being non-resources (literal & variable). Should fail in defined way.
-
+    // FIXME TJA: Add test for subject and predicate being non-resources (literal & variable). Should fail in defined
+    // way.
     private static final TripleSpec BOOK_1_DC_TITLE_VARIABLE =
         new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
     private static final TripleSpec BOOK_2_DC_TITLE_VARIABLE =
@@ -146,18 +145,18 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     }
 
     private void checkBuiltTripleWithVariable(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
-        Map<Attribute,ValueOperation> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
+        Map<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
     private void checkBuiltTripleWithLiteral(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
-        Map<Attribute,ValueOperation> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
+        Map<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
     private void checkBuildTriple(Map<Attribute,ValueOperation> expectedAvp, ATriple triple) throws Exception {
         triple.apply(tripleBuilder);
-        Map<Attribute,ValueOperation> actualAvp = tripleBuilder.getTriples();
+        Map<Attribute, ValueOperation> actualAvp = tripleBuilder.getTriples();
         assertEquals(expectedAvp, actualAvp);
     }
 }

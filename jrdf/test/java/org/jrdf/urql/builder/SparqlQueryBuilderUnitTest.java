@@ -83,10 +83,10 @@ import java.lang.reflect.Modifier;
  * @version $Id: SparqlQueryBuilderUnitTest.java 921 2006-10-31 09:52:43Z newmana $
  */
 public class SparqlQueryBuilderUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
-    private static final SparqlParser SPARQL_PARSER = factory.createMock(SparqlParser.class);
+    private static final MockFactory FACTORY = new MockFactory();
+    private static final SparqlParser SPARQL_PARSER = FACTORY.createMock(SparqlParser.class);
     private static final String QUERY_GOOD = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final Graph GRAPH = factory.createMock(Graph.class);
+    private static final Graph GRAPH = FACTORY.createMock(Graph.class);
     private static final Class[] CONSTRUCTOR_PARAM_TYPES = {SparqlParser.class};
     private static final String[] PARAM_NAMES = {"graph", "queryText"};
     private static final Class[] PARAM_TYPES = {Graph.class, String.class};
@@ -111,34 +111,34 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
             public void execute() throws Throwable {
                 SparqlParser parser = createParserThrowsException();
                 QueryBuilder builder = new UrqlQueryBuilder(parser);
-                factory.replay();
+                FACTORY.replay();
                 builder.buildQuery(GRAPH, QUERY_GOOD);
-                factory.verify();
+                FACTORY.verify();
             }
         });
     }
 
     public void testBuildQuery() throws Exception {
-        factory.reset();
+        FACTORY.reset();
         SparqlParser parser = createParser();
         QueryBuilder builder = new UrqlQueryBuilder(parser);
-        factory.replay();
+        FACTORY.replay();
         builder.buildQuery(GRAPH, QUERY_GOOD);
-        factory.verify();
+        FACTORY.verify();
     }
 
     private SparqlParser createParserThrowsException() throws Exception {
-        SparqlParser parser = factory.createMock(SparqlParser.class);
+        SparqlParser parser = FACTORY.createMock(SparqlParser.class);
         parser.parseQuery(GRAPH, QUERY_GOOD);
         expectLastCall().andThrow(new InvalidQuerySyntaxException(""));
         return parser;
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     private SparqlParser createParser() throws Exception {
-        SparqlParser parser = factory.createMock(SparqlParser.class);
+        SparqlParser parser = FACTORY.createMock(SparqlParser.class);
         parser.parseQuery(GRAPH, QUERY_GOOD);
-        expectLastCall().andReturn(factory.createMock(Query.class));
+        expectLastCall().andReturn(FACTORY.createMock(Query.class));
         return parser;
     }
 }
