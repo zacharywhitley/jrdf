@@ -81,19 +81,19 @@ public class TypeComparatorImplUnitTest extends TestCase {
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
-    private TypeComparator typeComparator;
-    private NodeType mockNodeType;
-    private static final MockFactory factory = new MockFactory();
+    private static final MockFactory FACTORY = new MockFactory();
     private static final NodeType BNODE_TYPE = new BlankNodeType();
     private static final NodeType URI_NODE_TYPE = new URIReferenceNodeType();
     private static final NodeType LITERAL_NODE_TYPE = new LiteralNodeType();
     private static final NodeType SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
     private static final NodeType PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
     private static final NodeType OBJECT_POSITIONAL_NODE = new ObjectNodeType();
+    private TypeComparator typeComparator;
+    private NodeType mockNodeType;
 
     public void setUp() throws Exception {
         typeComparator = TestJRDFFactory.getFactory().getNewTypeComparator();
-        mockNodeType = factory.createMock(NodeType.class);
+        mockNodeType = FACTORY.createMock(NodeType.class);
     }
 
     public void testClassProperties() {
@@ -109,9 +109,9 @@ public class TypeComparatorImplUnitTest extends TestCase {
     }
 
     public void testCompareEqual() {
-        factory.replay();
+        FACTORY.replay();
         int result = typeComparator.compare(mockNodeType, mockNodeType);
-        factory.verify();
+        FACTORY.verify();
         assertTrue(EQUAL == result);
     }
 

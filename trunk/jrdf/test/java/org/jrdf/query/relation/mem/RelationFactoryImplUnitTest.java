@@ -82,7 +82,7 @@ public class RelationFactoryImplUnitTest extends TestCase {
     private static final String[] CONSTRUCTOR_NAMES = {"attributeComparator", "tupleComparator"};
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.createMock(AttributeComparator.class);
     private static final TupleComparator TUPLE_COMPARATOR = FACTORY.createMock(TupleComparator.class);
-    private static final Set<Tuple> tuples = new HashSet<Tuple>();
+    private static final Set<Tuple> TUPLES = new HashSet<Tuple>();
     private static final Set<Attribute> HEADING = new HashSet<Attribute>();
 
     public void testClassProperties() {
@@ -95,19 +95,19 @@ public class RelationFactoryImplUnitTest extends TestCase {
 
     public void testGetRelation() {
         RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
-        Relation relation = relationFactory.getRelation(tuples);
+        Relation relation = relationFactory.getRelation(TUPLES);
         checkRelation(relation);
     }
 
     public void testGetRelationWithHeading() {
         RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
-        Relation relation = relationFactory.getRelation(HEADING, tuples);
+        Relation relation = relationFactory.getRelation(HEADING, TUPLES);
         checkRelation(relation);
         assertSame(HEADING, relation.getHeading());
     }
 
     private void checkRelation(Relation relation) {
-        assertSame(tuples, relation.getTuples());
+        assertSame(TUPLES, relation.getTuples());
         assertTrue(relation instanceof RelationImpl);
     }
 

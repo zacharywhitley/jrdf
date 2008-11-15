@@ -276,7 +276,7 @@ public class RelationIntegrationTestUtil {
         return newAttributes;
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public static Relation createEmptyRelation(Set<Attribute> newAttributes) {
         RelationFactory rf = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, FACTORY.getNewTupleComparator());
         return rf.getRelation(newAttributes, Collections.EMPTY_SET);
