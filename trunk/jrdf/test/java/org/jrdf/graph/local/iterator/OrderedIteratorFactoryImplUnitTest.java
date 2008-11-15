@@ -60,20 +60,10 @@
 package org.jrdf.graph.local.iterator;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.expect;
 import org.jrdf.collection.CollectionFactory;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.BlankNodeComparator;
-import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.LocalizedNodeComparator;
-import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
@@ -82,11 +72,7 @@ import org.jrdf.util.test.URIReference1;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import static java.util.Arrays.asList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     private static final Class<?>[] PARAM_TYPES = {Localizer.class, GraphHandler[].class, CollectionFactory.class};

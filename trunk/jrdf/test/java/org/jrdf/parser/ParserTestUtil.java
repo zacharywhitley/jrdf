@@ -79,6 +79,7 @@ import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.ClosableIterable;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.test.AssertThrows;
 
@@ -186,16 +187,7 @@ public class ParserTestUtil {
             Iterator<Triple> it = actualTriples.iterator();
             while (it.hasNext() && !found) {
                 Triple triple = it.next();
-                if ((nodesAreBlankOrEqual(tripleToFind.getSubject(), triple.getSubject())) &&
-                    tripleToFind.getPredicate().equals(triple.getPredicate())) {
-                    if (org.jrdf.util.EqualsUtil.hasSuperClassOrInterface(Literal.class, tripleToFind.getObject())) {
-                        Literal literal1 = (Literal) tripleToFind.getObject();
-                        Node node = triple.getObject();
-                        found = SEM_COMPARATOR.compare(literal1, node) == 0;
-                    } else {
-                        found = nodesAreBlankOrEqual(tripleToFind.getObject(), triple.getObject());
-                    }
-                }
+                found = hasTriple(tripleToFind, triple);
                 if (found) {
                     numberFound++;
                 }
@@ -204,7 +196,22 @@ public class ParserTestUtil {
         return numberFound;
     }
 
-    public static boolean nodesAreBlankOrEqual(Node nodeToFind, Node currentNode) {
+    private static boolean hasTriple(Triple tripleToFind, Triple triple) {
+        boolean found = false;
+        if ((nodesAreBlankOrEqual(tripleToFind.getSubject(), triple.getSubject())) &&
+            tripleToFind.getPredicate().equals(triple.getPredicate())) {
+            if (hasSuperClassOrInterface(Literal.class, tripleToFind.getObject())) {
+                Literal literal1 = (Literal) tripleToFind.getObject();
+                Node node = triple.getObject();
+                found = SEM_COMPARATOR.compare(literal1, node) == 0;
+            } else {
+                found = nodesAreBlankOrEqual(tripleToFind.getObject(), triple.getObject());
+            }
+        }
+        return found;
+    }
+
+    private static boolean nodesAreBlankOrEqual(Node nodeToFind, Node currentNode) {
         return org.jrdf.graph.AbstractBlankNode.isBlankNode(nodeToFind) && (org.jrdf.graph.AbstractBlankNode.isBlankNode(currentNode)) ||
             nodeToFind.equals(currentNode);
     }
