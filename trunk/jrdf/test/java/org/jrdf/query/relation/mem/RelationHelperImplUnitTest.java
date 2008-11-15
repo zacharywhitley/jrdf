@@ -153,14 +153,14 @@ public class RelationHelperImplUnitTest extends TestCase {
         assertTrue(comparator instanceof AttributeComparator);
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     private Relation createRelation(Set<Attribute> set) {
         Relation relation = factory.createMock(Relation.class);
         expect(relation.getHeading()).andReturn(set);
         return relation;
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     private Relation createSortedRelation(SortedSet<Attribute> set) {
         Relation relation = factory.createMock(Relation.class);
         expect(relation.getSortedHeading()).andReturn(set);

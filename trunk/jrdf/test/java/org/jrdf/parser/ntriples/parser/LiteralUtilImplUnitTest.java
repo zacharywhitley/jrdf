@@ -66,12 +66,13 @@ import static org.easymock.EasyMock.expect;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.test.ArgumentTestUtil;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import static org.jrdf.util.test.ArgumentTestUtil.*;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
 
 import java.util.regex.Pattern;
 

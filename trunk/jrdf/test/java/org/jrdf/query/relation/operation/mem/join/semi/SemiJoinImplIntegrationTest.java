@@ -100,7 +100,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 717 $
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public class SemiJoinImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final DyadicJoin JOIN = FACTORY.getNewSemiJoin();
@@ -232,8 +232,10 @@ public class SemiJoinImplIntegrationTest extends TestCase {
 //        System.err.println("-------------------------------");
 //        boolean isEqual = sortedTuples.equals(sortedTuples2);
 //        System.err.println("Sorted Expected tuples relation1: " + isEqual);
-//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(relation.getSortedTuples()));
-//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
+//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(
+// relation.getSortedTuples()));
+//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(
+// expected.getSortedTuples()));
         assertEquals(expectedResult, relation);
     }
 

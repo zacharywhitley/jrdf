@@ -131,9 +131,11 @@ public class RelationIntegrationTestUtil {
     public static final Attribute VAR_BAR1_OBJECT = new AttributeImpl(VAR_BAR1, new ObjectNodeType());
     public static final Attribute VAR_FOO1_LITERAL = new AttributeImpl(VAR_FOO1, new LiteralNodeType());
     public static final Attribute VAR_BAR1_LITERAL = new AttributeImpl(VAR_BAR1, new LiteralNodeType());
-    public static final Attribute VAR_BAR1_SUBJECTPREDICATE = new AttributeImpl(VAR_BAR1, new SubjectPredicateNodeType());
+    public static final Attribute VAR_BAR1_SUBJECTPREDICATE = new AttributeImpl(VAR_BAR1,
+        new SubjectPredicateNodeType());
     public static final Attribute VAR_BAR1_SUBJECTOBJECT = new AttributeImpl(VAR_BAR1, new SubjectObjectNodeType());
-    public static final Attribute VAR_BAR1_SUBJECTPREDICATEOBJECT = new AttributeImpl(VAR_BAR1, new SubjectPredicateObjectNodeType());
+    public static final Attribute VAR_BAR1_SUBJECTPREDICATEOBJECT = new AttributeImpl(VAR_BAR1,
+        new SubjectPredicateObjectNodeType());
     public static final Attribute VAR_BAR2_PREDICATE = new AttributeImpl(VAR_BAR2, new PredicateNodeType());
     public static final Attribute POS_BAR3_OBJECT = new AttributeImpl(POS_BAR3, new ObjectNodeType());
 
@@ -157,12 +159,18 @@ public class RelationIntegrationTestUtil {
     public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_B1 = createAvo(POS_FOO1_SUBJECT, BNODE_1);
     public static final Map<Attribute, ValueOperation> POS_FOO1_SUBJECT_B2 = createAvo(POS_FOO1_SUBJECT, BNODE_2);
 
-    public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R2 = createAvo(POS_FOO2_PREDICATE, RESOURCE_1);
-    public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R4 = createAvo(POS_FOO2_PREDICATE, RESOURCE_3);
-    public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R6 = createAvo(POS_FOO2_PREDICATE, RESOURCE_4);
-    public static final Map<Attribute, ValueOperation> POS_FOO4_PREDICATE_R2 = createAvo(POS_FOO4_PREDICATE, RESOURCE_1);
-    public static final Map<Attribute, ValueOperation> POS_FOO4_PREDICATE_R3 = createAvo(POS_FOO4_PREDICATE, RESOURCE_3);
-    public static final Map<Attribute, ValueOperation> POS_FOO4_PREDICATE_R5 = createAvo(POS_FOO4_PREDICATE, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R2 = createAvo(POS_FOO2_PREDICATE,
+        RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R4 = createAvo(POS_FOO2_PREDICATE,
+        RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> POS_FOO2_PREDICATE_R6 = createAvo(POS_FOO2_PREDICATE,
+        RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> POS_FOO4_PREDICATE_R2 = createAvo(POS_FOO4_PREDICATE,
+        RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> POS_FOO4_PREDICATE_R3 = createAvo(POS_FOO4_PREDICATE,
+        RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> POS_FOO4_PREDICATE_R5 = createAvo(POS_FOO4_PREDICATE,
+        RESOURCE_4);
     public static final Map<Attribute, ValueOperation> POS_FOO5_OBJECT_R6 = createAvo(POS_FOO5_OBJECT, RESOURCE_6);
 
     public static final Map<Attribute, ValueOperation> POS_FOO3_OBJECT_R3 = createAvo(POS_FOO3_OBJECT, RESOURCE_3);
@@ -173,14 +181,20 @@ public class RelationIntegrationTestUtil {
     public static final Map<Attribute, ValueOperation> POS_BAR3_OBJECT_R1 = createAvo(POS_BAR3_OBJECT, RESOURCE_1);
 
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R3 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_3);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_NOT_R3 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_3, NeqAVPOperation.NEQUALS);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_NOT_R3 = createAvo(VAR_BAR1_SUBJECT,
+        RESOURCE_3, NeqAVPOperation.NEQUALS);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R4 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_4);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R5 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_5);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R1 = createAvo(VAR_BAR1_PREDICATE, RESOURCE_1);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R2 = createAvo(VAR_BAR1_PREDICATE, RESOURCE_2);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R3 = createAvo(VAR_BAR1_PREDICATE, RESOURCE_3);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R4 = createAvo(VAR_BAR1_PREDICATE, RESOURCE_4);
-    public static final Map<Attribute, ValueOperation> VAR_BAR2_PREDICATE_R4 = createAvo(VAR_BAR2_PREDICATE, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R1 = createAvo(VAR_BAR1_PREDICATE,
+        RESOURCE_1);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R2 = createAvo(VAR_BAR1_PREDICATE,
+        RESOURCE_2);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R3 = createAvo(VAR_BAR1_PREDICATE,
+        RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R4 = createAvo(VAR_BAR1_PREDICATE,
+        RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR2_PREDICATE_R4 = createAvo(VAR_BAR2_PREDICATE,
+        RESOURCE_4);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_OBJECT_R3 = createAvo(VAR_BAR1_OBJECT, RESOURCE_3);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_OBJECT_R4 = createAvo(VAR_BAR1_OBJECT, RESOURCE_4);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_LITERAL_L1 = createAvo(VAR_BAR1_LITERAL, LITERAL_1);
@@ -189,12 +203,18 @@ public class RelationIntegrationTestUtil {
     public static final Map<Attribute, ValueOperation> VAR_BAR1_LITERAL_L2 = createAvo(VAR_BAR1_LITERAL, LITERAL_2);
     public static final Map<Attribute, ValueOperation> VAR_FOO1_LITERAL_L2 = createAvo(VAR_FOO1_LITERAL, LITERAL_2);
 
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATE_R3 = createAvo(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_3);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATE_R4 = createAvo(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_4);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATEOBJECT_R3 = createAvo(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_3);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATEOBJECT_R4 = createAvo(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_4);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTOBJECT_R3 = createAvo(VAR_BAR1_SUBJECTOBJECT, RESOURCE_3);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTOBJECT_R4 = createAvo(VAR_BAR1_SUBJECTOBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATE_R3 = createAvo(
+        VAR_BAR1_SUBJECTPREDICATE, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATE_R4 = createAvo(
+        VAR_BAR1_SUBJECTPREDICATE, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATEOBJECT_R3 = createAvo(
+        VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTPREDICATEOBJECT_R4 = createAvo(
+        VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_4);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTOBJECT_R3 = createAvo(VAR_BAR1_SUBJECTOBJECT,
+        RESOURCE_3);
+    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECTOBJECT_R4 = createAvo(VAR_BAR1_SUBJECTOBJECT,
+        RESOURCE_4);
 
     private static Map<Attribute, ValueOperation> createAvo(final Attribute attribute, final Node node) {
         return new HashMap<Attribute, ValueOperation>() {

@@ -66,7 +66,7 @@ package org.jrdf.query.relation.operation.mem.join.natural;
  * @author Andrew Newman
  * @version $Revision$
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public class NaturalJoinImplIntegrationTest extends AbstractNaturalJoinIntegrationTest {
     protected void setUp() throws Exception {
         nadicJoin = FACTORY.getNewNaturalJoin();

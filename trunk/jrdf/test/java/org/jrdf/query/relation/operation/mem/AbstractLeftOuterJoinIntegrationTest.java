@@ -149,8 +149,10 @@ public abstract class AbstractLeftOuterJoinIntegrationTest extends TestCase {
 //        System.err.println("-------------------------------");
 //        boolean isEqual = sortedTuples.equals(sortedTuples2);
 //        System.err.println("Sorted Expected tuples relation1: " + isEqual);
-//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(relation.getSortedTuples()));
-//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
+//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(
+// relation.getSortedTuples()));
+//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(
+// expected.getSortedTuples()));
         assertEquals(expectedResult, relation);
     }
 }

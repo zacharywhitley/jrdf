@@ -71,6 +71,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
+import static org.jrdf.graph.AbstractBlankNode.*;
 import org.jrdf.graph.datatype.LexicalComparator;
 import org.jrdf.graph.datatype.LexicalComparatorImpl;
 import org.jrdf.graph.datatype.SemanticLiteralComparator;
@@ -200,10 +201,11 @@ public class ParserTestUtil {
         boolean found = false;
         if ((nodesAreBlankOrEqual(tripleToFind.getSubject(), triple.getSubject())) &&
             tripleToFind.getPredicate().equals(triple.getPredicate())) {
+            // TODO Change to use visitor.
             if (hasSuperClassOrInterface(Literal.class, tripleToFind.getObject())) {
-                Literal literal1 = (Literal) tripleToFind.getObject();
+                Literal literal = (Literal) tripleToFind.getObject();
                 Node node = triple.getObject();
-                found = SEM_COMPARATOR.compare(literal1, node) == 0;
+                found = SEM_COMPARATOR.compare(literal, node) == 0;
             } else {
                 found = nodesAreBlankOrEqual(tripleToFind.getObject(), triple.getObject());
             }
@@ -212,7 +214,6 @@ public class ParserTestUtil {
     }
 
     private static boolean nodesAreBlankOrEqual(Node nodeToFind, Node currentNode) {
-        return org.jrdf.graph.AbstractBlankNode.isBlankNode(nodeToFind) && (org.jrdf.graph.AbstractBlankNode.isBlankNode(currentNode)) ||
-            nodeToFind.equals(currentNode);
+        return (isBlankNode(nodeToFind) && (isBlankNode(currentNode))) || nodeToFind.equals(currentNode);
     }
 }

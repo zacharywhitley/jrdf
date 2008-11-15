@@ -82,11 +82,11 @@ import java.lang.reflect.Modifier;
  * @version $Id$
  */
 public class AttributeComparatorImplUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
-    private static final Attribute ATTRIBUTE = factory.createMock(Attribute.class);
-    private static final TypeComparator NODE_COMPARATOR = factory.createMock(TypeComparator.class);
+    private static final MockFactory FACTORY = new MockFactory();
+    private static final Attribute ATTRIBUTE = FACTORY.createMock(Attribute.class);
+    private static final TypeComparator NODE_COMPARATOR = FACTORY.createMock(TypeComparator.class);
     private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR
-        = factory.createMock(AttributeNameComparator.class);
+        = FACTORY.createMock(AttributeNameComparator.class);
     private static final int BEFORE = 1;
     private static final int AFTER = -1;
 
@@ -109,7 +109,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
 
     public void testIdentity() {
         AttributeComparator comparator = createComparator(NODE_COMPARATOR, ATTRIBUTE_NAME_COMPARATOR);
-        Attribute att2 = new TestAttribute(factory.createMock(Attribute.class));
+        Attribute att2 = new TestAttribute(FACTORY.createMock(Attribute.class));
         TestAttribute att1 = new TestAttribute(att2);
         int result = comparator.compare(att1, att2);
         assertTrue("Should return equal for att1, att2", result == 0);
@@ -125,30 +125,30 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     // TODO (AN) Finish testAttributeNameComparator
 
     private void checkNodeTypeComparator(int expectedResult) {
-        NodeType t1 = factory.createMock(NodeType.class);
-        NodeType t2 = factory.createMock(NodeType.class);
+        NodeType t1 = FACTORY.createMock(NodeType.class);
+        NodeType t2 = FACTORY.createMock(NodeType.class);
         Attribute attribute1 = createAttribute(t1);
         Attribute attribute2 = createAttribute(t2);
         TypeComparator typeComparator = createTypeComparator(t1, t2, expectedResult);
         AttributeComparator comparator = createComparator(typeComparator, ATTRIBUTE_NAME_COMPARATOR);
-        factory.replay();
+        FACTORY.replay();
         int result = comparator.compare(attribute1, attribute2);
-        factory.verify();
-        factory.reset();
+        FACTORY.verify();
+        FACTORY.reset();
         assertEquals(expectedResult, result);
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     private Attribute createAttribute(NodeType type) {
-        Attribute att = factory.createMock(Attribute.class);
+        Attribute att = FACTORY.createMock(Attribute.class);
         att.getType();
         expectLastCall().andReturn(type);
         return att;
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     private TypeComparator createTypeComparator(NodeType t1, NodeType t2, int expectedResult) {
-        TypeComparator typeComparator = factory.createMock(TypeComparator.class);
+        TypeComparator typeComparator = FACTORY.createMock(TypeComparator.class);
         typeComparator.compare(t1, t2);
         expectLastCall().andReturn(expectedResult);
         return typeComparator;

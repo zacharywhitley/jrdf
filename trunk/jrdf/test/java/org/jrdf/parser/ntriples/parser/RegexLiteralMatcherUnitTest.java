@@ -65,13 +65,13 @@ import static org.easymock.EasyMock.expect;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
-import static org.jrdf.util.test.ArgumentTestUtil.*;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
-import org.jrdf.util.test.ArgumentTestUtil;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
 
 import java.util.regex.Pattern;
 
@@ -79,7 +79,6 @@ public class RegexLiteralMatcherUnitTest extends TestCase {
     private static final Class<LiteralMatcher> TARGET_INTERFACE = LiteralMatcher.class;
     private static final Class<RegexLiteralMatcher> TEST_CLASS = RegexLiteralMatcher.class;
     private static final Class[] PARAM_TYPES = new Class[]{RegexMatcherFactory.class, NTripleUtil.class};
-    private static final String[] PARAMETER_NAMES = new String[]{"regexFactory", "nTripleUtil"};
     private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
         "(" +
         "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +

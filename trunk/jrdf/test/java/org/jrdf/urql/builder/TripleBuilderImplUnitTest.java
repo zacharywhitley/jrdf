@@ -154,7 +154,7 @@ public final class TripleBuilderImplUnitTest extends TestCase {
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
-    private void checkBuildTriple(Map<Attribute,ValueOperation> expectedAvp, ATriple triple) throws Exception {
+    private void checkBuildTriple(Map<Attribute, ValueOperation> expectedAvp, ATriple triple) throws Exception {
         triple.apply(tripleBuilder);
         Map<Attribute, ValueOperation> actualAvp = tripleBuilder.getTriples();
         assertEquals(expectedAvp, actualAvp);

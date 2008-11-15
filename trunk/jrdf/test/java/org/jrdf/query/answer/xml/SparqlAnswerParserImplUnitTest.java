@@ -84,12 +84,16 @@ public class SparqlAnswerParserImplUnitTest extends TestCase {
     private static final TypeValueImpl R1C4 = new TypeValueImpl(LITERAL, "");
     private static final TypeValueImpl R2C4 = new TypeValueImpl(URI_REFERENCE, "mailto:bob@work.example.org");
     private static final TypeValueImpl R1C5 = new TypeValueImpl();
-    private static final TypeValueImpl R2C5 = new TypeValueImpl(TYPED_LITERAL, "30", true, "http://www.w3.org/2001/XMLSchema#integer");
-    private static final TypeValueImpl R1C6 = new TypeValueImpl(TYPED_LITERAL, "&lt;p xmlns=\"http://www.w3.org/1999/xhtml\"&gt;My name is &lt;b&gt;alice&lt;/b&gt;&lt;/p&gt;", true, "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral");
+    private static final TypeValueImpl R2C5 = new TypeValueImpl(TYPED_LITERAL, "30", true,
+        "http://www.w3.org/2001/XMLSchema#integer");
+    private static final TypeValueImpl R1C6 = new TypeValueImpl(TYPED_LITERAL,
+        "&lt;p xmlns=\"http://www.w3.org/1999/xhtml\"&gt;My name is &lt;b&gt;alice&lt;/b&gt;&lt;/p&gt;", true,
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral");
     private static final TypeValueImpl R2C6 = new TypeValueImpl();
     private static final TypeValueImpl R1C7 = new TypeValueImpl(BLANK_NODE, "r2");
     private static final TypeValueImpl R2C7 = new TypeValueImpl(BLANK_NODE, "r1");
-    public static final LinkedHashSet<String> EXPECTED_VARIABLES = new LinkedHashSet<String>(asList("x", "hpage", "name", "mbox", "age", "blurb", "friend"));
+    public static final LinkedHashSet<String> EXPECTED_VARIABLES = new LinkedHashSet<String>(asList("x", "hpage",
+        "name", "mbox", "age", "blurb", "friend"));
     public static final List<TypeValueImpl> ROW_1 = asList(R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7);
     public static final List<TypeValueImpl> ROW_2 = asList(R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7);
     private SparqlAnswerParser parser;

@@ -82,8 +82,10 @@ public class FullOuterJoinImplIntegrationTest extends TestCase {
 //        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_PREDICATE_R2, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
 //        tuple2.addAll(createASingleTuple(VAR_BAR1_PREDICATE_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R3));
 //
-//        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
-//        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2));
+//        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+// VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
+//        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4,
+// VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2));
 //        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO3_OBJECT_R6));
 //        resultTuple.addAll(createASingleTuple(VAR_BAR1_PREDICATE_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R3));
 //
@@ -100,8 +102,10 @@ public class FullOuterJoinImplIntegrationTest extends TestCase {
 //        System.err.println("-------------------------------");
 //        boolean isEqual = sortedTuples.equals(sortedTuples2);
 //        System.err.println("Sorted Expected tuples relation1: " + isEqual);
-//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(relation.getSortedTuples()));
-//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
+//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(
+// relation.getSortedTuples()));
+//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(
+// expected.getSortedTuples()));
         assertEquals(expectedResult, relation);
     }
 

@@ -87,7 +87,7 @@ import java.util.Map;
  * @author Tom Adams
  * @version $Revision$
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public final class SingleConstraintUnitTest extends TestCase {
     private static final LinkedHashMap<Attribute, ValueOperation> AVO_1 =
         createAvoMap(TEST_ATTRIBUTE_FOO_POS, ANY_NODE);
