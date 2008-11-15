@@ -64,13 +64,14 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.query.answer.Answer;
-import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.answer.Answer;
+import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.builder.QueryBuilder;
 import org.jrdf.util.param.ParameterTestUtil;
+import static org.jrdf.util.param.ParameterTestUtil.NULL_STRING;
 import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
@@ -81,18 +82,18 @@ import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 
 import java.lang.reflect.Modifier;
 
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public class SparqlConnectionImplUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
-    private static final String NULL = ParameterTestUtil.NULL_STRING;
+    private static final MockFactory FACTORY = new MockFactory();
+    private static final String NULL = NULL_STRING;
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
     private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
     private static final String QUERY_ITQL = "select { s, p, o } from <rmi://localhost/server1#> where s p o ;";
     private static final String FIELD_BUILDER = "builder";
-    private static final QueryBuilder BUILDER = factory.createMock(QueryBuilder.class);
-    private static final Answer ANSWER = factory.createMock(Answer.class);
-    private static final Graph GRAPH = factory.createMock(Graph.class);
-    private static final QueryEngine QUERY_ENGINE = factory.createMock(QueryEngine.class);
+    private static final QueryBuilder BUILDER = FACTORY.createMock(QueryBuilder.class);
+    private static final Answer ANSWER = FACTORY.createMock(Answer.class);
+    private static final Graph GRAPH = FACTORY.createMock(Graph.class);
+    private static final QueryEngine QUERY_ENGINE = FACTORY.createMock(QueryEngine.class);
     private static final String METHOD_NAME = "executeQuery";
     private static final Class[] PARAM_TYPES = {QueryBuilder.class, QueryEngine.class};
     private static final String[] METHOD_PARAM_NAMES = {"graph", "queryText"};
@@ -102,7 +103,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final InvalidQuerySyntaxException INVALID_QUERY_EXCEPTION = new InvalidQuerySyntaxException("");
 
     public void setUp() {
-        factory.reset();
+        FACTORY.reset();
     }
 
     public void testClassProperties() {
@@ -133,21 +134,21 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         Query query = createQuery(GRAPH, queryEngine);
         QueryBuilder builder = createBuilder(GRAPH, QUERY_ITQL, query);
         UrqlConnection connection = new UrqlConnectionImpl(builder, queryEngine);
-        factory.replay();
+        FACTORY.replay();
         Answer answer = connection.executeQuery(GRAPH, QUERY_ITQL);
-        factory.verify();
+        FACTORY.verify();
         assertEquals(ANSWER, answer);
     }
 
     public void testEmptyGraph() throws Exception {
         QueryEngine queryEngine = createQueryEngine();
         Graph graph = createEmptyGraph();
-        Query query = factory.createMock(Query.class);
+        Query query = FACTORY.createMock(Query.class);
         QueryBuilder builder = createBuilder(graph, QUERY_ITQL, query);
         UrqlConnection connection = new UrqlConnectionImpl(builder, queryEngine);
-        factory.replay();
+        FACTORY.replay();
         Answer answer = connection.executeQuery(graph, QUERY_ITQL);
-        factory.verify();
+        FACTORY.verify();
         assertEquals(EMPTY_ANSWER, answer);
     }
 
@@ -156,9 +157,9 @@ public class SparqlConnectionImplUnitTest extends TestCase {
             public void execute() throws Throwable {
                 QueryBuilder builder = createBuilderThrowsException(GRAPH, QUERY_ITQL, new GraphException(""));
                 final UrqlConnection connection = createConnection(builder);
-                factory.replay();
+                FACTORY.replay();
                 connection.executeQuery(GRAPH, QUERY_ITQL);
-                factory.verify();
+                FACTORY.verify();
             }
         });
     }
@@ -168,29 +169,29 @@ public class SparqlConnectionImplUnitTest extends TestCase {
             public void execute() throws Throwable {
                 QueryBuilder builder = createBuilderThrowsException(GRAPH, QUERY_ITQL, INVALID_QUERY_EXCEPTION);
                 UrqlConnection connection = createConnection(builder);
-                factory.replay();
+                FACTORY.replay();
                 connection.executeQuery(GRAPH, QUERY_ITQL);
-                factory.verify();
+                FACTORY.verify();
             }
         });
     }
 
     private Graph createEmptyGraph() throws GraphException {
-        Graph graph = factory.createMock(Graph.class);
+        Graph graph = FACTORY.createMock(Graph.class);
         graph.isEmpty();
         expectLastCall().andReturn(true);
         return graph;
     }
 
     private Query createQuery(Graph graph, QueryEngine queryEngine) {
-        Query query = factory.createMock(Query.class);
+        Query query = FACTORY.createMock(Query.class);
         query.executeQuery(graph, queryEngine);
         expectLastCall().andReturn(ANSWER);
         return query;
     }
 
     private QueryEngine createQueryEngine() {
-        return factory.createMock(QueryEngine.class);
+        return FACTORY.createMock(QueryEngine.class);
     }
 
     private UrqlConnection createConnection(QueryBuilder builder) {
@@ -208,14 +209,14 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     private QueryBuilder createBuilder(Graph graph, String queryString, Query query) throws Exception {
-        QueryBuilder builder = factory.createMock(QueryBuilder.class);
+        QueryBuilder builder = FACTORY.createMock(QueryBuilder.class);
         builder.buildQuery(graph, queryString);
         expectLastCall().andReturn(query);
         return builder;
     }
 
     private QueryBuilder createBuilderThrowsException(Graph graph, String queryText, Exception e) throws Exception {
-        QueryBuilder builder = factory.createMock(QueryBuilder.class);
+        QueryBuilder builder = FACTORY.createMock(QueryBuilder.class);
         builder.buildQuery(graph, queryText);
         expectLastCall().andThrow(e);
         return builder;

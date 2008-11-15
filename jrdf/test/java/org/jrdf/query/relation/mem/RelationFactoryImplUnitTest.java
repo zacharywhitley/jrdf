@@ -77,11 +77,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class RelationFactoryImplUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
+    private static final MockFactory FACTORY = new MockFactory();
     private static final Class[] CONSTRUCTOR_TYPES = {AttributeComparator.class, TupleComparator.class};
     private static final String[] CONSTRUCTOR_NAMES = {"attributeComparator", "tupleComparator"};
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = factory.createMock(AttributeComparator.class);
-    private static final TupleComparator TUPLE_COMPARATOR = factory.createMock(TupleComparator.class);
+    private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.createMock(AttributeComparator.class);
+    private static final TupleComparator TUPLE_COMPARATOR = FACTORY.createMock(TupleComparator.class);
     private static final Set<Tuple> tuples = new HashSet<Tuple>();
     private static final Set<Attribute> HEADING = new HashSet<Attribute>();
 

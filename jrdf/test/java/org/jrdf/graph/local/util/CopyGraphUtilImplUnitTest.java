@@ -264,11 +264,12 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         while (it.hasNext()) {
             Triple tmpT = it.next();
             SubjectNode tmpSN = tmpT.getSubject();
-            if (AbstractBlankNode.isBlankNode(tmpSN)) {
-                if (tmpSN.hashCode() == bNode1Hash) {
-
-                }
-            }
+            // TODO YF Fix this so that it actually tests something.
+//            if (AbstractBlankNode.isBlankNode(tmpSN)) {
+//                if (tmpSN.hashCode() == bNode1Hash) {
+//
+//                }
+//            }
         }
     }
 

@@ -59,7 +59,8 @@
 
 package org.jrdf.query.answer.xml;
 
-import com.ctc.wstx.api.WstxInputProperties;
+import static com.ctc.wstx.api.WstxInputProperties.PARSING_MODE_FRAGMENT;
+import static com.ctc.wstx.api.WstxInputProperties.P_INPUT_PARSING_MODE;
 import junit.framework.TestCase;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.BINDING;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.HEAD;
@@ -89,12 +90,12 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
-    private XMLInputFactory FACTORY = XMLInputFactory.newInstance();
+    private XMLInputFactory factory = XMLInputFactory.newInstance();
     {
-        FACTORY.setProperty(WstxInputProperties.P_INPUT_PARSING_MODE, WstxInputProperties.PARSING_MODE_FRAGMENT);
+        factory.setProperty(P_INPUT_PARSING_MODE, PARSING_MODE_FRAGMENT);
     }
+
     protected Writer writer;
     private XMLStreamReader reader;
     protected AnswerXMLWriter xmlWriter;
@@ -137,7 +138,7 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
         xmlWriter.writeVariables();
         xmlWriter.flush();
         String xml = writer.toString();
-        reader = FACTORY.createXMLStreamReader(new StringReader(xml));
+        reader = factory.createXMLStreamReader(new StringReader(xml));
         while (reader.hasNext()) {
             int eventType = reader.getEventType();
             switch (eventType) {
@@ -174,24 +175,24 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
         final InputStream stream1 = url.openStream();
         int count = 0;
         String[][] pairs = new String[][]{
-                new String[]{"x", "r1"},
-                new String[]{"hpage", "http://work.example.org/alice/"},
-                new String[]{"name", "Alice"},
-                new String[]{"mbox", ""},
-                new String[]{"friend", "r2"},
-                new String[]{"blurb", "<p xmlns=\"http://www.w3.org/1999/xhtml\">My name is <b>alice</b></p>"}
+            new String[]{"x", "r1"},
+            new String[]{"hpage", "http://work.example.org/alice/"},
+            new String[]{"name", "Alice"},
+            new String[]{"mbox", ""},
+            new String[]{"friend", "r2"},
+            new String[]{"blurb", "<p xmlns=\"http://www.w3.org/1999/xhtml\">My name is <b>alice</b></p>"}
         };
         Map<String, String> map1 = new HashMap<String, String>();
         for (String[] pair : pairs) {
             map1.put(pair[0], pair[1]);
         }
-        pairs = new String[][] {
-                new String[]{"x", "r2"},
-                new String[]{"hpage", "http://work.example.org/bob/"},
-                new String[]{"name", "Bob"},
-                new String[]{"mbox", "mailto:bob@work.example.org"},
-                new String[]{"age", "30"},
-                new String[]{"friend", "r1"}
+        pairs = new String[][]{
+            new String[]{"x", "r2"},
+            new String[]{"hpage", "http://work.example.org/bob/"},
+            new String[]{"name", "Bob"},
+            new String[]{"mbox", "mailto:bob@work.example.org"},
+            new String[]{"age", "30"},
+            new String[]{"friend", "r1"}
         };
         Map<String, String> map2 = new HashMap<String, String>();
         for (String[] pair : pairs) {
@@ -208,8 +209,9 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
         String xml = writer.toString();
         assertEquals(2, count);
         int pos = 0;
-        reader = FACTORY.createXMLStreamReader(new StringReader(xml));
-        loop: while (reader.hasNext()) {
+        reader = factory.createXMLStreamReader(new StringReader(xml));
+    loop:
+        while (reader.hasNext()) {
             int eventType = reader.next();
             switch (eventType) {
                 case START_ELEMENT:
@@ -240,14 +242,15 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
     private void checkMaps(Map<String, String> actualMap, int pos, List<Map<String, String>> maps) {
         Map<String, String> map = maps.get(pos);
         assertEquals(map.size(), actualMap.size());
-        for (String key: map.keySet()) {
+        for (String key : map.keySet()) {
             assertEquals(map.get(key), actualMap.get(key));
         }
     }
 
     private Map<String, String> checkBindings() throws XMLStreamException {
         Map<String, String> map1 = new HashMap<String, String>();
-        loop: while (reader.hasNext()) {
+    loop:
+        while (reader.hasNext()) {
             int eventType = reader.next();
             switch (eventType) {
                 case START_ELEMENT:
@@ -270,7 +273,8 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
 
     private Map<String, String> checkOneBinding(Map<String, String> map) throws XMLStreamException {
         final String varName = reader.getAttributeValue(null, NAME);
-        loop: while (reader.hasNext()) {
+    loop:
+        while (reader.hasNext()) {
             int eventType = reader.next();
             switch (eventType) {
                 case START_ELEMENT:

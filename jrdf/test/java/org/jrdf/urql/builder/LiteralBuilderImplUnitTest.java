@@ -95,15 +95,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public class LiteralBuilderImplUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
+    private static final MockFactory FACTORY = new MockFactory();
     private static final Class[] CONSTRUCTOR_PARAM_TYPES = new Class[]{GraphElementFactory.class, Map.class};
     private static final String[] PARAM_NAMES = {"element"};
     private static final Class[] PARAM_TYPES = {ALiteralObjectTripleElement.class};
     private static final ParameterDefinition BUILD_PARAM_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
-    private static final HashMap<String,String> PREFIX_MAP = new HashMap<String, String>();
-    private static final LiteralBuilder BUILDER = new LiteralBuilderImpl(factory.createMock(GraphElementFactory.class),
+    private static final HashMap<String, String> PREFIX_MAP = new HashMap<String, String>();
+    private static final LiteralBuilder BUILDER = new LiteralBuilderImpl(FACTORY.createMock(GraphElementFactory.class),
         PREFIX_MAP);
 
     public void testClassProperties() {
@@ -127,23 +127,23 @@ public class LiteralBuilderImplUnitTest extends TestCase {
     }
 
     public void testCreateLiteralWithException() throws Exception {
-        factory.reset();
+        FACTORY.reset();
         final LiteralBuilder builder = createBuilder();
         expectLastCall().andThrow(new GraphElementFactoryException("foo"));
-        factory.replay();
+        FACTORY.replay();
         checkThrowsException(builder);
-        factory.verify();
+        FACTORY.verify();
     }
 
     private void checkLiteralCreation(ALiteralObjectTripleElement element) throws Exception {
-        factory.reset();
-        Literal literal = factory.createMock(Literal.class);
+        FACTORY.reset();
+        Literal literal = FACTORY.createMock(Literal.class);
         LiteralBuilder builder = createBuilder();
         expectLastCall().andReturn(literal);
 
-        factory.replay();
+        FACTORY.replay();
         checkReturnsLiteral(builder, element, literal);
-        factory.verify();
+        FACTORY.verify();
     }
 
     private void checkReturnsLiteral(LiteralBuilder builder, ALiteralObjectTripleElement element,
@@ -162,7 +162,7 @@ public class LiteralBuilderImplUnitTest extends TestCase {
     }
 
     private LiteralBuilder createBuilder() throws GraphException {
-        GraphElementFactory graphFactory = factory.createMock(GraphElementFactory.class);
+        GraphElementFactory graphFactory = FACTORY.createMock(GraphElementFactory.class);
         graphFactory.createLiteral("hello");
         return new LiteralBuilderImpl(graphFactory, new HashMap<String, String>());
     }
@@ -181,7 +181,9 @@ public class LiteralBuilderImplUnitTest extends TestCase {
         strand.add(new ADbQuotedUnescapedDbQuotedStrand(new TDbqtext("hello")));
         TDbquote tDbquote = new TDbquote("\"");
         PLiteralValue quotedLiteralLiteral = new ADbQuotedLiteralLiteralValue(tDbquote, strand, tDbquote);
-        return new ALiteralObjectTripleElement(new ARdfLiteralLiteral(new AUntypedLiteralRdfLiteral(quotedLiteralLiteral)));
+        final AUntypedLiteralRdfLiteral untypedLiteral = new AUntypedLiteralRdfLiteral(quotedLiteralLiteral);
+        final ARdfLiteralLiteral rdfLiteral = new ARdfLiteralLiteral(untypedLiteral);
+        return new ALiteralObjectTripleElement(rdfLiteral);
     }
 }
 

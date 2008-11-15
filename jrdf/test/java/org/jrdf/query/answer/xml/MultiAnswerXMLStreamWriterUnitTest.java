@@ -130,7 +130,7 @@ public class MultiAnswerXMLStreamWriterUnitTest extends AbstractAnswerXMLStreamW
             for (int i = 0; i < loops; i++) {
                 writeStream();
                 if (i == loops - 1) {
-                    synchronized(this) {
+                    synchronized (this) {
                         this.wait(1000);
                     }
                 }
@@ -140,8 +140,10 @@ public class MultiAnswerXMLStreamWriterUnitTest extends AbstractAnswerXMLStreamW
 
         void writeStream() throws IOException {
             stream = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml").openStream();
-            for (int i; (i = stream.read()) != -1;) {
-                outputStream.write(i);
+            int read = stream.read();
+            while (read != -1) {
+                outputStream.write(read);
+                read = stream.read();
             }
             stream.close();
         }

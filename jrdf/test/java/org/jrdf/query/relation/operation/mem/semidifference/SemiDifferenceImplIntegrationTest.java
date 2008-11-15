@@ -103,7 +103,7 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
         checkMinus(RELATION_DUM, RELATION_DEE, RELATION_DEE);
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void testRelationDEEandDumWithRelation() {
         Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE);
@@ -203,8 +203,10 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 //        System.err.println("-------------------------------");
 //        boolean isEqual = sortedTuples.equals(sortedTuples2);
 //        System.err.println("Sorted Expected tuples relation1: " + isEqual);
-//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(relation.getSortedTuples()));
-//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
+//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(
+// relation.getSortedTuples()));
+//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(
+// expected.getSortedTuples()));
         assertEquals(expectedResult, relation);
     }
 

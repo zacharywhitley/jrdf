@@ -76,10 +76,10 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision:$
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public class TupleFactoryImplUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
-    private static final Map<Attribute, ValueOperation> MOCK_AVP = factory.createMock(Map.class);
+    private static final MockFactory FACTORY = new MockFactory();
+    private static final Map<Attribute, ValueOperation> MOCK_AVP = FACTORY.createMock(Map.class);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(TupleFactory.class, TupleFactoryImpl.class);

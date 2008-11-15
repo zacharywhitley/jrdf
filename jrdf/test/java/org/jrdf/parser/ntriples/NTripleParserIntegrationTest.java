@@ -102,9 +102,9 @@ public class NTripleParserIntegrationTest extends TestCase {
     };
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
         private static final long serialVersionUID = 1L;
-        {
+//        {
             //add("rdf-tests/datatypes/test006.nt");
-        }
+//        }
     };
 
     public void testStandardTest() throws Exception {

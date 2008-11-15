@@ -64,7 +64,7 @@ import org.jrdf.urql.parser.node.ATriple;
 import org.jrdf.urql.parser.node.TVariableprefix;
 
 public interface TripleSpec {
-    static final TVariableprefix VARIABLE_PREFIX = new TVariableprefix("?");
+    TVariableprefix VARIABLE_PREFIX = new TVariableprefix("?");
 
     Attribute[] asAttributes();
 
