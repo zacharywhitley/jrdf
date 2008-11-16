@@ -71,6 +71,7 @@ import static org.jrdf.util.test.AssertThrows.assertThrows;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
+import static java.net.URI.create;
 
 /**
  * Abstract test case for graph implementations.
@@ -80,6 +81,7 @@ import java.net.URI;
  * @version $Revision$
  */
 public abstract class AbstractTripleFactoryUnitTest extends TestCase {
+    private static final int NUMBER_OF_TRIPLES_TO_ADD = 10;
 
     /**
      * Instance of a graph object.
@@ -549,6 +551,14 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         Resource resource = elementFactory.createResource(uri2);
         tripleFactory.addTriple(uri1, uri1, resource);
         assertTrue("Should have statement", graph.contains(ref1, ref1, ref2));
+    }
+
+    public void testMultipleAddtion() throws Exception {
+        for (int i = 0; i < NUMBER_OF_TRIPLES_TO_ADD; i++) {
+            tripleFactory.addTriple(create("http://subject/" + i), create("http://predicate/" + i),
+                    create("http://object/" + i));
+        }
+        assertEquals(NUMBER_OF_TRIPLES_TO_ADD, graph.getNumberOfTriples());
     }
 
     /**

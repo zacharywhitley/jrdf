@@ -150,13 +150,11 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
     private static final String FAILED_TO_ADD_TRIPLE = "Failed to add triple.";
-    private static final int NUMBER_OF_TRIPLES_TO_ADD = 10;
 
     /**
      * Create test instance.
      *
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
+     * @throws Exception A generic exception - this should cause the tests to fail.
      */
     public void setUp() throws Exception {
         setGlobalValues();
@@ -170,37 +168,23 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         blank1 = elementFactory.createBlankNode();
         blank2 = elementFactory.createBlankNode();
 
-        URI uri1 = new URI("http://namespace#somevalue");
-        URI uri2 = new URI("http://namespace#someothervalue");
-        URI uri3 = new URI("http://namespace#yetanothervalue");
-        URI uri4 = new URI("http://namespace#yetanotheranothervalue");
-        URI uri5 = new URI("http://namespace#visforvalue");
-        ref1 = elementFactory.createURIReference(uri1);
-        ref2 = elementFactory.createURIReference(uri2);
-        ref3 = elementFactory.createURIReference(uri3);
-        ref4 = elementFactory.createURIReference(uri4);
-        ref5 = elementFactory.createURIReference(uri5);
+        ref1 = elementFactory.createURIReference(create("http://namespace#somevalue"));
+        ref2 = elementFactory.createURIReference(create("http://namespace#someothervalue"));
+        ref3 = elementFactory.createURIReference(create("http://namespace#yetanothervalue"));
+        ref4 = elementFactory.createURIReference(create("http://namespace#yetanotheranothervalue"));
+        ref5 = elementFactory.createURIReference(create("http://namespace#visforvalue"));
 
         l1 = elementFactory.createLiteral(TEST_STR1);
         l2 = elementFactory.createLiteral(TEST_STR2);
     }
 
-    //
-    // implementation interfaces
-    //
-
     /**
      * Create a graph implementation.
      *
      * @return A new Graph.
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
+     * @throws Exception A generic exception - this should cause the tests to fail.
      */
     protected abstract Graph newGraph() throws Exception;
-
-    //
-    // Test cases
-    //
 
     /**
      * Tests that a new graph is empty.
@@ -223,40 +207,30 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     /**
      * Tests addition.
      *
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
+     * @throws Exception A generic exception - this should cause the tests to fail.
      */
     public void testAddition() throws Exception {
-
         // add in a triple by nodes
         graph.add(blank1, ref1, blank2);
-
-        assertFalse(graph.isEmpty());
-        assertEquals(1, graph.getNumberOfTriples());
+        checkNumberOfTriples(1);
 
         // add in a whole triple
         Triple triple2 = tripleFactory.createTriple(blank2, ref1, blank2);
         graph.add(triple2);
-
-        assertFalse(graph.isEmpty());
-        assertEquals(2, graph.getNumberOfTriples());
+        checkNumberOfTriples(2);
 
         // add in the first triple again
         graph.add(blank1, ref1, blank2);
-
-        assertFalse(graph.isEmpty());
-        assertEquals(2, graph.getNumberOfTriples());
+        checkNumberOfTriples(2);
 
         // add in the second whole triple again
         Triple triple2b = tripleFactory.createTriple(blank2, ref1, blank2);
         graph.add(triple2b);
-        assertFalse(graph.isEmpty());
-        assertEquals(2, graph.getNumberOfTriples());
+        checkNumberOfTriples(2);
 
         // and again
         graph.add(triple2);
-        assertFalse(graph.isEmpty());
-        assertEquals(2, graph.getNumberOfTriples());
+        checkNumberOfTriples(2);
 
         // Add using iterator
         List<Triple> list = new ArrayList<Triple>();
@@ -264,50 +238,31 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         list.add(tripleFactory.createTriple(ref2, ref2, ref2));
 
         graph.add(list.iterator());
-        assertFalse(graph.isEmpty());
-        assertEquals(4, graph.getNumberOfTriples());
+        checkNumberOfTriples(4);
 
         // Try to add nulls
-        assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                graph.add(null, ref1, ref1);
-            }
-        });
-        assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                graph.add(ref1, null, ref1);
-            }
-        });
-        assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                graph.add(ref1, ref1, null);
-            }
-        });
+        checkIllegalAdd(CANT_ADD_NULL_MESSAGE, null, ref1, ref1);
+        checkIllegalAdd(CANT_ADD_NULL_MESSAGE, ref1, null, ref1);
+        checkIllegalAdd(CANT_ADD_NULL_MESSAGE, ref1, ref1, null);
 
         // Try to add any nodes
-        assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                graph.add(ANY_SUBJECT_NODE, ref1, ref1);
-            }
-        });
-        assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                graph.add(ref1, ANY_PREDICATE_NODE, ref1);
-            }
-        });
-        assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                graph.add(ref1, ref1, ANY_OBJECT_NODE);
-            }
-        });
+        checkIllegalAdd(CANT_ADD_ANY_NODE_MESSAGE, ANY_SUBJECT_NODE, ref1, ref1);
+        checkIllegalAdd(CANT_ADD_ANY_NODE_MESSAGE, ref1, ANY_PREDICATE_NODE, ref1);
+        checkIllegalAdd(CANT_ADD_ANY_NODE_MESSAGE, ref1, ref1, ANY_OBJECT_NODE);
     }
 
-    public void testMultipleAddtion() throws Exception {
-        for (int i = 0; i < NUMBER_OF_TRIPLES_TO_ADD; i++) {
-            tripleFactory.addTriple(create("http://subject/" + i), create("http://predicate/" + i),
-                    create("http://object/" + i));
-        }
-        assertEquals(NUMBER_OF_TRIPLES_TO_ADD, graph.getNumberOfTriples());
+    private void checkNumberOfTriples(final int expectedNumberOfTriples) throws GraphException {
+        assertFalse(graph.isEmpty());
+        assertEquals(expectedNumberOfTriples, graph.getNumberOfTriples());
+    }
+
+    private void checkIllegalAdd(final String expectedMessage, final SubjectNode subject,
+        final PredicateNode predicate, final ObjectNode object) {
+        assertThrows(IllegalArgumentException.class, expectedMessage, new Block() {
+            public void execute() throws Throwable {
+                graph.add(subject, predicate, object);
+            }
+        });
     }
 
     /**
@@ -470,8 +425,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     /**
      * Tests containership.
      *
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
+     * @throws Exception A generic exception - this should cause the tests to fail.
      */
     public void testContains() throws Exception {
         // add some test data
@@ -659,25 +613,6 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         } finally {
             it.close();
         }
-    }
-
-    private void checkForNonExistentResultsWithTriple(SubjectNode subject, PredicateNode predicateNode,
-        ObjectNode objectNode) throws GraphException {
-        Triple t = tripleFactory.createTriple(subject, predicateNode, objectNode);
-        ClosableIterator<Triple> it = graph.find(t).iterator();
-        try {
-            assertFalse(it.hasNext());
-        } finally {
-            it.close();
-        }
-    }
-
-    private void checkForNulls(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object) {
-        assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new Block() {
-            public void execute() throws Throwable {
-                graph.find(subject, predicate, object);
-            }
-        });
     }
 
     /**
@@ -912,6 +847,25 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         assertEquals(1, graph.getNumberOfTriples());
         newGraph();
         assertEquals(1, graph.getNumberOfTriples());
+    }
+
+    private void checkForNonExistentResultsWithTriple(SubjectNode subject, PredicateNode predicateNode,
+        ObjectNode objectNode) throws GraphException {
+        Triple t = tripleFactory.createTriple(subject, predicateNode, objectNode);
+        ClosableIterator<Triple> it = graph.find(t).iterator();
+        try {
+            assertFalse(it.hasNext());
+        } finally {
+            it.close();
+        }
+    }
+
+    private void checkForNulls(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object) {
+        assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new Block() {
+            public void execute() throws Throwable {
+                graph.find(subject, predicate, object);
+            }
+        });
     }
 
     private void checkInvalidRemove(ClosableIterator<Triple> ci) {
