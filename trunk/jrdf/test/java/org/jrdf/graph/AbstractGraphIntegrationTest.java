@@ -150,6 +150,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
     private static final String FAILED_TO_ADD_TRIPLE = "Failed to add triple.";
+    private static final String FAILED_TO_REMOVE_TRIPLE = "Failed to remove nonexistent triple";
 
     /**
      * Create test instance.
@@ -210,20 +211,20 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
      * @throws Exception A generic exception - this should cause the tests to fail.
      */
     public void testAddition() throws Exception {
-        // add in a triple by nodes
+        // add by nodes
         graph.add(blank1, ref1, blank2);
         checkNumberOfTriples(1);
 
-        // add in a whole triple
+        // add by triple
         Triple triple2 = tripleFactory.createTriple(blank2, ref1, blank2);
         graph.add(triple2);
         checkNumberOfTriples(2);
 
-        // add in the first triple again
+        // add the first triple again
         graph.add(blank1, ref1, blank2);
         checkNumberOfTriples(2);
 
-        // add in the second whole triple again
+        // add the second whole triple again
         Triple triple2b = tripleFactory.createTriple(blank2, ref1, blank2);
         graph.add(triple2b);
         checkNumberOfTriples(2);
@@ -236,7 +237,6 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         List<Triple> list = new ArrayList<Triple>();
         list.add(tripleFactory.createTriple(ref1, ref1, ref1));
         list.add(tripleFactory.createTriple(ref2, ref2, ref2));
-
         graph.add(list.iterator());
         checkNumberOfTriples(4);
 
@@ -274,56 +274,62 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         // add some test data
         addTriplesToGraph();
         addFullTriplesToGraph();
-
-        // check that all is well
-        assertFalse(graph.isEmpty());
-        assertEquals(6, graph.getNumberOfTriples());
+        checkNumberOfTriples(6);
 
         // delete the first statement
         graph.remove(blank1, ref1, blank2);
-        assertEquals(5, graph.getNumberOfTriples());
+        checkNumberOfTriples(5);
 
         // delete the last statement
         graph.remove(t3);
-        assertEquals(4, graph.getNumberOfTriples());
+        checkNumberOfTriples(4);
 
         // delete the next last statement with a new "triple object"
         t2 = tripleFactory.createTriple(blank2, ref2, blank1);
         graph.remove(t2);
-        assertEquals(3, graph.getNumberOfTriples());
+        checkNumberOfTriples(3);
 
         // delete the next last statement with a triple different to what it was built with
         graph.remove(blank2, ref1, blank1);
-        assertEquals(2, graph.getNumberOfTriples());
+        checkNumberOfTriples(2);
 
         // delete the next last statement with a triple different to what it was built with
         graph.remove(ref1, ref2, l2);
-        assertEquals(1, graph.getNumberOfTriples());
+        checkNumberOfTriples(1);
+
+        // delete using iterator
+        graph.add(ref1, ref1, ref1);
+        graph.add(ref2, ref2, ref2);
+        List<Triple> list = new ArrayList<Triple>();
+        list.add(tripleFactory.createTriple(ref1, ref1, ref1));
+        list.add(tripleFactory.createTriple(ref2, ref2, ref2));
+        graph.remove(list.iterator());
+        checkNumberOfTriples(1);
+
+        // check can't remove last removed triple
+        checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, ref2, ref2, ref2);
+        checkNumberOfTriples(1);
 
         // delete the wrong triple
-        assertThrows(GraphException.class, new Block() {
-            public void execute() throws Throwable {
-                graph.remove(blank2, ref1, blank1);
-            }
-        });
-        assertEquals(1, graph.getNumberOfTriples());
+        checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, blank2, ref1, blank1);
+        checkNumberOfTriples(1);
 
         // delete a triple that never existed
-        assertThrows(GraphException.class, new Block() {
-            public void execute() throws Throwable {
-                graph.remove(blank2, ref2, l2);
-            }
-        });
-        assertEquals(1, graph.getNumberOfTriples());
+        checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, blank2, ref2, l2);
+        checkNumberOfTriples(1);
+        checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, blank2, ref1, blank1);
+        checkNumberOfTriples(1);
 
-        // and delete with a triple object
-        t1 = tripleFactory.createTriple(blank2, ref1, blank1);
-        assertThrows(GraphException.class, new Block() {
-            public void execute() throws Throwable {
-                graph.remove(t1);
-            }
-        });
-        assertEquals(1, graph.getNumberOfTriples());
+        // Try to add nulls
+        checkIllegalRemove(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, null, ref1, ref1);
+        checkIllegalRemove(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, ref1, null, ref1);
+        checkIllegalRemove(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, ref1, ref1, null);
+
+        // Try to add any nodes
+        checkIllegalRemove(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE, ANY_SUBJECT_NODE, ref1, ref1);
+        checkIllegalRemove(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE, ref1, ANY_PREDICATE_NODE,
+            ref1);
+        checkIllegalRemove(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE, ref1, ref1, ANY_OBJECT_NODE);
 
         // now clear out the graph
         assertFalse(graph.isEmpty());
@@ -331,71 +337,18 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         assertTrue(graph.isEmpty());
         assertEquals(0, graph.getNumberOfTriples());
 
-        assertThrows(ExternalBlankNodeException.class, new Block() {
-            public void execute() throws Throwable {
-                graph.remove(blank1, ref2, blank2);
-            }
-        });
+        checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, ref1, ref1, ref1);
         assertTrue(graph.isEmpty());
         assertEquals(0, graph.getNumberOfTriples());
+    }
 
-        // Check removal using iterator
-        ref1 = graph.getElementFactory().createURIReference(ref1.getURI());
-        ref2 = graph.getElementFactory().createURIReference(ref2.getURI());
-        graph.add(tripleFactory.createTriple(ref1, ref1, ref1));
-        graph.add(tripleFactory.createTriple(ref2, ref2, ref2));
-
-        List<Triple> list = new ArrayList<Triple>();
-        list.add(tripleFactory.createTriple(ref1, ref1, ref1));
-        list.add(tripleFactory.createTriple(ref2, ref2, ref2));
-        graph.remove(list.iterator());
-
-        // check that we can't still remove things
-        assertThrows(GraphException.class, new Block() {
+    private void checkIllegalRemove(final Class<?> expectedException, String expectedMessage,
+        final SubjectNode subject, final PredicateNode predicate, final ObjectNode object) {
+        assertThrows(expectedException, expectedMessage, new Block() {
             public void execute() throws Throwable {
-                graph.remove(ref2, ref2, ref2);
+                graph.remove(subject, predicate, object);
             }
         });
-
-        assertTrue(graph.isEmpty());
-        assertEquals(0, graph.getNumberOfTriples());
-
-        // Try to add nulls
-        assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                graph.remove(null, ref1, ref1);
-            }
-        });
-        assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                graph.remove(ref1, null, ref1);
-            }
-        });
-        assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                graph.remove(ref1, ref1, null);
-            }
-        });
-
-        // Try to add any nodes
-        assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
-            new AssertThrows.Block() {
-                public void execute() throws Throwable {
-                    graph.remove(ANY_SUBJECT_NODE, ref1, ref1);
-                }
-            });
-        assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
-            new AssertThrows.Block() {
-                public void execute() throws Throwable {
-                    graph.remove(ref1, ANY_PREDICATE_NODE, ref1);
-                }
-            });
-        assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
-            new AssertThrows.Block() {
-                public void execute() throws Throwable {
-                    graph.remove(ref1, ref1, ANY_OBJECT_NODE);
-                }
-            });
     }
 
     public void testRemoveIterator() throws Exception {
