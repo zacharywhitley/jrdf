@@ -90,7 +90,7 @@ public final class LongIndexSesame implements LongIndex {
         try {
             boolean changed = RecordIteratorHelper.remove(btree, node);
             if (!changed) {
-                throw new GraphException("Unable to remove nonexistent statement");
+                throw new GraphException("Failed to remove nonexistent triple");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

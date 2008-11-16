@@ -125,10 +125,12 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
         return new FlatteningFiveLongClosableIterator(iterator);
     }
 
+    // TODO Cover the other graph exceptions in tests - currently only the first one is test driven.
+    // Search for Unable to remove nonexistent statement.
     public void remove(Long... quin) throws GraphException {
         ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>> mids = index.get(quin[0]);
         if (null == mids) {
-            throw new GraphException("Unable to remove nonexistent statement");
+            throw new GraphException("Failed to remove nonexistent triple");
         }
         ClosableMap<Long, ClosableMap<Long, Set<Long>>> subjectIndex = mids.get(quin[1]);
         if (null == subjectIndex) {
