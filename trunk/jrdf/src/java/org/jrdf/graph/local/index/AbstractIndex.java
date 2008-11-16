@@ -114,8 +114,6 @@ public abstract class AbstractIndex<T> implements Index<T>, Serializable {
     public abstract ClosableIterator<T[]> getSubIndex(T first);
 
     // TODO AN Make it clean like LongIndexBdb
-    // TODO Test drive other graph exceptions - trying to remove no-existent statements.
-    // Search for Unable to remove nonexistent statement
     public void remove(T... node) throws GraphException {
         // find the sub index
         Map<T, Set<T>> subIndex = index.get(node[0]);
@@ -127,11 +125,11 @@ public abstract class AbstractIndex<T> implements Index<T>, Serializable {
         Set<T> group = subIndex.get(node[1]);
         // check that the group exists
         if (null == group) {
-            throw new GraphException("Unable to remove nonexistent statement");
+            throw new GraphException("Failed to remove nonexistent triple");
         }
         // remove from the group, report error if it didn't exist
         if (!group.remove(node[2])) {
-            throw new GraphException("Unable to remove nonexistent statement");
+            throw new GraphException("Failed to remove nonexistent triple");
         }
         // clean up the graph
         if (group.isEmpty()) {

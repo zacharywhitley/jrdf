@@ -69,11 +69,6 @@ import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-
 public abstract class AbstractMoleculeStructureIndexIntegrationTest extends TestCase {
     protected MoleculeStructureIndex<Long> index;
 
@@ -86,6 +81,7 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
         index.close();
     }
 
+    // TODO Test Unable to remove nonexistent statement remove.
     public void testBasicOps() throws GraphException {
         assertFalse("No keys", index.contains(1L));
         index.add(1L, 2L, 3L, 4L, 5L);

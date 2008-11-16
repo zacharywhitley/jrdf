@@ -315,9 +315,9 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         checkNumberOfTriples(1);
 
         // delete a triple that never existed
-        checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, blank2, ref2, l2);
+        checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, blank1, ref1, l2);
         checkNumberOfTriples(1);
-        checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, blank2, ref1, blank1);
+        checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, blank1, ref2, l2);
         checkNumberOfTriples(1);
 
         // Try to add nulls

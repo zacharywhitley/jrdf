@@ -65,11 +65,6 @@ import org.jrdf.util.ClosableMapImpl;
 
 import java.util.Set;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-
 public class MoleculeStructureIndexMemIntegrationTest extends AbstractMoleculeStructureIndexIntegrationTest {
 
     public void setUp() throws Exception {

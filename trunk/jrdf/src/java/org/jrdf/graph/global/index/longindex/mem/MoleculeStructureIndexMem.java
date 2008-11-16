@@ -134,11 +134,11 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
         }
         ClosableMap<Long, ClosableMap<Long, Set<Long>>> subjectIndex = mids.get(quin[1]);
         if (null == subjectIndex) {
-            throw new GraphException("Unable to remove nonexistent statement");
+            throw new GraphException("Failed to remove nonexistent triple");
         }
         Map<Long, Set<Long>> predicateIndex = subjectIndex.get(quin[2]);
         if (null == predicateIndex) {
-            throw new GraphException("Unable to remove nonexistent statement");
+            throw new GraphException("Failed to remove nonexistent triple");
         }
         Set<Long> objectIndex = predicateIndex.get(quin[3]);
         if (null == objectIndex) {
