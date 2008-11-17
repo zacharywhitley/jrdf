@@ -59,12 +59,8 @@
 
 package org.jrdf.graph.global.molecule;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
@@ -82,7 +78,6 @@ import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
@@ -118,7 +113,7 @@ public class TextToMoleculeGraphIntegrationTest extends AbstractMoleculeGraphInt
         super.tearDown();
     }
 
-    public void testOneMoleculeGraph() throws IOException {
+    public void testOneMoleculeGraph() throws Exception {
         Molecule m1 = moleculeFactory.createMolecule(b1r1b2);
         graph.add(m1);
         graphBuilder.parse(new StringReader(graph.toString()));
@@ -128,7 +123,7 @@ public class TextToMoleculeGraphIntegrationTest extends AbstractMoleculeGraphInt
         assertFalse(graphBuilder.hasNext());
     }
 
-    public void testTwoLevelMolecule() throws IOException {
+    public void testTwoLevelMolecule() throws Exception {
         Molecule m1 = moleculeFactory.createMolecule(b1r1b2);
         Molecule m2 = moleculeFactory.createMolecule(b2r2b3);
         m1.add(b1r1b2, m2);
@@ -142,7 +137,7 @@ public class TextToMoleculeGraphIntegrationTest extends AbstractMoleculeGraphInt
         assertFalse(graphBuilder.hasNext());
     }
 
-    public void testTwoMolecules() throws IOException, GraphException {
+    public void testTwoMolecules() throws Exception {
         Molecule m1 = moleculeFactory.createMolecule(b1r1b2);
         Molecule m2 = moleculeFactory.createMolecule(b1r2r2);
         graph.add(m1);
