@@ -59,18 +59,13 @@
 
 package org.jrdf.graph.global.molecule;
 
-import junit.framework.TestCase;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.MoleculeGraph;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b1r1b2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b1r2r2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b2r2b3;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.factory;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.globalMoleculeComparator;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.graph;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.moleculeFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
@@ -92,12 +87,7 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-
-public class TextToMoleculeGraphUnitTest extends TestCase {
+public class TextToMoleculeGraphIntegrationTest extends AbstractMoleculeGraphIntegrationTest {
     private MoleculeGraph destGraph;
     private TextToMolecule textToMolecule;
     private TripleParserImpl tripleParser;
@@ -106,7 +96,6 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        MoleculeGraphTestUtil.setUp();
         destGraph = factory.getGraph();
         destElementFactory = destGraph.getElementFactory();
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
@@ -126,7 +115,7 @@ public class TextToMoleculeGraphUnitTest extends TestCase {
     public void tearDown() {
         destGraph.clear();
         destGraph.close();
-        MoleculeGraphTestUtil.close();
+        super.tearDown();
     }
 
     public void testOneMoleculeGraph() throws IOException {
