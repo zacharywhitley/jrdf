@@ -765,15 +765,8 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         }
     }
 
-    public void testURIReferenceIterator() throws Exception {
+    public void testURIReferenceResourceIterator() throws Exception {
         checkFindResources(3, URI_REFERENCE_TYPE, URIReference.class);
-        addTestNodes();
-        checkFindNodes(5, URI_REFERENCE_TYPE);
-        graph.remove(ref5, ref2, ref1);
-        checkFindNodes(5, URI_REFERENCE_TYPE);
-        graph.remove(ref1, ref3, ref5);
-        graph.remove(ref5, ref5, ref5);
-        checkFindNodes(4, URI_REFERENCE_TYPE);
     }
 
     public void testBlankNodeResourceIterator() throws Exception {
@@ -797,12 +790,27 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         }
     }
 
-    public void testResourceIterators() throws Exception {
+    public void testBlankNodes() throws Exception {
+        addTestNodes();
+        checkFindNodes(2, BNODE_TYPE);
+    }
+
+    public void testUriReferenceNodes() throws Exception {
+        addTestNodes();
+        checkFindNodes(5, URI_REFERENCE_TYPE);
+        graph.remove(ref5, ref2, ref1);
+        checkFindNodes(5, URI_REFERENCE_TYPE);
+        graph.remove(ref1, ref3, ref5);
+        graph.remove(ref5, ref5, ref5);
+        checkFindNodes(4, URI_REFERENCE_TYPE);
+    }
+
+    public void testResourceNodes() throws Exception {
         addTestNodes();
         checkFindNodes(5, RESOURCE_TYPE);
     }
 
-    public void testPredicateIterators() throws Exception {
+    public void testPredicateNodes() throws Exception {
         addTestNodes();
         checkFindNodes(4, PREDICATE_TYPE);
     }
