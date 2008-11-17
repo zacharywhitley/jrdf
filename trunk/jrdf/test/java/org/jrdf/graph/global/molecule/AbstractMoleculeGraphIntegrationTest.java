@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.global.molecule;
 
+import junit.framework.TestCase;
 import org.jrdf.GlobalJRDFFactory;
 import org.jrdf.SortedDiskGlobalJRDFFactory;
 import org.jrdf.graph.BlankNode;
@@ -76,7 +77,7 @@ import org.jrdf.util.TempDirectoryHandler;
 
 import java.net.URI;
 
-public class AbstractMoleculeGraphIntegrationTest {
+public abstract class AbstractMoleculeGraphIntegrationTest extends TestCase {
     protected GlobalJRDFFactory factory;
     protected MoleculeFactory moleculeFactory;
     protected MoleculeGraph graph;

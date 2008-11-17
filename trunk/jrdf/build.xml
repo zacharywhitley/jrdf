@@ -10,7 +10,7 @@
 
     <target name="gen-src" depends="gen-urql-parser"/>
 
-    <target name="checkstyle" depends="checkstyle-production">
+    <target name="checkstyle" depends="checkstyle-production, checkstyle-test">
     </target>
 
     <target name="checkstyle-production">

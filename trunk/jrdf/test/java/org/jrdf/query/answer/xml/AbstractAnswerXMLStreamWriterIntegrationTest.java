@@ -196,10 +196,9 @@ public abstract class AbstractAnswerXMLStreamWriterIntegrationTest extends TestC
     }
 
     private void checkContentsOfResults(List<Map<String, String>> maps) throws XMLStreamException {
-        final String xml = writer.toString();
+        reader = factory.createXMLStreamReader(new StringReader(writer.toString()));
         Map<String, String> actualResultsMap = new HashMap<String, String>();
         int pos = 0;
-        reader = factory.createXMLStreamReader(new StringReader(xml));
         while (reader.hasNext() && !endOfResults()) {
             final int eventType = reader.next();
             if (eventType == START_ELEMENT) {
