@@ -65,6 +65,8 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.local.index.nodepool.ExternalBlankNodeException;
 import org.jrdf.query.relation.type.BlankNodeType;
+import org.jrdf.query.relation.type.ValueNodeType;
+import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
@@ -357,6 +359,10 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         checkRemoveIterator(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 2);
     }
 
+    public void testRemoveIteratorAllSubjectAllObject() throws Exception {
+        checkRemoveIterator(ANY_SUBJECT_NODE, ref2, ANY_OBJECT_NODE, 1);
+    }
+
     public void testRemoveIteratorAllPredicate() throws Exception {
         checkRemoveIterator(blank1, ANY_PREDICATE_NODE, blank2, 1);
     }
@@ -431,7 +437,6 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
     }
 
     public void testIllegalContains() {
-        // Try to test for containing nulls
         checkIllegalContains(null, ref1, ref1);
         checkIllegalContains(ref1, null, ref1);
         checkIllegalContains(ref1, ref1, null);
@@ -446,21 +451,8 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         });
     }
 
-    /**
-     * Tests finding.
-     *
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
-     */
     public void testFinding() throws Exception {
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref1, l1);
-        graph.add(blank1, ref2, blank2);
-        graph.add(blank1, ref1, l2);
-        graph.add(blank2, ref1, blank2);
-        graph.add(blank2, ref2, blank2);
-        graph.add(blank2, ref1, l1);
-        graph.add(blank2, ref1, l2);
+        addTriplesWithBlankNodes();
         ClosableIterator<Triple> it;
 
         // look for the first triple and check that one is returned
@@ -494,8 +486,6 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         it = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ref1).iterator();
         assertFalse(it.hasNext());
         it.close();
-
-        // do it all again with triples
 
         // look for the first triple and check that one is returned
         checkForSingleResultWithTriple(blank1, ref1, blank2);
@@ -531,7 +521,7 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     private void checkForSingleResult(final SubjectNode subject, final PredicateNode predicate,
         final ObjectNode object) throws GraphException {
-        ClosableIterator<Triple> it = graph.find(subject, predicate, object).iterator();
+        final ClosableIterator<Triple> it = graph.find(subject, predicate, object).iterator();
         try {
             assertTrue(it.hasNext());
         } finally {
@@ -541,8 +531,8 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
 
     private void checkForSingleResultWithTriple(final SubjectNode subject, final PredicateNode predicate,
         final ObjectNode object) throws GraphException {
-        Triple t = tripleFactory.createTriple(subject, predicate, object);
-        ClosableIterator<Triple> it = graph.find(t).iterator();
+        final Triple t = tripleFactory.createTriple(subject, predicate, object);
+        final ClosableIterator<Triple> it = graph.find(t).iterator();
         try {
             assertTrue(it.hasNext());
         } finally {
@@ -550,14 +540,33 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         }
     }
 
-    private void checkForNonExistentResults(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphException {
-        ClosableIterator<Triple> it = graph.find(subject, predicate, object).iterator();
+    private void checkForNonExistentResults(final SubjectNode subject, final PredicateNode predicate,
+        final ObjectNode object) throws GraphException {
+        final ClosableIterator<Triple> it = graph.find(subject, predicate, object).iterator();
         try {
             assertFalse(it.hasNext());
         } finally {
             it.close();
         }
+    }
+
+    private void checkForNonExistentResultsWithTriple(final SubjectNode subject, final PredicateNode predicateNode,
+        final ObjectNode objectNode) throws GraphException {
+        final Triple t = tripleFactory.createTriple(subject, predicateNode, objectNode);
+        final ClosableIterator<Triple> it = graph.find(t).iterator();
+        try {
+            assertFalse(it.hasNext());
+        } finally {
+            it.close();
+        }
+    }
+
+    private void checkForNulls(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object) {
+        assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new Block() {
+            public void execute() throws Throwable {
+                graph.find(subject, predicate, object);
+            }
+        });
     }
 
     /**
@@ -604,11 +613,14 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         //(iterator may return results in a different order)
         Set<Triple> statements = new HashSet<Triple>();
         ClosableIterable<Triple> iterable = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        assertTrue("ClosableIterator is returning false for hasNext().", iterable.iterator().hasNext());
-        for (Triple triple : iterable) {
-            statements.add(triple);
+        try {
+            assertTrue("ClosableIterator is returning false for hasNext().", iterable.iterator().hasNext());
+            for (Triple triple : iterable) {
+                statements.add(triple);
+            }
+        } finally {
+            iterable.iterator().close();
         }
-        iterable.iterator().close();
 
         //check that the iterator contained the correct number of statements
         assertEquals("ClosableIterator is incomplete.", graph.getNumberOfTriples(), statements.size());
@@ -621,342 +633,33 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         }
     }
 
-    /**
-     * Tests iterative removal.
-     *
-     * @throws Exception A generic exception - this should cause the tests to fail.
-     */
-    public void testIterativeRemoval() throws Exception {
-        // TODO AN Add a test for fulliterative add.
-        // add some test data
+    // TODO AN Add a test for fulliterative add.
+    public void testIterativeRemoveAll() throws Exception {
         checkFullIteratorRemoval(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 6);
-        graph = newGraph();
-        final GraphElementFactory elementFactory4 = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+    }
 
-        blank1 = elementFactory4.createBlankNode();
-        blank2 = elementFactory4.createBlankNode();
-
-        ref1 = elementFactory4.createURIReference(create("http://namespace#somevalue"));
-        ref2 = elementFactory4.createURIReference(create("http://namespace#someothervalue"));
-        ref3 = elementFactory4.createURIReference(create("http://namespace#yetanothervalue"));
-        ref4 = elementFactory4.createURIReference(create("http://namespace#yetanotheranothervalue"));
-        ref5 = elementFactory4.createURIReference(create("http://namespace#visforvalue"));
-
-        l1 = elementFactory4.createLiteral(TEST_STR1);
-        l2 = elementFactory4.createLiteral(TEST_STR2);
+    public void testIterativeRemoveAllPredicateAllObject() throws Exception {
         checkFullIteratorRemoval(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 2);
-        graph = newGraph();
-        final GraphElementFactory elementFactory3 = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+    }
 
-        blank1 = elementFactory3.createBlankNode();
-        blank2 = elementFactory3.createBlankNode();
-
-        ref1 = elementFactory3.createURIReference(create("http://namespace#somevalue"));
-        ref2 = elementFactory3.createURIReference(create("http://namespace#someothervalue"));
-        ref3 = elementFactory3.createURIReference(create("http://namespace#yetanothervalue"));
-        ref4 = elementFactory3.createURIReference(create("http://namespace#yetanotheranothervalue"));
-        ref5 = elementFactory3.createURIReference(create("http://namespace#visforvalue"));
-
-        l1 = elementFactory3.createLiteral(TEST_STR1);
-        l2 = elementFactory3.createLiteral(TEST_STR2);
+    public void testIterativeRemoveAllObject() throws Exception {
         checkFullIteratorRemoval(blank2, ref1, ANY_OBJECT_NODE, 2);
-        graph = newGraph();
-        final GraphElementFactory elementFactory2 = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+    }
 
-        blank1 = elementFactory2.createBlankNode();
-        blank2 = elementFactory2.createBlankNode();
-
-        ref1 = elementFactory2.createURIReference(create("http://namespace#somevalue"));
-        ref2 = elementFactory2.createURIReference(create("http://namespace#someothervalue"));
-        ref3 = elementFactory2.createURIReference(create("http://namespace#yetanothervalue"));
-        ref4 = elementFactory2.createURIReference(create("http://namespace#yetanotheranothervalue"));
-        ref5 = elementFactory2.createURIReference(create("http://namespace#visforvalue"));
-
-        l1 = elementFactory2.createLiteral(TEST_STR1);
-        l2 = elementFactory2.createLiteral(TEST_STR2);
+    public void testIterativeRemoveAllSubjectAllObject() throws Exception {
         checkFullIteratorRemoval(ANY_SUBJECT_NODE, ref2, ANY_OBJECT_NODE, 3);
-        graph = newGraph();
-        final GraphElementFactory elementFactory1 = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+    }
 
-        blank1 = elementFactory1.createBlankNode();
-        blank2 = elementFactory1.createBlankNode();
-
-        ref1 = elementFactory1.createURIReference(create("http://namespace#somevalue"));
-        ref2 = elementFactory1.createURIReference(create("http://namespace#someothervalue"));
-        ref3 = elementFactory1.createURIReference(create("http://namespace#yetanothervalue"));
-        ref4 = elementFactory1.createURIReference(create("http://namespace#yetanotheranothervalue"));
-        ref5 = elementFactory1.createURIReference(create("http://namespace#visforvalue"));
-
-        l1 = elementFactory1.createLiteral(TEST_STR1);
-        l2 = elementFactory1.createLiteral(TEST_STR2);
+    public void testIterativeRemoveAllPredicate() throws Exception {
         checkFullIteratorRemoval(blank1, ANY_PREDICATE_NODE, blank2, 2);
-        graph = newGraph();
-        final GraphElementFactory elementFactory = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+    }
 
-        blank1 = elementFactory.createBlankNode();
-        blank2 = elementFactory.createBlankNode();
-
-        ref1 = elementFactory.createURIReference(create("http://namespace#somevalue"));
-        ref2 = elementFactory.createURIReference(create("http://namespace#someothervalue"));
-        ref3 = elementFactory.createURIReference(create("http://namespace#yetanothervalue"));
-        ref4 = elementFactory.createURIReference(create("http://namespace#yetanotheranothervalue"));
-        ref5 = elementFactory.createURIReference(create("http://namespace#visforvalue"));
-
-        l1 = elementFactory.createLiteral(TEST_STR1);
-        l2 = elementFactory.createLiteral(TEST_STR2);
+    public void testIterativeRemoveSingleTriple() throws Exception {
         checkFullIteratorRemoval(ref1, ref2, l2, 1);
     }
 
-    /**
-     * Test blank node semantics across graphs - throws exception when adding blank node across graphs. Throws
-     * an exception when the node ids exist in the graph but return different blank nodes.
-     */
-    public void testBlankNodesAcrossGraphs() throws Exception {
-        final Graph newGraph = newGraph();
-        GraphElementFactory graphElementFactory = newGraph.getElementFactory();
-        URI newURI = new URI("http://namespace#somevalue");
-        final URIReference newRes = graphElementFactory.createURIReference(newURI);
-        newGraph.add(newRes, newRes, newRes);
-        assertThrows(ExternalBlankNodeException.class, FAILED_TO_ADD_TRIPLE, new Block() {
-            public void execute() throws Throwable {
-                newGraph.add(blank1, newRes, newRes);
-            }
-        });
-        assertThrows(ExternalBlankNodeException.class, FAILED_TO_ADD_TRIPLE, new Block() {
-            public void execute() throws Throwable {
-                newGraph.add(blank2, newRes, newRes);
-            }
-        });
-    }
-
-    public void testResourceIteratorSimple() throws Exception {
-        final ClosableIterator<? extends Node> resources = graph.findNodes(RESOURCE_TYPE).iterator();
-        try {
-            boolean b = resources.hasNext();
-            assertFalse("Should be no resources for empty graph", b);
-            assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
-                public void execute() throws Throwable {
-                    resources.next();
-                }
-            });
-        } finally {
-            resources.close();
-        }
-    }
-
-    public void testBlankNodeTypeIterator() throws Exception {
-        addTestNodes();
-        assertEquals("Incorrect number of blank nodes", 2, getNumberOfBlankNodes());
-        graph.remove(blank1, ref1, blank2);
-        graph.remove(blank1, ref2, blank2);
-        graph.remove(blank1, ref1, l1);
-        graph.remove(blank1, ref1, l2);
-        assertEquals("Incorrect number of blank nodes", 1, getNumberOfBlankNodes());
-    }
-
-    public void testURIReferenceResourceIterator() throws Exception {
-        addTestNodes();
-        ClosableIterator<Resource> iterator = graph.findResources(URI_REFERENCE_TYPE).iterator();
-        try {
-            int counter = 0;
-            while (iterator.hasNext()) {
-                Resource resource = iterator.next();
-                assertTrue(resource.getUnderlyingNode() instanceof URIReference);
-                counter++;
-            }
-            assertEquals("Unexpected number of unique URIs in the subject and object position", 3, counter);
-        } finally {
-            iterator.close();
-        }
-    }
-
-    public void testBlankNodeResourceIterator() throws Exception {
-        addTestNodes();
-        ClosableIterator<Resource> iterator = graph.findResources(BNODE_TYPE).iterator();
-        try {
-            int counter = 0;
-            while (iterator.hasNext()) {
-                Resource resource = iterator.next();
-                assertTrue(resource.getUnderlyingNode() instanceof BlankNode);
-                counter++;
-            }
-            assertEquals("Unexpected number of unique blank nodes in the subject and object position", 2, counter);
-        } finally {
-            iterator.close();
-        }
-    }
-
-    public void testURIReferencesIterator() throws Exception {
-        addTestNodes();
-        assertEquals("Unexpected number of unique URIs", 5, countURIRefs());
-        graph.remove(ref5, ref2, ref1);
-        assertEquals("Unexpected number of unique URIs", 5, countURIRefs());
-        graph.remove(ref1, ref3, ref5);
-        graph.remove(ref5, ref5, ref5);
-        assertEquals("Unexpected number of unique URIs", 4, countURIRefs());
-    }
-
-    private int countURIRefs() {
-        ClosableIterable<? extends Node> iterator = graph.findNodes(URI_REFERENCE_TYPE);
-        try {
-            int counter = 0;
-            for (Node node : iterator) {
-                counter++;
-            }
-            return counter;
-        } finally {
-            iterator.iterator().close();
-        }
-    }
-
-    public void testResourceIterators() throws Exception {
-        addTestNodes();
-        ClosableIterable<? extends Node> resources = graph.findNodes(RESOURCE_TYPE);
-        try {
-            int counter = 0;
-            for (Node node : resources) {
-                counter++;
-            }
-            assertEquals("Unexpected number of unique resources (Blank Nodes and URIs)", 5, counter);
-        } finally {
-            resources.iterator().close();
-        }
-    }
-
-    public void testPredicateIterators() throws Exception {
-        addTestNodes();
-        ClosableIterable<? extends Node> uniquePredicates = graph.findNodes(PREDICATE_TYPE);
-        try {
-            int counter = 0;
-            for (Node node : uniquePredicates) {
-                counter++;
-            }
-            assertEquals("Unexpected number of unique predicates", 4, counter);
-        } finally {
-            uniquePredicates.iterator().close();
-        }
-    }
-
-    public void testFixedUniquePredicateIterator() throws Exception {
-        addTestNodes();
-        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(blank2), ref1, ref2);
-        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(ref5), ref2, ref3, ref5);
-    }
-
-    public void testClear() throws Exception {
-        addTriplesToGraph();
-        assertEquals(3, graph.getNumberOfTriples());
-        assertEquals(true, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator().hasNext());
-        graph.clear();
-        assertEquals(0, graph.getNumberOfTriples());
-        assertEquals(false, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator().hasNext());
-    }
-
-    public void testSeparateGraphs() throws Exception {
-        graph.add(blank2, ref1, l2);
-        assertEquals(1, graph.getNumberOfTriples());
-        newGraph();
-        assertEquals(1, graph.getNumberOfTriples());
-    }
-
-    private void checkForNonExistentResultsWithTriple(SubjectNode subject, PredicateNode predicateNode,
-        ObjectNode objectNode) throws GraphException {
-        Triple t = tripleFactory.createTriple(subject, predicateNode, objectNode);
-        ClosableIterator<Triple> it = graph.find(t).iterator();
-        try {
-            assertFalse(it.hasNext());
-        } finally {
-            it.close();
-        }
-    }
-
-    private void checkForNulls(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object) {
-        assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new Block() {
-            public void execute() throws Throwable {
-                graph.find(subject, predicate, object);
-            }
-        });
-    }
-
-    private void checkInvalidRemove(ClosableIterator<Triple> ci) {
-        try {
-            ci.remove();
-            fail("Must throw an exception.");
-        } catch (IllegalStateException ise) {
-            assertTrue(ise.getMessage().indexOf("Next not called or beyond end of data") != -1);
-        }
-    }
-
-    private void addTriplesToGraph() throws Exception {
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(ref1, ref2, l2);
-    }
-
-    private void addFullTriplesToGraph() throws GraphException {
-        t1 = tripleFactory.createTriple(blank2, ref1, blank1);
-        graph.add(t1);
-        t2 = tripleFactory.createTriple(blank2, ref2, blank1);
-        graph.add(t2);
-        t3 = tripleFactory.createTriple(blank2, ref1, l1);
-        graph.add(t3);
-    }
-
-    private void checkFixedUniquePredicateIterator(Resource resource, PredicateNode... predicates)
-        throws Exception {
-        int counter = 0;
-        ClosableIterable<PredicateNode> resourcePredicates = graph.findPredicates(resource);
-        try {
-            Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
-            for (PredicateNode predicateNode : resourcePredicates) {
-                assertTrue("Results should not have: " + predicateNode + " expected: " + expectedPredicates,
-                    expectedPredicates.contains(predicateNode));
-                counter++;
-            }
-            assertEquals("Wrong number of unique predicates", expectedPredicates.size(), counter);
-        } finally {
-            resourcePredicates.iterator().close();
-        }
-    }
-
-    private void addTestNodes() throws GraphException {
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(blank1, ref1, l1);
-        graph.add(blank1, ref1, l2);
-        graph.add(blank2, ref1, blank2);
-        graph.add(blank2, ref2, blank2);
-        graph.add(blank2, ref1, l1);
-        graph.add(blank2, ref1, l2);
-        graph.add(blank2, ref1, l2);
-        graph.add(ref1, ref1, ref1);
-        graph.add(ref1, ref3, ref1);
-        graph.add(ref4, ref3, ref1);
-        graph.add(ref5, ref2, ref1);
-        graph.add(ref1, ref3, ref5);
-        graph.add(ref5, ref5, ref5);
-    }
-
-    private int getNumberOfBlankNodes() {
-        ClosableIterable<? extends Node> blankNodes = graph.findNodes(new BlankNodeType());
-        try {
-            int counter = 0;
-            for (Node node : blankNodes) {
-                counter++;
-            }
-            return counter;
-        } finally {
-            blankNodes.iterator().close();
-        }
-    }
-
-    private void checkFullIteratorRemoval(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-        int expectedFoundTriples) throws Exception {
+    private void checkFullIteratorRemoval(final SubjectNode subjectNode, final PredicateNode predicateNode,
+        final ObjectNode objectNode, final int expectedFoundTriples) throws Exception {
 
         addTriplesToGraph();
         addFullTriplesToGraph();
@@ -970,7 +673,12 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         ClosableIterator<Triple> ci = graph.find(subjectNode, predicateNode, objectNode).iterator();
 
         // Check that it throws an exception before hasNext is called.
-        checkInvalidRemove(ci);
+        try {
+            ci.remove();
+            fail("Must throw an exception.");
+        } catch (IllegalStateException ise) {
+            assertTrue(ise.getMessage().indexOf("Next not called or beyond end of data") != -1);
+        }
 
         for (int i = 0; i < expectedFoundTriples; i++) {
             // remove the element
@@ -995,5 +703,195 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
                 }
             });
         }
+    }
+
+    /**
+     * Test blank node semantics across graphs - throws exception when adding blank node across graphs. Throws
+     * an exception when the node ids exist in the graph but return different blank nodes.
+     */
+    public void testBlankNodesAcrossGraphs() throws Exception {
+        final Graph externalGraph = newGraph();
+        GraphElementFactory graphElementFactory = externalGraph.getElementFactory();
+        URI newURI = new URI("http://namespace#somevalue");
+        final URIReference newRes = graphElementFactory.createURIReference(newURI);
+        externalGraph.add(newRes, newRes, newRes);
+        checkIllegalBlankNodeAddition(externalGraph, blank1, newRes, newRes);
+        checkIllegalBlankNodeAddition(externalGraph, blank2, newRes, newRes);
+    }
+
+    private void checkIllegalBlankNodeAddition(final Graph externalGraph, final SubjectNode subject,
+        final PredicateNode predicate, final ObjectNode object) {
+        assertThrows(ExternalBlankNodeException.class, FAILED_TO_ADD_TRIPLE, new Block() {
+            public void execute() throws Throwable {
+                externalGraph.add(subject, predicate, object);
+            }
+        });
+    }
+
+    public void testBlankNodeTypeIterator() throws Exception {
+        addTestNodes();
+        assertEquals("Incorrect number of blank nodes", 2, getNumberOfBlankNodes());
+        graph.remove(blank1, ref1, blank2);
+        graph.remove(blank1, ref2, blank2);
+        graph.remove(blank1, ref1, l1);
+        graph.remove(blank1, ref1, l2);
+        assertEquals("Incorrect number of blank nodes", 1, getNumberOfBlankNodes());
+    }
+
+    private int getNumberOfBlankNodes() {
+        ClosableIterable<? extends Node> blankNodes = graph.findNodes(new BlankNodeType());
+        try {
+            int counter = 0;
+            for (Node node : blankNodes) {
+                counter++;
+            }
+            return counter;
+        } finally {
+            blankNodes.iterator().close();
+        }
+    }
+
+    public void testResourceIteratorSimple() throws Exception {
+        final ClosableIterator<? extends Node> resources = graph.findNodes(RESOURCE_TYPE).iterator();
+        try {
+            assertFalse("Should be no resources for empty graph", resources.hasNext());
+            assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    resources.next();
+                }
+            });
+        } finally {
+            resources.close();
+        }
+    }
+
+    public void testURIReferenceIterator() throws Exception {
+        checkFindResources(3, URI_REFERENCE_TYPE, URIReference.class);
+        addTestNodes();
+        checkFindNodes(5, URI_REFERENCE_TYPE);
+        graph.remove(ref5, ref2, ref1);
+        checkFindNodes(5, URI_REFERENCE_TYPE);
+        graph.remove(ref1, ref3, ref5);
+        graph.remove(ref5, ref5, ref5);
+        checkFindNodes(4, URI_REFERENCE_TYPE);
+    }
+
+    public void testBlankNodeResourceIterator() throws Exception {
+        checkFindResources(2, BNODE_TYPE, BlankNode.class);
+    }
+
+    private void checkFindResources(final int expectedNumber, final ValueNodeType nodeType, final Class<?> clazz)
+        throws GraphException {
+        addTestNodes();
+        final ClosableIterator<Resource> iterator = graph.findResources(nodeType).iterator();
+        try {
+            int counter = 0;
+            while (iterator.hasNext()) {
+                final Resource resource = iterator.next();
+                assertTrue(clazz.isAssignableFrom(resource.getUnderlyingNode().getClass()));
+                counter++;
+            }
+            assertEquals("Unexpected number of unique nodes", expectedNumber, counter);
+        } finally {
+            iterator.close();
+        }
+    }
+
+    public void testResourceIterators() throws Exception {
+        addTestNodes();
+        checkFindNodes(5, RESOURCE_TYPE);
+    }
+
+    public void testPredicateIterators() throws Exception {
+        addTestNodes();
+        checkFindNodes(4, PREDICATE_TYPE);
+    }
+
+    private void checkFindNodes(final int expectedNumber, final NodeType nodeType) throws GraphException {
+        final ClosableIterable<? extends Node> nodes = graph.findNodes(nodeType);
+        try {
+            int counter = 0;
+            for (Node node : nodes) {
+                counter++;
+            }
+            assertEquals("Unexpected number of unique resources nodes", expectedNumber, counter);
+        } finally {
+            nodes.iterator().close();
+        }
+    }
+
+    public void testFixedUniquePredicateIterator() throws Exception {
+        addTestNodes();
+        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(blank2), ref1, ref2);
+        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(ref5), ref2, ref3, ref5);
+    }
+
+    private void checkFixedUniquePredicateIterator(final Resource resource, final PredicateNode... predicates)
+        throws Exception {
+        int counter = 0;
+        final ClosableIterable<PredicateNode> resourcePredicates = graph.findPredicates(resource);
+        try {
+            final Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
+            for (final PredicateNode predicateNode : resourcePredicates) {
+                assertTrue("Results should not have: " + predicateNode + " expected: " + expectedPredicates,
+                    expectedPredicates.contains(predicateNode));
+                counter++;
+            }
+            assertEquals("Wrong number of unique predicates", expectedPredicates.size(), counter);
+        } finally {
+            resourcePredicates.iterator().close();
+        }
+    }
+
+    public void testClear() throws Exception {
+        addTriplesToGraph();
+        assertEquals(3, graph.getNumberOfTriples());
+        assertEquals(true, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator().hasNext());
+        graph.clear();
+        assertEquals(0, graph.getNumberOfTriples());
+        assertEquals(false, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator().hasNext());
+    }
+
+    public void testSeparateGraphs() throws Exception {
+        graph.add(blank2, ref1, l2);
+        assertEquals(1, graph.getNumberOfTriples());
+        newGraph();
+        assertEquals(1, graph.getNumberOfTriples());
+    }
+
+    private void addTriplesToGraph() throws Exception {
+        graph.add(blank1, ref1, blank2);
+        graph.add(blank1, ref2, blank2);
+        graph.add(ref1, ref2, l2);
+    }
+
+    private void addFullTriplesToGraph() throws GraphException {
+        t1 = tripleFactory.createTriple(blank2, ref1, blank1);
+        graph.add(t1);
+        t2 = tripleFactory.createTriple(blank2, ref2, blank1);
+        graph.add(t2);
+        t3 = tripleFactory.createTriple(blank2, ref1, l1);
+        graph.add(t3);
+    }
+
+    private void addTestNodes() throws GraphException {
+        addTriplesWithBlankNodes();
+        graph.add(ref1, ref1, ref1);
+        graph.add(ref1, ref3, ref1);
+        graph.add(ref4, ref3, ref1);
+        graph.add(ref5, ref2, ref1);
+        graph.add(ref1, ref3, ref5);
+        graph.add(ref5, ref5, ref5);
+    }
+
+    private void addTriplesWithBlankNodes() throws GraphException {
+        graph.add(blank1, ref1, blank2);
+        graph.add(blank1, ref1, l1);
+        graph.add(blank1, ref2, blank2);
+        graph.add(blank1, ref1, l2);
+        graph.add(blank2, ref1, blank2);
+        graph.add(blank2, ref2, blank2);
+        graph.add(blank2, ref1, l1);
+        graph.add(blank2, ref1, l2);
     }
 }
