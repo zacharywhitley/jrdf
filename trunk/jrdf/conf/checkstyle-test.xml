@@ -90,7 +90,9 @@
 
         <!-- Metrics -->
         <module name="BooleanExpressionComplexity"/>
-        <module name="ClassDataAbstractionCoupling"/>
+        <module name="ClassDataAbstractionCoupling">
+            <property name="max" value="20"/>
+        </module>
         <module name="CyclomaticComplexity">
             <property name="max" value="6"/>
         </module>
