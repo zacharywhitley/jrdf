@@ -349,70 +349,19 @@ public abstract class AbstractGraphIntegrationTest extends TestCase {
         });
     }
 
-    public void testRemoveIterator() throws Exception {
-        graph = newGraph();
-        final GraphElementFactory elementFactory3 = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
-
-        blank1 = elementFactory3.createBlankNode();
-        blank2 = elementFactory3.createBlankNode();
-
-        ref1 = elementFactory3.createURIReference(create("http://namespace#somevalue"));
-        ref2 = elementFactory3.createURIReference(create("http://namespace#someothervalue"));
-        ref3 = elementFactory3.createURIReference(create("http://namespace#yetanothervalue"));
-        ref4 = elementFactory3.createURIReference(create("http://namespace#yetanotheranothervalue"));
-        ref5 = elementFactory3.createURIReference(create("http://namespace#visforvalue"));
-
-        l1 = elementFactory3.createLiteral(TEST_STR1);
-        l2 = elementFactory3.createLiteral(TEST_STR2);
+    public void testRemoveIteratorAll() throws Exception {
         checkRemoveIterator(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 0);
-        graph = newGraph();
-        final GraphElementFactory elementFactory2 = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+    }
 
-        blank1 = elementFactory2.createBlankNode();
-        blank2 = elementFactory2.createBlankNode();
-
-        ref1 = elementFactory2.createURIReference(create("http://namespace#somevalue"));
-        ref2 = elementFactory2.createURIReference(create("http://namespace#someothervalue"));
-        ref3 = elementFactory2.createURIReference(create("http://namespace#yetanothervalue"));
-        ref4 = elementFactory2.createURIReference(create("http://namespace#yetanotheranothervalue"));
-        ref5 = elementFactory2.createURIReference(create("http://namespace#visforvalue"));
-
-        l1 = elementFactory2.createLiteral(TEST_STR1);
-        l2 = elementFactory2.createLiteral(TEST_STR2);
+    public void testRemoveIteratorAllPredicateAllObject() throws Exception {
         checkRemoveIterator(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 2);
-        graph = newGraph();
-        final GraphElementFactory elementFactory1 = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+    }
 
-        blank1 = elementFactory1.createBlankNode();
-        blank2 = elementFactory1.createBlankNode();
-
-        ref1 = elementFactory1.createURIReference(create("http://namespace#somevalue"));
-        ref2 = elementFactory1.createURIReference(create("http://namespace#someothervalue"));
-        ref3 = elementFactory1.createURIReference(create("http://namespace#yetanothervalue"));
-        ref4 = elementFactory1.createURIReference(create("http://namespace#yetanotheranothervalue"));
-        ref5 = elementFactory1.createURIReference(create("http://namespace#visforvalue"));
-
-        l1 = elementFactory1.createLiteral(TEST_STR1);
-        l2 = elementFactory1.createLiteral(TEST_STR2);
+    public void testRemoveIteratorAllPredicate() throws Exception {
         checkRemoveIterator(blank1, ANY_PREDICATE_NODE, blank2, 1);
-        graph = newGraph();
-        final GraphElementFactory elementFactory = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+    }
 
-        blank1 = elementFactory.createBlankNode();
-        blank2 = elementFactory.createBlankNode();
-
-        ref1 = elementFactory.createURIReference(create("http://namespace#somevalue"));
-        ref2 = elementFactory.createURIReference(create("http://namespace#someothervalue"));
-        ref3 = elementFactory.createURIReference(create("http://namespace#yetanothervalue"));
-        ref4 = elementFactory.createURIReference(create("http://namespace#yetanotheranothervalue"));
-        ref5 = elementFactory.createURIReference(create("http://namespace#visforvalue"));
-
-        l1 = elementFactory.createLiteral(TEST_STR1);
-        l2 = elementFactory.createLiteral(TEST_STR2);
+    public void testRemoveIteratorSingleTriple() throws Exception {
         checkRemoveIterator(ref1, ref2, l2, 2);
     }
 
