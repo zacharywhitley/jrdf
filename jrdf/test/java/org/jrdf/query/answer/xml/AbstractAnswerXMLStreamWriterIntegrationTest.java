@@ -80,24 +80,38 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
+public abstract class AbstractAnswerXMLStreamWriterIntegrationTest extends TestCase {
     private XMLInputFactory factory = XMLInputFactory.newInstance();
     {
         factory.setProperty(P_INPUT_PARSING_MODE, PARSING_MODE_FRAGMENT);
     }
-
-    protected Writer writer;
+    private static final String[][] VALUES_1 = new String[][]{
+        new String[]{"x", "r1"},
+        new String[]{"hpage", "http://work.example.org/alice/"},
+        new String[]{"name", "Alice"},
+        new String[]{"mbox", ""},
+        new String[]{"friend", "r2"},
+        new String[]{"blurb", "<p xmlns=\"http://www.w3.org/1999/xhtml\">My name is <b>alice</b></p>"}
+    };
+    private static final String[][] VALUES_2 = new String[][]{
+        new String[]{"x", "r2"},
+        new String[]{"hpage", "http://work.example.org/bob/"},
+        new String[]{"name", "Bob"},
+        new String[]{"mbox", "mailto:bob@work.example.org"},
+        new String[]{"age", "30"},
+        new String[]{"friend", "r1"}
+    };
+    private static final Map<String, String> RESULT1 = addToMap(VALUES_1);
+    private static final Map<String, String> RESULT2 = addToMap(VALUES_2);
     private XMLStreamReader reader;
+    protected Writer writer;
     protected AnswerXMLWriter xmlWriter;
     protected URL url;
     protected InputStream stream;
@@ -118,17 +132,13 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
     }
 
     public void testVariables() throws Exception {
-        Set<String> set = new HashSet<String>();
-        for (String v : new String[]{"x", "hpage", "name", "mbox", "age", "blurb", "friend"}) {
-            set.add(v);
-        }
-        Set<String> varSet = getVariables();
-        checkVariables(set, varSet);
+        final Set<String> set = new HashSet<String>(asList("x", "hpage", "name", "mbox", "age", "blurb", "friend"));
+        checkVariables(set, getVariables());
     }
 
     protected void checkVariables(Set<String> set, Set<String> varSet) {
         assertEquals(set.size(), varSet.size());
-        for (String v : varSet) {
+        for (final String v : varSet) {
             assertTrue(set.contains(v));
         }
     }
@@ -137,68 +147,44 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
         Set<String> varSet = new HashSet<String>();
         xmlWriter.writeVariables();
         xmlWriter.flush();
-        String xml = writer.toString();
+        final String xml = writer.toString();
         reader = factory.createXMLStreamReader(new StringReader(xml));
         while (reader.hasNext()) {
-            int eventType = reader.getEventType();
-            switch (eventType) {
-                case START_ELEMENT:
-                    final String tagName = reader.getLocalName();
-                    assertEquals(HEAD, tagName);
-                    addVar(varSet);
-                    break;
-                default:
-                    break;
+            if (reader.getEventType() == START_ELEMENT) {
+                assertEquals(HEAD, reader.getLocalName());
+                addVar(varSet);
             }
             reader.next();
         }
         return varSet;
     }
 
-    private void addVar(Set<String> variables) throws XMLStreamException {
-        int event = reader.next();
+    private void addVar(final Set<String> variables) throws XMLStreamException {
+        reader.next();
         while (reader.hasNext()) {
-            switch (event) {
-                case START_ELEMENT:
-                    final String tagName = reader.getLocalName();
-                    assertEquals(VARIABLE, tagName);
-                    variables.add(reader.getAttributeValue(null, NAME));
-                    break;
-                default:
-                    break;
+            if (reader.getEventType() == START_ELEMENT) {
+                assertEquals(VARIABLE, reader.getLocalName());
+                variables.add(reader.getAttributeValue(null, NAME));
             }
-            event = reader.next();
+            reader.next();
         }
     }
 
     public void testResult() throws Exception {
-        final InputStream stream1 = url.openStream();
+        final InputStream resultStream = url.openStream();
+        try {
+            final List<Map<String, String>> maps = new ArrayList<Map<String, String>>();
+            maps.add(RESULT1);
+            maps.add(RESULT2);
+            checkNumberOfResults(maps.size());
+            checkContentsOfResults(maps);
+        } finally {
+            resultStream.close();
+        }
+    }
+
+    private void checkNumberOfResults(final int expectedNumber) throws XMLStreamException {
         int count = 0;
-        String[][] pairs = new String[][]{
-            new String[]{"x", "r1"},
-            new String[]{"hpage", "http://work.example.org/alice/"},
-            new String[]{"name", "Alice"},
-            new String[]{"mbox", ""},
-            new String[]{"friend", "r2"},
-            new String[]{"blurb", "<p xmlns=\"http://www.w3.org/1999/xhtml\">My name is <b>alice</b></p>"}
-        };
-        Map<String, String> map1 = new HashMap<String, String>();
-        for (String[] pair : pairs) {
-            map1.put(pair[0], pair[1]);
-        }
-        pairs = new String[][]{
-            new String[]{"x", "r2"},
-            new String[]{"hpage", "http://work.example.org/bob/"},
-            new String[]{"name", "Bob"},
-            new String[]{"mbox", "mailto:bob@work.example.org"},
-            new String[]{"age", "30"},
-            new String[]{"friend", "r1"}
-        };
-        Map<String, String> map2 = new HashMap<String, String>();
-        for (String[] pair : pairs) {
-            map2.put(pair[0], pair[1]);
-        }
-        Map<String, String> actualMap = new HashMap<String, String>();
         xmlWriter.writeStartResults();
         while (xmlWriter.hasMoreResults()) {
             xmlWriter.writeResult();
@@ -206,90 +192,77 @@ public abstract class AbstractAnswerXMLStreamWriterUnitTest extends TestCase {
         }
         xmlWriter.writeEndResults();
         xmlWriter.flush();
-        String xml = writer.toString();
-        assertEquals(2, count);
+        assertEquals(expectedNumber, count);
+    }
+
+    private void checkContentsOfResults(List<Map<String, String>> maps) throws XMLStreamException {
+        final String xml = writer.toString();
+        Map<String, String> actualResultsMap = new HashMap<String, String>();
         int pos = 0;
         reader = factory.createXMLStreamReader(new StringReader(xml));
-    loop:
-        while (reader.hasNext()) {
-            int eventType = reader.next();
-            switch (eventType) {
-                case START_ELEMENT:
-                    String tagName = reader.getLocalName();
-                    if (RESULT.equals(tagName)) {
-                        actualMap = checkBindings();
-                    }
-                    break;
-                case END_ELEMENT:
-                    tagName = reader.getLocalName();
-                    if (RESULT.equals(tagName)) {
-                        List<Map<String, String>> maps = new ArrayList<Map<String, String>>();
-                        maps.add(map1);
-                        maps.add(map2);
-                        checkMaps(actualMap, pos, maps);
-                        pos++;
-                    } else if (RESULTS.equals(tagName)) {
-                        break loop;
-                    }
-                    break;
-                default:
-                    break;
+        while (reader.hasNext() && !endOfResults()) {
+            final int eventType = reader.next();
+            if (eventType == START_ELEMENT) {
+                actualResultsMap = createActualResultsMap();
+            } else if (eventType == END_ELEMENT) {
+                if (RESULT.equals(reader.getLocalName())) {
+                    checkMaps(maps.get(pos), actualResultsMap);
+                    pos++;
+                }
             }
-        }
-        stream1.close();
-    }
-
-    private void checkMaps(Map<String, String> actualMap, int pos, List<Map<String, String>> maps) {
-        Map<String, String> map = maps.get(pos);
-        assertEquals(map.size(), actualMap.size());
-        for (String key : map.keySet()) {
-            assertEquals(map.get(key), actualMap.get(key));
         }
     }
 
-    private Map<String, String> checkBindings() throws XMLStreamException {
-        Map<String, String> map1 = new HashMap<String, String>();
-    loop:
-        while (reader.hasNext()) {
-            int eventType = reader.next();
-            switch (eventType) {
-                case START_ELEMENT:
-                    String tagName = reader.getLocalName();
-                    assertEquals(BINDING, tagName);
-                    map1 = checkOneBinding(map1);
-                    break;
-                case END_ELEMENT:
-                    tagName = reader.getLocalName();
-                    if (RESULT.equals(tagName)) {
-                        break loop;
-                    }
-                    break;
-                default:
-                    break;
-            }
+    private Map<String, String> createActualResultsMap() throws XMLStreamException {
+        Map<String, String> actualResultsMap = new HashMap<String, String>();
+        if (RESULT.equals(reader.getLocalName())) {
+            actualResultsMap = createBindings();
         }
-        return map1;
+        return actualResultsMap;
     }
 
-    private Map<String, String> checkOneBinding(Map<String, String> map) throws XMLStreamException {
-        final String varName = reader.getAttributeValue(null, NAME);
-    loop:
-        while (reader.hasNext()) {
-            int eventType = reader.next();
-            switch (eventType) {
-                case START_ELEMENT:
-                    final String varValue = reader.getElementText();
-                    map.put(varName, varValue);
-                    break;
-                case END_ELEMENT:
-                    final String tagName = reader.getLocalName();
-                    if (BINDING.equals(tagName)) {
-                        break loop;
-                    }
-                    break;
-                default:
-                    break;
+    private Map<String, String> createBindings() throws XMLStreamException {
+        final Map<String, String> newMap = new HashMap<String, String>();
+        while (reader.hasNext() && !endOfResult()) {
+            if (reader.next() == START_ELEMENT) {
+                assertEquals(BINDING, reader.getLocalName());
+                addBinding(newMap);
             }
+        }
+        return newMap;
+    }
+
+    private void addBinding(final Map<String, String> map) throws XMLStreamException {
+        while (reader.hasNext() && !endOfBinding()) {
+            if (reader.next() == START_ELEMENT) {
+                map.put(reader.getAttributeValue(null, NAME), reader.getElementText());
+            }
+        }
+    }
+
+    private void checkMaps(final Map<String, String> expectedValues, final Map<String, String> actualValues) {
+        assertEquals(expectedValues.size(), actualValues.size());
+        for (final String key : expectedValues.keySet()) {
+            assertEquals(expectedValues.get(key), actualValues.get(key));
+        }
+    }
+
+    private boolean endOfResults() {
+        return (reader.getEventType() == END_ELEMENT) && (RESULTS.equals(reader.getLocalName()));
+    }
+
+    private boolean endOfResult() {
+        return (reader.getEventType() == END_ELEMENT) && (RESULT.equals(reader.getLocalName()));
+    }
+
+    private boolean endOfBinding() {
+        return (reader.getEventType() == END_ELEMENT) && (BINDING.equals(reader.getLocalName()));
+    }
+
+    private static Map<String, String> addToMap(final String[][] result) {
+        final Map<String, String> map = new HashMap<String, String>();
+        for (final String[] pair : result) {
+            map.put(pair[0], pair[1]);
         }
         return map;
     }

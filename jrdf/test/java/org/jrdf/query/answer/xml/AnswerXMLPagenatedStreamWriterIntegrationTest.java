@@ -88,7 +88,7 @@ import java.util.Set;
  * @version :$
  */
 
-public class AnswerXMLPagenatedStreamWriterUnitTest extends AbstractAnswerXMLStreamWriterUnitTest {
+public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswerXMLStreamWriterIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
