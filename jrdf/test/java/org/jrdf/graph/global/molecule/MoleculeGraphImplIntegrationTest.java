@@ -59,7 +59,9 @@
 
 package org.jrdf.graph.global.molecule;
 
-import junit.framework.TestCase;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import org.jrdf.collection.MemMapFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -71,22 +73,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b1r1b2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b1r1r1;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b1r2r2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b2r2b3;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b2r2r1;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b3r2r2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.b3r2r3;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.bnode2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.elementFactory;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.factory;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.globalMoleculeComparator;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.graph;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.moleculeComparator;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.moleculeFactory;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.r1r2b2;
-import static org.jrdf.graph.global.molecule.MoleculeGraphTestUtil.ref1;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
@@ -120,19 +106,9 @@ import java.util.Set;
 // TODO Write a test to check that writing triples and getting molecules synchronise.  Especially with creating
 
 // new URIs across data structures.  e.g. create a triple with a new molecule and then do a find on it.
-public class MoleculeGraphImplIntegrationTest extends TestCase {
+public class MoleculeGraphImplIntegrationTest extends AbstractMoleculeGraphIntegrationTest {
     private MoleculeGraph destGraph;
     private static final int NUMBER_OF_MOLECULES_TO_ADD = 10;
-
-    public void setUp() throws Exception {
-        super.setUp();
-        MoleculeGraphTestUtil.setUp();
-    }
-
-    @Override
-    public void tearDown() {
-        MoleculeGraphTestUtil.close();
-    }
 
     public void testSimpleAdds() throws Exception {
         for (int i = 0; i < NUMBER_OF_MOLECULES_TO_ADD; i++) {
@@ -169,6 +145,7 @@ public class MoleculeGraphImplIntegrationTest extends TestCase {
     }
 
     public void testMoleculeBdbIndex() throws GraphException {
+        final GraphElementFactory elementFactory = graph.getElementFactory();
         Resource b1 = elementFactory.createResource();
         Resource r1 = elementFactory.createResource(create("urn:foo"));
         Molecule molecule = moleculeFactory.createMolecule(b1.asTriple(r1, b1));

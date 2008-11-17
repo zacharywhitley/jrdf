@@ -69,18 +69,6 @@ import org.jrdf.util.TempDirectoryHandler;
 public class BdbGraphImplIntegrationTest extends AbstractGraphIntegrationTest {
     private static final JRDFFactory FACTORY = SortedDiskBdbJRDFFactory.getFactory();
 
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
-    @Override
-    public Graph newGraph() throws Exception {
-        Graph newGraph = FACTORY.getGraph();
-        newGraph.clear();
-        return newGraph;
-    }
-
     public void setUp() throws Exception {
         final DirectoryHandler handler = new TempDirectoryHandler();
         handler.removeDir();
@@ -89,5 +77,17 @@ public class BdbGraphImplIntegrationTest extends AbstractGraphIntegrationTest {
 
     public void tearDown() {
         FACTORY.close();
+    }
+
+    /**
+     * Create a graph implementation.
+     *
+     * @return A new GraphImplUnitTest.
+     */
+    @Override
+    public Graph newGraph() throws Exception {
+        final Graph newGraph = FACTORY.getGraph();
+        newGraph.clear();
+        return newGraph;
     }
 }

@@ -61,10 +61,8 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.GlobalJRDFFactory;
 import org.jrdf.SortedDiskGlobalJRDFFactory;
-import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
@@ -74,66 +72,49 @@ import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
 import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
+import org.jrdf.util.TempDirectoryHandler;
 
 import java.net.URI;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
+public class AbstractMoleculeGraphIntegrationTest {
+    protected GlobalJRDFFactory factory;
+    protected MoleculeFactory moleculeFactory;
+    protected MoleculeGraph graph;
+    protected MoleculeComparator moleculeComparator;
+    protected MoleculeComparator globalMoleculeComparator;
+    protected URIReference ref1;
+    protected BlankNode bnode2;
+    protected Triple r1r2b2;
+    protected Triple b1r1r1;
+    protected Triple b1r1b2;
+    protected Triple b1r2r2;
+    protected Triple b2r2r1;
+    protected Triple b2r2b3;
+    protected Triple b3r2r2;
+    protected Triple b3r2r3;
 
-public class MoleculeGraphTestUtil {
-    public static GlobalJRDFFactory factory;
-    public static TripleComparator comparator, globalComparator;
-    public static MoleculeComparator moleculeComparator, globalMoleculeComparator;
-    public static MoleculeFactory moleculeFactory;
-
-    public static MoleculeGraph graph;
-    public static GraphElementFactory elementFactory;
-    public static TripleFactory tripleFactory;
-    public static BlankNode bnode1;
-    public static BlankNode bnode2;
-    public static BlankNode bnode3;
-
-
-    public static Triple b3r2r2;
-    public static Triple b3r2r3;
-    public static Triple b2r2b3;
-    public static Triple b2r2r1;
-    public static Triple r1r2b2;
-    public static Triple b1r1b2;
-    public static Triple b1r2r2;
-    public static Triple b1r1r1;
-
-    public static URIReference ref1;
-    public static URIReference ref2;
-    public static URIReference ref3;
-
-    private MoleculeGraphTestUtil() {
-    }
-
-    public static void setUp() throws GraphElementFactoryException {
-        comparator = new TripleComparatorFactoryImpl().newComparator();
-        globalComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-        globalMoleculeComparator = new MoleculeHeadTripleComparatorImpl(globalComparator);
-
+    public void setUp() throws Exception {
+        final TripleComparator comparator = new TripleComparatorFactoryImpl().newComparator();
         moleculeComparator = new MoleculeHeadTripleComparatorImpl(comparator);
         moleculeFactory = new MoleculeFactoryImpl(moleculeComparator);
+
+        final TripleComparator globalComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+        globalMoleculeComparator = new MoleculeHeadTripleComparatorImpl(globalComparator);
 
         new TempDirectoryHandler().removeDir();
         factory = SortedDiskGlobalJRDFFactory.getFactory();
         graph = factory.getGraph();
         graph.clear();
-        elementFactory = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+        final GraphElementFactory elementFactory = graph.getElementFactory();
+        final TripleFactory tripleFactory = graph.getTripleFactory();
 
         ref1 = elementFactory.createURIReference(URI.create("urn:ref1"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:ref2"));
-        ref3 = elementFactory.createURIReference(URI.create("urn:ref3"));
+        final URIReference ref2 = elementFactory.createURIReference(URI.create("urn:ref2"));
+        final URIReference ref3 = elementFactory.createURIReference(URI.create("urn:ref3"));
 
-        bnode1 = elementFactory.createBlankNode();
+        final BlankNode bnode1 = elementFactory.createBlankNode();
         bnode2 = elementFactory.createBlankNode();
-        bnode3 = elementFactory.createBlankNode();
+        final BlankNode bnode3 = elementFactory.createBlankNode();
 
         b1r1r1 = tripleFactory.createTriple(bnode1, ref1, ref1);
         b1r2r2 = tripleFactory.createTriple(bnode1, ref2, ref2);
@@ -145,7 +126,7 @@ public class MoleculeGraphTestUtil {
         b3r2r2 = tripleFactory.createTriple(bnode3, ref2, ref2);
     }
 
-    public static void close() {
+    public void tearDown() {
         graph.clear();
         graph.close();
         factory.close();
