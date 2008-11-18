@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializable {
@@ -32,6 +32,10 @@ public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializ
 
     public Expression<ExpressionVisitor> getNextExpression() {
         return nextExpression;
+    }
+
+    public void setNextExpression(Expression<ExpressionVisitor> expression) {
+        nextExpression = expression;
     }
 
     @Override
