@@ -95,7 +95,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Default implementation of {@link org.jrdf.urql.analysis.SparqlAnalyser}.
+ * Default implementation of {@link SparqlAnalyser}.
  */
 //TODO This is a mess fix me please!!!!
 public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereAnalyser {

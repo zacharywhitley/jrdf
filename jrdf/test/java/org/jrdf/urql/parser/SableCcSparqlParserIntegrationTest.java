@@ -520,6 +520,22 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression("ASK WHERE { ?s ?p 'The Pragmatic Programmer' } ", spPrag1);
     }
 
+    public void testPrefixInFilteredAsk() throws Exception {
+        AttributeName oVar = new VariableName("o");
+        Expression<ExpressionVisitor> spoExpression = createConstraintExpression("s", "p", "o");
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
+        ValueOperation value = new ValueOperationImpl(createLiteral("unknown", XSD.STRING), EQUALS);
+        avo.put(attribute, value);
+        Map<Attribute, ValueOperation> strAvo = new HashMap<Attribute, ValueOperation>();
+        ValueOperation strValue = new ValueOperationImpl(ANY_NODE, STR);
+        strAvo.put(attribute, strValue);
+        LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression(strAvo, avo);
+        Expression<ExpressionVisitor> filterExpression = new Filter(spoExpression, equalsExpression);
+        checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
+            "ASK WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", filterExpression);
+    }
+
     private void checkConstraintExpression(String queryString, Expression<ExpressionVisitor> expectedExpression) throws
         Exception {
         Query query = parseQuery(queryString);
