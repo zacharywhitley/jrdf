@@ -60,9 +60,10 @@
 package org.jrdf.query.server.distributed;
 
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.SparqlStreamingAnswer;
-import org.jrdf.query.answer.xml.SparqlAnswerParserStream;
-import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
+import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
+import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
 import org.jrdf.query.client.CallableGraphQueryClient;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
@@ -84,21 +85,23 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * @version :$
  */
 
-public class DistributedQueryClient implements QueryClient {
+public class DistributedQueryClientImpl implements QueryClient {
+    private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
+        new SparqlStreamingAnswerFactoryImpl();
     private ExecutorService executor;
     private Collection<CallableGraphQueryClient> queryClients;
     private Collection<String> serverAddresses;
     private Set<Future<InputStream>> set;
-    private SparqlAnswerParserStream xmlWriter;
+    private SparqlAnswerStreamParser multiStreamAnswerParser;
 
-    public DistributedQueryClient(Collection<String> servers) throws XMLStreamException, InterruptedException {
+    public DistributedQueryClientImpl(Collection<String> servers) throws XMLStreamException, InterruptedException {
         this.serverAddresses = servers;
         this.queryClients = new LinkedList<CallableGraphQueryClient>();
         for (String server : serverAddresses) {
             this.queryClients.add(new QueryClientImpl(server));
         }
         this.executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
-        this.xmlWriter = new SparqlAnswerParserStreamImpl();
+        this.multiStreamAnswerParser = new SparqlAnswerStreamParserImpl();
     }
 
     public void getQuery(String graphName, String queryString, String noRows) {
@@ -109,10 +112,14 @@ public class DistributedQueryClient implements QueryClient {
 
     public Answer executeQuery() throws IOException {
         checkNotNull(queryClients);
-        this.set = new HashSet<Future<InputStream>>();
-        executeQuries();
-        aggregateResults();
-        return new SparqlStreamingAnswer(xmlWriter);
+        try {
+            this.set = new HashSet<Future<InputStream>>();
+            executeQuries();
+            aggregateResults();
+            return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingAnswer(multiStreamAnswerParser);
+        } catch (XMLStreamException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
     private void aggregateResults() {
@@ -120,7 +127,7 @@ public class DistributedQueryClient implements QueryClient {
         for (Future<InputStream> future : set) {
             try {
                 final InputStream stream = future.get();
-                xmlWriter.addStream(stream);
+                multiStreamAnswerParser.addStream(stream);
             } catch (Exception e) {
                 cancelExecution(future);
             }

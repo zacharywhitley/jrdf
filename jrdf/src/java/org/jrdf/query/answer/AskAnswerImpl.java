@@ -11,12 +11,11 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class AskAnswerImpl implements AskAnswer, Serializable {
     private static final long serialVersionUID = 432026021050798815L;
-    private static final String ASK_VARIABLE_NAME = "Boolean Result";
 
     private long timeTaken;
     private boolean result;

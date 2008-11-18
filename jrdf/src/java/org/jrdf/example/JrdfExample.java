@@ -74,8 +74,9 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
+import org.jrdf.query.answer.xml.AnswerXMLWriter;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.vocabulary.XSD;
@@ -246,10 +247,10 @@ public class JrdfExample {
                 "        ?s <http://example.org/terms#hasConfirmed> ?add \n" +
                 "        OPTIONAL { ?add <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> ?o } . \n" +
                 "        FILTER ( bound(?add) && !bound(?o) ) }";
-        Answer answer = connection.executeQuery(graph, query);
+        SelectAnswer answer = (SelectAnswer) connection.executeQuery(graph, query);
         System.out.println("Query Result:\n" + answer);
         StringWriter writer = new StringWriter();
-        AnswerXMLPagenatedStreamWriter answerXMLWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);
+        AnswerXMLWriter answerXMLWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);
         answerXMLWriter.write(writer);
         String xmlString = writer.toString();
         System.out.printf("Query result xml:\n" + xmlString);

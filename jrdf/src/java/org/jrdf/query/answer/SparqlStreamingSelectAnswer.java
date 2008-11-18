@@ -59,8 +59,8 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.SparqlAnswerParserStream;
-import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
 import org.jrdf.query.answer.xml.TypeValue;
 
 import javax.xml.stream.XMLStreamException;
@@ -69,20 +69,20 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 // TODO AN/YF - Can we do time taken and number of tuples (maybe based on how much so far?)
-public class SparqlStreamingAnswer implements Answer {
-    private SparqlAnswerParserStream answerStream;
+public class SparqlStreamingSelectAnswer implements SelectAnswer {
+    private SparqlAnswerStreamParser answerStreamParser;
     private TypeValueToString typeValueToString = new TypeValueToStringImpl();
 
-    public SparqlStreamingAnswer(InputStream inputStream) throws XMLStreamException, InterruptedException {
-        this(new SparqlAnswerParserStreamImpl(inputStream));
+    public SparqlStreamingSelectAnswer(InputStream inputStream) throws XMLStreamException, InterruptedException {
+        this(new SparqlAnswerStreamParserImpl(inputStream));
     }
 
-    public SparqlStreamingAnswer(SparqlAnswerParserStream answerStream) {
-        this.answerStream = answerStream;
+    public SparqlStreamingSelectAnswer(SparqlAnswerStreamParser answerStreamParser) {
+        this.answerStreamParser = answerStreamParser;
     }
 
     public String[] getVariableNames() {
-        LinkedHashSet<String> existingVariables = answerStream.getVariables();
+        LinkedHashSet<String> existingVariables = answerStreamParser.getVariables();
         String[] existingVariablesArray = existingVariables.toArray(new String[existingVariables.size()]);
         String[] variables = new String[existingVariables.size()];
         System.arraycopy(existingVariablesArray, 0, variables, 0, existingVariablesArray.length);
@@ -90,17 +90,14 @@ public class SparqlStreamingAnswer implements Answer {
     }
 
     public Iterator<TypeValue[]> columnValuesIterator() {
-        return new StreamingAnswerIterator(answerStream);
+        return new StreamingAnswerIterator(answerStreamParser);
     }
 
     // TODO AN/YF Remove - complete cut-and-past of AnswerImpl.
     public String[][] getColumnValues() {
-        final LinkedHashSet<String> hashSet = answerStream.getVariables();
-        System.err.println("Hashset " + hashSet);
+        final LinkedHashSet<String> hashSet = answerStreamParser.getVariables();
         final int numberOfVariables = hashSet.size();
-        System.err.println("Got: " + numberOfVariables);
         final int numberOfTuples = (int) numberOfTuples();
-        System.err.println("Got: " + numberOfTuples);
         String table[][] = new String[numberOfTuples][numberOfVariables];
         int index = 0;
         Iterator<TypeValue[]> iterator = columnValuesIterator();
@@ -108,7 +105,6 @@ public class SparqlStreamingAnswer implements Answer {
             table[index] = typeValueToString.convert(iterator.next());
             index++;
         }
-        System.err.println("Table : " + table.length);
         return table;
     }
 

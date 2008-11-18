@@ -62,9 +62,12 @@ package org.jrdf;
 import junit.framework.TestCase;
 import org.jrdf.graph.local.GraphImpl;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
+import org.jrdf.query.answer.AnswerType;
 import org.jrdf.query.answer.xml.DatatypeType;
 import org.jrdf.query.answer.xml.SparqlResultType;
 import org.jrdf.query.relation.constants.NullaryTuple;
+import org.jrdf.urql.parser.lexer.LexerException;
+import org.jrdf.urql.parser.parser.ParserException;
 import org.jrdf.util.NodeTypeEnum;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
@@ -124,8 +127,9 @@ public final class SerializationIntegrationTest extends TestCase {
         excludedClasses.add(NodeTypeEnum.class);
         excludedClasses.add(DatatypeType.class);
         excludedClasses.add(SparqlResultType.class);
-        excludedClasses.add(org.jrdf.urql.parser.lexer.LexerException.class);
-        excludedClasses.add(org.jrdf.urql.parser.parser.ParserException.class);
+        excludedClasses.add(LexerException.class);
+        excludedClasses.add(ParserException.class);
+        excludedClasses.add(AnswerType.class);
 //        excludedClasses.add(SelectQueryImpl.class); // not sure why this doesn't work, it references Expression.ALL
         return excludedClasses;
     }

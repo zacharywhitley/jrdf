@@ -1,4 +1,6 @@
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer.xml.parser;
+
+import org.jrdf.query.answer.xml.TypeValue;
 
 import java.util.LinkedHashSet;
 

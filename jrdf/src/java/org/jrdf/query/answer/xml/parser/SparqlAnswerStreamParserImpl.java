@@ -1,6 +1,8 @@
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer.xml.parser;
 
-import javax.xml.stream.XMLInputFactory;
+import org.jrdf.query.answer.AnswerType;
+import org.jrdf.query.answer.xml.TypeValue;
+
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 import java.util.LinkedHashSet;
@@ -8,16 +10,16 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 // TODO AN/YF - Turn into extension of closableiterator?
-public class SparqlAnswerParserStreamImpl implements SparqlAnswerParserStream {
-    private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
+public class SparqlAnswerStreamParserImpl implements SparqlAnswerStreamParser {
     private SparqlAnswerParser parser;
     private BlockingQueue<InputStream> streamQueue;
     private LinkedHashSet<String> variables;
     private boolean gotVariables;
     private boolean hasMore;
     private TypeValue[] results;
+    private AnswerType answerType;
 
-    public SparqlAnswerParserStreamImpl(InputStream... streams) throws XMLStreamException, InterruptedException {
+    public SparqlAnswerStreamParserImpl(InputStream... streams) throws XMLStreamException, InterruptedException {
         this.hasMore = false;
         this.variables = new LinkedHashSet<String>();
         this.streamQueue = new LinkedBlockingQueue<InputStream>();
@@ -32,6 +34,14 @@ public class SparqlAnswerParserStreamImpl implements SparqlAnswerParserStream {
         if (!hasMore) {
             setupNextParser();
         }
+    }
+
+    public AnswerType getAnswerType() throws XMLStreamException {
+        return answerType;
+    }
+
+    public boolean getAskResult() throws XMLStreamException {
+        return parser.getAskResult();
     }
 
     public LinkedHashSet<String> getVariables() {
@@ -63,12 +73,9 @@ public class SparqlAnswerParserStreamImpl implements SparqlAnswerParserStream {
             if (parser != null) {
                 parser.close();
             }
-            parser = new SparqlAnswerParserImpl(INPUT_FACTORY.createXMLStreamReader(currentStream));
-            LinkedHashSet<String> newVariables = parser.getVariables();
-            if (!gotVariables) {
-                variables = newVariables;
-                gotVariables = true;
-            }
+            parser = new SparqlAnswerParserImpl(currentStream);
+            answerType = parser.getAnswerType();
+            parseVariables();
             if (!hasMore) {
                 hasMore = hasMore();
             }
@@ -77,9 +84,16 @@ public class SparqlAnswerParserStreamImpl implements SparqlAnswerParserStream {
         }
     }
 
+    private void parseVariables() {
+        if (!gotVariables && answerType == AnswerType.SELECT) {
+            variables = parser.getVariables();
+            gotVariables = true;
+        }
+    }
+
     private boolean hasMore() {
         try {
-            return parser != null && getToNextStreamResult();
+            return getToNextStreamResult();
         } catch (XMLStreamException e) {
             return false;
         }

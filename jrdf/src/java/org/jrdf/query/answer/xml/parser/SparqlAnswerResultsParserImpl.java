@@ -1,7 +1,9 @@
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer.xml.parser;
 
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.BINDING;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
+import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.xml.TypeValueImpl;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -30,7 +32,7 @@ public class SparqlAnswerResultsParserImpl implements SparqlAnswerResultsParser 
         return mapToArray(variables, variableToValue);
     }
 
-    public Map<String, TypeValue> parseAllResults() throws XMLStreamException {
+    private Map<String, TypeValue> parseAllResults() throws XMLStreamException {
         Map<String, TypeValue> variableToValue = new HashMap<String, TypeValue>();
         int currentEvent = parser.getEventType();
         while (parser.hasNext() && !endOfResult(currentEvent)) {

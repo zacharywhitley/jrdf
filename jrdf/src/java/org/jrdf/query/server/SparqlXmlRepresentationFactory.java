@@ -60,8 +60,11 @@
 package org.jrdf.query.server;
 
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.AskAnswer;
+import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
 import org.jrdf.query.answer.xml.AnswerXMLWriter;
+import org.jrdf.query.answer.xml.AskAnswerXMLStreamWriter;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
 
@@ -73,12 +76,24 @@ public class SparqlXmlRepresentationFactory implements RepresentationFactory {
             Representation representation = Representation.createEmpty();
             Answer answer = (Answer) dataModel.get("answer");
             if (answer != null) {
-                AnswerXMLWriter xmlWriter = new AnswerXMLPagenatedStreamWriter(answer);
+                AnswerXMLWriter xmlWriter = getAnswerXMLWriter(answer);
                 representation = new SparqlRepresentation(defaultMediaType, xmlWriter);
             }
             return representation;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private AnswerXMLWriter getAnswerXMLWriter(Answer answer) {
+        AnswerXMLWriter xmlWriter;
+        if (answer instanceof SelectAnswer) {
+            xmlWriter = new AnswerXMLPagenatedStreamWriter((SelectAnswer) answer);
+        } else if (answer instanceof AskAnswer) {
+            xmlWriter = new AskAnswerXMLStreamWriter((AskAnswer) answer);
+        } else {
+            throw new IllegalArgumentException("Illegal SPARQL answer type: " + answer.getClass());
+        }
+        return xmlWriter;
     }
 }

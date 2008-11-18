@@ -67,10 +67,11 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.query.answer.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnectionImpl;
 import org.jrdf.urql.builder.QueryBuilder;
@@ -85,7 +86,7 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version :$Id:$
  */
 
 public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswerXMLStreamWriterIntegrationTest {
@@ -138,7 +139,7 @@ public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswe
         graph.add(b3, p3, l3);
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);
+        xmlWriter = new AnswerXMLPagenatedStreamWriter((SelectAnswer) answer, writer);
         Set<String> vars = getVariables();
         Set<String> set = new HashSet<String>();
         for (String var : new String[]{"s", "p", "o"}) {
@@ -153,7 +154,7 @@ public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswe
         graph.add(b3, p3, l3);
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new AnswerXMLPagenatedStreamWriter(answer, writer);
+        xmlWriter = new AnswerXMLPagenatedStreamWriter((SelectAnswer) answer, writer);
         xmlWriter.writeStartResults();
         int count = 0;
         while (xmlWriter.hasMoreResults()) {
@@ -163,14 +164,5 @@ public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswe
         xmlWriter.writeEndResults();
         xmlWriter.flush();
         assertEquals(3, count);
-        /*String[][] pairs = new String[][]{
-                new String[]{"s", b1.toString()},
-                new String[]{"p", p1.toString()},
-                new String[]{"o", l1.toString()}
-        };
-        Map<String, String> map = new HashMap<String, String>();
-        for (String[] pair : pairs) {
-            map.put(pair[0], pair[1]);
-        }*/
     }
 }

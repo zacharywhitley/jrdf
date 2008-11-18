@@ -59,7 +59,7 @@
 
 package org.jrdf.query.answer.xml;
 
-import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SelectAnswer;
 import static org.jrdf.query.answer.xml.DatatypeType.NONE;
 import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -67,7 +67,6 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import static javax.xml.XMLConstants.XML_NS_PREFIX;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -79,25 +78,25 @@ import java.util.Iterator;
 public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter implements AnswerXMLWriter {
     private long maxRows;
     private long count;
-    private Answer answer;
+    private SelectAnswer answer;
     private Iterator<TypeValue[]> iterator;
 
     private AnswerXMLPagenatedStreamWriter() {
     }
 
-    public AnswerXMLPagenatedStreamWriter(Answer answer) {
+    public AnswerXMLPagenatedStreamWriter(SelectAnswer answer) {
         checkNotNull(answer);
         this.answer = answer;
         this.iterator = answer.columnValuesIterator();
         this.maxRows = answer.numberOfTuples();
     }
 
-    public AnswerXMLPagenatedStreamWriter(Answer answer, Writer writer) throws XMLStreamException {
+    public AnswerXMLPagenatedStreamWriter(SelectAnswer answer, Writer writer) throws XMLStreamException {
         this(answer);
         this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
-    public AnswerXMLPagenatedStreamWriter(Answer answer, Writer writer, int maxRows) throws XMLStreamException {
+    public AnswerXMLPagenatedStreamWriter(SelectAnswer answer, Writer writer, int maxRows) throws XMLStreamException {
         this(answer, writer);
         this.maxRows = maxRows;
     }
@@ -112,28 +111,13 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
         return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
     }
 
-    public void write() throws XMLStreamException {
-        checkNotNull(streamWriter);
-        doWrite();
-    }
-
     public void write(Writer writer) throws XMLStreamException {
         streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
-        doWrite();
+        super.write();
     }
 
-    public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
-        throw new UnsupportedOperationException("Cannot add a stream to this writer.");
-    }
-
-    private void doWrite() throws XMLStreamException {
-        writeStartDocument();
-        writeVariables();
-        writeAllResults();
-        writeEndDocument();
-    }
-
-    public void writeVariables() throws XMLStreamException {
+    @Override
+    public void writeHead() throws XMLStreamException {
         streamWriter.writeStartElement(HEAD);
         for (String variable : answer.getVariableNames()) {
             streamWriter.writeStartElement(VARIABLE);
@@ -141,15 +125,6 @@ public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter impl
             streamWriter.writeEndElement();
         }
         streamWriter.writeEndElement();
-    }
-
-    protected void writeAllResults() throws XMLStreamException {
-        writeStartResults();
-        while (hasMoreResults()) {
-            writeResult();
-        }
-        writeEndResults();
-        streamWriter.flush();
     }
 
     // TODO AN/YF This is a duplicate of MultiAnswerXMLStreamQueueWriter except uses iterator instead of streamParser.

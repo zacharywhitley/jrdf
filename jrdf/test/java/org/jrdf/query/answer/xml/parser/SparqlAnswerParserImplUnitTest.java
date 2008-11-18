@@ -57,16 +57,17 @@
  *
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer.xml.parser;
 
 import junit.framework.TestCase;
 import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.xml.SparqlResultType.LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
+import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.xml.TypeValueImpl;
 
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
 import java.net.URL;
 import static java.util.Arrays.asList;
@@ -101,8 +102,7 @@ public class SparqlAnswerParserImplUnitTest extends TestCase {
     public void testParse() throws Exception {
         URL resource = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml");
         InputStream stream = resource.openStream();
-        XMLStreamReader streamReader = INPUT_FACTORY.createXMLStreamReader(stream);
-        parser = new SparqlAnswerParserImpl(streamReader);
+        parser = new SparqlAnswerParserImpl(stream);
         assertTrue(parser.hasMoreResults());
         assertEquals(EXPECTED_VARIABLES, parser.getVariables());
         checkHasMoreAndGetResult(ROW_1);

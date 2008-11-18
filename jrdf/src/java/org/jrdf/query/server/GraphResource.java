@@ -59,6 +59,9 @@
 
 package org.jrdf.query.server;
 
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.AskAnswer;
+import org.jrdf.query.answer.SelectAnswer;
 import static org.jrdf.query.server.local.GraphApplicationImpl.DEFAULT_MAX_ROWS;
 import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import static org.restlet.data.Status.SUCCESS_OK;
@@ -72,7 +75,7 @@ import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version : $Id: $
  */
 
 public class GraphResource extends ConfigurableRestletResource {
@@ -115,12 +118,18 @@ public class GraphResource extends ConfigurableRestletResource {
 
     private Representation queryResultRepresentation(Variant variant) throws ResourceException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
+        Answer answer = graphApplication.answerQuery(graphName, queryString);
         dataModel.put("query", queryString);
-        dataModel.put("answer", graphApplication.answerQuery(graphName, queryString));
         dataModel.put(GRAPH_NAME, graphName);
         dataModel.put("timeTaken", graphApplication.getTimeTaken());
         dataModel.put("tooManyRows", graphApplication.isTooManyRows());
         dataModel.put("maxRows", DEFAULT_MAX_ROWS);
+        dataModel.put("answer", answer);
+        if (answer instanceof SelectAnswer) {
+            dataModel.put("answerType", "select");
+        } else if (answer instanceof AskAnswer) {
+            dataModel.put("answerType", "ask");
+        }
         return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }
 }

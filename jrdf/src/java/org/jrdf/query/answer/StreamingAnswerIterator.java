@@ -1,23 +1,23 @@
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.SparqlAnswerParserStream;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
 import org.jrdf.query.answer.xml.TypeValue;
 
 import java.util.Iterator;
 
 public class StreamingAnswerIterator implements Iterator<TypeValue[]> {
-    private SparqlAnswerParserStream answerStream;
+    private SparqlAnswerStreamParser answerStreamParser;
 
-    public StreamingAnswerIterator(SparqlAnswerParserStream newAnswerStream) {
-        this.answerStream = newAnswerStream;
+    public StreamingAnswerIterator(SparqlAnswerStreamParser newAnswerStreamParser) {
+        this.answerStreamParser = newAnswerStreamParser;
     }
 
     public boolean hasNext() {
-        return answerStream.hasMoreResults();
+        return answerStreamParser.hasMoreResults();
     }
 
     public TypeValue[] next() {
-        return answerStream.getResults();
+        return answerStreamParser.getResults();
     }
 
     public void remove() {

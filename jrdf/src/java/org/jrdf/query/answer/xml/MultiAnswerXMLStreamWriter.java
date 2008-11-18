@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -59,199 +59,14 @@
 
 package org.jrdf.query.answer.xml;
 
-import static com.ctc.wstx.api.WstxInputProperties.PARSING_MODE_DOCUMENTS;
-import static com.ctc.wstx.api.WstxInputProperties.P_INPUT_PARSING_MODE;
-
-import javax.xml.stream.XMLInputFactory;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id$
  */
 
-public class MultiAnswerXMLStreamWriter extends AbstractXMLStreamWriter implements AnswerXMLWriter, Runnable {
-    private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
-    {
-        INPUT_FACTORY.setProperty(P_INPUT_PARSING_MODE, PARSING_MODE_DOCUMENTS);
-    }
-
-    private InputStream inputStream;
-    private XMLStreamReader parser;
-    private boolean hasMore;
-    private Set<String> variables;
-    private boolean gotVariables;
-    private int currentEvent;
-
-    public MultiAnswerXMLStreamWriter(InputStream inputStream) throws XMLStreamException {
-        this.inputStream = inputStream;
-        variables = new HashSet<String>();
-        createParser();
-    }
-
-    public void run() {
-        try {
-            if (parser == null) {
-                createParser();
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void createParser() throws XMLStreamException {
-        parser = INPUT_FACTORY.createXMLStreamReader(this.inputStream);
-    }
-
-    public boolean hasMoreResults() {
-        try {
-            hasMore = getToNextResult();
-        } catch (XMLStreamException e) {
-            hasMore = false;
-        }
-        return hasMore;
-    }
-
-    public void write(Writer writer) throws XMLStreamException {
-        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
-        write();
-    }
-
-    public void writeResult() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULT);
-        while (parser.hasNext()) {
-            currentEvent = parser.getEventType();
-            if (currentEvent == START_ELEMENT && BINDING.equals(parser.getLocalName())) {
-                writeOneBinding();
-            } else if (currentEvent == END_ELEMENT && RESULT.equals(parser.getLocalName())) {
-                break;
-            }
-            parser.next();
-        }
-        streamWriter.writeEndElement();
-        hasMore = getToNextResult();
-    }
-
-    public void writeVariables() throws XMLStreamException {
-        if (!gotVariables) {
-            gotVariables = getVariables();
-        }
-        streamWriter.writeStartElement(HEAD);
-        for (String variable : variables) {
-            streamWriter.writeStartElement(VARIABLE);
-            streamWriter.writeAttribute(NAME, variable);
-            streamWriter.writeEndElement();
-        }
-        streamWriter.writeEndElement();
-    }
-
-    public void setWriter(Writer writer) throws XMLStreamException, IOException {
-        if (streamWriter != null) {
-            streamWriter.close();
-        }
-        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
-    }
-
-    public void write() throws XMLStreamException {
-        writeStartDocument();
-        writeVariables();
-        writeAllResults();
-        writeEndDocument();
-    }
-
-    public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
-        throw new UnsupportedOperationException("Cannot add stream to this writer.");
-    }
-
-    protected void writeAllResults() throws XMLStreamException {
-        writeStartResults();
-        while (hasMoreResults()) {
-            writeResult();
-        }
-        writeEndResults();
-    }
-
-    private void writeOneBinding() throws XMLStreamException {
-        streamWriter.writeStartElement(BINDING);
-        String variableName = parser.getAttributeValue(null, NAME);
-        streamWriter.writeAttribute(NAME, variableName);
-        currentEvent = parser.next();
-        writeOneNode();
-        streamWriter.writeEndElement();
-    }
-
-    private void writeOneNode() throws XMLStreamException {
-        String tagName = parser.getLocalName();
-        streamWriter.writeStartElement(tagName);
-        if (LITERAL.equals(tagName)) {
-            String datatype = parser.getAttributeValue(null, DATATYPE);
-            if (datatype != null) {
-                streamWriter.writeAttribute(DATATYPE, datatype);
-            }
-            String language = parser.getAttributeValue(null, XML_LANG);
-            if (language != null) {
-                streamWriter.writeAttribute(XML_LANG, language);
-            }
-        }
-        final String text = parser.getElementText();
-        streamWriter.writeCharacters(text);
-        streamWriter.writeEndElement();
-    }
-
-    private boolean getVariables() throws XMLStreamException {
-        while (parser.hasNext()) {
-            currentEvent = parser.getEventType();
-            if (currentEvent == START_ELEMENT && VARIABLE.equals(parser.getLocalName())) {
-                addVariable();
-            } else if (currentEvent == END_ELEMENT) {
-                if (HEAD.equals(parser.getLocalName())) {
-                    return true;
-                }
-            }
-            currentEvent = parser.next();
-        }
-        return false;
-    }
-
-    private void addVariable() {
-        assert currentEvent == START_ELEMENT;
-        variables.add(parser.getAttributeValue(null, NAME));
-    }
-
-    private boolean getToNextResult() throws XMLStreamException {
-        while (parser.hasNext()) {
-            int eventType = parser.getEventType();
-            if (eventType == START_ELEMENT) {
-                final String tagName = parser.getLocalName();
-                if (RESULT.equals(tagName)) {
-                    return true;
-                } else if (!gotVariables && VARIABLE.equals(tagName)) {
-                    gotVariables = getVariables();
-                }
-            }
-            parser.next();
-        }
-        return false;
-    }
-
-    public void close() throws XMLStreamException, IOException {
-        try {
-            if (parser != null) {
-                parser.close();
-            }
-            if (streamWriter != null) {
-                streamWriter.close();
-            }
-        } catch (XMLStreamException e) {
-            ;
-        }
-    }
+public interface MultiAnswerXMLStreamWriter extends AnswerXMLWriter {
+    void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
 }
