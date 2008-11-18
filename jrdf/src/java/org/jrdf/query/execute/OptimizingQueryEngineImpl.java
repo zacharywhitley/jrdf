@@ -60,10 +60,10 @@
 package org.jrdf.query.execute;
 
 import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
+import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Ask;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
@@ -76,6 +76,7 @@ import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 
 import java.util.Collection;
+import java.util.Collections;
 import static java.util.Collections.sort;
 import static java.util.Collections.swap;
 import java.util.HashSet;
@@ -83,7 +84,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author Yuan-Fang Li
@@ -111,18 +111,18 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         List<Expression<V>> constraintList = flattenAndSortConjunction(conjunction);
-        Set<Relation> partialResult = new TreeSet<Relation>(relationComparator);
-        Relation tempRelation = result;
+        List<Relation> partialResult = new LinkedList<Relation>();
         for (Expression<V> exp : constraintList) {
-            exp.accept((V) this);
-            partialResult.add(result);
-            if (result.getTuples().isEmpty()) {
+            Relation tempRelation = getExpression(exp);
+            if (tempRelation.getTuples().isEmpty()) {
+                result = tempRelation;
                 return;
             }
-            result = tempRelation;
+            partialResult.add(tempRelation);
         }
-        partialResult = matchAttributes(new LinkedList<Relation>(partialResult));
-        result = naturalJoin.join(partialResult);
+        Collections.sort(partialResult, relationComparator);
+        Set<Relation> partialResultSet = matchAttributes(partialResult);
+        result = naturalJoin.join(partialResultSet);
     }
 
     private Set<Relation> matchAttributes(List<Relation> partialResults) {
@@ -186,8 +186,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             if (!lhs.getTuples().isEmpty()) {
                 result = lhs;
             } else {
-                Relation rhs = getExpression(conjunction.getRhs());
-                result = rhs;
+                result = getExpression(conjunction.getRhs());
             }
         } else {
             Relation rhs = getExpression(conjunction.getRhs());
