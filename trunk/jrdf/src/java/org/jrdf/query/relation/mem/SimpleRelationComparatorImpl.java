@@ -64,7 +64,7 @@ import org.jrdf.query.relation.Relation;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id: $
  */
 
 /**
