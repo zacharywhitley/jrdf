@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,81 +57,35 @@
  *
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer;
 
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.query.answer.AnswerType.ASK;
+import static org.jrdf.query.answer.AnswerType.SELECT;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
 
-import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id:$
  */
 
-public abstract class AbstractXMLStreamWriter implements AnswerXMLWriter {
-    protected static final String ENCODING_DEFAULT = "UTF-8";
-    protected static final String VERSION_NUMBER = "1.0";
-    protected static final XMLOutputFactory OUTPUT_FACTORY = javax.xml.stream.XMLOutputFactory.newInstance();
-    protected XMLStreamWriter streamWriter;
-
-    public void writeStartDocument() throws XMLStreamException {
-        streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
-        String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
-        streamWriter.writeProcessingInstruction("xml-stylesheet", target);
-
-        streamWriter.writeStartElement(SPARQL);
-        streamWriter.writeDefaultNamespace(SPARQL_NS);
-        streamWriter.writeNamespace("xsi", W3C_XML_SCHEMA_INSTANCE_NS_URI);
-        streamWriter.writeNamespace("schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
+public class SparqlStreamingAnswerFactoryImpl implements SparqlStreamingAnswerFactory {
+    public Answer createStreamingAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
+        SparqlAnswerStreamParser streamAnswerParser = new SparqlAnswerStreamParserImpl(stream);
+        return createStreamingAnswer(streamAnswerParser);
     }
 
-    public void writeEndDocument() throws XMLStreamException {
-        streamWriter.writeEndElement();
-        streamWriter.writeEndDocument();
-    }
-
-    public void writeStartResults() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULTS);
-    }
-
-    public void writeEndResults() throws XMLStreamException {
-        streamWriter.writeEndElement();
-    }
-
-    public void close() throws XMLStreamException, IOException {
-        if (streamWriter != null) {
-            streamWriter.flush();
-            streamWriter.close();
+    public Answer createStreamingAnswer(SparqlAnswerStreamParser answerStreamParser) throws XMLStreamException {
+        final AnswerType answerType = answerStreamParser.getAnswerType();
+        if (answerType == SELECT) {
+            return new SparqlStreamingSelectAnswer(answerStreamParser);
+        } else if (answerType == ASK) {
+            return new SparqlStreamingAskAnswer(answerStreamParser);
+        } else {
+            throw new RuntimeException("Invalid SPARQL answer stream: " + answerType);
         }
-    }
-
-    public void flush() throws XMLStreamException {
-        streamWriter.flush();
-    }
-
-    public void write() throws XMLStreamException {
-        checkNotNull(streamWriter);
-        writeStartDocument();
-        writeHead();
-        writeAllResults();
-        writeEndDocument();
-    }
-
-    public void writeHead() throws XMLStreamException {
-        streamWriter.writeStartElement(HEAD);
-        streamWriter.writeEndElement();
-    }
-
-    protected void writeAllResults() throws XMLStreamException {
-        writeStartResults();
-        while (hasMoreResults()) {
-            writeResult();
-        }
-        writeEndResults();
-        streamWriter.flush();
     }
 }

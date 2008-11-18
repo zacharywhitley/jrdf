@@ -116,6 +116,7 @@ public abstract class AbstractAnswerXMLStreamWriterIntegrationTest extends TestC
     protected URL url;
     protected InputStream stream;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         writer = new StringWriter();
@@ -123,6 +124,7 @@ public abstract class AbstractAnswerXMLStreamWriterIntegrationTest extends TestC
         stream = url.openStream();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         stream.close();
@@ -145,7 +147,7 @@ public abstract class AbstractAnswerXMLStreamWriterIntegrationTest extends TestC
 
     protected Set<String> getVariables() throws XMLStreamException {
         Set<String> varSet = new HashSet<String>();
-        xmlWriter.writeVariables();
+        xmlWriter.writeHead();
         xmlWriter.flush();
         final String xml = writer.toString();
         reader = factory.createXMLStreamReader(new StringReader(xml));

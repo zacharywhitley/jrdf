@@ -1,4 +1,4 @@
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer.xml.parser;
 
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.BNODE;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.DATATYPE;
@@ -9,6 +9,9 @@ import static org.jrdf.query.answer.xml.AnswerXMLWriter.XML_LANG;
 import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
+import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.xml.TypeValueImpl;
+import org.jrdf.query.answer.xml.SparqlResultType;
 
 import static javax.xml.XMLConstants.XML_NS_URI;
 import javax.xml.stream.XMLStreamException;

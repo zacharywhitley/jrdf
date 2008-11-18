@@ -63,6 +63,7 @@ import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARA
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Ask;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
@@ -86,16 +87,24 @@ import java.util.TreeSet;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version : $Id: $
  */
 
 public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
     private final RelationComparator relationComparator = new SimpleRelationComparatorImpl();
     private final ExpressionComparator expressionComparator = EXPRESSION_COMPARATOR;
+    private boolean shortCircuit;
 
     public OptimizingQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
         Union union, DyadicJoin leftOuterJoin, SemiDifference diff) {
         super(project, naturalJoin, restrict, union, leftOuterJoin, diff);
+        shortCircuit = false;
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
+        shortCircuit = true;
+        result = getExpression(ask.getNextExpression());
     }
 
     // TODO YF join those with common attributes first.
@@ -167,6 +176,22 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             flattenConjunction((Conjunction<V>) expression, set);
         } else {
             set.add(expression);
+        }
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> conjunction) {
+        Relation lhs = getExpression(conjunction.getLhs());
+        if (shortCircuit) {
+            if (!lhs.getTuples().isEmpty()) {
+                result = lhs;
+            } else {
+                Relation rhs = getExpression(conjunction.getRhs());
+                result = rhs;
+            }
+        } else {
+            Relation rhs = getExpression(conjunction.getRhs());
+            result = union.union(lhs, rhs);
         }
     }
 

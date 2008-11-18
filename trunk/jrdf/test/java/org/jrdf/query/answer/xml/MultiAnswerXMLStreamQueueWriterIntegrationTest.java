@@ -59,10 +59,12 @@
 
 package org.jrdf.query.answer.xml;
 
-import static org.jrdf.query.answer.xml.SparqlAnswerParserImplUnitTest.EXPECTED_VARIABLES;
-import static org.jrdf.query.answer.xml.SparqlAnswerParserImplUnitTest.ROW_1;
-import static org.jrdf.query.answer.xml.SparqlAnswerParserImplUnitTest.ROW_2;
-import static org.jrdf.query.answer.xml.SparqlAnswerParserImplUnitTest.checkRow;
+import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.EXPECTED_VARIABLES;
+import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.ROW_1;
+import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.ROW_2;
+import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.checkRow;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsParserImpl;
 
 import static javax.xml.stream.XMLInputFactory.newInstance;
 import javax.xml.stream.XMLStreamReader;
@@ -81,6 +83,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends AbstractAnsw
     private InputStream stream1, stream2;
     private XMLStreamReader streamReader;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         stream1 = url.openStream();
@@ -89,6 +92,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends AbstractAnsw
         xmlWriter.setWriter(writer);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         stream1.close();
         stream2.close();
@@ -104,7 +108,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends AbstractAnsw
         assertEquals(2, count);
         checkTwoResults(writer);
         assertFalse(xmlWriter.hasMoreResults());
-        xmlWriter.addStream(stream2);
+        ((MultiAnswerXMLStreamWriter) xmlWriter).addStream(stream2);
         assertTrue(xmlWriter.hasMoreResults());
         while (xmlWriter.hasMoreResults()) {
             count++;
@@ -117,7 +121,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends AbstractAnsw
 
     public void test2Streams() throws Exception {
         int count = 0;
-        xmlWriter.addStream(stream2);
+        ((MultiAnswerXMLStreamWriter) xmlWriter).addStream(stream2);
         xmlWriter.writeStartResults();
         while (xmlWriter.hasMoreResults()) {
             count++;

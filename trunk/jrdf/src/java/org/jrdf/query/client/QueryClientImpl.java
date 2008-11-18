@@ -61,7 +61,8 @@ package org.jrdf.query.client;
 
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.SparqlStreamingAnswer;
+import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
+import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
 import static org.jrdf.query.client.ServerPort.createServerPort;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
@@ -88,6 +89,8 @@ import java.util.List;
 
 public class QueryClientImpl implements CallableGraphQueryClient {
     private static final int DEFAULT_PORT = 8182;
+    private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
+        new SparqlStreamingAnswerFactoryImpl();
     private Client client;
     private Request request;
     private ServerPort serverPort;
@@ -128,11 +131,11 @@ public class QueryClientImpl implements CallableGraphQueryClient {
         return request;
     }
 
-    private Answer tryGetAnswer(Representation output) throws IOException {
+    private Answer tryGetAnswer(Representation output) {
         try {
-            return new SparqlStreamingAnswer(output.getStream());
+            return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingAnswer(output.getStream());
         } catch (Exception e) {
-            throw new IOException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

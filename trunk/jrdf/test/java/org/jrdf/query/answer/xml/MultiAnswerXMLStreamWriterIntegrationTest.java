@@ -77,13 +77,16 @@ import java.io.StringWriter;
 
 public class MultiAnswerXMLStreamWriterIntegrationTest extends AbstractAnswerXMLStreamWriterIntegrationTest {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
-        xmlWriter = new MultiAnswerXMLStreamWriter(stream);
+        xmlWriter = new MultiAnswerXMLStreamWriterImpl(stream);
         xmlWriter.setWriter(writer);
     }
 
+    @Override
     protected void tearDown() throws Exception {
+        super.tearDown();
         xmlWriter.close();
     }
 
@@ -95,7 +98,7 @@ public class MultiAnswerXMLStreamWriterIntegrationTest extends AbstractAnswerXML
         Thread thread = new Thread(sWriter);
         thread.start();
 
-        xmlWriter = new MultiAnswerXMLStreamWriter(inputStream);
+        xmlWriter = new MultiAnswerXMLStreamWriterImpl(inputStream);
         writer = new StringWriter();
         xmlWriter.setWriter(writer);
         Thread wThread = new Thread((Runnable) xmlWriter);
@@ -160,7 +163,7 @@ public class MultiAnswerXMLStreamWriterIntegrationTest extends AbstractAnswerXML
         xml += xml;
         InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
         writer = new StringWriter();
-        xmlWriter = new MultiAnswerXMLStreamWriter(inputStream);
+        xmlWriter = new MultiAnswerXMLStreamWriterImpl(inputStream);
         xmlWriter.setWriter(writer);
         int count = 0;
         xmlWriter.writeStartResults();

@@ -14,7 +14,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class AskQueryImpl implements Query {
@@ -31,7 +31,6 @@ public class AskQueryImpl implements Query {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
         boolean result = getResult(graph, queryEngine);
-        System.err.println("ASK result = " + result);
         return new AskAnswerImpl(System.currentTimeMillis() - timeStarted, result);
     }
 

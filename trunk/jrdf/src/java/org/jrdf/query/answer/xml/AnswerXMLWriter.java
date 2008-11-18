@@ -62,11 +62,10 @@ package org.jrdf.query.answer.xml;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
-import java.io.InputStream;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version  $Id:$
  */
 
 public interface AnswerXMLWriter {
@@ -141,8 +140,12 @@ public interface AnswerXMLWriter {
      */
     String SPARQL_NS = "http://www.w3.org/2005/sparql-results#";
 
+    /**
+     * The element "boolean".
+     */
+    String BOOLEAN = "boolean";
 
-    void write(Writer writer) throws XMLStreamException, IOException;
+    void write(Writer writer) throws XMLStreamException;
 
     void close() throws XMLStreamException, IOException;
 
@@ -150,7 +153,7 @@ public interface AnswerXMLWriter {
 
     void writeStartDocument() throws XMLStreamException;
 
-    void writeVariables() throws XMLStreamException;
+    void writeHead() throws XMLStreamException;
 
     void writeStartResults() throws XMLStreamException;
 
@@ -165,6 +168,4 @@ public interface AnswerXMLWriter {
     void setWriter(Writer writer) throws XMLStreamException, IOException;
 
     void flush() throws XMLStreamException;
-
-    void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
 }

@@ -67,8 +67,6 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.SparqlStreamingAnswer;
-import org.jrdf.query.answer.xml.SparqlAnswerParserStreamImpl;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.client.CallableGraphQueryClient;
 import org.jrdf.query.client.QueryClient;
@@ -106,6 +104,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
     private SpringLocalServer localQueryServer;
     private SpringDistributedServer distributedServer;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         HANDLER.removeDir();
@@ -119,6 +118,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         distributedServer.start();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         graph.close();
@@ -155,7 +155,8 @@ public class DistributedQueryIntegrationTest extends TestCase {
         assertEquals(2, graph.getNumberOfTriples());
         CallableGraphQueryClient queryClient = new QueryClientImpl("127.0.0.1:8182");
         queryClient.getQuery(FOO, QUERY_STRING, "all");
-        Answer answer = new SparqlStreamingAnswer(new SparqlAnswerParserStreamImpl(queryClient.call()));
+//        Answer answer = new SparqlStreamingSelectAnswer(new SparqlAnswerStreamParserImpl(queryClient.call()));
+        Answer answer = queryClient.executeQuery();
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 

@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,81 +57,61 @@
  *
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer;
 
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
+import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.xml.TypeValueImpl;
+import static org.jrdf.query.answer.xml.SparqlResultType.BOOLEAN;
 
-import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id:$
  */
 
-public abstract class AbstractXMLStreamWriter implements AnswerXMLWriter {
-    protected static final String ENCODING_DEFAULT = "UTF-8";
-    protected static final String VERSION_NUMBER = "1.0";
-    protected static final XMLOutputFactory OUTPUT_FACTORY = javax.xml.stream.XMLOutputFactory.newInstance();
-    protected XMLStreamWriter streamWriter;
+public class SparqlStreamingAskAnswer implements AskAnswer {
+    private SparqlAnswerStreamParser answerStreamParser;
+    private boolean result;
 
-    public void writeStartDocument() throws XMLStreamException {
-        streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
-        String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
-        streamWriter.writeProcessingInstruction("xml-stylesheet", target);
-
-        streamWriter.writeStartElement(SPARQL);
-        streamWriter.writeDefaultNamespace(SPARQL_NS);
-        streamWriter.writeNamespace("xsi", W3C_XML_SCHEMA_INSTANCE_NS_URI);
-        streamWriter.writeNamespace("schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
+    public SparqlStreamingAskAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
+        this(new SparqlAnswerStreamParserImpl(stream));
     }
 
-    public void writeEndDocument() throws XMLStreamException {
-        streamWriter.writeEndElement();
-        streamWriter.writeEndDocument();
+    public SparqlStreamingAskAnswer(SparqlAnswerStreamParser answerStreamParser) {
+        this.answerStreamParser = answerStreamParser;
     }
 
-    public void writeStartResults() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULTS);
+    public boolean getResult() throws XMLStreamException {
+        return answerStreamParser.getAskResult();
     }
 
-    public void writeEndResults() throws XMLStreamException {
-        streamWriter.writeEndElement();
+    public long getTimeTaken() {
+        return -1;
     }
 
-    public void close() throws XMLStreamException, IOException {
-        if (streamWriter != null) {
-            streamWriter.flush();
-            streamWriter.close();
-        }
+    public long numberOfTuples() {
+        return 0;
     }
 
-    public void flush() throws XMLStreamException {
-        streamWriter.flush();
+    public String[] getVariableNames() {
+        return new String[]{ASK_VARIABLE_NAME};
     }
 
-    public void write() throws XMLStreamException {
-        checkNotNull(streamWriter);
-        writeStartDocument();
-        writeHead();
-        writeAllResults();
-        writeEndDocument();
+    public String[][] getColumnValues() {
+        return new String[][]{{Boolean.toString(result)}};
     }
 
-    public void writeHead() throws XMLStreamException {
-        streamWriter.writeStartElement(HEAD);
-        streamWriter.writeEndElement();
-    }
-
-    protected void writeAllResults() throws XMLStreamException {
-        writeStartResults();
-        while (hasMoreResults()) {
-            writeResult();
-        }
-        writeEndResults();
-        streamWriter.flush();
+    public Iterator<TypeValue[]> columnValuesIterator() {
+        TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(result));
+        Set<TypeValue[]> set = new HashSet<TypeValue[]>();
+        set.add(new TypeValue[]{typeValue});
+        return set.iterator();
     }
 }

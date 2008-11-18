@@ -61,6 +61,8 @@ package org.jrdf.query.answer.xml;
 
 import static org.jrdf.query.answer.xml.DatatypeType.NONE;
 import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
 
 import static javax.xml.XMLConstants.XML_NS_PREFIX;
 import javax.xml.stream.XMLStreamException;
@@ -74,11 +76,11 @@ import java.util.Iterator;
  * @version :$
  */
 
-public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter {
-    private SparqlAnswerParserStream streamParser;
+public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter implements MultiAnswerXMLStreamWriter {
+    private SparqlAnswerStreamParser streamParser;
 
     public MultiAnswerXMLStreamQueueWriter(InputStream... streams) throws InterruptedException, XMLStreamException {
-        this.streamParser = new SparqlAnswerParserStreamImpl(streams);
+        this.streamParser = new SparqlAnswerStreamParserImpl(streams);
     }
 
     public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
@@ -96,7 +98,8 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter {
         return streamParser.hasMoreResults();
     }
 
-    public void writeVariables() throws XMLStreamException {
+    @Override
+    public void writeHead() throws XMLStreamException {
         streamWriter.writeStartElement(HEAD);
         for (String variable : streamParser.getVariables()) {
             streamWriter.writeStartElement(VARIABLE);
@@ -124,9 +127,13 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter {
         streamWriter.flush();
     }
 
-    public void write(Writer writer) throws XMLStreamException, IOException {
-        setWriter(writer);
-        write();
+    public void write(Writer writer) throws XMLStreamException {
+        try {
+            setWriter(writer);
+            write();
+        } catch (IOException e) {
+            throw new XMLStreamException(e);
+        }
     }
 
     public void close() throws XMLStreamException {
@@ -152,16 +159,9 @@ public class MultiAnswerXMLStreamQueueWriter extends AbstractXMLStreamWriter {
                 streamWriter.writeAttribute(XML_NS_PREFIX + ":lang", result.getSuffix());
             }
         }
-        streamWriter.writeCharacters(result.getValue());
+        final String nodeString = result.getValue();
+        streamWriter.writeCharacters(nodeString);
         streamWriter.writeEndElement();
         streamWriter.writeEndElement();
-    }
-
-    protected void writeAllResults() throws XMLStreamException {
-        writeStartResults();
-        while (streamParser.hasMoreResults()) {
-            writeResult();
-        }
-        writeEndResults();
     }
 }
