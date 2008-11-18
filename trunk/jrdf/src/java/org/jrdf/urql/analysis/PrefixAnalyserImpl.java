@@ -105,11 +105,17 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
 
     @Override
     public void caseAAskQueryStart(AAskQueryStart node) {
+        expression = analyseAskClause(node);
+    }
+
+    private Expression<ExpressionVisitor> analyseAskClause(AAskQueryStart node) {
         try {
+            super.caseAAskQueryStart(node);
             WhereAnalyser analyzer = analyseWhereClause(node.getWhereClause());
-            expression = new Ask(analyzer.getExpression());
+            return new Ask(analyzer.getExpression());
         } catch (ParserException e) {
             exception = e;
+            return null;
         }
     }
 
