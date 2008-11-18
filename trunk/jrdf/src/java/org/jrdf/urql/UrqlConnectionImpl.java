@@ -61,9 +61,11 @@ package org.jrdf.urql;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.query.AskQueryImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.AskAnswerImpl;
 import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.builder.QueryBuilder;
@@ -99,8 +101,16 @@ public final class UrqlConnectionImpl implements UrqlConnection {
         checkNotEmptyString("queryText", queryText);
         Query query = builder.buildQuery(graph, queryText);
         if (graph.isEmpty()) {
-            return EMPTY_ANSWER;
+            return getEmptyAnswer(query);
         }
         return query.executeQuery(graph, queryEngine);
+    }
+
+    private Answer getEmptyAnswer(Query query) {
+        if (query instanceof AskQueryImpl) {
+            return new AskAnswerImpl(0, false);
+        } else {
+            return EMPTY_ANSWER;
+        }
     }
 }

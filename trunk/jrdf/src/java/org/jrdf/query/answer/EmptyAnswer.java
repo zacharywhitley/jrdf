@@ -65,7 +65,7 @@ import org.jrdf.util.EmptyClosableIterator;
 import java.io.Serializable;
 import java.util.Iterator;
 
-public final class EmptyAnswer implements AskAnswer, SelectAnswer, Serializable {
+public final class EmptyAnswer implements SelectAnswer, Serializable {
     private static final long serialVersionUID = -7374613298128439580L;
 
     /**
@@ -94,10 +94,6 @@ public final class EmptyAnswer implements AskAnswer, SelectAnswer, Serializable 
 
     public long getTimeTaken() {
         return 0;
-    }
-
-    public boolean getResult() {
-        return false;
     }
 
     @Override
