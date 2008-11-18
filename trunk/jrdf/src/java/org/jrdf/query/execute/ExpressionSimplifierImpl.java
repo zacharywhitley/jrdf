@@ -141,6 +141,8 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
     }
 
     public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
+        Expression<ExpressionVisitor> next = getNext(ask.getNextExpression());
+        ask.setNextExpression(next);
         expression = ask;
     }
 
