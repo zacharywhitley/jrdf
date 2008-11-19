@@ -1,6 +1,7 @@
 package org.jrdf.query.answer.xml.parser;
 
 import org.jrdf.query.answer.AnswerType;
+import static org.jrdf.query.answer.AnswerType.ASK;
 import org.jrdf.query.answer.xml.TypeValue;
 
 import javax.xml.stream.XMLStreamException;
@@ -18,11 +19,13 @@ public class SparqlAnswerStreamParserImpl implements SparqlAnswerStreamParser {
     private boolean hasMore;
     private TypeValue[] results;
     private AnswerType answerType;
+    private boolean result;
 
     public SparqlAnswerStreamParserImpl(InputStream... streams) throws XMLStreamException, InterruptedException {
         this.hasMore = false;
         this.variables = new LinkedHashSet<String>();
         this.streamQueue = new LinkedBlockingQueue<InputStream>();
+        result = false;
         for (InputStream stream : streams) {
             this.streamQueue.put(stream);
         }
@@ -41,7 +44,12 @@ public class SparqlAnswerStreamParserImpl implements SparqlAnswerStreamParser {
     }
 
     public boolean getAskResult() throws XMLStreamException {
-        return parser.getAskResult();
+        if (answerType == ASK) {
+            result = result || parser.getAskResult();
+            return result;
+        } else {
+            throw new UnsupportedOperationException("Cannot answer boolean for non-ASK query: " + answerType);
+        }
     }
 
     public LinkedHashSet<String> getVariables() {

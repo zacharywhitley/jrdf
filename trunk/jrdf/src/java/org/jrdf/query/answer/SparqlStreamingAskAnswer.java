@@ -73,7 +73,7 @@ import java.util.HashSet;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class SparqlStreamingAskAnswer implements AskAnswer {
@@ -86,10 +86,12 @@ public class SparqlStreamingAskAnswer implements AskAnswer {
 
     public SparqlStreamingAskAnswer(SparqlAnswerStreamParser answerStreamParser) {
         this.answerStreamParser = answerStreamParser;
+        this.result = false;
     }
 
     public boolean getResult() throws XMLStreamException {
-        return answerStreamParser.getAskResult();
+        result = answerStreamParser.getAskResult();
+        return result;
     }
 
     public long getTimeTaken() {
