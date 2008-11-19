@@ -23,6 +23,7 @@
         <module name="IllegalInstantiation"/>
         <module name="Indentation"/>
         <module name="InnerAssignment"/>
+        <module name="InterfaceIsType"/>
         <module name="LeftCurly"/>
         <module name="LineLength">
             <!-- Ignore Header lines -->
