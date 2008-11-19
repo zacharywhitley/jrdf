@@ -20,9 +20,6 @@ public class AskAnswerImpl implements AskAnswer, Serializable {
     private long timeTaken;
     private boolean result;
 
-    private AskAnswerImpl() {
-    }
-
     public AskAnswerImpl(long timeTaken, boolean result) {
         this.timeTaken = timeTaken;
         this.result = result;
@@ -57,5 +54,9 @@ public class AskAnswerImpl implements AskAnswer, Serializable {
 
     public String toString() {
         return ASK_VARIABLE_NAME + "\nValue " + result;
+    }
+
+    public void accept(AnswerVisitor visitor) {
+        visitor.visitAskAnswer(this);
     }
 }

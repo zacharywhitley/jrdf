@@ -116,4 +116,8 @@ public class SparqlStreamingAskAnswer implements AskAnswer {
         set.add(new TypeValue[]{typeValue});
         return set.iterator();
     }
+
+    public void accept(AnswerVisitor visitor) {
+        visitor.visitAskAnswer(this);
+    }
 }

@@ -100,4 +100,8 @@ public final class EmptyAnswer implements SelectAnswer, Serializable {
     public String toString() {
         return "";
     }
+
+    public void accept(AnswerVisitor visitor) {
+        visitor.visitSelectAnswer(this);
+    }
 }

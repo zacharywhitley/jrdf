@@ -90,9 +90,6 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     private transient Relation results;
     private transient TypeValueToString valueToString = new TypeValueToStringImpl();
 
-    private SelectAnswerImpl() {
-    }
-
     public SelectAnswerImpl(LinkedHashSet<Attribute> newHeading, Relation newResults,
                             long timeTaken, boolean hasProjected) {
         checkNotNull(newHeading, newResults);
@@ -233,5 +230,9 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
             newTuples.add((Tuple) input.readObject());
         }
         results = relationFactory.getRelation(newAttributes, newTuples);
+    }
+
+    public void accept(AnswerVisitor visitor) {
+        visitor.visitSelectAnswer(this);
     }
 }

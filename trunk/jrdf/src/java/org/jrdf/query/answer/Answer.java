@@ -69,7 +69,7 @@ import java.util.Iterator;
  *
  * @version $Id$
  */
-public interface Answer {
+public interface Answer extends AnswerVisitable {
 
     /**
      * Returns the variable names (the value after the question mark in a SPARQL query).
