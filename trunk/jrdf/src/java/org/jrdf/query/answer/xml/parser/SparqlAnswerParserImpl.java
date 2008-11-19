@@ -65,7 +65,7 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
                 hasMore = true;
                 answerType = ASK;
                 break;
-            } else if (startOfElement(eventType, VARIABLE) || endOfElement(eventType, HEAD)) {
+            } else if (startOfElement(eventType, VARIABLE) || startOfElement(eventType, RESULTS)) {
                 tryGetVariables();
                 answerType = SELECT;
                 break;
@@ -116,7 +116,7 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     private boolean hasNextResult() throws XMLStreamException {
         int eventType = parser.getEventType();
         while (parser.hasNext()) {
-            if (startOfElement(eventType, RESULT)) {
+            if (startOfElement(eventType, RESULT) || startOfElement(eventType, BOOLEAN)) {
                 return true;
             }
             eventType = parser.next();

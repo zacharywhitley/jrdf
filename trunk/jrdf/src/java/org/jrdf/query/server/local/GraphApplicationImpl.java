@@ -104,10 +104,10 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
         try {
             System.out.println("Starting answer query");
             final MoleculeGraph graph = getGraph(graphName);
-            System.err.println("graph # = " + graph.getNumberOfTriples());
+            System.out.println("graph # = " + graph.getNumberOfTriples());
             answer = urqlConnection.executeQuery(graph, queryString);
             tooManyRows = answer.numberOfTuples() > DEFAULT_MAX_ROWS;
-            System.err.println("answer # = " + answer.numberOfTuples() + " time taken = " + answer.getTimeTaken());
+            System.out.println("answer # = " + answer.numberOfTuples() + " time taken = " + answer.getTimeTaken());
             return answer;
         } catch (Exception e) {
             throw new ResourceException(e);
