@@ -67,6 +67,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.client.CallableGraphQueryClient;
 import org.jrdf.query.client.QueryClient;
@@ -98,7 +99,8 @@ public class DistributedQueryIntegrationTest extends TestCase {
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-    private static final String QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
+    private static final String SELECT_QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
+    private static final String ASK_QUERY_STRING = "ASK WHERE { ?s ?p ?o. }";
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
@@ -141,7 +143,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         DistributedServerClient serverClient = new DistributedServerClient("127.0.0.1:8183");
         serverClient.postDistributedServer("add", "127.0.0.1");
         QueryClient client = new QueryClientImpl("127.0.0.1:8183");
-        client.getQuery(FOO, QUERY_STRING, "all");
+        client.getQuery(FOO, SELECT_QUERY_STRING, "all");
         final Answer answer = client.executeQuery();
         checkAnswer(answer, 0, Collections.<String>emptySet());
     }
@@ -154,7 +156,7 @@ public class DistributedQueryIntegrationTest extends TestCase {
         graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
         CallableGraphQueryClient queryClient = new QueryClientImpl("127.0.0.1:8182");
-        queryClient.getQuery(FOO, QUERY_STRING, "all");
+        queryClient.getQuery(FOO, SELECT_QUERY_STRING, "all");
 //        Answer answer = new SparqlStreamingSelectAnswer(new SparqlAnswerStreamParserImpl(queryClient.call()));
         Answer answer = queryClient.executeQuery();
         checkAnswer(answer, 2, asSet("s", "p", "o"));
@@ -170,9 +172,42 @@ public class DistributedQueryIntegrationTest extends TestCase {
         DistributedServerClient serverClient = new DistributedServerClient("127.0.0.1:8183");
         serverClient.postDistributedServer("add", "127.0.0.1");
         QueryClient client = new QueryClientImpl("127.0.0.1:8183");
-        client.getQuery(FOO, QUERY_STRING, "all");
+        client.getQuery(FOO, SELECT_QUERY_STRING, "all");
         Answer answer = client.executeQuery();
         checkAnswer(answer, 2, asSet("s", "p", "o"));
+    }
+
+    public void testLocalClientAskQuery() throws Exception {
+        assertEquals(0, graph.getNumberOfTriples());
+        QueryClient client = new QueryClientImpl("127.0.0.1:8182");
+        client.getQuery(FOO, ASK_QUERY_STRING, "all");
+        AskAnswer answer = (AskAnswer) client.executeQuery();
+        assertEquals(false, answer.getResult());
+    }
+
+    public void testDistributedClientEmptyAskQuery() throws Exception {
+        assertEquals(0, graph.getNumberOfTriples());
+        DistributedServerClient serverClient = new DistributedServerClient("127.0.0.1:8183");
+        serverClient.postDistributedServer("add", "127.0.0.1");
+        QueryClient client = new QueryClientImpl("127.0.0.1:8183");
+        client.getQuery(FOO, ASK_QUERY_STRING, "all");
+        AskAnswer answer = (AskAnswer) client.executeQuery();
+        assertEquals(false, answer.getResult());
+    }
+
+    public void testDistributedClientAskQuery() throws Exception {
+        final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
+        final BlankNode b1 = elementFactory.createBlankNode();
+        final BlankNode b2 = elementFactory.createBlankNode();
+        graph.add(b1, p, b2);
+        graph.add(b2, p, b1);
+        assertEquals(2, graph.getNumberOfTriples());
+        DistributedServerClient serverClient = new DistributedServerClient("127.0.0.1:8183");
+        serverClient.postDistributedServer("add", "127.0.0.1");
+        QueryClient client = new QueryClientImpl("127.0.0.1:8183");
+        client.getQuery(FOO, ASK_QUERY_STRING, "all");
+        AskAnswer answer = (AskAnswer) client.executeQuery();
+        assertEquals(true, answer.getResult());
     }
 
     private void checkAnswer(Answer answer, int noResults, Set<String> expectedVariableNames) throws Exception {

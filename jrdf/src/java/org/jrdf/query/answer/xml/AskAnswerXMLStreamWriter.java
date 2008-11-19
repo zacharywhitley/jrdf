@@ -9,7 +9,7 @@ import java.io.Writer;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class AskAnswerXMLStreamWriter extends AbstractXMLStreamWriter {
@@ -38,15 +38,20 @@ public class AskAnswerXMLStreamWriter extends AbstractXMLStreamWriter {
         return hasMore;
     }
 
+    @Override
     public void write() throws XMLStreamException {
         checkNotNull(streamWriter);
-        super.write();
+        writeStartDocument();
+        writeHead();
+        writeResult();
+        writeEndDocument();
     }
 
     public void write(Writer writer) throws XMLStreamException {
         streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
-        super.write();
+        write();
     }
+
 
     public void writeResult() throws XMLStreamException {
         if (hasMoreResults()) {
@@ -56,8 +61,5 @@ public class AskAnswerXMLStreamWriter extends AbstractXMLStreamWriter {
             streamWriter.flush();
             hasMore = false;
         }
-    }
-
-    public void writeVariables() throws XMLStreamException {
     }
 }

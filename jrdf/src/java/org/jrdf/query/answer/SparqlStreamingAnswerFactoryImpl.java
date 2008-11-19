@@ -69,7 +69,7 @@ import java.io.InputStream;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class SparqlStreamingAnswerFactoryImpl implements SparqlStreamingAnswerFactory {
