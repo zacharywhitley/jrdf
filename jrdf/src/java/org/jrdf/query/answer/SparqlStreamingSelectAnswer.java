@@ -115,4 +115,8 @@ public class SparqlStreamingSelectAnswer implements SelectAnswer {
     public long getTimeTaken() {
         return -1;
     }
+
+    public void accept(AnswerVisitor visitor) {
+        visitor.visitSelectAnswer(this);
+    }
 }
