@@ -106,13 +106,15 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         Map<Attribute, ValueOperation> rhs = equalsExpression.getRhs();
         Attribute attribute = lhs.keySet().iterator().next();
         ValueOperation lvo = lhs.get(attribute);
+        ValueOperation rvo = rhs.get(attribute);
         final Node lvalue = lvo.getValue();
-        if (isAnyNode(lvalue)) {
-            newAttributeValues.put(attribute, rhs.get(attribute));
-        } else {
-            newAttributeValues.put(attribute, lhs.get(attribute));
+        if (isAnyNode(lvalue) && rvo != null) {
+            newAttributeValues.put(attribute, rvo);
+            expression = null;
+        } else if (rvo != null && isAnyNode(rvo.getValue())) {
+            newAttributeValues.put(attribute, lvo);
+            expression = null;
         }
-        expression = null;
     }
 
     private boolean isAnyNode(Node node) {
