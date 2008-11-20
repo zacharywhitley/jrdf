@@ -11,11 +11,8 @@ import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.mem.AVPOperation;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
-import static org.jrdf.query.relation.mem.NeqAVPOperation.NEQUALS;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.urql.builder.LiteralBuilder;
+import org.jrdf.urql.builder.URIReferenceBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABooleanNotUnaryExpression;
 import org.jrdf.urql.parser.node.ABoundBuiltincall;
@@ -27,6 +24,7 @@ import org.jrdf.urql.parser.node.AMoreValueLogical;
 import org.jrdf.urql.parser.node.ANeMoreNumericExpression;
 import org.jrdf.urql.parser.node.ARelationalExpression;
 import org.jrdf.urql.parser.node.AStrBuiltincall;
+import org.jrdf.urql.parser.node.AVariable;
 import org.jrdf.urql.parser.node.PMoreNumericExpression;
 import org.jrdf.urql.parser.node.PMoreValueLogical;
 import org.jrdf.urql.parser.parser.ParserException;
@@ -41,11 +39,14 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     private VariableCollector collector;
     private Map<Attribute, ValueOperation> valuePair;
     private NumericExpressionAnalyser numericExpressionAnalyser;
+    private URIReferenceBuilder uriBuilder;
 
-    public FilterAnalyserImpl(LiteralBuilder newLiteralBuilder, VariableCollector collector) {
+    public FilterAnalyserImpl(LiteralBuilder newLiteralBuilder, VariableCollector newCollector,
+                              URIReferenceBuilder newUriBuilder) {
         this.literalBuilder = newLiteralBuilder;
-        this.collector = collector;
-        this.numericExpressionAnalyser = new NumericExpressionAnalyserImpl(literalBuilder, collector);
+        this.collector = newCollector;
+        this.uriBuilder = newUriBuilder;
+        this.numericExpressionAnalyser = new NumericExpressionAnalyserImpl(literalBuilder, collector, uriBuilder);
     }
 
     public LogicExpression<V> getExpression() throws ParserException {
@@ -77,6 +78,17 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     }
 
     @Override
+    public void caseAVariable(AVariable node) {
+        try {
+            node.apply(numericExpressionAnalyser);
+            valuePair = numericExpressionAnalyser.getSingleAvp();
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+
+    @Override
     public void caseABoundBuiltincall(ABoundBuiltincall node) {
         try {
             node.apply(numericExpressionAnalyser);
@@ -89,7 +101,7 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
 
     @Override
     public void caseAMoreValueLogical(AMoreValueLogical node) {
-        FilterAnalyserImpl<V> analyzer = new FilterAnalyserImpl<V>(literalBuilder, collector);
+        FilterAnalyserImpl<V> analyzer = new FilterAnalyserImpl<V>(literalBuilder, collector, uriBuilder);
         node.getValueLogical().apply(analyzer);
         try {
             expression = analyzer.getExpression();
@@ -159,24 +171,8 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
             node.getNumericExpression().apply(numericExpressionAnalyser);
             Map<Attribute, ValueOperation> moreValuePair = numericExpressionAnalyser.getSingleAvp();
             expression = new LessThanExpression<V>(valuePair, moreValuePair);
-            boolean changed = negateAVP(valuePair);
-            if (!changed) {
-                negateAVP(moreValuePair);
-            }
-            expression = new EqualsExpression<V>(valuePair, moreValuePair);
         } catch (ParserException e) {
             exception = e;
         }
-    }
-
-    private boolean negateAVP(Map<Attribute, ValueOperation> valuePair) {
-        final Attribute attribute = valuePair.keySet().iterator().next();
-        final ValueOperation valueOperation = valuePair.get(attribute);
-        final AVPOperation avpOperation = valueOperation.getOperation();
-        if (avpOperation.equals(EQUALS)) {
-            valuePair.put(attribute, new ValueOperationImpl(valueOperation.getValue(), NEQUALS));
-            return true;
-        }
-        return false;
     }
 }

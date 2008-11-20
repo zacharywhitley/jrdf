@@ -34,4 +34,6 @@ public interface NamespaceListener {
      * @param uri    The URI of the namespace.
      */
     void handleNamespace(String prefix, String uri);
+
+    String getFullURI(String prefix);
 }

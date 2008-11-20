@@ -105,9 +105,7 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
     }
 
     public void setAvo(Attribute existingAttribute, ValueOperation newValueOperation) {
-        if (singleAvp.remove(existingAttribute) != null) {
-            singleAvp.put(existingAttribute, newValueOperation);
-        }
+        singleAvp.put(existingAttribute, newValueOperation);
     }
 
     public LinkedHashMap<Attribute, ValueOperation> getAvo(Map<AttributeName, ? extends NodeType> allVariables) {

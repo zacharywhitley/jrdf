@@ -276,7 +276,12 @@ Productions
     {numeric_literal} numeric_literal |
     {boolean_literal} boolean_literal |
     {variable} variable |
-    {builtincall} builtincall;
+    {builtincall} builtincall |
+    {resource_or_qname} iri_ref_or_prefixed_name;
+
+  iri_ref_or_prefixed_name =
+    {iri_ref} resource |
+    {prefixed_name} qname_element;
 
   more_numeric_expression =
     {e} equals numeric_expression |

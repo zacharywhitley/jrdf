@@ -26,8 +26,8 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader parser;
     private final SparqlAnswerResultsParser resultsParser;
-    private boolean hasMore;
     private LinkedHashSet<String> variables = new LinkedHashSet<String>();
+    private boolean hasMore;
     private boolean finishedVariableParsing;
     private AnswerType answerType = UNKNOWN;
 

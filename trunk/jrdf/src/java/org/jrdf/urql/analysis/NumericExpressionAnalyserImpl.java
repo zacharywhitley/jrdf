@@ -9,18 +9,21 @@ import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.BoundAVPOperation;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
-import org.jrdf.query.relation.mem.StrAVPOperation;
 import org.jrdf.query.relation.mem.EqAVPOperation;
+import org.jrdf.query.relation.mem.StrAVPOperation;
+import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PositionalNodeType;
 import org.jrdf.urql.builder.LiteralBuilder;
+import org.jrdf.urql.builder.URIReferenceBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABoundBuiltincall;
+import org.jrdf.urql.parser.node.AIriRefIriRefOrPrefixedName;
+import org.jrdf.urql.parser.node.APrefixedNameIriRefOrPrefixedName;
 import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
-import org.jrdf.urql.parser.node.AVariable;
 import org.jrdf.urql.parser.node.AStrBuiltincall;
+import org.jrdf.urql.parser.node.AVariable;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.HashMap;
@@ -33,10 +36,13 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
     private Node value;
     private LiteralBuilder literalBuilder;
     private VariableCollector collector;
+    private URIReferenceBuilder uriBuilder;
 
-    public NumericExpressionAnalyserImpl(LiteralBuilder newLiteralBuilder, VariableCollector collector) {
+    public NumericExpressionAnalyserImpl(LiteralBuilder newLiteralBuilder, VariableCollector collector,
+                                         URIReferenceBuilder uriBuilder) {
         this.literalBuilder = newLiteralBuilder;
         this.collector = collector;
+        this.uriBuilder = uriBuilder;
     }
 
     public Map<Attribute, ValueOperation> getSingleAvp() throws ParserException {
@@ -80,5 +86,25 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
     public void caseAVariable(AVariable node) {
         this.attributeName = new VariableName(node.getVariablename().getText());
         this.value = AnyNode.ANY_NODE;
+    }
+
+    @Override
+    public void caseAIriRefIriRefOrPrefixedName(AIriRefIriRefOrPrefixedName node) {
+        try {
+            this.value = uriBuilder.createURIReference(node);
+            this.operation = EqAVPOperation.EQUALS;
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseAPrefixedNameIriRefOrPrefixedName(APrefixedNameIriRefOrPrefixedName node) {
+        try {
+            this.value = uriBuilder.createURIReference(node);
+            this.operation = EqAVPOperation.EQUALS;
+        } catch (ParserException e) {
+            exception = e;
+        }
     }
 }

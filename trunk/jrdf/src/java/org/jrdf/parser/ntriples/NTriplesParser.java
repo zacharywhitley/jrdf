@@ -60,6 +60,7 @@
 package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerConfiguration;
@@ -77,19 +78,29 @@ import java.util.regex.Pattern;
 
 public class NTriplesParser implements Parser, StatementHandlerConfiguration {
     private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
+    private static final Pattern PREFIX_REGEX = Pattern.compile("\\p{Blank}*" +
+                    "@prefix\\p{Blank}+" +
+                    "([a-zA-Z][\\x20-\\x7E]*)?:" +
+                    "\\p{Blank}+\\<(([\\x20-\\x7E]+?))\\>\\p{Blank}*\\.\\p{Blank}*");
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
-        "\\.\\p{Blank}*");
+                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
+                    "_:(\\p{Alpha}[\\x20-\\x7E]*?))\\p{Blank}+" +
+                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]+?)))\\p{Blank}+" +
+                    "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
+                    "_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))\\p{Blank}*" +
+                    "\\.\\p{Blank}*");
 
     private final TripleParser tripleParser;
     private final RegexMatcherFactory regexMatcherFactory;
+    private final NamespaceListener listener;
     private StatementHandler sh;
+    private static final int PREFIX_GROUP = 1;
+    private static final int URI_GROUP = 2;
 
-    public NTriplesParser(TripleParser tripleFactory, RegexMatcherFactory newRegexFactory) {
+    public NTriplesParser(TripleParser tripleFactory, RegexMatcherFactory newRegexFactory, NamespaceListener listener) {
         this.tripleParser = tripleFactory;
         this.regexMatcherFactory = newRegexFactory;
+        this.listener = listener;
     }
 
     public void setStatementHandler(StatementHandler statementHandler) {
@@ -108,9 +119,14 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
             while ((line = bufferedReader.readLine()) != null) {
                 RegexMatcher commentMatcher = regexMatcherFactory.createMatcher(COMMENT_REGEX, line);
                 if (!commentMatcher.matches()) {
-                    tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
-                    if (tripleRegexMatcher.matches()) {
-                        parseTriple(tripleRegexMatcher);
+                    RegexMatcher prefixMatcher = regexMatcherFactory.createMatcher(PREFIX_REGEX, line);
+                    if (prefixMatcher.matches()) {
+                        handlePrefix(prefixMatcher);
+                    } else {
+                        tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
+                        if (tripleRegexMatcher.matches()) {
+                            parseTriple(tripleRegexMatcher);
+                        }
                     }
                 }
             }
@@ -118,6 +134,12 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
         } finally {
             bufferedReader.close();
         }
+    }
+
+    private void handlePrefix(RegexMatcher prefixMatcher) {
+        final String prefix = prefixMatcher.group(PREFIX_GROUP);
+        final String uri = prefixMatcher.group(URI_GROUP);
+        listener.handleNamespace(prefix, uri);
     }
 
     private void parseTriple(RegexMatcher tripleRegexMatcher) throws StatementHandlerException {

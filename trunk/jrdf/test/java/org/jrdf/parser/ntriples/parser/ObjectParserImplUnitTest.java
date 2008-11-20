@@ -108,31 +108,34 @@ public class ObjectParserImplUnitTest extends TestCase {
     public void testParseObjectURI() throws Exception {
         URIReference expectedUriReference = mockFactory.createMock(URIReference.class);
         expect(uriReferenceParser.parseURIReference(MATCHER)).andReturn(expectedUriReference);
-        expect(regexMatcher.group(8)).andReturn(MATCHER).times(2);
+        expect(regexMatcher.group(13)).andReturn(MATCHER).times(2);
         checkParse(expectedUriReference);
     }
 
     public void testParseBlankNode() throws Exception {
         BlankNode expectedBlankNode = mockFactory.createMock(BlankNode.class);
         expect(blankNodeParser.parseBlankNode(MATCHER)).andReturn(expectedBlankNode);
-        expect(regexMatcher.group(8)).andReturn(null).times(1);
-        expect(regexMatcher.group(9)).andReturn(MATCHER).times(2);
+        expect(regexMatcher.group(13)).andReturn(null).times(1);
+        expect(regexMatcher.group(14)).andReturn(null).times(1);
+        expect(regexMatcher.group(17)).andReturn(MATCHER).times(2);
         checkParse(expectedBlankNode);
     }
 
     public void testParseLiteral() throws Exception {
         Literal expectedLiteral = mockFactory.createMock(Literal.class);
         expect(literalParser.parseLiteral(MATCHER)).andReturn(expectedLiteral);
-        expect(regexMatcher.group(8)).andReturn(null).times(1);
-        expect(regexMatcher.group(9)).andReturn(null).times(1);
-        expect(regexMatcher.group(11)).andReturn(MATCHER).times(2);
+        expect(regexMatcher.group(13)).andReturn(null).times(1);
+        expect(regexMatcher.group(14)).andReturn(null).times(1);
+        expect(regexMatcher.group(17)).andReturn(null).times(1);
+        expect(regexMatcher.group(18)).andReturn(MATCHER).times(2);
         checkParse(expectedLiteral);
     }
 
     public void testDoesntParse() throws Exception {
-        expect(regexMatcher.group(8)).andReturn(null).times(1);
-        expect(regexMatcher.group(9)).andReturn(null).times(1);
-        expect(regexMatcher.group(11)).andReturn(null).times(1);
+        expect(regexMatcher.group(13)).andReturn(null).times(1);
+        expect(regexMatcher.group(14)).andReturn(null).times(1);
+        expect(regexMatcher.group(17)).andReturn(null).times(1);
+        expect(regexMatcher.group(18)).andReturn(null).times(1);
         expect(regexMatcher.group(0)).andReturn(LINE).times(1);
         mockFactory.replay();
         checkThrowsException();

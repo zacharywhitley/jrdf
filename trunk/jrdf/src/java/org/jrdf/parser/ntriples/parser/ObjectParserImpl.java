@@ -66,9 +66,12 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public final class ObjectParserImpl implements ObjectParser {
     private static final int LINE_GROUP = 0;
-    private static final int URI_GROUP = 8;
-    private static final int BLANK_NODE_GROUP = 9;
-    private static final int LITERAL_GROUP = 11;
+    private static final int URI_GROUP = 13;
+    private static final int NS_LOCAL_NAME_GROUP = 14;
+    private static final int NS_GROUP = 15;
+    private static final int LOCAL_NAME_GROUP = 16;
+    private static final int BLANK_NODE_GROUP = 17;
+    private static final int LITERAL_GROUP = 18;
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalParser;
@@ -85,6 +88,8 @@ public final class ObjectParserImpl implements ObjectParser {
         checkNotNull(matcher);
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+        } else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(NS_GROUP), matcher.group(LOCAL_NAME_GROUP));
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {
             return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
         } else if (matcher.group(LITERAL_GROUP) != null) {

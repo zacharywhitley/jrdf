@@ -74,6 +74,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.builder.LiteralBuilderImpl;
 import org.jrdf.urql.builder.TripleBuilder;
+import org.jrdf.urql.builder.URIReferenceBuilderImpl;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABlockOfTriples;
 import org.jrdf.urql.parser.node.AFilterPatternGraphPatternOrFilter;
@@ -211,7 +212,8 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     public void caseAFilterPatternGraphPatternOrFilter(AFilterPatternGraphPatternOrFilter node) {
         try {
             FilterAnalyser analyser = new FilterAnalyserImpl(new LiteralBuilderImpl(graph.getElementFactory(),
-                    tripleBuilder.getPrefixMap()), collector);
+                    tripleBuilder.getPrefixMap()), collector,
+                    new URIReferenceBuilderImpl(graph.getElementFactory(), tripleBuilder.getPrefixMap()));
             node.apply(analyser);
             expression = analyser.getExpression();
         } catch (ParserException e) {

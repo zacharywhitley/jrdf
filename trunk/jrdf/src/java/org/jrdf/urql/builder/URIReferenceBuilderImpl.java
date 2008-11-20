@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,34 +57,74 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.urql.builder;
 
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.parser.ParseException;
-import org.jrdf.util.boundary.RegexMatcher;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.URIReference;
+import org.jrdf.urql.parser.node.AIriRefIriRefOrPrefixedName;
+import org.jrdf.urql.parser.node.APrefixedNameIriRefOrPrefixedName;
+import org.jrdf.urql.parser.node.AQnameQnameElement;
+import org.jrdf.urql.parser.node.Token;
+import org.jrdf.urql.parser.parser.ParserException;
 
-public final class PredicateParserImpl implements PredicateParser {
-    private static final int LINE_GROUP = 0;
-    private static final int URI_GROUP = 8;
-    private static final int NS_LOCAL_NAME_GROUP = 9;
-    private static final int NS_GROUP = 10;
-    private static final int LOCAL_NAME_GROUP = 11;
-    private final URIReferenceParser uriReferenceParser;
+import java.net.URI;
+import java.util.Map;
 
-    public PredicateParserImpl(URIReferenceParser uriReferenceParser) {
-        checkNotNull(uriReferenceParser);
-        this.uriReferenceParser = uriReferenceParser;
+/**
+ * @author Yuan-Fang Li
+ * @version $Id:$
+ */
+
+public class URIReferenceBuilderImpl implements URIReferenceBuilder {
+    private final GraphElementFactory factory;
+    private final Map<String, String> prefixMap;
+    private ParserException exception;
+    private URIReference uriRef;
+
+    public URIReferenceBuilderImpl(GraphElementFactory factory, Map<String, String> prefixMap) {
+        this.factory = factory;
+        this.prefixMap = prefixMap;
     }
 
-    public PredicateNode parsePredicate(RegexMatcher matcher) throws ParseException {
-        checkNotNull(matcher);
-        if (matcher.group(URI_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
-        }  else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(NS_GROUP), matcher.group(LOCAL_NAME_GROUP));
+    public Node createURIReference(AIriRefIriRefOrPrefixedName node) throws ParserException {
+        final URI uri = TokenHelper.getResource(node.getResource());
+        createFromURIReference(node.getResource(), uri);
+        return getResult(node);
+    }
+
+    public Node createURIReference(APrefixedNameIriRefOrPrefixedName node) throws ParserException {
+        createFromPrefixedName(node);
+        return getResult(node);
+    }
+
+    private void createFromPrefixedName(APrefixedNameIriRefOrPrefixedName node) {
+        final AQnameQnameElement element = (AQnameQnameElement) node.getQnameElement();
+        final String prefix = element.getNcnamePrefix().getText();
+        final String namespace = prefixMap.get(prefix);
+        final String localName = element.getNcName().getText();
+        createFromURIReference(element.getNcName(), URI.create(namespace + localName));
+    }
+
+    private Node getResult(org.jrdf.urql.parser.node.Node element) throws ParserException {
+        if (exception == null) {
+            if (uriRef != null) {
+                return uriRef;
+            } else {
+                throw new IllegalStateException("Unable to parse element: " + element);
+            }
         } else {
-            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
+            throw exception;
+        }
+    }
+
+    private void createFromURIReference(Token node, URI uri)  {
+        try {
+            uriRef = factory.createURIReference(uri);
+        } catch (GraphElementFactoryException e) {
+            exception = new ParserException(node,
+                "Cannot create URI reference for URI: " + uri.toString());
         }
     }
 }

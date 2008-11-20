@@ -20,6 +20,9 @@ public class AskAnswerImpl implements AskAnswer, Serializable {
     private long timeTaken;
     private boolean result;
 
+    private AskAnswerImpl() {
+    }
+
     public AskAnswerImpl(long timeTaken, boolean result) {
         this.timeTaken = timeTaken;
         this.result = result;

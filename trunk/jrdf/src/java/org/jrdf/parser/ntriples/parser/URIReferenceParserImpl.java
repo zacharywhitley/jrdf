@@ -62,6 +62,8 @@ package org.jrdf.parser.ntriples.parser;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.URIReference;
+import org.jrdf.parser.NamespaceListener;
+import org.jrdf.parser.NamespaceListenerImpl;
 import org.jrdf.parser.ParseException;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -71,11 +73,21 @@ import java.net.URI;
 public final class URIReferenceParserImpl implements URIReferenceParser {
     private final GraphElementFactory graphElementFactory;
     private final NTripleUtil nTripleUtil;
+    private final NamespaceListener listener;
+
+    public URIReferenceParserImpl(GraphElementFactory newGraphElementFactory, NTripleUtil newNTripleUtil,
+                                  NamespaceListener listener) {
+        checkNotNull(newGraphElementFactory, newNTripleUtil);
+        this.graphElementFactory = newGraphElementFactory;
+        this.nTripleUtil = newNTripleUtil;
+        this.listener = listener;
+    }
 
     public URIReferenceParserImpl(GraphElementFactory newGraphElementFactory, NTripleUtil newNTripleUtil) {
         checkNotNull(newGraphElementFactory, newNTripleUtil);
         this.graphElementFactory = newGraphElementFactory;
         this.nTripleUtil = newNTripleUtil;
+        this.listener = new NamespaceListenerImpl();
     }
 
     public URIReference parseURIReference(String s) throws ParseException {
@@ -87,6 +99,21 @@ public final class URIReferenceParserImpl implements URIReferenceParser {
             throw new ParseException("Failed to create URI Reference: " + s, 1);
         } catch (GraphElementFactoryException e) {
             throw new ParseException("Failed to create URI Reference: " + s, 1);
+        }
+    }
+
+    public URIReference parseURIReference(String prefix, String localName) throws ParseException {
+        checkNotEmptyString("prefix", prefix);
+        checkNotEmptyString("localName", localName);
+        try {
+            final String uriString = listener.getFullURI(prefix);
+            checkNotEmptyString("prefixed uri", uriString);
+            String literal = nTripleUtil.unescapeLiteral(uriString + localName);
+            return graphElementFactory.createURIReference(URI.create(literal));
+        } catch (IllegalArgumentException iae) {
+            throw new ParseException("Failed to create URI Reference: " + prefix + ":" + localName, 1);
+        } catch (GraphElementFactoryException e) {
+            throw new ParseException("Failed to create URI Reference: " + prefix + ":" + localName, 1);
         }
     }
 }
