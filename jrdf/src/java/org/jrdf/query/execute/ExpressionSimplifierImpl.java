@@ -1,5 +1,10 @@
 package org.jrdf.query.execute;
 
+import org.jrdf.graph.AnyNode;
+import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnyPredicateNode;
+import org.jrdf.graph.AnySubjectNode;
+import org.jrdf.graph.Node;
 import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
@@ -20,8 +25,6 @@ import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.mem.AVPOperation;
-import org.jrdf.query.relation.mem.EqAVPOperation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -103,13 +106,18 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         Map<Attribute, ValueOperation> rhs = equalsExpression.getRhs();
         Attribute attribute = lhs.keySet().iterator().next();
         ValueOperation lvo = lhs.get(attribute);
-        AVPOperation lAVP = lvo.getOperation();
-        if (EqAVPOperation.EQUALS.equals(lAVP)) {
-            newAttributeValues.put(attribute, lvo);
-        } else {
+        final Node lvalue = lvo.getValue();
+        if (isAnyNode(lvalue)) {
             newAttributeValues.put(attribute, rhs.get(attribute));
+        } else {
+            newAttributeValues.put(attribute, lhs.get(attribute));
         }
         expression = null;
+    }
+
+    private boolean isAnyNode(Node node) {
+        return node instanceof AnySubjectNode || node instanceof AnyPredicateNode ||
+            node instanceof AnyObjectNode || node instanceof AnyNode;
     }
 
     public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {

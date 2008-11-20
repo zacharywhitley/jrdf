@@ -80,12 +80,15 @@ public class RegexLiteralMatcherUnitTest extends TestCase {
     private static final Class<RegexLiteralMatcher> TEST_CLASS = RegexLiteralMatcher.class;
     private static final Class[] PARAM_TYPES = new Class[]{RegexMatcherFactory.class, NTripleUtil.class};
     private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
-        "(" +
-        "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-        ").*");
+            "(" +
+            "\\@(\\p{Lower}[\\-\\p{Alnum}]*)?|" +
+            "\\^\\^\\<([\\x20-\\x7E]+)\\>|" +
+            "\\^\\^(\\p{Alpha}[\\x20-\\x7E]*?):((\\p{Alpha}[\\x20-\\x7E]*)?)" +
+            ")*\\p{Blank}*");
     private static final int LITERAL_INDEX = 1;
-    private static final int LANGUAGE_INDEX = 5;
-    private static final int DATATYPE_INDEX = 8;
+    private static final int LANGUAGE_INDEX = 3;
+    private static final int DATATYPE_INDEX = 4;
+    private static final int DATATYPE_PREFIX_INDEX = 5;
     private static final String LINE = "line" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
     private RegexMatcherFactory regexMatcherFactory;
@@ -130,6 +133,7 @@ public class RegexLiteralMatcherUnitTest extends TestCase {
         expect(nTripleUtil.unescapeLiteral(literal)).andReturn("foo");
         expect(matcher.group(LANGUAGE_INDEX)).andReturn("bar");
         expect(matcher.group(DATATYPE_INDEX)).andReturn("baz");
+        expect(matcher.group(DATATYPE_PREFIX_INDEX)).andReturn(null).times(1);
         mockFactory.replay();
         String[] strings = parser.parse(LINE);
         assertEquals(3, strings.length);

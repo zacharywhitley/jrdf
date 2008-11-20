@@ -42,6 +42,7 @@
     <suppress checks="JavaNCSS" files="NodeTypeBinding"/>
     <suppress checks="JavaNCSS" files="SortMergeNaturalJoin"/>
     <suppress checks="JavaNCSS" files="SparqlStreamingAnswerFactoryImpl"/>
+    <suppress checks="JavaNCSS" files="NTriplesParser"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>
@@ -76,6 +77,7 @@
     <suppress checks="MagicNumber" files="MoleculeGraphImpl"/>
     <suppress checks="MagicNumber" files="WritableIndexImpl"/>
     <suppress checks="ReturnCount" files="BlankNodeMapperImpl"/>
+    <suppress checks="ReturnCount" files="ObjectParserImpl"/>
 
     <!-- Import -->
     <!-- BTree -->

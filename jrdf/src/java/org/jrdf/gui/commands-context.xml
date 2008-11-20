@@ -108,10 +108,19 @@
     </bean>
 
     <bean id="loadRdfCommand" class="org.jrdf.gui.command.LoadRdfCommand">
-        <property name="JRDFModel" ref="jrdfModel"/>
+        <property name="JRDFModel" ref="jrdfNTriplesModel"/>
     </bean>
 
     <bean id="jrdfModel" class="org.jrdf.gui.model.JRDFModelImpl">
+        <constructor-arg>
+            <ref bean="graphFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="urqlConnection"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="jrdfNTriplesModel" class="org.jrdf.gui.model.JRDFNTriplesModelImpl">
         <constructor-arg>
             <ref bean="graphFactory"/>
         </constructor-arg>
@@ -139,7 +148,7 @@
     </bean>
 
     <bean id="runQueryCommand" class="org.jrdf.gui.command.RunQueryCommand">
-        <property name="JRDFModel" ref="jrdfModel"/>
+        <property name="JRDFModel" ref="jrdfNTriplesModel"/>
         <property name="queryPanelView">
             <ref bean="queryPanelView"/>
         </property>

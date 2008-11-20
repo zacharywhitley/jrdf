@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,34 +57,64 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.gui.model;
 
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.parser.ParseException;
-import org.jrdf.util.boundary.RegexMatcher;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.collection.MapFactory;
+import org.jrdf.collection.MemMapFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.GraphFactory;
+import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.ntriples.NTriplesParser;
+import org.jrdf.parser.ntriples.ParserFactory;
+import org.jrdf.parser.ntriples.ParserFactoryImpl;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.urql.UrqlConnection;
+import org.jrdf.util.EscapeURL;
 
-public final class PredicateParserImpl implements PredicateParser {
-    private static final int LINE_GROUP = 0;
-    private static final int URI_GROUP = 8;
-    private static final int NS_LOCAL_NAME_GROUP = 9;
-    private static final int NS_GROUP = 10;
-    private static final int LOCAL_NAME_GROUP = 11;
-    private final URIReferenceParser uriReferenceParser;
+import java.net.URL;
 
-    public PredicateParserImpl(URIReferenceParser uriReferenceParser) {
-        checkNotNull(uriReferenceParser);
-        this.uriReferenceParser = uriReferenceParser;
+/**
+ * @author Yuan-Fang Li
+ * @version $Id:$
+ */
+
+public class JRDFNTriplesModelImpl implements JRDFModel {
+    private final GraphFactory graphFactory;
+    private Graph graph;
+    private UrqlConnection connection;
+
+    public JRDFNTriplesModelImpl(GraphFactory graphFactory, UrqlConnection connection) {
+        this.graphFactory = graphFactory;
+        this.connection = connection;
     }
 
-    public PredicateNode parsePredicate(RegexMatcher matcher) throws ParseException {
-        checkNotNull(matcher);
-        if (matcher.group(URI_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
-        }  else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(NS_GROUP), matcher.group(LOCAL_NAME_GROUP));
-        } else {
-            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
+    public Graph loadModel(URL url) {
+        try {
+            graph = graphFactory.getGraph();
+            graph.clear();
+            NTriplesParser parser = getParser();
+            parser.parse(url.openStream(), EscapeURL.toEscapedString(url));
+            return graph;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+    }
+
+    private NTriplesParser getParser() {
+        ParserFactory parserFactory = new ParserFactoryImpl();
+        MapFactory creator = new MemMapFactory();
+        ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
+        NTriplesParser parser = parserFactory.createParser(graph, factory);
+        parser.setStatementHandler(new GraphStatementHandler(graph));
+        return parser;
+    }
+
+    public Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
+        return connection.executeQuery(graph, query);
     }
 }

@@ -122,4 +122,9 @@ public final class SelectQueryImpl implements Query {
     private boolean hasProjected() {
         return expression instanceof Projection;
     }
+
+    @Override
+    public String toString() {
+        return expression.toString();
+    }
 }

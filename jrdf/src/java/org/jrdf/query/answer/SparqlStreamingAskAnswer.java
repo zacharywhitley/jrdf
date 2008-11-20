@@ -107,14 +107,22 @@ public class SparqlStreamingAskAnswer implements AskAnswer {
     }
 
     public String[][] getColumnValues() {
-        return new String[][]{{Boolean.toString(result)}};
+        try {
+            return new String[][]{{Boolean.toString(getResult())}};
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Iterator<TypeValue[]> columnValuesIterator() {
-        TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(result));
-        Set<TypeValue[]> set = new HashSet<TypeValue[]>();
-        set.add(new TypeValue[]{typeValue});
-        return set.iterator();
+        try {
+            TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(getResult()));
+            Set<TypeValue[]> set = new HashSet<TypeValue[]>();
+            set.add(new TypeValue[]{typeValue});
+            return set.iterator();
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void accept(AnswerVisitor visitor) {

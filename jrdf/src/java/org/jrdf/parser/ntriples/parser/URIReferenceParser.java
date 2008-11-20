@@ -64,4 +64,6 @@ import org.jrdf.parser.ParseException;
 
 public interface URIReferenceParser {
     URIReference parseURIReference(String s) throws ParseException;
+
+    URIReference parseURIReference(String prefix, String localName) throws ParseException;
 }

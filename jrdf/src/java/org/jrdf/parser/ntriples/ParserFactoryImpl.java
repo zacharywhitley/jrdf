@@ -60,7 +60,9 @@
 package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.NamespaceListenerImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
@@ -81,11 +83,13 @@ public class ParserFactoryImpl implements ParserFactory {
         BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil literalUtil = new NTripleUtilImpl(matcherFactory);
-        LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, literalUtil);
+        NamespaceListener namespaceListener = new NamespaceListenerImpl();
+        LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, literalUtil, namespaceListener);
         LiteralParser literalParser = new LiteralParserImpl(newGraph.getElementFactory(), literalMatcher);
-        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(newGraph.getElementFactory(), literalUtil);
+        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(newGraph.getElementFactory(), literalUtil,
+            namespaceListener);
         TripleParser tripleParser = new TripleParserImpl(uriReferenceParser, blankNodeParser, literalParser,
             newGraph.getTripleFactory());
-        return new NTriplesParser(tripleParser, matcherFactory);
+        return new NTriplesParser(tripleParser, matcherFactory, namespaceListener);
     }
 }
