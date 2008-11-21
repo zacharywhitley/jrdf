@@ -107,8 +107,7 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         Attribute attribute = lhs.keySet().iterator().next();
         ValueOperation lvo = lhs.get(attribute);
         ValueOperation rvo = rhs.get(attribute);
-        final Node lvalue = lvo.getValue();
-        if (isAnyNode(lvalue) && rvo != null) {
+        if (isAnyNode(lvo.getValue()) && rvo != null) {
             newAttributeValues.put(attribute, rvo);
             expression = null;
         } else if (rvo != null && isAnyNode(rvo.getValue())) {
