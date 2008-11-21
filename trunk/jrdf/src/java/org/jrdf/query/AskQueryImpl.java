@@ -41,6 +41,6 @@ public class AskQueryImpl implements Query {
         expression.accept(simplifier);
         expression = simplifier.getExpression();
         expression.accept(queryEngine);
-        return queryEngine.getResult().getTuples().size() != 0;
+        return !queryEngine.getResult().getTuples().isEmpty();
     }
 }

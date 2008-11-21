@@ -46,7 +46,6 @@ public class SparqlAnswerStreamParserImpl implements SparqlAnswerStreamParser {
     public boolean getAskResult() throws XMLStreamException {
         if (answerType == ASK) {
             final boolean partialAnswer = parser.getAskResult();
-            System.err.println("partial answer = " + partialAnswer);
             result = result || partialAnswer;
             return result;
         } else {

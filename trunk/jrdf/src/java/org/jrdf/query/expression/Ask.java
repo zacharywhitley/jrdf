@@ -1,8 +1,12 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.util.EqualsUtil;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.type.PositionalNodeType;
+import org.jrdf.urql.analysis.VariableCollector;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
@@ -14,12 +18,14 @@ public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializ
 
     private static final int DUMMY_HASHCODE = 47;
     private Expression<ExpressionVisitor> nextExpression;
+    private Map<AttributeName, PositionalNodeType> allVariables;
 
     private Ask() {
     }
 
-    public Ask(Expression<ExpressionVisitor> nextExpression) {
+    public Ask(Expression<ExpressionVisitor> nextExpression, VariableCollector variableCollector) {
         this.nextExpression = nextExpression;
+        allVariables = variableCollector.getAttributes();
     }
 
     public void accept(V v) {
@@ -36,6 +42,10 @@ public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializ
 
     public void setNextExpression(Expression<ExpressionVisitor> expression) {
         nextExpression = expression;
+    }
+
+    public Map<AttributeName, PositionalNodeType> getAllVariables() {
+        return allVariables;
     }
 
     @Override
