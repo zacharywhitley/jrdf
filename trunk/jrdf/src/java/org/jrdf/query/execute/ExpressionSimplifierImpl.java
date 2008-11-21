@@ -114,6 +114,8 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         } else if (rvo != null && isAnyNode(rvo.getValue())) {
             newAttributeValues.put(attribute, lvo);
             expression = null;
+        } else {
+            expression = equalsExpression;
         }
     }
 
