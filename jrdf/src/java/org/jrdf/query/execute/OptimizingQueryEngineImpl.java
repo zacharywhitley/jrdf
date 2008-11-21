@@ -104,6 +104,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @Override
     public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
         shortCircuit = true;
+        allVariables = ask.getAllVariables();
         result = getExpression(ask.getNextExpression());
     }
 
