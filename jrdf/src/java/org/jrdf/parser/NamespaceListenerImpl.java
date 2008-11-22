@@ -65,12 +65,10 @@ import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
-
 public class NamespaceListenerImpl implements NamespaceListener, Serializable {
     private static final long serialVersionUID = 6725027316200321078L;
-
     private Map<String, String> map;
 
     public NamespaceListenerImpl() {

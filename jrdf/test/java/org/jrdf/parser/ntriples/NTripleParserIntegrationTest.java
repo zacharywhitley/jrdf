@@ -133,7 +133,7 @@ public class NTripleParserIntegrationTest extends TestCase {
         for (String fileName : NEGATIVE_TESTS) {
             final URL file = getClass().getClassLoader().getResource(fileName);
             Graph graph = TEST_JRDF_FACTORY.getGraph();
-            ParserFactory parserFactory = new ParserFactoryImpl();
+            NTriplesParserFactory parserFactory = new NTriplesParserFactoryImpl();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
             NTriplesParser parser = parserFactory.createParser(graph, factory);

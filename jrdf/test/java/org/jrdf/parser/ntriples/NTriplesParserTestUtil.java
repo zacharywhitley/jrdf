@@ -93,7 +93,7 @@ public class NTriplesParserTestUtil {
 
     public static Set<Triple> parseNTriplesFile(InputStream in, Graph graph, ParserBlankNodeFactory factory)
         throws Exception {
-        ParserFactory parserFactory = new ParserFactoryImpl();
+        NTriplesParserFactory parserFactory = new NTriplesParserFactoryImpl();
         NTriplesParser parser = parserFactory.createParser(graph, factory);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.parse(in, "foo");

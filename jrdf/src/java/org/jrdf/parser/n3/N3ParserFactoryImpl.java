@@ -57,11 +57,43 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.n3;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.parser.NamespaceListener;
+import org.jrdf.parser.NamespaceListenerImpl;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.ntriples.CommentsParserImpl;
+import org.jrdf.parser.ntriples.TriplesParserImpl;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.LiteralParser;
+import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
+import org.jrdf.parser.ntriples.parser.NTripleUtil;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
+import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.ntriples.parser.TripleParserImpl;
+import org.jrdf.parser.ntriples.parser.URIReferenceParser;
+import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-public interface ParserFactory {
-    NTriplesParser createParser(Graph graph, ParserBlankNodeFactory parserBlankNodeFactory);
+public class N3ParserFactoryImpl implements N3ParserFactory {
+    public N3Parser createParser(Graph newGraph, ParserBlankNodeFactory parserBlankNodeFactory) {
+        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
+        RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+        NTripleUtil literalUtil = new NTripleUtilImpl(matcherFactory);
+        NamespaceListener namespaceListener = new NamespaceListenerImpl();
+        LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, literalUtil, namespaceListener);
+        LiteralParser literalParser = new LiteralParserImpl(newGraph.getElementFactory(), literalMatcher);
+        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(newGraph.getElementFactory(), literalUtil,
+            namespaceListener);
+        TripleParser tripleParser = new TripleParserImpl(uriReferenceParser, blankNodeParser, literalParser,
+            newGraph.getTripleFactory());
+        return new N3Parser(new CommentsParserImpl(matcherFactory),
+            new PrefixParserImpl(matcherFactory, namespaceListener),
+            new TriplesParserImpl(tripleParser, matcherFactory));
+    }
 }

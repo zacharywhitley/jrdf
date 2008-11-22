@@ -21,8 +21,7 @@
 package org.jrdf.parser;
 
 /**
- * An interface defining methods for receiving namespace declarations from
- * an RDF parser.
+ * An interface defining methods for receiving namespace declarations from an RDF parser.
  */
 public interface NamespaceListener {
 

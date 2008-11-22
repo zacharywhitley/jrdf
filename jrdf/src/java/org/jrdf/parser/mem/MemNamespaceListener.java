@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision: 2741 $
+ * $Date: 2008-11-20 16:27:50 +1000 (Thu, 20 Nov 2008) $
  *
  * ====================================================================
  *
@@ -57,52 +57,35 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.mem;
 
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.StatementHandler;
-import org.jrdf.parser.StatementHandlerConfiguration;
-import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.NamespaceListener;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.Reader;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class NTriplesParser implements Parser, StatementHandlerConfiguration {
-    private final CommentsParser commentsParser;
-    private final TriplesParser triplesParser;
+/**
+ * @author Yuan-Fang Li
+ * @version $Id: NamespaceListenerImpl.java 2741 2008-11-20 06:27:50Z yuanfang $
+ */
+public class MemNamespaceListener implements NamespaceListener, Serializable {
+    private static final long serialVersionUID = 6725027316200321078L;
+    private Map<String, String> map;
 
-    public NTriplesParser(final CommentsParser newCommentsParser, final TriplesParser newTriplesParser) {
-        commentsParser = newCommentsParser;
-        triplesParser = newTriplesParser;
+    public MemNamespaceListener() {
+        map = new HashMap<String, String>();
     }
 
-    public void setStatementHandler(final StatementHandler statementHandler) {
-        triplesParser.setStatementHandler(statementHandler);
-    }
-
-    public void parse(final InputStream in, final String baseURI) throws IOException, StatementHandlerException {
-        parse(new InputStreamReader(in), baseURI);
-    }
-
-    public void parse(final Reader reader, final String baseURI) throws IOException, StatementHandlerException {
-        final LineNumberReader bufferedReader = new LineNumberReader(reader);
-        try {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                handleLine(line);
-            }
-            triplesParser.clear();
-        } finally {
-            bufferedReader.close();
+    public void handleNamespace(String prefix, String uri) {
+        if (map.get(prefix) == null) {
+            map.put(prefix, uri);
+        } else {
+            throw new IllegalArgumentException("Existing prefix mapping for: " + prefix + "and " + uri);
         }
     }
 
-    private void handleLine(final CharSequence line) throws StatementHandlerException {
-        if (!commentsParser.handleComment(line)) {
-            triplesParser.handleTriple(line);
-        }
+    public String getFullURI(String prefix) {
+        return map.get(prefix);
     }
 }

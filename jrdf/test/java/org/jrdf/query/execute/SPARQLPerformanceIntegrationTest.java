@@ -70,10 +70,10 @@ import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
-import org.jrdf.parser.ntriples.NTriplesParser;
+import org.jrdf.parser.n3.N3Parser;
+import org.jrdf.parser.n3.N3ParserFactory;
+import org.jrdf.parser.n3.N3ParserFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
-import org.jrdf.parser.ntriples.ParserFactory;
-import org.jrdf.parser.ntriples.ParserFactoryImpl;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
@@ -92,13 +92,13 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class SPARQLPerformanceIntegrationTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-    private static final ParserFactory PARSER_FACTORY = new ParserFactoryImpl();
+    private static final N3ParserFactory PARSER_FACTORY = new N3ParserFactoryImpl();
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
     private static final Set<String> FILE_NAMES = new HashSet<String>() {
         {
@@ -174,7 +174,7 @@ public class SPARQLPerformanceIntegrationTest extends TestCase {
         assertEquals(0, graph.getNumberOfTriples());
         InputStream in = getSampleData(this.getClass(), fileName);
         ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(MAP_FACTORY, graph.getElementFactory());
-        NTriplesParser parser = PARSER_FACTORY.createParser(graph, factory);
+        N3Parser parser = PARSER_FACTORY.createParser(graph, factory);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.parse(in, fileName);
         assertEquals(50168, graph.getNumberOfTriples());
