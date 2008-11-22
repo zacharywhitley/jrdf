@@ -59,50 +59,45 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.parser.Parser;
+import org.jrdf.graph.Triple;
 import org.jrdf.parser.StatementHandler;
-import org.jrdf.parser.StatementHandlerConfiguration;
 import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.Reader;
+import java.util.regex.Pattern;
 
-public class NTriplesParser implements Parser, StatementHandlerConfiguration {
-    private final CommentsParser commentsParser;
-    private final TriplesParser triplesParser;
+public class TriplesParserImpl implements TriplesParser {
+    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
+                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
+                    "_:(\\p{Alpha}[\\x20-\\x7E]*?))\\p{Blank}+" +
+                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]+?)))\\p{Blank}+" +
+                    "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
+                    "_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))\\p{Blank}*" +
+                    "\\.\\p{Blank}*");
+    private final TripleParser tripleParser;
+    private final RegexMatcherFactory regexMatcherFactory;
+    private StatementHandler sh;
 
-    public NTriplesParser(final CommentsParser newCommentsParser, final TriplesParser newTriplesParser) {
-        commentsParser = newCommentsParser;
-        triplesParser = newTriplesParser;
+    public TriplesParserImpl(TripleParser newTripleFactory, RegexMatcherFactory newRegexFactory) {
+        tripleParser = newTripleFactory;
+        regexMatcherFactory = newRegexFactory;
     }
 
-    public void setStatementHandler(final StatementHandler statementHandler) {
-        triplesParser.setStatementHandler(statementHandler);
+    public void setStatementHandler(StatementHandler newStatementHandler) {
+        sh = newStatementHandler;
     }
 
-    public void parse(final InputStream in, final String baseURI) throws IOException, StatementHandlerException {
-        parse(new InputStreamReader(in), baseURI);
-    }
-
-    public void parse(final Reader reader, final String baseURI) throws IOException, StatementHandlerException {
-        final LineNumberReader bufferedReader = new LineNumberReader(reader);
-        try {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                handleLine(line);
-            }
-            triplesParser.clear();
-        } finally {
-            bufferedReader.close();
+    public void handleTriple(final CharSequence line) throws StatementHandlerException {
+        final RegexMatcher tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
+        if (tripleRegexMatcher.matches()) {
+            final Triple triple = tripleParser.parseTriple(tripleRegexMatcher);
+            sh.handleStatement(triple.getSubject(), triple.getPredicate(), triple.getObject());
         }
     }
 
-    private void handleLine(final CharSequence line) throws StatementHandlerException {
-        if (!commentsParser.handleComment(line)) {
-            triplesParser.handleTriple(line);
-        }
+    public void clear() {
+        tripleParser.clear();
     }
 }

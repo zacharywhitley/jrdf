@@ -4,6 +4,9 @@
     <facet type="Spring" name="Spring">
       <configuration />
     </facet>
+    <facet type="Groovy" name="Groovy">
+      <configuration />
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5" inherit-compiler-output="true">
     <exclude-output />
@@ -21,6 +24,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/unit-test-results" />
     </content>
+    <orderEntry type="library" name="groovy-1.5.7" level="project" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="spring" level="project" />

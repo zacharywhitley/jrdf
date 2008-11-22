@@ -57,12 +57,14 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.n3;
 
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerConfiguration;
 import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.ntriples.CommentsParser;
+import org.jrdf.parser.ntriples.TriplesParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,17 +72,21 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
 
-public class NTriplesParser implements Parser, StatementHandlerConfiguration {
+// TODO AN Fix duplication with this and NTriplesParser
+public class N3Parser implements Parser, StatementHandlerConfiguration {
     private final CommentsParser commentsParser;
+    private final PrefixParser prefixParser;
     private final TriplesParser triplesParser;
 
-    public NTriplesParser(final CommentsParser newCommentsParser, final TriplesParser newTriplesParser) {
+    public N3Parser(final CommentsParser newCommentsParser, final PrefixParser newPrefixParser,
+        final TriplesParser newTriplesParser) {
         commentsParser = newCommentsParser;
         triplesParser = newTriplesParser;
+        prefixParser = newPrefixParser;
     }
 
-    public void setStatementHandler(final StatementHandler statementHandler) {
-        triplesParser.setStatementHandler(statementHandler);
+    public void setStatementHandler(final StatementHandler newStatementHandler) {
+        triplesParser.setStatementHandler(newStatementHandler);
     }
 
     public void parse(final InputStream in, final String baseURI) throws IOException, StatementHandlerException {
@@ -102,7 +108,9 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
 
     private void handleLine(final CharSequence line) throws StatementHandlerException {
         if (!commentsParser.handleComment(line)) {
-            triplesParser.handleTriple(line);
+            if (!prefixParser.handlePrefix(line)) {
+                triplesParser.handleTriple(line);
+            }
         }
     }
 }
