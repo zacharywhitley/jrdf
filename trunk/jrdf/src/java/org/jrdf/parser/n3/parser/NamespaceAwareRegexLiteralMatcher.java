@@ -71,6 +71,7 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 public final class NamespaceAwareRegexLiteralMatcher implements LiteralMatcher, Serializable {
+    private static final long serialVersionUID = -1198268919417815649L;
     private static final int LITERAL_VALUES_LENGTH = 3;
     private Pattern pattern = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
         "(" +
@@ -86,6 +87,9 @@ public final class NamespaceAwareRegexLiteralMatcher implements LiteralMatcher, 
     private RegexMatcherFactory regexFactory;
     private NTripleUtil nTripleUtil;
     private NamespaceListener listener;
+
+    private NamespaceAwareRegexLiteralMatcher() {
+    }
 
     public NamespaceAwareRegexLiteralMatcher(RegexMatcherFactory newRegexFactory, NTripleUtil newNTripleUtil,
         NamespaceListener newListener) {
