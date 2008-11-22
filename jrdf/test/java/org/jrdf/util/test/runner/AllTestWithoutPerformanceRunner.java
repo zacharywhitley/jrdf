@@ -59,50 +59,20 @@
 
 package org.jrdf.util.test.runner;
 
-import com.gargoylesoftware.base.testing.RecursiveTestSuite;
-import com.gargoylesoftware.base.testing.TestFilter;
+import junit.framework.Test;
+import junit.framework.TestCase;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 
 /**
- * Recurses the root directory of classes and runs all tests which end with a
- * given suffix.
+ * Run all the tests in the project.
  *
- * @author Andrew Newman
- * @version $Revision$
+ * @author Tom Adams
+ * @version $Id$
  */
-public class DefaultTestRunner extends RecursiveTestSuite {
+public class AllTestWithoutPerformanceRunner extends TestCase {
 
-    private static final String PATH_ROOT = "/";
-
-    public DefaultTestRunner(String testClassNameSuffix) throws IOException {
-        super(getLocation(), new ConcreteSuffixFilter(testClassNameSuffix));
-        setName(testClassNameSuffix);
-    }
-
-    private static File getLocation() {
-        return new File(DefaultTestRunner.class.getResource(PATH_ROOT).getFile());
-    }
-
-    private static class ConcreteSuffixFilter implements TestFilter {
-        private String[] testClassNameSuffix;
-
-        public ConcreteSuffixFilter(final String testClassNameSuffix) {
-            this.testClassNameSuffix = testClassNameSuffix.split(",");
-        }
-
-        public boolean accept(final Class aClass) {
-            if (Modifier.isAbstract(aClass.getModifiers())) {
-                return false;
-            }
-            for (final String suffix : testClassNameSuffix) {
-                if (aClass.getName().endsWith(suffix)) {
-                    return true;
-                }
-            }
-            return false;
-        }
+    public static Test suite() throws IOException {
+        return new DefaultTestRunner("UnitTest,IntegrationTest");
     }
 }
