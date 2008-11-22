@@ -49,6 +49,10 @@
     <property name="integration.test.classes.dir" value="${test.classes.dir}"/>
     <property name="integration.test.results.dir" value="${build.dir}/integration-test-results"/>
     <property name="integration.test.results" value="${integration.test.results.dir}/Integration-Tests.xml"/>
+    <property name="performance.test.src.dir" value="${test.src.dir}"/>
+    <property name="performance.test.classes.dir" value="${test.classes.dir}"/>
+    <property name="performance.test.results.dir" value="${build.dir}/performance-test-results"/>
+    <property name="performance.test.results" value="${performance.test.results.dir}/Performance-Tests.xml"/>
 
     <property name="spring.version" value="2.5.5"/>
     <property name="restlet.version" value="1.1rc2"/>
@@ -73,7 +77,6 @@
         <exclude name="**/*TestRunner*.java"/>
         <exclude name="**/*Mock*.java"/>
         <exclude name="**/Abstract*"/>
-        <exclude name="**/*Performance*Test.java"/>
     </patternset>
     <patternset id="unit.test.code.pattern">
         <!-- FIXME TJA: Why do we need to exclude all these, why not just included *UnitTest? -->
@@ -81,6 +84,7 @@
         <!--<include name="**/*UnitTest.java"/>-->
         <include name="**/*Test*.java"/>
         <exclude name="**/*IntegrationTest.java"/>
+        <exclude name="**/*PerformanceTest.java"/>
         <exclude name="**/*TestUtil*.java"/>
         <exclude name="**/*TestRunner*.java"/>
         <exclude name="**/*Mock*.java"/>
@@ -90,7 +94,10 @@
     <patternset id="integration.test.code.pattern">
         <include name="**/*IntegrationTest.java"/>
         <exclude name="**/Abstract*"/>
-        <exclude name="**/*Performance*Test.java"/>
+    </patternset>
+    <patternset id="performance.test.code.pattern">
+        <include name="**/*PerformanceTest.java"/>
+        <exclude name="**/Abstract*"/>
     </patternset>
     <patternset id="all.code.pattern">
         <include name="**/*.java"/>
@@ -160,6 +167,9 @@
     </fileset>
     <fileset id="integration.test.code.fileset" dir="${integration.test.src.dir}">
         <patternset refid="integration.test.code.pattern"/>
+    </fileset>
+    <fileset id="performance.test.code.fileset" dir="${performance.test.src.dir}">
+        <patternset refid="performance.test.code.pattern"/>
     </fileset>
     <fileset id="all.code.fileset" dir="${prod.src.dir}">
         <patternset refid="all.code.pattern"/>
