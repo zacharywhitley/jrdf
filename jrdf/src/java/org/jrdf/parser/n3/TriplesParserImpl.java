@@ -57,11 +57,49 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.parser.n3;
 
-import org.jrdf.graph.URIReference;
-import org.jrdf.parser.ParseException;
+import org.jrdf.graph.Triple;
+import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.ntriples.TriplesParser;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 
-public interface URIReferenceParser {
-    URIReference parseURIReference(String s) throws ParseException;
+import java.util.regex.Pattern;
+
+// TODO N3 Changes - Duplicate of one found in NTriples package.
+public class TriplesParserImpl implements TriplesParser {
+    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
+                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
+                    "_:(\\p{Alpha}[\\x20-\\x7E]*?))\\p{Blank}+" +
+                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]+?)))\\p{Blank}+" +
+                    "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
+                    "_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))\\p{Blank}*" +
+                    "\\.\\p{Blank}*");
+    private final TripleParser tripleParser;
+    private final RegexMatcherFactory regexMatcherFactory;
+    private StatementHandler sh;
+
+    public TriplesParserImpl(TripleParser newTripleFactory, RegexMatcherFactory newRegexFactory) {
+        tripleParser = newTripleFactory;
+        regexMatcherFactory = newRegexFactory;
+    }
+
+    public void setStatementHandler(StatementHandler newStatementHandler) {
+        sh = newStatementHandler;
+    }
+
+    public void handleTriple(final CharSequence line) throws StatementHandlerException {
+        final RegexMatcher tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
+        if (tripleRegexMatcher.matches()) {
+            final Triple triple = tripleParser.parseTriple(tripleRegexMatcher);
+            sh.handleStatement(triple.getSubject(), triple.getPredicate(), triple.getObject());
+        }
+    }
+
+    public void clear() {
+        tripleParser.clear();
+    }
 }

@@ -70,12 +70,10 @@ import java.util.regex.Pattern;
 
 public class TriplesParserImpl implements TriplesParser {
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
-                    "_:(\\p{Alpha}[\\x20-\\x7E]*?))\\p{Blank}+" +
-                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]+?)))\\p{Blank}+" +
-                    "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
-                    "_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))\\p{Blank}*" +
-                    "\\.\\p{Blank}*");
+        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
+        "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
+        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
+        "\\.\\p{Blank}*");
     private final TripleParser tripleParser;
     private final RegexMatcherFactory regexMatcherFactory;
     private StatementHandler sh;

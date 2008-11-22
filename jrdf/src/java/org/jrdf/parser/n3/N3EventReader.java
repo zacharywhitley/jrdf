@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.n3;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.RDFEventReader;
@@ -74,15 +74,18 @@ import java.net.URI;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
-public class NTriplesEventReader implements RDFEventReader {
+// TODO N3 Changes - Copy of NTriplesEventReader.
+public class N3EventReader implements RDFEventReader {
     /**
      * A regular expression for NTriples.
      */
     public static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
-            "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
-            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
-            "\\.\\p{Blank}*");
+                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}\\p{Alnum}*?):(\\p{Alpha}\\p{Alnum}*?))|" +
+                    "_:(\\p{Alpha}\\p{Alnum}*?))\\p{Blank}+" +
+                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}\\p{Alnum}*?):(\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
+                    "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}\\p{Alnum}*?):(\\p{Alpha}\\p{Alnum}*?))|" +
+                    "_:(\\p{Alpha}\\p{Alnum}*?)|(([\\x20-\\x7E]+?)))\\p{Blank}*" +
+                    "\\.\\p{Blank}*");
     private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
 
     private final LineNumberReader bufferedReader;
@@ -91,12 +94,12 @@ public class NTriplesEventReader implements RDFEventReader {
     private final TripleParser tripleParser;
     private Triple nextTriple;
 
-    public NTriplesEventReader(final InputStream in, final URI newBaseURI, final RegexMatcherFactory newRegexFactory,
+    public N3EventReader(final InputStream in, final URI newBaseURI, final RegexMatcherFactory newRegexFactory,
         final TripleParser newTripleParser) {
         this(new InputStreamReader(in), newBaseURI, newRegexFactory, newTripleParser);
     }
 
-    public NTriplesEventReader(final Reader reader, final URI newBaseURI, final RegexMatcherFactory newRegexFactory,
+    public N3EventReader(final Reader reader, final URI newBaseURI, final RegexMatcherFactory newRegexFactory,
         final TripleParser newTripleParser) {
         this.bufferedReader = new LineNumberReader(reader);
         this.baseURI = newBaseURI;

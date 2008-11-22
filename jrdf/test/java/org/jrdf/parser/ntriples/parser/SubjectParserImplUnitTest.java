@@ -113,15 +113,13 @@ public class SubjectParserImplUnitTest extends TestCase {
         BlankNode expectedBlankNode = mockFactory.createMock(BlankNode.class);
         EasyMock.expect(blankNodeParser.parseBlankNode(MATCHER)).andReturn(expectedBlankNode);
         EasyMock.expect(regexMatcher.group(2)).andReturn(null).times(1);
-        EasyMock.expect(regexMatcher.group(3)).andReturn(null).times(1);
-        EasyMock.expect(regexMatcher.group(6)).andReturn(MATCHER).times(2);
+        EasyMock.expect(regexMatcher.group(3)).andReturn(MATCHER).times(2);
         checkParse(expectedBlankNode);
     }
 
     public void testDoesntParse() throws Exception {
         EasyMock.expect(regexMatcher.group(2)).andReturn(null).times(1);
         EasyMock.expect(regexMatcher.group(3)).andReturn(null).times(1);
-        EasyMock.expect(regexMatcher.group(6)).andReturn(null).times(1);
         EasyMock.expect(regexMatcher.group(0)).andReturn(LINE).times(1);
         mockFactory.replay();
         checkThrowsException();

@@ -63,8 +63,11 @@ import org.jrdf.graph.Graph;
 import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.NamespaceListenerImpl;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.n3.parser.NamespaceAwareRegexLiteralMatcher;
+import org.jrdf.parser.n3.parser.NamespaceAwareURIReferenceParser;
+import org.jrdf.parser.n3.parser.NamespaceAwareURIReferenceParserImpl;
+import org.jrdf.parser.n3.parser.TripleParserImpl;
 import org.jrdf.parser.ntriples.CommentsParserImpl;
-import org.jrdf.parser.ntriples.TriplesParserImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
@@ -72,11 +75,7 @@ import org.jrdf.parser.ntriples.parser.LiteralParser;
 import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
 import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
 import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.parser.ntriples.parser.TripleParserImpl;
-import org.jrdf.parser.ntriples.parser.URIReferenceParser;
-import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
@@ -86,10 +85,11 @@ public class N3ParserFactoryImpl implements N3ParserFactory {
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil literalUtil = new NTripleUtilImpl(matcherFactory);
         NamespaceListener namespaceListener = new NamespaceListenerImpl();
-        LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, literalUtil, namespaceListener);
-        LiteralParser literalParser = new LiteralParserImpl(newGraph.getElementFactory(), literalMatcher);
-        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(newGraph.getElementFactory(), literalUtil,
+        LiteralMatcher literalMatcher = new NamespaceAwareRegexLiteralMatcher(matcherFactory, literalUtil,
             namespaceListener);
+        LiteralParser literalParser = new LiteralParserImpl(newGraph.getElementFactory(), literalMatcher);
+        NamespaceAwareURIReferenceParser uriReferenceParser = new NamespaceAwareURIReferenceParserImpl(
+            newGraph.getElementFactory(), literalUtil, namespaceListener);
         TripleParser tripleParser = new TripleParserImpl(uriReferenceParser, blankNodeParser, literalParser,
             newGraph.getTripleFactory());
         return new N3Parser(new CommentsParserImpl(matcherFactory),
