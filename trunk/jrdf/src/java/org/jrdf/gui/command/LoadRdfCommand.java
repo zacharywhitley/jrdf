@@ -91,6 +91,7 @@ public class LoadRdfCommand extends ApplicationWindowAwareCommand {
 
     protected void doExecuteCommand() {
         JFrame control = getContext().getWindow().getControl();
+        // TODO N3 Changes
         File file = FileChooserUtils.showFileChooser(control, "n3", "Ok", null);
         if (file != null) {
             ApplicationWindowAwareCommand applicationWindowAwareCommand = tryLoadModel(file);

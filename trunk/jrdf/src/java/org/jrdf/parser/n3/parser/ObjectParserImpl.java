@@ -57,11 +57,48 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.parser.n3.parser;
 
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.ObjectNode;
 import org.jrdf.parser.ParseException;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.LiteralParser;
+import org.jrdf.parser.ntriples.parser.ObjectParser;
+import org.jrdf.util.boundary.RegexMatcher;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public interface URIReferenceParser {
-    URIReference parseURIReference(String s) throws ParseException;
+public final class ObjectParserImpl implements ObjectParser {
+    private static final int LINE_GROUP = 0;
+    private static final int URI_GROUP = 13;
+    private static final int NS_LOCAL_NAME_GROUP = 14;
+    private static final int NS_GROUP = 15;
+    private static final int LOCAL_NAME_GROUP = 16;
+    private static final int BLANK_NODE_GROUP = 17;
+    private static final int LITERAL_GROUP = 18;
+    private final NamespaceAwareURIReferenceParser uriReferenceParser;
+    private final BlankNodeParser blankNodeParser;
+    private final LiteralParser literalParser;
+
+    public ObjectParserImpl(NamespaceAwareURIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser,
+        LiteralParser literalParser) {
+        checkNotNull(uriReferenceParser, blankNodeParser, literalParser);
+        this.uriReferenceParser = uriReferenceParser;
+        this.blankNodeParser = blankNodeParser;
+        this.literalParser = literalParser;
+    }
+
+    public ObjectNode parseObject(RegexMatcher matcher) throws ParseException {
+        checkNotNull(matcher);
+        if (matcher.group(URI_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+        } else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(NS_GROUP), matcher.group(LOCAL_NAME_GROUP));
+        } else if (matcher.group(BLANK_NODE_GROUP) != null) {
+            return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
+        } else if (matcher.group(LITERAL_GROUP) != null) {
+            return literalParser.parseLiteral(matcher.group(LITERAL_GROUP));
+        } else {
+            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
+        }
+    }
 }

@@ -57,11 +57,55 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.parser.n3.parser;
 
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
 import org.jrdf.parser.ParseException;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.LiteralParser;
+import org.jrdf.parser.ntriples.parser.ObjectParser;
+import org.jrdf.parser.ntriples.parser.PredicateParser;
+import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.util.boundary.RegexMatcher;
 
-public interface URIReferenceParser {
-    URIReference parseURIReference(String s) throws ParseException;
+public class TripleParserImpl implements TripleParser {
+    private final SubjectParser subjectParser;
+    private final PredicateParser predicateParser;
+    private final ObjectParser objectParser;
+    private final TripleFactory tripleFactory;
+    private final BlankNodeParser blankNodeParser;
+
+    public TripleParserImpl(NamespaceAwareURIReferenceParser newURIReferenceParser, BlankNodeParser newBlankNodeParser,
+        LiteralParser newLiteralNodeParser, TripleFactory newTripleFactory) {
+        this.subjectParser = new SubjectParserImpl(newURIReferenceParser, newBlankNodeParser);
+        this.predicateParser = new PredicateParserImpl(newURIReferenceParser);
+        this.objectParser = new ObjectParserImpl(newURIReferenceParser, newBlankNodeParser, newLiteralNodeParser);
+        this.blankNodeParser = newBlankNodeParser;
+        this.tripleFactory = newTripleFactory;
+    }
+
+    public Triple parseTriple(RegexMatcher tripleRegexMatcher) {
+        try {
+            SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
+            PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher);
+            ObjectNode object = objectParser.parseObject(tripleRegexMatcher);
+            if (subject != null && predicate != null && object != null) {
+                return tripleFactory.createTriple(subject, predicate, object);
+            } else {
+                // This is an error - will become a NoSuchElementException.
+                return null;
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void clear() {
+        blankNodeParser.clear();
+    }
 }

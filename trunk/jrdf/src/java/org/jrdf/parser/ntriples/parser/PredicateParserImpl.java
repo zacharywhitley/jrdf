@@ -66,23 +66,18 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public final class PredicateParserImpl implements PredicateParser {
     private static final int LINE_GROUP = 0;
-    private static final int URI_GROUP = 8;
-    private static final int NS_LOCAL_NAME_GROUP = 9;
-    private static final int NS_GROUP = 10;
-    private static final int LOCAL_NAME_GROUP = 11;
+    private static final int URI_GROUP = 6;
     private final URIReferenceParser uriReferenceParser;
 
-    public PredicateParserImpl(URIReferenceParser uriReferenceParser) {
-        checkNotNull(uriReferenceParser);
-        this.uriReferenceParser = uriReferenceParser;
+    public PredicateParserImpl(final URIReferenceParser newUriReferenceParser) {
+        checkNotNull(newUriReferenceParser);
+        uriReferenceParser = newUriReferenceParser;
     }
 
-    public PredicateNode parsePredicate(RegexMatcher matcher) throws ParseException {
+    public PredicateNode parsePredicate(final RegexMatcher matcher) throws ParseException {
         checkNotNull(matcher);
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
-        }  else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(NS_GROUP), matcher.group(LOCAL_NAME_GROUP));
         } else {
             throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
         }

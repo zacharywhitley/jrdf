@@ -57,11 +57,42 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.parser.n3.parser;
 
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.parser.ParseException;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.util.boundary.RegexMatcher;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public interface URIReferenceParser {
-    URIReference parseURIReference(String s) throws ParseException;
+public final class SubjectParserImpl implements SubjectParser {
+    private static final int LINE_GROUP = 0;
+    private static final int URI_GROUP = 2;
+    private static final int NS_LOCAL_NAME_GROUP = 3;
+    private static final int NS_GROUP = 4;
+    private static final int LOCAL_NAME_GROUP = 5;
+    private static final int BLANK_NODE_GROUP = 6;
+    private final NamespaceAwareURIReferenceParser uriReferenceParser;
+    private final BlankNodeParser blankNodeParser;
+
+    public SubjectParserImpl(NamespaceAwareURIReferenceParser newURIReferenceParser,
+        BlankNodeParser newBlankNodeParser) {
+        checkNotNull(newURIReferenceParser, newBlankNodeParser);
+        this.uriReferenceParser = newURIReferenceParser;
+        this.blankNodeParser = newBlankNodeParser;
+    }
+
+    public SubjectNode parseSubject(RegexMatcher matcher) throws ParseException {
+        checkNotNull(matcher);
+        if (matcher.group(URI_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+        } else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(NS_GROUP), matcher.group(LOCAL_NAME_GROUP));
+        } else if (matcher.group(BLANK_NODE_GROUP) != null) {
+            return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
+        } else {
+            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
+        }
+    }
 }

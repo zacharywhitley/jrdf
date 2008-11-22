@@ -57,40 +57,65 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.parser.n3.parser;
 
-import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.URIReference;
+import org.jrdf.parser.NamespaceListener;
+import org.jrdf.parser.NamespaceListenerImpl;
 import org.jrdf.parser.ParseException;
-import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public final class ObjectParserImpl implements ObjectParser {
-    private static final int LINE_GROUP = 0;
-    private static final int URI_GROUP = 8;
-    private static final int BLANK_NODE_GROUP = 9;
-    private static final int LITERAL_GROUP = 11;
-    private final URIReferenceParser uriReferenceParser;
-    private final BlankNodeParser blankNodeParser;
-    private final LiteralParser literalParser;
+import java.net.URI;
 
-    public ObjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser,
-        LiteralParser literalParser) {
-        checkNotNull(uriReferenceParser, blankNodeParser, literalParser);
-        this.uriReferenceParser = uriReferenceParser;
-        this.blankNodeParser = blankNodeParser;
-        this.literalParser = literalParser;
+public final class NamespaceAwareURIReferenceParserImpl implements NamespaceAwareURIReferenceParser {
+    private final GraphElementFactory graphElementFactory;
+    private final NTripleUtil nTripleUtil;
+    private final NamespaceListener listener;
+
+    public NamespaceAwareURIReferenceParserImpl(GraphElementFactory newGraphElementFactory, NTripleUtil newNTripleUtil,
+        NamespaceListener newListener) {
+        checkNotNull(newGraphElementFactory, newNTripleUtil);
+        graphElementFactory = newGraphElementFactory;
+        nTripleUtil = newNTripleUtil;
+        listener = newListener;
     }
 
-    public ObjectNode parseObject(RegexMatcher matcher) throws ParseException {
-        checkNotNull(matcher);
-        if (matcher.group(URI_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
-        } else if (matcher.group(BLANK_NODE_GROUP) != null) {
-            return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
-        } else if (matcher.group(LITERAL_GROUP) != null) {
-            return literalParser.parseLiteral(matcher.group(LITERAL_GROUP));
-        } else {
-            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
+    public NamespaceAwareURIReferenceParserImpl(GraphElementFactory newGraphElementFactory,
+        NTripleUtil newNTripleUtil) {
+        checkNotNull(newGraphElementFactory, newNTripleUtil);
+        graphElementFactory = newGraphElementFactory;
+        nTripleUtil = newNTripleUtil;
+        listener = new NamespaceListenerImpl();
+    }
+
+    public URIReference parseURIReference(String s) throws ParseException {
+        checkNotEmptyString("s", s);
+        try {
+            String literal = nTripleUtil.unescapeLiteral(s);
+            return graphElementFactory.createURIReference(URI.create(literal));
+        } catch (IllegalArgumentException iae) {
+            throw new ParseException("Failed to create URI Reference: " + s, 1);
+        } catch (GraphElementFactoryException e) {
+            throw new ParseException("Failed to create URI Reference: " + s, 1);
+        }
+    }
+
+    public URIReference parseURIReference(String prefix, String localName) throws ParseException {
+        checkNotEmptyString("prefix", prefix);
+        checkNotEmptyString("localName", localName);
+        try {
+            final String uriString = listener.getFullURI(prefix);
+            checkNotEmptyString("prefixed uri", uriString);
+            String literal = nTripleUtil.unescapeLiteral(uriString + localName);
+            return graphElementFactory.createURIReference(URI.create(literal));
+        } catch (IllegalArgumentException iae) {
+            throw new ParseException("Failed to create URI Reference: " + prefix + ":" + localName, 1);
+        } catch (GraphElementFactoryException e) {
+            throw new ParseException("Failed to create URI Reference: " + prefix + ":" + localName, 1);
         }
     }
 }

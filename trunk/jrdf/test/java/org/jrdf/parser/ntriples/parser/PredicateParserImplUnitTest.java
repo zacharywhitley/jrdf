@@ -102,13 +102,12 @@ public class PredicateParserImplUnitTest extends TestCase {
     public void testParseObjectURI() throws Exception {
         URIReference expectedUriReference = mockFactory.createMock(URIReference.class);
         EasyMock.expect(uriReferenceParser.parseURIReference(MATCHER)).andReturn(expectedUriReference);
-        EasyMock.expect(regexMatcher.group(8)).andReturn(MATCHER).times(2);
+        EasyMock.expect(regexMatcher.group(6)).andReturn(MATCHER).times(2);
         checkParse(expectedUriReference);
     }
 
     public void testDoesntParse() throws Exception {
-        EasyMock.expect(regexMatcher.group(8)).andReturn(null).times(1);
-        EasyMock.expect(regexMatcher.group(9)).andReturn(null).times(1);
+        EasyMock.expect(regexMatcher.group(6)).andReturn(null).times(1);
         EasyMock.expect(regexMatcher.group(0)).andReturn(LINE).times(1);
         mockFactory.replay();
         checkThrowsException();

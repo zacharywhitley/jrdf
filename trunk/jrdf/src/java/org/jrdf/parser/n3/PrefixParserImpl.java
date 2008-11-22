@@ -24,9 +24,11 @@ public class PrefixParserImpl implements PrefixParser {
     public boolean handlePrefix(final CharSequence line) {
         final RegexMatcher prefixMatcher = regexMatcherFactory.createMatcher(PREFIX_REGEX, line);
         final boolean matched = prefixMatcher.matches();
-        final String prefix = prefixMatcher.group(PREFIX_GROUP);
-        final String uri = prefixMatcher.group(URI_GROUP);
-        listener.handleNamespace(prefix, uri);
+        if (matched) {
+            final String prefix = prefixMatcher.group(PREFIX_GROUP);
+            final String uri = prefixMatcher.group(URI_GROUP);
+            listener.handleNamespace(prefix, uri);
+        }
         return matched;
     }
 }

@@ -95,7 +95,7 @@ import java.util.Set;
  * @version $Id$
  */
 
-public class SPARQLPerformanceIntegrationTest extends TestCase {
+public class SPARQLPerformanceTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final N3ParserFactory PARSER_FACTORY = new N3ParserFactoryImpl();

@@ -57,11 +57,35 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.parser.n3.parser;
 
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.parser.ParseException;
+import org.jrdf.parser.ntriples.parser.PredicateParser;
+import org.jrdf.util.boundary.RegexMatcher;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public interface URIReferenceParser {
-    URIReference parseURIReference(String s) throws ParseException;
+public final class PredicateParserImpl implements PredicateParser {
+    private static final int LINE_GROUP = 0;
+    private static final int URI_GROUP = 8;
+    private static final int NS_LOCAL_NAME_GROUP = 9;
+    private static final int NS_GROUP = 10;
+    private static final int LOCAL_NAME_GROUP = 11;
+    private final NamespaceAwareURIReferenceParser uriReferenceParser;
+
+    public PredicateParserImpl(NamespaceAwareURIReferenceParser uriReferenceParser) {
+        checkNotNull(uriReferenceParser);
+        this.uriReferenceParser = uriReferenceParser;
+    }
+
+    public PredicateNode parsePredicate(RegexMatcher matcher) throws ParseException {
+        checkNotNull(matcher);
+        if (matcher.group(URI_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+        }  else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(NS_GROUP), matcher.group(LOCAL_NAME_GROUP));
+        } else {
+            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
+        }
+    }
 }

@@ -57,11 +57,12 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.parser.n3.parser;
 
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
+import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 
-public interface URIReferenceParser {
-    URIReference parseURIReference(String s) throws ParseException;
+public interface NamespaceAwareURIReferenceParser extends URIReferenceParser {
+    URIReference parseURIReference(String prefix, String localName) throws ParseException;
 }

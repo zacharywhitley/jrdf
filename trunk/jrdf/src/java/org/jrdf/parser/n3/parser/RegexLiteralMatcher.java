@@ -57,8 +57,12 @@
  *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.parser.n3.parser;
 
+import org.jrdf.parser.NamespaceListener;
+import org.jrdf.parser.NamespaceListenerImpl;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
@@ -73,21 +77,35 @@ public final class RegexLiteralMatcher implements LiteralMatcher, Serializable {
     private static final int LITERAL_VALUES_LENGTH = 3;
     private Pattern pattern = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
         "(" +
-        "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-        ").*");
+        "\\@(\\p{Lower}[\\-\\p{Alnum}]*)?|" +
+        "\\^\\^\\<([\\x20-\\x7E]+)\\>|" +
+        "\\^\\^(\\p{Alpha}[\\x20-\\x7E]*?):((\\p{Alpha}[\\x20-\\x7E]*)?)" +
+        ")*\\p{Blank}*");
     private static final int LITERAL_INDEX = 1;
-    private static final int LANGUAGE_INDEX = 5;
-    private static final int DATATYPE_INDEX = 8;
+    private static final int LANGUAGE_INDEX = 3;
+    private static final int DATATYPE_URI_INDEX = 4;
+    private static final int DATATYPE_PREFIX_INDEX = 5;
+    private static final int DATATYPE_LOCAL_NAME_INDEX = 6;
     private RegexMatcherFactory regexFactory;
     private NTripleUtil nTripleUtil;
+    private NamespaceListener listener;
 
     private RegexLiteralMatcher() {
     }
 
     public RegexLiteralMatcher(RegexMatcherFactory newRegexFactory, NTripleUtil newNTripleUtil) {
         checkNotNull(newRegexFactory, newNTripleUtil);
-        this.regexFactory = newRegexFactory;
-        this.nTripleUtil = newNTripleUtil;
+        regexFactory = newRegexFactory;
+        nTripleUtil = newNTripleUtil;
+        listener = new NamespaceListenerImpl();
+    }
+
+    public RegexLiteralMatcher(RegexMatcherFactory newRegexFactory, NTripleUtil newNTripleUtil,
+        NamespaceListener newListener) {
+        checkNotNull(newRegexFactory, newNTripleUtil);
+        regexFactory = newRegexFactory;
+        nTripleUtil = newNTripleUtil;
+        listener = newListener;
     }
 
     public void setPattern(String newPattern) {
@@ -108,8 +126,22 @@ public final class RegexLiteralMatcher implements LiteralMatcher, Serializable {
             String ntriplesLiteral = matcher.group(LITERAL_INDEX);
             values[0] = nTripleUtil.unescapeLiteral(ntriplesLiteral);
             values[1] = matcher.group(LANGUAGE_INDEX);
-            values[2] = matcher.group(DATATYPE_INDEX);
+            values[2] = getDatatypeString(matcher);
+        } else {
+            System.err.println("not matching: " + s);
         }
         return values;
+    }
+
+    private String getDatatypeString(RegexMatcher matcher) {
+        String result = null;
+        final String prefix = matcher.group(DATATYPE_PREFIX_INDEX);
+        final String fullURI = matcher.group(DATATYPE_URI_INDEX);
+        if (fullURI != null) {
+            result = fullURI;
+        } else if (prefix != null) {
+            result = listener.getFullURI(prefix) + matcher.group(DATATYPE_LOCAL_NAME_INDEX);
+        }
+        return result;
     }
 }
