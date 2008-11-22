@@ -190,6 +190,9 @@
     <path id="integration.test.code.path">
         <path refid="test.code.path"/>
     </path>
+    <path id="performance.test.code.path">
+        <path refid="test.code.path"/>
+    </path>
     <path id="all.code.path">
         <path refid="production.code.path"/>
         <path refid="test.code.path"/>
@@ -225,6 +228,10 @@
     </path>
 
     <path id="integration.test.class.path">
+        <path refid="test.class.path"/>
+    </path>
+
+    <path id="performance.test.class.path">
         <path refid="test.class.path"/>
     </path>
 
