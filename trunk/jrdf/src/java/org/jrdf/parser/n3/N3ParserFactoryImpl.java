@@ -66,7 +66,7 @@ import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.n3.parser.NamespaceAwareRegexLiteralMatcher;
 import org.jrdf.parser.n3.parser.NamespaceAwareURIReferenceParser;
 import org.jrdf.parser.n3.parser.NamespaceAwareURIReferenceParserImpl;
-import org.jrdf.parser.n3.parser.TripleParserImpl;
+import org.jrdf.parser.n3.parser.NamespaceAwareTripleParser;
 import org.jrdf.parser.ntriples.CommentsParserImpl;
 import org.jrdf.parser.ntriples.TriplesParserImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
@@ -101,7 +101,7 @@ public class N3ParserFactoryImpl implements N3ParserFactory {
         LiteralParser literalParser = new LiteralParserImpl(newGraph.getElementFactory(), literalMatcher);
         NamespaceAwareURIReferenceParser uriReferenceParser = new NamespaceAwareURIReferenceParserImpl(
             newGraph.getElementFactory(), literalUtil, namespaceListener);
-        TripleParser tripleParser = new TripleParserImpl(uriReferenceParser, blankNodeParser, literalParser,
+        TripleParser tripleParser = new NamespaceAwareTripleParser(uriReferenceParser, blankNodeParser, literalParser,
             newGraph.getTripleFactory());
         return new N3Parser(new CommentsParserImpl(matcherFactory),
             new PrefixParserImpl(matcherFactory, namespaceListener),
