@@ -12,7 +12,6 @@
       <antReference projectDefault="true" />
       <customJdkName value="" />
       <maximumHeapSize value="128" />
-      <maximumStackSize value="32" />
       <properties />
     </buildFile>
   </component>
@@ -308,13 +307,16 @@
   <component name="ProjectDetails">
     <option name="projectName" value="jrdf" />
   </component>
-  <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectFileVersion" converted="true">
+    <converter id="javaee-modules" />
+    <converter id="ror-modules" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/jrdf.iml" filepath="$PROJECT_DIR$/jrdf.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
   <component name="RUBY_DOC_SETTINGS">
@@ -353,7 +355,7 @@
         </entry>
       </map>
     </option>
-    <option name="myVersion" value="124" />
+    <option name="myVersion" value="123" />
   </component>
   <component name="ToggleTest">
     <toggle from="*" to="*UnitTest" />

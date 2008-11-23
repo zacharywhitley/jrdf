@@ -69,18 +69,16 @@ import org.jrdf.util.boundary.RegexMatcherFactory;
 import java.util.regex.Pattern;
 
 public class TriplesParserImpl implements TriplesParser {
-    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
-        "\\.\\p{Blank}*");
     private final TripleParser tripleParser;
     private final RegexMatcherFactory regexMatcherFactory;
+    private final Pattern pattern;
     private StatementHandler sh;
 
-    public TriplesParserImpl(TripleParser newTripleFactory, RegexMatcherFactory newRegexFactory) {
+    public TriplesParserImpl(TripleParser newTripleFactory, RegexMatcherFactory newRegexFactory,
+        final Pattern newPattern) {
         tripleParser = newTripleFactory;
         regexMatcherFactory = newRegexFactory;
+        pattern = newPattern;
     }
 
     public void setStatementHandler(StatementHandler newStatementHandler) {
@@ -88,7 +86,7 @@ public class TriplesParserImpl implements TriplesParser {
     }
 
     public void handleTriple(final CharSequence line) throws StatementHandlerException {
-        final RegexMatcher tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
+        final RegexMatcher tripleRegexMatcher = regexMatcherFactory.createMatcher(pattern, line);
         if (tripleRegexMatcher.matches()) {
             final Triple triple = tripleParser.parseTriple(tripleRegexMatcher);
             sh.handleStatement(triple.getSubject(), triple.getPredicate(), triple.getObject());
