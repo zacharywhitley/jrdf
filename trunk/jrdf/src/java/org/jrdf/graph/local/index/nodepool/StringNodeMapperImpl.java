@@ -79,10 +79,6 @@ import java.net.URI;
 // TODO N3 Changes - this and RegexLiteralMatcher - sharing regex pattern.
 public class StringNodeMapperImpl implements StringNodeMapper, Serializable {
     private static final long serialVersionUID = 6290485805443126422L;
-    private static final String PATTERN = "\\\"([\\t\\r\\n\\x20-\\x7E]*)\\\"" +
-        "(" +
-        "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-        ").*";
     private LiteralMatcher literalMatcher;
     private String currentString;
 
@@ -91,7 +87,6 @@ public class StringNodeMapperImpl implements StringNodeMapper, Serializable {
 
     public StringNodeMapperImpl(LiteralMatcher newLiteralMatcher) {
         literalMatcher = newLiteralMatcher;
-        literalMatcher.setPattern(PATTERN);
     }
 
     public String convertToString(Node node) {
