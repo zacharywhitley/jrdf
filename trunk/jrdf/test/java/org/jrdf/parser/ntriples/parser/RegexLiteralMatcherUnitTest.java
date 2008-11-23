@@ -79,10 +79,11 @@ public class RegexLiteralMatcherUnitTest extends TestCase {
     private static final Class<LiteralMatcher> TARGET_INTERFACE = LiteralMatcher.class;
     private static final Class<RegexLiteralMatcher> TEST_CLASS = RegexLiteralMatcher.class;
     private static final Class[] PARAM_TYPES = new Class[]{RegexMatcherFactory.class, NTripleUtil.class};
-    private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
+    private static final String PATTERN = "\\\"([\\t\\r\\n\\x20-\\x7E]*)\\\"" +
         "(" +
         "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-        ").*");
+        ").*";
+    private static final Pattern LANGUAGE_REGEX = Pattern.compile(PATTERN);
     private static final int LITERAL_INDEX = 1;
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;

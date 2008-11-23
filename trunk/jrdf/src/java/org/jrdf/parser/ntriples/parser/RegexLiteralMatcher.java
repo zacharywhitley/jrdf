@@ -71,10 +71,13 @@ import java.util.regex.Pattern;
 public final class RegexLiteralMatcher implements LiteralMatcher, Serializable {
     private static final long serialVersionUID = 71365287225809670L;
     private static final int LITERAL_VALUES_LENGTH = 3;
-    private Pattern pattern = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
+    private static final String PATTERN = "\\\"([\\t\\r\\n\\x20-\\x7E]*)\\\"" +
         "(" +
         "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-        ").*");
+        ").*";
+    private Pattern pattern = Pattern.compile(PATTERN);
+
+
     private static final int LITERAL_INDEX = 1;
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;
