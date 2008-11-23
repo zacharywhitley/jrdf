@@ -41,9 +41,6 @@ public interface StatementHandler {
      * @param subject   A URI or bNode.
      * @param predicate A URI.
      * @param object    A URI, bNode or literal.
-     * @throws StatementHandlerException If the statement handler has
-     *                                   encountered an unrecoverable error.
      */
-    void handleStatement(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws StatementHandlerException;
+    void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 }

@@ -61,20 +61,17 @@ package org.jrdf.parser.n3;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.RDFEventReader;
+import org.jrdf.parser.ntriples.RegexEventReader;
+import org.jrdf.parser.ntriples.TriplesParser;
+import org.jrdf.parser.ntriples.TriplesParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.URI;
-import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
-// TODO N3 Changes - Copy of NTriplesEventReader.
 public class N3EventReader implements RDFEventReader {
     /**
      * A regular expression for NTriples.
@@ -86,84 +83,33 @@ public class N3EventReader implements RDFEventReader {
                     "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}\\p{Alnum}*?):(\\p{Alpha}\\p{Alnum}*?))|" +
                     "_:(\\p{Alpha}\\p{Alnum}*?)|(([\\x20-\\x7E]+?)))\\p{Blank}*" +
                     "\\.\\p{Blank}*");
-    private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
+    private RDFEventReader eventReader;
 
-    private final LineNumberReader bufferedReader;
-    private final URI baseURI;
-    private final RegexMatcherFactory regexMatcherFactory;
-    private final TripleParser tripleParser;
-    private Triple nextTriple;
-
-    public N3EventReader(final InputStream in, final URI newBaseURI, final RegexMatcherFactory newRegexFactory,
-        final TripleParser newTripleParser) {
-        this(new InputStreamReader(in), newBaseURI, newRegexFactory, newTripleParser);
+    public N3EventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleFactory,
+        final RegexMatcherFactory newRegexFactory) {
+        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory, newRegexFactory, TRIPLE_REGEX);
+        eventReader = new RegexEventReader(in, newBaseURI, triplesParser);
     }
 
-    public N3EventReader(final Reader reader, final URI newBaseURI, final RegexMatcherFactory newRegexFactory,
-        final TripleParser newTripleParser) {
-        this.bufferedReader = new LineNumberReader(reader);
-        this.baseURI = newBaseURI;
-        this.regexMatcherFactory = newRegexFactory;
-        this.tripleParser = newTripleParser;
-        parseNext();
+    public N3EventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleFactory,
+        final RegexMatcherFactory newRegexFactory) {
+        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory, newRegexFactory, TRIPLE_REGEX);
+        eventReader = new RegexEventReader(reader, newBaseURI, triplesParser);
     }
 
     public boolean hasNext() {
-        return nextTriple != null;
+        return eventReader.hasNext();
     }
 
     public Triple next() {
-        Triple currentTriple = nextTriple;
-        parseNext();
-        if (currentTriple != null) {
-            return currentTriple;
-        } else {
-            throw new NoSuchElementException();
-        }
+        return eventReader.next();
     }
 
     public void remove() {
-        throw new UnsupportedOperationException("Cannot remove triples, this is read only.");
-    }
-
-    private void parseNext() {
-        String line = getLine();
-        Triple triple = null;
-        while (line != null && triple == null) {
-            triple = parseLine(line);
-            if (triple == null) {
-                line = getLine();
-            }
-        }
-        nextTriple = triple;
+        eventReader.remove();
     }
 
     public boolean close() {
-        try {
-            bufferedReader.close();
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
-
-    private String getLine() {
-        try {
-            return bufferedReader.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Triple parseLine(String line) {
-        RegexMatcher tripleRegexMatcher;
-        Triple triple = null;
-        if (!COMMENT_REGEX.matcher(line).matches()) {
-            tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
-            if (tripleRegexMatcher.matches()) {
-                triple = tripleParser.parseTriple(tripleRegexMatcher);
-            }
-        }
-        return triple;
+        return eventReader.close();
     }
 }

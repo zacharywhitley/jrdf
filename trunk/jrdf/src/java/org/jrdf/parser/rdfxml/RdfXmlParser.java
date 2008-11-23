@@ -1176,7 +1176,7 @@ public final class RdfXmlParser implements ConfigurableParser {
     private void reportStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws SAXException {
         try {
             statementHandler.handleStatement(subject, predicate, object);
-        } catch (StatementHandlerException e) {
+        } catch (Exception e) {
             // Wrap exception in a SAXException, it will be unwrapped in the
             // parse() method
             throw new SAXException(e);
