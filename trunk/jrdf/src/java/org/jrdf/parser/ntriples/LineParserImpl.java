@@ -62,26 +62,37 @@ package org.jrdf.parser.ntriples;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
 
-public class NTriplesParser implements LineHandler {
-    private final CommentsParser commentsParser;
-    private final TriplesParser triplesParser;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.Reader;
 
-    public NTriplesParser(final CommentsParser newCommentsParser, final TriplesParser newTriplesParser) {
-        commentsParser = newCommentsParser;
-        triplesParser = newTriplesParser;
+public class LineParserImpl implements LineParser {
+    private LineHandler lineHandler;
+
+    public LineParserImpl(final LineHandler newLineHandler) {
+        lineHandler = newLineHandler;
     }
 
     public void setStatementHandler(final StatementHandler statementHandler) {
-        triplesParser.setStatementHandler(statementHandler);
+        lineHandler.setStatementHandler(statementHandler);
     }
 
-    public void handleLine(final CharSequence line) throws StatementHandlerException {
-        if (!commentsParser.handleComment(line)) {
-            triplesParser.handleTriple(line);
+    public void parse(final InputStream in, final String baseURI) throws IOException, StatementHandlerException {
+        parse(new InputStreamReader(in), baseURI);
+    }
+
+    public void parse(final Reader reader, final String baseURI) throws IOException, StatementHandlerException {
+        final LineNumberReader bufferedReader = new LineNumberReader(reader);
+        try {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                lineHandler.handleLine(line);
+            }
+            lineHandler.clear();
+        } finally {
+            bufferedReader.close();
         }
-    }
-
-    public void clear() {
-        triplesParser.clear();
     }
 }
