@@ -76,7 +76,6 @@ import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 import java.io.Serializable;
 import java.net.URI;
 
-// TODO N3 Changes - this and RegexLiteralMatcher - sharing regex pattern.
 public class StringNodeMapperImpl implements StringNodeMapper, Serializable {
     private static final long serialVersionUID = 6290485805443126422L;
     private LiteralMatcher literalMatcher;

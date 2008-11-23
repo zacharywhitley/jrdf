@@ -67,7 +67,6 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
-// TODO N3 Changes - this and StringNodeMapperImpl - sharing regex pattern.  This should be moved to N3 only.
 public final class RegexLiteralMatcher implements LiteralMatcher, Serializable {
     private static final long serialVersionUID = 71365287225809670L;
     private static final int LITERAL_VALUES_LENGTH = 3;
