@@ -136,7 +136,8 @@ public class NTripleParserIntegrationTest extends TestCase {
             NTriplesParserFactory parserFactory = new NTriplesParserFactoryImpl();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
-            NTriplesParser parser = parserFactory.createParser(graph, factory);
+            NTriplesParser nTriplesParser = parserFactory.createParser(graph, factory);
+            LineParser parser = new LineParserImpl(nTriplesParser);
             parser.setStatementHandler(new GraphStatementHandler(graph));
             parser.parse(file.openStream(), "foo");
         }

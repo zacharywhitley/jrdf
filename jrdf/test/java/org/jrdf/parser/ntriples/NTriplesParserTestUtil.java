@@ -59,9 +59,9 @@
 
 package org.jrdf.parser.ntriples;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -94,7 +94,8 @@ public class NTriplesParserTestUtil {
     public static Set<Triple> parseNTriplesFile(InputStream in, Graph graph, ParserBlankNodeFactory factory)
         throws Exception {
         NTriplesParserFactory parserFactory = new NTriplesParserFactoryImpl();
-        NTriplesParser parser = parserFactory.createParser(graph, factory);
+        NTriplesParser ntriplesParser = parserFactory.createParser(graph, factory);
+        LineParser parser = new LineParserImpl(ntriplesParser);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.parse(in, "foo");
         Set<Triple> actualResults = new HashSet<Triple>();

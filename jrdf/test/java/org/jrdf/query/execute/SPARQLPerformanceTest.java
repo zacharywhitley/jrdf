@@ -69,11 +69,14 @@ import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.ParseException;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.n3.N3Parser;
 import org.jrdf.parser.n3.N3ParserFactory;
 import org.jrdf.parser.n3.N3ParserFactoryImpl;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
+import org.jrdf.parser.ntriples.LineParser;
+import org.jrdf.parser.ntriples.LineParserImpl;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.*;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
@@ -170,11 +173,13 @@ public class SPARQLPerformanceTest extends TestCase {
         }
     }
 
-    private void parseGraph(String fileName) throws IOException, StatementHandlerException, GraphException {
+    private void parseGraph(String fileName) throws GraphException, IOException, StatementHandlerException,
+        ParseException {
         assertEquals(0, graph.getNumberOfTriples());
         InputStream in = getSampleData(this.getClass(), fileName);
         ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(MAP_FACTORY, graph.getElementFactory());
-        N3Parser parser = PARSER_FACTORY.createParser(graph, factory);
+        N3Parser n3Parser = PARSER_FACTORY.createParser(graph, factory);
+        LineParser parser = new LineParserImpl(n3Parser);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.parse(in, fileName);
         assertEquals(50168, graph.getNumberOfTriples());

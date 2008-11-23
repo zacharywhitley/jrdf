@@ -59,21 +59,13 @@
 
 package org.jrdf.parser.n3;
 
-import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandler;
-import org.jrdf.parser.StatementHandlerConfiguration;
 import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.ntriples.CommentsParser;
+import org.jrdf.parser.ntriples.LineHandler;
 import org.jrdf.parser.ntriples.TriplesParser;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.Reader;
-
-// TODO AN Fix duplication with this and NTriplesParser
-public class N3Parser implements Parser, StatementHandlerConfiguration {
+public class N3Parser implements LineHandler {
     private final CommentsParser commentsParser;
     private final PrefixParser prefixParser;
     private final TriplesParser triplesParser;
@@ -89,28 +81,15 @@ public class N3Parser implements Parser, StatementHandlerConfiguration {
         triplesParser.setStatementHandler(newStatementHandler);
     }
 
-    public void parse(final InputStream in, final String baseURI) throws IOException, StatementHandlerException {
-        parse(new InputStreamReader(in), baseURI);
-    }
-
-    public void parse(final Reader reader, final String baseURI) throws IOException, StatementHandlerException {
-        final LineNumberReader bufferedReader = new LineNumberReader(reader);
-        try {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                handleLine(line);
-            }
-            triplesParser.clear();
-        } finally {
-            bufferedReader.close();
-        }
-    }
-
-    private void handleLine(final CharSequence line) throws StatementHandlerException {
+    public void handleLine(final CharSequence line) throws StatementHandlerException {
         if (!commentsParser.handleComment(line)) {
             if (!prefixParser.handlePrefix(line)) {
                 triplesParser.handleTriple(line);
             }
         }
+    }
+
+    public void clear() {
+        triplesParser.clear();
     }
 }

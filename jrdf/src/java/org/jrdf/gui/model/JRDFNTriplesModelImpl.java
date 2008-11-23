@@ -64,9 +64,11 @@ import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.GraphFactory;
-import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.ntriples.LineParser;
+import org.jrdf.parser.ntriples.LineParserImpl;
 import org.jrdf.parser.ntriples.NTriplesParser;
 import org.jrdf.parser.ntriples.NTriplesParserFactory;
 import org.jrdf.parser.ntriples.NTriplesParserFactoryImpl;
@@ -96,7 +98,7 @@ public class JRDFNTriplesModelImpl implements JRDFModel {
         try {
             graph = graphFactory.getGraph();
             graph.clear();
-            NTriplesParser parser = getParser();
+            LineParser parser = getParser();
             parser.parse(url.openStream(), EscapeURL.toEscapedString(url));
             return graph;
         } catch (Exception e) {
@@ -105,11 +107,12 @@ public class JRDFNTriplesModelImpl implements JRDFModel {
         }
     }
 
-    private NTriplesParser getParser() {
+    private LineParser getParser() {
         NTriplesParserFactory parserFactory = new NTriplesParserFactoryImpl();
         MapFactory creator = new MemMapFactory();
         ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
-        NTriplesParser parser = parserFactory.createParser(graph, factory);
+        NTriplesParser nTriplesParser = parserFactory.createParser(graph, factory);
+        final LineParser parser = new LineParserImpl(nTriplesParser);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         return parser;
     }
