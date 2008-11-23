@@ -85,15 +85,15 @@ public class N3EventReader implements RDFEventReader {
                     "\\.\\p{Blank}*");
     private RDFEventReader eventReader;
 
-    public N3EventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleFactory,
+    public N3EventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleParser,
         final RegexMatcherFactory newRegexFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory, newRegexFactory, TRIPLE_REGEX);
+        final TriplesParser triplesParser = new TriplesParserImpl(newTripleParser, newRegexFactory, TRIPLE_REGEX);
         eventReader = new RegexEventReader(in, newBaseURI, triplesParser);
     }
 
-    public N3EventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleFactory,
+    public N3EventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleParser,
         final RegexMatcherFactory newRegexFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory, newRegexFactory, TRIPLE_REGEX);
+        final TriplesParser triplesParser = new TriplesParserImpl(newTripleParser, newRegexFactory, TRIPLE_REGEX);
         eventReader = new RegexEventReader(reader, newBaseURI, triplesParser);
     }
 
