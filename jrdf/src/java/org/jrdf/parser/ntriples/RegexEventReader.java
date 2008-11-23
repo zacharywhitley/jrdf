@@ -59,53 +59,97 @@
 
 package org.jrdf.parser.ntriples;
 
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.parser.StatementHandler;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.URI;
+import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
-public class NTriplesEventReader implements RDFEventReader {
-    /**
-     * A regular expression for NTriples.
-     */
-    public static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
-            "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
-            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
-            "\\.\\p{Blank}*");
-    private RDFEventReader eventReader;
+public class RegexEventReader implements RDFEventReader, StatementHandler {
+    private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
+    private final LineNumberReader bufferedReader;
+    private final URI baseURI;
+    private final TriplesParser parser;
+    private Triple currentTriple;
+    private Triple nextTriple;
 
-
-    public NTriplesEventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleFactory,
-        final RegexMatcherFactory newRegexFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory, newRegexFactory, TRIPLE_REGEX);
-        eventReader = new RegexEventReader(in, newBaseURI, triplesParser);
+    public RegexEventReader(final InputStream in, final URI newBaseURI, final TriplesParser newParser) {
+        this(new InputStreamReader(in), newBaseURI, newParser);
     }
 
-    public NTriplesEventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleFactory,
-        final RegexMatcherFactory newRegexFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory, newRegexFactory, TRIPLE_REGEX);
-        eventReader = new RegexEventReader(reader, newBaseURI, triplesParser);
+    public RegexEventReader(final Reader reader, final URI newBaseURI, final TriplesParser newParser) {
+        bufferedReader = new LineNumberReader(reader);
+        baseURI = newBaseURI;
+        parser = newParser;
+        parser.setStatementHandler(this);
+        parseNext();
     }
 
     public boolean hasNext() {
-        return eventReader.hasNext();
+        return nextTriple != null;
     }
 
     public Triple next() {
-        return eventReader.next();
+        final Triple currentTriple = nextTriple;
+        parseNext();
+        if (currentTriple != null) {
+            return currentTriple;
+        } else {
+            throw new NoSuchElementException();
+        }
     }
 
     public void remove() {
-        eventReader.remove();
+        throw new UnsupportedOperationException("Cannot remove triples, this is read only.");
+    }
+
+    private void parseNext() {
+        String line = getLine();
+        currentTriple = null;
+        while (line != null && currentTriple == null) {
+            parseLine(line);
+            if (currentTriple == null) {
+                line = getLine();
+            }
+        }
+        nextTriple = currentTriple;
     }
 
     public boolean close() {
-        return eventReader.close();
+        try {
+            bufferedReader.close();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private String getLine() {
+        try {
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        currentTriple = new TripleImpl(subject, predicate, object);
+    }
+
+    private void parseLine(CharSequence line) {
+        if (!COMMENT_REGEX.matcher(line).matches()) {
+            parser.handleTriple(line);
+        }
     }
 }

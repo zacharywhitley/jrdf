@@ -61,7 +61,6 @@ package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.StatementHandler;
-import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
@@ -85,7 +84,7 @@ public class TriplesParserImpl implements TriplesParser {
         sh = newStatementHandler;
     }
 
-    public void handleTriple(final CharSequence line) throws StatementHandlerException {
+    public void handleTriple(final CharSequence line) {
         final RegexMatcher tripleRegexMatcher = regexMatcherFactory.createMatcher(pattern, line);
         if (tripleRegexMatcher.matches()) {
             final Triple triple = tripleParser.parseTriple(tripleRegexMatcher);
