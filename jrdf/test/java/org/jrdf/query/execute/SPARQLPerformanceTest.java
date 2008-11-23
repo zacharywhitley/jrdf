@@ -100,7 +100,7 @@ import java.util.Set;
 
 public class SPARQLPerformanceTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
-    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+    private PersistentGlobalJRDFFactory factory;
     private static final N3ParserFactory PARSER_FACTORY = new N3ParserFactoryImpl();
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
     private static final Set<String> FILE_NAMES = new HashSet<String>() {
@@ -133,8 +133,9 @@ public class SPARQLPerformanceTest extends TestCase {
         super.setUp();
         HANDLER.removeDir();
         HANDLER.makeDir();
-        connection = FACTORY.getNewUrqlConnection();
-        graph = FACTORY.getGraph("sparql_test");
+        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+        graph = factory.getGraph("sparql_test");
+        connection = factory.getNewUrqlConnection();
         parseGraph("rdf-tests/sparql/sp2b.n3");
     }
 
@@ -142,6 +143,8 @@ public class SPARQLPerformanceTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         graph.clear();
+        graph.close();
+        factory.close();
     }
 
     public void testSparqlPerformance() throws Exception {
