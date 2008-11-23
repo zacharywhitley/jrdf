@@ -68,6 +68,7 @@ import org.jrdf.parser.n3.parser.NamespaceAwareURIReferenceParser;
 import org.jrdf.parser.n3.parser.NamespaceAwareURIReferenceParserImpl;
 import org.jrdf.parser.n3.parser.TripleParserImpl;
 import org.jrdf.parser.ntriples.CommentsParserImpl;
+import org.jrdf.parser.ntriples.TriplesParserImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
@@ -79,7 +80,17 @@ import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
+import java.util.regex.Pattern;
+
 public class N3ParserFactoryImpl implements N3ParserFactory {
+    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
+        "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
+        "_:(\\p{Alpha}[\\x20-\\x7E]*?))\\p{Blank}+" +
+        "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]+?)))\\p{Blank}+" +
+        "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
+        "_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))\\p{Blank}*" +
+        "\\.\\p{Blank}*");
+
     public N3Parser createParser(Graph newGraph, ParserBlankNodeFactory parserBlankNodeFactory) {
         BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
@@ -94,6 +105,6 @@ public class N3ParserFactoryImpl implements N3ParserFactory {
             newGraph.getTripleFactory());
         return new N3Parser(new CommentsParserImpl(matcherFactory),
             new PrefixParserImpl(matcherFactory, namespaceListener),
-            new TriplesParserImpl(tripleParser, matcherFactory));
+            new TriplesParserImpl(tripleParser, matcherFactory, TRIPLE_REGEX));
     }
 }
