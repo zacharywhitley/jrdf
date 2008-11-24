@@ -75,8 +75,6 @@
     </patternset>
     <patternset id="test.code.pattern">
         <include name="**/*.java"/>
-    </patternset>
-    <patternset id="groovy.test.code.pattern">
         <include name="**/*.groovy"/>
     </patternset>
     <patternset id="unit.test.code.pattern">

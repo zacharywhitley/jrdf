@@ -66,7 +66,7 @@ import org.jrdf.parser.ParseException;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.net.URI;
+import static java.net.URI.create;
 
 public final class URIReferenceParserImpl implements URIReferenceParser {
     private final GraphElementFactory graphElementFactory;
@@ -82,7 +82,7 @@ public final class URIReferenceParserImpl implements URIReferenceParser {
         checkNotEmptyString("s", s);
         try {
             String literal = nTripleUtil.unescapeLiteral(s);
-            return graphElementFactory.createURIReference(URI.create(literal));
+            return graphElementFactory.createURIReference(create(literal));
         } catch (IllegalArgumentException iae) {
             throw new ParseException("Failed to create URI Reference: " + s, 1);
         } catch (GraphElementFactoryException e) {
