@@ -103,7 +103,7 @@ import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class ExpressionSimplifierImplUnitTest extends TestCase {
@@ -119,7 +119,6 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
     private static final VariableName ATTRIBUTE_S1 = new VariableName("s1");
     private static final VariableName ATTRIBUTE_P = new VariableName("p");
     private static final VariableName ATTRIBUTE_O = new VariableName("o");
-    private static final VariableName ATTRIBUTE_O1 = new VariableName("o1");
 
     private ExpressionSimplifier simplifier;
     private static final Attribute ATTR_S = new AttributeImpl(ATTRIBUTE_S, SUBJECT_NODE_TYPE);
@@ -134,8 +133,11 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
 
     public void testSimpleQuery() throws InvalidQuerySyntaxException, GraphException, IllegalAccessException {
         String queryText = "SELECT * WHERE { ?s ?p 'hello'@en }";
-        final Query query = QUERY_BUILDER.buildQuery(GRAPH, queryText);
+        Query query = QUERY_BUILDER.buildQuery(GRAPH, queryText);
         getExpression(query, ((Projection) query.getNext()).getNextExpression());
+        queryText = "ASK WHERE { ?s ?p 'hello'@en }";
+        query = QUERY_BUILDER.buildQuery(GRAPH, queryText);
+        getExpression(query, ((Ask) query.getNext()).getNextExpression());
     }
 
     public void testSimpleFilter() throws InvalidQuerySyntaxException, GraphException, IllegalAccessException {
@@ -146,6 +148,8 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
         Map<Attribute, ValueOperation> obj = createSingleAVP(ATTR_O, literal, STR);
         LinkedHashMap<Attribute, ValueOperation> map = createSingleAVP(subj, pred, obj);
         SingleConstraint<ExpressionVisitor> constraint = new SingleConstraint<ExpressionVisitor>(map);
+        getExpression(QUERY_BUILDER.buildQuery(GRAPH, queryText), constraint);
+        queryText = "ASK WHERE { ?s ?p ?o FILTER (str(?o) = \"abc\") }";
         getExpression(QUERY_BUILDER.buildQuery(GRAPH, queryText), constraint);
     }
 
@@ -162,6 +166,8 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
         SingleConstraint<ExpressionVisitor> constraint2 = new SingleConstraint<ExpressionVisitor>(avp2);
         Conjunction<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(constraint1, constraint2);
         getExpression(QUERY_BUILDER.buildQuery(GRAPH, queryText), conj);
+        queryText = "ASK WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1) }";
+        getExpression(QUERY_BUILDER.buildQuery(GRAPH, queryText), conj);
     }
 
     public void testComplexFilter() throws IllegalAccessException, InvalidQuerySyntaxException, GraphException {
@@ -177,6 +183,8 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
         final LinkedHashMap<Attribute, ValueOperation> avp2 = createSingleAVP(subj1, pred, obj);
         SingleConstraint<ExpressionVisitor> constraint2 = new SingleConstraint<ExpressionVisitor>(avp2);
         Conjunction<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(constraint1, constraint2);
+        getExpression(QUERY_BUILDER.buildQuery(GRAPH, queryText), conj);
+        queryText = "ASK WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1 && str(?o1) = \"abc\") }";
         getExpression(QUERY_BUILDER.buildQuery(GRAPH, queryText), conj);
     }
 
@@ -197,6 +205,8 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
         NEqualsExpression<ExpressionVisitor> neq = new NEqualsExpression<ExpressionVisitor>(filterLhs, filterRhs);
         Conjunction<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(constraint1, constraint2);
         Filter<ExpressionVisitor> filter = new Filter<ExpressionVisitor>(conj, neq);
+        getExpression(QUERY_BUILDER.buildQuery(GRAPH, queryText), filter);
+        queryText = "ASK WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1 && str(?o1) != \"abc\") }";
         getExpression(QUERY_BUILDER.buildQuery(GRAPH, queryText), filter);
     }
 
