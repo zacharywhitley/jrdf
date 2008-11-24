@@ -13,6 +13,7 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
 import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
+import org.jrdf.query.relation.mem.StrAVPOperation;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_LITERAL;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_LITERAL_L1;
@@ -77,7 +78,7 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
 
     public void testEqualsExpression() {
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
-        ValueOperation vo = new ValueOperationImpl(AnyNode.ANY_NODE, EQUALS);
+        ValueOperation vo = new ValueOperationImpl(AnyNode.ANY_NODE, StrAVPOperation.STR);
         avo.put(VAR_FOO1_LITERAL, vo);
         expression = new EqualsExpression(avo, VAR_FOO1_LITERAL_L1);
         boolean result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);

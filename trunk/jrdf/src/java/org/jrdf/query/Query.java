@@ -60,8 +60,10 @@
 package org.jrdf.query;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.execute.QueryEngine;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 
 /**
  * A query to a graph.
@@ -71,4 +73,6 @@ import org.jrdf.query.answer.Answer;
  */
 public interface Query {
     Answer executeQuery(Graph graph, QueryEngine queryEngine);
+
+    Expression<ExpressionVisitor> getNext();
 }

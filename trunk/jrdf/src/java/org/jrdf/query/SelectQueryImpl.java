@@ -92,6 +92,10 @@ public final class SelectQueryImpl implements Query {
         this.graphRelationFactory = graphRelationFactory;
     }
 
+    public Expression<ExpressionVisitor> getNext() {
+        return expression;
+    }
+
     public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
