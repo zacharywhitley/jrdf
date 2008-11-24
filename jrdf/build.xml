@@ -37,7 +37,10 @@
         <compile.macro src.dir="${gen.src.dir}" classpath.ref="gen.class.path" output.dir="${prod.classes.dir}"
                        code.path="gen.code.path" code.pattern="production.code.pattern"/>
         <compile.macro src.dir="${prod.src.dir}" classpath.ref="production.class.path" output.dir="${prod.classes.dir}"
-                       code.path="production.code.path" code.pattern="production.code.pattern" compiler.args="-Xlint:all"/>
+                       code.path="production.code.path" code.pattern="production.code.pattern"
+                       compiler.args="-Xlint:all"/>
+        <compile.groovy.macro src.dir="${groovy.test.src.dir}:${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
+                              code.path="test.code.path" code.pattern="groovy.test.code.pattern"/>
         <compile.macro src.dir="${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
                        code.path="test.code.path" code.pattern="test.code.pattern" compiler.args="-Xlint:all"/>
 
@@ -45,7 +48,7 @@
         <emma enabled="${emma.enabled}">
             <instr instrpath="${prod.classes.dir}" destdir="${out.instr.dir}/classes"
                    metadatafile="${coverage.dir}/metadata.emma" merge="true">
-                <filter value="${emma.filter}" />
+                <filter value="${emma.filter}"/>
             </instr>
         </emma>
 
@@ -101,6 +104,25 @@
         </sequential>
     </macrodef>
 
+    <macrodef name="compile.groovy.macro">
+        <attribute name="src.dir"/>
+        <attribute name="output.dir"/>
+        <attribute name="classpath.ref"/>
+        <attribute name="code.path"/>
+        <attribute name="code.pattern"/>
+        <sequential>
+            <mkdir dir="@{output.dir}"/>
+            <groovyc srcdir="@{src.dir}" destdir="@{output.dir}" classpathref="@{classpath.ref}">
+                <src>
+                    <path refid="@{code.path}"/>
+                </src>
+                <patternset refid="@{code.pattern}"/>
+                <javac source="1.5" target="1.5" debug="on" classpathref="@{classpath.ref}">
+                </javac>
+            </groovyc>
+        </sequential>
+    </macrodef>
+
     <target name="dist" depends="compile,-copy-urql-sablecc-resources">
         <antcall target="-dist-jar"/>
         <antcall target="-dist-src-jar"/>
@@ -132,18 +154,19 @@
 
     <target name="-dist-server">
         <dist.jar mainclass="org.jrdf.query.server.SpringLocalServer" jarname="server.jar" disttype="server"/>
-        <dist.jar mainclass="org.jrdf.query.server.SpringDistributedServer" jarname="distributed-server.jar" disttype="server"/>
+        <dist.jar mainclass="org.jrdf.query.server.SpringDistributedServer" jarname="distributed-server.jar"
+                  disttype="server"/>
     </target>
 
     <macrodef name="dist.jar">
         <attribute name="mainclass"/>
         <attribute name="jarname"/>
         <attribute name="disttype"/>
-        <sequential >
+        <sequential>
             <mkdir dir="${dist.dir}/@{disttype}"/>
             <pathconvert dirsep="/" pathsep=" " property="jar.classpath">
-               <map from="${basedir}/lib" to="lib"/>
-               <path refid="production.class.path"/>
+                <map from="${basedir}/lib" to="lib"/>
+                <path refid="production.class.path"/>
             </pathconvert>
             <jar destfile="${dist.dir}/@{disttype}/main.jar">
                 <manifest>

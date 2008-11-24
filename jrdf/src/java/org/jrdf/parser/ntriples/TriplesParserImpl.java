@@ -73,14 +73,14 @@ public class TriplesParserImpl implements TriplesParser {
     private final Pattern pattern;
     private StatementHandler sh;
 
-    public TriplesParserImpl(TripleParser newTripleFactory, RegexMatcherFactory newRegexFactory,
+    public TriplesParserImpl(final TripleParser newTripleFactory, final RegexMatcherFactory newRegexFactory,
         final Pattern newPattern) {
         tripleParser = newTripleFactory;
         regexMatcherFactory = newRegexFactory;
         pattern = newPattern;
     }
 
-    public void setStatementHandler(StatementHandler newStatementHandler) {
+    public void setStatementHandler(final StatementHandler newStatementHandler) {
         sh = newStatementHandler;
     }
 

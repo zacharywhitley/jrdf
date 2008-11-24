@@ -24,6 +24,7 @@
     <property name="one-jar.lib.dir" value="${lib.dir}/one-jar"/>
     <property name="prod.src.dir" value="${src.dir}/java"/>
     <property name="test.src.dir" value="${test.dir}/java"/>
+    <property name="groovy.test.src.dir" value="${test.dir}/groovy"/>
     <property name="gen.src.dir" value="${build.dir}/gen"/>
     <property name="modified.src.dir" value="${build.dir}/jester"/>
     <property name="sablecc.src.dir" value="${src.dir}/sablecc"/>
@@ -58,6 +59,7 @@
     <property name="restlet.version" value="1.1rc2"/>
     <property name="freemarker.version" value="2.3.14"/>
     <property name="bdbje.version" value="3.3.69"/>
+    <property name="groovy.version" value="1.5.7"/>
 
     <!-- EMMA coverage data output directory: -->
     <property name="coverage.dir" value="${build.dir}/coverage"/>
@@ -72,11 +74,10 @@
         <exclude name="**/*Mock*.java"/>
     </patternset>
     <patternset id="test.code.pattern">
-        <include name="**/*Test*.java"/>
-        <exclude name="**/*TestUtil*.java"/>
-        <exclude name="**/*TestRunner*.java"/>
-        <exclude name="**/*Mock*.java"/>
-        <exclude name="**/Abstract*"/>
+        <include name="**/*.java"/>
+    </patternset>
+    <patternset id="groovy.test.code.pattern">
+        <include name="**/*.groovy"/>
     </patternset>
     <patternset id="unit.test.code.pattern">
         <!-- FIXME TJA: Why do we need to exclude all these, why not just included *UnitTest? -->
@@ -151,6 +152,7 @@
         <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
         <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
+        <include name="${lib.dir}/groovy/groovy-${groovy.version}/embeddable/groovy-all-${groovy.version}.jar"/>
     </patternset>
 
     <fileset id="production.code.fileset" dir="${prod.src.dir}">
@@ -236,7 +238,6 @@
     </path>
 
     <taskdef resource="emma_ant.properties" classpathref="test.class.path"/>
-
     <taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask"
              classpath="${one-jar.lib.dir}/one-jar-ant-task-0.96.jar" onerror="report"/>
 
@@ -261,4 +262,9 @@
             </sablecc>
         </sequential>
     </macrodef>
+
+    <path id="groovy.class.path">
+        <pathelement location="${lib.dir}/groovy/groovy-${groovy.version}/embeddable/groovy-all-${groovy.version}.jar"/>
+    </path>
+    <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="groovy.class.path"/>
 </project>
