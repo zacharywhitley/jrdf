@@ -16,12 +16,12 @@ class RdfBuilderUnitTest extends GroovyTestCase {
 
         // Same subject, different predicate and object
         rdf.'urn:foo1' {
-            'urn:bar1'('urn:baz1')
-            'urn:bar2'('urn:baz2')
+            'urn:bar1' 'urn:baz1'
+            'urn:bar2' 'urn:baz2'
         }
 
         // Same subject, different predicate object as attributes
-        rdf.'urn:foo2'(
+        rdf.'urn:foo2' (
             'urn:bar1':'urn:baz1',
             'urn:bar2':'urn:baz2'
         )
