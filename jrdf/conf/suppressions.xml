@@ -31,6 +31,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="QueryClientImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="FilterAnalyserImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ExpressionSimplifierImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
@@ -42,6 +43,7 @@
     <suppress checks="JavaNCSS" files="NodeTypeBinding"/>
     <suppress checks="JavaNCSS" files="SortMergeNaturalJoin"/>
     <suppress checks="JavaNCSS" files="SparqlStreamingAnswerFactoryImpl"/>
+    <suppress checks="JavaNCSS" files="ExpressionSimplifierImpl"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>

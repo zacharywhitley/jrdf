@@ -76,7 +76,7 @@ public final class StrAVPOperation implements AVPOperation {
     private static final long serialVersionUID = 2960126343260406193L;
 
     /**
-     * The constant to indicate bound operation.
+     * The constant to indicate str operation.
      */
     public static final StrAVPOperation STR = new StrAVPOperation();
 
@@ -85,26 +85,29 @@ public final class StrAVPOperation implements AVPOperation {
 
     public boolean addAttributeValuePair(Attribute attribute, Map<Attribute,
         ValueOperation> newAttributeValues, ValueOperation lhs, ValueOperation rhs) {
-        Node literal;
-        ValueOperation litVO;
         if (StrOperator.class.isAssignableFrom(lhs.getOperation().getClass())) {
-            literal = rhs.getValue();
-            litVO = rhs;
+            return processLiteral(attribute, newAttributeValues, rhs);
         } else {
-            literal = lhs.getValue();
-            litVO = lhs;
+            return processLiteral(attribute, newAttributeValues, lhs);
         }
+    }
+
+    private boolean processLiteral(Attribute attribute, Map<Attribute,
+        ValueOperation> newAttributeValues, ValueOperation vo) {
+        Node literal = vo.getValue();
         if (!Literal.class.isAssignableFrom(literal.getClass())) {
             return true;
         }
-        newAttributeValues.put(attribute, litVO);
+        newAttributeValues.put(attribute, vo);
         return false;
     }
 
+    @Override
     public int hashCode() {
         return super.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
         return obj == this;
     }
