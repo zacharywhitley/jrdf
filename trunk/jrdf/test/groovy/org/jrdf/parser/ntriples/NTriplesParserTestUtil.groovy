@@ -1,93 +1,83 @@
 package org.jrdf.parser.ntriples
 
-import org.jrdf.parser.GraphStatementHandler
-import org.jrdf.graph.Triple
-import org.jrdf.parser.ParserBlankNodeFactory
-import org.jrdf.graph.GraphElementFactory
-import org.jrdf.graph.TripleFactory
-import org.jrdf.graph.URIReference
-import org.jrdf.util.ClosableIterable
-import org.jrdf.graph.Graph
-import org.jrdf.graph.BlankNode
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE
+import static java.net.URI.create
+import org.jrdf.graph.BlankNode
+import org.jrdf.graph.Graph
+import org.jrdf.graph.Triple
+import org.jrdf.graph.URIReference
+import org.jrdf.parser.GraphStatementHandler
+import org.jrdf.parser.ParserBlankNodeFactory
+import org.jrdf.graph.Resource
 
-public class NTriplesParserTestUtil {
+class NTriplesParserTestUtil {
 
-  private NTriplesParserTestUtil() {
-  }
+    private NTriplesParserTestUtil() {
+    }
 
-  public static InputStream getSampleData(Class clazz, String fileName) throws IOException {
-      URL source = clazz.getClassLoader().getResource(fileName);
-      return source.openStream();
-  }
+    static InputStream getSampleData(Class clazz, String fileName) throws IOException {
+        URL source = clazz.getClassLoader().getResource(fileName)
+        return source.openStream()
+    }
 
-  public static Set<Triple> parseNTriplesFile(InputStream input, Graph graph, ParserBlankNodeFactory factory)
-      throws Exception {
-      NTriplesParserFactory parserFactory = new NTriplesParserFactoryImpl();
-      NTriplesParser ntriplesParser = parserFactory.createParser(graph, factory);
-      LineParser parser = new LineParserImpl(ntriplesParser);
-      parser.setStatementHandler(new GraphStatementHandler(graph));
-      parser.parse(input, "foo");
-      Set<Triple> actualResults = new HashSet<Triple>();
-      ClosableIterable<Triple> tripleClosableIterable = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-              ANY_OBJECT_NODE);
-      for (Triple triple : tripleClosableIterable) {
-          actualResults.add(triple);
-      }
-      return actualResults;
-  }
+    static Set<Triple> parseNTriplesFile(InputStream input, Graph graph, ParserBlankNodeFactory factory) {
+        def parserFactory = new NTriplesParserFactoryImpl()
+        def ntriplesParser = parserFactory.createParser(graph, factory)
+        def parser = new LineParserImpl(ntriplesParser)
+        parser.setStatementHandler(new GraphStatementHandler(graph))
+        parser.parse(input, "foo")
+        def actualResults = new HashSet<Triple>()
+        graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).each {
+            actualResults.add(it)
+        }
+        return actualResults
+    }
 
-  public static Set<Triple> standardTest(Graph newGraph, ParserBlankNodeFactory blankNodeFactory) throws Exception {
-      Set<Triple> answers = new HashSet<Triple>();
-      GraphElementFactory graphElementFactory = newGraph.getElementFactory();
-      TripleFactory tripleFactory = newGraph.getTripleFactory();
-      List<URIReference> refs = new ArrayList<URIReference>();
-      for (int i = 0; i < 33; i++) {
-          refs.add(graphElementFactory.createURIReference(URI.create("http://example.org/resource" + i)));
-      }
-      URIReference p = graphElementFactory.createURIReference(URI.create("http://example.org/property"));
-      BlankNode anon = blankNodeFactory.createBlankNode("anon");
-      answers.add(tripleFactory.createTriple(refs.get(1), p, refs.get(2)));
-      answers.add(tripleFactory.createTriple(anon, p, refs.get(2)));
-      answers.add(tripleFactory.createTriple(refs.get(2), p, anon));
-      answers.add(tripleFactory.createTriple(refs.get(3), p, refs.get(2)));
-      answers.add(tripleFactory.createTriple(refs.get(4), p, refs.get(2)));
-      answers.add(tripleFactory.createTriple(refs.get(5), p, refs.get(2)));
-      answers.add(tripleFactory.createTriple(refs.get(6), p, refs.get(2)));
-      answers.add(tripleFactory.createTriple(refs.get(7), p, graphElementFactory.createLiteral("simple literal")));
-      answers.add(tripleFactory.createTriple(refs.get(8), p, graphElementFactory.createLiteral("backslash:\\")));
-      answers.add(tripleFactory.createTriple(refs.get(9), p, graphElementFactory.createLiteral("dquote:\"")));
-      answers.add(tripleFactory.createTriple(refs.get(10), p, graphElementFactory.createLiteral("newline:\n")));
-      answers.add(tripleFactory.createTriple(refs.get(11), p, graphElementFactory.createLiteral("return\r")));
-      answers.add(tripleFactory.createTriple(refs.get(12), p, graphElementFactory.createLiteral("tab:\t")));
-      answers.add(tripleFactory.createTriple(refs.get(13), p, refs.get(2)));
-      answers.add(tripleFactory.createTriple(refs.get(14), p, graphElementFactory.createLiteral("x")));
-      answers.add(tripleFactory.createTriple(refs.get(15), p, anon));
-      answers.add(tripleFactory.createTriple(refs.get(16), p, graphElementFactory.createLiteral("\u00E9")));
-      answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\u20AC")));
-      answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\uD800\uDC00")));
-      answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\uD84C\uDFB4")));
-      answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\uDBFF\uDFFF")));
-      URI xmlLiteral = URI.create("http://www.w3.org/2000/01/rdf-schema#XMLLiteral");
-      answers.add(tripleFactory.createTriple(refs.get(21), p, graphElementFactory.createLiteral("", xmlLiteral)));
-      answers.add(tripleFactory.createTriple(refs.get(22), p, graphElementFactory.createLiteral(" ", xmlLiteral)));
-      answers.add(tripleFactory.createTriple(refs.get(23), p, graphElementFactory.createLiteral("x", xmlLiteral)));
-      answers.add(tripleFactory.createTriple(refs.get(23), p, graphElementFactory.createLiteral("\"", xmlLiteral)));
-      answers.add(tripleFactory.createTriple(refs.get(24), p, graphElementFactory.createLiteral("<a></a>",
-          xmlLiteral)));
-      answers.add(tripleFactory.createTriple(refs.get(25), p, graphElementFactory.createLiteral("a <b></b>",
-          xmlLiteral)));
-      answers.add(tripleFactory.createTriple(refs.get(26), p, graphElementFactory.createLiteral("a <b></b> c",
-          xmlLiteral)));
-      answers.add(tripleFactory.createTriple(refs.get(26), p, graphElementFactory.createLiteral("a\n<b></b>\nc",
-          xmlLiteral)));
-      answers.add(tripleFactory.createTriple(refs.get(27), p, graphElementFactory.createLiteral("chat", xmlLiteral)));
-      answers.add(tripleFactory.createTriple(refs.get(30), p, graphElementFactory.createLiteral("chat", "fr")));
-      answers.add(tripleFactory.createTriple(refs.get(31), p, graphElementFactory.createLiteral("chat", "en")));
-      URI datatype = URI.create("http://example.org/datatype1");
-      answers.add(tripleFactory.createTriple(refs.get(32), p, graphElementFactory.createLiteral("abc", datatype)));
-      return answers;
-  }
+    static Set<Triple> standardTest(Graph newGraph, ParserBlankNodeFactory blankNodeFactory) {
+        def answers = new HashSet<Triple>()
+        def refs = new ArrayList<Resource>()
+        def graphElementFactory = newGraph.getElementFactory()
+        (0..32).each {
+            refs.add(graphElementFactory.createResource(create("http://example.org/resource" + it)))
+        }
+        URI p = create("http://example.org/property")
+        Resource anon = graphElementFactory.createResource(blankNodeFactory.createBlankNode("anon"));
+        answers.add(refs[1].asTriple(p, refs[2]))
+        answers.add(anon.asTriple(p, refs[2]))
+        answers.add(refs[2].asTriple(p, anon))
+        answers.add(refs[3].asTriple(p, refs[2]))
+        answers.add(refs[4].asTriple(p, refs[2]))
+        answers.add(refs[5].asTriple(p, refs[2]))
+        answers.add(refs[6].asTriple(p, refs[2]))
+        answers.add(refs[7].asTriple(p, "simple literal"))
+        answers.add(refs[8].asTriple(p, "backslash:\\"))
+        answers.add(refs[9].asTriple(p, "dquote:\""))
+        answers.add(refs[10].asTriple(p, "newline:\n"))
+        answers.add(refs[11].asTriple(p, "return\r"))
+        answers.add(refs[12].asTriple(p, "tab:\t"))
+        answers.add(refs[13].asTriple(p, refs[2]))
+        answers.add(refs[14].asTriple(p, "x"))
+        answers.add(refs[15].asTriple(p, anon))
+        answers.add(refs[16].asTriple(p, "\u00E9"))
+        answers.add(refs[17].asTriple(p, "\u20AC"))
+        answers.add(refs[17].asTriple(p, "\uD800\uDC00"))
+        answers.add(refs[17].asTriple(p, "\uD84C\uDFB4"))
+        answers.add(refs[17].asTriple(p, "\uDBFF\uDFFF"))
+        URI xmlLiteral = create("http://www.w3.org/2000/01/rdf-schema#XMLLiteral");
+        answers.add(refs[21].asTriple(p, "", xmlLiteral))
+        answers.add(refs[22].asTriple(p, " ", xmlLiteral))
+        answers.add(refs[23].asTriple(p, "x", xmlLiteral))
+        answers.add(refs[23].asTriple(p, "\"", xmlLiteral))
+        answers.add(refs[24].asTriple(p, "<a></a>", xmlLiteral))
+        answers.add(refs[25].asTriple(p, "a <b></b>", xmlLiteral))
+        answers.add(refs[26].asTriple(p, "a <b></b> c", xmlLiteral))
+        answers.add(refs[26].asTriple(p, "a\n<b></b>\nc", xmlLiteral))
+        answers.add(refs[27].asTriple(p, "chat", xmlLiteral))
+        answers.add(refs[30].asTriple(p, "chat", "fr"))
+        answers.add(refs[31].asTriple(p, "chat", "en"))
+        answers.add(refs[32].asTriple(p, "abc", create("http://example.org/datatype1")))
+        return answers;
+    }
 }
