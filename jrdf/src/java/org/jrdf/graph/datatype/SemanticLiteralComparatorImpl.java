@@ -61,6 +61,7 @@ package org.jrdf.graph.datatype;
 
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.BlankNodeImpl;
 import org.jrdf.vocabulary.XSD;
 
@@ -113,6 +114,8 @@ public final class SemanticLiteralComparatorImpl implements SemanticLiteralCompa
     public int compare(Literal literal1, Node node) {
         if (BlankNodeImpl.isBlankNode(node)) {
             return 0;
+        } else if (URIReference.class.isAssignableFrom(node.getClass())) {
+            return -1;
         } else {
             return compare(literal1, (Literal) node);
         }
