@@ -93,7 +93,7 @@ public class RdfBuilder extends BuilderSupport {
     }
 
     protected void nodeCompleted(Object name, Object value) {
-        if (value != null && subject != null && value.toString().equals(subject.toString())) {
+        if (value != null && subject != null && parseNode(value.toString()).equals(subject)) {
             subject = null;
         }
     }
@@ -173,8 +173,17 @@ public class RdfBuilder extends BuilderSupport {
     }
 
     private Node parseNode(String string) {
+        if (string.startsWith("<") && string.endsWith(">")) {
+            return parseURINode(string);
+        } else {
+            throw new IllegalArgumentException("Bad node string: " + string);
+        }
+    }
+
+    private Node parseURINode(String string) {
         try {
-            return parser.parseURIReference(string.toString());
+            final String s = string.substring(1, string.length() - 1);
+            return parser.parseURIReference(s);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

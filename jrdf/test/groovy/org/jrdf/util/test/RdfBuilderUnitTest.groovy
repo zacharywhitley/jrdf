@@ -12,31 +12,31 @@ class RdfBuilderUnitTest extends GroovyTestCase {
         def rdf = new RdfBuilder(graph)
 
         // Normal triple
-        rdf.'urn:foo' 'urn:bar':'urn:baz'
+        rdf.'<urn:foo>' '<urn:bar>':'<urn:baz>'
 
         // Same subject, different predicate and object
-        rdf.'urn:foo1' {
-            'urn:bar1' 'urn:baz1'
-            'urn:bar2' 'urn:baz2'
+        rdf.'<urn:foo1>' {
+            "<urn:bar1>" "<urn:baz1>"
+            "<urn:bar2>" "<urn:baz2>"
         }
 
         // Same subject, different predicate object as attributes
-        rdf.'urn:foo2' (
-            'urn:bar1':'urn:baz1',
-            'urn:bar2':'urn:baz2'
+        rdf.'<urn:foo2>' (
+            '<urn:bar1>':'<urn:baz1>',
+            '<urn:bar2>':'<urn:baz2>'
         )
 
         // Same subject and predicate, different object
-        rdf.'urn:foo3' {
-            'urn:bar' {
-                'urn:baz1'()
-                'urn:baz2'()
+        rdf.'<urn:foo3>' {
+            '<urn:bar>' {
+                '<urn:baz1>'()
+                '<urn:baz2>'()
             }
         }
 
         // Same subject and predicate, different object as attributes
-        rdf.'urn:foo4'(
-            'urn:bar':['urn:baz1', 'urn:baz2']
+        rdf.'<urn:foo4>'(
+            '<urn:bar>':['<urn:baz1>', '<urn:baz2>']
         )
 
         assertEquals(9, graph.getNumberOfTriples())
