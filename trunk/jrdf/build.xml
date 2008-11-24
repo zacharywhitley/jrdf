@@ -40,9 +40,7 @@
                        code.path="production.code.path" code.pattern="production.code.pattern"
                        compiler.args="-Xlint:all"/>
         <compile.groovy.macro src.dir="${groovy.test.src.dir}:${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
-                              code.path="test.code.path" code.pattern="groovy.test.code.pattern"/>
-        <compile.macro src.dir="${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
-                       code.path="test.code.path" code.pattern="test.code.pattern" compiler.args="-Xlint:all"/>
+                              code.path="test.code.path" code.pattern="test.code.pattern"/>
 
         <!-- Create emma instrumented classes if turned on -->
         <emma enabled="${emma.enabled}">
