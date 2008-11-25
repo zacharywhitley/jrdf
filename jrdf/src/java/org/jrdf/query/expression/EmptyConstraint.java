@@ -96,7 +96,7 @@ public final class EmptyConstraint<V extends ExpressionVisitor> implements Const
     }
 
     public int size() {
-        return 1;
+        return 0;
     }
 
     public int hashCode() {
