@@ -80,6 +80,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+// TODO N3 Add Negative tests.
 public class NTripleParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
