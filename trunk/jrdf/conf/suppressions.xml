@@ -79,6 +79,7 @@
     <suppress checks="MagicNumber" files="WritableIndexImpl"/>
     <suppress checks="ReturnCount" files="BlankNodeMapperImpl"/>
     <suppress checks="ReturnCount" files="NamespaceAwareObjectParser"/>
+    <suppress checks="ReturnCount" files="SingleRdfNodeParser"/>
 
     <!-- Import -->
     <!-- BTree -->
