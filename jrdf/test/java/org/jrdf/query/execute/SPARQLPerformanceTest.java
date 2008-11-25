@@ -67,16 +67,16 @@ import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.ParseException;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.n3.N3Parser;
 import org.jrdf.parser.n3.N3ParserFactory;
 import org.jrdf.parser.n3.N3ParserFactoryImpl;
 import org.jrdf.parser.ntriples.LineParser;
 import org.jrdf.parser.ntriples.LineParserImpl;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.*;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
@@ -90,7 +90,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -103,19 +103,19 @@ public class SPARQLPerformanceTest extends TestCase {
     private PersistentGlobalJRDFFactory factory;
     private static final N3ParserFactory PARSER_FACTORY = new N3ParserFactoryImpl();
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
-    private static final Set<String> FILE_NAMES = new HashSet<String>() {
+    private static final Set<String> FILE_NAMES = new LinkedHashSet<String>() {
         {
-            add("rdf-tests/sparql/q1.sparql");
-            add("rdf-tests/sparql/q2.sparql");
-            add("rdf-tests/sparql/q3a.sparql");
-            add("rdf-tests/sparql/q3b.sparql");
-            add("rdf-tests/sparql/q3c.sparql");
-            add("rdf-tests/sparql/q4.sparql");
-            add("rdf-tests/sparql/q5a.sparql");
-            add("rdf-tests/sparql/q5b.sparql");
-            add("rdf-tests/sparql/q6.sparql");
-            add("rdf-tests/sparql/q7.sparql");
-            add("rdf-tests/sparql/q8.sparql");
+//            add("rdf-tests/sparql/q1.sparql");
+//            add("rdf-tests/sparql/q2.sparql");
+//            add("rdf-tests/sparql/q3a.sparql");
+//            add("rdf-tests/sparql/q3b.sparql");
+//            add("rdf-tests/sparql/q3c.sparql");
+//            add("rdf-tests/sparql/q4.sparql");
+//            add("rdf-tests/sparql/q5a.sparql");
+//            add("rdf-tests/sparql/q5b.sparql");
+//            add("rdf-tests/sparql/q6.sparql");
+//            add("rdf-tests/sparql/q7.sparql");
+//            add("rdf-tests/sparql/q8.sparql");
             add("rdf-tests/sparql/q9.sparql");
             add("rdf-tests/sparql/q10.sparql");
             add("rdf-tests/sparql/q11.sparql");
@@ -145,6 +145,7 @@ public class SPARQLPerformanceTest extends TestCase {
         graph.clear();
         graph.close();
         factory.close();
+        HANDLER.removeDir();
     }
 
     public void testSparqlPerformance() throws Exception {
