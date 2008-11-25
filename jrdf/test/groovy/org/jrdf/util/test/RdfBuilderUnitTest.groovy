@@ -43,11 +43,12 @@ class RdfBuilderUnitTest extends GroovyTestCase {
         rdf.'_foo' '<urn:blank>':'<urn:bar>'
         rdf.'<urn:foo>' '<urn:blank>':'_foo'
 
-//        rdf.'<urn:foo>' '<urn:bar>':'"foo"'
-//        rdf.'<urn:foo>' '<urn:bar>':'"foo"@en'
-//        rdf.'<urn:foo>' '<urn:bar>':'"12"^^xsd'
+        // Literal nodes
+        rdf.'<urn:lit1>' '<urn:bar>':'"foo"'
+        rdf.'<urn:lit2>' '<urn:bar>':'"le foo"@fr'
+        rdf.'<urn:lit3>' '<urn:bar>':'"12"^^<xsd:int>'
 
-        assertEquals(11, graph.getNumberOfTriples())
+        assertEquals(14, graph.getNumberOfTriples())
         println("Graph: " + graph)
     }
 }

@@ -59,25 +59,20 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.Graph;
 import org.jrdf.collection.MemMapFactory;
+import org.jrdf.graph.Graph;
 import org.jrdf.parser.ParseErrorListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFInputFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
-import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 import org.jrdf.parser.ntriples.parser.LiteralParser;
-import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
-import org.jrdf.parser.ntriples.parser.NTripleUtil;
-import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
+import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.parser.ntriples.parser.URIReferenceParser;
-import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
@@ -133,11 +128,9 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     }
 
     private void init(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
-        RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
-        uriReferenceParser = new URIReferenceParserImpl(graph.getElementFactory(), nTripleUtil);
-        blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
-        LiteralMatcher literalMatcher = new RegexLiteralMatcher(matcherFactory, nTripleUtil);
-        literalParser = new LiteralParserImpl(graph.getElementFactory(), literalMatcher);
+        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(graph, new MemMapFactory());
+        uriReferenceParser = parsersFactory.getURIReferenceParser();
+        blankNodeParser = parsersFactory.getBlankNodeParserWithFactory(blankNodeFactory);
+        literalParser = parsersFactory.getLiteralParser();
     }
 }
