@@ -185,10 +185,12 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
+    // TODO YF PERFORMANCE too bad!
     public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> newUnion) {
         List<Expression<V>> list = new LinkedList<Expression<V>>();
         list.add(newUnion.getLhs());
         list.add(newUnion.getRhs());
+        reorderExpressionList(list);
         Relation lhs = getExpression(list.get(0));
         if (shortCircuit) {
             if (!lhs.getTuples().isEmpty()) {

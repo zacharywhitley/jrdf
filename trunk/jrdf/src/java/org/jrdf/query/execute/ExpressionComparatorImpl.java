@@ -123,7 +123,7 @@ public final class ExpressionComparatorImpl implements ExpressionVisitor, Expres
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         int lhs = getNext(conjunction.getLhs());
         int rhs = getNext(conjunction.getRhs());
-        result = (lhs + rhs) / 2;
+        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
@@ -137,13 +137,13 @@ public final class ExpressionComparatorImpl implements ExpressionVisitor, Expres
     public <V extends ExpressionVisitor> void visitUnion(Union<V> union) {
         int lhs = getNext(union.getLhs());
         int rhs = getNext(union.getRhs());
-        result = (lhs + rhs) / 2;
+        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
         int lhs = getNext(optional.getLhs());
         int rhs = getNext(optional.getRhs());
-        result = (lhs + rhs) / 2;
+        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
@@ -151,7 +151,9 @@ public final class ExpressionComparatorImpl implements ExpressionVisitor, Expres
     }
 
     public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
-        result = andExpression.size();
+        int lhs = getNext(andExpression.getLhs());
+        int rhs = getNext(andExpression.getRhs());
+        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
     public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
