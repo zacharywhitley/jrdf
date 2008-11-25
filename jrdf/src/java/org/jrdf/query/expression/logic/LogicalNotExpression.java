@@ -89,7 +89,7 @@ public class LogicalNotExpression<V extends ExpressionVisitor> implements LogicE
     }
 
     public int size() {
-        return expression.size();
+        return expression.size() + 1;
     }
 
     @Override

@@ -100,34 +100,34 @@ public class ExpressionComparatorImplUnitTest extends TestCase {
 
     public void testSimpleConjunctionSize() {
         final int size = BOOK1_AND_2_CONJUNCTION.size();
-        assertEquals(2, size);
+        assertEquals(1, size);
     }
 
     public void testComplexConjunctionSize() {
         final int size = BOOK1_AND_2_AND_3_CONJUNCTION.size();
-        assertEquals(2, size);
+        assertEquals(1, size);
     }
 
     public void testSimpleUnionSize() {
         final int size = BOOK1_AND_2_UNION.size();
-        assertEquals(2, size);
+        assertEquals(1, size);
     }
 
     public void testComplexUnionSize() {
         final int size = BOOK1_AND_2_AND_3_UNION.size();
-        assertEquals(2, size);
+        assertEquals(1, size);
     }
 
     public void testAnyConstraintSize() {
         final int size = ANY_SPO.size();
-        assertEquals(0, size);
+        assertEquals(3, size);
     }
 
     public void testSingleConstraintSize() {
         int size = FOAF_NAME_EXP_1.size();
-        assertEquals(1, size);
-        size = BOOK_1_DC_TITLE_ID_1.size();
         assertEquals(2, size);
+        size = BOOK_1_DC_TITLE_ID_1.size();
+        assertEquals(1, size);
     }
 
     public void testConjunction() {

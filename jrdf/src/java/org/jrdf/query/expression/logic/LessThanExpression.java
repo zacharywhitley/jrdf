@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  *
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 public class LessThanExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
     private static final long serialVersionUID = -8314509866292119440L;
@@ -40,11 +40,10 @@ public class LessThanExpression<V extends ExpressionVisitor> implements LogicExp
     }
 
     public int size() {
-        return (lhs.size() + rhs.size()) / 2;
+        return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
     public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
         int hash = DUMMY_HASHCODE + lhs.hashCode();
         return hash * DUMMY_HASHCODE + rhs.hashCode();
     }

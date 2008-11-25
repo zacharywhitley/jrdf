@@ -159,8 +159,12 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     private <V extends ExpressionVisitor> List<Expression<V>> flattenAndSortConjunction(Conjunction<V> conjunction) {
         List<Expression<V>> constraintList = new LinkedList<Expression<V>>();
         flattenConjunction(conjunction, constraintList);
-        sort(constraintList, expressionComparator);
+        reorderExpressionList(constraintList);
         return constraintList;
+    }
+
+    private <V extends ExpressionVisitor> void reorderExpressionList(List<Expression<V>> constraintList) {
+        sort(constraintList, expressionComparator);
     }
 
     private <V extends ExpressionVisitor> void flattenConjunction(Conjunction<V> conjunction,
@@ -181,18 +185,25 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> conjunction) {
-        Relation lhs = getExpression(conjunction.getLhs());
+    public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> newUnion) {
+        List<Expression<V>> list = new LinkedList<Expression<V>>();
+        list.add(newUnion.getLhs());
+        list.add(newUnion.getRhs());
+        Relation lhs = getExpression(list.get(0));
         if (shortCircuit) {
             if (!lhs.getTuples().isEmpty()) {
                 result = lhs;
             } else {
-                result = getExpression(conjunction.getRhs());
+                result = getExpression(list.get(1));
             }
         } else {
-            Relation rhs = getExpression(conjunction.getRhs());
+            Relation rhs = getExpression(list.get(1));
             result = union.union(lhs, rhs);
         }
+    }
+
+    private void setShortCircuit(boolean shortCircuit) {
+        this.shortCircuit = shortCircuit;
     }
 
     @Override
@@ -202,6 +213,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             union, leftOuterJoin, diff);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
+        ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(shortCircuit);
         expression.accept((V) queryEngine);
         return queryEngine.getResult();
     }

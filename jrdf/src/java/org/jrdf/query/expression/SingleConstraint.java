@@ -128,7 +128,7 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
         while (iterator.hasNext()) {
             final ValueOperation valueOperation = singleAvp.get(iterator.next());
             final Node node = valueOperation.getValue();
-            if (!isAnyNode(node) && !isBuiltinNode(node)) {
+            if (isAnyNode(node)) {
                 result++;
             }
         }

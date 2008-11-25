@@ -105,7 +105,6 @@ public final class RelationProcessorImpl implements RelationProcessor {
         return doProcessRelations(tupleEngine, relation1, relation2, headings);
     }
 
-    //TODO YF change this to use set factory?
     private Relation doProcessRelations(TupleEngine tupleEngine, Relation relation1, Relation relation2,
                                         SortedSet<Attribute> headings) {
         SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);

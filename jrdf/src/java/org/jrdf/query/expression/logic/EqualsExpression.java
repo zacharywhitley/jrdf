@@ -99,7 +99,7 @@ public class EqualsExpression<V extends ExpressionVisitor> implements LogicExpre
     }
 
     public int size() {
-        return (lhs.size() + rhs.size()) / 2;
+        return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
     public int hashCode() {
