@@ -57,32 +57,16 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.collection.MemMapFactory;
-import org.jrdf.graph.Graph;
 import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
-import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
-import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.parser.ntriples.parser.TripleParserImpl;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-import java.util.regex.Pattern;
+public interface NodeParsersFactory {
+    URIReferenceParser getURIReferenceParser();
 
-public class NTriplesParserFactoryImpl implements NTriplesParserFactory {
-    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
-        "\\.\\p{Blank}*");
+    BlankNodeParser getBlankNodeParser();
 
-    public NTriplesParser createParser(Graph newGraph, ParserBlankNodeFactory parserBlankNodeFactory) {
-        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(newGraph, new MemMapFactory());
-        final TripleParser tripleParser = new TripleParserImpl(parsersFactory.getURIReferenceParser(),
-            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser(), newGraph.getTripleFactory());
-        final RegexMatcherFactoryImpl matcherFactory = new RegexMatcherFactoryImpl();
-        return new NTriplesParser(new CommentsParserImpl(matcherFactory),
-            new TriplesParserImpl(tripleParser, matcherFactory, TRIPLE_REGEX));
-    }
+    BlankNodeParser getBlankNodeParserWithFactory(ParserBlankNodeFactory parserBlankNodeFactory);
+
+    LiteralParser getLiteralParser();
 }
