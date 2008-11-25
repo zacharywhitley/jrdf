@@ -119,6 +119,10 @@ public final class SelectQueryImpl implements Query {
         ExpressionSimplifier simplifier = new ExpressionSimplifierImpl();
         expression.accept(simplifier);
         expression = simplifier.getExpression();
+        if (simplifier.parseAgain()) {
+            expression.accept(simplifier);
+            expression = simplifier.getExpression();
+        }
         expression.accept(queryEngine);
         return queryEngine.getResult();
     }

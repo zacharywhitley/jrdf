@@ -114,7 +114,6 @@ public class JrdfExample {
      * Default Constructor.
      */
     public JrdfExample() {
-
     }
 
     /**
