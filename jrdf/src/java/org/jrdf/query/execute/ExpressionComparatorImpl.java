@@ -93,7 +93,7 @@ public final class ExpressionComparatorImpl implements ExpressionVisitor, Expres
     private ExpressionComparatorImpl() {
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public int compare(Expression lhs, Expression rhs) {
         int lhsValue = getNext(lhs);
         int rhsValue = getNext(rhs);
