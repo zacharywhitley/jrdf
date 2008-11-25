@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  *
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class NEqualsExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
@@ -41,7 +41,7 @@ public class NEqualsExpression<V extends ExpressionVisitor> implements LogicExpr
     }
 
     public int size() {
-        return (lhs.size() + rhs.size()) / 2;
+        return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
     public int hashCode() {

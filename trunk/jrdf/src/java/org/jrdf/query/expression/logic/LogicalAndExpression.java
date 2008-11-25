@@ -99,7 +99,7 @@ public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicE
     }
 
     public int size() {
-        return (lhs.size() + rhs.size()) / 2;
+        return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
     public void accept(V v) {

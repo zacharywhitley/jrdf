@@ -59,11 +59,11 @@
 
 package org.jrdf.query.execute;
 
+import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.EmptyConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
@@ -71,16 +71,17 @@ import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.NEqualsExpression;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter
-        implements ExpressionVisitor, ExpressionComparator {
+public final class ExpressionComparatorImpl implements ExpressionVisitor, ExpressionComparator {
     private static final long serialVersionUID = 4884876904025513571L;
     private int result;
 
@@ -92,15 +93,16 @@ public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter
     private ExpressionComparatorImpl() {
     }
 
+    @SuppressWarnings( "unchecked" )
     public int compare(Expression lhs, Expression rhs) {
         int lhsValue = getNext(lhs);
         int rhsValue = getNext(rhs);
         if (lhsValue == rhsValue) {
             return 0;
         } else if (lhsValue < rhsValue) {
-            return 1;
-        } else {
             return -1;
+        } else {
+            return 1;
         }
     }
 
@@ -115,7 +117,7 @@ public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
         int lhs = getNext(filter.getLhs());
         int rhs = getNext(filter.getRhs());
-        result = (lhs + rhs) / 2;
+        result = lhs + rhs;
     }
 
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
@@ -144,24 +146,32 @@ public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter
         result = (lhs + rhs) / 2;
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
         result = operator.size();
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
         result = andExpression.size();
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
         result = notExpression.size();
     }
 
-    @Override
     public <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression) {
         result = equalsExpression.size();
+    }
+
+    public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
+        result = getNext(ask.getNextExpression());
+    }
+
+    public <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression) {
+        result = lessThanExpression.size();
+    }
+
+    public <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression) {
+        result = nEqualsExpression.size();
     }
 
     @SuppressWarnings({ "unchecked" })
