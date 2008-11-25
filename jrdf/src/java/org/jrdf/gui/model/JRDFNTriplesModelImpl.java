@@ -94,6 +94,7 @@ public class JRDFNTriplesModelImpl implements JRDFModel {
         this.connection = connection;
     }
 
+    // TODO N3 Changes - detect RDF type based on file extension and mime type.
     public Graph loadModel(URL url) {
         try {
             graph = graphFactory.getGraph();
