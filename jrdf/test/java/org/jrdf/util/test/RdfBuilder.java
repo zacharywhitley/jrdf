@@ -67,31 +67,45 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.ParseException;
-import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.LiteralParser;
-import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
-import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
-import org.jrdf.parser.ntriples.parser.URIReferenceParser;
+import org.jrdf.parser.mem.MemNamespaceListener;
+import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactory;
+import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactoryImpl;
+import org.jrdf.parser.n3.parser.SingleRdfNodeParser;
+import org.jrdf.parser.ntriples.parser.ObjectParser;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class RdfBuilder extends BuilderSupport {
-    private Graph graph;
-    private URIReferenceParser uriParser;
-    private BlankNodeParser bnodeParser;
-    private LiteralParser literalParser;
+    private static final Pattern REGEX = Pattern.compile(
+        "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
+        "_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))");
+    private final Graph graph;
+    private final NamespaceListener listener;
+    private final RegexMatcherFactory matcherFactory;
+    private final ObjectParser namespaceAwareObjectParser;
     private SubjectNode subject;
     private PredicateNode predicate;
     private ObjectNode object;
 
     public RdfBuilder(final Graph newGraph) {
         graph = newGraph;
-        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(newGraph, new MemMapFactory());
-        uriParser = parsersFactory.getURIReferenceParser();
-        bnodeParser = parsersFactory.getBlankNodeParser();
-        literalParser = parsersFactory.getLiteralParser();
+        listener = new MemNamespaceListener();
+        matcherFactory = new RegexMatcherFactoryImpl();
+        final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(
+            newGraph, new MemMapFactory(), matcherFactory, listener);
+        namespaceAwareObjectParser = new SingleRdfNodeParser(parsersFactory.getURIReferenceParser(),
+            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
+    }
+
+    public void namespace(String prefix, String uri) {
+        listener.handleNamespace(prefix, uri);
     }
 
     protected void setParent(Object name, Object value) {
@@ -178,29 +192,13 @@ public class RdfBuilder extends BuilderSupport {
     }
 
     private Node parseNode(String string) {
-        if (string.startsWith("<") && string.endsWith(">")) {
-            return parseURINode(string);
-        } else if (string.startsWith("_")) {
-            return parseBlankNode(string);
-        } else if (string.startsWith("\"")) {
-            return parseLiteral(string);
-        } else {
-            throw new IllegalArgumentException("Bad node string: " + string);
-        }
-    }
-
-    private Node parseURINode(String string) {
         try {
-            final String s = string.substring(1, string.length() - 1);
-            return uriParser.parseURIReference(s);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Node parseBlankNode(String string) {
-        try {
-            return bnodeParser.parseBlankNode(string);
+            final RegexMatcher matcher = matcherFactory.createMatcher(REGEX, string);
+            if (matcher.matches()) {
+                return namespaceAwareObjectParser.parseObject(matcher);
+            } else {
+                throw new IllegalArgumentException("Couldn't match string: " + string);
+            }
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -210,14 +208,6 @@ public class RdfBuilder extends BuilderSupport {
         try {
             graph.add(subject, predicate, object);
         } catch (GraphException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Node parseLiteral(String string) {
-        try {
-            return literalParser.parseLiteral(string);
-        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
