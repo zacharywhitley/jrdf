@@ -89,8 +89,6 @@ public class TriplesParserImpl implements TriplesParser {
         if (tripleRegexMatcher.matches()) {
             final Triple triple = tripleParser.parseTriple(tripleRegexMatcher);
             sh.handleStatement(triple.getSubject(), triple.getPredicate(), triple.getObject());
-        } else {
-            throw new IllegalArgumentException("Cannot parse line: " + line);
         }
     }
 
