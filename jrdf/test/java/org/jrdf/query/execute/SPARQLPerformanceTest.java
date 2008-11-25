@@ -105,17 +105,17 @@ public class SPARQLPerformanceTest extends TestCase {
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
     private static final Set<String> FILE_NAMES = new LinkedHashSet<String>() {
         {
-//            add("rdf-tests/sparql/q1.sparql");
-//            add("rdf-tests/sparql/q2.sparql");
-//            add("rdf-tests/sparql/q3a.sparql");
-//            add("rdf-tests/sparql/q3b.sparql");
-//            add("rdf-tests/sparql/q3c.sparql");
-//            add("rdf-tests/sparql/q4.sparql");
-//            add("rdf-tests/sparql/q5a.sparql");
-//            add("rdf-tests/sparql/q5b.sparql");
-//            add("rdf-tests/sparql/q6.sparql");
-//            add("rdf-tests/sparql/q7.sparql");
-//            add("rdf-tests/sparql/q8.sparql");
+            add("rdf-tests/sparql/q1.sparql");
+            add("rdf-tests/sparql/q2.sparql");
+            add("rdf-tests/sparql/q3a.sparql");
+            add("rdf-tests/sparql/q3b.sparql");
+            add("rdf-tests/sparql/q3c.sparql");
+            add("rdf-tests/sparql/q4.sparql");
+            add("rdf-tests/sparql/q5a.sparql");
+            add("rdf-tests/sparql/q5b.sparql");
+            add("rdf-tests/sparql/q6.sparql");
+            add("rdf-tests/sparql/q7.sparql");
+            add("rdf-tests/sparql/q8.sparql");
             add("rdf-tests/sparql/q9.sparql");
             add("rdf-tests/sparql/q10.sparql");
             add("rdf-tests/sparql/q11.sparql");
