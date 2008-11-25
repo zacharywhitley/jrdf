@@ -67,11 +67,11 @@ import org.jrdf.graph.GraphFactory;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.n3.N3Parser;
+import org.jrdf.parser.n3.N3ParserFactory;
+import org.jrdf.parser.n3.N3ParserFactoryImpl;
 import org.jrdf.parser.ntriples.LineParser;
 import org.jrdf.parser.ntriples.LineParserImpl;
-import org.jrdf.parser.ntriples.NTriplesParser;
-import org.jrdf.parser.ntriples.NTriplesParserFactory;
-import org.jrdf.parser.ntriples.NTriplesParserFactoryImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.urql.UrqlConnection;
@@ -108,10 +108,10 @@ public class JRDFNTriplesModelImpl implements JRDFModel {
     }
 
     private LineParser getParser() {
-        NTriplesParserFactory parserFactory = new NTriplesParserFactoryImpl();
+        N3ParserFactory parserFactory = new N3ParserFactoryImpl();
         MapFactory creator = new MemMapFactory();
         ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
-        NTriplesParser nTriplesParser = parserFactory.createParser(graph, factory);
+        N3Parser nTriplesParser = parserFactory.createParser(graph, factory);
         final LineParser parser = new LineParserImpl(nTriplesParser);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         return parser;
