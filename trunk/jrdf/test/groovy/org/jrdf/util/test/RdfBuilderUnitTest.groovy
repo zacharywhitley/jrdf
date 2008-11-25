@@ -16,8 +16,8 @@ class RdfBuilderUnitTest extends GroovyTestCase {
 
         // Same subject, different predicate and object
         rdf.'<urn:foo1>' {
-            "<urn:bar1>" "<urn:baz1>"
-            "<urn:bar2>" "<urn:baz2>"
+            '<urn:bar1>' '<urn:baz1>'
+            '<urn:bar2>' '<urn:baz2>'
         }
 
         // Same subject, different predicate object as attributes
@@ -39,6 +39,11 @@ class RdfBuilderUnitTest extends GroovyTestCase {
             '<urn:bar>':['<urn:baz1>', '<urn:baz2>']
         )
 
-        assertEquals(9, graph.getNumberOfTriples())
+        // Blank nodes
+        rdf.'_foo' '<urn:blank>':'<urn:bar>'
+        rdf.'<urn:foo>' '<urn:blank>':'_foo'
+
+        assertEquals(11, graph.getNumberOfTriples())
+        println("Graph: " + graph)
     }
 }

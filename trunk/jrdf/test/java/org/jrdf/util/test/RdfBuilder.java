@@ -60,6 +60,7 @@
 package org.jrdf.util.test;
 
 import groovy.util.BuilderSupport;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
@@ -67,6 +68,10 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.parser.ParseException;
+import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
 import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 import org.jrdf.parser.ntriples.parser.URIReferenceParser;
@@ -78,7 +83,8 @@ import java.util.Map;
 
 public class RdfBuilder extends BuilderSupport {
     private Graph graph;
-    private URIReferenceParser parser;
+    private URIReferenceParser uriParser;
+    private BlankNodeParser bnodeParser;
     private SubjectNode subject;
     private PredicateNode predicate;
     private ObjectNode object;
@@ -86,7 +92,10 @@ public class RdfBuilder extends BuilderSupport {
     public RdfBuilder(final Graph newGraph) {
         graph = newGraph;
         final NTripleUtil util = new NTripleUtilImpl(new RegexMatcherFactoryImpl());
-        parser = new URIReferenceParserImpl(graph.getElementFactory(), util);
+        uriParser = new URIReferenceParserImpl(graph.getElementFactory(), util);
+        ParserBlankNodeFactory parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
+            graph.getElementFactory());
+        bnodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
     }
 
     protected void setParent(Object name, Object value) {
@@ -175,6 +184,8 @@ public class RdfBuilder extends BuilderSupport {
     private Node parseNode(String string) {
         if (string.startsWith("<") && string.endsWith(">")) {
             return parseURINode(string);
+        } else if (string.startsWith("_")) {
+            return parseBlankNode(string);
         } else {
             throw new IllegalArgumentException("Bad node string: " + string);
         }
@@ -183,7 +194,15 @@ public class RdfBuilder extends BuilderSupport {
     private Node parseURINode(String string) {
         try {
             final String s = string.substring(1, string.length() - 1);
-            return parser.parseURIReference(s);
+            return uriParser.parseURIReference(s);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Node parseBlankNode(String string) {
+        try {
+            return bnodeParser.parseBlankNode(string);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
