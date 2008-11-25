@@ -49,6 +49,5 @@ class RdfBuilderUnitTest extends GroovyTestCase {
         rdf.'<urn:lit3>' '<urn:bar>':'"12"^^<xsd:int>'
 
         assertEquals(14, graph.getNumberOfTriples())
-        println("Graph: " + graph)
     }
 }
