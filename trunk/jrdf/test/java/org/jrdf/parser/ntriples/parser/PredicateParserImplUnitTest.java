@@ -66,26 +66,33 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import org.jrdf.util.test.StandardClassPropertiesTestUtil;
 
+import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
+
 public class PredicateParserImplUnitTest extends TestCase {
+    private static final Pattern REGEX = compile("(<([\\x20-\\x7E]+?)>)");
     private static final Class<PredicateParser> TARGET_INTERFACE = PredicateParser.class;
     private static final Class<PredicateParserImpl> TEST_CLASS = PredicateParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[]{URIReferenceParser.class};
-    private static final String[] PARAMETER_NAMES = new String[]{"uriReferenceParser"};
+    private static final Class[] PARAM_TYPES = new Class[]{RegexMatcherFactory.class, URIReferenceParser.class};
+    private static final String[] PARAMETER_NAMES = new String[]{"newFactory", "uriReferenceParser"};
     private static final String MATCHER = "match" + Math.random();
     private static final String LINE = "line" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
+    private RegexMatcherFactory factory;
     private URIReferenceParser uriReferenceParser;
     private PredicateParser predicateParser;
     private RegexMatcher regexMatcher;
 
     public void setUp() {
+        factory = mockFactory.createMock(RegexMatcherFactory.class);
         uriReferenceParser = mockFactory.createMock(URIReferenceParser.class);
-        predicateParser = new PredicateParserImpl(uriReferenceParser);
+        predicateParser = new PredicateParserImpl(factory, uriReferenceParser);
         regexMatcher = mockFactory.createMock(RegexMatcher.class);
     }
 
@@ -95,19 +102,19 @@ public class PredicateParserImplUnitTest extends TestCase {
     }
 
     public void testMethodProperties() {
-        ArgumentTestUtil.checkMethodNullAssertions(predicateParser, "parsePredicate", new ParameterDefinition(
-            new String[]{"regexMatcher"}, new Class[]{RegexMatcher.class}));
+        checkMethodNullAssertions(predicateParser, "parseNode", new ParameterDefinition(
+            new String[]{"regexMatcher"}, new Class[]{CharSequence.class}));
     }
 
     public void testParseObjectURI() throws Exception {
         URIReference expectedUriReference = mockFactory.createMock(URIReference.class);
         EasyMock.expect(uriReferenceParser.parseURIReference(MATCHER)).andReturn(expectedUriReference);
-        EasyMock.expect(regexMatcher.group(6)).andReturn(MATCHER).times(2);
+        EasyMock.expect(regexMatcher.group(2)).andReturn(MATCHER).times(2);
         checkParse(expectedUriReference);
     }
 
     public void testDoesntParse() throws Exception {
-        EasyMock.expect(regexMatcher.group(6)).andReturn(null).times(1);
+        EasyMock.expect(regexMatcher.group(2)).andReturn(null).times(1);
         EasyMock.expect(regexMatcher.group(0)).andReturn(LINE).times(1);
         mockFactory.replay();
         checkThrowsException();

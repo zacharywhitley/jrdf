@@ -82,24 +82,24 @@ public class NamespaceAwareTripleParser implements TripleParser {
     private final TripleFactory tripleFactory;
     private final BlankNodeParser blankNodeParser;
 
-    public NamespaceAwareTripleParser(RegexMatcherFactory newRegexFactory,
-        NamespaceAwareURIReferenceParser newURIReferenceParser, BlankNodeParser newBlankNodeParser,
-        LiteralParser newLiteralNodeParser, TripleFactory newTripleFactory) {
+    public NamespaceAwareTripleParser(final RegexMatcherFactory newRegexFactory,
+        final NamespaceAwareURIReferenceParser newURIReferenceParser, final BlankNodeParser newBlankNodeParser,
+        final LiteralParser newLiteralNodeParser, final TripleFactory newTripleFactory) {
         checkNotNull(newRegexFactory, newURIReferenceParser, newBlankNodeParser, newLiteralNodeParser,
             newTripleFactory);
         subjectParser = new NamespaceAwareSubjectParser(newURIReferenceParser, newBlankNodeParser);
-        predicateParser = new NamespaceAwarePredicateParser(newURIReferenceParser);
+        predicateParser = new NamespaceAwarePredicateParser(newRegexFactory, newURIReferenceParser);
         objectParser = new NamespaceAwareObjectParser(newRegexFactory, newURIReferenceParser, newBlankNodeParser,
             newLiteralNodeParser);
         blankNodeParser = newBlankNodeParser;
         tripleFactory = newTripleFactory;
     }
 
-    public Triple parseTriple(RegexMatcher tripleRegexMatcher, CharSequence line) {
+    public Triple parseTriple(final RegexMatcher tripleRegexMatcher, final CharSequence line) {
         try {
-            SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
-            PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher);
-            ObjectNode object = objectParser.parseNode(line);
+            final SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
+            final PredicateNode predicate = predicateParser.parseNode(line);
+            final ObjectNode object = objectParser.parseNode(line);
             if (subject != null && predicate != null && object != null) {
                 return tripleFactory.createTriple(subject, predicate, object);
             } else {

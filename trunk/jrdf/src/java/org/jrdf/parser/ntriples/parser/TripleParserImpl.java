@@ -76,12 +76,14 @@ public class TripleParserImpl implements TripleParser {
         "(<(.+?)>|_:(.+?))\\p{Blank}+" +
         "(<(.+?)>)\\p{Blank}+" +
         "(<(.+?)>|_:(.+?)|(.+?))\\p{Blank}*\\.\\p{Blank}*");
+    private static final int OBJECT_GROUP = 6;
     private final RegexMatcherFactory regexMatcherFactory;
     private final SubjectParser subjectParser;
     private final PredicateParser predicateParser;
     private final ObjectParser objectParser;
     private final TripleFactory tripleFactory;
     private final BlankNodeParser blankNodeParser;
+    private static final int PREDICATE_GROUP = 4;
 
     public TripleParserImpl(RegexMatcherFactory newRegexMatcherFactory, URIReferenceParser newURIReferenceParser,
         BlankNodeParser newBlankNodeParser, LiteralParser newLiteralNodeParser, TripleFactory newTripleFactory) {
@@ -89,8 +91,8 @@ public class TripleParserImpl implements TripleParser {
             newTripleFactory);
         regexMatcherFactory = newRegexMatcherFactory;
         subjectParser = new SubjectParserImpl(newURIReferenceParser, newBlankNodeParser);
-        predicateParser = new PredicateParserImpl(newURIReferenceParser);
-        objectParser = new ObjectParserImpl(newRegexMatcherFactory, newURIReferenceParser, newBlankNodeParser,
+        predicateParser = new PredicateParserImpl(regexMatcherFactory, newURIReferenceParser);
+        objectParser = new ObjectParserImpl(regexMatcherFactory, newURIReferenceParser, newBlankNodeParser,
             newLiteralNodeParser);
         blankNodeParser = newBlankNodeParser;
         tripleFactory = newTripleFactory;
@@ -98,18 +100,17 @@ public class TripleParserImpl implements TripleParser {
 
     public Triple parseTriple(RegexMatcher tripleRegexMatcher, CharSequence line) {
         try {
-            final SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
-            final PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher);
             final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
-            regexMatcher.matches();
-            final String line1 = regexMatcher.group(6);
-            final ObjectNode object = objectParser.parseNode(line1);
-            if (subject != null && predicate != null && object != null) {
-                return tripleFactory.createTriple(subject, predicate, object);
-            } else {
-                // This is an error - will become a NoSuchElementException.
-                return null;
+            if (regexMatcher.matches()) {
+                final SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
+                final PredicateNode predicate = predicateParser.parseNode(regexMatcher.group(PREDICATE_GROUP));
+                final ObjectNode object = objectParser.parseNode(regexMatcher.group(OBJECT_GROUP));
+                if (subject != null && predicate != null && object != null) {
+                    return tripleFactory.createTriple(subject, predicate, object);
+                }
             }
+            // This is an error - will become a NoSuchElementException.
+            return null;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

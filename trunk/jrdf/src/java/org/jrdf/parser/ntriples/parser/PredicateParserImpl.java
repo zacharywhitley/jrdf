@@ -62,20 +62,36 @@ package org.jrdf.parser.ntriples.parser;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
+
 public final class PredicateParserImpl implements PredicateParser {
+    private static final Pattern REGEX = compile("(<([\\x20-\\x7E]+?)>)");
     private static final int LINE_GROUP = 0;
-    private static final int URI_GROUP = 6;
+    private static final int URI_GROUP = 2;
+    private final RegexMatcherFactory factory;
     private final URIReferenceParser uriReferenceParser;
 
-    public PredicateParserImpl(final URIReferenceParser newUriReferenceParser) {
-        checkNotNull(newUriReferenceParser);
+    public PredicateParserImpl(final RegexMatcherFactory newFactory, final URIReferenceParser newUriReferenceParser) {
+        checkNotNull(newFactory, newUriReferenceParser);
+        factory = newFactory;
         uriReferenceParser = newUriReferenceParser;
     }
 
+    public PredicateNode parseNode(final CharSequence line) throws ParseException {
+        checkNotNull(line);
+        final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
+        if (regexMatcher.matches()) {
+            return parsePredicate(regexMatcher);
+        } else {
+            throw new IllegalArgumentException("Couldn't match line: " + line);
+        }
+    }
+
     public PredicateNode parsePredicate(final RegexMatcher matcher) throws ParseException {
-        checkNotNull(matcher);
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else {

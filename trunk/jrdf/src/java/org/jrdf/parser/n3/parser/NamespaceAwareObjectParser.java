@@ -87,9 +87,9 @@ public final class NamespaceAwareObjectParser implements ObjectParser {
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalParser;
 
-    public NamespaceAwareObjectParser(RegexMatcherFactory newFactory,
-        NamespaceAwareURIReferenceParser newUriReferenceParser, BlankNodeParser newBlankNodeParser,
-        LiteralParser newLiteralParser) {
+    public NamespaceAwareObjectParser(final RegexMatcherFactory newFactory,
+        final NamespaceAwareURIReferenceParser newUriReferenceParser, final BlankNodeParser newBlankNodeParser,
+        final LiteralParser newLiteralParser) {
         checkNotNull(newFactory, newUriReferenceParser, newBlankNodeParser, newLiteralParser);
         factory = newFactory;
         uriReferenceParser = newUriReferenceParser;
@@ -97,7 +97,7 @@ public final class NamespaceAwareObjectParser implements ObjectParser {
         literalParser = newLiteralParser;
     }
 
-    public ObjectNode parseNode(CharSequence line) throws ParseException {
+    public ObjectNode parseNode(final CharSequence line) throws ParseException {
         final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
         if (regexMatcher.matches()) {
             return parseObject(regexMatcher);
@@ -106,7 +106,7 @@ public final class NamespaceAwareObjectParser implements ObjectParser {
         }
     }
 
-    private ObjectNode parseObject(RegexMatcher matcher) throws ParseException {
+    private ObjectNode parseObject(final RegexMatcher matcher) throws ParseException {
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
