@@ -61,10 +61,7 @@ package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.parser.ParseException;
-import org.jrdf.util.boundary.RegexMatcher;
 
 public interface ObjectParser {
     ObjectNode parseNode(CharSequence line) throws ParseException;
-
-    ObjectNode parseObject(RegexMatcher matcher) throws ParseException;
 }
