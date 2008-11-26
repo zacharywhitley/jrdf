@@ -104,7 +104,7 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
         init(graph, blankNodeFactory);
         TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, uriReferenceParser, blankNodeParser,
             literalParser, graph.getTripleFactory());
-        return new NTriplesEventReader(stream, baseURI, tripleParser, REGEX_MATCHER_FACTORY);
+        return new NTriplesEventReader(stream, baseURI, tripleParser);
     }
 
     public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph,
@@ -113,7 +113,7 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
         TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, uriReferenceParser, blankNodeParser,
             literalParser,
             graph.getTripleFactory());
-        return new NTriplesEventReader(reader, baseURI, tripleParser, REGEX_MATCHER_FACTORY);
+        return new NTriplesEventReader(reader, baseURI, tripleParser);
     }
 
     public ParseErrorListener getRDFReporter() {
@@ -122,10 +122,6 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
 
     public static RDFInputFactory newInstance() {
         return FACTORY;
-    }
-
-    public static RDFInputFactory newInstance(String factoryId, ClassLoader classLoader) {
-        throw new UnsupportedOperationException();
     }
 
     private void init(Graph graph, ParserBlankNodeFactory blankNodeFactory) {

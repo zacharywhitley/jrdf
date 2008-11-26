@@ -79,7 +79,6 @@ public final class NTripleUtilImpl implements NTripleUtil, Serializable {
     private static final int HEX_RADIX = 16;
     private static final Map<String, String> LITERAL_ESCAPE_LOOKUP = new HashMap<String, String>() {
         private static final long serialVersionUID = 321L;
-
         {
             put("\\\\", "\\\\");
             put("\\\"", "\\\"");

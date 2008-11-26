@@ -65,26 +65,16 @@ import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.mem.MemNamespaceListener;
 import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactory;
-import org.jrdf.parser.n3.parser.NamespaceAwareTripleParser;
 import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactoryImpl;
+import org.jrdf.parser.n3.parser.NamespaceAwareTripleParser;
 import org.jrdf.parser.ntriples.CommentsParserImpl;
 import org.jrdf.parser.ntriples.TriplesParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-import java.util.regex.Pattern;
-
 public class N3ParserFactoryImpl implements N3ParserFactory {
-    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
-        "_:(\\p{Alpha}[\\x20-\\x7E]*?))\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]+?)))\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
-        "_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))\\p{Blank}*" +
-        "\\.\\p{Blank}*");
-
-    public N3Parser createParser(Graph newGraph, ParserBlankNodeFactory parserBlankNodeFactory) {
+    public N3Parser createParser(final Graph newGraph, final ParserBlankNodeFactory parserBlankNodeFactory) {
         final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         final NamespaceListener listener = new MemNamespaceListener();
         final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph,
@@ -94,6 +84,6 @@ public class N3ParserFactoryImpl implements N3ParserFactory {
             parsersFactory.getLiteralParser(), newGraph.getTripleFactory());
         return new N3Parser(new CommentsParserImpl(matcherFactory),
             new PrefixParserImpl(matcherFactory, listener),
-            new TriplesParserImpl(tripleParser, matcherFactory, TRIPLE_REGEX));
+            new TriplesParserImpl(tripleParser));
     }
 }
