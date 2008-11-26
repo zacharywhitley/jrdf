@@ -190,7 +190,7 @@ class RdfBuilder extends BuilderSupport {
         clearTriple()
     }
 
-    private Node parseNode(def string) {
+    private Node parseNode(String string) {
         return namespaceAwareObjectParser.parseNode(string)
     }
 
