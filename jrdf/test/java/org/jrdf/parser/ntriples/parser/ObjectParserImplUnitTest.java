@@ -153,7 +153,7 @@ public class ObjectParserImplUnitTest extends TestCase {
         mockFactory.verify();
     }
 
-    private void checkParse(ObjectNode expectedUriReference) throws ParseException {
+    private void checkParse(final ObjectNode expectedUriReference) throws ParseException {
         expect(regexMatcher.matches()).andReturn(true);
         expect(factory.createMatcher(eqPattern(REGEX), eq(line))).andReturn(regexMatcher);
         mockFactory.replay();

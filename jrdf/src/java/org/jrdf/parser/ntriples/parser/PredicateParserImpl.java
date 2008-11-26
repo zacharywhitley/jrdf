@@ -91,7 +91,7 @@ public final class PredicateParserImpl implements PredicateParser {
         }
     }
 
-    public PredicateNode parsePredicate(final RegexMatcher matcher) throws ParseException {
+    private PredicateNode parsePredicate(final RegexMatcher matcher) throws ParseException {
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else {

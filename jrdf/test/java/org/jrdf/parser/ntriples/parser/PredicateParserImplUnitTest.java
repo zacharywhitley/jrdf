@@ -60,11 +60,12 @@
 package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
-import org.jrdf.graph.ObjectNode;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
+import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
@@ -88,12 +89,14 @@ public class PredicateParserImplUnitTest extends TestCase {
     private URIReferenceParser uriReferenceParser;
     private PredicateParser predicateParser;
     private RegexMatcher regexMatcher;
+    private CharSequence line;
 
     public void setUp() {
         factory = mockFactory.createMock(RegexMatcherFactory.class);
         uriReferenceParser = mockFactory.createMock(URIReferenceParser.class);
         predicateParser = new PredicateParserImpl(factory, uriReferenceParser);
         regexMatcher = mockFactory.createMock(RegexMatcher.class);
+        line = mockFactory.createMock(CharSequence.class);
     }
 
     public void testClassProperties() {
@@ -108,29 +111,33 @@ public class PredicateParserImplUnitTest extends TestCase {
 
     public void testParseObjectURI() throws Exception {
         URIReference expectedUriReference = mockFactory.createMock(URIReference.class);
-        EasyMock.expect(uriReferenceParser.parseURIReference(MATCHER)).andReturn(expectedUriReference);
-        EasyMock.expect(regexMatcher.group(2)).andReturn(MATCHER).times(2);
+        expect(uriReferenceParser.parseURIReference(MATCHER)).andReturn(expectedUriReference);
+        expect(regexMatcher.group(2)).andReturn(MATCHER).times(2);
         checkParse(expectedUriReference);
     }
 
     public void testDoesntParse() throws Exception {
-        EasyMock.expect(regexMatcher.group(2)).andReturn(null).times(1);
-        EasyMock.expect(regexMatcher.group(0)).andReturn(LINE).times(1);
+        expect(regexMatcher.matches()).andReturn(true);
+        expect(factory.createMatcher(eqPattern(REGEX), eq(line))).andReturn(regexMatcher);
+        expect(regexMatcher.group(2)).andReturn(null).times(1);
+        expect(regexMatcher.group(0)).andReturn(LINE).times(1);
         mockFactory.replay();
         checkThrowsException();
         mockFactory.verify();
     }
 
-    private void checkParse(ObjectNode expectedUriReference) throws ParseException {
+    private void checkParse(final PredicateNode expectedUriReference) throws ParseException {
+        expect(regexMatcher.matches()).andReturn(true);
+        expect(factory.createMatcher(eqPattern(REGEX), eq(line))).andReturn(regexMatcher);
         mockFactory.replay();
-        PredicateNode predicateNode = predicateParser.parsePredicate(regexMatcher);
+        final PredicateNode predicateNode = predicateParser.parseNode(line);
         assertTrue(expectedUriReference == predicateNode);
         mockFactory.verify();
     }
 
     private void checkThrowsException() {
         try {
-            predicateParser.parsePredicate(regexMatcher);
+            predicateParser.parseNode(line);
             fail("Didn't throw parse exception");
         } catch (ParseException p) {
             assertEquals("Failed to parse line: " + LINE, p.getMessage());
