@@ -110,8 +110,7 @@ public class NamespaceAwareTripleParser implements TripleParser {
         try {
             final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
             if (regexMatcher.matches()) {
-                final String subjectG = regexMatcher.group(SUBJECT_GROUP);
-                final SubjectNode subject = subjectParser.parseNode(subjectG);
+                final SubjectNode subject = subjectParser.parseNode(regexMatcher.group(SUBJECT_GROUP));
                 final PredicateNode predicate = predicateParser.parseNode(regexMatcher.group(PREDICATE_GROUP));
                 final ObjectNode object = objectParser.parseNode(regexMatcher.group(OBJECT_GROUP));
                 if (subject != null && predicate != null && object != null) {
