@@ -68,17 +68,14 @@ class NTriplesParserTestUtil {
         rdf."eg:resource7" "eg:property":'"simple literal"'
         rdf."eg:resource8" "eg:property":'"backslash:\\"'
         rdf."eg:resource9" "eg:property":'"dquote:\""'
-        newGraph.add(refs[10].asTriple(p, "newline:\n"))
-        newGraph.add(refs[11].asTriple(p, "return\r"))
-        newGraph.add(refs[12].asTriple(p, "tab:\t"))
-        newGraph.add(refs[13].asTriple(p, refs[2]))
-        newGraph.add(refs[14].asTriple(p, "x"))
-        newGraph.add(refs[15].asTriple(p, anon))
-        newGraph.add(refs[16].asTriple(p, "\u00E9"))
-        newGraph.add(refs[17].asTriple(p, "\u20AC"))
-        newGraph.add(refs[17].asTriple(p, "\uD800\uDC00"))
-        newGraph.add(refs[17].asTriple(p, "\uD84C\uDFB4"))
-        newGraph.add(refs[17].asTriple(p, "\uDBFF\uDFFF"))
+        rdf."eg:resource10" "eg:property":'"newline:\\n"'
+        rdf."eg:resource11" "eg:property":'"return\\r"'
+        rdf."eg:resource12" "eg:property":'"tab:\\t"'
+        rdf."eg:resource13" "eg:property":"eg:resource2"
+        rdf."eg:resource14" "eg:property":'"x"'
+        rdf."eg:resource15" "eg:property":"_:anon"
+        rdf."eg:resource16" "eg:property":'"\\u00E9"'
+        rdf."eg:resource17" ("eg:property":['"\\u20AC"', '"\\uD800\\uDC00"', '"\\uD84C\\uDFB4"', '"\\uDBFF\\uDFFF"'] )
         URI xmlLiteral = create("http://www.w3.org/2000/01/rdf-schema#XMLLiteral");
         newGraph.add(refs[21].asTriple(p, "", xmlLiteral))
         newGraph.add(refs[22].asTriple(p, " ", xmlLiteral))
