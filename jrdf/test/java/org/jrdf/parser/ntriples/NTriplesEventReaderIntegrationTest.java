@@ -61,20 +61,19 @@ package org.jrdf.parser.ntriples;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import static org.jrdf.parser.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFInputFactory;
-import org.jrdf.parser.ParserTestUtil;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.HashSet;
@@ -89,23 +88,28 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
         NEW_GRAPH.getElementFactory());
 
     public void testParseFile() throws Exception {
-        RDFEventReader eventReader = init();
+        final RDFEventReader eventReader = getEventReader();
         try {
-            Set<Triple> actualResults = new HashSet<Triple>();
-            while (eventReader.hasNext()) {
-                Triple triple = eventReader.next();
-                actualResults.add(triple);
-            }
-            Set<Triple> expectedTriples = standardTest();
-            ParserTestUtil.checkGraph(expectedTriples, actualResults);
+            final Set<Triple> expectedTriples = standardTest();
+            final Set<Triple> actualResults = getActualTriples(eventReader);
+            checkGraph(expectedTriples, actualResults);
         } finally {
             eventReader.close();
         }
     }
 
-    private RDFEventReader init() throws IOException {
-        InputStream in = getSampleData(this.getClass(), TEST_DATA);
-        RDFInputFactory factory = newInstance();
+    private RDFEventReader getEventReader() throws Exception {
+        final InputStream in = getSampleData(this.getClass(), TEST_DATA);
+        final RDFInputFactory factory = newInstance();
         return factory.createRDFEventReader(in, URI.create("foo"), NEW_GRAPH, BLANK_NODE_FACTORY);
+    }
+
+    private Set<Triple> getActualTriples(RDFEventReader eventReader) {
+        final Set<Triple> actualResults = new HashSet<Triple>();
+        while (eventReader.hasNext()) {
+            final Triple triple = eventReader.next();
+            actualResults.add(triple);
+        }
+        return actualResults;
     }
 }
