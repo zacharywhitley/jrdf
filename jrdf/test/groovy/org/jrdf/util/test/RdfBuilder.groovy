@@ -93,8 +93,9 @@ class RdfBuilder extends BuilderSupport {
             parsersFactory.blankNodeParser, parsersFactory.literalParser)
     }
 
-    public void namespace(String prefix, String uri) {
+    public RdfNamespace namespace(String prefix, String uri) {
         listener.handleNamespace(prefix, uri)
+        return new RdfNamespace(namespace:prefix, builder:this)
     }
 
     protected void setParent(Object name, Object value) {
@@ -103,6 +104,8 @@ class RdfBuilder extends BuilderSupport {
     protected void nodeCompleted(Object name, Object value) {
         if (value && subject && parseNode(value.toString()).equals(subject)) {
             subject = null
+        } else if (value && predicate && parseNode(value.toString()).equals(predicate)) {
+            predicate = null
         }
     }
 
@@ -147,8 +150,8 @@ class RdfBuilder extends BuilderSupport {
         if (subject == null || value) {
             attributes.entrySet().each {Map.Entry entry ->
                 subject = (SubjectNode) parseNode(name.toString());
-                predicate = (PredicateNode) parseNode(entry.getKey().toString());
-                addObject(entry.getValue());
+                predicate = (PredicateNode) parseNode(entry.key.toString());
+                addObject(entry.value);
             }
         } else {
             throw new IllegalStateException("Cannot create triple at this level")

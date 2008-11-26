@@ -8,8 +8,8 @@ class RdfBuilderUnitTest extends GroovyTestCase {
     void testCreateAndDoSimpleTriples() {
         Graph graph = TestJRDFFactory.factory.graph
         def rdf = new RdfBuilder(graph)
-        rdf.namespace("urn", "http://this/is/not/a/urn#");
-        rdf.namespace("xsd", "http://www.w3.org/2001/XMLSchema#");
+        def urn = rdf.namespace("urn", "http://this/is/not/a/urn#");
+        def xsd = rdf.namespace("xsd", "http://www.w3.org/2001/XMLSchema#");
 
         // Normal triples
         rdf.'urn:foo1' 'urn:bar':'urn:baz'
@@ -49,6 +49,14 @@ class RdfBuilderUnitTest extends GroovyTestCase {
             }
         }
 
-        assertEquals(14, graph.getNumberOfTriples())
+        // With method calls instead
+        rdf.'urn:foo6' {
+            'urn:bar' {
+                urn.baz1
+                urn.baz2
+            }
+        }
+
+        assertEquals(16, graph.getNumberOfTriples())
     }
 }
