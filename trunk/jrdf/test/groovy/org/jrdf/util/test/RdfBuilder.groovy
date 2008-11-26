@@ -95,7 +95,20 @@ class RdfBuilder extends BuilderSupport {
 
     public RdfNamespace namespace(String prefix, String uri) {
         listener.handleNamespace(prefix, uri)
-        return new RdfNamespace(namespace:prefix, builder:this)
+        return createNamespace(prefix)
+    }
+
+    public RdfNamespace getProperty(String name) {
+        if (listener.getFullURI(name)) {
+            return createNamespace(name)
+        } else {
+            return null;
+        }
+    }
+
+    private RdfNamespace createNamespace(String prefix) {
+        def namespace = new RdfNamespace(namespace: prefix, builder: this)
+        return namespace
     }
 
     protected void setParent(Object name, Object value) {
