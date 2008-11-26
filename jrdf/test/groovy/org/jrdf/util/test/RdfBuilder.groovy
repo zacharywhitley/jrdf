@@ -84,7 +84,7 @@ class RdfBuilder extends BuilderSupport {
 
     public RdfBuilder(final Graph newGraph) {
         graph = newGraph
-        this.listener = new MemNamespaceListener()
+        listener = new MemNamespaceListener()
         def matcherFactory = new RegexMatcherFactoryImpl()
         final parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph, new MemMapFactory(), matcherFactory,
             listener)

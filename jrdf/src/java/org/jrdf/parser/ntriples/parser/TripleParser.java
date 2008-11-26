@@ -60,10 +60,9 @@
 package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.util.boundary.RegexMatcher;
 
 public interface TripleParser {
-    Triple parseTriple(RegexMatcher tripleRegexMatcher, CharSequence line);
+    Triple parseTriple(CharSequence line);
 
     void clear();
 }
