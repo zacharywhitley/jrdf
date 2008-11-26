@@ -65,7 +65,6 @@ import org.jrdf.parser.ntriples.RegexEventReader;
 import org.jrdf.parser.ntriples.TriplesParser;
 import org.jrdf.parser.ntriples.TriplesParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -85,15 +84,13 @@ public class N3EventReader implements RDFEventReader {
                     "\\.\\p{Blank}*");
     private RDFEventReader eventReader;
 
-    public N3EventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleParser,
-        final RegexMatcherFactory newRegexFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleParser, newRegexFactory, TRIPLE_REGEX);
+    public N3EventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleParser) {
+        final TriplesParser triplesParser = new TriplesParserImpl(newTripleParser);
         eventReader = new RegexEventReader(in, newBaseURI, triplesParser);
     }
 
-    public N3EventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleParser,
-        final RegexMatcherFactory newRegexFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleParser, newRegexFactory, TRIPLE_REGEX);
+    public N3EventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleParser) {
+        final TriplesParser triplesParser = new TriplesParserImpl(newTripleParser);
         eventReader = new RegexEventReader(reader, newBaseURI, triplesParser);
     }
 

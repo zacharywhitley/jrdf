@@ -71,7 +71,7 @@ import static java.util.regex.Pattern.compile;
 
 public final class NamespaceAwarePredicateParser implements PredicateParser {
     private static final Pattern REGEX = compile(
-        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
+        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))" +
         "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
     private static final int LINE_GROUP = 0;
     private static final int URI_GROUP = 2;

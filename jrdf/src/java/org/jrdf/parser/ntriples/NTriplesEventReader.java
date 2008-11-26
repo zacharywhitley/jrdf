@@ -62,7 +62,6 @@ package org.jrdf.parser.ntriples;
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -81,15 +80,13 @@ public class NTriplesEventReader implements RDFEventReader {
     private RDFEventReader eventReader;
 
 
-    public NTriplesEventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleFactory,
-        final RegexMatcherFactory newRegexFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory, newRegexFactory, TRIPLE_REGEX);
+    public NTriplesEventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleFactory) {
+        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory);
         eventReader = new RegexEventReader(in, newBaseURI, triplesParser);
     }
 
-    public NTriplesEventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleFactory,
-        final RegexMatcherFactory newRegexFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory, newRegexFactory, TRIPLE_REGEX);
+    public NTriplesEventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleFactory) {
+        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory);
         eventReader = new RegexEventReader(reader, newBaseURI, triplesParser);
     }
 

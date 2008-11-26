@@ -111,7 +111,6 @@ public class TripleParserImpl implements TripleParser {
                     return tripleFactory.createTriple(subject, predicate, object);
                 }
             }
-            // This is an error - will become a NoSuchElementException.
             return null;
         } catch (ParseException e) {
             throw new RuntimeException(e);

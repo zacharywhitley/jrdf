@@ -62,22 +62,13 @@ package org.jrdf.parser.ntriples;
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-
-import java.util.regex.Pattern;
 
 public class TriplesParserImpl implements TriplesParser {
     private final TripleParser tripleParser;
-    private final RegexMatcherFactory regexMatcherFactory;
-    private final Pattern pattern;
     private StatementHandler sh;
 
-    public TriplesParserImpl(final TripleParser newTripleFactory, final RegexMatcherFactory newRegexFactory,
-        final Pattern newPattern) {
+    public TriplesParserImpl(final TripleParser newTripleFactory) {
         tripleParser = newTripleFactory;
-        regexMatcherFactory = newRegexFactory;
-        pattern = newPattern;
     }
 
     public void setStatementHandler(final StatementHandler newStatementHandler) {
@@ -85,9 +76,8 @@ public class TriplesParserImpl implements TriplesParser {
     }
 
     public void handleTriple(final CharSequence line) {
-        final RegexMatcher tripleRegexMatcher = regexMatcherFactory.createMatcher(pattern, line);
-        if (tripleRegexMatcher.matches()) {
-            final Triple triple = tripleParser.parseTriple(line);
+        final Triple triple = tripleParser.parseTriple(line);
+        if (triple != null) {
             sh.handleStatement(triple.getSubject(), triple.getPredicate(), triple.getObject());
         }
     }
