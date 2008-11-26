@@ -70,7 +70,7 @@ import org.jrdf.parser.ParseException;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.test.ArgumentTestUtil;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
@@ -80,7 +80,7 @@ import static java.util.regex.Pattern.compile;
 
 public class ObjectParserImplUnitTest extends TestCase {
     private static final Pattern REGEX = compile(
-        "(<([\\x20-\\x7E]+?)>|_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))");
+        "(<([\\x20-\\x7E]+?)>|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
     private static final Class<ObjectParser> TARGET_INTERFACE = ObjectParser.class;
     private static final Class<ObjectParserImpl> TEST_CLASS = ObjectParserImpl.class;
     private static final Class[] PARAM_TYPES = new Class[]{RegexMatcherFactory.class, URIReferenceParser.class,
@@ -113,8 +113,8 @@ public class ObjectParserImplUnitTest extends TestCase {
     }
 
     public void testMethodProperties() {
-        ArgumentTestUtil.checkMethodNullAssertions(objectParser, "parseObject", new ParameterDefinition(
-            new String[]{"regexMatcher"}, new Class[]{RegexMatcher.class}));
+        checkMethodNullAssertions(objectParser, "parseNode", new ParameterDefinition(
+            new String[]{"line"}, new Class[]{CharSequence.class}));
     }
 
     public void testParseObjectURI() throws Exception {
@@ -137,14 +137,16 @@ public class ObjectParserImplUnitTest extends TestCase {
         expect(literalParser.parseLiteral(MATCHER)).andReturn(expectedLiteral);
         expect(regexMatcher.group(2)).andReturn(null).times(1);
         expect(regexMatcher.group(3)).andReturn(null).times(1);
-        expect(regexMatcher.group(5)).andReturn(MATCHER).times(2);
+        expect(regexMatcher.group(4)).andReturn(MATCHER).times(2);
         checkParse(expectedLiteral);
     }
 
     public void testDoesntParse() throws Exception {
+        expect(regexMatcher.matches()).andReturn(true);
+        expect(factory.createMatcher(eqPattern(REGEX), eq(line))).andReturn(regexMatcher);
         expect(regexMatcher.group(2)).andReturn(null).times(1);
         expect(regexMatcher.group(3)).andReturn(null).times(1);
-        expect(regexMatcher.group(5)).andReturn(null).times(1);
+        expect(regexMatcher.group(4)).andReturn(null).times(1);
         expect(regexMatcher.group(0)).andReturn(LINE).times(1);
         mockFactory.replay();
         checkThrowsException();
@@ -162,7 +164,7 @@ public class ObjectParserImplUnitTest extends TestCase {
 
     private void checkThrowsException() {
         try {
-            objectParser.parseObject(regexMatcher);
+            objectParser.parseNode(line);
             fail("Didn't throw parse exception");
         } catch (ParseException p) {
             assertEquals("Failed to parse line: " + LINE, p.getMessage());

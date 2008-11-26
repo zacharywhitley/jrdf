@@ -106,8 +106,7 @@ public final class NamespaceAwareObjectParser implements ObjectParser {
         }
     }
 
-    public ObjectNode parseObject(RegexMatcher matcher) throws ParseException {
-        checkNotNull(matcher);
+    private ObjectNode parseObject(RegexMatcher matcher) throws ParseException {
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {

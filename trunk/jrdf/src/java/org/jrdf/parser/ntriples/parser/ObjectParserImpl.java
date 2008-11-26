@@ -60,7 +60,6 @@
 package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
@@ -71,11 +70,11 @@ import static java.util.regex.Pattern.compile;
 
 public final class ObjectParserImpl implements ObjectParser {
     private static final Pattern REGEX = compile(
-        "(<([\\x20-\\x7E]+?)>|_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))");
+        "(<([\\x20-\\x7E]+?)>|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
     private static final int LINE_GROUP = 0;
     private static final int URI_GROUP = 2;
     private static final int BLANK_NODE_GROUP = 3;
-    private static final int LITERAL_GROUP = 5;
+    private static final int LITERAL_GROUP = 4;
     private final RegexMatcherFactory factory;
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
@@ -90,7 +89,8 @@ public final class ObjectParserImpl implements ObjectParser {
         literalParser = newLiteralParser;
     }
 
-    public ObjectNode parseNode(CharSequence line) throws ParseException {
+    public ObjectNode parseNode(final CharSequence line) throws ParseException {
+        checkNotNull(line);
         final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
         if (regexMatcher.matches()) {
             return parseObject(regexMatcher);
@@ -99,11 +99,9 @@ public final class ObjectParserImpl implements ObjectParser {
         }
     }
 
-    public ObjectNode parseObject(RegexMatcher matcher) throws ParseException {
-        checkNotNull(matcher);
+    private ObjectNode parseObject(final RegexMatcher matcher) throws ParseException {
         if (matcher.group(URI_GROUP) != null) {
-            final URIReference uriReference = uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
-            return uriReference;
+            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {
             return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
         } else if (matcher.group(LITERAL_GROUP) != null) {

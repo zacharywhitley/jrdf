@@ -70,7 +70,7 @@ import org.jrdf.parser.mem.MemNamespaceListener
 import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactoryImpl
 import org.jrdf.parser.ntriples.parser.ObjectParser
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl
-import org.jrdf.parser.n3.parser.NewNamespaceAwareObjectParser
+import org.jrdf.parser.n3.parser.NamespaceAwareObjectParser
 
 class RdfBuilder extends BuilderSupport {
     private final regex = "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
@@ -88,7 +88,7 @@ class RdfBuilder extends BuilderSupport {
         def matcherFactory = new RegexMatcherFactoryImpl()
         final parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph, new MemMapFactory(), matcherFactory,
             listener)
-        namespaceAwareObjectParser = new NewNamespaceAwareObjectParser(matcherFactory,
+        namespaceAwareObjectParser = new NamespaceAwareObjectParser(matcherFactory,
             parsersFactory.uriReferenceParser, parsersFactory.blankNodeParser, parsersFactory.literalParser)
     }
 
