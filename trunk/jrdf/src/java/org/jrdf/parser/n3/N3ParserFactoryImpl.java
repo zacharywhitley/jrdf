@@ -89,7 +89,7 @@ public class N3ParserFactoryImpl implements N3ParserFactory {
         final NamespaceListener listener = new MemNamespaceListener();
         final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph,
             new MemMapFactory(), matcherFactory, listener);
-        final TripleParser tripleParser = new NamespaceAwareTripleParser(parsersFactory.getURIReferenceParser(),
+        final TripleParser tripleParser = new NamespaceAwareTripleParser(parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser(), newGraph.getTripleFactory());
         return new N3Parser(new CommentsParserImpl(matcherFactory),
             new PrefixParserImpl(matcherFactory, listener),

@@ -1,14 +1,12 @@
 package org.jrdf.util.test
 
-import groovy.xml.MarkupBuilder
 import org.jrdf.TestJRDFFactory
 import org.jrdf.graph.Graph
 
 class RdfBuilderUnitTest extends GroovyTestCase {
-    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
 
     void testCreateAndDoSimpleTriples() {
-        Graph graph = FACTORY.getGraph()
+        Graph graph = TestJRDFFactory.factory.graph
         def rdf = new RdfBuilder(graph)
         rdf.namespace("urn", "http://this/is/not/a/urn#");
         rdf.namespace("xsd", "http://www.w3.org/2001/XMLSchema#");

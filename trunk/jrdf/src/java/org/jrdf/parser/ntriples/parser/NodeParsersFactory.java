@@ -62,7 +62,7 @@ package org.jrdf.parser.ntriples.parser;
 import org.jrdf.parser.ParserBlankNodeFactory;
 
 public interface NodeParsersFactory {
-    URIReferenceParser getURIReferenceParser();
+    URIReferenceParser getUriReferenceParser();
 
     BlankNodeParser getBlankNodeParser();
 

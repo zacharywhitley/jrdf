@@ -82,7 +82,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class RdfBuilder extends BuilderSupport {
+public class RdfBuilderOld extends BuilderSupport {
     private static final Pattern REGEX = Pattern.compile(
         "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))|" +
         "_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))");
@@ -94,13 +94,13 @@ public class RdfBuilder extends BuilderSupport {
     private PredicateNode predicate;
     private ObjectNode object;
 
-    public RdfBuilder(final Graph newGraph) {
+    public RdfBuilderOld(final Graph newGraph) {
         graph = newGraph;
         listener = new MemNamespaceListener();
         matcherFactory = new RegexMatcherFactoryImpl();
         final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(
             newGraph, new MemMapFactory(), matcherFactory, listener);
-        namespaceAwareObjectParser = new SingleRdfNodeParser(parsersFactory.getURIReferenceParser(),
+        namespaceAwareObjectParser = new SingleRdfNodeParser(parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
     }
 

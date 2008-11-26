@@ -79,7 +79,7 @@ public class NodeParsersFactoryImpl implements NodeParsersFactory {
         util = new NTripleUtilImpl(matcherFactory);
     }
 
-    public URIReferenceParser getURIReferenceParser() {
+    public URIReferenceParser getUriReferenceParser() {
         return new URIReferenceParserImpl(graph.getElementFactory(), util);
     }
 

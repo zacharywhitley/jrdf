@@ -129,7 +129,7 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
 
     private void init(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
         final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(graph, new MemMapFactory());
-        uriReferenceParser = parsersFactory.getURIReferenceParser();
+        uriReferenceParser = parsersFactory.getUriReferenceParser();
         blankNodeParser = parsersFactory.getBlankNodeParserWithFactory(blankNodeFactory);
         literalParser = parsersFactory.getLiteralParser();
     }
