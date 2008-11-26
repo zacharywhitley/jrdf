@@ -65,9 +65,16 @@ import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.LiteralParser;
 import org.jrdf.parser.ntriples.parser.ObjectParser;
 import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public final class SingleRdfNodeParser implements ObjectParser {
+import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
+
+public final class NewNamespaceAwareObjectParser implements ObjectParser {
+    private static final Pattern REGEX = compile(
+        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
+        "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))");
     private static final int LINE_GROUP = 0;
     private static final int URI_GROUP = 2;
     private static final int NS_LOCAL_NAME_GROUP = 3;
@@ -75,16 +82,28 @@ public final class SingleRdfNodeParser implements ObjectParser {
     private static final int LOCAL_NAME_GROUP = 5;
     private static final int BLANK_NODE_GROUP = 6;
     private static final int LITERAL_GROUP = 7;
+    private final RegexMatcherFactory factory;
     private final NamespaceAwareURIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalParser;
 
-    public SingleRdfNodeParser(NamespaceAwareURIReferenceParser uriReferenceParser,
-        BlankNodeParser blankNodeParser, LiteralParser literalParser) {
-        checkNotNull(uriReferenceParser, blankNodeParser, literalParser);
-        this.uriReferenceParser = uriReferenceParser;
-        this.blankNodeParser = blankNodeParser;
-        this.literalParser = literalParser;
+    public NewNamespaceAwareObjectParser(RegexMatcherFactory newFactory,
+        NamespaceAwareURIReferenceParser newUriReferenceParser, BlankNodeParser newBlankNodeParser,
+        LiteralParser newLiteralParser) {
+        checkNotNull(newFactory, newUriReferenceParser, newBlankNodeParser, newLiteralParser);
+        factory = newFactory;
+        uriReferenceParser = newUriReferenceParser;
+        blankNodeParser = newBlankNodeParser;
+        literalParser = newLiteralParser;
+    }
+
+    public ObjectNode parseNode(final CharSequence line) throws ParseException {
+        final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
+        if (regexMatcher.matches()) {
+            return parseObject(regexMatcher);
+        } else {
+            throw new IllegalArgumentException("Couldn't match line: " + line);
+        }
     }
 
     public ObjectNode parseObject(RegexMatcher matcher) throws ParseException {

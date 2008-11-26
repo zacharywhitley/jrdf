@@ -68,10 +68,9 @@ import org.jrdf.graph.SubjectNode
 import org.jrdf.parser.NamespaceListener
 import org.jrdf.parser.mem.MemNamespaceListener
 import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactoryImpl
-import org.jrdf.parser.n3.parser.SingleRdfNodeParser
 import org.jrdf.parser.ntriples.parser.ObjectParser
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl
-import org.jrdf.util.boundary.RegexMatcherImpl
+import org.jrdf.parser.n3.parser.NewNamespaceAwareObjectParser
 
 class RdfBuilder extends BuilderSupport {
     private final regex = "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
@@ -89,8 +88,8 @@ class RdfBuilder extends BuilderSupport {
         def matcherFactory = new RegexMatcherFactoryImpl()
         final parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph, new MemMapFactory(), matcherFactory,
             listener)
-        namespaceAwareObjectParser = new SingleRdfNodeParser(parsersFactory.uriReferenceParser,
-            parsersFactory.blankNodeParser, parsersFactory.literalParser)
+        namespaceAwareObjectParser = new NewNamespaceAwareObjectParser(matcherFactory,
+            parsersFactory.uriReferenceParser, parsersFactory.blankNodeParser, parsersFactory.literalParser)
     }
 
     public RdfNamespace namespace(String prefix, String uri) {
@@ -187,12 +186,7 @@ class RdfBuilder extends BuilderSupport {
     }
 
     private Node parseNode(def string) {
-        def matcher = (string =~ regex)
-        if (matcher.matches()) {
-            return namespaceAwareObjectParser.parseObject(new RegexMatcherImpl(matcher))
-        } else {
-            throw new IllegalArgumentException("Couldn't match string: $string")
-        }
+        return namespaceAwareObjectParser.parseNode(string)
     }
 
     private void addTriple() {

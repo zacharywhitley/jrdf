@@ -60,35 +60,55 @@
 package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
+
 public final class ObjectParserImpl implements ObjectParser {
+    private static final Pattern REGEX = compile(
+        "(<([\\x20-\\x7E]+?)>|_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))");
     private static final int LINE_GROUP = 0;
-    private static final int URI_GROUP = 8;
-    private static final int BLANK_NODE_GROUP = 9;
-    private static final int LITERAL_GROUP = 11;
+    private static final int URI_GROUP = 2;
+    private static final int BLANK_NODE_GROUP = 3;
+    private static final int LITERAL_GROUP = 5;
+    private final RegexMatcherFactory factory;
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalParser;
 
-    public ObjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser,
-        LiteralParser literalParser) {
-        checkNotNull(uriReferenceParser, blankNodeParser, literalParser);
-        this.uriReferenceParser = uriReferenceParser;
-        this.blankNodeParser = blankNodeParser;
-        this.literalParser = literalParser;
+    public ObjectParserImpl(RegexMatcherFactory newFactory, URIReferenceParser newUriReferenceParser,
+        BlankNodeParser newBlankNodeParser, LiteralParser newLiteralParser) {
+        checkNotNull(newFactory, newUriReferenceParser, newBlankNodeParser, newLiteralParser);
+        factory = newFactory;
+        uriReferenceParser = newUriReferenceParser;
+        blankNodeParser = newBlankNodeParser;
+        literalParser = newLiteralParser;
+    }
+
+    public ObjectNode parseNode(CharSequence line) throws ParseException {
+        final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
+        if (regexMatcher.matches()) {
+            return parseObject(regexMatcher);
+        } else {
+            throw new IllegalArgumentException("Couldn't match line: " + line);
+        }
     }
 
     public ObjectNode parseObject(RegexMatcher matcher) throws ParseException {
         checkNotNull(matcher);
         if (matcher.group(URI_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+            final URIReference uriReference = uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+            return uriReference;
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {
             return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
         } else if (matcher.group(LITERAL_GROUP) != null) {
-            return literalParser.parseLiteral(matcher.group(LITERAL_GROUP));
+            final String s = matcher.group(LITERAL_GROUP);
+            return literalParser.parseLiteral(s);
         } else {
             throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
         }

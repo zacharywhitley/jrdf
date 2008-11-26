@@ -79,9 +79,9 @@ public class NTriplesParserFactoryImpl implements NTriplesParserFactory {
 
     public NTriplesParser createParser(Graph newGraph, ParserBlankNodeFactory parserBlankNodeFactory) {
         final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(newGraph, new MemMapFactory());
-        final TripleParser tripleParser = new TripleParserImpl(parsersFactory.getUriReferenceParser(),
-            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser(), newGraph.getTripleFactory());
         final RegexMatcherFactoryImpl matcherFactory = new RegexMatcherFactoryImpl();
+        final TripleParser tripleParser = new TripleParserImpl(matcherFactory, parsersFactory.getUriReferenceParser(),
+            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser(), newGraph.getTripleFactory());
         return new NTriplesParser(new CommentsParserImpl(matcherFactory),
             new TriplesParserImpl(tripleParser, matcherFactory, TRIPLE_REGEX));
     }

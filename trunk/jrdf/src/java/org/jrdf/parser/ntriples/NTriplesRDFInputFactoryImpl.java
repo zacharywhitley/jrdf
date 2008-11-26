@@ -102,15 +102,16 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph,
         ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
-        TripleParser tripleParser = new TripleParserImpl(uriReferenceParser, blankNodeParser, literalParser,
-            graph.getTripleFactory());
+        TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, uriReferenceParser, blankNodeParser,
+            literalParser, graph.getTripleFactory());
         return new NTriplesEventReader(stream, baseURI, tripleParser, REGEX_MATCHER_FACTORY);
     }
 
     public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph,
         ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
-        TripleParser tripleParser = new TripleParserImpl(uriReferenceParser, blankNodeParser, literalParser,
+        TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, uriReferenceParser, blankNodeParser,
+            literalParser,
             graph.getTripleFactory());
         return new NTriplesEventReader(reader, baseURI, tripleParser, REGEX_MATCHER_FACTORY);
     }

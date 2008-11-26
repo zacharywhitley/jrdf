@@ -373,7 +373,7 @@ public class MoleculeGraphImplIntegrationTest extends AbstractMoleculeGraphInteg
 
     private TripleParser getTripleParser(Graph newGraph) {
         final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(newGraph, new MemMapFactory());
-        return new TripleParserImpl(parsersFactory.getUriReferenceParser(),
+        return new TripleParserImpl(new RegexMatcherFactoryImpl(), parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser(), newGraph.getTripleFactory());
     }
 

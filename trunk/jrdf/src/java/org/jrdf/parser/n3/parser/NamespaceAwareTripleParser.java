@@ -72,6 +72,8 @@ import org.jrdf.parser.ntriples.parser.PredicateParser;
 import org.jrdf.parser.ntriples.parser.SubjectParser;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class NamespaceAwareTripleParser implements TripleParser {
     private final SubjectParser subjectParser;
@@ -80,21 +82,24 @@ public class NamespaceAwareTripleParser implements TripleParser {
     private final TripleFactory tripleFactory;
     private final BlankNodeParser blankNodeParser;
 
-    public NamespaceAwareTripleParser(NamespaceAwareURIReferenceParser newURIReferenceParser,
-        BlankNodeParser newBlankNodeParser, LiteralParser newLiteralNodeParser, TripleFactory newTripleFactory) {
-        this.subjectParser = new NamespaceAwareSubjectParser(newURIReferenceParser, newBlankNodeParser);
-        this.predicateParser = new NamespaceAwarePredicateParser(newURIReferenceParser);
-        this.objectParser = new NamespaceAwareObjectParser(newURIReferenceParser, newBlankNodeParser,
+    public NamespaceAwareTripleParser(RegexMatcherFactory newRegexFactory,
+        NamespaceAwareURIReferenceParser newURIReferenceParser, BlankNodeParser newBlankNodeParser,
+        LiteralParser newLiteralNodeParser, TripleFactory newTripleFactory) {
+        checkNotNull(newRegexFactory, newURIReferenceParser, newBlankNodeParser, newLiteralNodeParser,
+            newTripleFactory);
+        subjectParser = new NamespaceAwareSubjectParser(newURIReferenceParser, newBlankNodeParser);
+        predicateParser = new NamespaceAwarePredicateParser(newURIReferenceParser);
+        objectParser = new NamespaceAwareObjectParser(newRegexFactory, newURIReferenceParser, newBlankNodeParser,
             newLiteralNodeParser);
-        this.blankNodeParser = newBlankNodeParser;
-        this.tripleFactory = newTripleFactory;
+        blankNodeParser = newBlankNodeParser;
+        tripleFactory = newTripleFactory;
     }
 
-    public Triple parseTriple(RegexMatcher tripleRegexMatcher) {
+    public Triple parseTriple(RegexMatcher tripleRegexMatcher, CharSequence line) {
         try {
             SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
             PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher);
-            ObjectNode object = objectParser.parseObject(tripleRegexMatcher);
+            ObjectNode object = objectParser.parseNode(line);
             if (subject != null && predicate != null && object != null) {
                 return tripleFactory.createTriple(subject, predicate, object);
             } else {
