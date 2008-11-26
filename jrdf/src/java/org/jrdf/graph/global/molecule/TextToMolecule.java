@@ -141,7 +141,7 @@ public class TextToMolecule {
         } else {
             final RegexMatcher tripleMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
             if (tripleMatcher.matches()) {
-                handleTriple(tripleMatcher);
+                handleTriple(tripleMatcher, line);
             } else {
                 final RegexMatcher endMolecule = regexMatcherFactory.createMatcher(END_MOLECULE, line);
                 if (endMolecule.matches()) {
@@ -161,8 +161,8 @@ public class TextToMolecule {
         currentMolecule = moleculeFactory.createMolecule();
     }
 
-    private void handleTriple(RegexMatcher tripleMatcher) {
-        currentTriple = tripleParser.parseTriple(tripleMatcher);
+    private void handleTriple(RegexMatcher tripleMatcher, CharSequence line) {
+        currentTriple = tripleParser.parseTriple(tripleMatcher, line);
         currentMolecule.add(currentTriple);
     }
 

@@ -63,7 +63,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.util.boundary.RegexMatcher;
 
 public interface TripleParser {
-    Triple parseTriple(RegexMatcher tripleRegexMatcher);
+    Triple parseTriple(RegexMatcher tripleRegexMatcher, CharSequence line);
 
     void clear();
 }
