@@ -68,11 +68,10 @@ import org.jrdf.graph.Triple;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.parser.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.RDFInputFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.addStandardValuesToGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 import org.jrdf.writer.RdfWriter;
 
@@ -80,6 +79,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -94,9 +94,9 @@ public class NTriplesWriterIntegrationTest extends TestCase {
         NEW_GRAPH.getElementFactory());
 
     public void testWriteTestGraph() throws Exception {
-        Set<String> strings = getTriplesAsStrings();
+        final Set<String> strings = getTriplesAsStrings();
         assertSame("Expected to get 33 triples", 33, strings.size());
-        Scanner scanner = new Scanner(getSampleData(this.getClass(), TEST_DATA));
+        final Scanner scanner = new Scanner(getSampleData(this.getClass(), TEST_DATA));
         int start = 1;
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
@@ -109,40 +109,48 @@ public class NTriplesWriterIntegrationTest extends TestCase {
         }
     }
 
-    public void testRoundTriple() throws Exception {
-        Writer writer = printOutGraph();
-        NEW_GRAPH.clear();
-        BLANK_NODE_FACTORY.clear();
-        StringReader reader = new StringReader(writer.toString());
-        RDFInputFactory factory = newInstance();
-        RDFEventReader eventReader = factory.createRDFEventReader(reader, URI.create("foo"), NEW_GRAPH,
-            BLANK_NODE_FACTORY);
-        Set<Triple> actualResults = new HashSet<Triple>();
-        while (eventReader.hasNext()) {
-            actualResults.add(eventReader.next());
-        }
-        NEW_GRAPH.clear();
-        BLANK_NODE_FACTORY.clear();
-        InputStream in = getSampleData(this.getClass(), TEST_DATA);
-        Set<Triple> expectedResults = parseNTriplesFile(in, NEW_GRAPH, BLANK_NODE_FACTORY);
-        checkGraph(expectedResults, actualResults);
-    }
-
     private Set<String> getTriplesAsStrings() throws Exception {
-        Writer out = printOutGraph();
-        String[] strings = out.toString().split(RdfWriter.NEW_LINE);
-        Set<String> results = new HashSet<String>();
-        for (String string : strings) {
+        final Writer out = printOutGraph();
+        final String[] strings = out.toString().split(RdfWriter.NEW_LINE);
+        final Set<String> results = new HashSet<String>();
+        for (final String string : strings) {
             results.add(string.replace(" ", ""));
         }
         return results;
     }
 
+    public void testRoundTriple() throws Exception {
+        final Set<Triple> expectedResults = expectedResults();
+        final Set<Triple> actualResults = getActualResults();
+        checkGraph(expectedResults, actualResults);
+    }
+
+    private Set<Triple> expectedResults() throws IOException {
+        NEW_GRAPH.clear();
+        BLANK_NODE_FACTORY.clear();
+        final InputStream in = getSampleData(this.getClass(), TEST_DATA);
+        return parseNTriplesFile(in, NEW_GRAPH, BLANK_NODE_FACTORY);
+    }
+
+    private Set<Triple> getActualResults() throws Exception {
+        final Writer writer = printOutGraph();
+        NEW_GRAPH.clear();
+        BLANK_NODE_FACTORY.clear();
+        final StringReader reader = new StringReader(writer.toString());
+        final RDFEventReader eventReader = newInstance().createRDFEventReader(reader, URI.create("foo"), NEW_GRAPH,
+            BLANK_NODE_FACTORY);
+        final Set<Triple> actualResults = new HashSet<Triple>();
+        while (eventReader.hasNext()) {
+            actualResults.add(eventReader.next());
+        }
+        return actualResults;
+    }
+
     private Writer printOutGraph() throws Exception {
         NEW_GRAPH.clear();
-        standardTest(NEW_GRAPH);
-        StringWriter out = new StringWriter();
-        NTriplesWriter writer = new NTriplesWriterImpl();
+        addStandardValuesToGraph(NEW_GRAPH);
+        final StringWriter out = new StringWriter();
+        final NTriplesWriter writer = new NTriplesWriterImpl();
         writer.write(NEW_GRAPH, out);
         return out;
     }

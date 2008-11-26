@@ -17,6 +17,7 @@ import org.jrdf.TestJRDFFactory
 
 class NTriplesParserTestUtil {
 
+
     private NTriplesParserTestUtil() {
     }
 
@@ -40,7 +41,7 @@ class NTriplesParserTestUtil {
 
     static Set<Triple> standardTest() {
         Graph newGraph = TestJRDFFactory.factory.graph
-        standardTest(newGraph)
+        addStandardValuesToGraph(newGraph)
         Set<Triple> answers = new HashSet<Triple>()
         newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).each {
             answers.add(it)
@@ -48,7 +49,7 @@ class NTriplesParserTestUtil {
         return answers
     }
 
-    static void standardTest(Graph newGraph) {
+    static def addStandardValuesToGraph(Graph newGraph) {
         def refs = new ArrayList<Resource>()
         def graphElementFactory = newGraph.getElementFactory()
         (0..32).each {

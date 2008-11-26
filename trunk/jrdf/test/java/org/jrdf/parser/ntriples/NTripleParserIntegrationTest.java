@@ -106,15 +106,15 @@ public class NTripleParserIntegrationTest extends TestCase {
     };
 
     public void testStandardTest() throws Exception {
-        final Set<Triple> actualResults = getActualResults(TEST_DATA);
         final Set<Triple> expectedResults = standardTest();
+        final Set<Triple> actualResults = getResults(TEST_DATA);
         checkGraph(expectedResults, actualResults);
     }
 
     public void testPositiveTests() throws Exception {
         for (final String fileName : POSITIVE_TESTS.keySet()) {
-            final Set<Triple> actualResults = getActualResults(fileName);
-            final Set<Triple> expectedResults = getResults(POSITIVE_TESTS.get(fileName), TEST_JRDF_FACTORY.getGraph());
+            final Set<Triple> expectedResults = getResults(POSITIVE_TESTS.get(fileName));
+            final Set<Triple> actualResults = getResults(fileName);
             checkGraph(expectedResults, actualResults);
         }
     }
@@ -122,17 +122,13 @@ public class NTripleParserIntegrationTest extends TestCase {
     public void testNegativeTests() throws Exception {
         for (final String fileName : NEGATIVE_TESTS) {
             // TODO Finish - this should expect an exception to be thrown.
-            getActualResults(fileName);
+            getResults(fileName);
         }
     }
 
-    private Set<Triple> getActualResults(final String fileName) throws Exception {
+    private Set<Triple> getResults(final String fileName) throws Exception {
         final Graph newGraph = TEST_JRDF_FACTORY.getGraph();
         factory = new ParserBlankNodeFactoryImpl(new MemMapFactory(), newGraph.getElementFactory());
-        return getResults(fileName, newGraph);
-    }
-
-    private Set<Triple> getResults(String fileName, Graph newGraph) throws Exception {
         final InputStream in = getSampleData(this.getClass(), fileName);
         try {
             return parseNTriplesFile(in, newGraph, factory);
