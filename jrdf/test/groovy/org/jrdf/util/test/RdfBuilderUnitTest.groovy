@@ -49,14 +49,15 @@ class RdfBuilderUnitTest extends GroovyTestCase {
             }
         }
 
-        // With method calls instead
-        rdf.'urn:foo6' {
-            'urn:bar' {
+        // With builtin property support
+        rdf.urn.foo6 {
+            urn.bar {
                 urn.baz1
                 urn.baz2
             }
         }
 
         assertEquals(16, graph.getNumberOfTriples())
+        println("Got " + graph)
     }
 }
