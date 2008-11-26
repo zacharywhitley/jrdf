@@ -57,16 +57,17 @@ class NTriplesParserTestUtil {
         }
         URI p = create("http://example.org/property")
         Resource anon = graphElementFactory.createResource();
-        newGraph.add(refs[1].asTriple(p, refs[2]))
-        newGraph.add(anon.asTriple(p, refs[2]))
-        newGraph.add(refs[2].asTriple(p, anon))
-        newGraph.add(refs[3].asTriple(p, refs[2]))
-        newGraph.add(refs[4].asTriple(p, refs[2]))
-        newGraph.add(refs[5].asTriple(p, refs[2]))
-        newGraph.add(refs[6].asTriple(p, refs[2]))
-        newGraph.add(refs[7].asTriple(p, "simple literal"))
-        newGraph.add(refs[8].asTriple(p, "backslash:\\"))
-        newGraph.add(refs[9].asTriple(p, "dquote:\""))
+        def rdf = new RdfBuilder(newGraph)
+        def eg = rdf.namespace("eg", "http://example.org/");
+        rdf.eg.resource1 "eg:property":"eg:resource2"
+        rdf."_:anon" "eg:property":"eg:resource2"
+        rdf."eg:resource2" "eg:property":"_:anon"
+        (3..6).each {
+            rdf."eg:resource$it" "eg:property":"eg:resource2"
+        }
+        rdf."eg:resource7" "eg:property":'"simple literal"'
+        rdf."eg:resource8" "eg:property":'"backslash:\\"'
+        rdf."eg:resource9" "eg:property":'"dquote:\""'
         newGraph.add(refs[10].asTriple(p, "newline:\n"))
         newGraph.add(refs[11].asTriple(p, "return\r"))
         newGraph.add(refs[12].asTriple(p, "tab:\t"))
