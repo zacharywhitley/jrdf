@@ -64,5 +64,7 @@ import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
 
 public interface PredicateParser {
+    PredicateNode parseNode(CharSequence line) throws ParseException;
+
     PredicateNode parsePredicate(RegexMatcher matcher) throws ParseException;
 }

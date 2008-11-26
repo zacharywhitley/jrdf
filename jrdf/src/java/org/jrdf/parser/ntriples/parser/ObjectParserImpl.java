@@ -80,8 +80,8 @@ public final class ObjectParserImpl implements ObjectParser {
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalParser;
 
-    public ObjectParserImpl(RegexMatcherFactory newFactory, URIReferenceParser newUriReferenceParser,
-        BlankNodeParser newBlankNodeParser, LiteralParser newLiteralParser) {
+    public ObjectParserImpl(final RegexMatcherFactory newFactory, final URIReferenceParser newUriReferenceParser,
+        final BlankNodeParser newBlankNodeParser, final LiteralParser newLiteralParser) {
         checkNotNull(newFactory, newUriReferenceParser, newBlankNodeParser, newLiteralParser);
         factory = newFactory;
         uriReferenceParser = newUriReferenceParser;

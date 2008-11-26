@@ -63,19 +63,38 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ntriples.parser.PredicateParser;
 import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
+
 public final class NamespaceAwarePredicateParser implements PredicateParser {
+    private static final Pattern REGEX = compile(
+        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
+        "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
     private static final int LINE_GROUP = 0;
-    private static final int URI_GROUP = 8;
-    private static final int NS_LOCAL_NAME_GROUP = 9;
-    private static final int NS_GROUP = 10;
-    private static final int LOCAL_NAME_GROUP = 11;
+    private static final int URI_GROUP = 2;
+    private static final int NS_LOCAL_NAME_GROUP = 3;
+    private static final int NS_GROUP = 4;
+    private static final int LOCAL_NAME_GROUP = 5;
+    private final RegexMatcherFactory factory;
     private final NamespaceAwareURIReferenceParser uriReferenceParser;
 
-    public NamespaceAwarePredicateParser(NamespaceAwareURIReferenceParser uriReferenceParser) {
-        checkNotNull(uriReferenceParser);
-        this.uriReferenceParser = uriReferenceParser;
+    public NamespaceAwarePredicateParser(final RegexMatcherFactory newFactory,
+        final NamespaceAwareURIReferenceParser newUriReferenceParser) {
+        checkNotNull(newFactory, newUriReferenceParser);
+        factory = newFactory;
+        uriReferenceParser = newUriReferenceParser;
+    }
+
+    public PredicateNode parseNode(final CharSequence line) throws ParseException {
+        final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
+        if (regexMatcher.matches()) {
+            return parsePredicate(regexMatcher);
+        } else {
+            throw new IllegalArgumentException("Couldn't match line: " + line);
+        }
     }
 
     public PredicateNode parsePredicate(RegexMatcher matcher) throws ParseException {
