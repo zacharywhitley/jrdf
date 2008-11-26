@@ -171,11 +171,11 @@ public class ParserTestUtil {
      * This only works where there is one blank node in the set of triples - multiple blank nodes will give false
      * positive results.
      *
-     * @param actualTriples the triples produced.
      * @param expectedTriples the expected triples.
+     * @param actualTriples the triples produced.
      * @throws Exception if anything goes wrong.
      */
-    public static void checkGraph(Set<Triple> actualTriples, Set<Triple> expectedTriples) throws Exception {
+    public static void checkGraph(Set<Triple> expectedTriples, Set<Triple> actualTriples) throws Exception {
         int numberFound = findNumberOfEqualTriples(actualTriples, expectedTriples);
         assertEquals(expectedTriples.size(), numberFound);
     }
