@@ -3,16 +3,11 @@ package org.jrdf.parser.ntriples
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE
-import static java.net.URI.create
-import org.jrdf.graph.BlankNode
 import org.jrdf.graph.Graph
 import org.jrdf.graph.Triple
-import org.jrdf.graph.URIReference
 import org.jrdf.parser.GraphStatementHandler
 import org.jrdf.parser.ParserBlankNodeFactory
-import org.jrdf.graph.Resource
 import org.jrdf.util.test.RdfBuilder
-import org.jrdf.util.test.RdfNamespace
 import org.jrdf.TestJRDFFactory
 
 class NTriplesParserTestUtil {
