@@ -105,8 +105,7 @@ public final class ObjectParserImpl implements ObjectParser {
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {
             return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
         } else if (matcher.group(LITERAL_GROUP) != null) {
-            final String s = matcher.group(LITERAL_GROUP);
-            return literalParser.parseLiteral(s);
+            return literalParser.parseLiteral(matcher.group(LITERAL_GROUP));
         } else {
             throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
         }
