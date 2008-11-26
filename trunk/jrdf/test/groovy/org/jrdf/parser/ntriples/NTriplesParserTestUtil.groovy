@@ -50,15 +50,9 @@ class NTriplesParserTestUtil {
     }
 
     static def addStandardValuesToGraph(Graph newGraph) {
-        def refs = new ArrayList<Resource>()
-        def graphElementFactory = newGraph.getElementFactory()
-        (0..32).each {
-            refs.add(graphElementFactory.createResource(create("http://example.org/resource" + it)))
-        }
-        URI p = create("http://example.org/property")
-        Resource anon = graphElementFactory.createResource();
         def rdf = new RdfBuilder(newGraph)
         def eg = rdf.namespace("eg", "http://example.org/");
+        rdf.namespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
         rdf.eg.resource1 "eg:property":"eg:resource2"
         rdf."_:anon" "eg:property":"eg:resource2"
         rdf."eg:resource2" "eg:property":"_:anon"
@@ -76,18 +70,15 @@ class NTriplesParserTestUtil {
         rdf."eg:resource15" "eg:property":"_:anon"
         rdf."eg:resource16" "eg:property":'"\\u00E9"'
         rdf."eg:resource17" ("eg:property":['"\\u20AC"', '"\\uD800\\uDC00"', '"\\uD84C\\uDFB4"', '"\\uDBFF\\uDFFF"'] )
-        URI xmlLiteral = create("http://www.w3.org/2000/01/rdf-schema#XMLLiteral");
-        newGraph.add(refs[21].asTriple(p, "", xmlLiteral))
-        newGraph.add(refs[22].asTriple(p, " ", xmlLiteral))
-        newGraph.add(refs[23].asTriple(p, "x", xmlLiteral))
-        newGraph.add(refs[23].asTriple(p, "\"", xmlLiteral))
-        newGraph.add(refs[24].asTriple(p, "<a></a>", xmlLiteral))
-        newGraph.add(refs[25].asTriple(p, "a <b></b>", xmlLiteral))
-        newGraph.add(refs[26].asTriple(p, "a <b></b> c", xmlLiteral))
-        newGraph.add(refs[26].asTriple(p, "a\n<b></b>\nc", xmlLiteral))
-        newGraph.add(refs[27].asTriple(p, "chat", xmlLiteral))
-        newGraph.add(refs[30].asTriple(p, "chat", "fr"))
-        newGraph.add(refs[31].asTriple(p, "chat", "en"))
-        newGraph.add(refs[32].asTriple(p, "abc", create("http://example.org/datatype1")))
+        rdf."eg:resource21" "eg:property":'""^^rdfs:XMLLiteral'
+        rdf."eg:resource22" "eg:property":'" "^^rdfs:XMLLiteral'
+        rdf."eg:resource23" ("eg:property":['"x"^^rdfs:XMLLiteral', '"\""^^rdfs:XMLLiteral'] )
+        rdf."eg:resource24" "eg:property":'"<a></a>"^^rdfs:XMLLiteral'
+        rdf."eg:resource25" "eg:property":'"a <b></b>"^^rdfs:XMLLiteral'
+        rdf."eg:resource26" ("eg:property":['"a <b></b> c"^^rdfs:XMLLiteral', '"a\\n<b></b>\\nc"^^rdfs:XMLLiteral'] )
+        rdf."eg:resource27" "eg:property":'"chat"^^rdfs:XMLLiteral'
+        rdf."eg:resource30" "eg:property":'"chat"@fr'
+        rdf."eg:resource31" "eg:property":'"chat"@en'
+        rdf."eg:resource32" "eg:property":'"abc"^^eg:datatype1'
     }
 }
