@@ -137,8 +137,6 @@ public final class ExpressionComparatorImpl implements ExpressionVisitor, Expres
     public <V extends ExpressionVisitor> void visitUnion(Union<V> union) {
         int lhs = getNext(union.getLhs());
         int rhs = getNext(union.getRhs());
-        System.err.println("union lhs compare = " + lhs);
-        System.err.println("union rhs compare = " + rhs);
         result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
