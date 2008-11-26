@@ -61,8 +61,7 @@ package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.parser.ParseException;
-import org.jrdf.util.boundary.RegexMatcher;
 
 public interface SubjectParser {
-    SubjectNode parseSubject(RegexMatcher tripleRegexMatcher) throws ParseException;
+    SubjectNode parseNode(CharSequence line) throws ParseException;
 }

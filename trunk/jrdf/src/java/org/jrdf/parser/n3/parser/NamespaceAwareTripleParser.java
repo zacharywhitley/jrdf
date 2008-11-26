@@ -71,7 +71,6 @@ import org.jrdf.parser.ntriples.parser.ObjectParser;
 import org.jrdf.parser.ntriples.parser.PredicateParser;
 import org.jrdf.parser.ntriples.parser.SubjectParser;
 import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -87,7 +86,7 @@ public class NamespaceAwareTripleParser implements TripleParser {
         final LiteralParser newLiteralNodeParser, final TripleFactory newTripleFactory) {
         checkNotNull(newRegexFactory, newURIReferenceParser, newBlankNodeParser, newLiteralNodeParser,
             newTripleFactory);
-        subjectParser = new NamespaceAwareSubjectParser(newURIReferenceParser, newBlankNodeParser);
+        subjectParser = new NamespaceAwareSubjectParser(newRegexFactory, newURIReferenceParser, newBlankNodeParser);
         predicateParser = new NamespaceAwarePredicateParser(newRegexFactory, newURIReferenceParser);
         objectParser = new NamespaceAwareObjectParser(newRegexFactory, newURIReferenceParser, newBlankNodeParser,
             newLiteralNodeParser);
@@ -95,9 +94,9 @@ public class NamespaceAwareTripleParser implements TripleParser {
         tripleFactory = newTripleFactory;
     }
 
-    public Triple parseTriple(final RegexMatcher tripleRegexMatcher, final CharSequence line) {
+    public Triple parseTriple(final CharSequence line) {
         try {
-            final SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
+            final SubjectNode subject = subjectParser.parseNode(line);
             final PredicateNode predicate = predicateParser.parseNode(line);
             final ObjectNode object = objectParser.parseNode(line);
             if (subject != null && predicate != null && object != null) {

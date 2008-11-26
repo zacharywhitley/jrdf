@@ -64,26 +64,45 @@ import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.SubjectParser;
 import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
+
 public final class NamespaceAwareSubjectParser implements SubjectParser {
+    private static final Pattern REGEX = compile(
+        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
+        "|_:(\\p{Alpha}[\\x20-\\x7E]*?))");
     private static final int LINE_GROUP = 0;
     private static final int URI_GROUP = 2;
     private static final int NS_LOCAL_NAME_GROUP = 3;
     private static final int NS_GROUP = 4;
     private static final int LOCAL_NAME_GROUP = 5;
     private static final int BLANK_NODE_GROUP = 6;
+    private final RegexMatcherFactory factory;
     private final NamespaceAwareURIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
 
-    public NamespaceAwareSubjectParser(NamespaceAwareURIReferenceParser newURIReferenceParser,
-        BlankNodeParser newBlankNodeParser) {
-        checkNotNull(newURIReferenceParser, newBlankNodeParser);
-        this.uriReferenceParser = newURIReferenceParser;
-        this.blankNodeParser = newBlankNodeParser;
+    public NamespaceAwareSubjectParser(final RegexMatcherFactory newFactory,
+        final NamespaceAwareURIReferenceParser newURIReferenceParser, final BlankNodeParser newBlankNodeParser) {
+        checkNotNull(newFactory, newURIReferenceParser, newBlankNodeParser);
+        factory = newFactory;
+        uriReferenceParser = newURIReferenceParser;
+        blankNodeParser = newBlankNodeParser;
     }
 
-    public SubjectNode parseSubject(RegexMatcher matcher) throws ParseException {
+    public SubjectNode parseNode(final CharSequence line) throws ParseException {
+        checkNotNull(line);
+        final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
+        if (regexMatcher.matches()) {
+            return parseSubject(regexMatcher);
+        } else {
+            throw new IllegalArgumentException("Couldn't match line: " + line);
+        }
+    }
+
+    private SubjectNode parseSubject(final RegexMatcher matcher) throws ParseException {
         checkNotNull(matcher);
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));

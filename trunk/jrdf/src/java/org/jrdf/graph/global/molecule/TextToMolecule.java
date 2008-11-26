@@ -162,7 +162,7 @@ public class TextToMolecule {
     }
 
     private void handleTriple(RegexMatcher tripleMatcher, CharSequence line) {
-        currentTriple = tripleParser.parseTriple(tripleMatcher, line);
+        currentTriple = tripleParser.parseTriple(line);
         currentMolecule.add(currentTriple);
     }
 

@@ -76,6 +76,8 @@ public class TripleParserImpl implements TripleParser {
         "(<(.+?)>|_:(.+?))\\p{Blank}+" +
         "(<(.+?)>)\\p{Blank}+" +
         "(<(.+?)>|_:(.+?)|(.+?))\\p{Blank}*\\.\\p{Blank}*");
+    private static final int SUBJECT_GROUP = 1;
+    private static final int PREDICATE_GROUP = 4;
     private static final int OBJECT_GROUP = 6;
     private final RegexMatcherFactory regexMatcherFactory;
     private final SubjectParser subjectParser;
@@ -83,14 +85,14 @@ public class TripleParserImpl implements TripleParser {
     private final ObjectParser objectParser;
     private final TripleFactory tripleFactory;
     private final BlankNodeParser blankNodeParser;
-    private static final int PREDICATE_GROUP = 4;
 
-    public TripleParserImpl(RegexMatcherFactory newRegexMatcherFactory, URIReferenceParser newURIReferenceParser,
-        BlankNodeParser newBlankNodeParser, LiteralParser newLiteralNodeParser, TripleFactory newTripleFactory) {
+    public TripleParserImpl(final RegexMatcherFactory newRegexMatcherFactory,
+        final URIReferenceParser newURIReferenceParser, final BlankNodeParser newBlankNodeParser,
+        final LiteralParser newLiteralNodeParser, final TripleFactory newTripleFactory) {
         checkNotNull(newRegexMatcherFactory, newURIReferenceParser, newBlankNodeParser, newLiteralNodeParser,
             newTripleFactory);
         regexMatcherFactory = newRegexMatcherFactory;
-        subjectParser = new SubjectParserImpl(newURIReferenceParser, newBlankNodeParser);
+        subjectParser = new SubjectParserImpl(regexMatcherFactory, newURIReferenceParser, newBlankNodeParser);
         predicateParser = new PredicateParserImpl(regexMatcherFactory, newURIReferenceParser);
         objectParser = new ObjectParserImpl(regexMatcherFactory, newURIReferenceParser, newBlankNodeParser,
             newLiteralNodeParser);
@@ -98,11 +100,11 @@ public class TripleParserImpl implements TripleParser {
         tripleFactory = newTripleFactory;
     }
 
-    public Triple parseTriple(RegexMatcher tripleRegexMatcher, CharSequence line) {
+    public Triple parseTriple(final CharSequence line) {
         try {
             final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
             if (regexMatcher.matches()) {
-                final SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
+                final SubjectNode subject = subjectParser.parseNode(regexMatcher.group(SUBJECT_GROUP));
                 final PredicateNode predicate = predicateParser.parseNode(regexMatcher.group(PREDICATE_GROUP));
                 final ObjectNode object = objectParser.parseNode(regexMatcher.group(OBJECT_GROUP));
                 if (subject != null && predicate != null && object != null) {
