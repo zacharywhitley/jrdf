@@ -84,7 +84,7 @@ class RdfBuilder extends BuilderSupport {
 
     public RdfBuilder(final Graph newGraph) {
         graph = newGraph
-        listener = new MemNamespaceListener()
+        this.listener = new MemNamespaceListener()
         def matcherFactory = new RegexMatcherFactoryImpl()
         final parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph, new MemMapFactory(), matcherFactory,
             listener)
@@ -97,6 +97,12 @@ class RdfBuilder extends BuilderSupport {
         return createNamespace(prefix)
     }
 
+    public void namespaces(Map prefixUris) {
+        prefixUris.each { key, value ->
+            namespace(key, value)
+        }
+    }
+
     public RdfNamespace getProperty(String name) {
         if (listener.getFullURI(name)) {
             return createNamespace(name)
@@ -106,8 +112,7 @@ class RdfBuilder extends BuilderSupport {
     }
 
     private RdfNamespace createNamespace(String prefix) {
-        def namespace = new RdfNamespace(namespace: prefix, builder: this)
-        return namespace
+        return new RdfNamespace(namespace: prefix, builder: this)
     }
 
     protected void setParent(Object name, Object value) {

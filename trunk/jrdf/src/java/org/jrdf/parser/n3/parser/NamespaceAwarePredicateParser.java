@@ -89,6 +89,7 @@ public final class NamespaceAwarePredicateParser implements PredicateParser {
     }
 
     public PredicateNode parseNode(final CharSequence line) throws ParseException {
+        checkNotNull(line);
         final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
         if (regexMatcher.matches()) {
             return parsePredicate(regexMatcher);
@@ -97,8 +98,7 @@ public final class NamespaceAwarePredicateParser implements PredicateParser {
         }
     }
 
-    public PredicateNode parsePredicate(RegexMatcher matcher) throws ParseException {
-        checkNotNull(matcher);
+    private PredicateNode parsePredicate(final RegexMatcher matcher) throws ParseException {
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         }  else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {

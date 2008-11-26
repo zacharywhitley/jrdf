@@ -9,7 +9,7 @@ class RdfBuilderUnitTest extends GroovyTestCase {
         Graph graph = TestJRDFFactory.factory.graph
         def rdf = new RdfBuilder(graph)
         def urn = rdf.namespace("urn", "http://this/is/not/a/urn#");
-        rdf.namespace("xsd", "http://www.w3.org/2001/XMLSchema#");
+        rdf.namespaces('xsd':'http://www.w3.org/2001/XMLSchema#', 'rdfs':'http://www.w3.org/2000/01/rdf-schema#')
 
         // Normal triples
         rdf.'urn:foo1' 'urn:bar':'urn:baz'

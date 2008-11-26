@@ -12,7 +12,6 @@ import org.jrdf.TestJRDFFactory
 
 class NTriplesParserTestUtil {
 
-
     private NTriplesParserTestUtil() {
     }
 
@@ -46,8 +45,7 @@ class NTriplesParserTestUtil {
 
     static def addStandardValuesToGraph(Graph newGraph) {
         def rdf = new RdfBuilder(newGraph)
-        def eg = rdf.namespace("eg", "http://example.org/");
-        rdf.namespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+        rdf.namespaces("eg":"http://example.org/", "rdfs":"http://www.w3.org/2000/01/rdf-schema#")
         rdf."eg:resource1" "eg:property":"eg:resource2"
         rdf."_:anon" "eg:property":"eg:resource2"
         rdf."eg:resource2" "eg:property":"_:anon"

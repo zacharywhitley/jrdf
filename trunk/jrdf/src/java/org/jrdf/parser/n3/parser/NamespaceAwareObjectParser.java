@@ -98,6 +98,7 @@ public final class NamespaceAwareObjectParser implements ObjectParser {
     }
 
     public ObjectNode parseNode(final CharSequence line) throws ParseException {
+        checkNotNull(line);
         final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
         if (regexMatcher.matches()) {
             return parseObject(regexMatcher);
