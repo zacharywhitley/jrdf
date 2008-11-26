@@ -54,6 +54,9 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         NodeType type = namePosMap.get(attributeName);
         type = (type != null) ? type : new ObjectNodeType();
         Attribute attribute = new AttributeImpl(attributeName, type);
+        if (operation == null) {
+            operation = EqAVPOperation.EQUALS;
+        }
         ValueOperation vo = new ValueOperationImpl(value, operation);
         returnValue.put(attribute, vo);
         collector.addConstraints(returnValue);
