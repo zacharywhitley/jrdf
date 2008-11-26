@@ -19,6 +19,7 @@ import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.builder.URIReferenceBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABoundBuiltincall;
+import org.jrdf.urql.parser.node.AEMoreNumericExpression;
 import org.jrdf.urql.parser.node.AIriRefIriRefOrPrefixedName;
 import org.jrdf.urql.parser.node.APrefixedNameIriRefOrPrefixedName;
 import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
@@ -54,9 +55,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         NodeType type = namePosMap.get(attributeName);
         type = (type != null) ? type : new ObjectNodeType();
         Attribute attribute = new AttributeImpl(attributeName, type);
-        if (operation == null) {
-            operation = EqAVPOperation.EQUALS;
-        }
         ValueOperation vo = new ValueOperationImpl(value, operation);
         returnValue.put(attribute, vo);
         collector.addConstraints(returnValue);
@@ -109,5 +107,10 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         } catch (ParserException e) {
             exception = e;
         }
+    }
+
+    @Override
+    public void caseAEMoreNumericExpression(AEMoreNumericExpression node) {
+        this.operation = EqAVPOperation.EQUALS;
     }
 }

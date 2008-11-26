@@ -146,6 +146,7 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     @Override
     public void caseAEMoreNumericExpression(AEMoreNumericExpression node) {
         try {
+            node.apply(numericExpressionAnalyser);
             node.getNumericExpression().apply(numericExpressionAnalyser);
             Map<Attribute, ValueOperation> moreValuePair = numericExpressionAnalyser.getSingleAvp();
             expression = new EqualsExpression<V>(valuePair, moreValuePair);
