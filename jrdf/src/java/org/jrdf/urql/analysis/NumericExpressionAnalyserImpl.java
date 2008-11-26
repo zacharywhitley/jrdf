@@ -19,7 +19,6 @@ import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.builder.URIReferenceBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABoundBuiltincall;
-import org.jrdf.urql.parser.node.AEMoreNumericExpression;
 import org.jrdf.urql.parser.node.AIriRefIriRefOrPrefixedName;
 import org.jrdf.urql.parser.node.APrefixedNameIriRefOrPrefixedName;
 import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
@@ -63,8 +62,8 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
 
     @Override
     public void caseABoundBuiltincall(ABoundBuiltincall node) {
-        this.operation = BoundAVPOperation.BOUND;
         node.getBracketedVar().apply(this);
+        this.operation = BoundAVPOperation.BOUND;
     }
 
     @Override
@@ -79,14 +78,15 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
 
     @Override
     public void caseAStrBuiltincall(AStrBuiltincall node) {
-        this.operation = StrAVPOperation.STR;
         node.getBracketedExpression().apply(this);
+        this.operation = StrAVPOperation.STR;
     }
 
     @Override
     public void caseAVariable(AVariable node) {
         this.attributeName = new VariableName(node.getVariablename().getText());
         this.value = AnyNode.ANY_NODE;
+        this.operation = EqAVPOperation.EQUALS;
     }
 
     @Override
@@ -107,10 +107,5 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         } catch (ParserException e) {
             exception = e;
         }
-    }
-
-    @Override
-    public void caseAEMoreNumericExpression(AEMoreNumericExpression node) {
-        this.operation = EqAVPOperation.EQUALS;
     }
 }
