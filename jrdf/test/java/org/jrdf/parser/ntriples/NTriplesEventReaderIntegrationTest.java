@@ -96,8 +96,8 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
                 Triple triple = eventReader.next();
                 actualResults.add(triple);
             }
-            Set<Triple> expectedTriples = standardTest(NEW_GRAPH, BLANK_NODE_FACTORY);
-            ParserTestUtil.checkGraph(actualResults, expectedTriples);
+            Set<Triple> expectedTriples = standardTest();
+            ParserTestUtil.checkGraph(expectedTriples, actualResults);
         } finally {
             eventReader.close();
         }

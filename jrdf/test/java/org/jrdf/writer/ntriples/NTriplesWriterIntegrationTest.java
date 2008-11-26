@@ -62,13 +62,13 @@ package org.jrdf.writer.ntriples;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.collection.MemMapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import static org.jrdf.parser.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFInputFactory;
-import org.jrdf.parser.ParserTestUtil;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
@@ -125,7 +125,7 @@ public class NTriplesWriterIntegrationTest extends TestCase {
         BLANK_NODE_FACTORY.clear();
         InputStream in = getSampleData(this.getClass(), TEST_DATA);
         Set<Triple> expectedResults = parseNTriplesFile(in, NEW_GRAPH, BLANK_NODE_FACTORY);
-        ParserTestUtil.checkGraph(expectedResults, actualResults);
+        checkGraph(expectedResults, actualResults);
     }
 
     private Set<String> getTriplesAsStrings() throws Exception {
@@ -139,10 +139,8 @@ public class NTriplesWriterIntegrationTest extends TestCase {
     }
 
     private Writer printOutGraph() throws Exception {
-        Set<Triple> triples = standardTest(NEW_GRAPH, BLANK_NODE_FACTORY);
-        for (Triple triple : triples) {
-            NEW_GRAPH.add(triple);
-        }
+        NEW_GRAPH.clear();
+        standardTest(NEW_GRAPH);
         StringWriter out = new StringWriter();
         NTriplesWriter writer = new NTriplesWriterImpl();
         writer.write(NEW_GRAPH, out);

@@ -61,20 +61,17 @@ package org.jrdf.parser.ntriples;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.collection.MapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.collection.MemMapFactory;
-import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.ParserTestUtil;
+import static org.jrdf.parser.ParserTestUtil.checkGraph;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -84,9 +81,9 @@ import java.util.Set;
 public class NTripleParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
+    private ParserBlankNodeFactory factory;
 
     // Commented out tests are due to the lack of inferencing for types and blank node equivalence.
-
     private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
         {
@@ -109,43 +106,34 @@ public class NTripleParserIntegrationTest extends TestCase {
     };
 
     public void testStandardTest() throws Exception {
-        Graph newGraph = TEST_JRDF_FACTORY.getGraph();
-        MapFactory creator = new MemMapFactory();
-        ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, newGraph.getElementFactory());
-        InputStream in = getSampleData(this.getClass(), TEST_DATA);
-        Set<Triple> actualResults = parseNTriplesFile(in, newGraph, factory);
-        Set<Triple> expectedResults = standardTest(newGraph, factory);
-        ParserTestUtil.checkGraph(actualResults, expectedResults);
+        final Set<Triple> actualResults = getActualResults(TEST_DATA);
+        final Set<Triple> expectedResults = standardTest();
+        checkGraph(expectedResults, actualResults);
     }
 
     public void testPositiveTests() throws Exception {
-        for (String fileName : POSITIVE_TESTS.keySet()) {
-            Graph newGraph = TEST_JRDF_FACTORY.getGraph();
-            MapFactory creator = new MemMapFactory();
-            ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, newGraph.getElementFactory());
-            Set<Triple> actualResults = getResults(fileName, newGraph, factory);
-            newGraph = TEST_JRDF_FACTORY.getGraph();
-            Set<Triple> expectedResults = getResults(POSITIVE_TESTS.get(fileName), newGraph, factory);
-            ParserTestUtil.checkGraph(actualResults, expectedResults);
+        for (final String fileName : POSITIVE_TESTS.keySet()) {
+            final Set<Triple> actualResults = getActualResults(fileName);
+            final Set<Triple> expectedResults = getResults(POSITIVE_TESTS.get(fileName), TEST_JRDF_FACTORY.getGraph());
+            checkGraph(expectedResults, actualResults);
         }
     }
 
     public void testNegativeTests() throws Exception {
-        for (String fileName : NEGATIVE_TESTS) {
-            final URL file = getClass().getClassLoader().getResource(fileName);
-            Graph graph = TEST_JRDF_FACTORY.getGraph();
-            NTriplesParserFactory parserFactory = new NTriplesParserFactoryImpl();
-            MapFactory creator = new MemMapFactory();
-            ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
-            NTriplesParser nTriplesParser = parserFactory.createParser(graph, factory);
-            LineParser parser = new LineParserImpl(nTriplesParser);
-            parser.setStatementHandler(new GraphStatementHandler(graph));
-            parser.parse(file.openStream(), "foo");
+        for (final String fileName : NEGATIVE_TESTS) {
+            // TODO Finish - this should expect an exception to be thrown.
+            getActualResults(fileName);
         }
     }
 
-    private Set<Triple> getResults(String fileName, Graph newGraph, ParserBlankNodeFactory factory) throws Exception {
-        InputStream in = getSampleData(this.getClass(), fileName);
+    private Set<Triple> getActualResults(final String fileName) throws Exception {
+        final Graph newGraph = TEST_JRDF_FACTORY.getGraph();
+        factory = new ParserBlankNodeFactoryImpl(new MemMapFactory(), newGraph.getElementFactory());
+        return getResults(fileName, newGraph);
+    }
+
+    private Set<Triple> getResults(String fileName, Graph newGraph) throws Exception {
+        final InputStream in = getSampleData(this.getClass(), fileName);
         try {
             return parseNTriplesFile(in, newGraph, factory);
         } finally {

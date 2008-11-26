@@ -57,6 +57,13 @@ class RdfBuilderUnitTest extends GroovyTestCase {
             }
         }
 
-        assertEquals(16, graph.getNumberOfTriples())
+        // Mixing styles
+        rdf.'_:foo2' {
+            urn.blank {
+                urn.very_blank
+            }
+        }
+
+        assertEquals(17, graph.getNumberOfTriples())
     }
 }
