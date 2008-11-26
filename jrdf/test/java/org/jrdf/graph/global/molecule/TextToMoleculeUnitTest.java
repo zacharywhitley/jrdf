@@ -104,7 +104,7 @@ public class TextToMoleculeUnitTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(graph, new MemMapFactory());
-        tripleParser = new TripleParserImpl(parsersFactory.getURIReferenceParser(),
+        tripleParser = new TripleParserImpl(parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser(), graph.getTripleFactory());
         traverser = new MoleculeTraverserImpl();
         textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, FACTORY);

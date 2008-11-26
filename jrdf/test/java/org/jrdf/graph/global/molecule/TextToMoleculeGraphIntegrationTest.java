@@ -80,7 +80,7 @@ public class TextToMoleculeGraphIntegrationTest extends AbstractMoleculeGraphInt
         super.setUp();
         destGraph = factory.getGraph();
         final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(destGraph, new MemMapFactory());
-        tripleParser = new TripleParserImpl(parsersFactory.getURIReferenceParser(),
+        tripleParser = new TripleParserImpl(parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser(), destGraph.getTripleFactory());
         textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), tripleParser, moleculeFactory);
         graphBuilder = new TextToMoleculeGraph(textToMolecule);
