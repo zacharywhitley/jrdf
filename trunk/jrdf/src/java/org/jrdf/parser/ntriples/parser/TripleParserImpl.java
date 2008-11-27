@@ -64,27 +64,80 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.Node;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
+import java.util.Map;
+import java.util.HashMap;
 
 public class TripleParserImpl implements TripleParser {
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
         "(<(.+?)>|_:(.+?))\\p{Blank}+" +
         "(<(.+?)>)\\p{Blank}+" +
         "(<(.+?)>|_:(.+?)|(.+?))\\p{Blank}*\\.\\p{Blank}*");
+    private static final Pattern SUBJECT_REGEX = compile("(<([\\x20-\\x7E]+?)>|_:(\\p{Alpha}[\\x20-\\x7E]*?))");
+    private static final Pattern PREDICATE_REGEX = compile("(<([\\x20-\\x7E]+?)>)");
+    private static final Pattern OBJECT_REGEX = compile(
+        "(<([\\x20-\\x7E]+?)>|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
     private static final int SUBJECT_GROUP = 1;
     private static final int PREDICATE_GROUP = 4;
     private static final int OBJECT_GROUP = 6;
+    private static final int URI_GROUP = 2;
+    private static final int BLANK_NODE_GROUP = 3;
+    private static final int LITERAL_GROUP = 4;
+    private final NodeParser nodeParser;
     private final RegexMatcherFactory regexMatcherFactory;
-    private final SubjectParser subjectParser;
-    private final PredicateParser predicateParser;
-    private final ObjectParser objectParser;
     private final TripleFactory tripleFactory;
     private final BlankNodeParser blankNodeParser;
+    private final URIReferenceParser uriReferenceParser;
+    private final LiteralParser literalNodeParser;
+    private final Map<Integer, RegexNodeParser> subjectGroupMatches = new HashMap<Integer, RegexNodeParser>() {
+        {
+            put(URI_GROUP, new RegexNodeParser() {
+                public Node parse(final String line) throws ParseException {
+                    return uriReferenceParser.parseURIReference(line);
+                }
+            });
+            put(BLANK_NODE_GROUP, new RegexNodeParser() {
+                public Node parse(final String line) throws ParseException {
+                    return blankNodeParser.parseBlankNode(line);
+                }
+            });
+        }
+    };
+    private final Map<Integer, RegexNodeParser> predicateGroupMatches = new HashMap<Integer, RegexNodeParser>() {
+        {
+            put(URI_GROUP, new RegexNodeParser() {
+                public Node parse(final String line) throws ParseException {
+                    return uriReferenceParser.parseURIReference(line);
+                }
+            });
+        }
+    };
+    private final Map<Integer, RegexNodeParser> objectGroupMatches = new HashMap<Integer, RegexNodeParser>() {
+        {
+            put(URI_GROUP, new RegexNodeParser() {
+                public Node parse(final String line) throws ParseException {
+                    return uriReferenceParser.parseURIReference(line);
+                }
+            });
+            put(BLANK_NODE_GROUP, new RegexNodeParser() {
+                public Node parse(final String line) throws ParseException {
+                    return blankNodeParser.parseBlankNode(line);
+                }
+            });
+            put(LITERAL_GROUP, new RegexNodeParser() {
+                public Node parse(final String line) throws ParseException {
+                    return literalNodeParser.parseLiteral(line);
+                }
+            });
+        }
+    };
 
     public TripleParserImpl(final RegexMatcherFactory newRegexMatcherFactory,
         final URIReferenceParser newURIReferenceParser, final BlankNodeParser newBlankNodeParser,
@@ -92,11 +145,9 @@ public class TripleParserImpl implements TripleParser {
         checkNotNull(newRegexMatcherFactory, newURIReferenceParser, newBlankNodeParser, newLiteralNodeParser,
             newTripleFactory);
         regexMatcherFactory = newRegexMatcherFactory;
-        NodeParser nodeParser = new NodeParserImpl(regexMatcherFactory);
-        subjectParser = new SubjectParserImpl(nodeParser, newURIReferenceParser, newBlankNodeParser);
-        predicateParser = new PredicateParserImpl(regexMatcherFactory, newURIReferenceParser);
-        objectParser = new ObjectParserImpl(regexMatcherFactory, newURIReferenceParser, newBlankNodeParser,
-            newLiteralNodeParser);
+        nodeParser = new NodeParserImpl(regexMatcherFactory);
+        uriReferenceParser = newURIReferenceParser;
+        literalNodeParser = newLiteralNodeParser;
         blankNodeParser = newBlankNodeParser;
         tripleFactory = newTripleFactory;
     }
@@ -105,9 +156,12 @@ public class TripleParserImpl implements TripleParser {
         try {
             final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
             if (regexMatcher.matches()) {
-                final SubjectNode subject = subjectParser.parseNode(regexMatcher.group(SUBJECT_GROUP));
-                final PredicateNode predicate = predicateParser.parseNode(regexMatcher.group(PREDICATE_GROUP));
-                final ObjectNode object = objectParser.parseNode(regexMatcher.group(OBJECT_GROUP));
+                final SubjectNode subject = (SubjectNode) nodeParser.parseNode(SUBJECT_REGEX,
+                    regexMatcher.group(SUBJECT_GROUP), subjectGroupMatches);
+                final PredicateNode predicate = (PredicateNode) nodeParser.parseNode(PREDICATE_REGEX,
+                    regexMatcher.group(PREDICATE_GROUP), predicateGroupMatches);
+                final ObjectNode object = (ObjectNode) nodeParser.parseNode(OBJECT_REGEX,
+                    regexMatcher.group(OBJECT_GROUP), objectGroupMatches);
                 if (subject != null && predicate != null && object != null) {
                     return tripleFactory.createTriple(subject, predicate, object);
                 }
