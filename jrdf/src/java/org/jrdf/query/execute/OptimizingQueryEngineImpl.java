@@ -105,7 +105,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
         shortCircuit = true;
         allVariables = ask.getAllVariables();
-        result = getExpression(ask.getNextExpression());
+        result = getExpression(ask.getNextExpression(), shortCircuit);
     }
 
     // TODO YF join those with common attributes first.
@@ -211,6 +211,16 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @Override
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
+        QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
+            union, leftOuterJoin, diff);
+        queryEngine.initialiseBaseRelation(result);
+        queryEngine.setAllVariables(allVariables);
+        expression.accept((V) queryEngine);
+        return queryEngine.getResult();
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression, boolean shortCircuit) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
             union, leftOuterJoin, diff);
         queryEngine.initialiseBaseRelation(result);

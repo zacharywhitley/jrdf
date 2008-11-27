@@ -76,12 +76,30 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         } else if (rhs == null) {
             expression = lhs;
         } else {
-            if (expressionComparator.compare(lhs, rhs) <= 0) {
-                expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
-            } else {
-                expression = new Conjunction<ExpressionVisitor>(rhs, lhs);
-            }
+            expression = constructNewConjunction(lhs, rhs);
         }
+    }
+
+    private Expression constructNewConjunction(Expression lhs, Expression rhs) {
+        Expression<ExpressionVisitor> expression;
+        if (lhs instanceof Union) {
+            expression = distributeConjunctionWithUnion((Union) lhs, rhs);
+        } else if (rhs instanceof Union) {
+            expression = distributeConjunctionWithUnion((Union) rhs, lhs);
+        } else if (expressionComparator.compare(lhs, rhs) <= 0) {
+            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+        } else {
+            expression = new Conjunction<ExpressionVisitor>(rhs, lhs);
+        }
+        return expression;
+    }
+
+    private Expression distributeConjunctionWithUnion(Union lhs, Expression rhs) {
+        Expression uLhs = lhs.getLhs();
+        Expression uRhs = lhs.getRhs();
+        Expression newConj1 = getNext(new Conjunction<ExpressionVisitor>(rhs, uLhs));
+        Expression newConj2 = getNext(new Conjunction<ExpressionVisitor>(rhs, uRhs));
+        return getNext(new Union<ExpressionVisitor>(newConj1, newConj2));
     }
 
     public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {

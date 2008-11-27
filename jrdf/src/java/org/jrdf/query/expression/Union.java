@@ -113,7 +113,7 @@ public final class Union<V extends ExpressionVisitor> implements Expression<V>, 
     }
 
     public String toString() {
-        return lhs + " U " + rhs;
+        return "( " + lhs + " U " + rhs + " )";
     }
 
     private boolean determineEqualityFromFields(Union o1, Union o2) {
