@@ -63,7 +63,7 @@ import org.jrdf.util.EqualsUtil;
 
 import java.io.Serializable;
 
-public final class Optional<V extends ExpressionVisitor> implements Expression<V>, Serializable {
+public final class Optional<V extends ExpressionVisitor> implements BiOperandExpression<V>, Serializable {
     private static final long serialVersionUID = 2784920251078701049L;
     private static final int DUMMY_HASHCODE = 47;
     private Expression<V> lhs;

@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -59,85 +59,13 @@
 
 package org.jrdf.query.expression;
 
-import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.util.EqualsUtil;
-
-import java.io.Serializable;
-
 /**
+ *
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id :$
  */
+public interface BiOperandExpression<V extends ExpressionVisitor> extends Expression<V> {
+    Expression<V> getLhs();
 
-public class Filter<V extends ExpressionVisitor> implements BiOperandExpression<V>, Serializable {
-    private static final long serialVersionUID = 7695585379424077889L;
-    private static final int DUMMY_HASHCODE = 47;
-    private Expression<V> lhs;
-    private LogicExpression<V> rhs;
-
-    private Filter() {
-    }
-
-    public Filter(Expression<V> lhs, LogicExpression<V> rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
-    }
-
-    public Expression<V> getLhs() {
-        return lhs;
-    }
-
-    public LogicExpression<V> getRhs() {
-        return rhs;
-    }
-
-    public void setLhs(Expression<V> lhs) {
-        this.lhs = lhs;
-    }
-
-    public void setRhs(LogicExpression<V> rhs) {
-        this.rhs = rhs;
-    }
-
-    public int size() {
-        return lhs.size() + rhs.size();
-    }
-
-    public void accept(V v) {
-        v.visitFilter(this);
-    }
-
-    public int hashCode() {
-        int hash = DUMMY_HASHCODE + lhs.hashCode();
-        return hash * DUMMY_HASHCODE + rhs.hashCode();
-    }
-
-    public String toString() {
-        return "( " + lhs + " )" + " FILTER ( " + rhs + " )";
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (Filter) obj);
-    }
-
-    private boolean determineEqualityFromFields(Filter o1, Filter o2) {
-        return lhsEqual(o1, o2) && rhsEqual(o1, o2);
-    }
-
-    private boolean rhsEqual(Filter o1, Filter o2) {
-        return o1.getRhs().equals(o2.getRhs());
-    }
-
-    private boolean lhsEqual(Filter o1, Filter o2) {
-        return o1.getLhs().equals(o2.getLhs());
-    }
+    Expression<V> getRhs();
 }
