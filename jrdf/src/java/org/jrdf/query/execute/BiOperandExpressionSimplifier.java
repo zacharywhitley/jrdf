@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,88 +57,19 @@
  *
  */
 
-package org.jrdf.query.expression.logic;
+package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.BiOperandExpression;
-import org.jrdf.util.EqualsUtil;
+
+import java.util.List;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id :$
  */
-
-public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
-    private static final long serialVersionUID = -1701496085083842700L;
-    private static final int DUMMY_HASHCODE = 47;
-
-    private LogicExpression<V> lhs;
-    private LogicExpression<V> rhs;
-
-    private LogicalAndExpression() {
-    }
-
-    public LogicalAndExpression(LogicExpression<V> lhs, LogicExpression<V> rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
-    }
-
-    public LogicExpression<V> getLhs() {
-        return lhs;
-    }
-
-    public LogicExpression<V> getRhs() {
-        return rhs;
-    }
-
-    public void setLhs(LogicExpression<V> lhs) {
-        this.lhs = lhs;
-    }
-
-    public void setRhs(LogicExpression<V> rhs) {
-        this.rhs = rhs;
-    }
-
-    public int size() {
-        return (lhs.size() + rhs.size()) / 2 + 1;
-    }
-
-    public void accept(V v) {
-        v.visitLogicalAnd(this);
-    }
-
-    public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
-        int hash = DUMMY_HASHCODE + lhs.hashCode();
-        return hash * DUMMY_HASHCODE + rhs.hashCode();
-    }
-
-    public String toString() {
-        return lhs + " && " + rhs;
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (LogicalAndExpression) obj);
-    }
-
-    private boolean determineEqualityFromFields(LogicalAndExpression o1, LogicalAndExpression o2) {
-        return lhsEqual(o1, o2) && rhsEqual(o1, o2);
-    }
-
-    private boolean rhsEqual(LogicalAndExpression o1, LogicalAndExpression o2) {
-        return o1.getRhs().equals(o2.getRhs());
-    }
-
-    private boolean lhsEqual(LogicalAndExpression o1, LogicalAndExpression o2) {
-        return o1.getLhs().equals(o2.getLhs());
-    }
+public interface BiOperandExpressionSimplifier {
+    <V extends ExpressionVisitor> List<Expression<V>>
+    flattenAndSortConjunction(BiOperandExpression<V> conjunction, Class expClass);
 }
