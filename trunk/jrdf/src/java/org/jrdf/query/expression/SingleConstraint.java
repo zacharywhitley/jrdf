@@ -82,6 +82,7 @@ import org.jrdf.vocabulary.XSD;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A expression expression comprising a single expression.
@@ -106,6 +107,10 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
 
     public void setAvo(Attribute existingAttribute, ValueOperation newValueOperation) {
         singleAvp.put(existingAttribute, newValueOperation);
+    }
+
+    public Set<Attribute> getHeadings() {
+        return singleAvp.keySet();
     }
 
     public LinkedHashMap<Attribute, ValueOperation> getAvo(Map<AttributeName, ? extends NodeType> allVariables) {
