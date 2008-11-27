@@ -59,52 +59,53 @@
 
 package org.jrdf.parser.ntriples.parser;
 
+import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
 import org.jrdf.parser.ParseException;
-import static org.jrdf.parser.ntriples.parser.NodeMapsImpl.*;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.regex.Pattern;
 
-public class TripleParserImpl implements TripleParser {
-    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(<(.+?)>|_:(.+?))\\p{Blank}+" +
-        "(<(.+?)>)\\p{Blank}+" +
-        "(<(.+?)>|_:(.+?)|(.+?))\\p{Blank}*\\.\\p{Blank}*");
-    private static final int SUBJECT_GROUP = 1;
-    private static final int PREDICATE_GROUP = 4;
-    private static final int OBJECT_GROUP = 6;
+public class RegexTripleParserImpl implements RegexTripleParser {
     private final RegexMatcherFactory regexMatcherFactory;
-    private final BlankNodeParser blankNodeParser;
-    private final RegexTripleParser tripleParser;
+    private final NodeParser nodeParser;
+    private final TripleFactory tripleFactory;
+    private final NodeMaps nodeMaps;
 
-    public TripleParserImpl(final RegexMatcherFactory newRegexFactory, final BlankNodeParser newBlankNodeParser,
-        final RegexTripleParser newTripleParser) {
-        checkNotNull(newRegexFactory, newBlankNodeParser, newTripleParser);
+    public RegexTripleParserImpl(final RegexMatcherFactory newRegexFactory, final TripleFactory newTripleFactory,
+        final NodeMaps newNodeMaps) {
+        checkNotNull(newRegexFactory, newTripleFactory, newNodeMaps);
         regexMatcherFactory = newRegexFactory;
-        blankNodeParser = newBlankNodeParser;
-        tripleParser = newTripleParser;
+        tripleFactory = newTripleFactory;
+        nodeMaps = newNodeMaps;
+        nodeParser = new NodeParserImpl();
     }
 
-    public Triple parseTriple(final CharSequence line) {
-        try {
-            final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
-            if (regexMatcher.matches()) {
-                final RegexMatcher matcher1 = tripleParser.createMatcher(regexMatcher, SUBJECT_REGEX, SUBJECT_GROUP);
-                final RegexMatcher matcher2 = tripleParser.createMatcher(regexMatcher, PREDICATE_REGEX,
-                    PREDICATE_GROUP);
-                final RegexMatcher matcher3 = tripleParser.createMatcher(regexMatcher, OBJECT_REGEX, OBJECT_GROUP);
-                return tripleParser.parseTripleLine(matcher1, matcher2, matcher3);
-            }
-            return null;
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+    public Triple parseTripleLine(final RegexMatcher subjectMatcher, final RegexMatcher predicateMatcher,
+        final RegexMatcher objectMatcher) throws ParseException {
+        final SubjectNode subject = (SubjectNode) nodeParser.parseNode(nodeMaps.getSubjectMap(), subjectMatcher);
+        final PredicateNode predicate = (PredicateNode) nodeParser.parseNode(nodeMaps.getPredicateMap(),
+            predicateMatcher);
+        final ObjectNode object = (ObjectNode) nodeParser.parseNode(nodeMaps.getObjectMap(), objectMatcher);
+        if (subject != null && predicate != null && object != null) {
+            return tripleFactory.createTriple(subject, predicate, object);
+        } else {
+            throw new ParseException("Failed to parse all triples in line: " + printNode(subjectMatcher, subject) +
+                ", " + printNode(predicateMatcher, predicate) + ", " + printNode(objectMatcher, object), 0);
         }
     }
 
-    public void clear() {
-        blankNodeParser.clear();
+    public RegexMatcher createMatcher(final RegexMatcher regexMatcher, final Pattern nodeRegex, final int nodeGroup) {
+        return regexMatcherFactory.createMatcher(nodeRegex, regexMatcher.group(nodeGroup));
+    }
+
+    private String printNode(final RegexMatcher matcher, final Node node) {
+        return matcher + "(" + node + ")";
     }
 }

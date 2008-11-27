@@ -125,6 +125,7 @@ public final class ArnoldTheInstantiator {
         instantiators.put(Long.class, new LongInstantiator());
         instantiators.put(ATriple.class, new ATripleInstantiator());
         instantiators.put(Set.class, new SetInstantiator());
+        instantiators.put(Map.class, new MapInstantiator());
     }
 
     private static class URLInstantiator implements Instantiator {
@@ -163,6 +164,12 @@ public final class ArnoldTheInstantiator {
     private static class SetInstantiator implements Instantiator {
         public Object instantiate() {
             return new HashSet();
+        }
+    }
+
+    private static class MapInstantiator implements Instantiator {
+        public Object instantiate() {
+            return new HashMap();
         }
     }
 }

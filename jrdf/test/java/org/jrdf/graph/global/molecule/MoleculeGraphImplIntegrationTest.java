@@ -71,13 +71,16 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
-import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
-import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.parser.ntriples.parser.NodeMaps;
 import org.jrdf.parser.ntriples.parser.NodeMapsImpl;
+import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
+import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
+import org.jrdf.parser.ntriples.parser.RegexTripleParser;
+import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
+import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import org.jrdf.vocabulary.RDF;
 
@@ -375,10 +378,12 @@ public class MoleculeGraphImplIntegrationTest extends AbstractMoleculeGraphInteg
 
     private TripleParser getTripleParser(Graph newGraph) {
         final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(newGraph, new MemMapFactory());
-        final NodeMaps nodeMap = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),
+        final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+        final NodeMaps nodeMaps = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
-        return new TripleParserImpl(new RegexMatcherFactoryImpl(), parsersFactory.getBlankNodeParser(),
-            newGraph.getTripleFactory(), nodeMap);
+        final RegexTripleParser parser = new RegexTripleParserImpl(matcherFactory, newGraph.getTripleFactory(),
+            nodeMaps);
+        return new TripleParserImpl(matcherFactory, parsersFactory.getBlankNodeParser(), parser);
     }
 
     private String getAsString(URL resource) throws IOException {

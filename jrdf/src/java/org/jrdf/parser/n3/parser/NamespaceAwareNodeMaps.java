@@ -63,14 +63,14 @@ import org.jrdf.graph.Node;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.LiteralParser;
-import org.jrdf.parser.ntriples.parser.RegexNodeParser;
 import org.jrdf.parser.ntriples.parser.NodeMaps;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.parser.ntriples.parser.RegexNodeParser;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-import static java.util.regex.Pattern.compile;
+import static java.util.regex.Pattern.*;
 
 public class NamespaceAwareNodeMaps implements NodeMaps {
     /**
@@ -78,21 +78,21 @@ public class NamespaceAwareNodeMaps implements NodeMaps {
      */
     public static final Pattern SUBJECT_REGEX = compile(
         "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
-        "|_:(\\p{Alpha}[\\x20-\\x7E]*?))");
+            "|_:(\\p{Alpha}[\\x20-\\x7E]*?))");
 
     /**
      * Pattern for Predicate in N3 triple pattern.
      */
     public static final Pattern PREDICATE_REGEX = compile(
         "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))" +
-        "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
+            "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
 
     /**
      * Pattern for Object in N3 triple pattern.
      */
     public static final Pattern OBJECT_REGEX = compile(
         "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
-        "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
+            "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
     private static final int URI_GROUP = 2;
     private static final int NS_LOCAL_NAME_GROUP = 3;
     private static final int BLANK_NODE_GROUP = 6;
@@ -100,30 +100,7 @@ public class NamespaceAwareNodeMaps implements NodeMaps {
     private final NamespaceAwareURIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalNodeParser;
-    private final Map<Integer, RegexNodeParser> groupMatches = new HashMap<Integer, RegexNodeParser>() {
-        {
-            put(URI_GROUP, new RegexNodeParser() {
-                public Node parse(final String line) throws ParseException {
-                    return uriReferenceParser.parseURIReference(line);
-                }
-            });
-            put(NS_LOCAL_NAME_GROUP, new RegexNodeParser() {
-                public Node parse(final String line) throws ParseException {
-                    return uriReferenceParser.parseURIReferenceWithNamespace(line);
-                }
-            });
-            put(BLANK_NODE_GROUP, new RegexNodeParser() {
-                public Node parse(final String line) throws ParseException {
-                    return blankNodeParser.parseBlankNode(line);
-                }
-            });
-            put(LITERAL_GROUP, new RegexNodeParser() {
-                public Node parse(final String line) throws ParseException {
-                    return literalNodeParser.parseLiteral(line);
-                }
-            });
-        }
-    };
+    private final Map<Integer, RegexNodeParser> groupMatches = new HashMap<Integer, RegexNodeParser>();
     private Map<Integer, RegexNodeParser> subjectGroupMatches;
     private Map<Integer, RegexNodeParser> predicateGroupMatches;
     private Map<Integer, RegexNodeParser> objectGroupMatches;
@@ -150,11 +127,35 @@ public class NamespaceAwareNodeMaps implements NodeMaps {
     }
 
     private void setUpMatches() {
+        standardMatches();
         subjectGroupMatches = new HashMap<Integer, RegexNodeParser>(groupMatches);
         predicateGroupMatches = new HashMap<Integer, RegexNodeParser>(groupMatches);
         objectGroupMatches = new HashMap<Integer, RegexNodeParser>(groupMatches);
         subjectGroupMatches.remove(LITERAL_GROUP);
         predicateGroupMatches.remove(BLANK_NODE_GROUP);
         predicateGroupMatches.remove(LITERAL_GROUP);
+    }
+
+    private void standardMatches() {
+        groupMatches.put(URI_GROUP, new RegexNodeParser() {
+            public Node parse(final String line) throws ParseException {
+                return uriReferenceParser.parseURIReference(line);
+            }
+        });
+        groupMatches.put(NS_LOCAL_NAME_GROUP, new RegexNodeParser() {
+            public Node parse(final String line) throws ParseException {
+                return uriReferenceParser.parseURIReferenceWithNamespace(line);
+            }
+        });
+        groupMatches.put(BLANK_NODE_GROUP, new RegexNodeParser() {
+            public Node parse(final String line) throws ParseException {
+                return blankNodeParser.parseBlankNode(line);
+            }
+        });
+        groupMatches.put(LITERAL_GROUP, new RegexNodeParser() {
+            public Node parse(final String line) throws ParseException {
+                return literalNodeParser.parseLiteral(line);
+            }
+        });
     }
 }

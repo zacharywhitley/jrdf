@@ -84,6 +84,8 @@ import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
 import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.parser.ntriples.parser.NodeMaps;
 import org.jrdf.parser.ntriples.parser.NodeMapsImpl;
+import org.jrdf.parser.ntriples.parser.RegexTripleParser;
+import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
 
@@ -107,10 +109,12 @@ public class TextToMoleculeUnitTest extends TestCase {
         super.setUp();
         final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(graph, new MemMapFactory());
         final RegexMatcherFactoryImpl matcherFactory = new RegexMatcherFactoryImpl();
-        final NodeMaps nodeMap = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),
+        final NodeMaps nodeMaps = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
+        final RegexTripleParser parser = new RegexTripleParserImpl(matcherFactory, graph.getTripleFactory(),
+            nodeMaps);
         tripleParser = new TripleParserImpl(matcherFactory, parsersFactory.getBlankNodeParser(),
-            graph.getTripleFactory(), nodeMap);
+            parser);
         traverser = new MoleculeTraverserImpl();
         textToMolecule = new TextToMolecule(matcherFactory, tripleParser, FACTORY);
     }

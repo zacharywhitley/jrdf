@@ -66,6 +66,8 @@ import org.jrdf.parser.ntriples.parser.NodeMaps;
 import org.jrdf.parser.ntriples.parser.NodeMapsImpl;
 import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
 import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
+import org.jrdf.parser.ntriples.parser.RegexTripleParser;
+import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
@@ -77,8 +79,10 @@ public class NTriplesParserFactoryImpl implements NTriplesParserFactory {
         final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         final NodeMaps nodeMaps = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
+        final RegexTripleParser parser = new RegexTripleParserImpl(matcherFactory, newGraph.getTripleFactory(),
+            nodeMaps);
         final TripleParser tripleParser = new TripleParserImpl(matcherFactory, parsersFactory.getBlankNodeParser(),
-            newGraph.getTripleFactory(), nodeMaps);
+            parser);
         return new NTriplesParser(new CommentsParserImpl(matcherFactory), new TriplesParserImpl(tripleParser));
     }
 }
