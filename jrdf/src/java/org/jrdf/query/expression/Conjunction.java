@@ -71,7 +71,7 @@ import java.io.Serializable;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public final class Conjunction<V extends ExpressionVisitor> implements Expression<V>, Serializable {
+public final class Conjunction<V extends ExpressionVisitor> implements BiOperandExpression<V>, Serializable {
     private static final long serialVersionUID = -7871756371628747688L;
     private static final int DUMMY_HASHCODE = 47;
     private Expression<V> lhs;
