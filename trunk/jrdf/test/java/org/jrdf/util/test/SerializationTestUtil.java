@@ -59,10 +59,11 @@
 
 package org.jrdf.util.test;
 
-import com.gargoylesoftware.base.testing.TestUtil;
-import junit.framework.Assert;
+import static com.gargoylesoftware.base.testing.TestUtil.*;
+import static junit.framework.Assert.*;
 import junit.framework.AssertionFailedError;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.*;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -101,7 +102,7 @@ public final class SerializationTestUtil {
     // Note. Re-throwing exceptions below as we lose the class that caused the problem.
     public static void checkSerialization(Object instanceToBeSerialized) {
         try {
-            TestUtil.testSerialization(instanceToBeSerialized, CHECK_BY_EQUALITY);
+            testSerialization(instanceToBeSerialized, CHECK_BY_EQUALITY);
         } catch (AssertionFailedError afe) {
             throw new AssertionFailedError("Class " + getClassName(instanceToBeSerialized) + ", " + afe.getMessage());
         } catch (IOException ioe) {
@@ -112,19 +113,17 @@ public final class SerializationTestUtil {
 
     private static void checkSerialUidValue(Class<?> cls, long expectedUid) {
         long actualUid = getLongFieldValue(cls, FIELD_SERIAL_VERSION_UID);
-        Assert.assertEquals(expectedUid, actualUid);
+        assertEquals(expectedUid, actualUid);
     }
 
-    // FIXME TJA: Do interfaces need serialVersionUID fields?
     private static void checkContainsSerialVersionUid(Class<?> cls) {
-        FieldPropertiesTestUtil.checkContainsField(cls, FIELD_SERIAL_VERSION_UID);
-        FieldPropertiesTestUtil.checkFieldPrivate(cls, FIELD_SERIAL_VERSION_UID);
-        FieldPropertiesTestUtil.checkFieldStatic(cls, FIELD_SERIAL_VERSION_UID);
-        FieldPropertiesTestUtil.checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
-        FieldPropertiesTestUtil.checkFieldIsOfType(cls, CLASS_LONG_PRIMITIVE, FIELD_SERIAL_VERSION_UID);
+        checkContainsField(cls, FIELD_SERIAL_VERSION_UID);
+        checkFieldPrivate(cls, FIELD_SERIAL_VERSION_UID);
+        checkFieldStatic(cls, FIELD_SERIAL_VERSION_UID);
+        checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
+        checkFieldIsOfType(cls, CLASS_LONG_PRIMITIVE, FIELD_SERIAL_VERSION_UID);
     }
 
-    // FIXME TJA: Think about whether interfaces need a serialVersionUID
     private static boolean canBeInstantiated(Class<?> cls) {
         return !cls.isInterface() && !Modifier.isAbstract(cls.getModifiers());
     }

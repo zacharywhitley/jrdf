@@ -62,29 +62,20 @@ package org.jrdf.parser.ntriples.parser;
 import org.jrdf.graph.Node;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public final class NodeParserImpl implements NodeParser {
     private static final int LINE_GROUP = 0;
-    private RegexMatcherFactory factory;
 
-    public NodeParserImpl(final RegexMatcherFactory newFactory) {
-        checkNotNull(newFactory);
-        factory = newFactory;
-    }
-
-    public Node parseNode(final Pattern regex, final CharSequence line, final Map<Integer, RegexNodeParser> matches)
+    public Node parseNode(final Map<Integer, RegexNodeParser> matches, final RegexMatcher regexMatcher)
         throws ParseException {
-        checkNotNull(regex, line, matches);
-        final RegexMatcher regexMatcher = factory.createMatcher(regex, line);
+        checkNotNull(matches, regexMatcher);
         if (regexMatcher.matches()) {
             return matchGroup(regexMatcher, matches);
         } else {
-            throw new IllegalArgumentException("Couldn't match line: " + line);
+            throw new IllegalArgumentException("Couldn't match line: " + regexMatcher.toString());
         }
     }
 

@@ -57,62 +57,17 @@
  *
  */
 
-package org.jrdf.util.boundary;
+package org.jrdf.parser.ntriples.parser;
 
-import java.util.regex.Matcher;
+import org.jrdf.graph.Triple;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.parser.ParseException;
 
-public class RegexMatcherImpl implements RegexMatcher {
-    private final Matcher matcher;
+import java.util.regex.Pattern;
 
-    RegexMatcherImpl(Matcher matcher) {
-        this.matcher = matcher;
-    }
+public interface RegexTripleParser {
+    Triple parseTripleLine(RegexMatcher subjectMatcher, RegexMatcher predicateMatcher,
+        RegexMatcher objectMatcher) throws ParseException;
 
-    public boolean find() {
-        return matcher.find();
-    }
-
-    public boolean matches() {
-        return matcher.matches();
-    }
-
-    public int start() {
-        return matcher.start();
-    }
-
-    public int start(int group) {
-        return matcher.start(group);
-    }
-
-    public int end() {
-        return matcher.end();
-    }
-
-    public int end(int group) {
-        return matcher.end(group);
-    }
-
-    public String group() {
-        return matcher.group();
-    }
-
-    public String group(int group) {
-        return matcher.group(group);
-    }
-
-    public int groupCount() {
-        return matcher.groupCount();
-    }
-
-    public void appendReplacement(StringBuffer sb, String replacement) {
-        matcher.appendReplacement(sb, replacement);
-    }
-
-    public void appendTail(StringBuffer sb) {
-        matcher.appendTail(sb);
-    }
-
-    public String toString() {
-        return matcher.group(0);
-    }
+    RegexMatcher createMatcher(RegexMatcher regexMatcher, Pattern nodeRegex, int nodeGroup);
 }

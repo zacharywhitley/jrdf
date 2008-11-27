@@ -61,12 +61,12 @@ package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.graph.Node;
 import org.jrdf.parser.ParseException;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-import static java.util.regex.Pattern.compile;
+import static java.util.regex.Pattern.*;
 
 public class NodeMapsImpl implements NodeMaps {
     /**
@@ -90,25 +90,7 @@ public class NodeMapsImpl implements NodeMaps {
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalNodeParser;
-    private final Map<Integer, RegexNodeParser> groupMatches = new HashMap<Integer, RegexNodeParser>() {
-        {
-            put(URI_GROUP, new RegexNodeParser() {
-                public Node parse(final String line) throws ParseException {
-                    return uriReferenceParser.parseURIReference(line);
-                }
-            });
-            put(BLANK_NODE_GROUP, new RegexNodeParser() {
-                public Node parse(final String line) throws ParseException {
-                    return blankNodeParser.parseBlankNode(line);
-                }
-            });
-            put(LITERAL_GROUP, new RegexNodeParser() {
-                public Node parse(final String line) throws ParseException {
-                    return literalNodeParser.parseLiteral(line);
-                }
-            });
-        }
-    };
+    private final Map<Integer, RegexNodeParser> groupMatches = new HashMap<Integer, RegexNodeParser>();
     private Map<Integer, RegexNodeParser> subjectGroupMatches;
     private Map<Integer, RegexNodeParser> predicateGroupMatches;
     private Map<Integer, RegexNodeParser> objectGroupMatches;
@@ -135,11 +117,30 @@ public class NodeMapsImpl implements NodeMaps {
     }
 
     private void setUpMatches() {
+        standardMatches();
         subjectGroupMatches = new HashMap<Integer, RegexNodeParser>(groupMatches);
         predicateGroupMatches = new HashMap<Integer, RegexNodeParser>(groupMatches);
         objectGroupMatches = new HashMap<Integer, RegexNodeParser>(groupMatches);
         subjectGroupMatches.remove(LITERAL_GROUP);
         predicateGroupMatches.remove(BLANK_NODE_GROUP);
         predicateGroupMatches.remove(LITERAL_GROUP);
+    }
+
+    private void standardMatches() {
+        groupMatches.put(URI_GROUP, new RegexNodeParser() {
+            public Node parse(final String line) throws ParseException {
+                return uriReferenceParser.parseURIReference(line);
+            }
+        });
+        groupMatches.put(BLANK_NODE_GROUP, new RegexNodeParser() {
+            public Node parse(final String line) throws ParseException {
+                return blankNodeParser.parseBlankNode(line);
+            }
+        });
+        groupMatches.put(LITERAL_GROUP, new RegexNodeParser() {
+            public Node parse(final String line) throws ParseException {
+                return literalNodeParser.parseLiteral(line);
+            }
+        });
     }
 }

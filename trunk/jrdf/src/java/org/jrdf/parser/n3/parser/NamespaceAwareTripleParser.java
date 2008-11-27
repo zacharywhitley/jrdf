@@ -59,17 +59,14 @@
 
 package org.jrdf.parser.n3.parser;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.parser.ParseException;
-import static org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps.*;
-import org.jrdf.parser.ntriples.parser.NodeMaps;
+import static org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps.OBJECT_REGEX;
+import static org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps.PREDICATE_REGEX;
+import static org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps.SUBJECT_REGEX;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.NodeParser;
-import org.jrdf.parser.ntriples.parser.NodeParserImpl;
+import org.jrdf.parser.ntriples.parser.RegexTripleParser;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
@@ -86,35 +83,27 @@ public class NamespaceAwareTripleParser implements TripleParser {
     private static final int PREDICATE_GROUP = 7;
     private static final int OBJECT_GROUP = 12;
     private final RegexMatcherFactory regexMatcherFactory;
-    private final NodeParser nodeParser;
-    private final TripleFactory tripleFactory;
     private final BlankNodeParser blankNodeParser;
-    private final NodeMaps nodeMaps;
+    private final RegexTripleParser tripleParser;
 
     public NamespaceAwareTripleParser(final RegexMatcherFactory newRegexFactory,
         final BlankNodeParser newBlankNodeParser, final TripleFactory newTripleFactory,
-        final NodeMaps newNodeMaps) {
-        checkNotNull(newRegexFactory, newBlankNodeParser, newTripleFactory, newNodeMaps);
+        final RegexTripleParser newTripleParser) {
+        checkNotNull(newRegexFactory, newBlankNodeParser, newTripleFactory, newTripleParser);
         regexMatcherFactory = newRegexFactory;
         blankNodeParser = newBlankNodeParser;
-        tripleFactory = newTripleFactory;
-        nodeMaps = newNodeMaps;
-        nodeParser = new NodeParserImpl(regexMatcherFactory);
+        tripleParser = newTripleParser;
     }
 
     public Triple parseTriple(final CharSequence line) {
         try {
             final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
             if (regexMatcher.matches()) {
-                final SubjectNode subject = (SubjectNode) nodeParser.parseNode(SUBJECT_REGEX,
-                    regexMatcher.group(SUBJECT_GROUP), nodeMaps.getSubjectMap());
-                final PredicateNode predicate = (PredicateNode) nodeParser.parseNode(PREDICATE_REGEX,
-                    regexMatcher.group(PREDICATE_GROUP), nodeMaps.getPredicateMap());
-                final ObjectNode object = (ObjectNode) nodeParser.parseNode(OBJECT_REGEX,
-                    regexMatcher.group(OBJECT_GROUP), nodeMaps.getObjectMap());
-                if (subject != null && predicate != null && object != null) {
-                    return tripleFactory.createTriple(subject, predicate, object);
-                }
+                final RegexMatcher matcher1 = tripleParser.createMatcher(regexMatcher, SUBJECT_REGEX, SUBJECT_GROUP);
+                final RegexMatcher matcher2 = tripleParser.createMatcher(regexMatcher, PREDICATE_REGEX,
+                    PREDICATE_GROUP);
+                final RegexMatcher matcher3 = tripleParser.createMatcher(regexMatcher, OBJECT_REGEX, OBJECT_GROUP);
+                return tripleParser.parseTripleLine(matcher1, matcher2, matcher3);
             }
             return null;
         } catch (ParseException e) {

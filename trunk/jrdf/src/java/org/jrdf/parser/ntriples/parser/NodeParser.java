@@ -61,11 +61,11 @@ package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.graph.Node;
 import org.jrdf.parser.ParseException;
+import org.jrdf.util.boundary.RegexMatcher;
 
-import java.util.regex.Pattern;
 import java.util.Map;
 
 public interface NodeParser {
-    Node parseNode(Pattern regex, CharSequence line, Map<Integer, RegexNodeParser> matches)
+    Node parseNode(Map<Integer, RegexNodeParser> matches, final RegexMatcher regexMatcher)
         throws ParseException;
 }
