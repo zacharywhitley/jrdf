@@ -160,13 +160,11 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> newUnion) {
         BiOperandExpressionSimplifier simplifier = new BiOperandExpressionSimplifierImpl(expressionComparator);
         List<Expression<V>> list = simplifier.flattenAndSortConjunction(newUnion, Union.class);
-        Relation lhs = getExpression(list.get(0));
+        Expression<V> lhsExp = list.get(0);
+        Expression<V> rhsExp = list.get(1);
+        Relation lhs = getExpression(lhsExp);
         if (shortCircuit) {
-            if (!lhs.getTuples().isEmpty()) {
-                result = lhs;
-            } else {
-                result = getExpression(list.get(1));
-            }
+            result = (!lhs.getTuples().isEmpty()) ? getExpression(rhsExp) : lhs;
         } else {
             Relation rhs = getExpression(list.get(1));
             result = union.union(lhs, rhs);
