@@ -60,6 +60,7 @@
 package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import org.jrdf.graph.BlankNode;
@@ -68,12 +69,12 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 import static java.util.regex.Pattern.compile;
 
@@ -81,14 +82,14 @@ public class SubjectParserImplUnitTest extends TestCase {
     private static final Pattern REGEX = compile("(<([\\x20-\\x7E]+?)>|_:(\\p{Alpha}[\\x20-\\x7E]*?))");
     private static final Class<SubjectParser> TARGET_INTERFACE = SubjectParser.class;
     private static final Class<SubjectParserImpl> TEST_CLASS = SubjectParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[]{RegexMatcherFactory.class, URIReferenceParser.class,
+    private static final Class[] PARAM_TYPES = new Class[]{NodeParser.class, URIReferenceParser.class,
         BlankNodeParser.class};
-    private static final String[] PARAMETER_NAMES = new String[]{"newFactory", "newUriReferenceParser",
+    private static final String[] PARAMETER_NAMES = new String[]{"newNodeParser", "newUriReferenceParser",
         "newBlankNodeParser"};
     private static final String MATCHER = "match" + Math.random();
     private static final String LINE = "line" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
-    private RegexMatcherFactory factory;
+    private NodeParser nodeParser;
     private URIReferenceParser uriReferenceParser;
     private BlankNodeParser blankNodeParser;
     private SubjectParser subjectParser;
@@ -96,10 +97,10 @@ public class SubjectParserImplUnitTest extends TestCase {
     private CharSequence line;
 
     public void setUp() {
-        factory = mockFactory.createMock(RegexMatcherFactory.class);
+        nodeParser = mockFactory.createMock(NodeParser.class);
         uriReferenceParser = mockFactory.createMock(URIReferenceParser.class);
         blankNodeParser = mockFactory.createMock(BlankNodeParser.class);
-        subjectParser = new SubjectParserImpl(factory, uriReferenceParser, blankNodeParser);
+        subjectParser = new SubjectParserImpl(nodeParser, uriReferenceParser, blankNodeParser);
         regexMatcher = mockFactory.createMock(RegexMatcher.class);
         line = mockFactory.createMock(CharSequence.class);
     }
@@ -113,35 +114,27 @@ public class SubjectParserImplUnitTest extends TestCase {
             new String[]{"line"}, new Class[]{CharSequence.class}));
     }
 
-    public void testParseObjectURI() throws Exception {
+    public void testParseURI() throws Exception {
         final URIReference expectedUriReference = mockFactory.createMock(URIReference.class);
-        expect(uriReferenceParser.parseURIReference(MATCHER)).andReturn(expectedUriReference);
-        expect(regexMatcher.group(2)).andReturn(MATCHER).times(2);
         checkParse(expectedUriReference);
     }
 
     public void testParseBlankNode() throws Exception {
         final BlankNode expectedBlankNode = mockFactory.createMock(BlankNode.class);
-        expect(blankNodeParser.parseBlankNode(MATCHER)).andReturn(expectedBlankNode);
-        expect(regexMatcher.group(2)).andReturn(null).times(1);
-        expect(regexMatcher.group(3)).andReturn(MATCHER).times(2);
         checkParse(expectedBlankNode);
     }
 
     public void testDoesntParse() throws Exception {
-        expect(regexMatcher.matches()).andReturn(true);
-        expect(factory.createMatcher(eqPattern(REGEX), eq(line))).andReturn(regexMatcher);
-        expect(regexMatcher.group(2)).andReturn(null).times(1);
-        expect(regexMatcher.group(3)).andReturn(null).times(1);
-        expect(regexMatcher.group(0)).andReturn(LINE).times(1);
+        expect(nodeParser.parseNode(eqPattern(REGEX), eq(line), (Map<Integer, RegexNodeParser>) anyObject())).
+            andThrow(new ParseException("Failed to parse line: " + LINE, 1));
         mockFactory.replay();
         checkThrowsException();
         mockFactory.verify();
     }
 
     private void checkParse(final SubjectNode expectedUriReference) throws ParseException {
-        expect(regexMatcher.matches()).andReturn(true);
-        expect(factory.createMatcher(eqPattern(REGEX), eq(line))).andReturn(regexMatcher);
+        expect(nodeParser.parseNode(eqPattern(REGEX), eq(line), (Map<Integer, RegexNodeParser>) anyObject())).
+            andReturn(expectedUriReference);
         mockFactory.replay();
         final SubjectNode subjectNode = subjectParser.parseNode(line);
         assertTrue(expectedUriReference == subjectNode);
