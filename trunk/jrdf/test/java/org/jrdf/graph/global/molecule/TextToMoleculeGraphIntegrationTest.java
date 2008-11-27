@@ -61,6 +61,8 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.global.MoleculeGraph;
+import org.jrdf.parser.ntriples.parser.NodeMaps;
+import org.jrdf.parser.ntriples.parser.NodeMapsImpl;
 import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
 import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
 import org.jrdf.parser.ntriples.parser.TripleParserImpl;
@@ -81,8 +83,10 @@ public class TextToMoleculeGraphIntegrationTest extends AbstractMoleculeGraphInt
         destGraph = factory.getGraph();
         final RegexMatcherFactoryImpl matcherFactory = new RegexMatcherFactoryImpl();
         final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(destGraph, new MemMapFactory());
-        tripleParser = new TripleParserImpl(matcherFactory, parsersFactory.getUriReferenceParser(),
-            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser(), destGraph.getTripleFactory());
+        final NodeMaps nodeMap = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),
+            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
+        tripleParser = new TripleParserImpl(matcherFactory, parsersFactory.getBlankNodeParser(),
+            destGraph.getTripleFactory(), nodeMap);
         textToMolecule = new TextToMolecule(matcherFactory, tripleParser, moleculeFactory);
         graphBuilder = new TextToMoleculeGraph(textToMolecule);
     }
