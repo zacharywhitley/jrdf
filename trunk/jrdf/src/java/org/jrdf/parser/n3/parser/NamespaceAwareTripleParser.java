@@ -162,9 +162,6 @@ public class NamespaceAwareTripleParser implements TripleParser {
                     regexMatcher.group(OBJECT_GROUP), objectGroupMatches);
                 if (subject != null && predicate != null && object != null) {
                     return tripleFactory.createTriple(subject, predicate, object);
-                } else {
-                    System.err.println("spo " + subject + ", " + predicate + ", " + object);
-                    System.err.println("Failed to parse " + line);
                 }
             }
             return null;
