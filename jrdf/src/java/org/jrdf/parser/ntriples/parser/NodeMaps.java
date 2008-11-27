@@ -57,36 +57,14 @@
  *
  */
 
-package org.jrdf.parser.n3;
+package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.collection.MemMapFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.mem.MemNamespaceListener;
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps;
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactory;
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactoryImpl;
-import org.jrdf.parser.n3.parser.NamespaceAwareTripleParser;
-import org.jrdf.parser.ntriples.CommentsParserImpl;
-import org.jrdf.parser.ntriples.parser.NodeMaps;
-import org.jrdf.parser.ntriples.TriplesParserImpl;
-import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import java.util.Map;
 
-public class N3ParserFactoryImpl implements N3ParserFactory {
-    public N3Parser createParser(final Graph newGraph, final ParserBlankNodeFactory parserBlankNodeFactory) {
-        final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        final NamespaceListener listener = new MemNamespaceListener();
-        final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph,
-            new MemMapFactory(), matcherFactory, listener);
-        final NodeMaps nodeMaps = new NamespaceAwareNodeMaps(parsersFactory.getUriReferenceParser(),
-            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
-        final TripleParser tripleParser = new NamespaceAwareTripleParser(matcherFactory,
-            parsersFactory.getBlankNodeParser(), newGraph.getTripleFactory(), nodeMaps);
-        return new N3Parser(new CommentsParserImpl(matcherFactory),
-            new PrefixParserImpl(matcherFactory, listener),
-            new TriplesParserImpl(tripleParser));
-    }
+public interface NodeMaps {
+    Map<Integer, RegexNodeParser> getSubjectMap();
+
+    Map<Integer, RegexNodeParser> getPredicateMap();
+
+    Map<Integer, RegexNodeParser> getObjectMap();
 }

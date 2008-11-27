@@ -73,8 +73,6 @@ import org.jrdf.util.boundary.RegexMatcherFactoryImpl
 import org.jrdf.parser.n3.parser.NamespaceAwareObjectParser
 
 class RdfBuilder extends BuilderSupport {
-    private final regex = "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
-        "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|(([\\x20-\\x7E]+?)))";
     private final Graph graph
     private final NamespaceListener listener
     private final ObjectParser namespaceAwareObjectParser
