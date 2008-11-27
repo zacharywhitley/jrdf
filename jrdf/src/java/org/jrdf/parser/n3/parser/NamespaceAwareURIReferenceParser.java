@@ -64,5 +64,5 @@ import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 
 public interface NamespaceAwareURIReferenceParser extends URIReferenceParser {
-    URIReference parseURIReference(String prefix, String localName) throws ParseException;
+    URIReference parseURIReferenceWithNamespace(String s) throws ParseException;
 }

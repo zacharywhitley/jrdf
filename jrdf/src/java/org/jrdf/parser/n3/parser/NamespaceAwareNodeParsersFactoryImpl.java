@@ -90,7 +90,8 @@ public class NamespaceAwareNodeParsersFactoryImpl implements NamespaceAwareNodeP
     }
 
     public NamespaceAwareURIReferenceParser getUriReferenceParser() {
-        return new NamespaceAwareURIReferenceParserImpl(graph.getElementFactory(), util, namespaceListener);
+        return new NamespaceAwareURIReferenceParserImpl(graph.getElementFactory(), util, namespaceListener,
+            regexMatcherFactory);
     }
 
     public BlankNodeParser getBlankNodeParser() {
