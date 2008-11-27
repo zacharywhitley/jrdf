@@ -164,7 +164,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         Expression<V> rhsExp = list.get(1);
         Relation lhs = getExpression(lhsExp);
         if (shortCircuit) {
-            result = (!lhs.getTuples().isEmpty()) ? getExpression(rhsExp) : lhs;
+            result = (lhs.getTuples().isEmpty()) ? getExpression(rhsExp) : lhs;
         } else {
             Relation rhs = getExpression(list.get(1));
             result = union.union(lhs, rhs);

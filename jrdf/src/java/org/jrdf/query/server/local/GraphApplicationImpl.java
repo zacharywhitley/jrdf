@@ -103,8 +103,10 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
     public Answer answerQuery(String graphName, String queryString) throws ResourceException {
         try {
             final MoleculeGraph graph = getGraph(graphName);
+            System.err.println("Graph # = " + graph.getNumberOfTriples());
             answer = urqlConnection.executeQuery(graph, queryString);
             tooManyRows = answer.numberOfTuples() > DEFAULT_MAX_ROWS;
+            System.err.println("Answer # = " + answer.numberOfTuples() + " taken " + answer.getTimeTaken());
             return answer;
         } catch (Exception e) {
             throw new ResourceException(e);
