@@ -63,59 +63,56 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.NamespaceListenerImpl;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ntriples.parser.NTripleUtil;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.net.URI;
+import static java.net.URI.create;
+import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
 
 public final class NamespaceAwareURIReferenceParserImpl implements NamespaceAwareURIReferenceParser {
+    private static final int PREFIX_GROUP = 2;
+    private static final int LOCAL_GROUP = 3;
+    private static final Pattern REGEX = compile("((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))");
     private final GraphElementFactory graphElementFactory;
     private final NTripleUtil nTripleUtil;
     private final NamespaceListener listener;
+    private final RegexMatcherFactory matcherFactory;
 
     public NamespaceAwareURIReferenceParserImpl(GraphElementFactory newGraphElementFactory, NTripleUtil newNTripleUtil,
-        NamespaceListener newListener) {
+        NamespaceListener newListener, final RegexMatcherFactory newMatcherFactory) {
         checkNotNull(newGraphElementFactory, newNTripleUtil);
         graphElementFactory = newGraphElementFactory;
         nTripleUtil = newNTripleUtil;
         listener = newListener;
-    }
-
-    public NamespaceAwareURIReferenceParserImpl(GraphElementFactory newGraphElementFactory,
-        NTripleUtil newNTripleUtil) {
-        checkNotNull(newGraphElementFactory, newNTripleUtil);
-        graphElementFactory = newGraphElementFactory;
-        nTripleUtil = newNTripleUtil;
-        listener = new NamespaceListenerImpl();
+        matcherFactory = newMatcherFactory;
     }
 
     public URIReference parseURIReference(String s) throws ParseException {
         checkNotEmptyString("s", s);
         try {
             String literal = nTripleUtil.unescapeLiteral(s);
-            return graphElementFactory.createURIReference(URI.create(literal));
+            return graphElementFactory.createURIReference(create(literal));
         } catch (IllegalArgumentException iae) {
-            throw new ParseException("Failed to create URI Reference: " + s, 1);
+            throw new ParseException("Failed to create URI Reference: " + s, PREFIX_GROUP);
         } catch (GraphElementFactoryException e) {
-            throw new ParseException("Failed to create URI Reference: " + s, 1);
+            throw new ParseException("Failed to create URI Reference: " + s, PREFIX_GROUP);
         }
     }
 
-    public URIReference parseURIReference(String prefix, String localName) throws ParseException {
-        checkNotEmptyString("prefix", prefix);
-        checkNotEmptyString("localName", localName);
-        try {
-            final String uriString = listener.getFullURI(prefix);
-            checkNotEmptyString("prefixed uri", uriString);
-            String literal = nTripleUtil.unescapeLiteral(uriString + localName);
-            return graphElementFactory.createURIReference(URI.create(literal));
-        } catch (IllegalArgumentException iae) {
-            throw new ParseException("Failed to create URI Reference: " + prefix + ":" + localName, 1);
-        } catch (GraphElementFactoryException e) {
-            throw new ParseException("Failed to create URI Reference: " + prefix + ":" + localName, 1);
+    public URIReference parseURIReferenceWithNamespace(String s) throws ParseException {
+        final RegexMatcher regexMatcher = matcherFactory.createMatcher(REGEX, s);
+        if (regexMatcher.matches()) {
+            final String fullURI = listener.getFullURI(regexMatcher.group(PREFIX_GROUP));
+            final String local = regexMatcher.group(LOCAL_GROUP);
+            return parseURIReference(fullURI + local);
+        } else {
+            return null;
         }
     }
+
 }

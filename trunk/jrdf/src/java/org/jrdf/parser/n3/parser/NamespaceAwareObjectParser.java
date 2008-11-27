@@ -78,8 +78,6 @@ public final class NamespaceAwareObjectParser implements ObjectParser {
     private static final int LINE_GROUP = 0;
     private static final int URI_GROUP = 2;
     private static final int NS_LOCAL_NAME_GROUP = 3;
-    private static final int NS_GROUP = 4;
-    private static final int LOCAL_NAME_GROUP = 5;
     private static final int BLANK_NODE_GROUP = 6;
     private static final int LITERAL_GROUP = 7;
     private final RegexMatcherFactory factory;
@@ -111,7 +109,7 @@ public final class NamespaceAwareObjectParser implements ObjectParser {
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(NS_GROUP), matcher.group(LOCAL_NAME_GROUP));
+            return uriReferenceParser.parseURIReferenceWithNamespace(matcher.group(NS_LOCAL_NAME_GROUP));
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {
             return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
         } else if (matcher.group(LITERAL_GROUP) != null) {
