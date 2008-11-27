@@ -64,7 +64,6 @@ import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.BiOperandExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
@@ -76,9 +75,7 @@ import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 
-import java.util.Collection;
 import java.util.Collections;
-import static java.util.Collections.sort;
 import static java.util.Collections.swap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -112,7 +109,8 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     // TODO YF join those with common attributes first.
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
-        List<Expression<V>> constraintList = flattenAndSortConjunction(conjunction, Conjunction.class);
+        BiOperandExpressionSimplifier simplifier = new BiOperandExpressionSimplifierImpl(expressionComparator);
+        List<Expression<V>> constraintList = simplifier.flattenAndSortConjunction(conjunction, Conjunction.class);
         List<Relation> partialResult = new LinkedList<Relation>();
         for (Expression<V> exp : constraintList) {
             Relation tempRelation = getExpression(exp);
@@ -157,42 +155,11 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         return set1;
     }
 
-    private <V extends ExpressionVisitor> List<Expression<V>>
-    flattenAndSortConjunction(BiOperandExpression<V> conjunction, Class expClass) {
-        List<Expression<V>> constraintList = new LinkedList<Expression<V>>();
-        flattenConjunction(conjunction, constraintList, expClass);
-        reorderExpressionList(constraintList);
-        return constraintList;
-    }
-
-    private <V extends ExpressionVisitor> void reorderExpressionList(List<Expression<V>> constraintList) {
-        sort(constraintList, expressionComparator);
-    }
-
-    private <V extends ExpressionVisitor> void flattenConjunction(BiOperandExpression<V> expression,
-                                                                  Collection<Expression<V>> set,
-                                                                  Class expClass) {
-        final Expression<V> lhs = expression.getLhs();
-        final Expression<V> rhs = expression.getRhs();
-        addExpressionToCollection(lhs, set, expClass);
-        addExpressionToCollection(rhs, set, expClass);
-    }
-
-    private <V extends ExpressionVisitor> void addExpressionToCollection(Expression<V> expression,
-                                                                         Collection<Expression<V>> set,
-                                                                         Class expClass) {
-        if (expClass.isAssignableFrom(expression.getClass())) {
-            flattenConjunction((BiOperandExpression<V>) expression, set, expClass);
-        } else {
-            set.add(expression);
-        }
-    }
-
     @Override
     // TODO YF PERFORMANCE too bad!
     public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> newUnion) {
-        List<Expression<V>> list = flattenAndSortConjunction(newUnion, Union.class);
-        reorderExpressionList(list);
+        BiOperandExpressionSimplifier simplifier = new BiOperandExpressionSimplifierImpl(expressionComparator);
+        List<Expression<V>> list = simplifier.flattenAndSortConjunction(newUnion, Union.class);
         Relation lhs = getExpression(list.get(0));
         if (shortCircuit) {
             if (!lhs.getTuples().isEmpty()) {

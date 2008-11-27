@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,88 +57,54 @@
  *
  */
 
-package org.jrdf.query.expression.logic;
+package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.BiOperandExpression;
-import org.jrdf.util.EqualsUtil;
+
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Collection;
+import static java.util.Collections.sort;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id :$
  */
+public class BiOperandExpressionSimplifierImpl implements BiOperandExpressionSimplifier {
+    private ExpressionComparator comparator;
 
-public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
-    private static final long serialVersionUID = -1701496085083842700L;
-    private static final int DUMMY_HASHCODE = 47;
-
-    private LogicExpression<V> lhs;
-    private LogicExpression<V> rhs;
-
-    private LogicalAndExpression() {
+    public BiOperandExpressionSimplifierImpl(ExpressionComparator comparator) {
+        this.comparator = comparator;
     }
 
-    public LogicalAndExpression(LogicExpression<V> lhs, LogicExpression<V> rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    public <V extends ExpressionVisitor> List<Expression<V>>
+    flattenAndSortConjunction(BiOperandExpression<V> conjunction, Class expClass) {
+        List<Expression<V>> constraintList = new LinkedList<Expression<V>>();
+        flattenConjunction(conjunction, constraintList, expClass);
+        reorderExpressionList(constraintList);
+        return constraintList;
     }
 
-    public LogicExpression<V> getLhs() {
-        return lhs;
+    private <V extends ExpressionVisitor> void reorderExpressionList(List<Expression<V>> constraintList) {
+        sort(constraintList, comparator);
     }
 
-    public LogicExpression<V> getRhs() {
-        return rhs;
+    private <V extends ExpressionVisitor> void
+    flattenConjunction(BiOperandExpression<V> expression, Collection<Expression<V>> set, Class expClass) {
+        final Expression<V> lhs = expression.getLhs();
+        final Expression<V> rhs = expression.getRhs();
+        addExpressionToCollection(lhs, set, expClass);
+        addExpressionToCollection(rhs, set, expClass);
     }
 
-    public void setLhs(LogicExpression<V> lhs) {
-        this.lhs = lhs;
-    }
-
-    public void setRhs(LogicExpression<V> rhs) {
-        this.rhs = rhs;
-    }
-
-    public int size() {
-        return (lhs.size() + rhs.size()) / 2 + 1;
-    }
-
-    public void accept(V v) {
-        v.visitLogicalAnd(this);
-    }
-
-    public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
-        int hash = DUMMY_HASHCODE + lhs.hashCode();
-        return hash * DUMMY_HASHCODE + rhs.hashCode();
-    }
-
-    public String toString() {
-        return lhs + " && " + rhs;
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
+    private <V extends ExpressionVisitor> void
+    addExpressionToCollection(Expression<V> expression, Collection<Expression<V>> set, Class expClass) {
+        if (expClass.isAssignableFrom(expression.getClass())) {
+            flattenConjunction((BiOperandExpression<V>) expression, set, expClass);
+        } else {
+            set.add(expression);
         }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (LogicalAndExpression) obj);
-    }
-
-    private boolean determineEqualityFromFields(LogicalAndExpression o1, LogicalAndExpression o2) {
-        return lhsEqual(o1, o2) && rhsEqual(o1, o2);
-    }
-
-    private boolean rhsEqual(LogicalAndExpression o1, LogicalAndExpression o2) {
-        return o1.getRhs().equals(o2.getRhs());
-    }
-
-    private boolean lhsEqual(LogicalAndExpression o1, LogicalAndExpression o2) {
-        return o1.getLhs().equals(o2.getLhs());
     }
 }
