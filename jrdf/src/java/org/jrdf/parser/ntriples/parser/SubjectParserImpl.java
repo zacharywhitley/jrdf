@@ -59,50 +59,49 @@
 
 package org.jrdf.parser.ntriples.parser;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.parser.ParseException;
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 import static java.util.regex.Pattern.compile;
 
 public final class SubjectParserImpl implements SubjectParser {
     private static final Pattern REGEX = compile(
         "(<([\\x20-\\x7E]+?)>|_:(\\p{Alpha}[\\x20-\\x7E]*?))");
-    private static final int LINE_GROUP = 0;
     private static final int URI_GROUP = 2;
     private static final int BLANK_NODE_GROUP = 3;
-    private final RegexMatcherFactory factory;
+    private final NodeParser nodeParser;
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
+    private final Map<Integer, RegexNodeParser> groupMatches = new HashMap<Integer, RegexNodeParser>() {
+        {
+            put(URI_GROUP, new RegexNodeParser() {
+                public Node parse(final String line) throws ParseException {
+                    return uriReferenceParser.parseURIReference(line);
+                }
+            });
+            put(BLANK_NODE_GROUP, new RegexNodeParser() {
+                public Node parse(final String line) throws ParseException {
+                    return blankNodeParser.parseBlankNode(line);
+                }
+            });
+        }
+    };
 
-    public SubjectParserImpl(final RegexMatcherFactory newFactory, final URIReferenceParser newURIReferenceParser,
+    public SubjectParserImpl(final NodeParser newNodeParser, final URIReferenceParser newURIReferenceParser,
         final BlankNodeParser newBlankNodeParser) {
-        checkNotNull(newFactory, newURIReferenceParser, newBlankNodeParser);
-        factory = newFactory;
+        checkNotNull(newNodeParser, newURIReferenceParser, newBlankNodeParser);
+        nodeParser = newNodeParser;
         uriReferenceParser = newURIReferenceParser;
         blankNodeParser = newBlankNodeParser;
     }
 
     public SubjectNode parseNode(final CharSequence line) throws ParseException {
         checkNotNull(line);
-        final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
-        if (regexMatcher.matches()) {
-            return parseSubject(regexMatcher);
-        } else {
-            throw new IllegalArgumentException("Couldn't match line: " + line);
-        }
-    }
-
-    private SubjectNode parseSubject(final RegexMatcher matcher) throws ParseException {
-        if (matcher.group(URI_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
-        } else if (matcher.group(BLANK_NODE_GROUP) != null) {
-            return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
-        } else {
-            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
-        }
+        return (SubjectNode) nodeParser.parseNode(REGEX, line, groupMatches);
     }
 }

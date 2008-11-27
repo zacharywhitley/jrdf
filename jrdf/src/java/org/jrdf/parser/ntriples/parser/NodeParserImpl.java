@@ -59,66 +59,44 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.Node;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
-public class TripleParserImpl implements TripleParser {
-    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(<(.+?)>|_:(.+?))\\p{Blank}+" +
-        "(<(.+?)>)\\p{Blank}+" +
-        "(<(.+?)>|_:(.+?)|(.+?))\\p{Blank}*\\.\\p{Blank}*");
-    private static final int SUBJECT_GROUP = 1;
-    private static final int PREDICATE_GROUP = 4;
-    private static final int OBJECT_GROUP = 6;
-    private final RegexMatcherFactory regexMatcherFactory;
-    private final SubjectParser subjectParser;
-    private final PredicateParser predicateParser;
-    private final ObjectParser objectParser;
-    private final TripleFactory tripleFactory;
-    private final BlankNodeParser blankNodeParser;
+public final class NodeParserImpl implements NodeParser {
+    private static final int LINE_GROUP = 0;
+    private RegexMatcherFactory factory;
 
-    public TripleParserImpl(final RegexMatcherFactory newRegexMatcherFactory,
-        final URIReferenceParser newURIReferenceParser, final BlankNodeParser newBlankNodeParser,
-        final LiteralParser newLiteralNodeParser, final TripleFactory newTripleFactory) {
-        checkNotNull(newRegexMatcherFactory, newURIReferenceParser, newBlankNodeParser, newLiteralNodeParser,
-            newTripleFactory);
-        regexMatcherFactory = newRegexMatcherFactory;
-        NodeParser nodeParser = new NodeParserImpl(regexMatcherFactory);
-        subjectParser = new SubjectParserImpl(nodeParser, newURIReferenceParser, newBlankNodeParser);
-        predicateParser = new PredicateParserImpl(regexMatcherFactory, newURIReferenceParser);
-        objectParser = new ObjectParserImpl(regexMatcherFactory, newURIReferenceParser, newBlankNodeParser,
-            newLiteralNodeParser);
-        blankNodeParser = newBlankNodeParser;
-        tripleFactory = newTripleFactory;
+    public NodeParserImpl(final RegexMatcherFactory newFactory) {
+        checkNotNull(newFactory);
+        factory = newFactory;
     }
 
-    public Triple parseTriple(final CharSequence line) {
-        try {
-            final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
-            if (regexMatcher.matches()) {
-                final SubjectNode subject = subjectParser.parseNode(regexMatcher.group(SUBJECT_GROUP));
-                final PredicateNode predicate = predicateParser.parseNode(regexMatcher.group(PREDICATE_GROUP));
-                final ObjectNode object = objectParser.parseNode(regexMatcher.group(OBJECT_GROUP));
-                if (subject != null && predicate != null && object != null) {
-                    return tripleFactory.createTriple(subject, predicate, object);
-                }
-            }
-            return null;
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+    public Node parseNode(final Pattern regex, final CharSequence line, final Map<Integer, RegexNodeParser> matches)
+        throws ParseException {
+        checkNotNull(regex, line, matches);
+        final RegexMatcher regexMatcher = factory.createMatcher(regex, line);
+        if (regexMatcher.matches()) {
+            return matchGroup(regexMatcher, matches);
+        } else {
+            throw new IllegalArgumentException("Couldn't match line: " + line);
         }
     }
 
-    public void clear() {
-        blankNodeParser.clear();
+    private Node matchGroup(final RegexMatcher matcher, final Map<Integer, RegexNodeParser> matches)
+        throws ParseException {
+        for (final Map.Entry<Integer, RegexNodeParser> work : matches.entrySet()) {
+            final String match = matcher.group(work.getKey());
+            if (match != null) {
+                return work.getValue().parse(match);
+            }
+        }
+        throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
     }
+
 }
