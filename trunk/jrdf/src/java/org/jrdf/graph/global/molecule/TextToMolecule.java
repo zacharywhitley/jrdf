@@ -60,7 +60,6 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
-import static org.jrdf.parser.ntriples.NTriplesEventReader.TRIPLE_REGEX;
 import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
@@ -81,6 +80,11 @@ import java.util.regex.Pattern;
  * @version $Id$
  */
 public class TextToMolecule {
+    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
+            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
+            "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
+            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
+            "\\.\\p{Blank}*");
     private static final Pattern START_MOLECULE = Pattern.compile("\\p{Blank}*\\[\\p{Blank}*");
     private static final Pattern END_MOLECULE = Pattern.compile("\\p{Blank}*\\]\\p{Blank}*");
     private final RegexMatcherFactory regexMatcherFactory;

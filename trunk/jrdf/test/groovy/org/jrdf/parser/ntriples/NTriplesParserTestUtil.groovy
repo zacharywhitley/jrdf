@@ -33,6 +33,17 @@ class NTriplesParserTestUtil {
         return actualResults
     }
 
+    static Set<Triple> standardTestWithN3() {
+        Graph newGraph = TestJRDFFactory.factory.graph
+        addStandardValuesToGraph(newGraph)
+        addN3ValuesToGraph(newGraph)
+        Set<Triple> answers = new HashSet<Triple>()
+        newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).each {
+            answers.add(it)
+        }
+        return answers
+    }
+
     static Set<Triple> standardTest() {
         Graph newGraph = TestJRDFFactory.factory.graph
         addStandardValuesToGraph(newGraph)
@@ -74,5 +85,12 @@ class NTriplesParserTestUtil {
         rdf."eg:resource30" "eg:property":'"chat"@fr'
         rdf."eg:resource31" "eg:property":'"chat"@en'
         rdf."eg:resource32" "eg:property":'"abc"^^eg:datatype1'
+    }
+
+    static def addN3ValuesToGraph(Graph newGraph) {
+        def rdf = new RdfBuilder(newGraph)
+        rdf.namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+        rdf."_:references1" "rdf:type":"rdf:Bag"
+        rdf."_:references1" "rdf:_1":"<http://localhost/misc/UnknownDocument>"
     }
 }

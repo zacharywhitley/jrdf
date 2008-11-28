@@ -66,6 +66,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.StatementHandler;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,10 +76,10 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.URI;
 import java.util.NoSuchElementException;
-import java.util.regex.Pattern;
 
 public class RegexEventReader implements RDFEventReader, StatementHandler {
-    private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
+    private final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+    private final CommentsParser commentsParser = new CommentsParserImpl(matcherFactory);
     private final LineNumberReader bufferedReader;
     private final URI baseURI;
     private final TriplesParser parser;
@@ -148,7 +150,7 @@ public class RegexEventReader implements RDFEventReader, StatementHandler {
     }
 
     private void parseLine(CharSequence line) {
-        if (!COMMENT_REGEX.matcher(line).matches()) {
+        if (!commentsParser.handleComment(line)) {
             parser.handleTriple(line);
         }
     }
