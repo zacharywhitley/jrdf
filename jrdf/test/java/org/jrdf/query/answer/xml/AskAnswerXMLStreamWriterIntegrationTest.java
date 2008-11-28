@@ -4,6 +4,7 @@ import com.ctc.wstx.api.WstxInputProperties;
 import junit.framework.TestCase;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -11,13 +12,9 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.QueryFactory;
-import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.answer.AskAnswer;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.BOOLEAN;
-import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.urql.UrqlConnectionImpl;
-import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 
@@ -33,7 +30,7 @@ import java.net.URI;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public class AskAnswerXMLStreamWriterIntegrationTest extends TestCase {
@@ -44,10 +41,7 @@ public class AskAnswerXMLStreamWriterIntegrationTest extends TestCase {
     }
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
-    private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
-    private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final UrqlConnectionImpl URQL_CONNECTION = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
+    private static final UrqlConnection URQL_CONNECTION = TestJRDFFactory.getFactory().getNewUrqlConnection();
 
     private Writer writer;
     private XMLStreamReader reader;

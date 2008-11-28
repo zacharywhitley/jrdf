@@ -61,6 +61,7 @@ package org.jrdf.query.answer.xml;
 
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -68,13 +69,9 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.QueryFactory;
-import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SelectAnswer;
-import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.urql.UrqlConnectionImpl;
-import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 
@@ -92,10 +89,8 @@ import java.util.Set;
 public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswerXMLStreamWriterIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
-    private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
-    private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final UrqlConnectionImpl URQL_CONNECTION = new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
+    private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory();
+    private UrqlConnection urqlConnection;
 
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
@@ -114,6 +109,8 @@ public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswe
         HANDLER.removeDir();
         HANDLER.makeDir();
         FACTORY.refresh();
+        TEST_FACTORY.refresh();
+        urqlConnection = TEST_FACTORY.getNewUrqlConnection();
         graph = FACTORY.getNewGraph("foo");
         elementFactory = graph.getElementFactory();
         b1 = elementFactory.createBlankNode();
@@ -138,7 +135,7 @@ public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswe
         graph.add(b2, p2, l2);
         graph.add(b3, p3, l3);
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
-        final Answer answer = URQL_CONNECTION.executeQuery(graph, queryString);
+        final Answer answer = urqlConnection.executeQuery(graph, queryString);
         xmlWriter = new AnswerXMLPagenatedStreamWriter((SelectAnswer) answer, writer);
         Set<String> vars = getVariables();
         Set<String> set = new HashSet<String>();
@@ -153,7 +150,7 @@ public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswe
         graph.add(b2, p2, l2);
         graph.add(b3, p3, l3);
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
-        final Answer answer = URQL_CONNECTION.executeQuery(graph, queryString);
+        final Answer answer = urqlConnection.executeQuery(graph, queryString);
         xmlWriter = new AnswerXMLPagenatedStreamWriter((SelectAnswer) answer, writer);
         xmlWriter.writeStartResults();
         int count = 0;
