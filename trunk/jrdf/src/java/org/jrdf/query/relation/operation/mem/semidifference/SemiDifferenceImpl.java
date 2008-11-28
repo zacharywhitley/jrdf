@@ -69,7 +69,6 @@ import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -126,13 +125,10 @@ public class SemiDifferenceImpl implements SemiDifference {
 
     // TODO (AN) Instead of getting a new iterator - using the ordering to only scan through the second relation once.
     private void performMinus(Relation relation1, Relation relation2, SortedSet<Tuple> resultTuples) {
-        for (Tuple tuple1 : relation1.getSortedTuples()) {
-            boolean found = false;
-            Iterator<Tuple> it = relation2.getSortedTuples().iterator();
-            while (it.hasNext() && !found) {
-                found = tuple1.equals(it.next());
-            }
-            if (!found) {
+        SortedSet<Tuple> set1 = relation1.getSortedTuples();
+        SortedSet<Tuple> set2 = relation2.getSortedTuples();
+        for (Tuple tuple1 : set1) {
+            if (!set2.contains(tuple1)) {
                 resultTuples.add(tuple1);
             }
         }

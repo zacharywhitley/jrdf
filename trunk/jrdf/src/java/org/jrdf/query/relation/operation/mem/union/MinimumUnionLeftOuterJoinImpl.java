@@ -62,6 +62,7 @@ package org.jrdf.query.relation.operation.mem.union;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Union;
+import org.jrdf.query.relation.operation.SemiDifference;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -69,10 +70,12 @@ import java.util.Set;
 public class MinimumUnionLeftOuterJoinImpl implements MinimumUnionLeftOuterJoin {
     private final NadicJoin naturalJoin;
     private final Union union;
+    private final SemiDifference diff;
 
-    public MinimumUnionLeftOuterJoinImpl(NadicJoin naturalJoin, Union minimumUnion) {
+    public MinimumUnionLeftOuterJoinImpl(NadicJoin naturalJoin, Union minimumUnion, SemiDifference diff) {
         this.naturalJoin = naturalJoin;
         this.union = minimumUnion;
+        this.diff = diff;
     }
 
     // TODO (AN) Add tuple subsumption i.e. go through the results and remove the results for a given attribute binding
@@ -84,6 +87,7 @@ public class MinimumUnionLeftOuterJoinImpl implements MinimumUnionLeftOuterJoin 
         relations.add(relation1);
         relations.add(relation2);
         Relation joinResult = naturalJoin.join(relations);
-        return union.union(joinResult, relation1);
+        Relation diffResult = diff.minus(relation1, relation2);
+        return union.union(joinResult, diffResult);
     }
 }

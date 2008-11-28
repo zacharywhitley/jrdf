@@ -233,6 +233,7 @@
     <bean id="minLeftOuterJoin" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl">
         <constructor-arg ref="sortMergeNaturalJoin"/>
         <constructor-arg ref="minimumUnion"/>
+        <constructor-arg ref="semiDifference"/>
     </bean>
     <bean id="booleanEvaluator" class="org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator">
         <constructor-arg ref="nodeComparator"/>
