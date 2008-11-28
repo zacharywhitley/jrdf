@@ -57,52 +57,59 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.n3;
 
+import junit.framework.TestCase;
+import org.jrdf.TestJRDFFactory;
+import org.jrdf.collection.MapFactory;
+import org.jrdf.collection.MemMapFactory;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
+import org.jrdf.parser.ParserBlankNodeFactory;
+import static org.jrdf.parser.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.RDFInputFactory;
+import static org.jrdf.parser.n3.N3RDFInputFactoryImpl.newInstance;
+import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTestWithN3;
 
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.URI;
-import java.util.regex.Pattern;
+import java.util.HashSet;
+import java.util.Set;
 
-public class NTriplesEventReader implements RDFEventReader {
-    /**
-     * A regular expression for NTriples.
-     */
-    public static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
-            "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
-            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
-            "\\.\\p{Blank}*");
-    private RDFEventReader eventReader;
+public class N3EventReaderIntegrationTest extends TestCase {
+    private static final String TEST_DATA = "org/jrdf/parser/n3/test.n3";
+    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
+    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
+    private static final MapFactory CREATOR = new MemMapFactory();
+    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(CREATOR,
+        NEW_GRAPH.getElementFactory());
 
-
-    public NTriplesEventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory);
-        eventReader = new RegexEventReader(in, newBaseURI, triplesParser);
+    public void testParseFile() throws Exception {
+        final RDFEventReader eventReader = getEventReader();
+        try {
+            final Set<Triple> expectedTriples = standardTestWithN3();
+            final Set<Triple> actualResults = getActualTriples(eventReader);
+            checkGraph(expectedTriples, actualResults);
+        } finally {
+            eventReader.close();
+        }
     }
 
-    public NTriplesEventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleFactory) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleFactory);
-        eventReader = new RegexEventReader(reader, newBaseURI, triplesParser);
+    private RDFEventReader getEventReader() throws Exception {
+        final InputStream in = getSampleData(this.getClass(), TEST_DATA);
+        final RDFInputFactory factory = newInstance();
+        return factory.createRDFEventReader(in, URI.create("foo"), NEW_GRAPH, BLANK_NODE_FACTORY);
     }
 
-    public boolean hasNext() {
-        return eventReader.hasNext();
-    }
-
-    public Triple next() {
-        return eventReader.next();
-    }
-
-    public void remove() {
-        eventReader.remove();
-    }
-
-    public boolean close() {
-        return eventReader.close();
+    private Set<Triple> getActualTriples(RDFEventReader eventReader) {
+        final Set<Triple> actualResults = new HashSet<Triple>();
+        while (eventReader.hasNext()) {
+            final Triple triple = eventReader.next();
+            actualResults.add(triple);
+        }
+        return actualResults;
     }
 }

@@ -33,6 +33,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="FilterAnalyserImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ExpressionSimplifierImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="OptimizingQueryEngineImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="N3RDFInputFactoryImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>

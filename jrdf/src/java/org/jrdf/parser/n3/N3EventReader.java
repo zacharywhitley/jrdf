@@ -59,54 +59,111 @@
 
 package org.jrdf.parser.n3;
 
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleImpl;
+import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.ntriples.RegexEventReader;
+import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.ntriples.CommentsParser;
+import org.jrdf.parser.ntriples.CommentsParserImpl;
 import org.jrdf.parser.ntriples.TriplesParser;
-import org.jrdf.parser.ntriples.TriplesParserImpl;
-import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.URI;
-import java.util.regex.Pattern;
+import java.util.NoSuchElementException;
 
-public class N3EventReader implements RDFEventReader {
-    /**
-     * A regular expression for NTriples.
-     */
-    public static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}\\p{Alnum}*?):(\\p{Alpha}\\p{Alnum}*?))|" +
-                    "_:(\\p{Alpha}\\p{Alnum}*?))\\p{Blank}+" +
-                    "(\\<([\\x20-\\x7E]+?)\\>|((\\p{Alpha}\\p{Alnum}*?):(\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
-                    "(\\<([\\x20-\\x7E]+?)\\>||((\\p{Alpha}\\p{Alnum}*?):(\\p{Alpha}\\p{Alnum}*?))|" +
-                    "_:(\\p{Alpha}\\p{Alnum}*?)|(([\\x20-\\x7E]+?)))\\p{Blank}*" +
-                    "\\.\\p{Blank}*");
-    private RDFEventReader eventReader;
+public class N3EventReader implements RDFEventReader, StatementHandler {
+    private final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+    private final CommentsParser commentsParser = new CommentsParserImpl(matcherFactory);
+    private final LineNumberReader bufferedReader;
+    private final URI baseURI;
+    private final TriplesParser parser;
+    private final NamespaceListener namespaceListener;
+    private final PrefixParser prefixParser;
+    private Triple currentTriple;
+    private Triple nextTriple;
 
-    public N3EventReader(final InputStream in, final URI newBaseURI, final TripleParser newTripleParser) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleParser);
-        eventReader = new RegexEventReader(in, newBaseURI, triplesParser);
+    public N3EventReader(final InputStream in, final URI newBaseURI, final TriplesParser newParser,
+        final NamespaceListener newNamespaceListener) {
+        this(new InputStreamReader(in), newBaseURI, newParser, newNamespaceListener);
     }
 
-    public N3EventReader(final Reader reader, final URI newBaseURI, final TripleParser newTripleParser) {
-        final TriplesParser triplesParser = new TriplesParserImpl(newTripleParser);
-        eventReader = new RegexEventReader(reader, newBaseURI, triplesParser);
+    public N3EventReader(final Reader reader, final URI newBaseURI, final TriplesParser newParser,
+        final NamespaceListener newNamespaceListener) {
+        bufferedReader = new LineNumberReader(reader);
+        baseURI = newBaseURI;
+        parser = newParser;
+        parser.setStatementHandler(this);
+        namespaceListener = newNamespaceListener;
+        prefixParser = new PrefixParserImpl(matcherFactory, namespaceListener);
+        parseNext();
     }
 
     public boolean hasNext() {
-        return eventReader.hasNext();
+        return nextTriple != null;
     }
 
     public Triple next() {
-        return eventReader.next();
+        final Triple currentTriple = nextTriple;
+        parseNext();
+        if (currentTriple != null) {
+            return currentTriple;
+        } else {
+            throw new NoSuchElementException();
+        }
     }
 
     public void remove() {
-        eventReader.remove();
+        throw new UnsupportedOperationException("Cannot remove triples, this is read only.");
+    }
+
+    private void parseNext() {
+        String line = getLine();
+        currentTriple = null;
+        while (line != null && currentTriple == null) {
+            parseLine(line);
+            if (currentTriple == null) {
+                line = getLine();
+            }
+        }
+        nextTriple = currentTriple;
     }
 
     public boolean close() {
-        return eventReader.close();
+        try {
+            bufferedReader.close();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private String getLine() {
+        try {
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        currentTriple = new TripleImpl(subject, predicate, object);
+    }
+
+    private void parseLine(CharSequence line) {
+        if (!commentsParser.handleComment(line)) {
+            if (!prefixParser.handlePrefix(line)) {
+                parser.handleTriple(line);
+            }
+        }
     }
 }
