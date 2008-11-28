@@ -61,13 +61,13 @@ package org.jrdf.query.answer;
 
 import com.gargoylesoftware.base.testing.TestUtil;
 import junit.framework.TestCase;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.mem.TupleImplUnitTest;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.RESOURCE_1;
-import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.util.test.ReflectTestUtil;
 
 import java.util.HashSet;
@@ -84,7 +84,7 @@ public final class SelectAnswerImplIntegrationTest extends TestCase {
     private static final String FOO_SUBJECT_VARIABLE = "foo1";
 
     public void testSerialization() throws Exception {
-        RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
+        RelationFactory relationFactory = TestJRDFFactory.getFactory().getNewRelationFactory();
         LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
         heading.add(POS_FOO1_SUBJECT);
         Set<Tuple> tuples = new HashSet<Tuple>();

@@ -69,8 +69,6 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.query.Query;
-import org.jrdf.query.QueryFactory;
-import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
@@ -107,9 +105,8 @@ import java.util.Map;
  */
 
 public class ExpressionSimplifierImplUnitTest extends TestCase {
-    private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
-    private static final QueryBuilder QUERY_BUILDER = QUERY_FACTORY.createQueryBuilder();
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private QueryBuilder queryBuilder;
     private static final Graph GRAPH = FACTORY.getGraph();
 
     private static final SubjectNodeType SUBJECT_NODE_TYPE = new SubjectNodeType();
@@ -139,6 +136,8 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        FACTORY.refresh();
+        queryBuilder = FACTORY.getNewQueryBuilder();
         simplifier = new ExpressionSimplifierImpl();
     }
 
@@ -147,13 +146,13 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
         Map<Attribute, ValueOperation> subj = createSingleAVP(ATTR_S, ANY_SUBJECT_NODE, EQUALS);
         Map<Attribute, ValueOperation> pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE, EQUALS);
         Literal literal = createLiteral("hello", "en");
-        Attribute object1 = new AttributeImpl(new PositionName("OBJECT0"), OBJECT_NODE_TYPE);
+        Attribute object1 = new AttributeImpl(new PositionName("OBJECT1"), OBJECT_NODE_TYPE);
         Map<Attribute, ValueOperation> obj = createSingleAVP(object1, literal, EQUALS);
         LinkedHashMap<Attribute, ValueOperation> map = createSingleAVP(subj, pred, obj);
         SingleConstraint<ExpressionVisitor> constraint = new SingleConstraint<ExpressionVisitor>(map);
         getExpression(queryText, constraint);
         queryText = "ASK WHERE { ?s ?p 'hello'@en }";
-        object1 = new AttributeImpl(new PositionName("OBJECT1"), OBJECT_NODE_TYPE);
+        object1 = new AttributeImpl(new PositionName("OBJECT2"), OBJECT_NODE_TYPE);
         obj = createSingleAVP(object1, literal, EQUALS);
         map = createSingleAVP(subj, pred, obj);
         constraint = new SingleConstraint<ExpressionVisitor>(map);
@@ -317,7 +316,7 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
     }
 
     private void getExpression(String queryText, Expression<ExpressionVisitor> expected) throws Exception {
-        Query query = QUERY_BUILDER.buildQuery(GRAPH, queryText);
+        Query query = queryBuilder.buildQuery(GRAPH, queryText);
         Expression<ExpressionVisitor> expression = getQueryExpression(query);
         if (expression instanceof Projection) {
             expression = getExpressionField(expression, Projection.class, "nextExpression");
@@ -336,8 +335,7 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
         if (simplifier.parseAgain()) {
             expression.accept(simplifier);
         }
-        expression = simplifier.getExpression();
-        return expression;
+        return simplifier.getExpression();
     }
 
     private Expression<ExpressionVisitor> getExpressionField(Object obj, Class<?> cls, String fieldName)

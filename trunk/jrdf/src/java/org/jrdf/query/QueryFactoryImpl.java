@@ -82,18 +82,19 @@ import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.query.relation.mem.TupleComparatorImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
+import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl;
 import org.jrdf.query.relation.operation.mem.join.NadicJoinImpl;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine;
+import org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator;
 import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
 import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
 import org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceImpl;
@@ -102,7 +103,6 @@ import org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl
 import org.jrdf.query.relation.operation.mem.union.OuterUnionEngine;
 import org.jrdf.query.relation.operation.mem.union.OuterUnionImpl;
 import org.jrdf.query.relation.operation.mem.union.SubsumptionEngine;
-import org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.type.TypeComparatorImpl;
 import org.jrdf.urql.builder.QueryBuilder;
@@ -139,7 +139,7 @@ public class QueryFactoryImpl implements QueryFactory {
             TUPLE_COMPARATOR, TUPLE_FACTORY);
         ParserFactory parserFactory = new ParserFactoryImpl();
         SparqlParser sparqlParser = new SableCcSparqllParser(parserFactory, graphRelationFactory,
-                ATTRIBUTE_FACTORY);
+            ATTRIBUTE_FACTORY);
         return new UrqlQueryBuilder(sparqlParser);
     }
 

@@ -111,7 +111,7 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
     public void testRelationDEEandDumWithRelation() {
         Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         // The union of DEE and R1 is DEE (everything matches the 0-tuple).
-        checkUnion(RELATION_DEE, relation, relation);
+        checkUnion(RELATION_DEE, relation, RELATION_DEE);
         checkUnion(RELATION_DEE, RELATION_DEE, relation);
         // The union of DUM and R1 is R1.
         checkUnion(relation, relation, RELATION_DUM);

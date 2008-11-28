@@ -146,9 +146,8 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
         Tuple tuple = solutions.iterator().next();
         Map<Attribute, ValueOperation> sortedAttributeValues = tuple.getAttributeValues();
         final TreeSet<Node> nodes = new TreeSet<Node>(FACTORY.getNewNodeComparator());
-        final Iterator<ValueOperation> unsortedIterator = sortedAttributeValues.values().iterator();
-        while (unsortedIterator.hasNext()) {
-            nodes.add(unsortedIterator.next().getValue());
+        for (ValueOperation valueOperation : sortedAttributeValues.values()) {
+            nodes.add(valueOperation.getValue());
         }
         Iterator<Node> iterator = nodes.iterator();
         checkSubject((SubjectNode) iterator.next());
