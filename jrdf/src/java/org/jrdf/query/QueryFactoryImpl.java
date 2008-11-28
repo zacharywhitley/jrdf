@@ -156,14 +156,14 @@ public class QueryFactoryImpl implements QueryFactory {
         BooleanEvaluator evaluator = new SimpleBooleanEvaluator(NODE_COMPARATOR);
         Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR, evaluator);
         Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
-        DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);
         SemiDifference diff = new SemiDifferenceImpl(RELATION_PROCESSOR, RELATION_FACTORY, TUPLE_COMPARATOR);
+        DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join, diff);
         return new OptimizingQueryEngineImpl(project, join, restrict, union, leftOuterJoin, diff);
     }
 
-    private DyadicJoin getLeftOuterJoin(TupleEngine unionTupleEngine, NadicJoin join) {
+    private DyadicJoin getLeftOuterJoin(TupleEngine unionTupleEngine, NadicJoin join, SemiDifference diff) {
         SubsumptionEngine subsumptionEngine = new SubsumptionEngine(TUPLE_FACTORY, RELATION_HELPER);
         Union minUnion = new MinimumUnionImpl(RELATION_PROCESSOR, unionTupleEngine, subsumptionEngine);
-        return new MinimumUnionLeftOuterJoinImpl(join, minUnion);
+        return new MinimumUnionLeftOuterJoinImpl(join, minUnion, diff);
     }
 }

@@ -59,21 +59,40 @@
 
 package org.jrdf.query.execute;
 
+import org.jrdf.graph.NodeComparator;
 import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Optional;
+import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.relation.attributename.AttributeNameComparator;
+import org.jrdf.query.relation.attributename.AttributeNameComparatorImpl;
+import org.jrdf.query.relation.mem.AttributeComparatorImpl;
+import org.jrdf.query.relation.mem.ComparatorFactory;
+import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
+import org.jrdf.query.relation.mem.RelationFactoryImpl;
 import org.jrdf.query.relation.mem.SimpleRelationComparatorImpl;
+import org.jrdf.query.relation.mem.TupleComparatorImpl;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
+import org.jrdf.query.relation.type.TypeComparator;
+import org.jrdf.query.relation.type.TypeComparatorImpl;
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.Collections;
 import static java.util.Collections.swap;
@@ -85,17 +104,32 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version : $Id: $
+ * @version $Id: $
  */
 
 public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
+    private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
+    private static final TypeComparator TYPE_COMPARATOR = new TypeComparatorImpl(NODE_TYPE_COMPARATOR);
+    private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR = new AttributeNameComparatorImpl();
+    private static final AttributeComparator ATTRIBUTE_COMPARATOR = new AttributeComparatorImpl(TYPE_COMPARATOR,
+        ATTRIBUTE_NAME_COMPARATOR);
+    private static final ComparatorFactory COMPARATOR_FACTORY = new ComparatorFactoryImpl();
+    private static final NodeComparator NODE_COMPARATOR = COMPARATOR_FACTORY.createNodeComparator();
+    private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(NODE_COMPARATOR,
+        ATTRIBUTE_COMPARATOR);
+    private static final RelationFactory RELATION_FACTORY = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR,
+        TUPLE_COMPARATOR);
+
     private final RelationComparator relationComparator = new SimpleRelationComparatorImpl();
     private final ExpressionComparator expressionComparator = EXPRESSION_COMPARATOR;
     private boolean shortCircuit;
+    private ConstraintTupleCacheHandler cacheHandler;
+    private static final int CACHE_LIMIT = 100;
 
     public OptimizingQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
         Union union, DyadicJoin leftOuterJoin, SemiDifference diff) {
         super(project, naturalJoin, restrict, union, leftOuterJoin, diff);
+        cacheHandler = new ConstraintTupleCacheHandlerImpl();
         shortCircuit = false;
     }
 
@@ -120,6 +154,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             }
             partialResult.add(tempRelation);
         }
+        cacheHandler.clear();
         Collections.sort(partialResult, relationComparator);
         Set<Relation> partialResultSet = matchAttributes(partialResult);
         result = naturalJoin.join(partialResultSet);
@@ -156,6 +191,39 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
+    public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
+        // TODO (AN) This really should be nadic and just pass in the rhs
+        Relation rhs = getExpression(optional.getRhs());
+        Relation lhs = getExpression(optional.getLhs());
+        result = leftOuterJoin.join(lhs, rhs);
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
+        long time = System.currentTimeMillis();
+        processConstraint(constraint);
+        if (result.getTuples().size() < CACHE_LIMIT) {
+            cacheHandler.addResultToCache(constraint, result, time);
+        }
+    }
+
+    private <V extends ExpressionVisitor> void processConstraint(SingleConstraint<V> constraint) {
+        Attribute curAttr = cacheHandler.findOneCachedAttribute(constraint);
+        if (curAttr != null) {
+            Set<Tuple> tuples = new HashSet<Tuple>();
+            Set<ValueOperation> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
+            for (ValueOperation newVO : voSet) {
+                constraint.setAvo(curAttr, newVO);
+                Relation tmpRelation = restrict.restrict(result, constraint.getAvo(allVariables));
+                tuples.addAll(tmpRelation.getTuples());
+            }
+            result = RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
+        } else {
+            result = restrict.restrict(result, constraint.getAvo(allVariables));
+        }
+    }
+
+    @Override
     // TODO YF PERFORMANCE too bad!
     public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> newUnion) {
         BiOperandExpressionSimplifier simplifier = new BiOperandExpressionSimplifierImpl(expressionComparator);
@@ -175,6 +243,10 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         this.shortCircuit = shortCircuit;
     }
 
+    private void setCacheHandler(ConstraintTupleCacheHandler handler) {
+        this.cacheHandler = handler;
+    }
+
     @Override
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
@@ -182,6 +254,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             union, leftOuterJoin, diff);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
+        ((OptimizingQueryEngineImpl) queryEngine).setCacheHandler(cacheHandler);
         expression.accept((V) queryEngine);
         return queryEngine.getResult();
     }

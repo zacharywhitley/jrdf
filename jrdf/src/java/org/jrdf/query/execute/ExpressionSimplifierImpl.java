@@ -18,6 +18,7 @@ import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
+import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
@@ -113,8 +114,12 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
     }
 
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
-        Expression<ExpressionVisitor> lhs = getNext(optional.getLhs());
-        Expression<ExpressionVisitor> rhs = getNext(optional.getRhs());
+        Expression<? extends ExpressionVisitor> lhsExp = optional.getLhs();
+        lhsExp = (lhsExp == null) ? EMPTY_CONSTRAINT : lhsExp;
+        Expression<ExpressionVisitor> lhs = getNext(lhsExp);
+        Expression<? extends ExpressionVisitor> rhsExp = optional.getRhs();
+        rhsExp = (rhsExp == null) ? EMPTY_CONSTRAINT : rhsExp;
+        Expression<ExpressionVisitor> rhs = getNext(rhsExp);
         expression = new Optional<ExpressionVisitor>(lhs, rhs);
     }
 
