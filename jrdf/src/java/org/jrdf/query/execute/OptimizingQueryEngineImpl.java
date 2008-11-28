@@ -143,6 +143,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     // TODO YF join those with common attributes first.
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
+        cacheHandler.clear();
         BiOperandExpressionSimplifier simplifier = new BiOperandExpressionSimplifierImpl(expressionComparator);
         List<Expression<V>> constraintList = simplifier.flattenAndSortConjunction(conjunction, Conjunction.class);
         List<Relation> partialResult = new LinkedList<Relation>();
@@ -154,7 +155,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             }
             partialResult.add(tempRelation);
         }
-        cacheHandler.clear();
         Collections.sort(partialResult, relationComparator);
         Set<Relation> partialResultSet = matchAttributes(partialResult);
         result = naturalJoin.join(partialResultSet);

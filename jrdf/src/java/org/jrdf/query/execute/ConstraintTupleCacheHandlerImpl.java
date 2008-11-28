@@ -143,9 +143,9 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
     private void updateCache(Relation result, long time, Attribute attribute) {
         AttributeName attributeName = attribute.getAttributeName();
         Set<Tuple> tupleSet = result.getTuples(attribute);
-        if (time < timeStamp) {
+        if (time > timeStamp) {
             clear(attributeName);
-            setTimeStamp(timeStamp);
+            setTimeStamp(time);
         }
         addToCache(attribute, attributeName, tupleSet);
     }
