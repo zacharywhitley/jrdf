@@ -87,7 +87,6 @@ import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
-import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.type.TypeComparatorImpl;
@@ -106,7 +105,6 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version $Id: $
  */
-
 public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
     private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
     private static final TypeComparator TYPE_COMPARATOR = new TypeComparatorImpl(NODE_TYPE_COMPARATOR);
@@ -127,8 +125,8 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     private static final int CACHE_LIMIT = 100;
 
     public OptimizingQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
-        Union union, DyadicJoin leftOuterJoin, SemiDifference diff) {
-        super(project, naturalJoin, restrict, union, leftOuterJoin, diff);
+        Union union, DyadicJoin leftOuterJoin) {
+        super(project, naturalJoin, restrict, union, leftOuterJoin);
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         shortCircuit = false;
     }
@@ -251,7 +249,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
-            union, leftOuterJoin, diff);
+            union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setCacheHandler(cacheHandler);
@@ -262,7 +260,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression, boolean shortCircuit) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
-            union, leftOuterJoin, diff);
+            union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(shortCircuit);

@@ -87,7 +87,6 @@ import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
-import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl;
@@ -97,7 +96,6 @@ import org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEn
 import org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator;
 import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
 import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
-import org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceImpl;
 import org.jrdf.query.relation.operation.mem.union.MinimumUnionImpl;
 import org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl;
 import org.jrdf.query.relation.operation.mem.union.OuterUnionEngine;
@@ -156,14 +154,13 @@ public class QueryFactoryImpl implements QueryFactory {
         BooleanEvaluator evaluator = new SimpleBooleanEvaluator(NODE_COMPARATOR);
         Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR, evaluator);
         Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
-        SemiDifference diff = new SemiDifferenceImpl(RELATION_PROCESSOR, RELATION_FACTORY, TUPLE_COMPARATOR);
-        DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join, diff);
-        return new OptimizingQueryEngineImpl(project, join, restrict, union, leftOuterJoin, diff);
+        DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);
+        return new OptimizingQueryEngineImpl(project, join, restrict, union, leftOuterJoin);
     }
 
-    private DyadicJoin getLeftOuterJoin(TupleEngine unionTupleEngine, NadicJoin join, SemiDifference diff) {
+    private DyadicJoin getLeftOuterJoin(TupleEngine unionTupleEngine, NadicJoin join) {
         SubsumptionEngine subsumptionEngine = new SubsumptionEngine(TUPLE_FACTORY, RELATION_HELPER);
         Union minUnion = new MinimumUnionImpl(RELATION_PROCESSOR, unionTupleEngine, subsumptionEngine);
-        return new MinimumUnionLeftOuterJoinImpl(join, minUnion, diff);
+        return new MinimumUnionLeftOuterJoinImpl(join, minUnion);
     }
 }
