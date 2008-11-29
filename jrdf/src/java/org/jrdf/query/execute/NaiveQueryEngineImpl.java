@@ -77,7 +77,6 @@ import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
-import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.HashSet;
@@ -87,7 +86,7 @@ import java.util.Set;
 
 /**
  * An implementation of a Query Engine that does not try to optimize or transform the query.  Simply evaluates the
- * query tree by performing restrinctions, other operations (natural process, etc) and then project.
+ * query tree by performing restrictions, other operations (natural process, etc) and then project.
  *
  * @author Andrew Newman
  * @version $Revision:$
@@ -99,17 +98,15 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     protected NadicJoin naturalJoin;
     protected org.jrdf.query.relation.operation.Union union;
     protected DyadicJoin leftOuterJoin;
-    protected SemiDifference diff;
     protected Map<AttributeName, PositionalNodeType> allVariables;
 
     public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
-        org.jrdf.query.relation.operation.Union union, DyadicJoin leftOuterJoin, SemiDifference diff) {
+        org.jrdf.query.relation.operation.Union union, DyadicJoin leftOuterJoin) {
         this.project = project;
         this.naturalJoin = naturalJoin;
         this.restrict = restrict;
         this.union = union;
         this.leftOuterJoin = leftOuterJoin;
-        this.diff = diff;
     }
 
     public Relation getResult() {
@@ -180,7 +177,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
 
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin, diff);
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         expression.accept((V) queryEngine);

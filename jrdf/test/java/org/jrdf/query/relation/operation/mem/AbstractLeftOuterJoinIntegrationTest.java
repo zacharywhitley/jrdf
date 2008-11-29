@@ -87,6 +87,8 @@ import java.util.Set;
  */
 public abstract class AbstractLeftOuterJoinIntegrationTest extends TestCase {
 
+    // TODO Add tests for identities. Such as DEE LOJ spo.
+
     public void testLeftOuterJoin1() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3);
         tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1));
