@@ -75,7 +75,7 @@ import org.jrdf.parser.ntriples.LineParserImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.urql.UrqlConnection;
-import org.jrdf.util.EscapeURL;
+import static org.jrdf.util.EscapeURL.toEscapedString;
 
 import java.net.URL;
 
@@ -94,13 +94,10 @@ public class JRDFNTriplesModelImpl implements JRDFModel {
         this.connection = connection;
     }
 
-    // TODO N3 Changes - detect RDF type based on file extension and mime type.
     public Graph loadModel(URL url) {
         try {
             graph = graphFactory.getGraph();
-            graph.clear();
-            LineParser parser = getParser();
-            parser.parse(url.openStream(), EscapeURL.toEscapedString(url));
+            parse(graph, url);
             return graph;
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,17 +105,19 @@ public class JRDFNTriplesModelImpl implements JRDFModel {
         }
     }
 
-    private LineParser getParser() {
+    public Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
+        return connection.executeQuery(graph, query);
+    }
+
+    // TODO N3 Changes - detect RDF type based on file extension and mime type.
+    private void parse(Graph graph, URL url) throws Exception {
+        graph.clear();
         N3ParserFactory parserFactory = new N3ParserFactoryImpl();
         MapFactory creator = new MemMapFactory();
         ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
         N3Parser nTriplesParser = parserFactory.createParser(graph, factory);
         final LineParser parser = new LineParserImpl(nTriplesParser);
         parser.setStatementHandler(new GraphStatementHandler(graph));
-        return parser;
-    }
-
-    public Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
-        return connection.executeQuery(graph, query);
+        parser.parse(url.openStream(), toEscapedString(url));
     }
 }

@@ -57,88 +57,48 @@
  *
  */
 
-package org.jrdf.gui.command;
+package org.jrdf.gui.model;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.gui.model.JRDFModel;
-import static org.jrdf.gui.view.FileChooserUtil.showFileChooser;
-import org.springframework.richclient.application.PageComponentContext;
-import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
+import org.jrdf.graph.GraphFactory;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.urql.UrqlConnection;
+import static org.jrdf.util.EscapeURL.toEscapedString;
 
-import javax.swing.JFrame;
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
-import static java.util.Arrays.asList;
 
-/**
- * Loads an RDF file from the file system.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
-public class LoadRdfCommand extends ApplicationWindowAwareCommand {
-    private JRDFModel jrdfModel;
+public class JRDFRdfXmlModelImpl implements JRDFModel {
+    private final GraphFactory graphFactory;
+    private Graph graph;
+    private UrqlConnection connection;
 
-    public LoadRdfCommand() {
-        super("rdfCommand");
+    public JRDFRdfXmlModelImpl(GraphFactory graphFactory, UrqlConnection connection) {
+        this.graphFactory = graphFactory;
+        this.connection = connection;
     }
 
-    public void setJRDFModel(JRDFModel jrdfModel) {
-        this.jrdfModel = jrdfModel;
-    }
-
-    protected void doExecuteCommand() {
-        JFrame control = getContext().getWindow().getControl();
-        File file = showFileChooser(control, asList("rdf", "nt", "n3"), "Ok", null);
-        if (file != null) {
-            tryLoadModel(file).execute();
-        }
-    }
-
-    private ApplicationWindowAwareCommand tryLoadModel(File file) {
+    public Graph loadModel(URL url) {
         try {
-            URL fileUrl = tryGetURL(file);
-            long startTime = System.currentTimeMillis();
-            Graph graph = jrdfModel.loadModel(fileUrl);
-            long numberOfTriples = tryGetNumberOfTriples(graph);
-            RdfLoadedCommand actionCommand = getRdfLoadedCommand();
-            actionCommand.setTriplesLoaded(numberOfTriples);
-            actionCommand.setTimeTaken(System.currentTimeMillis() - startTime);
-            return actionCommand;
+            graph = graphFactory.getGraph();
+            parse(graph, url);
+            return graph;
         } catch (Exception e) {
-            RdfFailedToLoadCommand actionCommand = getRdfFailedToLoadCommand();
-            actionCommand.setFileName(file.getName());
-            return actionCommand;
-        }
-    }
-
-    private URL tryGetURL(File file) {
-        try {
-            return file.toURI().toURL();
-        } catch (MalformedURLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
-    private long tryGetNumberOfTriples(Graph graph) {
-        try {
-            return graph.getNumberOfTriples();
-        } catch (GraphException ge) {
-            throw new RuntimeException(ge);
-        }
+    public Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
+        return connection.executeQuery(graph, query);
     }
 
-    private RdfLoadedCommand getRdfLoadedCommand() {
-        return (RdfLoadedCommand) getContext().getLocalCommandExecutor("rdfLoadedCommand");
-    }
-
-    private RdfFailedToLoadCommand getRdfFailedToLoadCommand() {
-        return (RdfFailedToLoadCommand) getContext().getLocalCommandExecutor("rdfFailedToLoadCommand");
-    }
-
-    private PageComponentContext getContext() {
-        return getApplicationWindow().getPage().getActiveComponent().getContext();
+    private void parse(Graph graph, URL url) throws Exception {
+        graph.clear();
+        final Parser graphRdfXmlParser = new GraphRdfXmlParser(graph);
+        graphRdfXmlParser.parse(url.openStream(), toEscapedString(url));
     }
 }
