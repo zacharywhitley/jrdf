@@ -9,8 +9,12 @@ import org.jrdf.parser.GraphStatementHandler
 import org.jrdf.parser.ParserBlankNodeFactory
 import org.jrdf.util.test.RdfBuilder
 import org.jrdf.TestJRDFFactory
+import org.jrdf.parser.RDFEventReader
+import org.jrdf.parser.RDFInputFactory
 
 class NTriplesParserTestUtil {
+
+
 
     private NTriplesParserTestUtil() {
     }
@@ -18,6 +22,14 @@ class NTriplesParserTestUtil {
     static InputStream getSampleData(Class clazz, String fileName) throws IOException {
         URL source = clazz.getClassLoader().getResource(fileName)
         return source.openStream()
+    }
+
+    static Set<Triple> getTriplesWithReader(RDFEventReader eventReader) {
+        def actualResults = new HashSet<Triple>()
+        eventReader.each {
+            actualResults.add(it);
+        }
+        return actualResults;
     }
 
     static Set<Triple> parseNTriplesFile(InputStream input, Graph graph, ParserBlankNodeFactory factory) {
