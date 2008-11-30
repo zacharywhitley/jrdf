@@ -68,15 +68,14 @@ import org.jrdf.graph.Triple;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.parser.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.RDFInputFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getTriplesWithReader;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 
 import java.io.InputStream;
-import java.net.URI;
-import java.util.HashSet;
+import static java.net.URI.create;
 import java.util.Set;
 
 public class NTriplesEventReaderIntegrationTest extends TestCase {
@@ -88,28 +87,15 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
         NEW_GRAPH.getElementFactory());
 
     public void testParseFile() throws Exception {
-        final RDFEventReader eventReader = getEventReader();
+        final InputStream input = getSampleData(getClass(), TEST_DATA);
+        final RDFEventReader eventReader = newInstance().createRDFEventReader(input, create("foo"), NEW_GRAPH,
+            BLANK_NODE_FACTORY);
         try {
             final Set<Triple> expectedTriples = standardTest();
-            final Set<Triple> actualResults = getActualTriples(eventReader);
+            final Set<Triple> actualResults = getTriplesWithReader(eventReader);
             checkGraph(expectedTriples, actualResults);
         } finally {
             eventReader.close();
         }
-    }
-
-    private RDFEventReader getEventReader() throws Exception {
-        final InputStream in = getSampleData(this.getClass(), TEST_DATA);
-        final RDFInputFactory factory = newInstance();
-        return factory.createRDFEventReader(in, URI.create("foo"), NEW_GRAPH, BLANK_NODE_FACTORY);
-    }
-
-    private Set<Triple> getActualTriples(RDFEventReader eventReader) {
-        final Set<Triple> actualResults = new HashSet<Triple>();
-        while (eventReader.hasNext()) {
-            final Triple triple = eventReader.next();
-            actualResults.add(triple);
-        }
-        return actualResults;
     }
 }
