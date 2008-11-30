@@ -1,4 +1,4 @@
-/*
+package org.jrdf.gui.view;/*
  * $Header$
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
@@ -57,44 +57,33 @@
  *
  */
 
-package org.jrdf.gui.model;
+import org.springframework.richclient.filechooser.DefaultFileFilter;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.query.answer.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.urql.UrqlConnection;
-import org.jrdf.util.EscapeURL;
+import javax.swing.JFileChooser;
+import java.awt.Component;
+import java.io.File;
+import java.util.List;
 
-import java.net.URL;
+public class FileChooserUtil {
+    private static JFileChooser fileChooser;
 
-public class JRDFModelImpl implements JRDFModel {
-    private final GraphFactory graphFactory;
-    private Graph graph;
-    private UrqlConnection connection;
-
-    public JRDFModelImpl(GraphFactory graphFactory, UrqlConnection connection) {
-        this.graphFactory = graphFactory;
-        this.connection = connection;
-    }
-
-    public Graph loadModel(URL url) {
-        try {
-            graph = graphFactory.getGraph();
-            graph.clear();
-            Parser graphRdfXmlParser = new GraphRdfXmlParser(graph);
-            graphRdfXmlParser.parse(url.openStream(), EscapeURL.toEscapedString(url));
-            return graph;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+    public static File showFileChooser(final Component parent, final List<String> defaultExtensions,
+        final String approveButtonName, final String fileTypeDescription) {
+        if (fileChooser == null) {
+            fileChooser = new JFileChooser();
         }
-    }
-
-    public Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
-        return connection.executeQuery(graph, query);
+        fileChooser.resetChoosableFileFilters();
+        final DefaultFileFilter filter = new DefaultFileFilter();
+        for (final String extension : defaultExtensions) {
+            filter.addExtension(extension);
+        }
+        filter.setDescription(fileTypeDescription);
+        fileChooser.setFileFilter(filter);
+        final int returnVal = fileChooser.showDialog(parent, approveButtonName);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile();
+        } else {
+            return null;
+        }
     }
 }

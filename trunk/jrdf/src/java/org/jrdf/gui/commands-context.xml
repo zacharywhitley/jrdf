@@ -111,7 +111,7 @@
         <property name="JRDFModel" ref="jrdfNTriplesModel"/>
     </bean>
 
-    <bean id="jrdfModel" class="org.jrdf.gui.model.JRDFModelImpl">
+    <bean id="jrdfModel" class="org.jrdf.gui.model.JRDFRdfXmlModelImpl">
         <constructor-arg>
             <ref bean="graphFactory"/>
         </constructor-arg>
