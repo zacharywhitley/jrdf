@@ -61,6 +61,7 @@ package org.jrdf.example;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;
+import org.jrdf.collection.MemMapFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -69,7 +70,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.ClosableIterable;
-import org.jrdf.util.EscapeURL;
+import static org.jrdf.util.EscapeURL.toEscapedString;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -102,8 +103,8 @@ public final class RdfXmlParserExample {
         InputStream in = getInputStream(url);
         try {
             final Graph jrdfMem = JRDF_FACTORY.getGraph();
-            Parser parser = new GraphRdfXmlParser(jrdfMem);
-            parser.parse(in, EscapeURL.toEscapedString(url));
+            Parser parser = new GraphRdfXmlParser(jrdfMem, new MemMapFactory());
+            parser.parse(in, toEscapedString(url));
             ClosableIterable<Triple> triples = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
             try {
                 for (Triple triple : triples) {

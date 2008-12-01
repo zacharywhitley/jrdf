@@ -57,11 +57,10 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.line;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.StatementHandlerConfiguration;
 
-public interface NTriplesParserFactory {
-    NTriplesParser createParser(Graph graph, ParserBlankNodeFactory parserBlankNodeFactory);
+public interface LineParser extends Parser, StatementHandlerConfiguration {
 }

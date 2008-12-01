@@ -59,9 +59,11 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.collection.MemMapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.line.LineHandler;
+import org.jrdf.parser.line.LineHandlerFactory;
+import org.jrdf.parser.line.TriplesParserImpl;
 import org.jrdf.parser.ntriples.parser.NodeMaps;
 import org.jrdf.parser.ntriples.parser.NodeMapsImpl;
 import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
@@ -73,9 +75,9 @@ import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-public class NTriplesParserFactoryImpl implements NTriplesParserFactory {
-    public NTriplesParser createParser(final Graph newGraph, final ParserBlankNodeFactory parserBlankNodeFactory) {
-        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(newGraph, new MemMapFactory());
+public class NTriplesParserFactoryImpl implements LineHandlerFactory {
+    public LineHandler createParser(final Graph newGraph, final MapFactory newMapFactory) {
+        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(newGraph, newMapFactory);
         final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         final NodeMaps nodeMaps = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());

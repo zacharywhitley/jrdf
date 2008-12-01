@@ -184,8 +184,9 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
     }
 
     private Graph readGraph(Reader reader, String baseURI) throws GraphException {
-        Graph read = TestJRDFFactory.getFactory().getGraph();
-        Parser parser = new GraphRdfXmlParser(read);
+        final TestJRDFFactory factory = TestJRDFFactory.getFactory();
+        final Graph graph = factory.getGraph();
+        final Parser parser = new GraphRdfXmlParser(graph, factory.getMapFactory());
         try {
             parser.parse(reader, baseURI);
         } catch (ParseException e) {
@@ -195,7 +196,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
             e.printStackTrace();
             fail("Output could not be parsed: " + e);
         }
-        return read;
+        return graph;
     }
 
     private StringWriter writeGraph(Graph graph)

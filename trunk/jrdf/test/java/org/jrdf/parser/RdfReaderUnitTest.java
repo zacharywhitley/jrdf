@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,67 +57,16 @@
  *
  */
 
-package org.jrdf.gui.model;
+package org.jrdf.parser;
 
-import org.jrdf.collection.MapFactory;
-import org.jrdf.collection.MemMapFactory;
+import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.parser.GraphStatementHandler;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
-import org.jrdf.parser.n3.N3Parser;
-import org.jrdf.parser.n3.N3ParserFactory;
-import org.jrdf.parser.n3.N3ParserFactoryImpl;
-import org.jrdf.parser.ntriples.LineParser;
-import org.jrdf.parser.ntriples.LineParserImpl;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.answer.Answer;
-import org.jrdf.urql.UrqlConnection;
-import static org.jrdf.util.EscapeURL.toEscapedString;
 
-import java.net.URL;
+import java.io.File;
 
-/**
- * @author Yuan-Fang Li
- * @version $Id$
- */
-
-public class JRDFNTriplesModelImpl implements JRDFModel {
-    private final GraphFactory graphFactory;
-    private Graph graph;
-    private UrqlConnection connection;
-
-    public JRDFNTriplesModelImpl(GraphFactory graphFactory, UrqlConnection connection) {
-        this.graphFactory = graphFactory;
-        this.connection = connection;
-    }
-
-    public Graph loadModel(URL url) {
-        try {
-            graph = graphFactory.getGraph();
-            parse(graph, url);
-            return graph;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
-        return connection.executeQuery(graph, query);
-    }
-
-    // TODO N3 Changes - detect RDF type based on file extension and mime type.
-    private void parse(Graph graph, URL url) throws Exception {
-        graph.clear();
-        N3ParserFactory parserFactory = new N3ParserFactoryImpl();
-        MapFactory creator = new MemMapFactory();
-        ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
-        N3Parser nTriplesParser = parserFactory.createParser(graph, factory);
-        final LineParser parser = new LineParserImpl(nTriplesParser);
-        parser.setStatementHandler(new GraphStatementHandler(graph));
-        parser.parse(url.openStream(), toEscapedString(url));
+public class RdfReaderUnitTest extends TestCase {
+    public void testNoFile() throws Exception {
+        Graph graph = new RdfReader().parseNTriples(new File(""));
+        assertTrue(graph.getNumberOfTriples() == 0);
     }
 }

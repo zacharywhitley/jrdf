@@ -57,11 +57,17 @@
  *
  */
 
-package org.jrdf.parser.n3;
+package org.jrdf.gui.model;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.graph.GraphException;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.InvalidQuerySyntaxException;
 
-public interface N3ParserFactory {
-    N3Parser createParser(Graph graph, ParserBlankNodeFactory parserBlankNodeFactory);
+import java.net.URL;
+
+public interface QueryModel {
+    Graph loadModel(URL urlName);
+
+    Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException;
 }

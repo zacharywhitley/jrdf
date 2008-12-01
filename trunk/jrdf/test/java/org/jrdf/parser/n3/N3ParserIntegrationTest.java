@@ -65,9 +65,7 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.parser.ParserTestUtil.checkGraph;
-import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseN3File;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTestWithN3;
@@ -80,14 +78,12 @@ public class N3ParserIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
-    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(CREATOR,
-        NEW_GRAPH.getElementFactory());
 
     public void testParseFile() throws Exception {
         final InputStream input = getSampleData(getClass(), TEST_DATA);
         try {
             final Set<Triple> expectedTriples = standardTestWithN3();
-            final Set<Triple> actualResults = parseN3File(input, NEW_GRAPH, BLANK_NODE_FACTORY);
+            final Set<Triple> actualResults = parseN3File(input, NEW_GRAPH, CREATOR);
             checkGraph(expectedTriples, actualResults);
         } finally {
             input.close();

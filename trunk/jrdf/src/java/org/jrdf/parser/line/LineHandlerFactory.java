@@ -57,52 +57,11 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.line;
 
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.RDFInputFactory;
-import org.jrdf.parser.StatementHandlerException;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.URI;
-
-/**
- * An NTriples parser that adds every triple encountered to a JRDF Graph.  Use the default parser configuration.
- *
- * @author Andrew Newman
- * @version $Id$
- */
-public class GraphNtriplesParser implements Parser {
-    private static final RDFInputFactory TRIPLES_RDF_INPUT_FACTORY = new NTriplesRDFInputFactoryImpl();
-    private final Graph graph;
-
-    public GraphNtriplesParser(Graph newGraph) {
-        this.graph = newGraph;
-    }
-
-    public void parse(InputStream in, String baseURI) throws StatementHandlerException {
-        RDFEventReader eventReader = TRIPLES_RDF_INPUT_FACTORY.createRDFEventReader(in, URI.create(baseURI), graph);
-        addTriples(eventReader);
-    }
-
-    public void parse(Reader reader, String baseURI) throws StatementHandlerException {
-        RDFEventReader eventReader = TRIPLES_RDF_INPUT_FACTORY.createRDFEventReader(reader, URI.create(baseURI), graph);
-        addTriples(eventReader);
-    }
-
-    private void addTriples(RDFEventReader eventReader) throws StatementHandlerException {
-        try {
-            while (eventReader.hasNext()) {
-                graph.add(eventReader.next());
-            }
-        } catch (GraphException e) {
-            throw new StatementHandlerException(e);
-        } finally {
-            eventReader.close();
-        }
-    }
+public interface LineHandlerFactory {
+    LineHandler createParser(Graph graph, MapFactory newMapFactory);
 }

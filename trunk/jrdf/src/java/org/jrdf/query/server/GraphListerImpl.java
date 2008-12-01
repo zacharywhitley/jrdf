@@ -64,7 +64,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.Value;
-import static org.jrdf.parser.Reader.parseNTriples;
+import org.jrdf.parser.RdfReader;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
@@ -87,6 +87,7 @@ import java.util.Set;
 public class GraphListerImpl implements GraphLister {
     private static final URI NAME = create(JRDF_NAMESPACE + "name");
     private static final URI ID = create(JRDF_NAMESPACE + "id");
+    private static final RdfReader RDF_READER = new RdfReader();
     private final DirectoryHandler handler;
     private final GraphApplication application;
     private Set<Resource> resources;
@@ -119,7 +120,7 @@ public class GraphListerImpl implements GraphLister {
 
     private void refreshGraphsModel() {
         final File file = new File(handler.getDir(), graphsFile);
-        final Graph modelsGraph = parseNTriples(file);
+        final Graph modelsGraph = RDF_READER.parseNTriples(file);
         final Models model = new ModelsImpl(modelsGraph);
         this.resources = model.getResources();
     }

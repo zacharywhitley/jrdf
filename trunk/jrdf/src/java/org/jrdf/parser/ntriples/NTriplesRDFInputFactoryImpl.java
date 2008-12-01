@@ -59,11 +59,12 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.collection.MemMapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.RDFInputFactory;
+import org.jrdf.parser.RDFEventReaderFactory;
+import org.jrdf.parser.line.TriplesParserImpl;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.LiteralParser;
@@ -83,45 +84,35 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 
-public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
-    private static final RDFInputFactory FACTORY = new NTriplesRDFInputFactoryImpl();
+public class NTriplesRDFInputFactoryImpl implements RDFEventReaderFactory {
     private static final RegexMatcherFactory REGEX_MATCHER_FACTORY = new RegexMatcherFactoryImpl();
+    private final MapFactory mapFactory;
     private BlankNodeParser blankNodeParser;
     private RegexTripleParser regexTripleFactory;
 
-    public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph) {
-        ParserBlankNodeFactory parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
-                graph.getElementFactory());
-        return createRDFEventReader(stream, baseURI, graph, parserBlankNodeFactory);
+    public NTriplesRDFInputFactoryImpl(final MapFactory newMapFactory) {
+        mapFactory = newMapFactory;
     }
 
-    public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph) {
-        ParserBlankNodeFactory parserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(),
-                graph.getElementFactory());
-        return createRDFEventReader(reader, baseURI, graph, parserBlankNodeFactory);
-    }
-
-    public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph,
-        ParserBlankNodeFactory blankNodeFactory) {
-        init(graph, blankNodeFactory);
-        TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, blankNodeParser, regexTripleFactory);
+    public RDFEventReader createRDFEventReader(final InputStream stream, final URI baseURI, final Graph graph) {
+        init(graph);
+        final TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, blankNodeParser,
+            regexTripleFactory);
         return new RegexEventReader(stream, baseURI, new TriplesParserImpl(tripleParser));
     }
 
-    public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph,
-        ParserBlankNodeFactory blankNodeFactory) {
-        init(graph, blankNodeFactory);
-        TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, blankNodeParser, regexTripleFactory);
+    public RDFEventReader createRDFEventReader(final Reader reader, final URI baseURI, final Graph graph) {
+        init(graph);
+        final TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, blankNodeParser,
+            regexTripleFactory);
         return new RegexEventReader(reader, baseURI, new TriplesParserImpl(tripleParser));
     }
 
-    public static RDFInputFactory newInstance() {
-        return FACTORY;
-    }
-
-    private void init(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
-        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(graph, new MemMapFactory());
+    private void init(final Graph graph) {
+        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(graph, mapFactory);
         final URIReferenceParser uriReferenceParser = parsersFactory.getUriReferenceParser();
+        final ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(mapFactory,
+            graph.getElementFactory());
         blankNodeParser = parsersFactory.getBlankNodeParserWithFactory(blankNodeFactory);
         final LiteralParser literalParser = parsersFactory.getLiteralParser();
         final NodeMaps nodeMaps = new NodeMapsImpl(uriReferenceParser, blankNodeParser, literalParser);

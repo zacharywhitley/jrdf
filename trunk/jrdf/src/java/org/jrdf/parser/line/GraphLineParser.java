@@ -57,17 +57,39 @@
  *
  */
 
-package org.jrdf.gui.model;
+package org.jrdf.parser.line;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.answer.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.ParseException;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.StatementHandlerException;
 
-import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 
-public interface JRDFModel {
-    Graph loadModel(URL urlName);
+// TODO (AN) Can this be made more generic by parsing in a configurable parser instead?
 
-    Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException;
+/**
+ * An line parser (N3 or NTriples) that adds every triple encountered to a JRDF Graph.
+ *
+ * @author Andrew Newman
+ * @version $Revision: 544 $
+ */
+public class GraphLineParser implements Parser {
+    private final LineParser parser;
+
+    public GraphLineParser(final Graph graph, final LineHandler newLineHandler) {
+        parser = new LineParserImpl(newLineHandler);
+        parser.setStatementHandler(new GraphStatementHandler(graph));
+    }
+
+    public void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException {
+        parser.parse(in, baseURI);
+    }
+
+    public void parse(Reader reader, String baseURI) throws IOException, ParseException, StatementHandlerException {
+        parser.parse(reader, baseURI);
+    }
 }

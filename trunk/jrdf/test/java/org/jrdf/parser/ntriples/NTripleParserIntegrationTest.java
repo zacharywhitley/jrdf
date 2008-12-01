@@ -64,9 +64,7 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.parser.ParserTestUtil.checkGraph;
-import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
@@ -81,7 +79,6 @@ import java.util.Set;
 public class NTripleParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-    private ParserBlankNodeFactory factory;
 
     // Commented out tests are due to the lack of inferencing for types and blank node equivalence.
     private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
@@ -128,10 +125,10 @@ public class NTripleParserIntegrationTest extends TestCase {
 
     private Set<Triple> getResults(final String fileName) throws Exception {
         final Graph newGraph = TEST_JRDF_FACTORY.getGraph();
-        factory = new ParserBlankNodeFactoryImpl(new MemMapFactory(), newGraph.getElementFactory());
+        final MemMapFactory mapFactory = new MemMapFactory();
         final InputStream in = getSampleData(this.getClass(), fileName);
         try {
-            return parseNTriplesFile(in, newGraph, factory);
+            return parseNTriplesFile(in, newGraph, mapFactory);
         } finally {
             in.close();
         }

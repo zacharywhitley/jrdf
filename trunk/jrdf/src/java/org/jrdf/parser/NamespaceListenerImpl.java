@@ -59,8 +59,9 @@
 
 package org.jrdf.parser;
 
+import org.jrdf.collection.MapFactory;
+
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -71,8 +72,8 @@ public class NamespaceListenerImpl implements NamespaceListener, Serializable {
     private static final long serialVersionUID = 6725027316200321078L;
     private Map<String, String> map;
 
-    public NamespaceListenerImpl() {
-        map = new HashMap<String, String>();
+    public NamespaceListenerImpl(MapFactory mapFactory) {
+        map = mapFactory.createMap(String.class, String.class);
     }
 
     public void handleNamespace(String prefix, String uri) {

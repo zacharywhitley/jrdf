@@ -111,7 +111,7 @@
         <property name="JRDFModel" ref="jrdfNTriplesModel"/>
     </bean>
 
-    <bean id="jrdfModel" class="org.jrdf.gui.model.JRDFRdfXmlModelImpl">
+    <bean id="jrdfModel" class="org.jrdf.gui.model.RdfXmlQueryModel">
         <constructor-arg>
             <ref bean="graphFactory"/>
         </constructor-arg>
@@ -120,7 +120,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="jrdfNTriplesModel" class="org.jrdf.gui.model.JRDFNTriplesModelImpl">
+    <bean id="jrdfNTriplesModel" class="org.jrdf.gui.model.NTriplesQueryModel">
         <constructor-arg>
             <ref bean="graphFactory"/>
         </constructor-arg>

@@ -57,55 +57,42 @@
  *
  */
 
-package org.jrdf.parser;
+package org.jrdf.parser.line;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.MemoryJRDFFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.ntriples.GraphNtriplesParser;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.StatementHandlerException;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.Reader;
 
-public final class Reader {
-    private Reader() {
+public class LineParserImpl implements LineParser {
+    private LineHandler lineHandler;
+
+    public LineParserImpl(final LineHandler newLineHandler) {
+        lineHandler = newLineHandler;
     }
 
-    public static Graph parseNTriples(File file) {
-        JRDFFactory factory = MemoryJRDFFactory.getFactory();
-        Graph newGraph = factory.getGraph();
-        Parser parser = new GraphNtriplesParser(newGraph);
-        InputStream stream = getInputStream(file);
-        tryParse(parser, stream);
-        return newGraph;
+    public void setStatementHandler(final StatementHandler statementHandler) {
+        lineHandler.setStatementHandler(statementHandler);
     }
 
-    public static Graph parseRdfXml(File file) {
-        JRDFFactory factory = MemoryJRDFFactory.getFactory();
-        Graph newGraph = factory.getGraph();
-        Parser parser = new GraphRdfXmlParser(newGraph);
-        InputStream stream = getInputStream(file);
-        tryParse(parser, stream);
-        return newGraph;
+    public void parse(final InputStream in, final String baseURI) throws IOException, StatementHandlerException {
+        parse(new InputStreamReader(in), baseURI);
     }
 
-    private static InputStream getInputStream(File file) {
+    public void parse(final Reader reader, final String baseURI) throws IOException, StatementHandlerException {
+        final LineNumberReader bufferedReader = new LineNumberReader(reader);
         try {
-            return new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            return new ByteArrayInputStream("".getBytes());
-        }
-    }
-
-    private static void tryParse(Parser parser, InputStream stream) {
-        try {
-            parser.parse(stream, "http://jrdf.sf.net/");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                lineHandler.handleLine(line);
+            }
+            lineHandler.clear();
+        } finally {
+            bufferedReader.close();
         }
     }
 }

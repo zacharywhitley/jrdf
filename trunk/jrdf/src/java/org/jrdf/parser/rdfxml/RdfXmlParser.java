@@ -241,7 +241,6 @@ public final class RdfXmlParser implements ConfigurableParser {
      *
      * @param graphElementFactory A GraphElementFactory.
      * @param creator A BlankNodeFactoryCreator.
-     * @throws org.jrdf.graph.GraphException
      */
     public RdfXmlParser(GraphElementFactory graphElementFactory, MapFactory creator) {
         this(graphElementFactory, new ParserBlankNodeFactoryImpl(creator, graphElementFactory));

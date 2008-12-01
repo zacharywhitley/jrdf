@@ -20,6 +20,8 @@
 
 package org.jrdf.parser;
 
+// TODO Make the fully qualified name of type URI instead of type String?
+
 /**
  * An interface defining methods for receiving namespace declarations from an RDF parser.
  */
@@ -30,9 +32,15 @@ public interface NamespaceListener {
      * declaration.
      *
      * @param prefix The prefix that is used in the namespace declaration.
-     * @param uri    The URI of the namespace.
+     * @param uri The URI of the namespace.
      */
     void handleNamespace(String prefix, String uri);
 
+    /**
+     * Given a prefix return the full URI.
+     *
+     * @param prefix the local name/prefix of the uri.
+     * @return the fully qualified URI.
+     */
     String getFullURI(String prefix);
 }

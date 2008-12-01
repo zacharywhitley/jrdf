@@ -61,7 +61,7 @@ package org.jrdf.gui.command;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.gui.model.JRDFModel;
+import org.jrdf.gui.model.QueryModel;
 import static org.jrdf.gui.view.FileChooserUtil.showFileChooser;
 import org.springframework.richclient.application.PageComponentContext;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
@@ -79,13 +79,13 @@ import static java.util.Arrays.asList;
  * @version $Revision:$
  */
 public class LoadRdfCommand extends ApplicationWindowAwareCommand {
-    private JRDFModel jrdfModel;
+    private QueryModel jrdfModel;
 
     public LoadRdfCommand() {
         super("rdfCommand");
     }
 
-    public void setJRDFModel(JRDFModel jrdfModel) {
+    public void setJRDFModel(QueryModel jrdfModel) {
         this.jrdfModel = jrdfModel;
     }
 

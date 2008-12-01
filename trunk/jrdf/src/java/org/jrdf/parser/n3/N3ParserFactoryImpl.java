@@ -59,10 +59,12 @@
 
 package org.jrdf.parser.n3;
 
-import org.jrdf.collection.MemMapFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.line.LineHandler;
+import org.jrdf.parser.line.LineHandlerFactory;
+import org.jrdf.parser.line.TriplesParserImpl;
 import org.jrdf.parser.mem.MemNamespaceListener;
 import org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps;
 import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactory;
@@ -70,19 +72,18 @@ import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactoryImpl;
 import org.jrdf.parser.n3.parser.NamespaceAwareTripleParser;
 import org.jrdf.parser.ntriples.CommentsParserImpl;
 import org.jrdf.parser.ntriples.parser.NodeMaps;
-import org.jrdf.parser.ntriples.TriplesParserImpl;
-import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.parser.ntriples.parser.RegexTripleParser;
 import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
+import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-public class N3ParserFactoryImpl implements N3ParserFactory {
-    public N3Parser createParser(final Graph newGraph, final ParserBlankNodeFactory parserBlankNodeFactory) {
+public class N3ParserFactoryImpl implements LineHandlerFactory {
+    public LineHandler createParser(final Graph newGraph, final MapFactory mapFactory) {
         final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         final NamespaceListener listener = new MemNamespaceListener();
         final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph,
-            new MemMapFactory(), matcherFactory, listener);
+            mapFactory, matcherFactory, listener);
         final NodeMaps nodeMaps = new NamespaceAwareNodeMaps(parsersFactory.getUriReferenceParser(),
             parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
         final RegexTripleParser parser = new RegexTripleParserImpl(matcherFactory, newGraph.getTripleFactory(),

@@ -1,4 +1,4 @@
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.line;
 
 import org.jrdf.parser.StatementHandlerConfiguration;
 
