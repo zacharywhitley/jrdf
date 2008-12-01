@@ -118,6 +118,9 @@
         <constructor-arg>
             <ref bean="urqlConnection"/>
         </constructor-arg>
+        <constructor-arg>
+            <ref bean="mapFactory"/>
+        </constructor-arg>
     </bean>
 
     <bean id="jrdfNTriplesModel" class="org.jrdf.gui.model.NTriplesQueryModel">
@@ -126,6 +129,9 @@
         </constructor-arg>
         <constructor-arg>
             <ref bean="urqlConnection"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="mapFactory"/>
         </constructor-arg>
     </bean>
 
