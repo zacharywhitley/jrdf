@@ -61,14 +61,14 @@ package org.jrdf.graph.local.index.nodepool;
 
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.parser.ntriples.parser.LiteralMatcherImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 public class StringNodeMapperFactoryImpl implements StringNodeMapperFactory {
     public StringNodeMapper createMapper() {
         RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
-        LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
+        LiteralMatcher matcher = new LiteralMatcherImpl(regexFactory, new NTripleUtilImpl(regexFactory));
         return new StringNodeMapperImpl(matcher);
     }
 }
