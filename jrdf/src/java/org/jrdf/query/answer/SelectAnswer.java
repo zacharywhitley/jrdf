@@ -2,7 +2,7 @@ package org.jrdf.query.answer;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public interface SelectAnswer extends Answer {

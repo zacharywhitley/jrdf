@@ -79,7 +79,6 @@ import org.jrdf.vocabulary.RDF;
 import org.jrdf.vocabulary.RDFS;
 import org.jrdf.vocabulary.XSD;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -129,11 +128,12 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
 
     public int size() {
         int result = 0;
-        final Iterator<Attribute> iterator = singleAvp.keySet().iterator();
-        while (iterator.hasNext()) {
-            final ValueOperation valueOperation = singleAvp.get(iterator.next());
+        for (Attribute attribute : singleAvp.keySet()) {
+            final ValueOperation valueOperation = singleAvp.get(attribute);
             final Node node = valueOperation.getValue();
             if (isAnyNode(node)) {
+                result += 2;
+            } else if (isBuiltinNode(node)) {
                 result++;
             }
         }

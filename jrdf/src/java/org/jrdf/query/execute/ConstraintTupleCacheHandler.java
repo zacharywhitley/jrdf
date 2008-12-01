@@ -76,10 +76,11 @@ import java.util.Set;
 public interface ConstraintTupleCacheHandler {
     Set<ValueOperation> getCachedValues(AttributeName name);
 
-    void clear();
+    void reset(int tupleSize, int constraintListSize);
 
     <V extends ExpressionVisitor> Attribute findOneCachedAttribute(SingleConstraint<V> constraint);
 
     <V extends ExpressionVisitor> void addResultToCache(SingleConstraint<V> constraint,
                                                                Relation result, long time);
+
 }

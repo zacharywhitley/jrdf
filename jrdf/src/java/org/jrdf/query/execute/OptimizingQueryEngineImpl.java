@@ -122,7 +122,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     private final ExpressionComparator expressionComparator = EXPRESSION_COMPARATOR;
     private boolean shortCircuit;
     private ConstraintTupleCacheHandler cacheHandler;
-    private static final int CACHE_LIMIT = 100;
 
     public OptimizingQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
         Union union, DyadicJoin leftOuterJoin) {
@@ -141,9 +140,9 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     // TODO YF join those with common attributes first.
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
-        cacheHandler.clear();
         BiOperandExpressionSimplifier simplifier = new BiOperandExpressionSimplifierImpl(expressionComparator);
         List<Expression<V>> constraintList = simplifier.flattenAndSortConjunction(conjunction, Conjunction.class);
+        cacheHandler.reset(result.getTuples().size(), constraintList.size());
         List<Relation> partialResult = new LinkedList<Relation>();
         for (Expression<V> exp : constraintList) {
             Relation tempRelation = getExpression(exp);
@@ -200,9 +199,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
         long time = System.currentTimeMillis();
         processConstraint(constraint);
-        if (result.getTuples().size() < CACHE_LIMIT) {
-            cacheHandler.addResultToCache(constraint, result, time);
-        }
+        cacheHandler.addResultToCache(constraint, result, time);
     }
 
     private <V extends ExpressionVisitor> void processConstraint(SingleConstraint<V> constraint) {
