@@ -123,6 +123,10 @@ public final class RelationDEE implements Relation, Serializable {
         return Collections.singleton(NULLARY_TUPLE);
     }
 
+    public long getTupleSize() {
+        return  NULLARY_TUPLE.getAttributeValues().size();
+    }
+
     // TODO (AN) Test drive me
     public SortedSet<Attribute> getSortedHeading() {
         SortedSet<Attribute> heading = new TreeSet<Attribute>(FACTORY.createAttributeComparator());

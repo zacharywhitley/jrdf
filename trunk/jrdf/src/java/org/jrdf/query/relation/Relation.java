@@ -97,4 +97,6 @@ public interface Relation {
     Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo);
 
     SortedSet<Tuple> getSortedTuples(Attribute attribute);
+
+    long getTupleSize();
 }
