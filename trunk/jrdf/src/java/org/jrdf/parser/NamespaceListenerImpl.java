@@ -72,6 +72,9 @@ public class NamespaceListenerImpl implements NamespaceListener, Serializable {
     private static final long serialVersionUID = 6725027316200321078L;
     private Map<String, String> map;
 
+    private NamespaceListenerImpl() {
+    }
+
     public NamespaceListenerImpl(MapFactory mapFactory) {
         map = mapFactory.createMap(String.class, String.class);
     }

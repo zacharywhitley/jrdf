@@ -57,18 +57,10 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleImpl;
-import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.StatementHandler;
-import org.jrdf.parser.line.TriplesParser;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.parser.line.FormatParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,24 +70,20 @@ import java.io.Reader;
 import java.net.URI;
 import java.util.NoSuchElementException;
 
-public class RegexEventReader implements RDFEventReader, StatementHandler {
-    private final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-    private final CommentsParser commentsParser = new CommentsParserImpl(matcherFactory);
+public class RDFEventReaderImpl implements RDFEventReader {
     private final LineNumberReader bufferedReader;
     private final URI baseURI;
-    private final TriplesParser parser;
-    private Triple currentTriple;
     private Triple nextTriple;
+    private FormatParser formatParser;
 
-    public RegexEventReader(final InputStream in, final URI newBaseURI, final TriplesParser newParser) {
-        this(new InputStreamReader(in), newBaseURI, newParser);
+    public RDFEventReaderImpl(final InputStream in, final URI newBaseURI, final FormatParser newFormatParser) {
+        this(new InputStreamReader(in), newBaseURI, newFormatParser);
     }
 
-    public RegexEventReader(final Reader reader, final URI newBaseURI, final TriplesParser newParser) {
+    public RDFEventReaderImpl(final Reader reader, final URI newBaseURI, final FormatParser newFormatParser) {
         bufferedReader = new LineNumberReader(reader);
         baseURI = newBaseURI;
-        parser = newParser;
-        parser.setStatementHandler(this);
+        formatParser = newFormatParser;
         parseNext();
     }
 
@@ -119,14 +107,14 @@ public class RegexEventReader implements RDFEventReader, StatementHandler {
 
     private void parseNext() {
         String line = getLine();
-        currentTriple = null;
-        while (line != null && currentTriple == null) {
-            parseLine(line);
-            if (currentTriple == null) {
+        nextTriple = null;
+        while (line != null && nextTriple == null) {
+            formatParser.parseLine(line);
+            nextTriple = formatParser.getTriple();
+            if (nextTriple == null) {
                 line = getLine();
             }
         }
-        nextTriple = currentTriple;
     }
 
     public boolean close() {
@@ -143,16 +131,6 @@ public class RegexEventReader implements RDFEventReader, StatementHandler {
             return bufferedReader.readLine();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        currentTriple = new TripleImpl(subject, predicate, object);
-    }
-
-    private void parseLine(CharSequence line) {
-        if (!commentsParser.handleComment(line)) {
-            parser.handleTriple(line);
         }
     }
 }

@@ -65,10 +65,10 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import static org.jrdf.parser.ParserTestUtil.checkGraph;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseN3File;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTestWithN3;
+import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
+import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
+import static org.jrdf.parser.line.LineParserTestUtil.parseN3File;
+import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
 
 import java.io.InputStream;
 import java.util.Set;

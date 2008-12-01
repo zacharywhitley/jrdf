@@ -71,8 +71,8 @@ import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.line.GraphLineParser;
 import org.jrdf.parser.line.LineHandlerFactory;
-import org.jrdf.parser.n3.N3ParserFactoryImpl;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
+import org.jrdf.parser.n3.N3ParserFactory;
+import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
@@ -97,7 +97,7 @@ import java.util.Set;
 public class SPARQLPerformanceTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private PersistentGlobalJRDFFactory factory;
-    private static final LineHandlerFactory PARSER_FACTORY = new N3ParserFactoryImpl();
+    private static final LineHandlerFactory PARSER_FACTORY = new N3ParserFactory();
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
     private static final Set<String> FILE_NAMES = new LinkedHashSet<String>() {
         {

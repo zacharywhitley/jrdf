@@ -64,10 +64,10 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import static org.jrdf.parser.ParserTestUtil.checkGraph;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
+import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
+import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
+import static org.jrdf.parser.line.LineParserTestUtil.parseNTriplesFile;
+import static org.jrdf.parser.line.LineParserTestUtil.standardTest;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -76,7 +76,7 @@ import java.util.Map;
 import java.util.Set;
 
 // TODO N3 Add Negative tests.
-public class NTripleParserIntegrationTest extends TestCase {
+public class NTriplesParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
 

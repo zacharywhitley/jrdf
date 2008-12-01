@@ -1,4 +1,4 @@
-package org.jrdf.parser.ntriples
+package org.jrdf.parser.line
 
 import org.jrdf.TestJRDFFactory
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE
@@ -9,16 +9,19 @@ import org.jrdf.graph.Triple
 import org.jrdf.parser.GraphStatementHandler
 import org.jrdf.parser.ParserBlankNodeFactory
 import org.jrdf.parser.RDFEventReader
-import org.jrdf.parser.n3.N3ParserFactoryImpl
+import org.jrdf.parser.n3.N3ParserFactory
 import org.jrdf.util.test.RdfBuilder
 import org.jrdf.collection.MapFactory
 import org.jrdf.parser.line.LineHandler
 import org.jrdf.parser.line.LineParserImpl
+import org.jrdf.parser.ntriples.NTriplesParserFactory
+import org.jrdf.parser.n3.N3ParserFactory
 
-class NTriplesParserTestUtil {
+class LineParserTestUtil {
 
-    private NTriplesParserTestUtil() {
+    private LineParserTestUtil() {
     }
+
 
     static InputStream getSampleData(Class clazz, String fileName) throws IOException {
         URL source = clazz.getClassLoader().getResource(fileName)
@@ -34,13 +37,13 @@ class NTriplesParserTestUtil {
     }
 
     static Set<Triple> parseNTriplesFile(InputStream input, Graph graph, MapFactory mapFactory) {
-        def parserFactory = new NTriplesParserFactoryImpl()
+        def parserFactory = new NTriplesParserFactory()
         def ntriplesParser = parserFactory.createParser(graph, mapFactory)
         return parseFile(ntriplesParser, input, graph);
     }
 
     static Set<Triple> parseN3File(InputStream input, Graph graph, MapFactory mapFactory) {
-        def parserFactory = new N3ParserFactoryImpl()
+        def parserFactory = new N3ParserFactory()
         def ntriplesParser = parserFactory.createParser(graph, mapFactory)
         return parseFile(ntriplesParser, input, graph);
     }

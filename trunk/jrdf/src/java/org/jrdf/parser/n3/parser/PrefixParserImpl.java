@@ -1,4 +1,4 @@
-package org.jrdf.parser.n3;
+package org.jrdf.parser.n3.parser;
 
 import org.jrdf.parser.NamespaceListener;
 import org.jrdf.util.boundary.RegexMatcher;
