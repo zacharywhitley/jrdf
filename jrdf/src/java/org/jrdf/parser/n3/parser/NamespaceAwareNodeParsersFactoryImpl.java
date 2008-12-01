@@ -103,7 +103,7 @@ public class NamespaceAwareNodeParsersFactoryImpl implements NamespaceAwareNodeP
     }
 
     public LiteralParser getLiteralParser() {
-        final LiteralMatcher literalMatcher = new NamespaceAwareRegexLiteralMatcher(regexMatcherFactory, util,
+        final LiteralMatcher literalMatcher = new NamespaceAwareLiteralMatcherImpl(regexMatcherFactory, util,
             namespaceListener);
         return new LiteralParserImpl(graph.getElementFactory(), literalMatcher);
     }

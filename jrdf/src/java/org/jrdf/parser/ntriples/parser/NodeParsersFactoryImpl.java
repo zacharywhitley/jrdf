@@ -92,6 +92,6 @@ public class NodeParsersFactoryImpl implements NodeParsersFactory {
     }
 
     public LiteralParser getLiteralParser() {
-        return new LiteralParserImpl(graph.getElementFactory(), new RegexLiteralMatcher(matcherFactory, util));
+        return new LiteralParserImpl(graph.getElementFactory(), new LiteralMatcherImpl(matcherFactory, util));
     }
 }

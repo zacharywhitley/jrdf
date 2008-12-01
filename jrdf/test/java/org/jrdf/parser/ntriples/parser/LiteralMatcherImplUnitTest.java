@@ -75,9 +75,9 @@ import org.jrdf.util.test.ParameterDefinition;
 
 import java.util.regex.Pattern;
 
-public class RegexLiteralMatcherUnitTest extends TestCase {
+public class LiteralMatcherImplUnitTest extends TestCase {
     private static final Class<LiteralMatcher> TARGET_INTERFACE = LiteralMatcher.class;
-    private static final Class<RegexLiteralMatcher> TEST_CLASS = RegexLiteralMatcher.class;
+    private static final Class<LiteralMatcherImpl> TEST_CLASS = LiteralMatcherImpl.class;
     private static final Class[] PARAM_TYPES = new Class[]{RegexMatcherFactory.class, NTripleUtil.class};
     private static final String PATTERN = "\\\"([\\t\\r\\n\\x20-\\x7E]*)\\\"" +
         "(" +
@@ -98,7 +98,7 @@ public class RegexLiteralMatcherUnitTest extends TestCase {
         regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
         matcher = mockFactory.createMock(RegexMatcher.class);
         nTripleUtil = mockFactory.createMock(NTripleUtil.class);
-        parser = new RegexLiteralMatcher(regexMatcherFactory, nTripleUtil);
+        parser = new LiteralMatcherImpl(regexMatcherFactory, nTripleUtil);
     }
 
     public void testClassProperties() {
