@@ -60,7 +60,7 @@ class LineParserTestUtil {
     }
 
     static Set<Triple> standardTestWithN3() {
-        Graph newGraph = TestJRDFFactory.factory.graph
+        Graph newGraph = TestJRDFFactory.factory.newGraph
         addStandardValuesToGraph(newGraph)
         addN3ValuesToGraph(newGraph)
         Set<Triple> answers = new HashSet<Triple>()
@@ -71,7 +71,7 @@ class LineParserTestUtil {
     }
 
     static Set<Triple> standardTest() {
-        Graph newGraph = TestJRDFFactory.factory.graph
+        Graph newGraph = TestJRDFFactory.factory.newGraph
         addStandardValuesToGraph(newGraph)
         Set<Triple> answers = new HashSet<Triple>()
         newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).each {

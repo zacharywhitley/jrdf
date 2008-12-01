@@ -87,7 +87,6 @@ import java.util.Set;
 public class GraphListerImpl implements GraphLister {
     private static final URI NAME = create(JRDF_NAMESPACE + "name");
     private static final URI ID = create(JRDF_NAMESPACE + "id");
-    private static final RdfReader RDF_READER = new RdfReader();
     private final DirectoryHandler handler;
     private final GraphApplication application;
     private Set<Resource> resources;
@@ -120,7 +119,7 @@ public class GraphListerImpl implements GraphLister {
 
     private void refreshGraphsModel() {
         final File file = new File(handler.getDir(), graphsFile);
-        final Graph modelsGraph = RDF_READER.parseNTriples(file);
+        final Graph modelsGraph = new RdfReader().parseNTriples(file);
         final Models model = new ModelsImpl(modelsGraph);
         this.resources = model.getResources();
     }

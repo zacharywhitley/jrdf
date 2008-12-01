@@ -86,7 +86,7 @@ public final class ConstraintsAnalyserImplUnitTest extends TestCase {
     private static final TripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE =
         new LiteralTripleSpec(URI_BOOK_1, URI_DC_TITLE, LITERAL_BOOK_TITLE);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph GRAPH = FACTORY.getGraph();
+    private static final Graph GRAPH = FACTORY.getNewGraph();
     private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
 
     public void testMe() {

@@ -165,7 +165,7 @@ public class RdfXmlIntegrationTest extends TestCase {
             final String ntFile = baseFileName + ".nt";
             final URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/" + ntFile);
             final URL actualFile = getClass().getClassLoader().getResource("rdf-tests/" + rdfFile);
-            Graph graph = TEST_JRDF_FACTORY.getGraph();
+            Graph graph = TEST_JRDF_FACTORY.getNewGraph();
             checkPositiveNtRdfTest(expectedFile, actualFile, "http://www.w3.org/2000/10/rdf-tests/" + rdfFile,
                 graph);
         }
@@ -176,14 +176,14 @@ public class RdfXmlIntegrationTest extends TestCase {
             final URL actualFile = getClass().getClassLoader().getResource("rdf-tests/" + actualName);
             final String expectedName = POSITIVE_NTRIPLE_TESTS.get(actualName);
             final URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/" + expectedName);
-            checkPositiveNtNtTest(expectedFile,  actualFile, "http://example.org", TEST_JRDF_FACTORY.getGraph());
+            checkPositiveNtNtTest(expectedFile,  actualFile, "http://example.org", TEST_JRDF_FACTORY.getNewGraph());
         }
     }
 
     public void testNegativeTests() throws Exception {
         for (String rdfFile : NEGATIVE_TESTS) {
             final URL errorFile = getClass().getClassLoader().getResource("rdf-tests/" + rdfFile);
-            checkNegativeRdfTestParseException(errorFile, TEST_JRDF_FACTORY.getGraph(), new MemMapFactory());
+            checkNegativeRdfTestParseException(errorFile, TEST_JRDF_FACTORY.getNewGraph(), new MemMapFactory());
         }
     }
 }

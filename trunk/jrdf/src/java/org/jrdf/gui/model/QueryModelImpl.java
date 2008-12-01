@@ -63,26 +63,21 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.GraphFactory;
-import org.jrdf.parser.GraphStatementHandler;
-import org.jrdf.parser.line.LineHandler;
-import org.jrdf.parser.line.LineHandlerFactory;
-import org.jrdf.parser.line.LineParser;
-import org.jrdf.parser.line.LineParserImpl;
-import org.jrdf.parser.n3.N3ParserFactory;
+import org.jrdf.parser.RdfReader;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.urql.UrqlConnection;
-import static org.jrdf.util.EscapeURL.toEscapedString;
 
 import java.net.URL;
 
-public class NTriplesQueryModel implements QueryModel {
+public class QueryModelImpl implements QueryModel {
     private final GraphFactory graphFactory;
     private final UrqlConnection connection;
     private final MapFactory mapFactory;
     private Graph graph;
+    private RdfReader rdfReader;
 
-    public NTriplesQueryModel(final GraphFactory newGraphFactory, final UrqlConnection newConnection,
+    public QueryModelImpl(final GraphFactory newGraphFactory, final UrqlConnection newConnection,
         final MapFactory newMapFactory) {
         graphFactory = newGraphFactory;
         connection = newConnection;
@@ -92,7 +87,7 @@ public class NTriplesQueryModel implements QueryModel {
     public Graph loadModel(URL url) {
         try {
             graph = graphFactory.getGraph();
-            parse(graph, url);
+            parse(url);
             return graph;
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,13 +99,18 @@ public class NTriplesQueryModel implements QueryModel {
         return connection.executeQuery(graph, query);
     }
 
-    // TODO N3 Changes - detect RDF type based on file extension and mime type.
-    private void parse(Graph graph, URL url) throws Exception {
+    private void parse(URL url) throws Exception {
         graph.clear();
-        LineHandlerFactory parserFactory = new N3ParserFactory();
-        LineHandler nTriplesParser = parserFactory.createParser(graph, mapFactory);
-        final LineParser parser = new LineParserImpl(nTriplesParser);
-        parser.setStatementHandler(new GraphStatementHandler(graph));
-        parser.parse(url.openStream(), toEscapedString(url));
+        final String fileName = url.toExternalForm();
+        rdfReader = new RdfReader(graph, mapFactory);
+        if (fileName.endsWith(".nt")) {
+            rdfReader.parseNTriples(url.openStream());
+        } else if (fileName.endsWith(".n3")) {
+            rdfReader.parseN3(url.openStream());
+        } else if (fileName.endsWith(".rdf")) {
+            rdfReader.parseRdfXml(url.openStream());
+        } else {
+            throw new RuntimeException("Unknown file type: " + fileName);
+        }
     }
 }

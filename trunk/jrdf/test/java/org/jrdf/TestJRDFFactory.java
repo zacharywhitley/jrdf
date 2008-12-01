@@ -110,7 +110,7 @@ public final class TestJRDFFactory implements JRDFFactory {
         BEAN_FACTORY.refresh();
     }
 
-    public Graph getGraph() {
+    public Graph getNewGraph() {
         GraphFactory graphFactory = (GraphFactory) BEAN_FACTORY.getBean("graphFactory");
         return graphFactory.getGraph();
     }

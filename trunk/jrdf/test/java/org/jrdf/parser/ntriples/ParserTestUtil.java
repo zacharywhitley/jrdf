@@ -96,7 +96,7 @@ import java.util.Set;
 
 public class ParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
+    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
     private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesEventReaderFactory(CREATOR);
     public static final LexicalComparator LEX_COMPARATOR = new LexicalComparatorImpl();

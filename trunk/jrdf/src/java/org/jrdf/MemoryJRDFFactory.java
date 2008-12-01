@@ -94,7 +94,7 @@ public final class MemoryJRDFFactory implements JRDFFactory {
     public void refresh() {
     }
 
-    public Graph getGraph() {
+    public Graph getNewGraph() {
         LongIndex[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
         MemCollectionFactory collectionFactory = new MemCollectionFactory();

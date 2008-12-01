@@ -142,7 +142,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the
     // Projection.ALL_VARIABLES is the empty list.
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph GRAPH = FACTORY.getGraph();
+    private static final Graph GRAPH = FACTORY.getNewGraph();
     private static final Literal LITERAL = createLiteral("The Pragmatic Programmer");
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_CONJUNCTION
         = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);

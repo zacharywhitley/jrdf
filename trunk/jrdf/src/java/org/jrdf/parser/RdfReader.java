@@ -59,14 +59,13 @@
 
 package org.jrdf.parser;
 
-import org.jrdf.JRDFFactory;
 import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.parser.line.GraphLineParser;
-import org.jrdf.parser.line.LineHandlerFactory;
 import org.jrdf.parser.line.LineHandler;
+import org.jrdf.parser.line.LineHandlerFactory;
 import org.jrdf.parser.n3.N3ParserFactory;
 import org.jrdf.parser.ntriples.NTriplesParserFactory;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
@@ -84,14 +83,14 @@ import java.io.InputStream;
 public final class RdfReader {
     private LineHandlerFactory ntriplesFactory = new NTriplesParserFactory();
     private LineHandlerFactory n3Factory = new N3ParserFactory();
-    private JRDFFactory factory = MemoryJRDFFactory.getFactory();
+    private Graph graph = MemoryJRDFFactory.getFactory().getNewGraph();
     private MapFactory mapFactory = new MemMapFactory();
 
     public RdfReader() {
     }
 
-    public RdfReader(final JRDFFactory newFactory, final MapFactory newMapFactory) {
-        factory = newFactory;
+    public RdfReader(final Graph newGraph, final MapFactory newMapFactory) {
+        graph = newGraph;
         mapFactory = newMapFactory;
     }
 
@@ -100,11 +99,10 @@ public final class RdfReader {
     }
 
     public Graph parseNTriples(final InputStream stream) {
-        final Graph newGraph = factory.getGraph();
-        final LineHandler lineHandler = ntriplesFactory.createParser(newGraph, mapFactory);
-        final GraphLineParser lineParser = new GraphLineParser(newGraph, lineHandler);
+        final LineHandler lineHandler = ntriplesFactory.createParser(graph, mapFactory);
+        final GraphLineParser lineParser = new GraphLineParser(graph, lineHandler);
         tryParse(lineParser, stream);
-        return newGraph;
+        return graph;
     }
 
     public Graph parseN3(final File file) {
@@ -112,11 +110,10 @@ public final class RdfReader {
     }
 
     public Graph parseN3(final InputStream stream) {
-        final Graph newGraph = factory.getGraph();
-        final LineHandler lineHandler = n3Factory.createParser(newGraph, mapFactory);
-        final GraphLineParser lineParser = new GraphLineParser(newGraph, lineHandler);
+        final LineHandler lineHandler = n3Factory.createParser(graph, mapFactory);
+        final GraphLineParser lineParser = new GraphLineParser(graph, lineHandler);
         tryParse(lineParser, stream);
-        return newGraph;
+        return graph;
     }
 
     public Graph parseRdfXml(final File file) {
@@ -124,10 +121,9 @@ public final class RdfReader {
     }
 
     public Graph parseRdfXml(final InputStream stream) {
-        final Graph newGraph = factory.getGraph();
-        final Parser parser = new GraphRdfXmlParser(newGraph, mapFactory);
+        final Parser parser = new GraphRdfXmlParser(graph, mapFactory);
         tryParse(parser, stream);
-        return newGraph;
+        return graph;
     }
 
     private InputStream getInputStream(final File file) {
@@ -140,7 +136,7 @@ public final class RdfReader {
 
     private void tryParse(Parser parser, InputStream stream) {
         try {
-            parser.parse(stream, null);
+            parser.parse(stream, "http://jrdf.sf.net/");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -94,7 +94,7 @@ public final class SortedMemoryJRDFFactory implements JRDFFactory {
     public void refresh() {
     }
 
-    public Graph getGraph() {
+    public Graph getNewGraph() {
         LongIndex[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
         return new OrderedGraphFactoryImpl(indexes, nodePoolFactory, new MemCollectionFactory()).getGraph();

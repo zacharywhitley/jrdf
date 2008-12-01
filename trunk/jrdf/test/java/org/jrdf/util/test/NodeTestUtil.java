@@ -165,6 +165,6 @@ public final class NodeTestUtil {
 
     // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
     private static Graph createGraph() {
-        return FACTORY.getGraph();
+        return FACTORY.getNewGraph();
     }
 }

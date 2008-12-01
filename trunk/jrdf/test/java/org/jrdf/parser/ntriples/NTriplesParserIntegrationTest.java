@@ -124,7 +124,7 @@ public class NTriplesParserIntegrationTest extends TestCase {
     }
 
     private Set<Triple> getResults(final String fileName) throws Exception {
-        final Graph newGraph = TEST_JRDF_FACTORY.getGraph();
+        final Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
         final MemMapFactory mapFactory = new MemMapFactory();
         final InputStream in = getSampleData(this.getClass(), fileName);
         try {

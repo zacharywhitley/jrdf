@@ -57,10 +57,10 @@
   ~ information on JRDF, please see <http://jrdf.sourceforge.net/>.
   ~
   -->
-
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
     <bean id="windowCommandManager"
           class="org.springframework.richclient.application.support.ApplicationWindowCommandManager">
@@ -108,22 +108,10 @@
     </bean>
 
     <bean id="loadRdfCommand" class="org.jrdf.gui.command.LoadRdfCommand">
-        <property name="JRDFModel" ref="jrdfNTriplesModel"/>
+        <property name="JRDFModel" ref="jrdfModel"/>
     </bean>
 
-    <bean id="jrdfModel" class="org.jrdf.gui.model.RdfXmlQueryModel">
-        <constructor-arg>
-            <ref bean="graphFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="urqlConnection"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="mapFactory"/>
-        </constructor-arg>
-    </bean>
-
-    <bean id="jrdfNTriplesModel" class="org.jrdf.gui.model.NTriplesQueryModel">
+    <bean id="jrdfModel" class="org.jrdf.gui.model.QueryModelImpl">
         <constructor-arg>
             <ref bean="graphFactory"/>
         </constructor-arg>
@@ -154,7 +142,7 @@
     </bean>
 
     <bean id="runQueryCommand" class="org.jrdf.gui.command.RunQueryCommand">
-        <property name="JRDFModel" ref="jrdfNTriplesModel"/>
+        <property name="JRDFModel" ref="jrdfModel"/>
         <property name="queryPanelView">
             <ref bean="queryPanelView"/>
         </property>
