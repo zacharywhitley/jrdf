@@ -65,7 +65,6 @@ import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
@@ -142,7 +141,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         BiOperandExpressionSimplifier simplifier = new BiOperandExpressionSimplifierImpl(expressionComparator);
         List<Expression<V>> constraintList = simplifier.flattenAndSortConjunction(conjunction, Conjunction.class);
-        cacheHandler.reset(result.getTuples().size(), constraintList.size());
+        cacheHandler.reset(result, constraintList.size());
         List<Relation> partialResult = new LinkedList<Relation>();
         for (Expression<V> exp : constraintList) {
             Relation tempRelation = getExpression(exp);
@@ -152,6 +151,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             }
             partialResult.add(tempRelation);
         }
+        cacheHandler.clear();
         Collections.sort(partialResult, relationComparator);
         Set<Relation> partialResultSet = matchAttributes(partialResult);
         result = naturalJoin.join(partialResultSet);
@@ -188,14 +188,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
-        // TODO (AN) This really should be nadic and just pass in the rhs
-        Relation rhs = getExpression(optional.getRhs());
-        Relation lhs = getExpression(optional.getLhs());
-        result = leftOuterJoin.join(lhs, rhs);
-    }
-
-    @Override
     public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
         long time = System.currentTimeMillis();
         processConstraint(constraint);
@@ -205,17 +197,21 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     private <V extends ExpressionVisitor> void processConstraint(SingleConstraint<V> constraint) {
         Attribute curAttr = cacheHandler.findOneCachedAttribute(constraint);
         if (curAttr != null) {
-            Set<Tuple> tuples = new HashSet<Tuple>();
-            Set<ValueOperation> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
-            for (ValueOperation newVO : voSet) {
-                constraint.setAvo(curAttr, newVO);
-                Relation tmpRelation = restrict.restrict(result, constraint.getAvo(allVariables));
-                tuples.addAll(tmpRelation.getTuples());
-            }
-            result = RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
+            doCachedConstraint(constraint, curAttr);
         } else {
             result = restrict.restrict(result, constraint.getAvo(allVariables));
         }
+    }
+
+    private <V extends ExpressionVisitor> void doCachedConstraint(SingleConstraint<V> constraint, Attribute curAttr) {
+        Set<Tuple> tuples = new HashSet<Tuple>();
+        Set<ValueOperation> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
+        for (ValueOperation newVO : voSet) {
+            constraint.setAvo(curAttr, newVO);
+            Relation tmpRelation = restrict.restrict(result, constraint.getAvo(allVariables));
+            tuples.addAll(tmpRelation.getTuples());
+        }
+        result = RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
     }
 
     @Override

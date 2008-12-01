@@ -119,6 +119,10 @@ public final class RelationImpl implements Relation {
         return tuples;
     }
 
+    public long getTupleSize() {
+        return tuples.size();
+    }
+
     public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
         Set<Tuple> set = new HashSet<Tuple>();
         for (Tuple tuple : tuples) {

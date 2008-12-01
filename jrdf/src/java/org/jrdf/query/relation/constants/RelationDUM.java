@@ -109,6 +109,10 @@ public final class RelationDUM implements Relation, Serializable {
         return Collections.emptySet();
     }
 
+    public long getTupleSize() {
+        return 0;
+    }
+
     public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
         return Collections.emptySet();
     }

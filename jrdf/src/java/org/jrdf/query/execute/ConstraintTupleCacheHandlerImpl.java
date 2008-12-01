@@ -68,8 +68,8 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -80,41 +80,39 @@ import java.util.TreeMap;
  */
 
 public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHandler {
-    private static final int LOAD_FACTOR = 10;
     private static final int VAR_PRESET = 2;
+    private static final int LOAD_FACTOR = 10;
+    private static final int DEFAULT_LIMIT = 1000;
 
     private Map<AttributeName, Set<ValueOperation>> cache;
     private long timeStamp;
     private int cacheLimit;
 
     public ConstraintTupleCacheHandlerImpl() {
-        cache = new LinkedHashMap<AttributeName, Set<ValueOperation>>();
+        cache = new HashMap<AttributeName, Set<ValueOperation>>();
         timeStamp = System.currentTimeMillis();
+        cacheLimit = DEFAULT_LIMIT;
     }
 
-    public void reset(int tupleSize, int constraintListSize) {
+    public void reset(Relation result, int constraintListSize) {
         clear();
+        long tupleSize = estimateTupleSize(result);
         this.cacheLimit = calculateCacheSize(tupleSize, constraintListSize);
     }
 
-    private void addToCache(AttributeName name, ValueOperation valueOperation) {
-        Set<ValueOperation> set = cache.get(name);
-        if (set == null) {
-            set = new HashSet<ValueOperation>();
-        }
-        set.add(valueOperation);
-        cache.put(name, set);
+    private long estimateTupleSize(Relation result) {
+        return result.getTupleSize();
     }
 
     public Set<ValueOperation> getCachedValues(AttributeName name) {
         return cache.get(name);
     }
 
-    private int calculateCacheSize(int tupleSize, int constraintSize) {
-        return tupleSize / (constraintSize * VAR_PRESET * LOAD_FACTOR);
+    private int calculateCacheSize(long tupleSize, int constraintSize) {
+        return Math.max(DEFAULT_LIMIT, (int) tupleSize / (constraintSize * VAR_PRESET * LOAD_FACTOR));
     }
 
-    private void clear() {
+    public void clear() {
         for (AttributeName name : cache.keySet()) {
             Set<ValueOperation> vo = cache.get(name);
             vo.clear();
@@ -151,7 +149,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
 
     public <V extends ExpressionVisitor> void addResultToCache(SingleConstraint<V> constraint,
                                                                Relation result, long time) {
-        if (result.getTuples().size() < cacheLimit) {
+        if (result.getTupleSize() < cacheLimit) {
             Set<Attribute> attributes = constraint.getHeadings();
             Set<Attribute> resultAttributes = result.getHeading();
             Set<Attribute> set = findMatchingAttributes(attributes, resultAttributes);
@@ -163,18 +161,24 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
 
     private void updateCache(Relation result, long time, Attribute attribute) {
         AttributeName attributeName = attribute.getAttributeName();
-        Set<Tuple> tupleSet = result.getTuples(attribute);
+        Set<ValueOperation> voSet = getMatchingVOs(attribute, result.getTuples(attribute));
+        Set<ValueOperation> cached = cache.get(attributeName);
         if (time > timeStamp) {
-            clear(attributeName);
             setTimeStamp(time);
         }
-        addToCache(attribute, attributeName, tupleSet);
+        if (cached != null) {
+            voSet.retainAll(cached);
+        }
+        clear(attributeName);
+        cache.put(attributeName, voSet);
     }
 
-    private void addToCache(Attribute attribute, AttributeName attributeName, Set<Tuple> tupleSet) {
+    private Set<ValueOperation> getMatchingVOs(Attribute attribute, Set<Tuple>tupleSet) {
+        Set<ValueOperation> set = new HashSet<ValueOperation>();
         for (Tuple tuple : tupleSet) {
-            addToCache(attributeName, tuple.getValueOperation(attribute));
+            set.add(tuple.getValueOperation(attribute));
         }
+        return set;
     }
 
     private Set<Attribute> findMatchingAttributes(Set<Attribute> source, Set<Attribute> target) {
