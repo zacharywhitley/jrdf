@@ -59,6 +59,7 @@
 
 package org.jrdf.query.answer.xml;
 
+import junit.framework.TestCase;
 import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.EXPECTED_VARIABLES;
 import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.ROW_1;
 import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.ROW_2;
@@ -67,27 +68,28 @@ import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsParser;
 import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsParserImpl;
 
 import static javax.xml.stream.XMLInputFactory.newInstance;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Set;
+import java.util.HashSet;
+import static java.util.Arrays.asList;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-
-public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends AbstractAnswerXMLStreamWriterIntegrationTest {
+public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends TestCase {
+    private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil();
     private InputStream stream1, stream2;
     private XMLStreamReader streamReader;
+    private AnswerXMLWriter xmlWriter;
+    private Writer writer = new StringWriter();
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        stream1 = url.openStream();
-        stream2 = url.openStream();
+        stream1 = TEST_UTIL.getData().openStream();
+        stream2 = TEST_UTIL.getData().openStream();
         xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1);
         xmlWriter.setWriter(writer);
     }
@@ -96,6 +98,15 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends AbstractAnsw
     protected void tearDown() throws Exception {
         stream1.close();
         stream2.close();
+    }
+
+    public void testVariables() throws Exception {
+        final Set<String> set = new HashSet<String>(asList("x", "hpage", "name", "mbox", "age", "blurb", "friend"));
+        TEST_UTIL.checkVariables(set, TEST_UTIL.getVariables(xmlWriter, writer));
+    }
+
+    public void testResults() throws Exception {
+        TEST_UTIL.checkResult(TEST_UTIL.getData(), writer, xmlWriter);
     }
 
     public void testIncomingStreams() throws Exception {
@@ -134,7 +145,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends AbstractAnsw
 
     public void test2StreamsConstructor() throws Exception {
         stream1.close();
-        stream1 = url.openStream();
+        stream1 = TEST_UTIL.getData().openStream();
         xmlWriter.close();
         writer = new StringWriter();
         xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1, stream2);

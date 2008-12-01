@@ -59,38 +59,51 @@
 
 package org.jrdf.query.answer.xml;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.BufferedReader;
+import junit.framework.TestCase;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.StringWriter;
+import java.io.Writer;
+import static java.util.Arrays.asList;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-
-public class MultiAnswerXMLStreamWriterIntegrationTest extends AbstractAnswerXMLStreamWriterIntegrationTest {
+public class MultiAnswerXMLStreamWriterIntegrationTest extends TestCase {
+    private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil();
+    private AnswerXMLWriter xmlWriter;
+    private Writer writer = new StringWriter();
+    private InputStream stream;
 
     @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    public void setUp() throws Exception {
+        stream = TEST_UTIL.getData().openStream();
         xmlWriter = new MultiAnswerXMLStreamWriterImpl(stream);
         xmlWriter.setWriter(writer);
     }
 
     @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        xmlWriter.close();
+    public void tearDown() throws Exception {
+        stream.close();
+        if (xmlWriter != null) {
+            xmlWriter.close();
+        }
     }
 
-    public void testIncomingStream() throws IOException, XMLStreamException, InterruptedException {
+    public void testVariables() throws Exception {
+        final Set<String> set = new HashSet<String>(asList("x", "hpage", "name", "mbox", "age", "blurb", "friend"));
+        TEST_UTIL.checkVariables(set, TEST_UTIL.getVariables(xmlWriter, writer));
+    }
+
+    public void testResults() throws Exception {
+        TEST_UTIL.checkResult(TEST_UTIL.getData(), writer, xmlWriter);
+    }
+
+    public void testIncomingStream() throws Exception {
         PipedOutputStream outputStream = new PipedOutputStream();
         PipedInputStream inputStream = new PipedInputStream(outputStream);
         long start = System.currentTimeMillis();
@@ -117,9 +130,32 @@ public class MultiAnswerXMLStreamWriterIntegrationTest extends AbstractAnswerXML
         thread.join();
     }
 
+    public void testMultipleInputs() throws Exception {
+        stream = TEST_UTIL.getData().openStream();
+        String xml = TEST_UTIL.readStreamIntoString(stream);
+        xml += xml;
+        InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
+        writer = new StringWriter();
+        xmlWriter = new MultiAnswerXMLStreamWriterImpl(inputStream);
+        xmlWriter.setWriter(writer);
+        int count = 0;
+        xmlWriter.writeStartResults();
+        while (xmlWriter.hasMoreResults()) {
+            count++;
+            xmlWriter.writeResult();
+        }
+        xmlWriter.writeEndResults();
+        assertEquals(4, count);
+        xmlWriter.flush();
+        inputStream.close();
+    }
+
     class RunnableStreamWriter implements Runnable {
+
         private InputStream stream;
+
         private OutputStream outputStream;
+
         private int loops;
 
         RunnableStreamWriter(OutputStream outuputStream, int count) {
@@ -156,37 +192,5 @@ public class MultiAnswerXMLStreamWriterIntegrationTest extends AbstractAnswerXML
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    public void testMultipleInputs() throws XMLStreamException, IOException {
-        String xml = readStreamIntoString();
-        xml += xml;
-        InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        writer = new StringWriter();
-        xmlWriter = new MultiAnswerXMLStreamWriterImpl(inputStream);
-        xmlWriter.setWriter(writer);
-        int count = 0;
-        xmlWriter.writeStartResults();
-        while (xmlWriter.hasMoreResults()) {
-            count++;
-            xmlWriter.writeResult();
-        }
-        xmlWriter.writeEndResults();
-        assertEquals(4, count);
-        xmlWriter.flush();
-        inputStream.close();
-    }
-
-    private String readStreamIntoString() throws IOException {
-        final InputStream stream1 = url.openStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream1));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line + "\n");
-        }
-        br.close();
-        stream1.close();
-        return sb.toString();
     }
 }
