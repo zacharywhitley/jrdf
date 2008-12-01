@@ -59,96 +59,73 @@
 
 package org.jrdf.query.answer.xml;
 
+import junit.framework.TestCase;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.net.URI;
+import java.io.StringWriter;
+import java.io.Writer;
+import static java.net.URI.create;
+import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author Yuan-Fang Li
- * @version :$Id:$
- */
-
-public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswerXMLStreamWriterIntegrationTest {
+public class AnswerXMLPagenatedStreamWriterIntegrationTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+    private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil();
     private UrqlConnection urqlConnection;
-
     private MoleculeGraph graph;
-    private GraphElementFactory elementFactory;
-    private BlankNode b1;
-    private BlankNode b2;
-    private BlankNode b3;
-    private URIReference p1;
-    private URIReference p2;
-    private URIReference p3;
-    private Literal l1;
-    private Literal l2;
-    private Literal l3;
+    private AnswerXMLWriter xmlWriter;
+    private Writer writer = new StringWriter();
 
+    @Override
     public void setUp() throws Exception {
-        super.setUp();
         HANDLER.removeDir();
         HANDLER.makeDir();
         FACTORY.refresh();
         TEST_FACTORY.refresh();
         urqlConnection = TEST_FACTORY.getNewUrqlConnection();
         graph = FACTORY.getNewGraph("foo");
-        elementFactory = graph.getElementFactory();
-        b1 = elementFactory.createBlankNode();
-        b2 = elementFactory.createBlankNode();
-        b3 = elementFactory.createBlankNode();
-        p1 = elementFactory.createURIReference(URI.create("urn:p1"));
-        p2 = elementFactory.createURIReference(URI.create("urn:p2"));
-        p3 = elementFactory.createURIReference(URI.create("urn:p3"));
-        l1 = elementFactory.createLiteral("l1");
-        l2 = elementFactory.createLiteral("l2");
-        l3 = elementFactory.createLiteral("l3");
+        final GraphElementFactory elementFactory = graph.getElementFactory();
+        Resource b1 = elementFactory.createResource();
+        Resource b2 = elementFactory.createResource();
+        Resource b3 = elementFactory.createResource();
+        b1.addValue(create("urn:p1"), "l1");
+        b2.addValue(create("urn:p2"), "l2");
+        b3.addValue(create("urn:p3"), "l3");
     }
 
+    @Override
     public void tearDown() throws Exception {
-        super.tearDown();
+        if (xmlWriter != null) {
+            xmlWriter.close();
+        }
         graph.close();
         HANDLER.removeDir();
     }
 
-    public void testVariables() throws GraphException, InvalidQuerySyntaxException, XMLStreamException, IOException {
-        graph.add(b1, p1, l1);
-        graph.add(b2, p2, l2);
-        graph.add(b3, p3, l3);
+    public void testVariables() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = urqlConnection.executeQuery(graph, queryString);
         xmlWriter = new AnswerXMLPagenatedStreamWriter((SelectAnswer) answer, writer);
-        Set<String> vars = getVariables();
+        Set<String> vars = TEST_UTIL.getVariables(xmlWriter, writer);
         Set<String> set = new HashSet<String>();
-        for (String var : new String[]{"s", "p", "o"}) {
-            set.add(var);
-        }
-        checkVariables(set, vars);
+        set.addAll(asList("s", "p", "o"));
+        TEST_UTIL.checkVariables(set, vars);
     }
 
-    public void testResult() throws GraphException, InvalidQuerySyntaxException, XMLStreamException, IOException {
-        graph.add(b1, p1, l1);
-        graph.add(b2, p2, l2);
-        graph.add(b3, p3, l3);
+    public void testResult() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = urqlConnection.executeQuery(graph, queryString);
         xmlWriter = new AnswerXMLPagenatedStreamWriter((SelectAnswer) answer, writer);
