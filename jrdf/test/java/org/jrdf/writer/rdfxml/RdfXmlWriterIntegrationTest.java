@@ -111,7 +111,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
     }
 
     public void testWriteOneStatement() throws Exception {
-        Graph graph = TestJRDFFactory.getFactory().getGraph();
+        Graph graph = TestJRDFFactory.getFactory().getNewGraph();
         GraphElementFactory graphElementFactory = graph.getElementFactory();
         URI uri = new URI("http://hello.com/foo");
         URIReference resource = graphElementFactory.createURIReference(uri);
@@ -138,7 +138,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
     }
 
     public void testWriteParseType2() throws Exception {
-        Graph graph = TestJRDFFactory.getFactory().getGraph();
+        Graph graph = TestJRDFFactory.getFactory().getNewGraph();
         Resource resource = graph.getElementFactory().createResource();
         resource.addValue(URI.create("urn:foo"), GOOD_XML, XML_LITERAL);
         writeGraph(graph);
@@ -185,7 +185,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
 
     private Graph readGraph(Reader reader, String baseURI) throws GraphException {
         final TestJRDFFactory factory = TestJRDFFactory.getFactory();
-        final Graph graph = factory.getGraph();
+        final Graph graph = factory.getNewGraph();
         final Parser parser = new GraphRdfXmlParser(graph, factory.getMapFactory());
         try {
             parser.parse(reader, baseURI);

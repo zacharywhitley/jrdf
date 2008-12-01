@@ -75,7 +75,7 @@ public class DiskPerformance extends AbstractGraphPerformance {
     private JRDFFactory factory = SortedDiskJRDFFactory.getFactory();
 
     protected Graph getGraph() {
-        Graph newGraph = factory.getGraph();
+        Graph newGraph = factory.getNewGraph();
         newGraph.clear();
         return newGraph;
     }

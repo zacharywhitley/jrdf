@@ -76,7 +76,7 @@ public class SesameGraphImplIntegrationTest extends AbstractGraphIntegrationTest
      */
     @Override
     public Graph newGraph() throws Exception {
-        Graph newGraph = FACTORY.getGraph();
+        Graph newGraph = FACTORY.getNewGraph();
         newGraph.clear();
         return newGraph;
     }

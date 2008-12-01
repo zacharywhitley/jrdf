@@ -73,7 +73,7 @@ import java.net.URI;
 
 public class GroundedTripleComparatorImplUnitTest extends TestCase {
     private JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
-    private Graph newGraph = factory.getGraph();
+    private Graph newGraph = factory.getNewGraph();
     private GraphElementFactory elementFactory = newGraph.getElementFactory();
     private TripleFactory tripleFactory = newGraph.getTripleFactory();
     private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();

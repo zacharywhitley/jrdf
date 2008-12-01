@@ -124,7 +124,7 @@ public class JrdfExample {
     private void runExample() throws Exception {
         System.out.println("Running example.");
         System.out.println("Creating Graph...");
-        Graph graph = JRDF_FACTORY.getGraph();
+        Graph graph = JRDF_FACTORY.getNewGraph();
         System.out.println("Creating Graph Elements...");
         populateGraph(graph);
         searchGraph(graph);

@@ -106,7 +106,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         return base.hasGraph(name);
     }
 
-    public Graph getGraph() {
+    public Graph getNewGraph() {
         return getGraph("default");
     }
 

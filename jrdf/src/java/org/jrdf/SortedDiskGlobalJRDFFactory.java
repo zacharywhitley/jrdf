@@ -131,7 +131,7 @@ public final class SortedDiskGlobalJRDFFactory implements GlobalJRDFFactory {
     public void refresh() {
     }
 
-    public MoleculeGraph getGraph() {
+    public MoleculeGraph getNewGraph() {
         graphNumber++;
         MapFactory factory = new BdbMapFactory(BDB_HANDLER, "database" + graphNumber);
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);

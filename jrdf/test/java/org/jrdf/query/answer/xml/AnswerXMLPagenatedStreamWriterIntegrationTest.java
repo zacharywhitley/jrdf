@@ -88,8 +88,8 @@ import java.util.Set;
 
 public class AnswerXMLPagenatedStreamWriterIntegrationTest extends AbstractAnswerXMLStreamWriterIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
-    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory();
+    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private UrqlConnection urqlConnection;
 
     private MoleculeGraph graph;

@@ -83,7 +83,7 @@ public class TextToMoleculeGraphIntegrationTest extends AbstractMoleculeGraphInt
 
     public void setUp() throws Exception {
         super.setUp();
-        destGraph = factory.getGraph();
+        destGraph = factory.getNewGraph();
         final RegexMatcherFactoryImpl matcherFactory = new RegexMatcherFactoryImpl();
         final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(destGraph, new MemMapFactory());
         final NodeMaps nodeMaps = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),

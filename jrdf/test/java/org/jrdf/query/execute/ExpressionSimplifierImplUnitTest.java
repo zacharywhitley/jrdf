@@ -107,7 +107,7 @@ import java.util.Map;
 public class ExpressionSimplifierImplUnitTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private QueryBuilder queryBuilder;
-    private static final Graph GRAPH = FACTORY.getGraph();
+    private static final Graph GRAPH = FACTORY.getNewGraph();
 
     private static final SubjectNodeType SUBJECT_NODE_TYPE = new SubjectNodeType();
     private static final PredicateNodeType PREDICATE_NODE_TYPE = new PredicateNodeType();

@@ -78,7 +78,7 @@ public class URIReferenceResourceImplUnitTest extends TestCase {
     private Resource resource3;
 
     public void setUp() throws Exception {
-        newGraph = TestJRDFFactory.getFactory().getGraph();
+        newGraph = TestJRDFFactory.getFactory().getNewGraph();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
         uri1 = graphElementFactory.createURIReference(URI.create("urn:foo"));
         uri2 = graphElementFactory.createURIReference(URI.create("urn:bar"));

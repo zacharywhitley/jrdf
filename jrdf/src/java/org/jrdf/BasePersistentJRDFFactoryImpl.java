@@ -27,7 +27,6 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final RdfReader RDF_READER = new RdfReader();
     private final Set<NodePoolFactory> openNodePoolFactories = new HashSet<NodePoolFactory>();
     private final BdbEnvironmentHandler bdbHandler;
     private CollectionFactory collectionFactory;
@@ -75,7 +74,7 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     }
 
     public void refresh() {
-        modelsGraph = RDF_READER.parseNTriples(file);
+        modelsGraph = new RdfReader().parseNTriples(file);
         models = new ModelsImpl(modelsGraph);
     }
 

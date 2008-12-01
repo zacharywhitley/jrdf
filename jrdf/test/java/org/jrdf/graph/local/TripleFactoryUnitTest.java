@@ -94,7 +94,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
-        return TestJRDFFactory.getFactory().getGraph();
+        return TestJRDFFactory.getFactory().getNewGraph();
     }
 
     @Override

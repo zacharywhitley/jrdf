@@ -115,7 +115,7 @@ public final class SortedMemoryGlobalJRDFFactory implements GlobalJRDFFactory {
     public void refresh() {
     }
 
-    public MoleculeGraph getGraph() {
+    public MoleculeGraph getNewGraph() {
         MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);

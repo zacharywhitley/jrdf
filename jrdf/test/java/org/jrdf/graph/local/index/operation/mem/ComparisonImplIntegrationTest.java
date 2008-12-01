@@ -90,9 +90,9 @@ public class ComparisonImplIntegrationTest extends TestCase {
     }
 
     private void checkGraph(URI resource1, URI resource2, boolean areEqual) throws Exception {
-        Graph graph1 = FACTORY.getGraph();
+        Graph graph1 = FACTORY.getNewGraph();
         addTriple(graph1, resource1);
-        Graph graph2 = FACTORY.getGraph();
+        Graph graph2 = FACTORY.getNewGraph();
         addTriple(graph2, resource2);
         Comparison comparison = new ComparisonImpl();
         assertEquals(areEqual, comparison.groundedGraphsAreEqual(graph1, graph2));

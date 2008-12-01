@@ -6,7 +6,7 @@ import org.jrdf.graph.Graph
 class RdfBuilderUnitTest extends GroovyTestCase {
 
     void testCreateAndDoSimpleTriples() {
-        Graph graph = TestJRDFFactory.factory.graph
+        Graph graph = TestJRDFFactory.factory.newGraph
         def rdf = new RdfBuilder(graph)
         def urn = rdf.namespace("urn", "http://this/is/not/a/urn#");
         rdf.namespaces('xsd':'http://www.w3.org/2001/XMLSchema#', 'rdfs':'http://www.w3.org/2000/01/rdf-schema#')

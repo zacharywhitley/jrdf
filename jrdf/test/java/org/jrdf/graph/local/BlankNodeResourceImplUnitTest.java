@@ -77,7 +77,7 @@ public class BlankNodeResourceImplUnitTest extends TestCase {
     private Resource resource3;
 
     public void setUp() throws Exception {
-        newGraph = TestJRDFFactory.getFactory().getGraph();
+        newGraph = TestJRDFFactory.getFactory().getNewGraph();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
         blankNode1 = graphElementFactory.createBlankNode();
         blankNode2 = graphElementFactory.createBlankNode();

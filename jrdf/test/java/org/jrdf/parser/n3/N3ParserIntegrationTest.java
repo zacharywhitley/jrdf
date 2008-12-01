@@ -76,7 +76,7 @@ import java.util.Set;
 public class N3ParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/n3/test.n3";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
+    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
 
     public void testParseFile() throws Exception {

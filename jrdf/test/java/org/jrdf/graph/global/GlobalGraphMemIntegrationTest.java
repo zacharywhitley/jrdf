@@ -79,7 +79,7 @@ public class GlobalGraphMemIntegrationTest extends AbstractGraphIntegrationTest 
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
-        return FACTORY.getGraph();
+        return FACTORY.getNewGraph();
     }
 
     @Override

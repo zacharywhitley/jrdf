@@ -80,7 +80,7 @@ public interface JRDFFactory {
      *
      * @return a new instance of a JRDF graph.
      */
-    Graph getGraph();
+    Graph getNewGraph();
 
     /**
      * Create a new connection to perform SPARQL operations depending on the current configuration.

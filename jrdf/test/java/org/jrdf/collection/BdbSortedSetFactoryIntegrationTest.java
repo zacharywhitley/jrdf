@@ -122,7 +122,7 @@ public class BdbSortedSetFactoryIntegrationTest extends TestCase {
     }
 
     private void createTriples() throws Exception {
-        Graph newGraph = FACTORY.getGraph();
+        Graph newGraph = FACTORY.getNewGraph();
         GraphElementFactory gef = newGraph.getElementFactory();
         BlankNode bn1 = gef.createBlankNode();
         URIReference uri1 = gef.createURIReference(URI.create("urn:foo"));

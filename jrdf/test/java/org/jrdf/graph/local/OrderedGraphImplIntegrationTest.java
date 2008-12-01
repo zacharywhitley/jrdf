@@ -80,7 +80,7 @@ public class OrderedGraphImplIntegrationTest extends AbstractGraphIntegrationTes
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
-        return FACTORY.getGraph();
+        return FACTORY.getNewGraph();
     }
 
 //    //TODO: Create a disk based serialization test.
