@@ -66,6 +66,7 @@ import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.SingleConstraint;
+import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
@@ -134,6 +135,13 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         shortCircuit = true;
         allVariables = ask.getAllVariables();
         result = getExpression(ask.getNextExpression(), shortCircuit);
+        cacheHandler.clear();
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
+        cacheHandler.clear();
+        super.visitProjection(projection);
     }
 
     // TODO YF join those with common attributes first.
