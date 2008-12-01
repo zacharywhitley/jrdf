@@ -1,4 +1,4 @@
-package org.jrdf.gui.view;/*
+/*
  * $Header$
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
@@ -56,6 +56,8 @@ package org.jrdf.gui.view;/*
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+
+package org.jrdf.gui.view;
 
 import org.springframework.richclient.filechooser.DefaultFileFilter;
 

@@ -82,7 +82,7 @@ public class BiOperandExpressionSimplifierImpl implements BiOperandExpressionSim
     public <V extends ExpressionVisitor> List<Expression<V>>
     flattenAndSortConjunction(BiOperandExpression<V> conjunction, Class expClass) {
         List<Expression<V>> constraintList = new LinkedList<Expression<V>>();
-        flattenConjunction(conjunction, constraintList, expClass);
+        flattenExpression(conjunction, constraintList, expClass);
         reorderExpressionList(constraintList);
         return constraintList;
     }
@@ -92,7 +92,7 @@ public class BiOperandExpressionSimplifierImpl implements BiOperandExpressionSim
     }
 
     private <V extends ExpressionVisitor> void
-    flattenConjunction(BiOperandExpression<V> expression, Collection<Expression<V>> set, Class expClass) {
+    flattenExpression(BiOperandExpression<V> expression, Collection<Expression<V>> set, Class expClass) {
         final Expression<V> lhs = expression.getLhs();
         final Expression<V> rhs = expression.getRhs();
         addExpressionToCollection(lhs, set, expClass);
@@ -102,7 +102,7 @@ public class BiOperandExpressionSimplifierImpl implements BiOperandExpressionSim
     private <V extends ExpressionVisitor> void
     addExpressionToCollection(Expression<V> expression, Collection<Expression<V>> set, Class expClass) {
         if (expClass.isAssignableFrom(expression.getClass())) {
-            flattenConjunction((BiOperandExpression<V>) expression, set, expClass);
+            flattenExpression((BiOperandExpression<V>) expression, set, expClass);
         } else {
             set.add(expression);
         }

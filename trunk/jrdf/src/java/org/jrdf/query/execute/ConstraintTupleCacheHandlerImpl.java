@@ -72,6 +72,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * @author Yuan-Fang Li
@@ -79,12 +80,21 @@ import java.util.Set;
  */
 
 public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHandler {
+    private static final int LOAD_FACTOR = 10;
+    private static final int VAR_PRESET = 2;
+
     private Map<AttributeName, Set<ValueOperation>> cache;
     private long timeStamp;
+    private int cacheLimit;
 
     public ConstraintTupleCacheHandlerImpl() {
         cache = new LinkedHashMap<AttributeName, Set<ValueOperation>>();
         timeStamp = System.currentTimeMillis();
+    }
+
+    public void reset(int tupleSize, int constraintListSize) {
+        clear();
+        this.cacheLimit = calculateCacheSize(tupleSize, constraintListSize);
     }
 
     private void addToCache(AttributeName name, ValueOperation valueOperation) {
@@ -100,7 +110,11 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         return cache.get(name);
     }
 
-    public void clear() {
+    private int calculateCacheSize(int tupleSize, int constraintSize) {
+        return tupleSize / (constraintSize * VAR_PRESET * LOAD_FACTOR);
+    }
+
+    private void clear() {
         for (AttributeName name : cache.keySet()) {
             Set<ValueOperation> vo = cache.get(name);
             vo.clear();
@@ -121,22 +135,29 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
 
     public <V extends ExpressionVisitor> Attribute findOneCachedAttribute(SingleConstraint<V> constraint) {
         Set<Attribute> attributes = constraint.getHeadings();
+        Map<Integer, Attribute> map = new TreeMap<Integer, Attribute>();
         for (Attribute attribute : attributes) {
             AttributeName attributeName = attribute.getAttributeName();
             if (attributeName instanceof VariableName && getCachedValues(attributeName) != null) {
-                return attribute;
+                map.put(getCachedValues(attributeName).size(), attribute);
             }
         }
-        return null;
+        if (map.size() == 0) {
+            return null;
+        } else {
+            return map.entrySet().iterator().next().getValue();
+        }
     }
 
     public <V extends ExpressionVisitor> void addResultToCache(SingleConstraint<V> constraint,
                                                                Relation result, long time) {
-        Set<Attribute> attributes = constraint.getHeadings();
-        Set<Attribute> resultAttributes = result.getHeading();
-        Set<Attribute> set = findMatchingAttributes(attributes, resultAttributes);
-        for (Attribute attribute : set) {
-            updateCache(result, time, attribute);
+        if (result.getTuples().size() < cacheLimit) {
+            Set<Attribute> attributes = constraint.getHeadings();
+            Set<Attribute> resultAttributes = result.getHeading();
+            Set<Attribute> set = findMatchingAttributes(attributes, resultAttributes);
+            for (Attribute attribute : set) {
+                updateCache(result, time, attribute);
+            }
         }
     }
 
