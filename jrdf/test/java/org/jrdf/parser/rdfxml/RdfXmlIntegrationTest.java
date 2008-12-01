@@ -63,9 +63,9 @@ import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
-import static org.jrdf.parser.ParserTestUtil.checkNegativeRdfTestParseException;
-import static org.jrdf.parser.ParserTestUtil.checkPositiveNtNtTest;
-import static org.jrdf.parser.ParserTestUtil.checkPositiveNtRdfTest;
+import static org.jrdf.parser.ntriples.ParserTestUtil.checkNegativeRdfTestParseException;
+import static org.jrdf.parser.ntriples.ParserTestUtil.checkPositiveNtNtTest;
+import static org.jrdf.parser.ntriples.ParserTestUtil.checkPositiveNtRdfTest;
 
 import java.net.URL;
 import java.util.HashMap;

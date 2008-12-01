@@ -67,8 +67,8 @@ import org.jrdf.graph.Graph;
 import org.jrdf.parser.line.GraphLineParser;
 import org.jrdf.parser.line.LineHandlerFactory;
 import org.jrdf.parser.line.LineHandler;
-import org.jrdf.parser.n3.N3ParserFactoryImpl;
-import org.jrdf.parser.ntriples.NTriplesParserFactoryImpl;
+import org.jrdf.parser.n3.N3ParserFactory;
+import org.jrdf.parser.ntriples.NTriplesParserFactory;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 
 import java.io.ByteArrayInputStream;
@@ -82,8 +82,8 @@ import java.io.InputStream;
  * JRDF Factory can be given to make it persistent.
  */
 public final class RdfReader {
-    private LineHandlerFactory ntriplesFactory = new NTriplesParserFactoryImpl();
-    private LineHandlerFactory n3Factory = new N3ParserFactoryImpl();
+    private LineHandlerFactory ntriplesFactory = new NTriplesParserFactory();
+    private LineHandlerFactory n3Factory = new N3ParserFactory();
     private JRDFFactory factory = MemoryJRDFFactory.getFactory();
     private MapFactory mapFactory = new MemMapFactory();
 

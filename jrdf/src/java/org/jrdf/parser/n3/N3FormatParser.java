@@ -57,34 +57,47 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.n3;
 
-import org.jrdf.collection.MapFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.line.LineHandler;
-import org.jrdf.parser.line.LineHandlerFactory;
-import org.jrdf.parser.line.TriplesParserImpl;
-import org.jrdf.parser.ntriples.parser.NodeMaps;
-import org.jrdf.parser.ntriples.parser.NodeMapsImpl;
-import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
-import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
-import org.jrdf.parser.ntriples.parser.RegexTripleParser;
-import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
-import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.parser.ntriples.parser.TripleParserImpl;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleImpl;
+import org.jrdf.parser.line.FormatParser;
+import org.jrdf.parser.line.TriplesParser;
+import org.jrdf.parser.ntriples.parser.CommentsParser;
+import org.jrdf.parser.ntriples.parser.CommentsParserImpl;
+import org.jrdf.parser.n3.parser.PrefixParser;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-public class NTriplesParserFactoryImpl implements LineHandlerFactory {
-    public LineHandler createParser(final Graph newGraph, final MapFactory newMapFactory) {
-        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(newGraph, newMapFactory);
-        final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        final NodeMaps nodeMaps = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),
-            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
-        final RegexTripleParser parser = new RegexTripleParserImpl(matcherFactory, newGraph.getTripleFactory(),
-            nodeMaps);
-        final TripleParser tripleParser = new TripleParserImpl(matcherFactory, parsersFactory.getBlankNodeParser(),
-            parser);
-        return new NTriplesParser(new CommentsParserImpl(matcherFactory), new TriplesParserImpl(tripleParser));
+public class N3FormatParser implements FormatParser {
+    private final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+    private final CommentsParser commentsParser = new CommentsParserImpl(matcherFactory);
+    private final TriplesParser parser;
+    private final PrefixParser prefixParser;
+    private Triple currentTriple;
+
+    public N3FormatParser(final TriplesParser newParser, final PrefixParser newPrefixParser) {
+        parser = newParser;
+        prefixParser = newPrefixParser;
+        parser.setStatementHandler(this);
+    }
+
+    public void parseLine(final CharSequence line) {
+        if (!commentsParser.handleComment(line)) {
+            if (!prefixParser.handlePrefix(line)) {
+                parser.handleTriple(line);
+            }
+        }
+    }
+
+    public Triple getTriple() {
+        return currentTriple;
+    }
+
+    public void handleStatement(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object) {
+        currentTriple = new TripleImpl(subject, predicate, object);
     }
 }

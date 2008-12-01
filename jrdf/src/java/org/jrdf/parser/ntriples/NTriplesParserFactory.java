@@ -57,44 +57,35 @@
  *
  */
 
-package org.jrdf.parser.n3;
+package org.jrdf.parser.ntriples;
 
-import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MapFactory;
-import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
-import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.NamespaceListenerImpl;
-import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
-import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.RDFEventReaderFactory;
-import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
-import static org.jrdf.parser.line.LineParserTestUtil.getTriplesWithReader;
-import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
+import org.jrdf.parser.line.LineHandler;
+import org.jrdf.parser.line.LineHandlerFactory;
+import org.jrdf.parser.line.TriplesParserImpl;
+import org.jrdf.parser.ntriples.parser.NodeMaps;
+import org.jrdf.parser.ntriples.parser.NodeMapsImpl;
+import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
+import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
+import org.jrdf.parser.ntriples.parser.RegexTripleParser;
+import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
+import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.ntriples.parser.TripleParserImpl;
+import org.jrdf.parser.ntriples.parser.CommentsParserImpl;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-import java.io.InputStream;
-import static java.net.URI.create;
-import java.util.Set;
-
-public class N3EventReaderIntegrationTest extends TestCase {
-    private static final String TEST_DATA = "org/jrdf/parser/n3/test.n3";
-    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
-    private static final MapFactory CREATOR = new MemMapFactory();
-    private static final NamespaceListener LISTENER = new NamespaceListenerImpl(CREATOR);
-    private static final RDFEventReaderFactory N3_RDF_INPUT_FACTORY = new N3EventReaderFactory(CREATOR, LISTENER);
-
-    public void testParseFile() throws Exception {
-        final InputStream input = getSampleData(getClass(), TEST_DATA);
-        final RDFEventReader eventReader = N3_RDF_INPUT_FACTORY.createRDFEventReader(input, create("foo"), NEW_GRAPH);
-        try {
-            final Set<Triple> expectedTriples = standardTestWithN3();
-            final Set<Triple> actualResults = getTriplesWithReader(eventReader);
-            checkGraph(expectedTriples, actualResults);
-        } finally {
-            eventReader.close();
-        }
+public class NTriplesParserFactory implements LineHandlerFactory {
+    public LineHandler createParser(final Graph newGraph, final MapFactory newMapFactory) {
+        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(newGraph, newMapFactory);
+        final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+        final NodeMaps nodeMaps = new NodeMapsImpl(parsersFactory.getUriReferenceParser(),
+            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
+        final RegexTripleParser parser = new RegexTripleParserImpl(matcherFactory, newGraph.getTripleFactory(),
+            nodeMaps);
+        final TripleParser tripleParser = new TripleParserImpl(matcherFactory, parsersFactory.getBlankNodeParser(),
+            parser);
+        return new NTriplesParser(new CommentsParserImpl(matcherFactory), new TriplesParserImpl(tripleParser));
     }
 }

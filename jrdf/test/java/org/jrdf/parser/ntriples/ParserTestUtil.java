@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.parser;
+package org.jrdf.parser.ntriples;
 
 import static junit.framework.Assert.assertEquals;
 import org.jrdf.TestJRDFFactory;
@@ -76,7 +76,11 @@ import org.jrdf.graph.datatype.LexicalComparator;
 import org.jrdf.graph.datatype.LexicalComparatorImpl;
 import org.jrdf.graph.datatype.SemanticLiteralComparator;
 import org.jrdf.graph.datatype.SemanticLiteralComparatorImpl;
-import org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl;
+import org.jrdf.parser.ParseException;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.RDFEventReader;
+import org.jrdf.parser.RDFEventReaderFactory;
+import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.ClosableIterable;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
@@ -94,7 +98,7 @@ public class ParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
-    private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesRDFInputFactoryImpl(CREATOR);
+    private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesEventReaderFactory(CREATOR);
     public static final LexicalComparator LEX_COMPARATOR = new LexicalComparatorImpl();
     public static final SemanticLiteralComparator SEM_COMPARATOR = new SemanticLiteralComparatorImpl(LEX_COMPARATOR);
 

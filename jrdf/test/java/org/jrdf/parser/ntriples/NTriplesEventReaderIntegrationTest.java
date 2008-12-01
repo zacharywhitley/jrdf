@@ -65,12 +65,12 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import static org.jrdf.parser.ParserTestUtil.checkGraph;
+import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFEventReaderFactory;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getTriplesWithReader;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
+import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
+import static org.jrdf.parser.line.LineParserTestUtil.getTriplesWithReader;
+import static org.jrdf.parser.line.LineParserTestUtil.standardTest;
 
 import java.io.InputStream;
 import static java.net.URI.create;
@@ -81,7 +81,7 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
-    private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesRDFInputFactoryImpl(CREATOR);
+    private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesEventReaderFactory(CREATOR);
 
     public void testParseFile() throws Exception {
         final InputStream input = getSampleData(getClass(), TEST_DATA);

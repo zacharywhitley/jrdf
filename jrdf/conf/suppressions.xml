@@ -11,9 +11,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphResource"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
@@ -33,7 +31,10 @@
     <suppress checks="ClassDataAbstractionCoupling" files="FilterAnalyserImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ExpressionSimplifierImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="OptimizingQueryEngineImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="N3RDFInputFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="NTriplesEventReaderFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="NTriplesParserFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="N3EventReaderFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="N3ParserFactory"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>

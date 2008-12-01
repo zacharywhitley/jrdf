@@ -57,113 +57,42 @@
  *
  */
 
-package org.jrdf.parser.n3;
+package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
-import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.line.FormatParser;
 import org.jrdf.parser.line.TriplesParser;
-import org.jrdf.parser.ntriples.CommentsParser;
-import org.jrdf.parser.ntriples.CommentsParserImpl;
+import org.jrdf.parser.ntriples.parser.CommentsParser;
+import org.jrdf.parser.ntriples.parser.CommentsParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.Reader;
-import java.net.URI;
-import java.util.NoSuchElementException;
-
-public class N3EventReader implements RDFEventReader, StatementHandler {
+public class NTriplesFormatParser implements FormatParser {
     private final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
     private final CommentsParser commentsParser = new CommentsParserImpl(matcherFactory);
-    private final LineNumberReader bufferedReader;
-    private final URI baseURI;
     private final TriplesParser parser;
-    private final NamespaceListener namespaceListener;
-    private final PrefixParser prefixParser;
     private Triple currentTriple;
-    private Triple nextTriple;
 
-    public N3EventReader(final InputStream in, final URI newBaseURI, final TriplesParser newParser,
-        final NamespaceListener newNamespaceListener) {
-        this(new InputStreamReader(in), newBaseURI, newParser, newNamespaceListener);
-    }
-
-    public N3EventReader(final Reader reader, final URI newBaseURI, final TriplesParser newParser,
-        final NamespaceListener newNamespaceListener) {
-        bufferedReader = new LineNumberReader(reader);
-        baseURI = newBaseURI;
+    public NTriplesFormatParser(final TriplesParser newParser) {
         parser = newParser;
         parser.setStatementHandler(this);
-        namespaceListener = newNamespaceListener;
-        prefixParser = new PrefixParserImpl(matcherFactory, namespaceListener);
-        parseNext();
     }
 
-    public boolean hasNext() {
-        return nextTriple != null;
-    }
-
-    public Triple next() {
-        final Triple currentTriple = nextTriple;
-        parseNext();
-        if (currentTriple != null) {
-            return currentTriple;
-        } else {
-            throw new NoSuchElementException();
+    public void parseLine(final CharSequence line) {
+        if (!commentsParser.handleComment(line)) {
+            parser.handleTriple(line);
         }
     }
 
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove triples, this is read only.");
-    }
-
-    private void parseNext() {
-        String line = getLine();
-        currentTriple = null;
-        while (line != null && currentTriple == null) {
-            parseLine(line);
-            if (currentTriple == null) {
-                line = getLine();
-            }
-        }
-        nextTriple = currentTriple;
-    }
-
-    public boolean close() {
-        try {
-            bufferedReader.close();
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
-
-    private String getLine() {
-        try {
-            return bufferedReader.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public Triple getTriple() {
+        return currentTriple;
     }
 
     public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         currentTriple = new TripleImpl(subject, predicate, object);
-    }
-
-    private void parseLine(CharSequence line) {
-        if (!commentsParser.handleComment(line)) {
-            if (!prefixParser.handlePrefix(line)) {
-                parser.handleTriple(line);
-            }
-        }
     }
 }

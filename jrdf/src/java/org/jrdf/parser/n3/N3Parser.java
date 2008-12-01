@@ -61,7 +61,8 @@ package org.jrdf.parser.n3;
 
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.ntriples.CommentsParser;
+import org.jrdf.parser.n3.parser.PrefixParser;
+import org.jrdf.parser.ntriples.parser.CommentsParser;
 import org.jrdf.parser.line.LineHandler;
 import org.jrdf.parser.line.TriplesParser;
 

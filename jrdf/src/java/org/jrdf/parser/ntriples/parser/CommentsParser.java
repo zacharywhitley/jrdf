@@ -1,8 +1,5 @@
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.ntriples.parser;
 
-/**
- * Class description goes here.
- */
 public interface CommentsParser {
     boolean handleComment(CharSequence line);
 }

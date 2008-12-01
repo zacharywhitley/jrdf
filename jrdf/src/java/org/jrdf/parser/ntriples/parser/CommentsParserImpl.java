@@ -1,4 +1,4 @@
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.util.boundary.RegexMatcherFactory;
 

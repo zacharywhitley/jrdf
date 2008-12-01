@@ -57,28 +57,27 @@
  *
  */
 
-package org.jrdf.parser.n3;
+package org.jrdf.parser.ntriples;
 
 import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFEventReaderFactory;
-import org.jrdf.parser.line.TriplesParser;
+import org.jrdf.parser.RDFEventReaderImpl;
 import org.jrdf.parser.line.TriplesParserImpl;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps;
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactory;
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactoryImpl;
-import org.jrdf.parser.n3.parser.NamespaceAwareTripleParser;
-import org.jrdf.parser.n3.parser.NamespaceAwareURIReferenceParser;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.LiteralParser;
 import org.jrdf.parser.ntriples.parser.NodeMaps;
+import org.jrdf.parser.ntriples.parser.NodeMapsImpl;
+import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
+import org.jrdf.parser.ntriples.parser.NodeParsersFactoryImpl;
 import org.jrdf.parser.ntriples.parser.RegexTripleParser;
 import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.ntriples.parser.TripleParserImpl;
+import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
@@ -86,38 +85,38 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 
-public class N3RDFInputFactoryImpl implements RDFEventReaderFactory {
+public class NTriplesEventReaderFactory implements RDFEventReaderFactory {
     private static final RegexMatcherFactory REGEX_MATCHER_FACTORY = new RegexMatcherFactoryImpl();
-    private final NamespaceListener namespaceListener;
     private final MapFactory mapFactory;
+    private BlankNodeParser blankNodeParser;
+    private RegexTripleParser regexTripleFactory;
 
-    public N3RDFInputFactoryImpl(final MapFactory newMapFactory, final NamespaceListener newNamespaceListener) {
+    public NTriplesEventReaderFactory(final MapFactory newMapFactory) {
         mapFactory = newMapFactory;
-        namespaceListener = newNamespaceListener;
     }
 
     public RDFEventReader createRDFEventReader(final InputStream stream, final URI baseURI, final Graph graph) {
-        final TriplesParserImpl triplesParser = new TriplesParserImpl(init(graph));
-        return new N3EventReader(stream, baseURI, triplesParser, namespaceListener);
+        init(graph);
+        final TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, blankNodeParser,
+            regexTripleFactory);
+        return new RDFEventReaderImpl(stream, baseURI, new NTriplesFormatParser(new TriplesParserImpl(tripleParser)));
     }
 
     public RDFEventReader createRDFEventReader(final Reader reader, final URI baseURI, final Graph graph) {
-        final TriplesParser triplesParser = new TriplesParserImpl(init(graph));
-        return new N3EventReader(reader, baseURI, triplesParser, namespaceListener);
+        init(graph);
+        final TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, blankNodeParser,
+            regexTripleFactory);
+        return new RDFEventReaderImpl(reader, baseURI, new NTriplesFormatParser(new TriplesParserImpl(tripleParser)));
     }
 
-    private TripleParser init(final Graph graph) {
-        final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(graph,
-            mapFactory, REGEX_MATCHER_FACTORY, namespaceListener);
-        final NamespaceAwareURIReferenceParser uriReferenceParser = parsersFactory.getUriReferenceParser();
+    private void init(final Graph graph) {
+        final NodeParsersFactory parsersFactory = new NodeParsersFactoryImpl(graph, mapFactory);
+        final URIReferenceParser uriReferenceParser = parsersFactory.getUriReferenceParser();
         final ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(mapFactory,
             graph.getElementFactory());
-        final BlankNodeParser blankNodeParser = parsersFactory.getBlankNodeParserWithFactory(blankNodeFactory);
+        blankNodeParser = parsersFactory.getBlankNodeParserWithFactory(blankNodeFactory);
         final LiteralParser literalParser = parsersFactory.getLiteralParser();
-        final NodeMaps nodeMaps = new NamespaceAwareNodeMaps(uriReferenceParser, blankNodeParser, literalParser);
-        final RegexTripleParser regexTripleFactory = new RegexTripleParserImpl(REGEX_MATCHER_FACTORY,
-            graph.getTripleFactory(), nodeMaps);
-        return new NamespaceAwareTripleParser(REGEX_MATCHER_FACTORY, blankNodeParser, graph.getTripleFactory(),
-            regexTripleFactory);
+        final NodeMaps nodeMaps = new NodeMapsImpl(uriReferenceParser, blankNodeParser, literalParser);
+        regexTripleFactory = new RegexTripleParserImpl(REGEX_MATCHER_FACTORY, graph.getTripleFactory(), nodeMaps);
     }
 }

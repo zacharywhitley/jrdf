@@ -68,7 +68,7 @@ import org.jrdf.parser.line.LineHandler;
 import org.jrdf.parser.line.LineHandlerFactory;
 import org.jrdf.parser.line.LineParser;
 import org.jrdf.parser.line.LineParserImpl;
-import org.jrdf.parser.n3.N3ParserFactoryImpl;
+import org.jrdf.parser.n3.N3ParserFactory;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.urql.UrqlConnection;
@@ -107,7 +107,7 @@ public class NTriplesQueryModel implements QueryModel {
     // TODO N3 Changes - detect RDF type based on file extension and mime type.
     private void parse(Graph graph, URL url) throws Exception {
         graph.clear();
-        LineHandlerFactory parserFactory = new N3ParserFactoryImpl();
+        LineHandlerFactory parserFactory = new N3ParserFactory();
         LineHandler nTriplesParser = parserFactory.createParser(graph, mapFactory);
         final LineParser parser = new LineParserImpl(nTriplesParser);
         parser.setStatementHandler(new GraphStatementHandler(graph));

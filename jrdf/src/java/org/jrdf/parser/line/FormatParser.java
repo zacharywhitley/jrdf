@@ -57,41 +57,13 @@
  *
  */
 
-package org.jrdf.parser.n3;
+package org.jrdf.parser.line;
 
-import org.jrdf.collection.MapFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.line.LineHandler;
-import org.jrdf.parser.line.LineHandlerFactory;
-import org.jrdf.parser.line.TriplesParserImpl;
-import org.jrdf.parser.mem.MemNamespaceListener;
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps;
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactory;
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactoryImpl;
-import org.jrdf.parser.n3.parser.NamespaceAwareTripleParser;
-import org.jrdf.parser.ntriples.CommentsParserImpl;
-import org.jrdf.parser.ntriples.parser.NodeMaps;
-import org.jrdf.parser.ntriples.parser.RegexTripleParser;
-import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
-import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.parser.StatementHandler;
+import org.jrdf.graph.Triple;
 
-public class N3ParserFactoryImpl implements LineHandlerFactory {
-    public LineHandler createParser(final Graph newGraph, final MapFactory mapFactory) {
-        final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        final NamespaceListener listener = new MemNamespaceListener();
-        final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph,
-            mapFactory, matcherFactory, listener);
-        final NodeMaps nodeMaps = new NamespaceAwareNodeMaps(parsersFactory.getUriReferenceParser(),
-            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
-        final RegexTripleParser parser = new RegexTripleParserImpl(matcherFactory, newGraph.getTripleFactory(),
-            nodeMaps);
-        final TripleParser tripleParser = new NamespaceAwareTripleParser(matcherFactory,
-            parsersFactory.getBlankNodeParser(), newGraph.getTripleFactory(), parser);
-        return new N3Parser(new CommentsParserImpl(matcherFactory),
-            new PrefixParserImpl(matcherFactory, listener),
-            new TriplesParserImpl(tripleParser));
-    }
+public interface FormatParser extends StatementHandler {
+    void parseLine(CharSequence line);
+
+    Triple getTriple();
 }
