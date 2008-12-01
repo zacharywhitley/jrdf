@@ -84,6 +84,7 @@ import org.jrdf.urql.builder.QueryBuilder;
 import org.jrdf.urql.builder.TripleBuilder;
 import org.jrdf.urql.parser.ParserFactory;
 import org.jrdf.urql.parser.SparqlParser;
+import org.jrdf.collection.MapFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -231,5 +232,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public GraphRelationFactory getNewGraphRelationFactory() {
         return (GraphRelationFactory) BEAN_FACTORY.getBean("graphRelationFactory");
+    }
+
+    public MapFactory getMapFactory() {
+        return (MapFactory) BEAN_FACTORY.getBean("mapFactory");
     }
 }

@@ -63,6 +63,7 @@ import static junit.framework.Assert.assertEquals;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
+import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -71,13 +72,11 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
-import static org.jrdf.graph.AbstractBlankNode.*;
 import org.jrdf.graph.datatype.LexicalComparator;
 import org.jrdf.graph.datatype.LexicalComparatorImpl;
 import org.jrdf.graph.datatype.SemanticLiteralComparator;
 import org.jrdf.graph.datatype.SemanticLiteralComparatorImpl;
-import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
-import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
+import org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.ClosableIterable;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
@@ -85,7 +84,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.test.AssertThrows;
 
 import java.io.IOException;
-import java.net.URI;
+import static java.net.URI.create;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -95,27 +94,26 @@ public class ParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
-    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(CREATOR,
-        NEW_GRAPH.getElementFactory());
+    private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesRDFInputFactoryImpl(CREATOR);
     public static final LexicalComparator LEX_COMPARATOR = new LexicalComparatorImpl();
     public static final SemanticLiteralComparator SEM_COMPARATOR = new SemanticLiteralComparatorImpl(LEX_COMPARATOR);
 
     private ParserTestUtil() {
     }
 
-    public static void checkPositiveNtNtTest(URL expectedFile, URL actualFile, String baseURI, Graph actualGraph,
-        ParserBlankNodeFactory blankNodeFactory) throws Exception {
-        checkNotNull(expectedFile, actualFile, baseURI, actualGraph, blankNodeFactory);
-        Set<Triple> resultTriples = getNTripleResult(actualFile, baseURI, newInstance());
-        Set<Triple> expectedTriples = getNTripleResult(expectedFile, baseURI, newInstance());
+    public static void checkPositiveNtNtTest(URL expectedFile, URL actualFile, String baseURI, Graph actualGraph)
+        throws Exception {
+        checkNotNull(expectedFile, actualFile, baseURI, actualGraph);
+        Set<Triple> resultTriples = getNTripleResult(actualFile, baseURI);
+        Set<Triple> expectedTriples = getNTripleResult(expectedFile, baseURI);
         checkResults(expectedFile, actualFile, resultTriples, expectedTriples);
     }
 
-    public static void checkPositiveNtRdfTest(URL expectedFile, URL actualFile, String baseURI, Graph actualGraph,
-        ParserBlankNodeFactory blankNodeFactory) throws Exception {
-        checkNotNull(expectedFile, actualFile, baseURI, actualGraph, blankNodeFactory);
-        Set<Triple> resultTriples = getRdfXmlResult(actualFile, baseURI, actualGraph, blankNodeFactory);
-        Set<Triple> expectedTriples = getNTripleResult(expectedFile, baseURI, newInstance());
+    public static void checkPositiveNtRdfTest(URL expectedFile, URL actualFile, String baseURI, Graph actualGraph)
+        throws Exception {
+        checkNotNull(expectedFile, actualFile, baseURI, actualGraph);
+        Set<Triple> resultTriples = getRdfXmlResult(actualFile, baseURI, actualGraph, CREATOR);
+        Set<Triple> expectedTriples = getNTripleResult(expectedFile, baseURI);
         checkResults(expectedFile, actualFile, resultTriples, expectedTriples);
     }
 
@@ -129,14 +127,14 @@ public class ParserTestUtil {
     }
 
     private static Set<Triple> getRdfXmlResult(URL actualFile, String baseURI, Graph actualGraph,
-        ParserBlankNodeFactory blankNodeFactory)
+        MapFactory mapFactory)
         throws GraphException, IOException, ParseException, StatementHandlerException {
-        Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, blankNodeFactory);
+        Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, mapFactory);
         rdfXmlParser.parse(actualFile.openStream(), baseURI);
         Set<Triple> resultTriples = new HashSet<Triple>();
         ClosableIterable<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
-            for (Triple o : results) {
+            for (final Triple o : results) {
                 resultTriples.add(o);
             }
         } finally {
@@ -145,21 +143,20 @@ public class ParserTestUtil {
         return resultTriples;
     }
 
-    private static Set<Triple> getNTripleResult(URL expectedFile, String baseURI, RDFInputFactory factory)
-        throws IOException {
-        RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create(baseURI),
-            NEW_GRAPH, BLANK_NODE_FACTORY);
+    private static Set<Triple> getNTripleResult(URL expectedFile, String baseURI) throws IOException {
+        RDFEventReader eventReader = NTRIPLES_RDF_INPUT_FACTORY.createRDFEventReader(expectedFile.openStream(),
+            create(baseURI), NEW_GRAPH);
         Set<Triple> expectedTriples = new HashSet<Triple>();
         while (eventReader.hasNext()) {
-            Triple o = eventReader.next();
+            final Triple o = eventReader.next();
             expectedTriples.add(o);
         }
         return expectedTriples;
     }
 
     public static void checkNegativeRdfTestParseException(final URL errorFile, Graph actualGraph,
-        ParserBlankNodeFactory blankNodeFactory) throws Exception {
-        final Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, blankNodeFactory);
+        MapFactory mapFactory) throws Exception {
+        final Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, mapFactory);
         AssertThrows.assertThrows(ParseException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 rdfXmlParser.parse(errorFile.openStream(), "http://example.org/");

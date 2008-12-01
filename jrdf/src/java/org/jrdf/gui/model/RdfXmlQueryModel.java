@@ -57,13 +57,52 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.gui.model;
 
-import org.jrdf.parser.StatementHandlerConfiguration;
-import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.collection.MapFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.GraphFactory;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.urql.UrqlConnection;
+import static org.jrdf.util.EscapeURL.toEscapedString;
 
-public interface LineHandler extends StatementHandlerConfiguration {
-    void handleLine(CharSequence line) throws StatementHandlerException;
+import java.net.URL;
 
-    void clear();
+public class RdfXmlQueryModel implements QueryModel {
+    private final GraphFactory graphFactory;
+    private final UrqlConnection connection;
+    private final MapFactory mapFactory;
+    private Graph graph;
+
+    public RdfXmlQueryModel(final GraphFactory newGraphFactory, final UrqlConnection newConnection,
+        final MapFactory newMapFactory) {
+        graphFactory = newGraphFactory;
+        connection = newConnection;
+        mapFactory = newMapFactory;
+    }
+
+    public Graph loadModel(URL url) {
+        try {
+            graph = graphFactory.getGraph();
+            parse(graph, url);
+            return graph;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
+        return connection.executeQuery(graph, query);
+    }
+
+    private void parse(Graph graph, URL url) throws Exception {
+        graph.clear();
+        final Parser graphRdfXmlParser = new GraphRdfXmlParser(graph, mapFactory);
+        graphRdfXmlParser.parse(url.openStream(), toEscapedString(url));
+    }
 }

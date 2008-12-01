@@ -60,7 +60,7 @@
 package org.jrdf.gui.command;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.gui.model.JRDFModel;
+import org.jrdf.gui.model.QueryModel;
 import org.jrdf.gui.view.QueryPanelView;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.Answer;
@@ -75,14 +75,14 @@ import org.springframework.richclient.command.support.ApplicationWindowAwareComm
  * @version $Revision:$
  */
 public class RunQueryCommand extends ApplicationWindowAwareCommand {
-    private JRDFModel jrdfModel;
+    private QueryModel jrdfModel;
     private QueryPanelView queryPanelView;
 
     public RunQueryCommand() {
         super("runQueryCommand");
     }
 
-    public void setJRDFModel(JRDFModel jrdfModel) {
+    public void setJRDFModel(QueryModel jrdfModel) {
         this.jrdfModel = jrdfModel;
     }
 

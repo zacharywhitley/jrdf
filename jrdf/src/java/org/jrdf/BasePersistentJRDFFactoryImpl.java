@@ -6,7 +6,6 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
-import static org.jrdf.parser.Reader.parseNTriples;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
@@ -18,6 +17,7 @@ import org.jrdf.util.Models;
 import org.jrdf.util.ModelsImpl;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import static org.jrdf.writer.Writer.writeNTriples;
+import org.jrdf.parser.RdfReader;
 
 import java.io.File;
 import java.util.HashSet;
@@ -27,6 +27,7 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
+    private static final RdfReader RDF_READER = new RdfReader();
     private final Set<NodePoolFactory> openNodePoolFactories = new HashSet<NodePoolFactory>();
     private final BdbEnvironmentHandler bdbHandler;
     private CollectionFactory collectionFactory;
@@ -74,7 +75,7 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     }
 
     public void refresh() {
-        modelsGraph = parseNTriples(file);
+        modelsGraph = RDF_READER.parseNTriples(file);
         models = new ModelsImpl(modelsGraph);
     }
 

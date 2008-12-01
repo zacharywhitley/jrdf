@@ -65,22 +65,21 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.parser.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.RDFEventReaderFactory;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.addStandardValuesToGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
-import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
+import org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl;
 import org.jrdf.writer.RdfWriter;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.io.IOException;
-import java.net.URI;
+import static java.net.URI.create;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -90,8 +89,7 @@ public class NTriplesWriterIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
-    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(CREATOR,
-        NEW_GRAPH.getElementFactory());
+    private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesRDFInputFactoryImpl(CREATOR);
 
     public void testWriteTestGraph() throws Exception {
         final Set<String> strings = getTriplesAsStrings();
@@ -127,18 +125,16 @@ public class NTriplesWriterIntegrationTest extends TestCase {
 
     private Set<Triple> expectedResults() throws IOException {
         NEW_GRAPH.clear();
-        BLANK_NODE_FACTORY.clear();
         final InputStream in = getSampleData(this.getClass(), TEST_DATA);
-        return parseNTriplesFile(in, NEW_GRAPH, BLANK_NODE_FACTORY);
+        return parseNTriplesFile(in, NEW_GRAPH, CREATOR);
     }
 
     private Set<Triple> getActualResults() throws Exception {
         final Writer writer = printOutGraph();
         NEW_GRAPH.clear();
-        BLANK_NODE_FACTORY.clear();
         final StringReader reader = new StringReader(writer.toString());
-        final RDFEventReader eventReader = newInstance().createRDFEventReader(reader, URI.create("foo"), NEW_GRAPH,
-            BLANK_NODE_FACTORY);
+        final RDFEventReader eventReader = NTRIPLES_RDF_INPUT_FACTORY.createRDFEventReader(reader, create("foo"),
+            NEW_GRAPH);
         final Set<Triple> actualResults = new HashSet<Triple>();
         while (eventReader.hasNext()) {
             actualResults.add(eventReader.next());

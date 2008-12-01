@@ -66,16 +66,12 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.MoleculeGraph;
-import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParseException;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
-import org.jrdf.parser.n3.N3Parser;
-import org.jrdf.parser.n3.N3ParserFactory;
+import org.jrdf.parser.line.GraphLineParser;
+import org.jrdf.parser.line.LineHandlerFactory;
 import org.jrdf.parser.n3.N3ParserFactoryImpl;
-import org.jrdf.parser.ntriples.LineParser;
-import org.jrdf.parser.ntriples.LineParserImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
@@ -101,7 +97,7 @@ import java.util.Set;
 public class SPARQLPerformanceTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private PersistentGlobalJRDFFactory factory;
-    private static final N3ParserFactory PARSER_FACTORY = new N3ParserFactoryImpl();
+    private static final LineHandlerFactory PARSER_FACTORY = new N3ParserFactoryImpl();
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
     private static final Set<String> FILE_NAMES = new LinkedHashSet<String>() {
         {
@@ -179,14 +175,11 @@ public class SPARQLPerformanceTest extends TestCase {
         }
     }
 
-    private void parseGraph(String fileName) throws GraphException, IOException, StatementHandlerException,
+    private void parseGraph(final String fileName) throws GraphException, IOException, StatementHandlerException,
         ParseException {
         assertEquals(0, graph.getNumberOfTriples());
-        InputStream in = getSampleData(this.getClass(), fileName);
-        ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(MAP_FACTORY, graph.getElementFactory());
-        N3Parser n3Parser = PARSER_FACTORY.createParser(graph, factory);
-        LineParser parser = new LineParserImpl(n3Parser);
-        parser.setStatementHandler(new GraphStatementHandler(graph));
+        final InputStream in = getSampleData(this.getClass(), fileName);
+        final Parser parser = new GraphLineParser(graph, PARSER_FACTORY.createParser(graph, MAP_FACTORY));
         parser.parse(in, fileName);
         assertEquals(50168, graph.getNumberOfTriples());
     }

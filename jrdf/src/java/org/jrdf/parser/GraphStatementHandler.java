@@ -74,14 +74,13 @@ import org.jrdf.graph.SubjectNode;
  * @version $Revision: 363 $
  */
 public class GraphStatementHandler implements StatementHandler {
-
     private final Graph graph;
 
-    public GraphStatementHandler(Graph graph) {
-        this.graph = graph;
+    public GraphStatementHandler(final Graph newGraph) {
+        graph = newGraph;
     }
 
-    public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+    public void handleStatement(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object) {
         try {
             graph.add(subject, predicate, object);
         } catch (Exception e) {

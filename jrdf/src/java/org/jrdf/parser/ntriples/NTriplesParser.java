@@ -61,6 +61,8 @@ package org.jrdf.parser.ntriples;
 
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.line.LineHandler;
+import org.jrdf.parser.line.TriplesParser;
 
 public class NTriplesParser implements LineHandler {
     private final CommentsParser commentsParser;

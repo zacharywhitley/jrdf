@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,16 +57,60 @@
  *
  */
 
-package org.jrdf.parser;
+package org.jrdf.gui.model;
 
-import junit.framework.TestCase;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.GraphFactory;
+import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.line.LineHandler;
+import org.jrdf.parser.line.LineHandlerFactory;
+import org.jrdf.parser.line.LineParser;
+import org.jrdf.parser.line.LineParserImpl;
+import org.jrdf.parser.n3.N3ParserFactoryImpl;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.urql.UrqlConnection;
+import static org.jrdf.util.EscapeURL.toEscapedString;
 
-import java.io.File;
+import java.net.URL;
 
-public class ReaderUnitTest extends TestCase {
-    public void testNoFile() throws Exception {
-        Graph graph = Reader.parseNTriples(new File(""));
-        assertTrue(graph.getNumberOfTriples() == 0);
+public class NTriplesQueryModel implements QueryModel {
+    private final GraphFactory graphFactory;
+    private final UrqlConnection connection;
+    private final MapFactory mapFactory;
+    private Graph graph;
+
+    public NTriplesQueryModel(final GraphFactory newGraphFactory, final UrqlConnection newConnection,
+        final MapFactory newMapFactory) {
+        graphFactory = newGraphFactory;
+        connection = newConnection;
+        mapFactory = newMapFactory;
+    }
+
+    public Graph loadModel(URL url) {
+        try {
+            graph = graphFactory.getGraph();
+            parse(graph, url);
+            return graph;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
+        return connection.executeQuery(graph, query);
+    }
+
+    // TODO N3 Changes - detect RDF type based on file extension and mime type.
+    private void parse(Graph graph, URL url) throws Exception {
+        graph.clear();
+        LineHandlerFactory parserFactory = new N3ParserFactoryImpl();
+        LineHandler nTriplesParser = parserFactory.createParser(graph, mapFactory);
+        final LineParser parser = new LineParserImpl(nTriplesParser);
+        parser.setStatementHandler(new GraphStatementHandler(graph));
+        parser.parse(url.openStream(), toEscapedString(url));
     }
 }

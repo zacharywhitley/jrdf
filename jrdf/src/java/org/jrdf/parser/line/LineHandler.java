@@ -57,20 +57,13 @@
  *
  */
 
-package org.jrdf.parser;
+package org.jrdf.parser.line;
 
-import org.jrdf.graph.Graph;
+import org.jrdf.parser.StatementHandlerConfiguration;
+import org.jrdf.parser.StatementHandlerException;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.URI;
+public interface LineHandler extends StatementHandlerConfiguration {
+    void handleLine(CharSequence line) throws StatementHandlerException;
 
-public interface RDFInputFactory {
-    RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph);
-
-    RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph);
-
-    RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph, ParserBlankNodeFactory factory);
-
-    RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph, ParserBlankNodeFactory factory);
+    void clear();
 }

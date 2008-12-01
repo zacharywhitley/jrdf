@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.line;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.StatementHandler;

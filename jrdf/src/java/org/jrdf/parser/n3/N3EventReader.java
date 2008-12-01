@@ -67,9 +67,9 @@ import org.jrdf.graph.TripleImpl;
 import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.line.TriplesParser;
 import org.jrdf.parser.ntriples.CommentsParser;
 import org.jrdf.parser.ntriples.CommentsParserImpl;
-import org.jrdf.parser.ntriples.TriplesParser;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 

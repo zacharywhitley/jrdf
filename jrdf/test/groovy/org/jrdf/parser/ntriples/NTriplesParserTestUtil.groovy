@@ -11,9 +11,11 @@ import org.jrdf.parser.ParserBlankNodeFactory
 import org.jrdf.parser.RDFEventReader
 import org.jrdf.parser.n3.N3ParserFactoryImpl
 import org.jrdf.util.test.RdfBuilder
+import org.jrdf.collection.MapFactory
+import org.jrdf.parser.line.LineHandler
+import org.jrdf.parser.line.LineParserImpl
 
 class NTriplesParserTestUtil {
-
 
     private NTriplesParserTestUtil() {
     }
@@ -31,20 +33,19 @@ class NTriplesParserTestUtil {
         return actualResults;
     }
 
-    static Set<Triple> parseNTriplesFile(InputStream input, Graph graph, ParserBlankNodeFactory factory) {
+    static Set<Triple> parseNTriplesFile(InputStream input, Graph graph, MapFactory mapFactory) {
         def parserFactory = new NTriplesParserFactoryImpl()
-        def ntriplesParser = parserFactory.createParser(graph, factory)
-        return parseFile(ntriplesParser, input, graph, factory);
+        def ntriplesParser = parserFactory.createParser(graph, mapFactory)
+        return parseFile(ntriplesParser, input, graph);
     }
 
-    static Set<Triple> parseN3File(InputStream input, Graph graph, ParserBlankNodeFactory factory) {
+    static Set<Triple> parseN3File(InputStream input, Graph graph, MapFactory mapFactory) {
         def parserFactory = new N3ParserFactoryImpl()
-        def ntriplesParser = parserFactory.createParser(graph, factory)
-        return parseFile(ntriplesParser, input, graph, factory);
+        def ntriplesParser = parserFactory.createParser(graph, mapFactory)
+        return parseFile(ntriplesParser, input, graph);
     }
 
-    static Set<Triple> parseFile(LineHandler lineHandler, InputStream input, Graph graph,
-        ParserBlankNodeFactory factory) {
+    static Set<Triple> parseFile(LineHandler lineHandler, InputStream input, Graph graph) {
         def parser = new LineParserImpl(lineHandler)
         parser.setStatementHandler(new GraphStatementHandler(graph))
         parser.parse(input, "foo")

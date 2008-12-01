@@ -57,10 +57,19 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser;
 
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.StatementHandlerConfiguration;
+import org.jrdf.graph.Graph;
 
-public interface LineParser extends Parser, StatementHandlerConfiguration {
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URI;
+
+/**
+ * Creates RDFEventReaders for no-IOC enabled clients.
+ */
+public interface RDFEventReaderFactory {
+    RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph);
+
+    RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph);
 }

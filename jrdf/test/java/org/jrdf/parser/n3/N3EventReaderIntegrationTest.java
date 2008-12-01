@@ -65,11 +65,11 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.NamespaceListener;
+import org.jrdf.parser.NamespaceListenerImpl;
 import static org.jrdf.parser.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
-import static org.jrdf.parser.n3.N3RDFInputFactoryImpl.newInstance;
+import org.jrdf.parser.RDFEventReaderFactory;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getTriplesWithReader;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTestWithN3;
@@ -83,13 +83,12 @@ public class N3EventReaderIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
-    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(CREATOR,
-        NEW_GRAPH.getElementFactory());
+    private static final NamespaceListener LISTENER = new NamespaceListenerImpl(CREATOR);
+    private static final RDFEventReaderFactory N3_RDF_INPUT_FACTORY = new N3RDFInputFactoryImpl(CREATOR, LISTENER);
 
     public void testParseFile() throws Exception {
         final InputStream input = getSampleData(getClass(), TEST_DATA);
-        final RDFEventReader eventReader = newInstance().createRDFEventReader(input, create("foo"), NEW_GRAPH,
-            BLANK_NODE_FACTORY);
+        final RDFEventReader eventReader = N3_RDF_INPUT_FACTORY.createRDFEventReader(input, create("foo"), NEW_GRAPH);
         try {
             final Set<Triple> expectedTriples = standardTestWithN3();
             final Set<Triple> actualResults = getTriplesWithReader(eventReader);

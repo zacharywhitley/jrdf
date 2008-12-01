@@ -19,12 +19,12 @@
 
 package org.jrdf.parser.rdfxml;
 
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.parser.ConfigurableParser;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
-import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.parser.ParserConfiguration.DT_IGNORE;
 import org.jrdf.parser.StatementHandlerException;
 
@@ -35,24 +35,18 @@ import java.io.Reader;
 // TODO (AN) Can this be made more generic by parsing in a configurable parser instead?
 
 /**
- * An RDF/XML parser that adds every triple encountered to a JRDF Graph.  Use the default parser configuration.
+ * An RDF/XML parser that adds every triple encountered to a JRDF Graph.  Uses the default parser configuration.
  *
  * @author Andrew Newman
  * @version $Revision: 544 $
  */
 public class GraphRdfXmlParser implements Parser {
+    private final MapFactory mapFactory;
     private ConfigurableParser parser;
 
-    public GraphRdfXmlParser(Graph graph) {
-        parser = new RdfXmlParser(graph.getElementFactory());
-        parser.setStatementHandler(new GraphStatementHandler(graph));
-        parser.setParseStandAloneDocuments(true);
-        parser.setVerifyData(true);
-        parser.setDatatypeHandling(DT_IGNORE);
-    }
-
-    public GraphRdfXmlParser(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
-        parser = new RdfXmlParser(graph.getElementFactory(), blankNodeFactory);
+    public GraphRdfXmlParser(final Graph graph, final MapFactory newMapFactory) {
+        mapFactory = newMapFactory;
+        parser = new RdfXmlParser(graph.getElementFactory(), mapFactory);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.setParseStandAloneDocuments(true);
         parser.setVerifyData(true);
