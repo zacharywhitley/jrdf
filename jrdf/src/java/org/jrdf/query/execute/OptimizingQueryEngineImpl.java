@@ -132,15 +132,17 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
 
     @Override
     public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
+        cacheHandler.clear();
+        System.gc();
         shortCircuit = true;
         allVariables = ask.getAllVariables();
         result = getExpression(ask.getNextExpression(), shortCircuit);
-        cacheHandler.clear();
     }
 
     @Override
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
         cacheHandler.clear();
+        System.gc();
         super.visitProjection(projection);
     }
 
@@ -155,6 +157,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             Relation tempRelation = getExpression(exp);
             if (tempRelation.getTuples().isEmpty()) {
                 result = tempRelation;
+                partialResult = null;
                 return;
             }
             partialResult.add(tempRelation);
@@ -163,6 +166,8 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         Collections.sort(partialResult, relationComparator);
         Set<Relation> partialResultSet = matchAttributes(partialResult);
         result = naturalJoin.join(partialResultSet);
+        partialResultSet = null;
+        partialResult = null;
     }
 
     private Set<Relation> matchAttributes(List<Relation> partialResults) {
@@ -220,6 +225,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             tuples.addAll(tmpRelation.getTuples());
         }
         result = RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
+        tuples = null;
     }
 
     @Override
@@ -235,6 +241,8 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         } else {
             Relation rhs = getExpression(list.get(1));
             result = union.union(lhs, rhs);
+            lhs = null;
+            rhs = null;
         }
     }
 

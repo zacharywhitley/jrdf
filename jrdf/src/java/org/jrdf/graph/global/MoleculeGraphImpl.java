@@ -86,9 +86,9 @@ import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.LongIndexToMoleculeIterator;
-import org.jrdf.util.ClosableIterable;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -225,6 +225,10 @@ public class MoleculeGraphImpl implements MoleculeGraph {
     public ClosableIterable<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
         throws GraphException {
         return graph.find(subject, predicate, object);
+    }
+
+    public ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return graph.findUnsorted(subject, predicate, object);
     }
 
     public ClosableIterable<? extends Node> findNodes(NodeType type) {

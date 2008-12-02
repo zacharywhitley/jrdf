@@ -127,6 +127,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         Relation expression = getExpression(projection.getNextExpression());
         LinkedHashSet<Attribute> attributes = projection.getAttributes();
         result = project.include(expression, attributes);
+        expression = null;
     }
 
     @Override
@@ -167,12 +168,15 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
             lhs = rhs;
         }
         result = leftOuterJoin.join(lhs, rhs);
+        lhs = null;
+        rhs = null;
     }
 
     @Override
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
-        result = getExpression(filter.getLhs());
-        result = restrict.restrict(result, filter.getRhs());
+        Relation lhsRelation = getExpression(filter.getLhs());
+        result = restrict.restrict(lhsRelation, filter.getRhs());
+        lhsRelation = null;
     }
 
     @SuppressWarnings({ "unchecked" })
