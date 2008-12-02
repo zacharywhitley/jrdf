@@ -176,6 +176,6 @@ public abstract class AbstractURIReference implements URIReference, Serializable
     }
 
     private boolean determineEqualityFromFields(URIReference uriReference) {
-        return getURI().equals(uriReference.getURI());
+        return uri.hashCode() == uriReference.hashCode() && uri.equals(uriReference.getURI());
     }
 }

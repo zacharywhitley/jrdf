@@ -69,7 +69,6 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
-import org.jrdf.graph.local.GraphImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
@@ -80,7 +79,6 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -119,14 +117,6 @@ public final class GraphRelationImpl implements GraphRelation {
         Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
         Triple searchTriple = new TripleImpl(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         return getUnsortedTuplesFromGraph(searchTriple, attributes);
-    }
-
-    public Set<Tuple> getTuples(LinkedHashMap<Attribute, ValueOperation> nameValues) {
-        Attribute[] attributes = nameValues.keySet().toArray(new Attribute[TRIPLE]);
-        Triple searchTriple = new TripleImpl((SubjectNode) nameValues.get(attributes[0]).getValue(),
-                (PredicateNode) nameValues.get(attributes[1]).getValue(),
-                (ObjectNode) nameValues.get(attributes[2]).getValue());
-        return getTuplesFromGraph(searchTriple, attributes);
     }
 
     public Set<Tuple> getTuples(Attribute attribute) {
@@ -229,16 +219,6 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     private ClosableIterator<Triple> getIterator(Triple searchTriple) {
-        try {
-            if (graph instanceof GraphImpl) {
-                return ((GraphImpl) graph).findUnsorted(searchTriple.getSubject(), searchTriple.getPredicate(),
-                        searchTriple.getObject());
-            } else {
-                return graph.find(searchTriple.getSubject(), searchTriple.getPredicate(), searchTriple.getObject()).
-                    iterator();
-            }
-        } catch (GraphException e) {
-            throw new RuntimeException(e);
-        }
+        return graph.findUnsorted(searchTriple.getSubject(), searchTriple.getPredicate(), searchTriple.getObject());
     }
 }

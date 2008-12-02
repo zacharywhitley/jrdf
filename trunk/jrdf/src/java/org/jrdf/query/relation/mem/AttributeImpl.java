@@ -119,7 +119,7 @@ public final class AttributeImpl implements Attribute {
     }
 
     private boolean determineEqualityFromFields(Attribute attribute) {
-        return attribute.getAttributeName().equals(getAttributeName()) &&
-                attribute.getType().equals(getType());
+        return hashCode() == attribute.hashCode() && attribute.getAttributeName().equals(getAttributeName()) &&
+            attribute.getType().equals(getType());
     }
 }
