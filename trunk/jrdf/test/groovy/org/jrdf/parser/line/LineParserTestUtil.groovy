@@ -82,35 +82,37 @@ class LineParserTestUtil {
 
     static def addStandardValuesToGraph(Graph newGraph) {
         def rdf = new RdfBuilder(newGraph)
-        rdf.namespace("eg", "http://example.org/")
-        rdf.namespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#")
-        rdf."eg:resource1" "eg:property": "eg:resource2"
-        rdf."_:anon" "eg:property": "eg:resource2"
-        rdf."eg:resource2" "eg:property": "_:anon"
-        (3..6).each {
-            rdf."eg:resource$it" "eg:property": "eg:resource2"
+        rdf.with {
+            namespace("eg", "http://example.org/")
+            namespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#")
+            "eg:resource1" "eg:property": "eg:resource2"
+            "_:anon" "eg:property": "eg:resource2"
+            "eg:resource2" "eg:property": "_:anon"
+            (3..6).each {
+                "eg:resource$it" "eg:property": "eg:resource2"
+            }
+            "eg:resource7" "eg:property": '"simple literal"'
+            "eg:resource8" "eg:property": '"backslash:\\"'
+            "eg:resource9" "eg:property": '"dquote:\""'
+            "eg:resource10" "eg:property": '"newline:\\n"'
+            "eg:resource11" "eg:property": '"return\\r"'
+            "eg:resource12" "eg:property": '"tab:\\t"'
+            "eg:resource13" "eg:property": "eg:resource2"
+            "eg:resource14" "eg:property": '"x"'
+            "eg:resource15" "eg:property": "_:anon"
+            "eg:resource16" "eg:property": '"\\u00E9"'
+            "eg:resource17"("eg:property": ['"\\u20AC"', '"\\uD800\\uDC00"', '"\\uD84C\\uDFB4"', '"\\uDBFF\\uDFFF"'])
+            "eg:resource21" "eg:property": '""^^rdfs:XMLLiteral'
+            "eg:resource22" "eg:property": '" "^^rdfs:XMLLiteral'
+            "eg:resource23"("eg:property": ['"x"^^rdfs:XMLLiteral', '"\""^^rdfs:XMLLiteral'])
+            "eg:resource24" "eg:property": '"<a></a>"^^rdfs:XMLLiteral'
+            "eg:resource25" "eg:property": '"a <b></b>"^^rdfs:XMLLiteral'
+            "eg:resource26"("eg:property": ['"a <b></b> c"^^rdfs:XMLLiteral', '"a\\n<b></b>\\nc"^^rdfs:XMLLiteral'])
+            "eg:resource27" "eg:property": '"chat"^^rdfs:XMLLiteral'
+            "eg:resource30" "eg:property": '"chat"@fr'
+            "eg:resource31" "eg:property": '"chat"@en'
+            "eg:resource32" "eg:property": '"abc"^^eg:datatype1'
         }
-        rdf."eg:resource7" "eg:property": '"simple literal"'
-        rdf."eg:resource8" "eg:property": '"backslash:\\"'
-        rdf."eg:resource9" "eg:property": '"dquote:\""'
-        rdf."eg:resource10" "eg:property": '"newline:\\n"'
-        rdf."eg:resource11" "eg:property": '"return\\r"'
-        rdf."eg:resource12" "eg:property": '"tab:\\t"'
-        rdf."eg:resource13" "eg:property": "eg:resource2"
-        rdf."eg:resource14" "eg:property": '"x"'
-        rdf."eg:resource15" "eg:property": "_:anon"
-        rdf."eg:resource16" "eg:property": '"\\u00E9"'
-        rdf."eg:resource17"("eg:property": ['"\\u20AC"', '"\\uD800\\uDC00"', '"\\uD84C\\uDFB4"', '"\\uDBFF\\uDFFF"'])
-        rdf."eg:resource21" "eg:property": '""^^rdfs:XMLLiteral'
-        rdf."eg:resource22" "eg:property": '" "^^rdfs:XMLLiteral'
-        rdf."eg:resource23"("eg:property": ['"x"^^rdfs:XMLLiteral', '"\""^^rdfs:XMLLiteral'])
-        rdf."eg:resource24" "eg:property": '"<a></a>"^^rdfs:XMLLiteral'
-        rdf."eg:resource25" "eg:property": '"a <b></b>"^^rdfs:XMLLiteral'
-        rdf."eg:resource26"("eg:property": ['"a <b></b> c"^^rdfs:XMLLiteral', '"a\\n<b></b>\\nc"^^rdfs:XMLLiteral'])
-        rdf."eg:resource27" "eg:property": '"chat"^^rdfs:XMLLiteral'
-        rdf."eg:resource30" "eg:property": '"chat"@fr'
-        rdf."eg:resource31" "eg:property": '"chat"@en'
-        rdf."eg:resource32" "eg:property": '"abc"^^eg:datatype1'
     }
 
     static def addN3ValuesToGraph(Graph newGraph) {
