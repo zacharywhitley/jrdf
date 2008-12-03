@@ -133,6 +133,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @Override
     public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
         cacheHandler.clear();
+        cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
         shortCircuit = true;
         allVariables = ask.getAllVariables();
@@ -142,6 +143,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @Override
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
         cacheHandler.clear();
+        cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
         super.visitProjection(projection);
     }

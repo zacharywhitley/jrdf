@@ -116,6 +116,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         for (AttributeName name : cache.keySet()) {
             Set<ValueOperation> vo = cache.get(name);
             vo.clear();
+            vo = null;
         }
         cache.clear();
     }
@@ -124,6 +125,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         Set<ValueOperation> set = cache.remove(name);
         if (set != null) {
             set.clear();
+            set = null;
         }
     }
 
