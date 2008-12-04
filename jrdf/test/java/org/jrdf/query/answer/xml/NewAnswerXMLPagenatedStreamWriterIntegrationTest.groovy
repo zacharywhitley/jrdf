@@ -137,14 +137,17 @@ class NewAnswerXMLPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
         assert 1 == allResults.size() : "Should have a results element"
         def variables = head.variable
         checkVariables(VARIABLES, variables)
+        def listOfResults = []
         def results = sparql.results.result
         results.each { result ->
-            //println "result " + result
+            def bindingResults = [:]
             result.binding.each { binding ->
-                //println "binding " + binding
+                //println "binding " + (binding.uri == "")
+                bindingResults.(binding.@name) = binding.text()
             }
+            listOfResults.add(bindingResults)
         }
-        //println("Results " + results)
+        //println("Results " + listOfResults)
     }
 
     private def checkVariables(def expectedVariablesAsString, def actualVariablesAsAttributes) {
