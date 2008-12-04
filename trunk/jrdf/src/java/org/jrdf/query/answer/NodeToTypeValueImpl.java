@@ -12,6 +12,7 @@ import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
 import static org.jrdf.query.relation.constants.NullaryNode.NULLARY_NODE;
+import org.jrdf.util.EscapeUtil;
 
 public class NodeToTypeValueImpl implements NodeToTypeValue {
     private TypeValue currentTypeValue;
@@ -30,7 +31,7 @@ public class NodeToTypeValueImpl implements NodeToTypeValue {
     }
 
     public void visitLiteral(Literal literal) {
-        currentTypeValue = new TypeValueImpl(LITERAL, literal.toString());
+        currentTypeValue = new TypeValueImpl(LITERAL, EscapeUtil.escape(literal.getLexicalForm()).toString());
     }
 
     public void visitNode(Node node) {

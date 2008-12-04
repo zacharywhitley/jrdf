@@ -119,24 +119,32 @@ class NewAnswerXMLPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
     @Override
     public void tearDown() throws Exception {
         if (xmlWriter != null) {
-            xmlWriter.close();
+            xmlWriter.close()
         }
-        graph.close();
-        HANDLER.removeDir();
+        graph.close()
+        HANDLER.removeDir()
     }
 
     public void testVariables() throws Exception {
         xmlWriter.write();
         xmlWriter.flush();
+        println("XMl: " + resultsWriter.toString())
         def slurper =  new XmlSlurper()
         def sparql = slurper.parseText(resultsWriter.toString())
         def head = sparql.head
         assert 1 == head.size() : "Should have a head element"
-        def results = sparql.results
-        assert 1 == results.size() : "Should have a results element"
+        def allResults = sparql.results
+        assert 1 == allResults.size() : "Should have a results element"
         def variables = head.variable
         checkVariables(VARIABLES, variables)
-        //println("result " + sparql.results.result.size())
+        def results = sparql.results.result
+        results.each { result ->
+            //println "result " + result
+            result.binding.each { binding ->
+                //println "binding " + binding
+            }
+        }
+        //println("Results " + results)
     }
 
     private def checkVariables(def expectedVariablesAsString, def actualVariablesAsAttributes) {
