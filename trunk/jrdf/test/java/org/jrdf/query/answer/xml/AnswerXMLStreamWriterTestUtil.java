@@ -63,6 +63,9 @@ import static com.ctc.wstx.api.WstxInputProperties.PARSING_MODE_FRAGMENT;
 import static com.ctc.wstx.api.WstxInputProperties.P_INPUT_PARSING_MODE;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Resource;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.HEAD;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.NAME;
 import static org.jrdf.query.answer.xml.AnswerXMLWriter.VARIABLE;
@@ -77,6 +80,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.net.URL;
+import static java.net.URI.create;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -113,6 +117,16 @@ public final class AnswerXMLStreamWriterTestUtil {
 
     public URL getData() {
         return getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml");
+    }
+
+    public void createTestGraph(Graph newGraph) throws Exception {
+        final GraphElementFactory elementFactory = newGraph.getElementFactory();
+        Resource b1 = elementFactory.createResource();
+        Resource b2 = elementFactory.createResource();
+        Resource b3 = elementFactory.createResource();
+        b1.addValue(create("urn:p1"), "l1");
+        b2.addValue(create("urn:p2"), "l2");
+        b3.addValue(create("urn:p3"), "l3");
     }
 
     public Set<String> getVariables(final AnswerXMLWriter xmlWriter, final Writer writer) throws Exception {
