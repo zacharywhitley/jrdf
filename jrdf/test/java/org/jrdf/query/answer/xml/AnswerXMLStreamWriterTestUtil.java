@@ -121,9 +121,9 @@ public final class AnswerXMLStreamWriterTestUtil {
 
     public void createTestGraph(Graph newGraph) throws Exception {
         final GraphElementFactory elementFactory = newGraph.getElementFactory();
-        Resource b1 = elementFactory.createResource();
-        Resource b2 = elementFactory.createResource();
-        Resource b3 = elementFactory.createResource();
+        Resource b1 = elementFactory.createResource(create("urn:s1"));
+        Resource b2 = elementFactory.createResource(create("urn:s2"));
+        Resource b3 = elementFactory.createResource(create("urn:s3"));
         b1.addValue(create("urn:p1"), "l1");
         b2.addValue(create("urn:p2"), "l2");
         b3.addValue(create("urn:p3"), "l3");

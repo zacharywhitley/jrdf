@@ -91,7 +91,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     private transient TypeValueToString valueToString = new TypeValueToStringImpl();
 
     public SelectAnswerImpl(LinkedHashSet<Attribute> newHeading, Relation newResults,
-                            long timeTaken, boolean hasProjected) {
+        long timeTaken, boolean hasProjected) {
         checkNotNull(newHeading, newResults);
         this.heading = newHeading;
         this.results = newResults;
@@ -212,7 +212,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
         }
     }
 
-    @SuppressWarnings({"unchecked" })
+    @SuppressWarnings({"unchecked"})
     private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
         valueToString = new TypeValueToStringImpl();
         RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
