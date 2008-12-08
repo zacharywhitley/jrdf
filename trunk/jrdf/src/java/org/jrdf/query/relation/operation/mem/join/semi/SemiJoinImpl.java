@@ -94,7 +94,7 @@ public final class SemiJoinImpl implements DyadicJoin {
             relation = RELATION_DUM;
         } else if (relation1 == RELATION_DEE) {
             relation = RELATION_DEE;
-        } else if (relation1 == relation2) {
+        } else if (relation1 == relation2 || relation1.equals(relation2)) {
             relation = relation1;
         }
         return relation;
