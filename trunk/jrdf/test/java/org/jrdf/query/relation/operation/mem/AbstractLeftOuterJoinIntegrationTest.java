@@ -62,6 +62,7 @@ package org.jrdf.query.relation.operation.mem;
 import junit.framework.TestCase;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
@@ -137,6 +138,13 @@ public abstract class AbstractLeftOuterJoinIntegrationTest extends TestCase {
         resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R2));
 
         checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+    }
+
+    public void testEmptyLHSOuterJoin() {
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+            POS_FOO4_PREDICATE_R2);
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO4_PREDICATE_R3));
+        checkJoin(createRelation(resultTuple), RELATION_DEE, createRelation(resultTuple));
     }
 
     public abstract DyadicJoin getJoin();
