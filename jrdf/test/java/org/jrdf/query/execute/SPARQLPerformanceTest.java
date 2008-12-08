@@ -71,8 +71,8 @@ import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.line.GraphLineParser;
 import org.jrdf.parser.line.LineHandlerFactory;
-import org.jrdf.parser.n3.N3ParserFactory;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
+import org.jrdf.parser.n3.N3ParserFactory;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
@@ -86,8 +86,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
@@ -99,25 +99,25 @@ public class SPARQLPerformanceTest extends TestCase {
     private PersistentGlobalJRDFFactory factory;
     private static final LineHandlerFactory PARSER_FACTORY = new N3ParserFactory();
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
-    private static final Set<String> FILE_NAMES = new LinkedHashSet<String>() {
+    private static final Map<String, Integer> FILE_RESULT_MAP = new LinkedHashMap<String, Integer>() {
         {
-            add("rdf-tests/sparql/q1.sparql");
-            add("rdf-tests/sparql/q2.sparql");
-            add("rdf-tests/sparql/q3a.sparql");
-            add("rdf-tests/sparql/q3b.sparql");
-            add("rdf-tests/sparql/q3c.sparql");
-            add("rdf-tests/sparql/q4.sparql");
-            add("rdf-tests/sparql/q5a.sparql");
-            add("rdf-tests/sparql/q5b.sparql");
-            add("rdf-tests/sparql/q6.sparql");
-            add("rdf-tests/sparql/q7.sparql");
-            add("rdf-tests/sparql/q8.sparql");
-            add("rdf-tests/sparql/q9.sparql");
-            add("rdf-tests/sparql/q10.sparql");
-            add("rdf-tests/sparql/q11.sparql");
-            add("rdf-tests/sparql/q12a.sparql");
-            add("rdf-tests/sparql/q12b.sparql");
-            add("rdf-tests/sparql/q12c.sparql");
+            put("rdf-tests/sparql/q1.sparql", 1);
+//            put("rdf-tests/sparql/q2.sparql", 965);
+//            put("rdf-tests/sparql/q3a.sparql", 3647);
+//            put("rdf-tests/sparql/q3b.sparql", 25);
+//            put("rdf-tests/sparql/q3c.sparql", 0);
+//            put("rdf-tests/sparql/q4.sparql", 104746);
+//            put("rdf-tests/sparql/q5a.sparql", 1085);
+//            put("rdf-tests/sparql/q5b.sparql", 1085);
+//            put("rdf-tests/sparql/q6.sparql", 1959);
+//            put("rdf-tests/sparql/q7.sparql", 2);
+//            put("rdf-tests/sparql/q8.sparql", 264);
+            put("rdf-tests/sparql/q9.sparql", 4);
+//            put("rdf-tests/sparql/q10.sparql", 307);
+//            put("rdf-tests/sparql/q11.sparql", 3697);
+//            put("rdf-tests/sparql/q12a.sparql", 1);
+//            put("rdf-tests/sparql/q12b.sparql", 1);
+//            put("rdf-tests/sparql/q12c.sparql", 1);
         }
     };
 
@@ -145,7 +145,8 @@ public class SPARQLPerformanceTest extends TestCase {
     }
 
     public void testSparqlPerformance() throws Exception {
-        for (String fileName : FILE_NAMES) {
+        for (Map.Entry<String, Integer> entry : FILE_RESULT_MAP.entrySet()) {
+            String fileName = entry.getKey();
             String sparql = getFileContent(fileName);
             System.err.println("Executing: " + fileName);
             Answer answer = connection.executeQuery(graph, sparql);
@@ -156,6 +157,7 @@ public class SPARQLPerformanceTest extends TestCase {
                 System.err.println("Answer = " + answer.toString() +
                     ", time = " + answer.getTimeTaken() + "\n");
             }
+            assertEquals(entry.getValue().intValue(), answer.numberOfTuples());
         }
     }
 

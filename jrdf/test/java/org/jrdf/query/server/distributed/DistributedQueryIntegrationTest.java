@@ -157,7 +157,6 @@ public class DistributedQueryIntegrationTest extends TestCase {
         assertEquals(2, graph.getNumberOfTriples());
         CallableGraphQueryClient queryClient = new QueryClientImpl("127.0.0.1:8182");
         queryClient.getQuery(FOO, SELECT_QUERY_STRING, "all");
-//        Answer answer = new SparqlStreamingSelectAnswer(new SparqlAnswerStreamParserImpl(queryClient.call()));
         Answer answer = queryClient.executeQuery();
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }

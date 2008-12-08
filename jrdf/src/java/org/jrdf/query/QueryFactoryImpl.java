@@ -155,7 +155,8 @@ public class QueryFactoryImpl implements QueryFactory {
         Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR, evaluator);
         Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
         DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);
-        return new OptimizingQueryEngineImpl(project, join, restrict, union, leftOuterJoin);
+//        return new NaiveQueryEngineImpl(project, join, restrict, union, leftOuterJoin);
+        return new OptimizingQueryEngineImpl(project, join, restrict, union, leftOuterJoin, RELATION_FACTORY);
     }
 
     private DyadicJoin getLeftOuterJoin(TupleEngine unionTupleEngine, NadicJoin join) {

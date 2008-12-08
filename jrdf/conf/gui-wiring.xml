@@ -169,6 +169,7 @@
         <constructor-arg ref="restrict"/>
         <constructor-arg ref="outerUnion"/>
         <constructor-arg ref="minLeftOuterJoin"/>
+        <constructor-arg ref="relationFactory"/>
     </bean>
 
     <!-- Relational Operations and Supporting Classes -->

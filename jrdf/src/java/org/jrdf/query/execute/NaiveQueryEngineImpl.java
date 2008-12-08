@@ -168,8 +168,6 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
             lhs = rhs;
         }
         result = leftOuterJoin.join(lhs, rhs);
-        lhs = null;
-        rhs = null;
     }
 
     @Override

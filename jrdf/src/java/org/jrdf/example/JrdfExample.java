@@ -244,7 +244,7 @@ public class JrdfExample {
                 "SELECT ?s ?add \n" +
                 "WHERE { \n" +
                 "        ?s <http://example.org/terms#hasConfirmed> ?add \n" +
-                "        OPTIONAL { ?add <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> ?o } . \n" +
+                "        OPTIONAL { ?add <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> ?o } \n" +
                 "        FILTER ( bound(?add) && !bound(?o) ) }";
         SelectAnswer answer = (SelectAnswer) connection.executeQuery(graph, query);
         System.out.println("Query Result:\n" + answer);
