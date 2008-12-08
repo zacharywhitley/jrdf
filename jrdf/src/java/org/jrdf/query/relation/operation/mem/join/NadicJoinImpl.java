@@ -101,6 +101,10 @@ public final class NadicJoinImpl implements NadicJoin {
         if (relations.contains(RELATION_DUM)) {
             relation = RELATION_DUM;
         }
+        // If relations contains DEE, remove it and return the rest of the set.
+        if (relations.contains(RELATION_DEE) && relations.size() > 1) {
+            relations.remove(RELATION_DEE);
+        }
         // Is it just one relations - if so just return it back.
         if (relations.size() == 1) {
             relation = relations.iterator().next();

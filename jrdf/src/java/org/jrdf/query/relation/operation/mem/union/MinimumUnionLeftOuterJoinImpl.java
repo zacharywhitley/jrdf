@@ -60,6 +60,7 @@
 package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Relation;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Union;
 
@@ -86,6 +87,10 @@ public class MinimumUnionLeftOuterJoinImpl implements MinimumUnionLeftOuterJoin 
         relations.add(relation1);
         relations.add(relation2);
         final Relation joinResult = naturalJoin.join(relations);
-        return union.union(joinResult, relation1);
+        if (RELATION_DEE.equals(relation1)) {
+            return joinResult;
+        } else {
+            return union.union(joinResult, relation1);
+        }
     }
 }
