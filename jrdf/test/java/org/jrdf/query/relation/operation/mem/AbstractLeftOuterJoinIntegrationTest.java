@@ -63,6 +63,7 @@ import junit.framework.TestCase;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
@@ -140,29 +141,36 @@ public abstract class AbstractLeftOuterJoinIntegrationTest extends TestCase {
         checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
-    public void testEmptyLHSOuterJoin() {
+    public void testEmptyLHSOuterJoin1() {
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3,
             POS_FOO4_PREDICATE_R2);
         resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO4_PREDICATE_R3));
         checkJoin(createRelation(resultTuple), RELATION_DEE, createRelation(resultTuple));
     }
 
+    public void testEmptyLHSOuterJoin2() {
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+            POS_FOO4_PREDICATE_R2);
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO4_PREDICATE_R3));
+        checkJoin(createRelation(resultTuple), createRelation(resultTuple), RELATION_DEE);
+    }
+
+    public void testEmptyLHSOuterJoin3() {
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+            POS_FOO4_PREDICATE_R2);
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO4_PREDICATE_R3));
+        checkJoin(createRelation(resultTuple), createRelation(resultTuple), createRelation(resultTuple));
+    }
+
+    public void testEmptyLHSOuterJoin4() {
+        checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DEE);
+        checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DUM);
+    }
+
     public abstract DyadicJoin getJoin();
 
     private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
         Relation relation = getJoin().join(relation1, relation2);
-
-//        Set<Tuple> sortedTuples = relation.getSortedTuples();
-//        Set<Tuple> sortedTuples2 = expected.getSortedTuples();
-//        System.err.println("Sorted Actual tuples relation: " + relation.getSortedTuples());
-//        System.err.println("Sorted Expected tuples relation: " + expected.getSortedTuples());
-//        System.err.println("-------------------------------");
-//        boolean isEqual = sortedTuples.equals(sortedTuples2);
-//        System.err.println("Sorted Expected tuples relation1: " + isEqual);
-//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(
-// relation.getSortedTuples()));
-//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(
-// expected.getSortedTuples()));
         assertEquals(expectedResult, relation);
     }
 }

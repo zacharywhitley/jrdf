@@ -235,12 +235,7 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         ValueOperation rvo = rhs.get(attribute);
         if (isAnyNode(lvo.getValue())) {
             if (rvo != null) {
-                ValueOperation newVO = new ValueOperationImpl(rvo.getValue(), lvo.getOperation());
-                final Attribute value = variableMap.get(attribute);
-                newAttributeValues.put(attribute, newVO);
-                if (value != null) {
-                    newAttributeValues.put(value, newVO);
-                }
+                updateAttributeValue(attribute, lvo, rvo);
             } else if (rhs.size() == 1) {
                 // assuming a variable now
                 updateVariableMap(rhs, attribute);
@@ -248,6 +243,15 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
             return true;
         }
         return false;
+    }
+
+    private void updateAttributeValue(Attribute attribute, ValueOperation lvo, ValueOperation rvo) {
+        ValueOperation newVO = new ValueOperationImpl(rvo.getValue(), lvo.getOperation());
+        final Attribute value = variableMap.get(attribute);
+        newAttributeValues.put(attribute, newVO);
+        if (value != null) {
+            newAttributeValues.put(value, newVO);
+        }
     }
 
     private void updateVariableMap(Map<Attribute, ValueOperation> rhs, Attribute attribute) {
