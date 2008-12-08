@@ -102,22 +102,22 @@ public class SPARQLPerformanceTest extends TestCase {
     private static final Map<String, Integer> FILE_RESULT_MAP = new LinkedHashMap<String, Integer>() {
         {
             put("rdf-tests/sparql/q1.sparql", 1);
-//            put("rdf-tests/sparql/q2.sparql", 965);
-//            put("rdf-tests/sparql/q3a.sparql", 3647);
-//            put("rdf-tests/sparql/q3b.sparql", 25);
-//            put("rdf-tests/sparql/q3c.sparql", 0);
-//            put("rdf-tests/sparql/q4.sparql", 104746);
-//            put("rdf-tests/sparql/q5a.sparql", 1085);
-//            put("rdf-tests/sparql/q5b.sparql", 1085);
-//            put("rdf-tests/sparql/q6.sparql", 1959);
-//            put("rdf-tests/sparql/q7.sparql", 2);
-//            put("rdf-tests/sparql/q8.sparql", 264);
+            put("rdf-tests/sparql/q2.sparql", 965);
+            put("rdf-tests/sparql/q3a.sparql", 3647);
+            put("rdf-tests/sparql/q3b.sparql", 25);
+            put("rdf-tests/sparql/q3c.sparql", 0);
+            put("rdf-tests/sparql/q4.sparql", 104746);
+            put("rdf-tests/sparql/q5a.sparql", 1085);
+            put("rdf-tests/sparql/q5b.sparql", 1085);
+            put("rdf-tests/sparql/q6.sparql", 1959);
+            put("rdf-tests/sparql/q7.sparql", 2);
+            put("rdf-tests/sparql/q8.sparql", 264);
             put("rdf-tests/sparql/q9.sparql", 4);
-//            put("rdf-tests/sparql/q10.sparql", 307);
-//            put("rdf-tests/sparql/q11.sparql", 3697);
-//            put("rdf-tests/sparql/q12a.sparql", 1);
-//            put("rdf-tests/sparql/q12b.sparql", 1);
-//            put("rdf-tests/sparql/q12c.sparql", 1);
+            put("rdf-tests/sparql/q10.sparql", 307);
+            put("rdf-tests/sparql/q11.sparql", 3697);
+            put("rdf-tests/sparql/q12a.sparql", 1);
+            put("rdf-tests/sparql/q12b.sparql", 1);
+            put("rdf-tests/sparql/q12c.sparql", 1);
         }
     };
 
