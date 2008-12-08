@@ -59,45 +59,25 @@
 
 package org.jrdf.query.execute;
 
-import org.jrdf.graph.NodeComparator;
-import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Projection;
+import org.jrdf.query.expression.SingleConstraint;
+import org.jrdf.query.expression.Optional;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.attributename.AttributeNameComparator;
-import org.jrdf.query.relation.attributename.AttributeNameComparatorImpl;
-import org.jrdf.query.relation.mem.AttributeComparatorImpl;
-import org.jrdf.query.relation.mem.ComparatorFactory;
-import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
-import org.jrdf.query.relation.mem.RelationFactoryImpl;
-import org.jrdf.query.relation.mem.SimpleRelationComparatorImpl;
-import org.jrdf.query.relation.mem.TupleComparatorImpl;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.type.TypeComparator;
-import org.jrdf.query.relation.type.TypeComparatorImpl;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
-import java.util.Collections;
-import static java.util.Collections.swap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -106,33 +86,23 @@ import java.util.Set;
  * @version $Id: $
  */
 public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
-    private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
-    private static final TypeComparator TYPE_COMPARATOR = new TypeComparatorImpl(NODE_TYPE_COMPARATOR);
-    private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR = new AttributeNameComparatorImpl();
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = new AttributeComparatorImpl(TYPE_COMPARATOR,
-        ATTRIBUTE_NAME_COMPARATOR);
-    private static final ComparatorFactory COMPARATOR_FACTORY = new ComparatorFactoryImpl();
-    private static final NodeComparator NODE_COMPARATOR = COMPARATOR_FACTORY.createNodeComparator();
-    private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(NODE_COMPARATOR,
-        ATTRIBUTE_COMPARATOR);
-    private static final RelationFactory RELATION_FACTORY = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR,
-        TUPLE_COMPARATOR);
-
-    private final RelationComparator relationComparator = new SimpleRelationComparatorImpl();
-    private final ExpressionComparator expressionComparator = EXPRESSION_COMPARATOR;
     private boolean shortCircuit;
     private ConstraintTupleCacheHandler cacheHandler;
+    private RelationFactory relationFactory;
+    private QueryExecutionPlanner planner;
 
     public OptimizingQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
-        Union union, DyadicJoin leftOuterJoin) {
+        Union union, DyadicJoin leftOuterJoin, RelationFactory newRelationFactory) {
         super(project, naturalJoin, restrict, union, leftOuterJoin);
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         shortCircuit = false;
+        relationFactory = newRelationFactory;
+        planner = QueryExecutionPlanner.getPlanner();
     }
 
     @Override
     public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
-        cacheHandler.clear();
+        clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
         shortCircuit = true;
@@ -142,64 +112,21 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
 
     @Override
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
-        cacheHandler.clear();
+        clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
         super.visitProjection(projection);
     }
 
     // TODO YF join those with common attributes first.
+    @SuppressWarnings({ "unchecked", "UnusedAssignment" })
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
-        BiOperandExpressionSimplifier simplifier = new BiOperandExpressionSimplifierImpl(expressionComparator);
-        List<Expression<V>> constraintList = simplifier.flattenAndSortConjunction(conjunction, Conjunction.class);
-        cacheHandler.reset(result, constraintList.size());
-        List<Relation> partialResult = new LinkedList<Relation>();
-        for (Expression<V> exp : constraintList) {
-            Relation tempRelation = getExpression(exp);
-            if (tempRelation.getTuples().isEmpty()) {
-                result = tempRelation;
-                partialResult = null;
-                return;
-            }
-            partialResult.add(tempRelation);
-        }
-        cacheHandler.clear();
-        Collections.sort(partialResult, relationComparator);
-        Set<Relation> partialResultSet = matchAttributes(partialResult);
-        result = naturalJoin.join(partialResultSet);
-        partialResultSet = null;
-        partialResult = null;
-    }
-
-    private Set<Relation> matchAttributes(List<Relation> partialResults) {
-        for (int i = 0; i < partialResults.size(); i++) {
-            matchAttributes(partialResults, i);
-        }
-        return new LinkedHashSet<Relation>(partialResults);
-    }
-
-    private void matchAttributes(List<Relation> relations, int pos) {
-        Relation first = relations.get(pos);
-        int idx, badPos = -1;
-        for (idx = pos + 1; idx < relations.size(); idx++) {
-            final Relation nextRel = relations.get(idx);
-            final Set<Attribute> headings = getCommonHeadings(first, nextRel);
-            if (headings.size() >= 1) {
-                break;
-            } else if (badPos < 0) {
-                badPos = idx;
-            }
-        }
-        if (badPos > 0 && idx < relations.size()) {
-            swap(relations, badPos, idx);
-        }
-    }
-
-    private Set<Attribute> getCommonHeadings(Relation rel1, Relation rel2) {
-        final Set<Attribute> set1 = new HashSet<Attribute>(rel1.getHeading());
-        set1.retainAll(rel2.getHeading());
-        return set1;
+        List<Expression> operands = planner.flattenExpression(conjunction);
+        resetCacheHandler(operands);
+        Set<Relation> relations = planner.processAndRearrangeExpressions(conjunction, operands, this);
+        result = naturalJoin.join(relations);
+        relations = null;
     }
 
     @Override
@@ -207,6 +134,50 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         long time = System.currentTimeMillis();
         processConstraint(constraint);
         cacheHandler.addResultToCache(constraint, result, time);
+    }
+
+    @SuppressWarnings({ "unchecked", "UnusedAssignment" })
+    @Override
+    public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> newUnion) {
+        List<Expression> operands = planner.flattenExpression(newUnion);
+        clearCacheHandler();
+        Expression<V> lhsExp = operands.get(0);
+        Expression<V> rhsExp = operands.get(1);
+        Relation lhs = getExpression(lhsExp);
+        if (shortCircuit) {
+            result = (lhs.getTuples().isEmpty()) ? getExpression(rhsExp) : lhs;
+        } else {
+            Relation rhs = getExpression(operands.get(1));
+            result = union.union(lhs, rhs);
+            rhs = null;
+        }
+        lhs = null;
+    }
+
+    @SuppressWarnings({ "UnusedAssignment" })
+    @Override
+    public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
+        clearCacheHandler();
+        // TODO (AN) This really should be nadic and just pass in the rhs
+        Relation rhs = getExpression(optional.getRhs());
+        clearCacheHandler();
+        Relation lhs;
+        if (optional.getLhs() != null) {
+            lhs = getExpression(optional.getLhs());
+        } else {
+            lhs = rhs;
+        }
+        result = leftOuterJoin.join(lhs, rhs);
+        lhs = null;
+        rhs = null;
+    }
+
+    void clearCacheHandler() {
+        cacheHandler.clear();
+    }
+
+    private void resetCacheHandler(List<Expression> constraintList) {
+        cacheHandler.reset(result, constraintList.size());
     }
 
     private <V extends ExpressionVisitor> void processConstraint(SingleConstraint<V> constraint) {
@@ -218,6 +189,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         }
     }
 
+    @SuppressWarnings({ "UnusedAssignment" })
     private <V extends ExpressionVisitor> void doCachedConstraint(SingleConstraint<V> constraint, Attribute curAttr) {
         Set<Tuple> tuples = new HashSet<Tuple>();
         Set<ValueOperation> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
@@ -225,27 +197,10 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             constraint.setAvo(curAttr, newVO);
             Relation tmpRelation = restrict.restrict(result, constraint.getAvo(allVariables));
             tuples.addAll(tmpRelation.getTuples());
+            tmpRelation = null;
         }
-        result = RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
+        result = relationFactory.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
         tuples = null;
-    }
-
-    @Override
-    // TODO YF PERFORMANCE too bad!
-    public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> newUnion) {
-        BiOperandExpressionSimplifier simplifier = new BiOperandExpressionSimplifierImpl(expressionComparator);
-        List<Expression<V>> list = simplifier.flattenAndSortConjunction(newUnion, Union.class);
-        Expression<V> lhsExp = list.get(0);
-        Expression<V> rhsExp = list.get(1);
-        Relation lhs = getExpression(lhsExp);
-        if (shortCircuit) {
-            result = (lhs.getTuples().isEmpty()) ? getExpression(rhsExp) : lhs;
-        } else {
-            Relation rhs = getExpression(list.get(1));
-            result = union.union(lhs, rhs);
-            lhs = null;
-            rhs = null;
-        }
     }
 
     private void setShortCircuit(boolean shortCircuit) {
@@ -260,7 +215,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
-            union, leftOuterJoin);
+            union, leftOuterJoin, relationFactory);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setCacheHandler(cacheHandler);
@@ -271,7 +226,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression, boolean shortCircuit) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
-            union, leftOuterJoin);
+            union, leftOuterJoin, relationFactory);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(shortCircuit);

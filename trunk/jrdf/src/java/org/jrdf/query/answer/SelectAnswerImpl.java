@@ -212,7 +212,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
         }
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
         valueToString = new TypeValueToStringImpl();
         RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
