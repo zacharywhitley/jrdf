@@ -154,19 +154,13 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         lhs = null;
     }
 
-    @SuppressWarnings({ "UnusedAssignment" })
+    @SuppressWarnings({ "UnusedAssignment", "unchecked" })
     @Override
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
         clearCacheHandler();
-        // TODO (AN) This really should be nadic and just pass in the rhs
-        Relation rhs = getExpression(optional.getRhs());
+        Relation lhs = getExpression(optional.getLhs());
         clearCacheHandler();
-        Relation lhs;
-        if (optional.getLhs() != null) {
-            lhs = getExpression(optional.getLhs());
-        } else {
-            lhs = rhs;
-        }
+        Relation rhs = getExpression(optional.getRhs());
         result = leftOuterJoin.join(lhs, rhs);
         lhs = null;
         rhs = null;
