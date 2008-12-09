@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+    <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="OrderedIteratorFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="LocalIteratorFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphResource"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskBdbJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="AbstractGraphPerformance"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MemCollectionFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryGlobalJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskGlobalJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskBdbGlobalJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="PersistentJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="PersistentGlobalJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="LongIndexBdb"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ServersResource"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="QueryClientImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="FilterAnalyserImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ExpressionSimplifierImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="NTriplesEventReaderFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="NTriplesParserFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="N3EventReaderFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="N3ParserFactory"/>
+    <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
+    <suppress checks="JavaNCSS" files="GraphImpl"/>
+    <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
+    <suppress checks="JavaNCSS" files="RDF"/>
+    <suppress checks="JavaNCSS" files="RDFS"/>
+    <suppress checks="JavaNCSS" files="XSD"/>
+    <suppress checks="JavaNCSS" files="OWL"/>
+    <suppress checks="JavaNCSS" files="BasicOperations"/>
+    <suppress checks="JavaNCSS" files="NodeTypeBinding"/>
+    <suppress checks="JavaNCSS" files="SortMergeNaturalJoin"/>
+    <suppress checks="JavaNCSS" files="SparqlStreamingAnswerFactoryImpl"/>
+    <suppress checks="JavaNCSS" files="ExpressionSimplifierImpl"/>
+    <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
+    <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
+    <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>
+    <suppress checks="ParameterNumber" files="NaiveQueryEngineImpl"/>
+    <suppress checks="ParameterNumber" files="OptimizingQueryEngineImpl"/>
+    <suppress checks="ParameterNumber" files="SortMergeNaturalJoinEngine"/>
+
+    <!-- Cleanup molecule implementation -->
+    <suppress checks="BooleanExpressionComplexity" files="FlatteningFiveLongClosableIterator"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DecomposerPerformance"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexBdb"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexMem"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeIndexSesame"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeStructureIndexMem"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeGraphImpl"/>
+    <suppress checks="CyclomaticComplexity" files="MoleculeIndexBdb"/>
+    <suppress checks="CyclomaticComplexity" files="MoleculeIndexMem"/>
+    <suppress checks="CyclomaticComplexity" files="MoleculeStructureIndexMem"/>
+    <suppress checks="CyclomaticComplexity" files="BlankNodeMapperImpl" />
+    <suppress checks="CyclomaticComplexity" files="NaiveGraphDecomposerImpl"/>
+    <suppress checks="CyclomaticComplexity" files="FlatteningFiveLongClosableIterator"/>
+    <suppress checks="JavaNCSS" files="DecomposerPerformance"/>
+    <suppress checks="JavaNCSS" files="MoleculeStructureIndexMem"/>
+    <suppress checks="JavaNCSS" files="MoleculeIndexMem"/>
+    <suppress checks="JavaNCSS" files="BlankNodeMapperImpl"/>
+    <suppress checks="JavaNCSS" files="MergeSubmoleculesImpl" />
+    <suppress checks="JavaNCSS" files="MoleculeImpl"/>
+    <suppress checks="JavaNCSS" files="NaiveGraphDecomposerImpl" />
+    <suppress checks="MagicNumber" files="MoleculeStructureIndex"/>
+    <suppress checks="MagicNumber" files="MoleculeGraphImpl"/>
+    <suppress checks="MagicNumber" files="WritableIndexImpl"/>
+    <suppress checks="ReturnCount" files="BlankNodeMapperImpl"/>
+    <suppress checks="ReturnCount" files="NamespaceAwareObjectParser"/>
+    <suppress checks="ReturnCount" files="SingleRdfNodeParser"/>
+
+    <!-- Import -->
+    <!-- BTree -->
+    <suppress checks="BooleanExpressionComplexity" files="ByteArrayUtil"/>
+    <suppress checks="BooleanExpressionComplexity" files="ByteHandler"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="BTree"/>
+    <suppress checks="CyclomaticComplexity" files="BTree"/>
+    <suppress checks="JavaNCSS" files="BTree"/>
+    <suppress checks="JavaNCSS" files="EntryIterator"/>
+    <suppress checks="MagicNumber" files="BTree"/>
+    <suppress checks="MagicNumber" files="ByteArrayUtil"/>
+    <suppress checks="MagicNumber" files="DefaultRecordComparator"/>
+    <suppress checks="ReturnCount" files="BTree"/>
+
+    <!-- RDF/XML Parser -->
+    <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser"/>
+    <suppress checks="BooleanExpressionComplexity" files="SAXFilter"/>
+    <suppress checks="BooleanExpressionComplexity" files="XmlDatatypeUtil"/>
+    <suppress checks="BooleanExpressionComplexity" files="XmlUtil"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlParser"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SAXFilter"/>
+    <suppress checks="CyclomaticComplexity" files="XmlDatatypeUtil"/>
+    <suppress checks="CyclomaticComplexity" files="XmlUtil"/>
+    <suppress checks="CyclomaticComplexity" files="RdfXmlParser"/>
+    <suppress checks="CyclomaticComplexity" files="SAXFilter"/>
+    <suppress checks="JavaNCSS" files="RdfXmlParser"/>
+    <suppress checks="JavaNCSS" files="SAXFilter"/>
+    <suppress checks="JavaNCSS" files="XmlDatatypeUtil"/>
+    <suppress checks="JavaNCSS" files="XmlUtil"/>
+    <suppress checks="JavadocStyle" files="XmlSchema"/>
+    <suppress checks="MagicNumber" files="XmlUtil"/>
+    <suppress checks="MemberName" files="RdfXmlParser"/>
+    <suppress checks="MethodLength" files="XmlUtil"/>
+    <suppress checks="ReturnCount" files="XmlDatatypeUtil"/>
+    <suppress checks="ReturnCount" files="XmlUtil"/>
+</suppressions>

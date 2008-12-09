@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ $Header$
+  ~ $Revision$
+  ~ $Date$
+  ~
+  ~ ====================================================================
+  ~
+  ~ The Apache Software License, Version 1.1
+  ~
+  ~ Copyright (c) 2003-2008 The JRDF Project.  All rights reserved.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions
+  ~ are met:
+  ~
+  ~ 1. Redistributions of source code must retain the above copyright
+  ~    notice, this list of conditions and the following disclaimer.
+  ~
+  ~ 2. Redistributions in binary form must reproduce the above copyright
+  ~    notice, this list of conditions and the following disclaimer in
+  ~    the documentation and/or other materials provided with the
+  ~    distribution.
+  ~
+  ~ 3. The end-user documentation included with the redistribution, if
+  ~    any, must include the following acknowlegement:
+  ~       "This product includes software developed by the
+  ~        the JRDF Project (http://jrdf.sf.net/)."
+  ~    Alternately, this acknowlegement may appear in the software itself,
+  ~    if and wherever such third-party acknowlegements normally appear.
+  ~
+  ~ 4. The names "The JRDF Project" and "JRDF" must not be used to endorse
+  ~    or promote products derived from this software without prior written
+  ~    permission. For written permission, please contact
+  ~    newmana@users.sourceforge.net.
+  ~
+  ~ 5. Products derived from this software may not be called "JRDF"
+  ~    nor may "JRDF" appear in their names without prior written
+  ~    permission of the JRDF Project.
+  ~
+  ~ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+  ~ WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  ~ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~ DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+  ~ ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  ~ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  ~ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+  ~ USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ~ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  ~ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+  ~ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+  ~ SUCH DAMAGE.
+  ~ ====================================================================
+  ~
+  ~ This software consists of voluntary contributions made by many
+  ~ individuals on behalf of the JRDF Project.  For more
+  ~ information on JRDF, please see <http://jrdf.sourceforge.net/>.
+  ~
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+    <!--Globalized in memory, graph classes -->
+
+    <!-- Localized in memory, graph classes -->
+
+    <bean id="memIndex" class="org.jrdf.graph.local.index.longindex.mem.LongIndexMem" scope="prototype"/>
+    <bean id="moleculeIndex" class="org.jrdf.graph.global.index.adapter.LongIndexAdapter" scope="prototype">
+        <constructor-arg>
+            <bean class="org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem" scope="prototype"/>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.jrdf.collection.MemCollectionFactory" scope="singleton"/>
+    <bean name="mapFactory" class="org.jrdf.collection.MemMapFactory" scope="singleton"/>
+
+    <bean class="org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory" scope="singleton"/>
+
+    <bean id="graphFactory" class="org.jrdf.graph.local.OrderedGraphFactoryImpl" scope="prototype">
+        <constructor-arg>
+            <list>
+                <ref bean="memIndex"/>
+                <ref bean="memIndex"/>
+                <ref bean="memIndex"/>
+            </list>
+        </constructor-arg>
+        <constructor-arg ref="org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory"/>
+        <constructor-arg ref="org.jrdf.collection.MemCollectionFactory"/>
+    </bean>
+
+    <!-- Relational Classes -->
+    <bean id="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl"/>
+    <bean id="localizedNodeComparator" class="org.jrdf.graph.local.LocalizedNodeComparatorImpl"/>
+    <bean id="blankNodeComparator" class="org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl">
+        <constructor-arg ref="localizedNodeComparator"/>
+    </bean>
+
+    <bean id="typeComparator" class="org.jrdf.query.relation.type.TypeComparatorImpl">
+        <constructor-arg ref="nodeTypeComparator"/>
+    </bean>
+
+    <bean id="attributeNameComparator" class="org.jrdf.query.relation.attributename.AttributeNameComparatorImpl"/>
+
+    <bean id="attributeComparator" class="org.jrdf.query.relation.mem.AttributeComparatorImpl">
+        <constructor-arg ref="typeComparator"/>
+        <constructor-arg ref="attributeNameComparator"/>
+    </bean>
+
+    <bean id="nodeComparator" class="org.jrdf.graph.local.NodeComparatorImpl">
+        <constructor-arg ref="nodeTypeComparator"/>
+        <constructor-arg ref="literalComparator"/>
+        <constructor-arg ref="blankNodeComparator"/>
+    </bean>
+
+    <bean id="literalComparator" class="org.jrdf.graph.datatype.SemanticLiteralComparatorImpl">
+        <constructor-arg ref="lexicalComparator"/>
+    </bean>
+
+    <bean id="lexicalComparator" class="org.jrdf.graph.datatype.LexicalComparatorImpl"/>
+
+    <bean id="tupleComparator" class="org.jrdf.query.relation.mem.TupleComparatorImpl">
+        <constructor-arg ref="nodeComparator"/>
+        <constructor-arg ref="attributeComparator"/>
+    </bean>
+
+    <bean id="tupleFactory" class="org.jrdf.query.relation.mem.TupleFactoryImpl">
+    </bean>
+
+    <bean id="relationComparator" class="org.jrdf.query.relation.mem.RelationComparatorImpl">
+        <constructor-arg ref="attributeComparator"/>
+        <constructor-arg ref="tupleComparator"/>
+    </bean>
+
+    <bean id="relationFactory" class="org.jrdf.query.relation.mem.RelationFactoryImpl">
+        <constructor-arg ref="attributeComparator"/>
+        <constructor-arg ref="tupleComparator"/>
+    </bean>
+
+    <!-- Query Classes -->
+    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl">
+        <constructor-arg ref="queryBuilder"/>
+        <constructor-arg ref="optimizingQueryEngine"/>
+    </bean>
+
+    <bean id="queryBuilder" class="org.jrdf.urql.builder.UrqlQueryBuilder">
+        <constructor-arg ref="sparqlParser"/>
+    </bean>
+
+    <bean id="sparqlParser" class="org.jrdf.urql.parser.SableCcSparqllParser">
+        <constructor-arg ref="parserFactory"/>
+        <constructor-arg ref="graphRelationFactory"/>
+        <constructor-arg ref="sortedAttributeFactory"/>
+    </bean>
+
+    <bean id="parserFactory" class="org.jrdf.urql.parser.ParserFactoryImpl"/>
+
+    <bean id="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
+        <constructor-arg ref="project"/>
+        <constructor-arg ref="naturalJoin"/>
+        <constructor-arg ref="restrict"/>
+        <constructor-arg ref="outerUnion"/>
+        <constructor-arg ref="minLeftOuterJoin"/>
+    </bean>
+
+    <bean id="optimizingQueryEngine" class="org.jrdf.query.execute.OptimizingQueryEngineImpl">
+        <constructor-arg ref="project"/>
+        <constructor-arg ref="sortMergeNaturalJoin"/>
+        <constructor-arg ref="restrict"/>
+        <constructor-arg ref="outerUnion"/>
+        <constructor-arg ref="minLeftOuterJoin"/>
+        <constructor-arg ref="relationFactory"/>
+    </bean>
+
+    <!-- Relational Operations and Supporting Classes -->
+    <bean id="sortedAttributeFactory" class="org.jrdf.query.relation.mem.SortedAttributeFactoryImpl">
+        <constructor-arg ref="attributeComparator"/>
+        <constructor-arg value="1"/>
+    </bean>
+
+    <bean id="attributeValuePairHelper" class="org.jrdf.query.relation.mem.AttributeValuePairHelperImpl">
+    </bean>
+
+    <bean id="graphRelationFactory" class="org.jrdf.query.relation.mem.GraphRelationFactoryImpl">
+        <constructor-arg ref="sortedAttributeFactory"/>
+        <constructor-arg ref="attributeValuePairHelper"/>
+        <constructor-arg ref="tupleComparator"/>
+        <constructor-arg ref="tupleFactory"/>
+    </bean>
+
+    <!-- Relational Operators -->
+    <bean id="relationHelper" class="org.jrdf.query.relation.mem.RelationHelperImpl">
+        <constructor-arg ref="attributeComparator"/>
+    </bean>
+
+    <bean id="relationProcessor" class="org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl">
+        <constructor-arg ref="relationFactory"/>
+        <constructor-arg ref="tupleComparator"/>
+    </bean>
+
+    <bean id="naturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine">
+        <constructor-arg ref="tupleFactory"/>
+        <constructor-arg ref="relationHelper"/>
+    </bean>
+
+    <bean id="sortMergeNaturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine">
+        <constructor-arg ref="tupleFactory"/>
+        <constructor-arg ref="relationHelper"/>
+        <constructor-arg ref="nodeComparator"/>
+    </bean>
+
+    <bean id="semiJoinEngine" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinEngine">
+        <constructor-arg ref="tupleFactory"/>
+        <constructor-arg ref="nodeComparator"/>
+    </bean>
+
+    <bean id="outerUnionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.OuterUnionEngine">
+        <constructor-arg ref="relationHelper"/>
+    </bean>
+
+    <bean id="subsumptionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.SubsumptionEngine">
+        <constructor-arg ref="tupleFactory"/>
+        <constructor-arg ref="relationHelper"/>
+    </bean>
+
+    <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.join.NadicJoinImpl">
+        <constructor-arg ref="relationProcessor"/>
+        <constructor-arg ref="naturalJoinEngine"/>
+    </bean>
+
+    <bean id="sortMergeNaturalJoin" class="org.jrdf.query.relation.operation.mem.join.NadicJoinImpl">
+        <constructor-arg ref="relationProcessor"/>
+        <constructor-arg ref="sortMergeNaturalJoinEngine"/>
+    </bean>
+
+    <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinImpl">
+        <constructor-arg ref="relationProcessor"/>
+        <constructor-arg ref="semiJoinEngine"/>
+    </bean>
+
+    <bean id="project" class="org.jrdf.query.relation.operation.mem.project.ProjectImpl">
+        <constructor-arg ref="tupleFactory"/>
+        <constructor-arg ref="relationFactory"/>
+    </bean>
+
+    <bean id="restrict" class="org.jrdf.query.relation.operation.mem.restrict.RestrictImpl">
+        <constructor-arg ref="relationFactory"/>
+        <constructor-arg ref="tupleFactory"/>
+        <constructor-arg ref="tupleComparator"/>
+        <constructor-arg ref="booleanEvaluator"/>
+    </bean>
+
+    <bean id="outerUnion" class="org.jrdf.query.relation.operation.mem.union.OuterUnionImpl">
+        <constructor-arg ref="relationProcessor"/>
+        <constructor-arg ref="outerUnionJoinEngine"/>
+    </bean>
+
+    <bean id="minimumUnion" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionImpl">
+        <constructor-arg ref="relationProcessor"/>
+        <constructor-arg ref="outerUnionJoinEngine"/>
+        <constructor-arg ref="subsumptionJoinEngine"/>
+    </bean>
+
+    <bean id="semiDifference" class="org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceImpl">
+        <constructor-arg ref="relationFactory"/>
+        <constructor-arg ref="tupleComparator"/>
+        <constructor-arg ref="relationProcessor"/>
+     </bean>
+
+    <bean id="antiJoin" class="org.jrdf.query.relation.operation.mem.join.anti.AntiJoinImpl">
+        <constructor-arg ref="semiJoin"/>
+        <constructor-arg ref="semiDifference"/>
+    </bean>
+
+    <bean id="leftOuterJoin" class="org.jrdf.query.relation.operation.mem.join.outer.LeftOuterJoinImpl">
+        <constructor-arg ref="antiJoin"/>
+        <constructor-arg ref="sortMergeNaturalJoin"/>
+        <constructor-arg ref="outerUnion"/>
+    </bean>
+
+    <bean id="fullOuterJoin" class="org.jrdf.query.relation.operation.mem.join.outer.FullOuterJoinImpl">
+        <constructor-arg ref="leftOuterJoin"/>
+        <constructor-arg ref="outerUnion"/>
+        <constructor-arg ref="antiJoin"/>
+    </bean>
+
+    <bean id="minFullOuterJoin" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionFullOuterJoinImpl">
+        <constructor-arg ref="minLeftOuterJoin"/>
+        <constructor-arg ref="minimumUnion"/>
+    </bean>
+
+    <bean id="minLeftOuterJoin" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl">
+        <constructor-arg ref="sortMergeNaturalJoin"/>
+        <constructor-arg ref="minimumUnion"/>
+    </bean>
+    <bean id="booleanEvaluator" class="org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator">
+        <constructor-arg ref="nodeComparator"/>
+    </bean>
+</beans>
