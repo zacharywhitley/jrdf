@@ -59,38 +59,49 @@
 
 package org.jrdf.query.expression.logic;
 
+import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.BiOperandExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public class EqualsExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
+public class EqualsExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
     private static final long serialVersionUID = 1297973700912646394L;
     private static final int DUMMY_HASHCODE = 47;
 
-    private Map<Attribute, ValueOperation> lhs;
-    private Map<Attribute, ValueOperation> rhs;
+    private Expression<V> lhs;
+    private Expression<V> rhs;
+    protected static final String EQUALS = "=";
 
     private EqualsExpression() {
     }
 
-    public EqualsExpression(Map<Attribute, ValueOperation> lhs, Map<Attribute, ValueOperation> rhs) {
+    public EqualsExpression(Expression<V> lhs, Expression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
 
-    public Map<Attribute, ValueOperation> getLhs() {
+    public Map<Attribute, ValueOperation> getAVO() {
+        Map<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>();
+        map.putAll(lhs.getAVO());
+        map.putAll(rhs.getAVO());
+        return map;
+    }
+
+    public Expression<V> getLhs() {
         return lhs;
     }
 
-    public Map<Attribute, ValueOperation> getRhs() {
+    public Expression<V> getRhs() {
         return rhs;
     }
 
@@ -103,13 +114,13 @@ public class EqualsExpression<V extends ExpressionVisitor> implements LogicExpre
     }
 
     public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
         int hash = DUMMY_HASHCODE + lhs.hashCode();
-        return hash * DUMMY_HASHCODE + rhs.hashCode();
+        hash = hash * DUMMY_HASHCODE + rhs.hashCode();
+        return hash * DUMMY_HASHCODE * EQUALS.hashCode();
     }
 
     public String toString() {
-        return lhs + " = " + rhs;
+        return lhs + (" " + EQUALS + " ") + rhs;
     }
 
     public boolean equals(Object obj) {

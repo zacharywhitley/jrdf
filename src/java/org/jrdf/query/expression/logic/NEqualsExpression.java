@@ -1,11 +1,14 @@
 package org.jrdf.query.expression.logic;
 
+import org.jrdf.query.expression.BiOperandExpression;
+import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  *
@@ -13,26 +16,34 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class NEqualsExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
+public class NEqualsExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
     private static final long serialVersionUID = -5583172009536428369L;
     private static final int DUMMY_HASHCODE = 47;
 
-    private Map<Attribute, ValueOperation> lhs;
-    private Map<Attribute, ValueOperation> rhs;
+    private Expression<V> lhs;
+    private Expression<V> rhs;
+    protected static final String NEQUALS = "!=";
 
     private NEqualsExpression() {
     }
 
-    public NEqualsExpression(Map<Attribute, ValueOperation> lhs, Map<Attribute, ValueOperation> rhs) {
+    public NEqualsExpression(Expression<V> lhs, Expression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
 
-    public Map<Attribute, ValueOperation> getLhs() {
+    public Map<Attribute, ValueOperation> getAVO() {
+        Map<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>();
+        map.putAll(lhs.getAVO());
+        map.putAll(rhs.getAVO());
+        return map;
+    }
+
+    public Expression<V> getLhs() {
         return lhs;
     }
 
-    public Map<Attribute, ValueOperation> getRhs() {
+    public Expression<V> getRhs() {
         return rhs;
     }
 
@@ -47,11 +58,12 @@ public class NEqualsExpression<V extends ExpressionVisitor> implements LogicExpr
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
         int hash = DUMMY_HASHCODE + lhs.hashCode();
-        return hash * DUMMY_HASHCODE + rhs.hashCode();
+        hash = hash * DUMMY_HASHCODE + rhs.hashCode();
+        return hash * DUMMY_HASHCODE + NEQUALS.hashCode();
     }
 
     public String toString() {
-        return lhs + " != " + rhs;
+        return lhs + (" " + NEQUALS + " ") + rhs;
     }
 
     public boolean equals(Object obj) {

@@ -60,9 +60,13 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.query.expression.logic.LogicExpression;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * @author Yuan-Fang Li
@@ -81,6 +85,14 @@ public class Filter<V extends ExpressionVisitor> implements BiOperandExpression<
     public Filter(Expression<V> lhs, LogicExpression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
+    }
+
+    public Map<Attribute, ValueOperation> getAVO() {
+        Map<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>();
+        map.putAll(lhs.getAVO());
+        map.putAll(rhs.getAVO());
+        return map;
+
     }
 
     public Expression<V> getLhs() {
