@@ -6,7 +6,7 @@ import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
 
-public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
+public final class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     private static final long serialVersionUID = -3910514962392635053L;
     private static final int DUMMY_HASHCODE = 47;
     private Map<Attribute, ValueOperation> singleAvp;
@@ -20,10 +20,10 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     }
 
     public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitOperator(this);
+        expressionVisitor.visitStr(this);
     }
 
-    public Map<Attribute, ValueOperation> getAttributeValuePair() {
+    public Map<Attribute, ValueOperation> getAVO() {
         return singleAvp;
     }
 
@@ -42,7 +42,7 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     }
 
     public int size() {
-        return 0;
+        return 2;
     }
 
     @Override

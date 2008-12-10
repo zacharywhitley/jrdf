@@ -112,6 +112,10 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
         return singleAvp.keySet();
     }
 
+    public Map<Attribute, ValueOperation> getAVO() {
+        return getAvo(null);
+    }
+
     public LinkedHashMap<Attribute, ValueOperation> getAvo(Map<AttributeName, ? extends NodeType> allVariables) {
         LinkedHashMap<Attribute, ValueOperation> newAvps = new LinkedHashMap<Attribute, ValueOperation>();
         for (Attribute existingAttribute : singleAvp.keySet()) {

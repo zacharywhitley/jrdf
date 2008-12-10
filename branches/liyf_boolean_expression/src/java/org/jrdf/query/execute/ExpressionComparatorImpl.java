@@ -70,6 +70,10 @@ import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
+import org.jrdf.query.expression.SingleValue;
+import org.jrdf.query.expression.StrOperator;
+import org.jrdf.query.expression.LangOperator;
+import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
@@ -146,8 +150,20 @@ public final class ExpressionComparatorImpl implements ExpressionVisitor, Expres
         result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
-    public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
-        result = operator.size();
+    private <V extends ExpressionVisitor> int visitOperator(Operator<V> operator) {
+        return operator.size();
+    }
+
+    public <V extends ExpressionVisitor> void visitStr(StrOperator<V> str) {
+        result = visitOperator(str);
+    }
+
+    public <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang) {
+        result = visitOperator(lang);
+    }
+
+    public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound) {
+        result = visitOperator(bound);
     }
 
     public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
@@ -174,6 +190,10 @@ public final class ExpressionComparatorImpl implements ExpressionVisitor, Expres
 
     public <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression) {
         result = nEqualsExpression.size();
+    }
+
+    public <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value) {
+        result = value.size();
     }
 
     @SuppressWarnings({ "unchecked" })

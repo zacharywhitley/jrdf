@@ -59,15 +59,131 @@
 
 package org.jrdf.query.execute;
 
-import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
+import org.jrdf.query.expression.BiOperandExpression;
+import org.jrdf.query.expression.Conjunction;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.SingleConstraint;
+import org.jrdf.query.expression.Union;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
  * @version $Id :$
  */
-public class BiOperandExpressionSimplifierImplIntegrationTest extends TestCase {
-    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    
+public class BiOperandExpressionSimplifierImplIntegrationTest extends ExpressionSimplifierImplIntegrationTest {
+    private BiOperandExpressionSimplifier simplifier;
+    private Map<Attribute, ValueOperation> subj;
+    private Map<Attribute, ValueOperation> pred;
+    private Map<Attribute, ValueOperation> obj;
+    private LinkedHashMap<Attribute, ValueOperation> avp1;
+    private SingleConstraint<ExpressionVisitor> constraint1;
+    private Map<Attribute, ValueOperation> subj1;
+    private Map<Attribute, ValueOperation> obj1;
+    private LinkedHashMap<Attribute, ValueOperation> avp2;
+    private SingleConstraint<ExpressionVisitor> constraint2;
+    private Map<Attribute, ValueOperation> subj2;
+    private Map<Attribute, ValueOperation> obj2;
+    private LinkedHashMap<Attribute, ValueOperation> avp3;
+    private SingleConstraint<ExpressionVisitor> constraint3;
+    private Map<Attribute, ValueOperation> subj3;
+    private Map<Attribute, ValueOperation> obj3;
+    private LinkedHashMap<Attribute, ValueOperation> avp4;
+    private SingleConstraint<ExpressionVisitor> constraint4;
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        simplifier = new BiOperandExpressionSimplifierImpl(EXPRESSION_COMPARATOR);
+        subj = createSingleAVP(ATTR_S, ANY_SUBJECT_NODE, EQUALS);
+        pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE, EQUALS);
+        obj = createSingleAVP(ATTR_O, ANY_OBJECT_NODE, EQUALS);
+        avp1 = createSingleAVP(subj, pred, obj);
+        constraint1 = new SingleConstraint<ExpressionVisitor>(avp1);
+        subj1 = createSingleAVP(ATTR_S1, ANY_SUBJECT_NODE, EQUALS);
+        obj1 = createSingleAVP(ATTR_O1, ANY_OBJECT_NODE, EQUALS);
+        avp2 = createSingleAVP(subj1, pred, obj1);
+        constraint2 = new SingleConstraint<ExpressionVisitor>(avp2);
+        subj2 = createSingleAVP(ATTR_S2, ANY_SUBJECT_NODE, EQUALS);
+        obj2 = createSingleAVP(ATTR_O2, ANY_OBJECT_NODE, EQUALS);
+        avp3 = createSingleAVP(subj2, pred, obj2);
+        constraint3 = new SingleConstraint<ExpressionVisitor>(avp3);
+        subj3 = createSingleAVP(ATTR_S3, ANY_SUBJECT_NODE, EQUALS);
+        obj3 = createSingleAVP(ATTR_O3, ANY_OBJECT_NODE, EQUALS);
+        avp4 = createSingleAVP(subj3, pred, obj3);
+        constraint4 = new SingleConstraint<ExpressionVisitor>(avp4);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
+    public void testSimplifierConjunction() {
+        Conjunction<ExpressionVisitor> conj1 = new Conjunction<ExpressionVisitor>(constraint1, constraint2);
+        Conjunction<ExpressionVisitor> conj2 = new Conjunction<ExpressionVisitor>(conj1, constraint3);
+        Conjunction<ExpressionVisitor> conj3 = new Conjunction<ExpressionVisitor>(conj2, constraint4);
+        List<Expression<ExpressionVisitor>> expected =
+            createExpected(constraint1, constraint2, constraint3, constraint4);
+        checkResult(conj3, expected);
+
+        conj1 = new Conjunction<ExpressionVisitor>(constraint4, constraint3);
+        conj2 = new Conjunction<ExpressionVisitor>(conj1, constraint2);
+        conj3 = new Conjunction<ExpressionVisitor>(conj2, constraint1);
+        expected = createExpected(constraint4, constraint3, constraint2, constraint1);
+        checkResult(conj3, expected);
+
+        conj1 = new Conjunction<ExpressionVisitor>(constraint4, constraint3);
+        conj2 = new Conjunction<ExpressionVisitor>(constraint2, constraint1);
+        conj3 = new Conjunction<ExpressionVisitor>(conj1, conj2);
+        expected = createExpected(constraint4, constraint3, constraint2, constraint1);
+        checkResult(conj3, expected);
+    }
+
+    public void testSimplifierUnion() {
+        Union<ExpressionVisitor> union1 = new Union<ExpressionVisitor>(constraint1, constraint2);
+        Union<ExpressionVisitor> union2 = new Union<ExpressionVisitor>(union1, constraint3);
+        Union<ExpressionVisitor> union3 = new Union<ExpressionVisitor>(union2, constraint4);
+        List<Expression<ExpressionVisitor>> expected =
+            createExpected(constraint1, constraint2, constraint3, constraint4);
+        checkResult(union3, expected);
+
+        union1 = new Union<ExpressionVisitor>(constraint4, constraint3);
+        union2 = new Union<ExpressionVisitor>(union1, constraint2);
+        union3 = new Union<ExpressionVisitor>(union2, constraint1);
+        expected = createExpected(constraint4, constraint3, constraint2, constraint1);
+        checkResult(union3, expected);
+
+        union1 = new Union<ExpressionVisitor>(constraint4, constraint3);
+        union2 = new Union<ExpressionVisitor>(constraint2, constraint1);
+        union3 = new Union<ExpressionVisitor>(union1, union2);
+        expected = createExpected(constraint4, constraint3, constraint2, constraint1);
+        checkResult(union3, expected);
+    }
+
+    private List<Expression<ExpressionVisitor>> createExpected(Expression<ExpressionVisitor>... expressions) {
+        List<Expression<ExpressionVisitor>> expected = new LinkedList<Expression<ExpressionVisitor>>();
+        for (Expression<ExpressionVisitor> exp : expressions) {
+            expected.add(exp);
+        }
+        return expected;
+    }
+
+    private void checkResult(BiOperandExpression<ExpressionVisitor> expression,
+                             List<Expression<ExpressionVisitor>> expected) {
+        List<Expression<ExpressionVisitor>> actual =
+            simplifier.flattenAndSortConjunction(expression, expression.getClass());
+        assertEquals(expected, actual);
+    }
 }

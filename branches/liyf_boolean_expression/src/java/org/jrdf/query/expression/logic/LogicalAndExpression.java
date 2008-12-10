@@ -61,7 +61,12 @@ package org.jrdf.query.expression.logic;
 
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.BiOperandExpression;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
+
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * @author Yuan-Fang Li
@@ -81,6 +86,13 @@ public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicE
     public LogicalAndExpression(LogicExpression<V> lhs, LogicExpression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
+    }
+
+    public Map<Attribute, ValueOperation> getAVO() {
+        Map<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>();
+        map.putAll(lhs.getAVO());
+        map.putAll(rhs.getAVO());
+        return map;
     }
 
     public LogicExpression<V> getLhs() {

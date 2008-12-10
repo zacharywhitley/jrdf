@@ -84,8 +84,6 @@ public interface ExpressionVisitor {
 
     <V extends ExpressionVisitor> void visitOptional(Optional<V> optional);
 
-    <V extends ExpressionVisitor> void visitOperator(Operator<V> operator);
-
     <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression);
 
     <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression);
@@ -99,4 +97,12 @@ public interface ExpressionVisitor {
     <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression);
 
     <V extends ExpressionVisitor> void visitAsk(Ask<V> ask);
+
+    <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value);
+
+    <V extends ExpressionVisitor> void visitStr(StrOperator<V> str);
+
+    <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang);
+
+    <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound);
 }

@@ -59,7 +59,6 @@
 
 package org.jrdf.query.expression;
 
-import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
@@ -70,7 +69,7 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id :$
  */
-public class LangOperator <V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
+public final class LangOperator <V extends ExpressionVisitor> implements Operator<V> {
     private static final long serialVersionUID = -6423244147349910918L;
 
     private static final int DUMMY_HASHCODE = 47;
@@ -84,16 +83,16 @@ public class LangOperator <V extends ExpressionVisitor> implements Operator<V>, 
         this.singleAvp = singleAvp;
     }
 
-    public Map<Attribute, ValueOperation> getAttributeValuePair() {
+    public Map<Attribute, ValueOperation> getAVO() {
         return singleAvp;
     }
 
     public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitOperator(this);
+        expressionVisitor.visitLang(this);
     }
 
     public int size() {
-        return 0;
+        return 2;
     }
 
     @Override

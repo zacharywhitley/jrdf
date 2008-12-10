@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,72 +57,86 @@
  *
  */
 
-package org.jrdf.query.expression.logic;
+package org.jrdf.query.expression;
 
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.differentClasses;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id :$
  */
+public final class SingleValue<V extends ExpressionVisitor> implements Constraint<V> {
+    private static final long serialVersionUID = -4113675582657624557L;
 
-public class LogicalNotExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
-    private static final long serialVersionUID = 7468439147872226467L;
     private static final int DUMMY_HASHCODE = 47;
+    private Map<Attribute, ValueOperation> avo;
 
-    private LogicExpression<V> expression;
-
-    private LogicalNotExpression() {
+    private SingleValue() {
     }
 
-    public LogicalNotExpression(LogicExpression<V> exp) {
-        expression = exp;
-    }
-
-    public void accept(V v) {
-        v.visitLogicalNot(this);
+    public SingleValue(Map<Attribute, ValueOperation> avp) {
+        this.avo = avp;
     }
 
     public Map<Attribute, ValueOperation> getAVO() {
-        return expression.getAVO();
+        return avo;
     }
 
-    public LogicExpression<V> getExpression() {
-        return expression;
+    public void setAvo(Attribute existingAttribute, ValueOperation newValueOperation) {
+        if (avo.containsKey(existingAttribute)) {
+            avo.put(existingAttribute, newValueOperation);
+        } else {
+            throw new RuntimeException("Cannot set non-existing attribute: " + existingAttribute);
+        }
+    }
+
+    public void accept(V v) {
+        v.visitSingleValue(this);
     }
 
     public int size() {
-        return expression.size() + 1;
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        if (differentClasses(this, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields(this, (SingleValue) obj);
     }
 
     @Override
     public int hashCode() {
-        return DUMMY_HASHCODE + expression.hashCode();
+        return DUMMY_HASHCODE + avo.hashCode();
     }
 
+    /**
+     * Delegates to <code>getAvp().toString()</code>.
+     */
+    @Override
     public String toString() {
-        return "! " + expression;
+        return avo.toString();
     }
 
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (LogicalNotExpression) obj);
+    private boolean determineEqualityFromFields(SingleValue o1, SingleValue o2) {
+        return o1.avo.equals(o2.avo);
     }
 
-    private boolean determineEqualityFromFields(LogicalNotExpression s1, LogicalNotExpression s2) {
-        return s1.expression.equals(s2.expression);
+    public Set<Attribute> getHeadings() {
+        return avo.keySet();
     }
 }

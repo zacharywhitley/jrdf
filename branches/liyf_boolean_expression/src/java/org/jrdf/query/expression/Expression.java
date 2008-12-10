@@ -59,7 +59,11 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
+
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * A pattern of triples applied to a graph to constrain the results of a query.
@@ -72,4 +76,6 @@ public interface Expression<V extends ExpressionVisitor> extends Serializable {
     void accept(V v);
 
     int size();
+
+    Map<Attribute, ValueOperation> getAVO();
 }

@@ -91,9 +91,6 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
     }
 
-    public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
-    }
-
     public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
     }
 
@@ -113,5 +110,17 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
     }
 
     public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
+    }
+
+    public <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value) {
+    }
+
+    public <V extends ExpressionVisitor> void visitStr(StrOperator<V> str) {
+    }
+
+    public <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang) {
+    }
+
+    public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound) {
     }
 }
