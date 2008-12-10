@@ -64,8 +64,11 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     public <V extends ExpressionVisitor> void visitStr(StrOperator<V> str) {
         final ValueOperation valueOperation = getValueOperation(str);
         if (valueOperation != null) {
-            Literal literal = (Literal) valueOperation.getValue();
-            value = new LiteralImpl(literal.getLexicalForm());
+            Node node = valueOperation.getValue();
+            if (Literal.class.isAssignableFrom(node.getClass())) {
+                Literal literal = (Literal) valueOperation.getValue();
+                value = new LiteralImpl(literal.getLexicalForm());
+            }
         }
     }
 
@@ -73,8 +76,11 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     public <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang) {
         final ValueOperation valueOperation = getValueOperation(lang);
         if (valueOperation != null) {
-            Literal literal = (Literal) valueOperation.getValue();
-            value = new LiteralImpl(literal.getLanguage());
+            Node node = valueOperation.getValue();
+            if (Literal.class.isAssignableFrom(node.getClass())) {
+                Literal literal = (Literal) node;
+                value = new LiteralImpl(literal.getLanguage());
+            }
         }
     }
 
