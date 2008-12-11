@@ -32,7 +32,7 @@ import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version :$Id:$
+ * @version $Id:$
  */
 
 public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements BooleanEvaluator {
