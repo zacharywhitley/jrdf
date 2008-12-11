@@ -121,7 +121,6 @@ public class LogicAndExpression<V extends ExpressionVisitor> implements LogicExp
     }
 
     public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
         int hash = DUMMY_HASHCODE + lhs.hashCode();
         hash = hash * DUMMY_HASHCODE + rhs.hashCode();
         return hash * DUMMY_HASHCODE + AND_STRING.hashCode();

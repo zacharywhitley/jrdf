@@ -21,6 +21,7 @@ public class LessThanExpression<V extends ExpressionVisitor> implements LogicExp
 
     private Expression<V> lhs;
     private Expression<V> rhs;
+    protected static final String LESS_THAN = "<";
 
     private LessThanExpression() {
     }
@@ -55,11 +56,12 @@ public class LessThanExpression<V extends ExpressionVisitor> implements LogicExp
 
     public int hashCode() {
         int hash = DUMMY_HASHCODE + lhs.hashCode();
-        return hash * DUMMY_HASHCODE + rhs.hashCode();
+        hash = hash * DUMMY_HASHCODE + rhs.hashCode();
+        return hash * DUMMY_HASHCODE + LESS_THAN.hashCode();
     }
 
     public String toString() {
-        return lhs + " < " + rhs;
+        return "( " + lhs + " " + LESS_THAN + " " + rhs + " )";
     }
 
     public boolean equals(Object obj) {
