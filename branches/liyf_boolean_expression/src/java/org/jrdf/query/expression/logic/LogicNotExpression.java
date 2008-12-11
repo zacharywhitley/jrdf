@@ -76,6 +76,7 @@ public class LogicNotExpression<V extends ExpressionVisitor> implements LogicExp
     private static final int DUMMY_HASHCODE = 47;
 
     private LogicExpression<V> expression;
+    protected static final String BANG = "!";
 
     private LogicNotExpression() {
     }
@@ -102,11 +103,12 @@ public class LogicNotExpression<V extends ExpressionVisitor> implements LogicExp
 
     @Override
     public int hashCode() {
-        return DUMMY_HASHCODE + expression.hashCode();
+        int hash = DUMMY_HASHCODE + expression.hashCode();
+        return hash * DUMMY_HASHCODE + BANG.hashCode();
     }
 
     public String toString() {
-        return "! " + expression;
+        return BANG + " " + expression;
     }
 
     public boolean equals(Object obj) {
