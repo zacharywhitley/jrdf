@@ -27,6 +27,8 @@ import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
+import org.jrdf.query.expression.logic.TrueExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AVPOperation;
@@ -203,6 +205,14 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         }
     }
 
+    public <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp) {
+        expression = trueExp;
+    }
+
+    public <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp) {
+        expression = falseExp;
+    }
+
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor> Expression<V>[] reorderPairs(Expression<V> lhs, Expression<V> rhs) {
         Expression<V>[] result = new Expression[2];
@@ -237,9 +247,9 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
 
     private boolean isValidForEquate(ValueOperation lvo, ValueOperation rvo) {
         AVPOperation lOp = lvo.getOperation();
-        AVPOperation rOp = rvo.getOperation();
         boolean validForEquate = lOp.equals(EQUALS) || lOp.equals(STR);
-        validForEquate = validForEquate && (rOp.equals(EQUALS) || rOp.equals(STR));
+        validForEquate = validForEquate &&
+            (rvo == null || rvo.getOperation().equals(EQUALS) || rvo.getOperation().equals(STR));
         return validForEquate;
     }
 

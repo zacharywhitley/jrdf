@@ -60,10 +60,12 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
+import org.jrdf.query.expression.logic.TrueExpression;
 
 /**
  * Visits the various expression objects.  Can be used to execute or optimize (transform) expressions.
@@ -105,4 +107,8 @@ public interface ExpressionVisitor {
     <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang);
 
     <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound);
+
+    <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp);
+
+    <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp);
 }

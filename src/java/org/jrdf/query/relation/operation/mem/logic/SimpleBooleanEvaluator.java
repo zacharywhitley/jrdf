@@ -19,6 +19,8 @@ import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
+import org.jrdf.query.expression.logic.TrueExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
@@ -48,7 +50,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         Map.Entry<Attribute, ValueOperation> entry = avo.entrySet().iterator().next();
         Attribute attribute = entry.getKey();
         Node node = entry.getValue().getValue();
-        ValueOperation valueOperation = tuple.getValueOperation(attribute);
+        final ValueOperation valueOperation = tuple.getValueOperation(attribute);
         if (AnyNode.ANY_NODE.equals(node)) {
             if (valueOperation != null) {
                 this.value = valueOperation.getValue();
@@ -124,6 +126,16 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         Node lhsValue = getValue(tuple, lessThanExpression.getLhs());
         Node rhsValue = getValue(tuple, lessThanExpression.getRhs());
         contradiction = compareNodes(lhsValue, rhsValue) >= 0;
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp) {
+        contradiction = false;
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp) {
+        contradiction = true;
     }
 
     private <V extends ExpressionVisitor> ValueOperation getValueOperation(Operator<V> str) {

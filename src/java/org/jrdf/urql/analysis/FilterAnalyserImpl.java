@@ -23,6 +23,8 @@ import org.jrdf.urql.parser.node.ANeMoreNumericExpression;
 import org.jrdf.urql.parser.node.ARelationalExpression;
 import org.jrdf.urql.parser.node.PMoreNumericExpression;
 import org.jrdf.urql.parser.node.PMoreValueLogical;
+import org.jrdf.urql.parser.node.ATrueBooleanLiteral;
+import org.jrdf.urql.parser.node.AFalseBooleanLiteral;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.LinkedList;
@@ -153,6 +155,26 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
             node.getNumericExpression().apply(numericExpressionAnalyser);
             Expression<V> rhsExp = numericExpressionAnalyser.getExpression();
             expression = new LessThanExpression<V>(lhsExp, rhsExp);
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseATrueBooleanLiteral(ATrueBooleanLiteral node) {
+        try {
+            node.apply(numericExpressionAnalyser);
+            expression = (LogicExpression<V>) numericExpressionAnalyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseAFalseBooleanLiteral(AFalseBooleanLiteral node) {
+        try {
+            node.apply(numericExpressionAnalyser);
+            expression = (LogicExpression<V>) numericExpressionAnalyser.getExpression();
         } catch (ParserException e) {
             exception = e;
         }

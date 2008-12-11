@@ -51,6 +51,8 @@ Tokens
   {def}                is_blank_call    = ('isBLANK');
   {def}                is_literal_call  = ('isLITERAL');
   {def}                bound_call       = ('BOUND' | 'bound');
+  {def}                true_literal     = ('TRUE' | 'true');
+  {def}                false_literal    = ('FALSE' | 'false');
 
   {def->com}                      hash           = '#';
   {com}                           comment        = [character - [lf + cr]];
@@ -217,7 +219,9 @@ Productions
     {decimal} decimal |
     {double} double;
 
-  boolean_literal = identifier;
+  boolean_literal =
+    {true} true_literal |
+    {false} false_literal ;
 
   constraint =
     {builtincall} builtincall |

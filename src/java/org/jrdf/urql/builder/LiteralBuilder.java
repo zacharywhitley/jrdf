@@ -60,12 +60,19 @@
 package org.jrdf.urql.builder;
 
 import org.jrdf.graph.Literal;
+import org.jrdf.urql.parser.node.AFalseBooleanLiteral;
 import org.jrdf.urql.parser.node.ALiteralObjectTripleElement;
-import org.jrdf.urql.parser.node.Switch;
 import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
+import org.jrdf.urql.parser.node.ATrueBooleanLiteral;
+import org.jrdf.urql.parser.node.Switch;
 import org.jrdf.urql.parser.parser.ParserException;
 
 public interface LiteralBuilder extends Switch {
     Literal createLiteral(ALiteralObjectTripleElement element) throws ParserException;
+
     Literal createLiteral(ARdfLiteralPrimaryExpression element) throws ParserException;
+
+    Literal createLiteral(ATrueBooleanLiteral element) throws ParserException;
+
+    Literal createLiteral(AFalseBooleanLiteral element) throws ParserException;
 }
