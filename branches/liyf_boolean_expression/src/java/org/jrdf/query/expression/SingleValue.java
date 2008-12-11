@@ -70,8 +70,9 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id :$
+ * @version $Id:$
  */
+
 public final class SingleValue<V extends ExpressionVisitor> implements Constraint<V> {
     private static final long serialVersionUID = -4113675582657624557L;
 
