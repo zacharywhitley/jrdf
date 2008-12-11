@@ -5,9 +5,10 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
+import org.jrdf.query.expression.logic.LogicAndExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.query.expression.logic.LogicalAndExpression;
-import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.LogicNotExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.builder.URIReferenceBuilder;
@@ -16,15 +17,17 @@ import org.jrdf.urql.parser.node.ABooleanNotUnaryExpression;
 import org.jrdf.urql.parser.node.ABoundBuiltincall;
 import org.jrdf.urql.parser.node.ABracketedExpressionConstraint;
 import org.jrdf.urql.parser.node.AConditionalAndExpression;
+import org.jrdf.urql.parser.node.AConditionalOrExpression;
 import org.jrdf.urql.parser.node.AEMoreNumericExpression;
+import org.jrdf.urql.parser.node.AFalseBooleanLiteral;
 import org.jrdf.urql.parser.node.ALtMoreNumericExpression;
 import org.jrdf.urql.parser.node.AMoreValueLogical;
 import org.jrdf.urql.parser.node.ANeMoreNumericExpression;
 import org.jrdf.urql.parser.node.ARelationalExpression;
+import org.jrdf.urql.parser.node.ATrueBooleanLiteral;
+import org.jrdf.urql.parser.node.PMoreConditionalAndExpression;
 import org.jrdf.urql.parser.node.PMoreNumericExpression;
 import org.jrdf.urql.parser.node.PMoreValueLogical;
-import org.jrdf.urql.parser.node.ATrueBooleanLiteral;
-import org.jrdf.urql.parser.node.AFalseBooleanLiteral;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.LinkedList;
@@ -96,7 +99,7 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
         try {
             node.getPrimaryExpression().apply(this);
             final LogicExpression<V> exp = this.getExpression();
-            expression = new LogicalNotExpression<V>(exp);
+            expression = new LogicNotExpression<V>(exp);
         } catch (ParserException e) {
             exception = e;
         }
@@ -116,7 +119,24 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
             for (PMoreValueLogical rhs : list) {
                 rhs.apply(this);
                 final LogicExpression<V> exp2 = getExpression();
-                exp1 = new LogicalAndExpression<V>(exp1, exp2);
+                exp1 = new LogicAndExpression<V>(exp1, exp2);
+            }
+            expression = exp1;
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseAConditionalOrExpression(AConditionalOrExpression node) {
+        try {
+            node.getConditionalAndExpression().apply(this);
+            LogicExpression<V> exp1 = expression;
+            final LinkedList<PMoreConditionalAndExpression> list = node.getMoreConditionalAndExpression();
+            for (PMoreConditionalAndExpression rhs : list) {
+                rhs.apply(this);
+                final LogicExpression<V> exp2 = getExpression();
+                exp1 = new LogicOrExpression<V>(exp1, exp2);
             }
             expression = exp1;
         } catch (ParserException e) {

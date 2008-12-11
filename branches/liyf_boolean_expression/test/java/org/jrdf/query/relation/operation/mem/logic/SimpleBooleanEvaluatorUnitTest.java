@@ -11,13 +11,14 @@ import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
+import org.jrdf.query.expression.logic.LogicAndExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
+import org.jrdf.query.expression.logic.LogicNotExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
-import org.jrdf.query.expression.logic.FalseExpression;
-import org.jrdf.query.expression.logic.LogicalAndExpression;
-import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
@@ -180,17 +181,31 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testAndExp() {
-        LogicExpression<ExpressionVisitor> andExp = new LogicalAndExpression<ExpressionVisitor>(TRUE_EXP, FALSE_EXP);
+        LogicExpression<ExpressionVisitor> andExp = new LogicAndExpression<ExpressionVisitor>(TRUE_EXP, FALSE_EXP);
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
+        assertFalse(result);
+
+        andExp = new LogicAndExpression<ExpressionVisitor>(FALSE_EXP, TRUE_EXP);
+        result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
         assertFalse(result);
     }
 
+    public void testOrExp() {
+        LogicExpression<ExpressionVisitor> andExp = new LogicOrExpression<ExpressionVisitor>(TRUE_EXP, FALSE_EXP);
+        boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
+        assertTrue(result);
+
+        andExp = new LogicOrExpression<ExpressionVisitor>(FALSE_EXP, TRUE_EXP);
+        result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
+        assertTrue(result);
+    }
+
     public void testNotExp() {
-        LogicExpression<ExpressionVisitor> notExp = new LogicalNotExpression<ExpressionVisitor>(TRUE_EXP);
+        LogicExpression<ExpressionVisitor> notExp = new LogicNotExpression<ExpressionVisitor>(TRUE_EXP);
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, notExp);
         assertFalse(result);
 
-        notExp = new LogicalNotExpression<ExpressionVisitor>(FALSE_EXP);
+        notExp = new LogicNotExpression<ExpressionVisitor>(FALSE_EXP);
         result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, notExp);
         assertTrue(result);
     }
