@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
  * @author Yuan-Fang Li
  * @version $Id$
  */
+
 public class LessThanExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
     private static final long serialVersionUID = -8314509866292119440L;
     private static final int DUMMY_HASHCODE = 47;
