@@ -79,6 +79,8 @@ import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
+import org.jrdf.query.expression.logic.TrueExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 
 /**
  * @author Yuan-Fang Li
@@ -194,6 +196,14 @@ public final class ExpressionComparatorImpl implements ExpressionVisitor, Expres
 
     public <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value) {
         result = value.size();
+    }
+
+    public <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp) {
+        result = trueExp.size();
+    }
+
+    public <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp) {
+        result = falseExp.size();
     }
 
     @SuppressWarnings({ "unchecked" })

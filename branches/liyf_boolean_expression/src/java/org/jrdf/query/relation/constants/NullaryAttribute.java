@@ -89,6 +89,16 @@ public final class NullaryAttribute implements Attribute, Serializable {
         return new NullaryNodeType();
     }
 
+    /**
+     * Test whether a given attribute is nullary attribute.
+     * @param attribute
+     * @return
+     */
+    public static boolean isNullaryAttribute(Attribute attribute) {
+        return attribute.getAttributeName() instanceof NullaryAttributeName ||
+            attribute.getType() instanceof NullaryNodeType;
+    }
+
     @Override
     public int hashCode() {
         return 1;

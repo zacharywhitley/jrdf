@@ -64,7 +64,6 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import static org.jrdf.urql.builder.TokenHelper.getResource;
 import org.jrdf.urql.parser.analysis.AnalysisAdapter;
-import org.jrdf.urql.parser.node.ABooleanLiteral;
 import org.jrdf.urql.parser.node.ABooleanLiteralLiteral;
 import org.jrdf.urql.parser.node.ADbQuotedLiteralLiteralValue;
 import org.jrdf.urql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
@@ -88,6 +87,8 @@ import org.jrdf.urql.parser.node.AUnsignedNumericLiteralNumericLiteral;
 import org.jrdf.urql.parser.node.AUntypedLiteralRdfLiteral;
 import org.jrdf.urql.parser.node.Node;
 import org.jrdf.urql.parser.node.Token;
+import org.jrdf.urql.parser.node.ATrueBooleanLiteral;
+import org.jrdf.urql.parser.node.AFalseBooleanLiteral;
 import org.jrdf.urql.parser.parser.ParserException;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.vocabulary.XSD;
@@ -123,6 +124,16 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
         checkNotNull(element);
         resetState();
         element.getRdfLiteral().apply(this);
+        return getResult(element);
+    }
+
+    public Literal createLiteral(ATrueBooleanLiteral element) throws ParserException {
+        createLiteral("true", XSD.BOOLEAN);
+        return getResult(element);
+    }
+
+    public Literal createLiteral(AFalseBooleanLiteral element) throws ParserException {
+        createLiteral("false", XSD.BOOLEAN);
         return getResult(element);
     }
 
@@ -194,11 +205,13 @@ public final class LiteralBuilderImpl extends AnalysisAdapter implements Literal
     }
 
     @Override
-    public void caseABooleanLiteral(ABooleanLiteral node) {
-        String s = node.getIdentifier().getText();
-        if (s.equals("true") || s.equals("false")) {
-            createLiteral(s, XSD.BOOLEAN);
-        }
+    public void caseATrueBooleanLiteral(ATrueBooleanLiteral node) {
+        createLiteral("true", XSD.BOOLEAN);
+    }
+
+    @Override
+    public void caseAFalseBooleanLiteral(AFalseBooleanLiteral node) {
+        createLiteral("false", XSD.BOOLEAN);
     }
 
     @Override

@@ -8,14 +8,17 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
+import org.jrdf.query.expression.logic.TrueExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.relation.constants.NullaryAttribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.BoundAVPOperation;
-import org.jrdf.query.relation.mem.EqAVPOperation;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.LangAVPOperator;
 import org.jrdf.query.relation.mem.StrAVPOperation;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
@@ -31,7 +34,9 @@ import org.jrdf.urql.parser.node.ALangBuiltincall;
 import org.jrdf.urql.parser.node.APrefixedNameIriRefOrPrefixedName;
 import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
 import org.jrdf.urql.parser.node.AStrBuiltincall;
+import org.jrdf.urql.parser.node.ATrueBooleanLiteral;
 import org.jrdf.urql.parser.node.AVariable;
+import org.jrdf.urql.parser.node.AFalseBooleanLiteral;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.HashMap;
@@ -102,7 +107,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
     @Override
     public void caseARdfLiteralPrimaryExpression(ARdfLiteralPrimaryExpression node) {
         try {
-            this.operation = EqAVPOperation.EQUALS;
+            this.operation = EQUALS;
             this.value = literalBuilder.createLiteral(node);
             this.expression = new SingleValue<V>(getSingleAvp());
         } catch (ParserException e) {
@@ -125,7 +130,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
     public void caseAVariable(AVariable node) {
         this.attributeName = new VariableName(node.getVariablename().getText());
         this.value = AnyNode.ANY_NODE;
-        this.operation = EqAVPOperation.EQUALS;
+        this.operation = EQUALS;
         try {
             this.expression = new SingleValue<V>(getSingleAvp());
         } catch (ParserException e) {
@@ -136,7 +141,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
     @Override
     public void caseAIriRefIriRefOrPrefixedName(AIriRefIriRefOrPrefixedName node) {
         try {
-            this.operation = EqAVPOperation.EQUALS;
+            this.operation = EQUALS;
             this.value = uriBuilder.createURIReference(node);
             this.expression = new SingleValue<V>(getSingleAvp());
         } catch (ParserException e) {
@@ -147,9 +152,37 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
     @Override
     public void caseAPrefixedNameIriRefOrPrefixedName(APrefixedNameIriRefOrPrefixedName node) {
         try {
-            this.operation = EqAVPOperation.EQUALS;
+            this.operation = EQUALS;
             this.value = uriBuilder.createURIReference(node);
             this.expression = new SingleValue<V>(getSingleAvp());
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseATrueBooleanLiteral(ATrueBooleanLiteral node) {
+        try {
+            if (attributeName == null) {
+                attributeName = NullaryAttribute.NULLARY_ATTRIBUTE.getAttributeName();
+            }
+            this.operation = EQUALS;
+            this.value = literalBuilder.createLiteral(node);
+            this.expression = new TrueExpression<V>(getSingleAvp());
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseAFalseBooleanLiteral(AFalseBooleanLiteral node) {
+        try {
+            if (attributeName == null) {
+                attributeName = NullaryAttribute.NULLARY_ATTRIBUTE.getAttributeName();
+            }
+            this.operation = EQUALS;
+            this.value = literalBuilder.createLiteral(node);
+            this.expression = new FalseExpression<V>(getSingleAvp());
         } catch (ParserException e) {
             exception = e;
         }

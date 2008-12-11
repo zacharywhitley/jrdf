@@ -61,6 +61,7 @@ package org.jrdf.urql.analysis;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.relation.constants.NullaryAttribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.NodeType;
@@ -111,7 +112,7 @@ public class AttributeCollectorImpl implements VariableCollector {
             } else {
                 addNewEntry(attribute);
             }
-        } else {
+        } else if (!NullaryAttribute.isNullaryAttribute(attribute)) {
             addNewEntry(attribute);
         }
     }

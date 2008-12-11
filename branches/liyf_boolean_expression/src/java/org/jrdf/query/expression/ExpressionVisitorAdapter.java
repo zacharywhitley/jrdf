@@ -64,6 +64,8 @@ import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
+import org.jrdf.query.expression.logic.TrueExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 
 /**
  * An adapter for ExpressionVisitor - allows an implementation to avoid having to implement all the methods.
@@ -122,5 +124,11 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
     }
 
     public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound) {
+    }
+
+    public <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp) {
+    }
+
+    public <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp) {
     }
 }

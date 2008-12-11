@@ -83,15 +83,18 @@ import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicalAndExpression;
 import org.jrdf.query.expression.logic.LogicalNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
+import org.jrdf.query.expression.logic.TrueExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.constants.NullaryAttribute;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import static org.jrdf.query.relation.mem.BoundAVPOperation.BOUND;
 import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
@@ -104,9 +107,9 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
+import org.jrdf.util.test.NodeTestUtil;
 import static org.jrdf.util.test.NodeTestUtil.createLiteral;
 import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.NodeTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.ANY_SPO;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
@@ -596,6 +599,30 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void testSimpleAskQuery() throws Exception {
         Expression<ExpressionVisitor> spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
         checkConstraintExpression("ASK WHERE { ?s ?p 'The Pragmatic Programmer' } ", spPrag1);
+    }
+
+    public void testSimpleTrueBoolean() throws Exception {
+        Expression<ExpressionVisitor> spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        ValueOperation value = new ValueOperationImpl(createLiteral("true", XSD.BOOLEAN), EQUALS);
+        Attribute attribute = new AttributeImpl(NullaryAttribute.NULLARY_ATTRIBUTE.getAttributeName(),
+            new ObjectNodeType());
+        avo.put(attribute, value);
+        LogicExpression<ExpressionVisitor> logicExp = new TrueExpression<ExpressionVisitor>(avo);
+        Filter<ExpressionVisitor> filter = new Filter<ExpressionVisitor>(spPrag1, logicExp);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p 'The Pragmatic Programmer' FILTER (TRUE) } ", filter);
+    }
+
+    public void testSimpleFalseBoolean() throws Exception {
+        Expression<ExpressionVisitor> spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
+        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+        ValueOperation value = new ValueOperationImpl(createLiteral("false", XSD.BOOLEAN), EQUALS);
+        Attribute attribute = new AttributeImpl(NullaryAttribute.NULLARY_ATTRIBUTE.getAttributeName(),
+            new ObjectNodeType());
+        avo.put(attribute, value);
+        LogicExpression<ExpressionVisitor> logicExp = new FalseExpression<ExpressionVisitor>(avo);
+        Filter<ExpressionVisitor> filter = new Filter<ExpressionVisitor>(spPrag1, logicExp);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p 'The Pragmatic Programmer' FILTER (FALSE) } ", filter);
     }
 
     public void testPrefixInFilteredAsk() throws Exception {
