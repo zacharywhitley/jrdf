@@ -128,7 +128,7 @@ public class LogicAndExpression<V extends ExpressionVisitor> implements LogicExp
     }
 
     public String toString() {
-        return lhs + (" " + AND_STRING + " ") + rhs;
+        return "( " + lhs + " " + AND_STRING + " " + rhs + " )";
     }
 
     public boolean equals(Object obj) {

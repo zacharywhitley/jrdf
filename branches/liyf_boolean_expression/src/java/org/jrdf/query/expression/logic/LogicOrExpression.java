@@ -127,7 +127,7 @@ public class LogicOrExpression<V extends ExpressionVisitor> implements LogicExpr
     }
 
     public String toString() {
-        return lhs + (" " + OR_STRING + " ") + rhs;
+        return "( " + lhs + " " + OR_STRING + " " + rhs + " )";
     }
 
     public boolean equals(Object obj) {
