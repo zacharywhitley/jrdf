@@ -120,7 +120,6 @@ public class LogicOrExpression<V extends ExpressionVisitor> implements LogicExpr
     }
 
     public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
         int hash = DUMMY_HASHCODE + lhs.hashCode();
         hash = hash * DUMMY_HASHCODE + rhs.hashCode();
         return hash * DUMMY_HASHCODE + OR_STRING.hashCode();
