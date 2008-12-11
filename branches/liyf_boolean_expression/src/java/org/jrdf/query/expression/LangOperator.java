@@ -67,8 +67,9 @@ import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id :$
+ * @version $Id:$
  */
+
 public final class LangOperator <V extends ExpressionVisitor> implements Operator<V> {
     private static final long serialVersionUID = -6423244147349910918L;
 
