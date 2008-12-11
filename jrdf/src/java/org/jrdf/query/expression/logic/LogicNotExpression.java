@@ -57,9 +57,9 @@
  *
  */
 
-package org.jrdf.query.expression;
+package org.jrdf.query.expression.logic;
 
-import org.jrdf.query.expression.logic.LogicExpression;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
@@ -68,44 +68,47 @@ import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id $
+ * @version $Id:$
  */
 
-public final class BoundOperator <V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
-    private static final long serialVersionUID = -2026129623510467814L;
+public class LogicNotExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
+    private static final long serialVersionUID = 7468439147872226467L;
     private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
-    protected static final String BOUND = "bound";
 
-    private BoundOperator() {
+    private LogicExpression<V> expression;
+    protected static final String BANG = "!";
+
+    private LogicNotExpression() {
     }
 
-    public BoundOperator(Map<Attribute, ValueOperation> singleAvp) {
-        this.singleAvp = singleAvp;
+    public LogicNotExpression(LogicExpression<V> exp) {
+        expression = exp;
     }
 
-    public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitBound(this);
+    public void accept(V v) {
+        v.visitLogicNot(this);
     }
 
     public Map<Attribute, ValueOperation> getAVO() {
-        return singleAvp;
+        return expression.getAVO();
+    }
+
+    public LogicExpression<V> getExpression() {
+        return expression;
     }
 
     public int size() {
-        return 2;
+        return expression.size() + 1;
     }
 
     @Override
     public int hashCode() {
-        return DUMMY_HASHCODE + DUMMY_HASHCODE * singleAvp.hashCode() + BOUND.hashCode();
+        int hash = DUMMY_HASHCODE + expression.hashCode();
+        return hash * DUMMY_HASHCODE + BANG.hashCode();
     }
 
-    @Override
     public String toString() {
-        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
-        Attribute attribute = attributeValueOperationEntry.getKey();
-        return BOUND + " (" + attribute + ")";
+        return BANG + " " + expression;
     }
 
     public boolean equals(Object obj) {
@@ -118,10 +121,10 @@ public final class BoundOperator <V extends ExpressionVisitor> implements Operat
         if (EqualsUtil.differentClasses(this, obj)) {
             return false;
         }
-        return determineEqualityFromFields(this, (BoundOperator) obj);
+        return determineEqualityFromFields(this, (LogicNotExpression) obj);
     }
 
-    private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {
-        return s1.singleAvp.equals(s2.singleAvp);
+    private boolean determineEqualityFromFields(LogicNotExpression s1, LogicNotExpression s2) {
+        return s1.expression.equals(s2.expression);
     }
 }

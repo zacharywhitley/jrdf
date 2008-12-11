@@ -1,32 +1,40 @@
 package org.jrdf.query.execute;
 
 import org.jrdf.graph.AnyNode;
-import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.AnySubjectNode;
 import org.jrdf.graph.Node;
 import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 import org.jrdf.query.expression.Ask;
+import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.EmptyConstraint;
+import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Filter;
-import org.jrdf.query.expression.Operator;
+import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
+import org.jrdf.query.expression.SingleValue;
+import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.Union;
-import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.query.expression.logic.LogicalAndExpression;
-import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.LogicAndExpression;
+import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
+import org.jrdf.query.expression.logic.TrueExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.relation.mem.AVPOperation;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
+import static org.jrdf.query.relation.mem.StrAVPOperation.STR;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 
 import java.util.HashMap;
@@ -36,11 +44,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class ExpressionSimplifierImpl implements ExpressionSimplifier {
-    private Map<Attribute, ValueOperation> newAttributeValues;
     private Expression expression;
-    private final ExpressionComparator expressionComparator = EXPRESSION_COMPARATOR;
-    private Map<Attribute, Attribute> variableMap;
     private Set<Attribute> declaredVariables;
+    private Map<Attribute, Attribute> variableMap;
+    private Map<Attribute, ValueOperation> newAttributeValues;
 
     public ExpressionSimplifierImpl(Map<Attribute, ValueOperation> newAttributeValues,
                                     Map<Attribute, Attribute> variableMap,
@@ -56,6 +63,7 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         this.declaredVariables = new LinkedHashSet<Attribute>();
     }
 
+    @SuppressWarnings({ "unchecked" })
     public <V extends ExpressionVisitor> Expression<V> getExpression() {
         return expression;
     }
@@ -86,7 +94,7 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         if (expression == null) {
             expression = constructUnionedConjunction(lhs, rhs);
             if (expression == null) {
-                if (expressionComparator.compare(lhs, rhs) <= 0) {
+                if (EXPRESSION_COMPARATOR.compare(lhs, rhs) <= 0) {
                     expression = new Conjunction<V>(lhs, rhs);
                 } else {
                     expression = new Conjunction<V>(rhs, lhs);
@@ -104,7 +112,7 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
             Expression<V> lrhs = ((Filter<V>) rhs).getLhs();
             expression = new Conjunction<V>(llhs, lrhs);
             LogicExpression<V> andExp =
-                new LogicalAndExpression<V>(((Filter<V>) lhs).getRhs(), ((Filter<V>) rhs).getRhs());
+                new LogicAndExpression<V>(((Filter<V>) lhs).getRhs(), ((Filter<V>) rhs).getRhs());
             expression = new Filter<V>(expression, andExp);
         } else if (lhs instanceof Filter) {
             expression = constructConjFilter((Filter<V>) lhs, rhs);
@@ -132,7 +140,8 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         return getNext(expression);
     }
 
-    private <V extends ExpressionVisitor> Expression distributeConjunctionWithUnion(Union<V> lhs, Expression<V> rhs) {
+    private <V extends ExpressionVisitor> Expression<V>
+    distributeConjunctionWithUnion(Union<V> lhs, Expression<V> rhs) {
         Expression<V> uLhs = lhs.getLhs();
         Expression<V> uRhs = lhs.getRhs();
         Expression newConj1 = getNext(new Conjunction<V>(rhs, uLhs));
@@ -143,7 +152,7 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
     public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {
         final Expression<V> lhs = getNext(conjunction.getLhs());
         final Expression<V> rhs = getNext(conjunction.getRhs());
-        if (expressionComparator.compare(lhs, rhs) <= 0) {
+        if (EXPRESSION_COMPARATOR.compare(lhs, rhs) <= 0) {
             expression = new Union<V>(lhs, rhs);
         } else {
             expression = new Union<V>(rhs, lhs);
@@ -161,15 +170,14 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
     }
 
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
-        LogicExpression<ExpressionVisitor> logicExpression =
-            (LogicExpression< ExpressionVisitor>) getNext(filter.getRhs());
+        LogicExpression<V> logicExpression = (LogicExpression<V>) getNext(filter.getRhs());
         expression = getNext(filter.getLhs());
         if (logicExpression != null) {
-            expression = new Filter<ExpressionVisitor>(expression, logicExpression);
+            expression = new Filter<V>(expression, logicExpression);
         }
     }
 
-    public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
+    public <V extends ExpressionVisitor> void visitLogicAnd(LogicAndExpression<V> andExpression) {
         Expression<V> lhs = getNext(andExpression.getLhs());
         Expression<V> rhs = getNext(andExpression.getRhs());
         if (lhs == null && rhs == null) {
@@ -183,43 +191,49 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         }
     }
 
+    public <V extends ExpressionVisitor> void visitLogicOr(LogicOrExpression<V> orExpression) {
+        Expression<V> lhs = getNext(orExpression.getLhs());
+        Expression<V> rhs = getNext(orExpression.getRhs());
+        if (lhs == null && rhs == null) {
+            expression = null;
+        } else if (lhs == null) {
+            expression = rhs;
+        } else if (rhs == null) {
+            expression = lhs;
+        } else {
+            expression = orExpression;
+        }
+    }
+
     // TODO YF if query selects both variables in (?name = ?name1), this doesn't work properly as ?name1 will be lost!
     public <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression) {
-        Map<Attribute, ValueOperation> lhs = equalsExpression.getLhs();
-        Map<Attribute, ValueOperation> rhs = equalsExpression.getRhs();
-        final Map<Attribute, ValueOperation>[] pair = reorderPairs(lhs, rhs);
-        lhs = pair[0];
-        rhs = pair[1];
-        final boolean changed = equateAVPs(lhs, rhs);
+        Expression<V> lhs = equalsExpression.getLhs();
+        Expression<V> rhs = equalsExpression.getRhs();
+        final Expression<V>[] pair = reorderPairs(lhs, rhs);
+        final boolean changed = equateAVOs(pair[0].getAVO(), pair[1].getAVO());
         if (changed) {
             expression = null;
         } else {
-            expression = equalsExpression;
+            lhs = pair[0];
+            rhs = pair[1];
+            expression = new EqualsExpression<V>(lhs, rhs);
         }
     }
 
-    private Map<Attribute, ValueOperation>[] reorderPairs(Map<Attribute, ValueOperation> lhs,
-                                                          Map<Attribute, ValueOperation> rhs) {
-        Map<Attribute, ValueOperation>[] result = new Map[2];
+    public <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp) {
+        expression = trueExp;
+    }
+
+    public <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp) {
+        expression = falseExp;
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private <V extends ExpressionVisitor> Expression<V>[] reorderPairs(Expression<V> lhs, Expression<V> rhs) {
+        Expression<V>[] result = new Expression[2];
         final int lhsSize = lhs.size();
         final int rhsSize = rhs.size();
-        if (lhsSize < rhsSize) {
-            result[0] = lhs;
-            result[1] = rhs;
-        } else if (rhsSize < lhsSize) {
-            result[0] = rhs;
-            result[1] = lhs;
-        } else {
-            result = reorderEqualLengthVOs(lhs, rhs, result);
-        }
-        return result;
-    }
-
-    private Map<Attribute, ValueOperation>[] reorderEqualLengthVOs(Map<Attribute, ValueOperation> lhs,
-                                                                   Map<Attribute, ValueOperation> rhs,
-                                                                   Map<Attribute, ValueOperation>[] result) {
-        Attribute attribute = lhs.keySet().iterator().next();
-        if (lhs.get(attribute).getValue().equals(ANY_NODE)) {
+        if (lhsSize >= rhsSize) {
             result[0] = lhs;
             result[1] = rhs;
         } else {
@@ -229,20 +243,29 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         return result;
     }
 
-    private boolean equateAVPs(Map<Attribute, ValueOperation> lhs, Map<Attribute, ValueOperation> rhs) {
+    private boolean equateAVOs(Map<Attribute, ValueOperation> lhs, Map<Attribute, ValueOperation> rhs) {
         Attribute attribute = lhs.keySet().iterator().next();
         ValueOperation lvo = lhs.get(attribute);
         ValueOperation rvo = rhs.get(attribute);
-        if (isAnyNode(lvo.getValue())) {
+        boolean validForEquate = isValidForEquate(lvo, rvo);
+        if (validForEquate && isAnyNode(lvo.getValue())) {
             if (rvo != null) {
                 updateAttributeValue(attribute, lvo, rvo);
-            } else if (rhs.size() == 1) {
+            } else {
                 // assuming a variable now
                 updateVariableMap(rhs, attribute);
             }
             return true;
         }
         return false;
+    }
+
+    private boolean isValidForEquate(ValueOperation lvo, ValueOperation rvo) {
+        AVPOperation lOp = lvo.getOperation();
+        boolean validForEquate = lOp.equals(EQUALS) || lOp.equals(STR);
+        validForEquate = validForEquate &&
+            (rvo == null || rvo.getOperation().equals(EQUALS) || rvo.getOperation().equals(STR));
+        return validForEquate;
     }
 
     private void updateAttributeValue(Attribute attribute, ValueOperation lvo, ValueOperation rvo) {
@@ -291,12 +314,7 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
     }
 
     public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
-        LinkedHashMap<Attribute, ValueOperation> avo = updateAVPVariables(constraint.getAvo(null));
-        for (Attribute attribute : avo.keySet()) {
-            if (newAttributeValues.get(attribute) != null) {
-                avo.put(attribute, newAttributeValues.get(attribute));
-            }
-        }
+        LinkedHashMap<Attribute, ValueOperation> avo = updateAVO(constraint.getAvo(null));
         expression = new SingleConstraint<V>(avo);
     }
 
@@ -305,24 +323,49 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
     }
 
     // Skip logical not now.
-    public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
+    public <V extends ExpressionVisitor> void visitLogicNot(LogicNotExpression<V> notExpression) {
         LogicExpression<V> exp = (LogicExpression<V>) getNext(notExpression.getExpression());
-        expression = new LogicalNotExpression<V>(exp);
+        expression = new LogicNotExpression<V>(exp);
     }
 
-    public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
-        expression = operator;
+    public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound) {
+        expression = bound;
+    }
+
+    public <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang) {
+        LinkedHashMap<Attribute, ValueOperation> avo = updateAVPVariables(lang.getAVO());
+        expression = new LangOperator(avo);
+    }
+
+    public <V extends ExpressionVisitor> void visitStr(StrOperator<V> str) {
+        LinkedHashMap<Attribute, ValueOperation> avo = updateAVPVariables(str.getAVO());
+        expression = new StrOperator(avo);
+    }
+
+    public <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value) {
+        LinkedHashMap<Attribute, ValueOperation> avo = updateAVPVariables(value.getAVO());
+        expression = new SingleValue(avo);
+    }
+
+    private LinkedHashMap<Attribute, ValueOperation> updateAVO(Map<Attribute, ValueOperation> oldAvo) {
+        LinkedHashMap<Attribute, ValueOperation> avo = updateAVPVariables(oldAvo);
+        for (Attribute attribute : avo.keySet()) {
+            if (newAttributeValues.get(attribute) != null) {
+                avo.put(attribute, newAttributeValues.get(attribute));
+            }
+        }
+        return avo;
     }
 
     public <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression) {
-        final Map<Attribute, ValueOperation> lhs = updateAVPVariables(lessThanExpression.getLhs());
-        final Map<Attribute, ValueOperation> rhs = updateAVPVariables(lessThanExpression.getRhs());
+        Expression<V> lhs = getNext(lessThanExpression.getLhs());
+        Expression<V> rhs = getNext(lessThanExpression.getRhs());
         expression = new LessThanExpression<V>(lhs, rhs);
     }
 
     public <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression) {
-        final Map<Attribute, ValueOperation> lhs = updateAVPVariables(nEqualsExpression.getLhs());
-        final Map<Attribute, ValueOperation> rhs = updateAVPVariables(nEqualsExpression.getRhs());
+        Expression<V> lhs = getNext(nEqualsExpression.getLhs());
+        Expression<V> rhs = getNext(nEqualsExpression.getRhs());
         expression = new NEqualsExpression<V>(lhs, rhs);
     }
 
@@ -338,13 +381,12 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
 
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor> Expression<V> getNext(Expression<V> expression) {
-        if (expression != null) {
-            ExpressionSimplifier expressionSimplifier =
-                    new ExpressionSimplifierImpl(newAttributeValues, variableMap, declaredVariables);
-            expression.accept((V) expressionSimplifier);
-            return expressionSimplifier.getExpression();
-        } else {
+        if (expression == null) {
             return null;
         }
+        ExpressionSimplifier expressionSimplifier =
+            new ExpressionSimplifierImpl(newAttributeValues, variableMap, declaredVariables);
+        expression.accept((V) expressionSimplifier);
+        return expressionSimplifier.getExpression();
     }
 }

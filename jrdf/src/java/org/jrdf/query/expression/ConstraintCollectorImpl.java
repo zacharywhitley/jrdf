@@ -40,12 +40,27 @@ public class ConstraintCollectorImpl extends ExpressionVisitorAdapter implements
         operators.putAll(map);
     }
 
-    public <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
-        Map<Attribute, ValueOperation> valuePair = operator.getAttributeValuePair();
+    private <V extends ExpressionVisitor> void visitOperator(Operator<V> operator) {
+        Map<Attribute, ValueOperation> valuePair = operator.getAVO();
         ValueOperation valueOperation = valuePair.values().iterator().next();
         if (valueOperation.getOperation().equals(EQUALS)) {
             operators.putAll(valuePair);
         }
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound) {
+        visitOperator(bound);
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang) {
+        visitOperator(lang);
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitStr(StrOperator<V> str) {
+        visitOperator(str);
     }
 
     @SuppressWarnings({ "unchecked" })

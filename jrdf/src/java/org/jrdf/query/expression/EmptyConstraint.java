@@ -59,7 +59,12 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * A expression expression comprising an empty expression.
@@ -80,6 +85,10 @@ public final class EmptyConstraint<V extends ExpressionVisitor> implements Const
 
     public void accept(V v) {
         v.visitEmptyConstraint(this);
+    }
+
+    public Map<Attribute, ValueOperation> getAVO() {
+        return Collections.EMPTY_MAP;
     }
 
     public boolean equals(Object obj) {

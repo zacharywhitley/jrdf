@@ -60,8 +60,12 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.util.EqualsUtil;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 public final class Union<V extends ExpressionVisitor> implements BiOperandExpression<V>, Serializable {
     private static final long serialVersionUID = -3805021039393789553L;
@@ -75,6 +79,13 @@ public final class Union<V extends ExpressionVisitor> implements BiOperandExpres
     public Union(Expression<V> lhs, Expression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
+    }
+
+    public Map<Attribute, ValueOperation> getAVO() {
+        Map<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>();
+        map.putAll(lhs.getAVO());
+        map.putAll(rhs.getAVO());
+        return map;
     }
 
     public Expression<V> getLhs() {
