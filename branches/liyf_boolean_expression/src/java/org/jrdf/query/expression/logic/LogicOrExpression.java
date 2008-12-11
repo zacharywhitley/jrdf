@@ -70,7 +70,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id :$
+ * @version $Id:$
  */
 public class LogicOrExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
     private static final long serialVersionUID = 6637326993178600535L;
