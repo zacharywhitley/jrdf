@@ -3,6 +3,8 @@ package org.jrdf.query.expression;
 import org.jrdf.util.EqualsUtil;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.PositionalNodeType;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.analysis.VariableCollector;
 
 import java.io.Serializable;
@@ -26,6 +28,10 @@ public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializ
     public Ask(Expression<ExpressionVisitor> nextExpression, VariableCollector variableCollector) {
         this.nextExpression = nextExpression;
         allVariables = variableCollector.getAttributes();
+    }
+
+    public Map<Attribute, ValueOperation> getAVO() {
+        return nextExpression.getAVO();
     }
 
     public void accept(V v) {

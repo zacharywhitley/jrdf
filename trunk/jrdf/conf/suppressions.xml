@@ -34,6 +34,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesParserFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="N3EventReaderFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="N3ParserFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="NumericExpressionAnalyserImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>

@@ -59,11 +59,5 @@
 
 package org.jrdf.query.expression;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
-
-import java.util.Map;
-
 public interface Operator<V extends ExpressionVisitor> extends Expression<V> {
-    Map<Attribute, ValueOperation> getAttributeValuePair();
 }

@@ -76,6 +76,8 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
+import org.jrdf.query.expression.SingleValue;
+import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
@@ -104,34 +106,35 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class ExpressionSimplifierImplUnitTest extends TestCase {
+public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private QueryBuilder queryBuilder;
     private static final Graph GRAPH = FACTORY.getNewGraph();
 
-    private static final SubjectNodeType SUBJECT_NODE_TYPE = new SubjectNodeType();
-    private static final PredicateNodeType PREDICATE_NODE_TYPE = new PredicateNodeType();
-    private static final ObjectNodeType OBJECT_NODE_TYPE = new ObjectNodeType();
-    private static final VariableName ATTRIBUTE_S = new VariableName("s");
-    private static final VariableName ATTRIBUTE_S1 = new VariableName("s1");
-    private static final VariableName ATTRIBUTE_S2 = new VariableName("s2");
-    private static final VariableName ATTRIBUTE_S3 = new VariableName("s3");
-    private static final VariableName ATTRIBUTE_P = new VariableName("p");
-    private static final VariableName ATTRIBUTE_O = new VariableName("o");
-    private static final VariableName ATTRIBUTE_O1 = new VariableName("o1");
-    private static final VariableName ATTRIBUTE_O2 = new VariableName("o2");
-    private static final VariableName ATTRIBUTE_O3 = new VariableName("o3");
+    protected static final SubjectNodeType SUBJECT_NODE_TYPE = new SubjectNodeType();
+    protected static final PredicateNodeType PREDICATE_NODE_TYPE = new PredicateNodeType();
+    protected static final ObjectNodeType OBJECT_NODE_TYPE = new ObjectNodeType();
+    protected static final VariableName ATTRIBUTE_S = new VariableName("s");
+    protected static final VariableName ATTRIBUTE_S1 = new VariableName("s1");
+    protected static final VariableName ATTRIBUTE_S2 = new VariableName("s2");
+    protected static final VariableName ATTRIBUTE_S3 = new VariableName("s3");
+    protected static final VariableName ATTRIBUTE_P = new VariableName("p");
+    protected static final VariableName ATTRIBUTE_O = new VariableName("o");
+    protected static final VariableName ATTRIBUTE_O1 = new VariableName("o1");
+    protected static final VariableName ATTRIBUTE_O2 = new VariableName("o2");
+    protected static final VariableName ATTRIBUTE_O3 = new VariableName("o3");
+
+    protected static final Attribute ATTR_S = new AttributeImpl(ATTRIBUTE_S, SUBJECT_NODE_TYPE);
+    protected static final Attribute ATTR_S1 = new AttributeImpl(ATTRIBUTE_S1, SUBJECT_NODE_TYPE);
+    protected static final Attribute ATTR_S2 = new AttributeImpl(ATTRIBUTE_S2, SUBJECT_NODE_TYPE);
+    protected static final Attribute ATTR_S3 = new AttributeImpl(ATTRIBUTE_S3, SUBJECT_NODE_TYPE);
+    protected static final Attribute ATTR_P = new AttributeImpl(ATTRIBUTE_P, PREDICATE_NODE_TYPE);
+    protected static final Attribute ATTR_O = new AttributeImpl(ATTRIBUTE_O, OBJECT_NODE_TYPE);
+    protected static final Attribute ATTR_O1 = new AttributeImpl(ATTRIBUTE_O1, OBJECT_NODE_TYPE);
+    protected static final Attribute ATTR_O2 = new AttributeImpl(ATTRIBUTE_O2, OBJECT_NODE_TYPE);
+    protected static final Attribute ATTR_O3 = new AttributeImpl(ATTRIBUTE_O3, OBJECT_NODE_TYPE);
 
     private ExpressionSimplifier simplifier;
-    private static final Attribute ATTR_S = new AttributeImpl(ATTRIBUTE_S, SUBJECT_NODE_TYPE);
-    private static final Attribute ATTR_S1 = new AttributeImpl(ATTRIBUTE_S1, SUBJECT_NODE_TYPE);
-    private static final Attribute ATTR_S2 = new AttributeImpl(ATTRIBUTE_S2, SUBJECT_NODE_TYPE);
-    private static final Attribute ATTR_S3 = new AttributeImpl(ATTRIBUTE_S3, SUBJECT_NODE_TYPE);
-    private static final Attribute ATTR_P = new AttributeImpl(ATTRIBUTE_P, PREDICATE_NODE_TYPE);
-    private static final Attribute ATTR_O = new AttributeImpl(ATTRIBUTE_O, OBJECT_NODE_TYPE);
-    private static final Attribute ATTR_O1 = new AttributeImpl(ATTRIBUTE_O1, OBJECT_NODE_TYPE);
-    private static final Attribute ATTR_O2 = new AttributeImpl(ATTRIBUTE_O2, OBJECT_NODE_TYPE);
-    private static final Attribute ATTR_O3 = new AttributeImpl(ATTRIBUTE_O3, OBJECT_NODE_TYPE);
 
     @Override
     protected void setUp() throws Exception {
@@ -219,8 +222,10 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
         final LinkedHashMap<Attribute, ValueOperation> avp2 = createSingleAVP(subj1, pred, obj);
         SingleConstraint<ExpressionVisitor> constraint2 = new SingleConstraint<ExpressionVisitor>(avp2);
         Map<Attribute, ValueOperation> filterLhs = createSingleAVP(ATTR_O, ANY_NODE, STR);
+        Expression<ExpressionVisitor> strOp = new StrOperator<ExpressionVisitor>(filterLhs);
         Map<Attribute, ValueOperation> filterRhs = createSingleAVP(ATTR_O, literal, EQUALS);
-        NEqualsExpression<ExpressionVisitor> neq = new NEqualsExpression<ExpressionVisitor>(filterLhs, filterRhs);
+        Expression<ExpressionVisitor> singleValue = new SingleValue<ExpressionVisitor>(filterRhs);
+        NEqualsExpression<ExpressionVisitor> neq = new NEqualsExpression<ExpressionVisitor>(strOp, singleValue);
         Conjunction<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(constraint1, constraint2);
         Filter<ExpressionVisitor> filter = new Filter<ExpressionVisitor>(conj, neq);
         getExpression(queryText, filter);
@@ -300,7 +305,7 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
         getExpression(queryText, union);
     }
 
-    private LinkedHashMap<Attribute, ValueOperation> createSingleAVP(Map<Attribute, ValueOperation>... avps) {
+    protected LinkedHashMap<Attribute, ValueOperation> createSingleAVP(Map<Attribute, ValueOperation>... avps) {
         LinkedHashMap<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>();
         for (Map<Attribute, ValueOperation> avp : avps) {
             map.putAll(avp);
@@ -308,7 +313,7 @@ public class ExpressionSimplifierImplUnitTest extends TestCase {
         return map;
     }
 
-    private Map<Attribute, ValueOperation> createSingleAVP(Attribute attrO, Node node, AVPOperation operation) {
+    protected Map<Attribute, ValueOperation> createSingleAVP(Attribute attrO, Node node, AVPOperation operation) {
         Map<Attribute, ValueOperation> lhs = new HashMap<Attribute, ValueOperation>();
         ValueOperation lvalue = new ValueOperationImpl(node, operation);
         lhs.put(attrO, lvalue);

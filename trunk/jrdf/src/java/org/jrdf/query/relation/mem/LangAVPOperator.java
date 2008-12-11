@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,64 +57,61 @@
  *
  */
 
-package org.jrdf.query.expression.logic;
+package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.util.EqualsUtil;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
+
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id :$
  */
+public final class LangAVPOperator implements AVPOperation {
+    private static final long serialVersionUID = -3208512183549922694L;
 
-public class LogicalNotExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
-    private static final long serialVersionUID = 7468439147872226467L;
-    private static final int DUMMY_HASHCODE = 47;
+    /**
+     * The singleton lang operator.
+     */
+    public static final LangAVPOperator LANG = new LangAVPOperator();
 
-    private LogicExpression<V> expression;
-
-    private LogicalNotExpression() {
+    private LangAVPOperator() {
     }
 
-    public LogicalNotExpression(LogicExpression<V> exp) {
-        expression = exp;
+    public boolean addAttributeValuePair(Attribute attribute, Map<Attribute, ValueOperation> newAttributeValues,
+                                         ValueOperation lhs, ValueOperation rhs) {
+        if (LangAVPOperator.class.isAssignableFrom(lhs.getOperation().getClass())) {
+            return processLiteral(attribute, newAttributeValues, rhs);
+        } else {
+            return processLiteral(attribute, newAttributeValues, lhs);
+        }
     }
 
-    public void accept(V v) {
-        v.visitLogicalNot(this);
-    }
-
-    public LogicExpression<V> getExpression() {
-        return expression;
-    }
-
-    public int size() {
-        return expression.size() + 1;
+    private boolean processLiteral(Attribute attribute, Map<Attribute,
+        ValueOperation> newAttributeValues, ValueOperation vo) {
+        Node literal = vo.getValue();
+        if (!Literal.class.isAssignableFrom(literal.getClass())) {
+            return true;
+        }
+        Literal lit = (Literal) literal;
+        newAttributeValues.put(attribute, vo);
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return DUMMY_HASHCODE + expression.hashCode();
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj == this;
     }
 
     public String toString() {
-        return "! " + expression;
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (LogicalNotExpression) obj);
-    }
-
-    private boolean determineEqualityFromFields(LogicalNotExpression s1, LogicalNotExpression s2) {
-        return s1.expression.equals(s2.expression);
+        return "lang";
     }
 }

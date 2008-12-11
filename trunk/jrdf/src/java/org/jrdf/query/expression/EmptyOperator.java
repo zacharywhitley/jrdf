@@ -1,10 +1,11 @@
 package org.jrdf.query.expression;
 
+import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.util.EqualsUtil;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class EmptyOperator<V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
@@ -12,8 +13,8 @@ public class EmptyOperator<V extends ExpressionVisitor> implements Operator<V>, 
     private static final int DUMMY_HASHCODE = 47;
 
     //TODO Come back and make these two methods sensible.
-    public Map<Attribute, ValueOperation> getAttributeValuePair() {
-        return null;
+    public Map<Attribute, ValueOperation> getAVO() {
+        return Collections.EMPTY_MAP;
     }
 
     public void accept(ExpressionVisitor v) {

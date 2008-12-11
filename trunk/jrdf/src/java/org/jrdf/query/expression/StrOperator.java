@@ -6,10 +6,11 @@ import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
 
-public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
+public final class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     private static final long serialVersionUID = -3910514962392635053L;
     private static final int DUMMY_HASHCODE = 47;
     private Map<Attribute, ValueOperation> singleAvp;
+    protected static final String STR = "str";
 
     private StrOperator() {
     }
@@ -19,10 +20,10 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     }
 
     public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitOperator(this);
+        expressionVisitor.visitStr(this);
     }
 
-    public Map<Attribute, ValueOperation> getAttributeValuePair() {
+    public Map<Attribute, ValueOperation> getAVO() {
         return singleAvp;
     }
 
@@ -41,20 +42,20 @@ public class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
     }
 
     public int size() {
-        return 0;
+        return 2;
     }
 
     @Override
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
-        return DUMMY_HASHCODE + singleAvp.hashCode();
+        return DUMMY_HASHCODE + DUMMY_HASHCODE * singleAvp.hashCode() + STR.hashCode();
     }
 
     @Override
     public String toString() {
         Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
         Attribute attribute = attributeValueOperationEntry.getKey();
-        return "str (" + attribute + ") ";
+        return STR + " (" + attribute + ") ";
     }
 
     private boolean determineEqualityFromFields(StrOperator s1, StrOperator s2) {

@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,55 +57,76 @@
  *
  */
 
-package org.jrdf.query.expression;
+package org.jrdf.query.expression.logic;
 
-import org.jrdf.query.expression.logic.LogicExpression;
+import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.BiOperandExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id $
+ * @version $Id:$
  */
-
-public final class BoundOperator <V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
-    private static final long serialVersionUID = -2026129623510467814L;
+public class LogicOrExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
+    private static final long serialVersionUID = 6637326993178600535L;
     private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
-    protected static final String BOUND = "bound";
 
-    private BoundOperator() {
+    private LogicExpression<V> lhs;
+    private LogicExpression<V> rhs;
+    protected static final String OR_STRING = "||";
+
+    private LogicOrExpression() {
     }
 
-    public BoundOperator(Map<Attribute, ValueOperation> singleAvp) {
-        this.singleAvp = singleAvp;
-    }
-
-    public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitBound(this);
+    public LogicOrExpression(LogicExpression<V> lhs, LogicExpression<V> rhs) {
+        this.lhs = lhs;
+        this.rhs = rhs;
     }
 
     public Map<Attribute, ValueOperation> getAVO() {
-        return singleAvp;
+        Map<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>();
+        map.putAll(lhs.getAVO());
+        map.putAll(rhs.getAVO());
+        return map;
+    }
+
+    public LogicExpression<V> getLhs() {
+        return lhs;
+    }
+
+    public LogicExpression<V> getRhs() {
+        return rhs;
+    }
+
+    public void setLhs(LogicExpression<V> lhs) {
+        this.lhs = lhs;
+    }
+
+    public void setRhs(LogicExpression<V> rhs) {
+        this.rhs = rhs;
     }
 
     public int size() {
-        return 2;
+        return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
-    @Override
+    public void accept(V v) {
+        v.visitLogicOr(this);
+    }
+
     public int hashCode() {
-        return DUMMY_HASHCODE + DUMMY_HASHCODE * singleAvp.hashCode() + BOUND.hashCode();
+        int hash = DUMMY_HASHCODE + lhs.hashCode();
+        hash = hash * DUMMY_HASHCODE + rhs.hashCode();
+        return hash * DUMMY_HASHCODE + OR_STRING.hashCode();
     }
 
-    @Override
     public String toString() {
-        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
-        Attribute attribute = attributeValueOperationEntry.getKey();
-        return BOUND + " (" + attribute + ")";
+        return "( " + lhs + " " + OR_STRING + " " + rhs + " )";
     }
 
     public boolean equals(Object obj) {
@@ -118,10 +139,19 @@ public final class BoundOperator <V extends ExpressionVisitor> implements Operat
         if (EqualsUtil.differentClasses(this, obj)) {
             return false;
         }
-        return determineEqualityFromFields(this, (BoundOperator) obj);
+        return determineEqualityFromFields(this, (LogicOrExpression) obj);
     }
 
-    private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {
-        return s1.singleAvp.equals(s2.singleAvp);
+    private boolean determineEqualityFromFields(LogicOrExpression o1, LogicOrExpression o2) {
+        return lhsEqual(o1, o2) && rhsEqual(o1, o2);
     }
+
+    private boolean rhsEqual(LogicOrExpression o1, LogicOrExpression o2) {
+        return o1.getRhs().equals(o2.getRhs());
+    }
+
+    private boolean lhsEqual(LogicOrExpression o1, LogicOrExpression o2) {
+        return o1.getLhs().equals(o2.getLhs());
+    }
+
 }

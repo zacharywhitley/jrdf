@@ -60,6 +60,7 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.NodeType;
@@ -101,8 +102,12 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         this.allVariables = collector.getAttributes();
     }
 
-    public void accept(ExpressionVisitor v) {
+    public void accept(V v) {
         v.visitProjection(this);
+    }
+
+    public Map<Attribute, ValueOperation> getAVO() {
+        return nextExpression.getAVO();
     }
 
     public LinkedHashSet<Attribute> getAttributes() {

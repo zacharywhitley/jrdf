@@ -1,16 +1,15 @@
 package org.jrdf.urql.analysis;
 
-import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.EmptyOperator;
+import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
+import org.jrdf.query.expression.logic.LogicAndExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.query.expression.logic.LogicalAndExpression;
-import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.LogicNotExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.builder.URIReferenceBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
@@ -18,26 +17,27 @@ import org.jrdf.urql.parser.node.ABooleanNotUnaryExpression;
 import org.jrdf.urql.parser.node.ABoundBuiltincall;
 import org.jrdf.urql.parser.node.ABracketedExpressionConstraint;
 import org.jrdf.urql.parser.node.AConditionalAndExpression;
+import org.jrdf.urql.parser.node.AConditionalOrExpression;
 import org.jrdf.urql.parser.node.AEMoreNumericExpression;
+import org.jrdf.urql.parser.node.AFalseBooleanLiteral;
 import org.jrdf.urql.parser.node.ALtMoreNumericExpression;
 import org.jrdf.urql.parser.node.AMoreValueLogical;
 import org.jrdf.urql.parser.node.ANeMoreNumericExpression;
 import org.jrdf.urql.parser.node.ARelationalExpression;
-import org.jrdf.urql.parser.node.AStrBuiltincall;
-import org.jrdf.urql.parser.node.AVariable;
+import org.jrdf.urql.parser.node.ATrueBooleanLiteral;
+import org.jrdf.urql.parser.node.PMoreConditionalAndExpression;
 import org.jrdf.urql.parser.node.PMoreNumericExpression;
 import org.jrdf.urql.parser.node.PMoreValueLogical;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.LinkedList;
-import java.util.Map;
 
 public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstAdapter implements FilterAnalyser {
     private LogicExpression<V> expression = new EmptyOperator<V>();
+    private Expression<V> operand;
     private ParserException exception;
     private LiteralBuilder literalBuilder;
     private VariableCollector collector;
-    private Map<Attribute, ValueOperation> valuePair;
     private NumericExpressionAnalyser numericExpressionAnalyser;
     private URIReferenceBuilder uriBuilder;
 
@@ -58,42 +58,26 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
 
     @Override
     public void caseARelationalExpression(ARelationalExpression node) {
-        node.getNumericExpression().apply(this);
-        final PMoreNumericExpression moreExpressions = node.getMoreNumericExpression();
-        if (moreExpressions != null) {
-            moreExpressions.apply(this);
-        } else {
-            super.caseARelationalExpression(node);
-        }
-    }
-
-    @Override
-    public void caseAStrBuiltincall(AStrBuiltincall node) {
         try {
-            node.apply(numericExpressionAnalyser);
-            valuePair = numericExpressionAnalyser.getSingleAvp();
+            node.getNumericExpression().apply(numericExpressionAnalyser);
+            operand = numericExpressionAnalyser.getExpression();
+            final PMoreNumericExpression moreExpressions = node.getMoreNumericExpression();
+            if (moreExpressions != null) {
+                moreExpressions.apply(this);
+            } else {
+                super.caseARelationalExpression(node);
+            }
         } catch (ParserException e) {
             exception = e;
         }
     }
-
-    @Override
-    public void caseAVariable(AVariable node) {
-        try {
-            node.apply(numericExpressionAnalyser);
-            valuePair = numericExpressionAnalyser.getSingleAvp();
-        } catch (ParserException e) {
-            exception = e;
-        }
-    }
-
 
     @Override
     public void caseABoundBuiltincall(ABoundBuiltincall node) {
         try {
             node.apply(numericExpressionAnalyser);
-            valuePair = numericExpressionAnalyser.getSingleAvp();
-            expression = new BoundOperator<V>(valuePair);
+            operand = numericExpressionAnalyser.getExpression();
+            expression = (LogicExpression<V>) operand;
         } catch (ParserException e) {
             exception = e;
         }
@@ -115,7 +99,7 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
         try {
             node.getPrimaryExpression().apply(this);
             final LogicExpression<V> exp = this.getExpression();
-            expression = new LogicalNotExpression<V>(exp);
+            expression = new LogicNotExpression<V>(exp);
         } catch (ParserException e) {
             exception = e;
         }
@@ -135,7 +119,24 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
             for (PMoreValueLogical rhs : list) {
                 rhs.apply(this);
                 final LogicExpression<V> exp2 = getExpression();
-                exp1 = new LogicalAndExpression<V>(exp1, exp2);
+                exp1 = new LogicAndExpression<V>(exp1, exp2);
+            }
+            expression = exp1;
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseAConditionalOrExpression(AConditionalOrExpression node) {
+        try {
+            node.getConditionalAndExpression().apply(this);
+            LogicExpression<V> exp1 = expression;
+            final LinkedList<PMoreConditionalAndExpression> list = node.getMoreConditionalAndExpression();
+            for (PMoreConditionalAndExpression rhs : list) {
+                rhs.apply(this);
+                final LogicExpression<V> exp2 = getExpression();
+                exp1 = new LogicOrExpression<V>(exp1, exp2);
             }
             expression = exp1;
         } catch (ParserException e) {
@@ -146,9 +147,10 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     @Override
     public void caseAEMoreNumericExpression(AEMoreNumericExpression node) {
         try {
+            Expression<V> lhsExp = operand;
             node.getNumericExpression().apply(numericExpressionAnalyser);
-            Map<Attribute, ValueOperation> moreValuePair = numericExpressionAnalyser.getSingleAvp();
-            expression = new EqualsExpression<V>(valuePair, moreValuePair);
+            Expression<V> rhsExp = numericExpressionAnalyser.getExpression();
+            expression = new EqualsExpression<V>(lhsExp, rhsExp);
         } catch (ParserException e) {
             exception = e;
         }
@@ -157,9 +159,10 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     @Override
     public void caseANeMoreNumericExpression(ANeMoreNumericExpression node) {
         try {
+            Expression<V> lhsExp = operand;
             node.getNumericExpression().apply(numericExpressionAnalyser);
-            Map<Attribute, ValueOperation> moreValuePair = numericExpressionAnalyser.getSingleAvp();
-            expression = new NEqualsExpression<V>(valuePair, moreValuePair);
+            Expression<V> rhsExp = numericExpressionAnalyser.getExpression();
+            expression = new NEqualsExpression<V>(lhsExp, rhsExp);
         } catch (ParserException e) {
             exception = e;
         }
@@ -168,9 +171,30 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     @Override
     public void caseALtMoreNumericExpression(ALtMoreNumericExpression node) {
         try {
+            Expression<V> lhsExp = operand;
             node.getNumericExpression().apply(numericExpressionAnalyser);
-            Map<Attribute, ValueOperation> moreValuePair = numericExpressionAnalyser.getSingleAvp();
-            expression = new LessThanExpression<V>(valuePair, moreValuePair);
+            Expression<V> rhsExp = numericExpressionAnalyser.getExpression();
+            expression = new LessThanExpression<V>(lhsExp, rhsExp);
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseATrueBooleanLiteral(ATrueBooleanLiteral node) {
+        try {
+            node.apply(numericExpressionAnalyser);
+            expression = (LogicExpression<V>) numericExpressionAnalyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseAFalseBooleanLiteral(AFalseBooleanLiteral node) {
+        try {
+            node.apply(numericExpressionAnalyser);
+            expression = (LogicExpression<V>) numericExpressionAnalyser.getExpression();
         } catch (ParserException e) {
             exception = e;
         }

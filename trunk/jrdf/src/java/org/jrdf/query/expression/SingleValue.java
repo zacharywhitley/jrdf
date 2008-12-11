@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -59,69 +59,85 @@
 
 package org.jrdf.query.expression;
 
-import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.differentClasses;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id $
+ * @version $Id:$
  */
 
-public final class BoundOperator <V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
-    private static final long serialVersionUID = -2026129623510467814L;
+public final class SingleValue<V extends ExpressionVisitor> implements Constraint<V> {
+    private static final long serialVersionUID = -4113675582657624557L;
+
     private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
-    protected static final String BOUND = "bound";
+    private Map<Attribute, ValueOperation> avo;
 
-    private BoundOperator() {
+    private SingleValue() {
     }
 
-    public BoundOperator(Map<Attribute, ValueOperation> singleAvp) {
-        this.singleAvp = singleAvp;
-    }
-
-    public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitBound(this);
+    public SingleValue(Map<Attribute, ValueOperation> avp) {
+        this.avo = avp;
     }
 
     public Map<Attribute, ValueOperation> getAVO() {
-        return singleAvp;
+        return avo;
+    }
+
+    public void setAvo(Attribute existingAttribute, ValueOperation newValueOperation) {
+        if (avo.containsKey(existingAttribute)) {
+            avo.put(existingAttribute, newValueOperation);
+        } else {
+            throw new RuntimeException("Cannot set non-existing attribute: " + existingAttribute);
+        }
+    }
+
+    public void accept(V v) {
+        v.visitSingleValue(this);
     }
 
     public int size() {
-        return 2;
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        if (differentClasses(this, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields(this, (SingleValue) obj);
     }
 
     @Override
     public int hashCode() {
-        return DUMMY_HASHCODE + DUMMY_HASHCODE * singleAvp.hashCode() + BOUND.hashCode();
+        return DUMMY_HASHCODE + avo.hashCode();
     }
 
+    /**
+     * Delegates to <code>getAvp().toString()</code>.
+     */
     @Override
     public String toString() {
-        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
-        Attribute attribute = attributeValueOperationEntry.getKey();
-        return BOUND + " (" + attribute + ")";
+        return avo.toString();
     }
 
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (BoundOperator) obj);
+    private boolean determineEqualityFromFields(SingleValue o1, SingleValue o2) {
+        return o1.avo.equals(o2.avo);
     }
 
-    private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {
-        return s1.singleAvp.equals(s2.singleAvp);
+    public Set<Attribute> getHeadings() {
+        return avo.keySet();
     }
 }
