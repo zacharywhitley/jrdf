@@ -76,11 +76,12 @@ import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
-import org.jrdf.query.expression.logic.LogicalAndExpression;
-import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.LogicAndExpression;
+import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
 import org.jrdf.query.expression.logic.FalseExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 
 /**
  * @author Yuan-Fang Li
@@ -168,13 +169,19 @@ public final class ExpressionComparatorImpl implements ExpressionVisitor, Expres
         result = visitOperator(bound);
     }
 
-    public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
+    public <V extends ExpressionVisitor> void visitLogicAnd(LogicAndExpression<V> andExpression) {
         int lhs = getNext(andExpression.getLhs());
         int rhs = getNext(andExpression.getRhs());
         result = (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
     }
 
-    public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
+    public <V extends ExpressionVisitor> void visitLogicOr(LogicOrExpression<V> orExpression) {
+        int lhs = getNext(orExpression.getLhs());
+        int rhs = getNext(orExpression.getRhs());
+        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
+    }
+
+    public <V extends ExpressionVisitor> void visitLogicNot(LogicNotExpression<V> notExpression) {
         result = notExpression.size();
     }
 

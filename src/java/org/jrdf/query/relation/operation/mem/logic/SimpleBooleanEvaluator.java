@@ -16,11 +16,12 @@ import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.query.expression.logic.LogicalAndExpression;
-import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.LogicAndExpression;
+import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
 import org.jrdf.query.expression.logic.FalseExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
@@ -94,7 +95,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
+    public <V extends ExpressionVisitor> void visitLogicAnd(LogicAndExpression<V> andExpression) {
         andExpression.getLhs().accept((V) this);
         boolean lhsBoolean = contradiction;
         andExpression.getRhs().accept((V) this);
@@ -102,7 +103,15 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
+    public <V extends ExpressionVisitor> void visitLogicOr(LogicOrExpression<V> orExpression) {
+        orExpression.getLhs().accept((V) this);
+        boolean lhsBoolean = contradiction;
+        orExpression.getRhs().accept((V) this);
+        contradiction = lhsBoolean && contradiction;
+    }
+
+    @Override
+    public <V extends ExpressionVisitor> void visitLogicNot(LogicNotExpression<V> notExpression) {
         notExpression.getExpression().accept((V) this);
         contradiction = !contradiction;
     }

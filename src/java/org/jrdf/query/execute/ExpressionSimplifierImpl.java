@@ -24,11 +24,12 @@ import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.query.expression.logic.LogicalAndExpression;
-import org.jrdf.query.expression.logic.LogicalNotExpression;
+import org.jrdf.query.expression.logic.LogicAndExpression;
+import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
 import org.jrdf.query.expression.logic.FalseExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AVPOperation;
@@ -111,7 +112,7 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
             Expression<V> lrhs = ((Filter<V>) rhs).getLhs();
             expression = new Conjunction<V>(llhs, lrhs);
             LogicExpression<V> andExp =
-                new LogicalAndExpression<V>(((Filter<V>) lhs).getRhs(), ((Filter<V>) rhs).getRhs());
+                new LogicAndExpression<V>(((Filter<V>) lhs).getRhs(), ((Filter<V>) rhs).getRhs());
             expression = new Filter<V>(expression, andExp);
         } else if (lhs instanceof Filter) {
             expression = constructConjFilter((Filter<V>) lhs, rhs);
@@ -176,7 +177,7 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
         }
     }
 
-    public <V extends ExpressionVisitor> void visitLogicalAnd(LogicalAndExpression<V> andExpression) {
+    public <V extends ExpressionVisitor> void visitLogicAnd(LogicAndExpression<V> andExpression) {
         Expression<V> lhs = getNext(andExpression.getLhs());
         Expression<V> rhs = getNext(andExpression.getRhs());
         if (lhs == null && rhs == null) {
@@ -187,6 +188,20 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
             expression = lhs;
         } else {
             expression = andExpression;
+        }
+    }
+
+    public <V extends ExpressionVisitor> void visitLogicOr(LogicOrExpression<V> orExpression) {
+        Expression<V> lhs = getNext(orExpression.getLhs());
+        Expression<V> rhs = getNext(orExpression.getRhs());
+        if (lhs == null && rhs == null) {
+            expression = null;
+        } else if (lhs == null) {
+            expression = rhs;
+        } else if (rhs == null) {
+            expression = lhs;
+        } else {
+            expression = orExpression;
         }
     }
 
@@ -308,9 +323,9 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
     }
 
     // Skip logical not now.
-    public <V extends ExpressionVisitor> void visitLogicalNot(LogicalNotExpression<V> notExpression) {
+    public <V extends ExpressionVisitor> void visitLogicNot(LogicNotExpression<V> notExpression) {
         LogicExpression<V> exp = (LogicExpression<V>) getNext(notExpression.getExpression());
-        expression = new LogicalNotExpression<V>(exp);
+        expression = new LogicNotExpression<V>(exp);
     }
 
     public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound) {

@@ -73,17 +73,18 @@ import java.util.LinkedHashMap;
  * @version :$
  */
 
-public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
+public class LogicAndExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
     private static final long serialVersionUID = -1701496085083842700L;
     private static final int DUMMY_HASHCODE = 47;
 
     private LogicExpression<V> lhs;
     private LogicExpression<V> rhs;
+    protected static final String AND_STRING = "&&";
 
-    private LogicalAndExpression() {
+    private LogicAndExpression() {
     }
 
-    public LogicalAndExpression(LogicExpression<V> lhs, LogicExpression<V> rhs) {
+    public LogicAndExpression(LogicExpression<V> lhs, LogicExpression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
@@ -116,17 +117,18 @@ public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicE
     }
 
     public void accept(V v) {
-        v.visitLogicalAnd(this);
+        v.visitLogicAnd(this);
     }
 
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
         int hash = DUMMY_HASHCODE + lhs.hashCode();
-        return hash * DUMMY_HASHCODE + rhs.hashCode();
+        hash = hash * DUMMY_HASHCODE + rhs.hashCode();
+        return hash * DUMMY_HASHCODE + AND_STRING.hashCode();
     }
 
     public String toString() {
-        return lhs + " && " + rhs;
+        return lhs + (" " + AND_STRING + " ") + rhs;
     }
 
     public boolean equals(Object obj) {
@@ -139,18 +141,18 @@ public class LogicalAndExpression<V extends ExpressionVisitor> implements LogicE
         if (EqualsUtil.differentClasses(this, obj)) {
             return false;
         }
-        return determineEqualityFromFields(this, (LogicalAndExpression) obj);
+        return determineEqualityFromFields(this, (LogicAndExpression) obj);
     }
 
-    private boolean determineEqualityFromFields(LogicalAndExpression o1, LogicalAndExpression o2) {
+    private boolean determineEqualityFromFields(LogicAndExpression o1, LogicAndExpression o2) {
         return lhsEqual(o1, o2) && rhsEqual(o1, o2);
     }
 
-    private boolean rhsEqual(LogicalAndExpression o1, LogicalAndExpression o2) {
+    private boolean rhsEqual(LogicAndExpression o1, LogicAndExpression o2) {
         return o1.getRhs().equals(o2.getRhs());
     }
 
-    private boolean lhsEqual(LogicalAndExpression o1, LogicalAndExpression o2) {
+    private boolean lhsEqual(LogicAndExpression o1, LogicAndExpression o2) {
         return o1.getLhs().equals(o2.getLhs());
     }
 }
