@@ -70,7 +70,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version :$Id:$
  */
 
 public class LogicAndExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {

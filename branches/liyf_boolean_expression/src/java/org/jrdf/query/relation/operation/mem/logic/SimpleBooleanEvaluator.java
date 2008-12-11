@@ -30,6 +30,11 @@ import org.jrdf.vocabulary.XSD;
 
 import java.util.Map;
 
+/**
+ * @author Yuan-Fang Li
+ * @version :$Id:$
+ */
+
 public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements BooleanEvaluator {
     private final NodeComparator nodeComparator;
 
