@@ -30,6 +30,8 @@ import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
 import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.expression.logic.LogicOrExpression;
+import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
+import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AVPOperation;
@@ -42,6 +44,12 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+
+/**
+ *
+ * @author Yuan-Fang Li
+ * @version $Id:$
+ */
 
 public class ExpressionSimplifierImpl implements ExpressionSimplifier {
     private Expression expression;
@@ -207,16 +215,19 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
 
     // TODO YF if query selects both variables in (?name = ?name1), this doesn't work properly as ?name1 will be lost!
     public <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression) {
-        Expression<V> lhs = equalsExpression.getLhs();
-        Expression<V> rhs = equalsExpression.getRhs();
+        Expression<V> lhs = getNext(equalsExpression.getLhs());
+        Expression<V> rhs = getNext(equalsExpression.getRhs());
         final Expression<V>[] pair = reorderPairs(lhs, rhs);
-        final boolean changed = equateAVOs(pair[0].getAVO(), pair[1].getAVO());
-        if (changed) {
-            expression = null;
-        } else {
-            lhs = pair[0];
-            rhs = pair[1];
-            expression = new EqualsExpression<V>(lhs, rhs);
+        boolean changed = equateExpressions(lhs, rhs);
+        if (!changed) {
+            changed = equateAVOs(pair[0].getAVO(), pair[1].getAVO());
+            if (changed) {
+                expression = null;
+            } else {
+                lhs = pair[0];
+                rhs = pair[1];
+                expression = new EqualsExpression<V>(lhs, rhs);
+            }
         }
     }
 
@@ -226,6 +237,40 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
 
     public <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp) {
         expression = falseExp;
+    }
+
+    private <V extends ExpressionVisitor> boolean equateExpressions(Expression<V> lhs, Expression<V> rhs) {
+        boolean changed = false;
+        if (isTrueExp(lhs) || isFalseExp(lhs)) {
+            equateRhsExp(lhs, rhs);
+            changed = true;
+        } else if (isTrueExp(rhs) || isFalseExp(rhs)) {
+            equateRhsExp(rhs, lhs);
+            changed = true;
+        }
+        return changed;
+    }
+
+    private <V extends ExpressionVisitor> void equateRhsExp(Expression<V> lhs, Expression<V> rhs) {
+        if (isTrueExp(lhs)) {
+            expression = rhs;
+        } else if (isFalseExp(lhs)) {
+            if (isTrueExp(rhs)) {
+                expression = FALSE_EXPRESSION;
+            } else if (isFalseExp(rhs)) {
+                expression = TRUE_EXPRESSION;
+            } else {
+                expression = new LogicNotExpression<V>((LogicExpression<V>) rhs);
+            }
+        }
+    }
+
+    private <V extends ExpressionVisitor> boolean isTrueExp(Expression<V> exp) {
+        return TRUE_EXPRESSION.equals(exp);
+    }
+
+    private <V extends ExpressionVisitor> boolean isFalseExp(Expression<V> exp) {
+        return FALSE_EXPRESSION.equals(exp);
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -324,8 +369,9 @@ public class ExpressionSimplifierImpl implements ExpressionSimplifier {
 
     // Skip logical not now.
     public <V extends ExpressionVisitor> void visitLogicNot(LogicNotExpression<V> notExpression) {
-        LogicExpression<V> exp = (LogicExpression<V>) getNext(notExpression.getExpression());
-        expression = new LogicNotExpression<V>(exp);
+//        LogicExpression<V> exp = (LogicExpression<V>) getNext(notExpression.getExpression());
+//        expression = new LogicNotExpression<V>(exp);
+        expression = notExpression;
     }
 
     public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound) {
