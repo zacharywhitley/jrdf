@@ -1,6 +1,6 @@
 package org.jrdf.query.relation.operation.mem.logic;
 
-import org.jrdf.graph.AnyNode;
+import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
@@ -14,14 +14,14 @@ import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
-import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicAndExpression;
+import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicNotExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
-import org.jrdf.query.expression.logic.FalseExpression;
-import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.ValueOperation;
@@ -53,11 +53,10 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     @Override
     public <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value) {
         Map<Attribute, ValueOperation> avo = value.getAVO();
-        Map.Entry<Attribute, ValueOperation> entry = avo.entrySet().iterator().next();
-        Attribute attribute = entry.getKey();
-        Node node = entry.getValue().getValue();
+        Attribute attribute = avo.keySet().iterator().next();
+        Node node = avo.get(attribute).getValue();
         final ValueOperation valueOperation = tuple.getValueOperation(attribute);
-        if (AnyNode.ANY_NODE.equals(node)) {
+        if (ANY_NODE.equals(node)) {
             if (valueOperation != null) {
                 this.value = valueOperation.getValue();
             } else {

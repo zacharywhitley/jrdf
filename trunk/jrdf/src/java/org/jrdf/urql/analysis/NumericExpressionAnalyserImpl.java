@@ -8,13 +8,13 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
-import org.jrdf.query.expression.logic.TrueExpression;
-import org.jrdf.query.expression.logic.FalseExpression;
+import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
+import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.constants.NullaryAttribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
+import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
 import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.BoundAVPOperation;
@@ -29,6 +29,7 @@ import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.builder.URIReferenceBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABoundBuiltincall;
+import org.jrdf.urql.parser.node.AFalseBooleanLiteral;
 import org.jrdf.urql.parser.node.AIriRefIriRefOrPrefixedName;
 import org.jrdf.urql.parser.node.ALangBuiltincall;
 import org.jrdf.urql.parser.node.APrefixedNameIriRefOrPrefixedName;
@@ -36,7 +37,6 @@ import org.jrdf.urql.parser.node.ARdfLiteralPrimaryExpression;
 import org.jrdf.urql.parser.node.AStrBuiltincall;
 import org.jrdf.urql.parser.node.ATrueBooleanLiteral;
 import org.jrdf.urql.parser.node.AVariable;
-import org.jrdf.urql.parser.node.AFalseBooleanLiteral;
 import org.jrdf.urql.parser.parser.ParserException;
 
 import java.util.HashMap;
@@ -75,7 +75,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
         final Map<AttributeName, PositionalNodeType> namePosMap = collector.getAttributes();
         NodeType type = namePosMap.get(attributeName);
         type = (type != null) ? type : new ObjectNodeType();
-        Attribute attribute = new AttributeImpl(attributeName, type);
+        Attribute attribute = attributeName == null ? NULLARY_ATTRIBUTE : new AttributeImpl(attributeName, type);
         ValueOperation vo = new ValueOperationImpl(value, operation);
         returnValue.put(attribute, vo);
         collector.addConstraints(returnValue);
@@ -164,11 +164,11 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
     public void caseATrueBooleanLiteral(ATrueBooleanLiteral node) {
         try {
             if (attributeName == null) {
-                attributeName = NullaryAttribute.NULLARY_ATTRIBUTE.getAttributeName();
+                attributeName = NULLARY_ATTRIBUTE.getAttributeName();
             }
             this.operation = EQUALS;
             this.value = literalBuilder.createLiteral(node);
-            this.expression = new TrueExpression<V>(getSingleAvp());
+            this.expression = TRUE_EXPRESSION;
         } catch (ParserException e) {
             exception = e;
         }
@@ -178,11 +178,11 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
     public void caseAFalseBooleanLiteral(AFalseBooleanLiteral node) {
         try {
             if (attributeName == null) {
-                attributeName = NullaryAttribute.NULLARY_ATTRIBUTE.getAttributeName();
+                attributeName = NULLARY_ATTRIBUTE.getAttributeName();
             }
             this.operation = EQUALS;
             this.value = literalBuilder.createLiteral(node);
-            this.expression = new FalseExpression<V>(getSingleAvp());
+            this.expression = FALSE_EXPRESSION;
         } catch (ParserException e) {
             exception = e;
         }

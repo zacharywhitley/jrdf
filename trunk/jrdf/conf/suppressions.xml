@@ -47,6 +47,7 @@
     <suppress checks="JavaNCSS" files="SortMergeNaturalJoin"/>
     <suppress checks="JavaNCSS" files="SparqlStreamingAnswerFactoryImpl"/>
     <suppress checks="JavaNCSS" files="ExpressionSimplifierImpl"/>
+    <suppress checks="JavaNCSS" files="FilterAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="SubsumptionEngine"/>
     <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>

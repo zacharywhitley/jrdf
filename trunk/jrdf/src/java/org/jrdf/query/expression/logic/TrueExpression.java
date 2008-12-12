@@ -59,28 +59,39 @@
 
 package org.jrdf.query.expression.logic;
 
+import org.jrdf.graph.global.LiteralImpl;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
+import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
+import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.util.EqualsUtil;
+import static org.jrdf.vocabulary.XSD.BOOLEAN;
 
+import static java.util.Collections.singletonMap;
 import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id :$
+ * @version $Id:$
  */
-public class TrueExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
+public final class TrueExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
     private static final long serialVersionUID = -6113444233155098483L;
     private static final int DUMMY_HASHCODE = 47;
+    private static final Map<Attribute, ValueOperation> MAP =
+        singletonMap(NULLARY_ATTRIBUTE,
+            (ValueOperation) new ValueOperationImpl(new LiteralImpl("true", BOOLEAN), EQUALS));
+
+    /**
+     * The singleton true expression.
+     */
+    public static final TrueExpression TRUE_EXPRESSION = new TrueExpression();
 
     private Map<Attribute, ValueOperation> avp;
 
     private TrueExpression() {
-    }
-
-    public TrueExpression(Map<Attribute, ValueOperation> avp) {
-        this.avp = avp;
+        this.avp = MAP;
     }
 
     public void accept(V v) {
