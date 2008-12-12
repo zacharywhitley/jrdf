@@ -1,6 +1,5 @@
 package org.jrdf.query.expression;
 
-import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
@@ -8,11 +7,10 @@ import org.jrdf.util.EqualsUtil;
 import java.util.Collections;
 import java.util.Map;
 
-public class EmptyOperator<V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
+public class EmptyExpression<V extends ExpressionVisitor> implements Expression<V> {
     private static final long serialVersionUID = 4636572000909954329L;
     private static final int DUMMY_HASHCODE = 47;
 
-    //TODO Come back and make these two methods sensible.
     public Map<Attribute, ValueOperation> getAVO() {
         return Collections.EMPTY_MAP;
     }
@@ -40,7 +38,6 @@ public class EmptyOperator<V extends ExpressionVisitor> implements Operator<V>, 
 
     @Override
     public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
         return DUMMY_HASHCODE + toString().hashCode();
     }
 

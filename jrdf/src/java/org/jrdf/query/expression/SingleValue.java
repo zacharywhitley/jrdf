@@ -70,7 +70,7 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 
 public final class SingleValue<V extends ExpressionVisitor> implements Constraint<V> {
@@ -88,6 +88,10 @@ public final class SingleValue<V extends ExpressionVisitor> implements Constrain
 
     public Map<Attribute, ValueOperation> getAVO() {
         return avo;
+    }
+
+    public void setAVO(Map<Attribute, ValueOperation> newAvo) {
+        this.avo = newAvo;
     }
 
     public void setAvo(Attribute existingAttribute, ValueOperation newValueOperation) {

@@ -95,18 +95,9 @@ public final class NullaryAttribute implements Attribute, Serializable {
      * @return
      */
     public static boolean isNullaryAttribute(Attribute attribute) {
-        return attribute.getAttributeName() instanceof NullaryAttributeName ||
-            attribute.getType() instanceof NullaryNodeType;
-    }
-
-    @Override
-    public int hashCode() {
-        return 1;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return true;
+        return NULLARY_ATTRIBUTE == attribute ||
+               attribute.getAttributeName() instanceof NullaryAttributeName ||
+               attribute.getType() instanceof NullaryNodeType;
     }
 
     private static final class NullaryAttributeName implements AttributeName, Serializable {
@@ -116,7 +107,7 @@ public final class NullaryAttribute implements Attribute, Serializable {
         }
 
         public String getLiteral() {
-            return "TRUE";
+            return "NULL";
         }
 
         @Override
@@ -137,7 +128,7 @@ public final class NullaryAttribute implements Attribute, Serializable {
         }
 
         public String getName() {
-            return "TRUE";
+            return "Null";
         }
 
         @SuppressWarnings({ "unchecked" })
