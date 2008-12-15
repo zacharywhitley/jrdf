@@ -84,7 +84,7 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id: $
+ * @version $Id:$
  */
 public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
     private static final RelationFactory RELATION_FACTORY = new QueryFactoryImpl().createRelationFactory();
