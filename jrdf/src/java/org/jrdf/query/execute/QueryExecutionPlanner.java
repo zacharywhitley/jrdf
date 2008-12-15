@@ -138,6 +138,7 @@ public final class QueryExecutionPlanner extends ExpressionVisitorAdapter implem
         return new LinkedHashSet<Relation>(partialResults);
     }
 
+    // TODO YF join those with common attributes first.
     private void matchAttributes(List<Relation> relations, int pos) {
         Relation first = relations.get(pos);
         int idx, badPos = -1;
