@@ -139,4 +139,15 @@ public class TextToMoleculeUnitTest extends TestCase {
         Molecule molecule1 = textToMolecule.parse(new StringReader(text));
         assertEquals("Same molecule", 0, GLOBAL_MOLECULE_COMPARATOR.compare(molecule, molecule1));
     }
+
+    public void testString() {
+        String text = "[\n" +
+            "  _:a5098ef89-fd24-49d1-9f92-fcb48d83bfe1#6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> " +
+                "<http://xmlns.com/foaf/0.1/Person> .\n" +
+            "  _:a5098ef89-fd24-49d1-9f92-fcb48d83bfe1#6 <http://xmlns.com/foaf/0.1/name> " +
+                "\"Jareer Cure\"^^<http://www.w3.org/2001/XMLSchema#string> .\n" +
+            "]";
+        Molecule molecule = textToMolecule.parse(new StringReader(text));
+        assertEquals(2, molecule.size());
+    }
 }

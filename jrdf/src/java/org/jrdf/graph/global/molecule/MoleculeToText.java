@@ -144,19 +144,15 @@ public class MoleculeToText implements MoleculeHandler, TypedNodeVisitor {
     }
 
     public void visitBlankNode(BlankNode blankNode) {
-        long nodeId;
+        String nodeId;
         if (localizer != null) {
             try {
-                nodeId = localizer.localize(blankNode);
+                nodeId = Long.toString(localizer.localize(blankNode));
             } catch (GraphException e) {
                 throw new RuntimeException("Cannot get ID for blank node: " + blankNode.toString());
             }
-        } else if (visitedBlankNodes.keySet().contains(blankNode)) {
-            nodeId = visitedBlankNodes.get(blankNode);
         } else {
-            currentId++;
-            visitedBlankNodes.put(blankNode, currentId);
-            nodeId = currentId;
+            nodeId = blankNode.toString();
         }
         nodeAsString = BLANK_NODE_PREFIX + "a" + nodeId;
     }

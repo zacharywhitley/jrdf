@@ -12,6 +12,7 @@
     <property name="project.jar" value="${project.shortname}-${project.version.full}.jar"/>
     <property name="project.src.jar" value="${project.shortname}-${project.version.full}-src.jar"/>
     <property name="gui.jar" value="jrdf-gui-${gui.version}.jar"/>
+    <property name="writer.jar" value="jrdf-writer-${gui.version}.jar"/>
     <property name="server.jar" value="jrdf-server-${gui.version}.jar"/>
     <property name="distributed-server.jar" value="jrdf-distributed-server-${gui.version}.jar"/>
     <property name="build.dir" value="build"/>

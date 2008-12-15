@@ -81,9 +81,9 @@ import java.util.regex.Pattern;
  */
 public class TextToMolecule {
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
+            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}(.+?))))\\p{Blank}+" +
             "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
-            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
+            "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}(.+?)))|([\\x20-\\x7E]+?))\\p{Blank}*" +
             "\\.\\p{Blank}*");
     private static final Pattern START_MOLECULE = Pattern.compile("\\p{Blank}*\\[\\p{Blank}*");
     private static final Pattern END_MOLECULE = Pattern.compile("\\p{Blank}*\\]\\p{Blank}*");
