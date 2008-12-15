@@ -76,6 +76,7 @@ import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.Union;
+import org.jrdf.query.QueryFactoryImpl;
 
 import java.util.HashSet;
 import java.util.List;
@@ -86,17 +87,16 @@ import java.util.Set;
  * @version $Id: $
  */
 public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
+    private static final RelationFactory RELATION_FACTORY = new QueryFactoryImpl().createRelationFactory();
     private boolean shortCircuit;
-    private ConstraintTupleCacheHandler cacheHandler;
-    private RelationFactory relationFactory;
     private QueryExecutionPlanner planner;
+    private ConstraintTupleCacheHandler cacheHandler;
 
     public OptimizingQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
-        Union union, DyadicJoin leftOuterJoin, RelationFactory newRelationFactory) {
+        Union union, DyadicJoin leftOuterJoin) {
         super(project, naturalJoin, restrict, union, leftOuterJoin);
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         shortCircuit = false;
-        relationFactory = newRelationFactory;
         planner = QueryExecutionPlanner.getPlanner();
     }
 
@@ -118,7 +118,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         super.visitProjection(projection);
     }
 
-    // TODO YF join those with common attributes first.
     @SuppressWarnings({ "unchecked", "UnusedAssignment" })
     @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
@@ -193,7 +192,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             tuples.addAll(tmpRelation.getTuples());
             tmpRelation = null;
         }
-        result = relationFactory.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
+        result = RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
         tuples = null;
     }
 
@@ -209,7 +208,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
-            union, leftOuterJoin, relationFactory);
+            union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setCacheHandler(cacheHandler);
@@ -220,7 +219,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     @SuppressWarnings({ "unchecked" })
     protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression, boolean shortCircuit) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
-            union, leftOuterJoin, relationFactory);
+            union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(shortCircuit);
