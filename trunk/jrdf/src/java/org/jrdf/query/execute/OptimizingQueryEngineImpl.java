@@ -77,6 +77,7 @@ import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.QueryFactoryImpl;
+import static org.jrdf.query.execute.QueryExecutionPlanner.getPlanner;
 
 import java.util.HashSet;
 import java.util.List;
@@ -97,7 +98,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         super(project, naturalJoin, restrict, union, leftOuterJoin);
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         shortCircuit = false;
-        planner = QueryExecutionPlanner.getPlanner();
+        planner = getPlanner();
     }
 
     @Override
