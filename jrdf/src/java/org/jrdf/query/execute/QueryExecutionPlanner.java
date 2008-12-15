@@ -80,7 +80,7 @@ import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id :$
+ * @version $Id:$
  */
 public final class QueryExecutionPlanner extends ExpressionVisitorAdapter implements ExpressionVisitor {
     private static final QueryExecutionPlanner PLANNER = new QueryExecutionPlanner();
