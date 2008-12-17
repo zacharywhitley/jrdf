@@ -178,6 +178,12 @@ public final class EscapeUtil {
         }
     }
 
+    private static String format16BitCharacter(String groupString) {
+        char charValue = groupString.charAt(0);
+        String hexString = Integer.toHexString(charValue).toUpperCase();
+        return "\\\\u0000".substring(0, CHARACTER_LENGTH_16_BIT - hexString.length()) + hexString;
+    }
+
     private static String escape8Bit(String groupString) {
         assert Character.SURROGATE == Character.getType(groupString.charAt(0));
         assert Character.SURROGATE == Character.getType(groupString.charAt(1));
@@ -188,11 +194,6 @@ public final class EscapeUtil {
         assert escapeString.startsWith("\\\\U000");
 
         return escapeString;
-    }
-
-    private static String format16BitCharacter(String groupString) {
-        String hexString = Integer.toHexString(groupString.charAt(0)).toUpperCase();
-        return "\\\\u0000".substring(0, CHARACTER_LENGTH_16_BIT - hexString.length()) + hexString;
     }
 
     private static String format8BitCharacter(String groupString) {
