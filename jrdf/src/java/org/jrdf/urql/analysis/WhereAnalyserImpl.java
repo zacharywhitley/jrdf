@@ -72,8 +72,10 @@ import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.builder.LiteralBuilderImpl;
 import org.jrdf.urql.builder.TripleBuilder;
+import org.jrdf.urql.builder.URIReferenceBuilder;
 import org.jrdf.urql.builder.URIReferenceBuilderImpl;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.ABlockOfTriples;
@@ -211,9 +213,11 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     @Override
     public void caseAFilterPatternGraphPatternOrFilter(AFilterPatternGraphPatternOrFilter node) {
         try {
-            FilterAnalyser analyser = new FilterAnalyserImpl(new LiteralBuilderImpl(graph.getElementFactory(),
-                    tripleBuilder.getPrefixMap()), collector,
-                    new URIReferenceBuilderImpl(graph.getElementFactory(), tripleBuilder.getPrefixMap()));
+            final LiteralBuilder builder = new LiteralBuilderImpl(graph.getElementFactory(),
+                tripleBuilder.getPrefixMap());
+            final URIReferenceBuilder uriReferenceBuilder = new URIReferenceBuilderImpl(graph.getElementFactory(),
+                tripleBuilder.getPrefixMap());
+            FilterAnalyser analyser = new FilterAnalyserImpl(builder, collector, uriReferenceBuilder);
             node.apply(analyser);
             expression = analyser.getExpression();
         } catch (ParserException e) {

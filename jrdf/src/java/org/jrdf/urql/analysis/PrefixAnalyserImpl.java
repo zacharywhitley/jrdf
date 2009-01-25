@@ -113,7 +113,7 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
             super.caseAAskQueryStart(node);
             VariableCollector variableCollector = new AttributeCollectorImpl();
             WhereAnalyser analyzer = analyseWhereClause(node.getWhereClause(), variableCollector);
-            return new Ask(analyzer.getExpression(), variableCollector);
+            return new Ask<ExpressionVisitor>(analyzer.getExpression(), variableCollector);
         } catch (ParserException e) {
             exception = e;
             return null;

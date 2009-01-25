@@ -36,12 +36,14 @@ import org.jrdf.urql.parser.node.PMoreValueLogical;
 import org.jrdf.urql.parser.node.PPrimaryExpression;
 import org.jrdf.urql.parser.parser.ParserException;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstAdapter implements FilterAnalyser {
-    private Expression<V> expression = new EmptyExpression<V>();
+public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnalyser {
+    private Expression<ExpressionVisitor> expression = new EmptyExpression<ExpressionVisitor>();
     private ParserException exception;
     private VariableCollector collector;
     private LiteralBuilder literalBuilder;
@@ -53,14 +55,14 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
         this.literalBuilder = newLiteralBuilder;
         this.collector = newCollector;
         this.uriBuilder = newUriBuilder;
-        this.numericExpressionAnalyser = new NumericExpressionAnalyserImpl(literalBuilder, collector, uriBuilder);
+        this.numericExpressionAnalyser = new NumericExpressionAnalyserImpl<ExpressionVisitor>(literalBuilder, collector, uriBuilder);
     }
 
-    public LogicExpression<V> getExpression() throws ParserException {
+    public LogicExpression<ExpressionVisitor> getExpression() throws ParserException {
         if (exception != null) {
             throw exception;
         }
-        return (LogicExpression<V>) expression;
+        return (LogicExpression<ExpressionVisitor>) expression;
     }
 
     @Override
@@ -91,7 +93,7 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
 
     @Override
     public void caseAMoreValueLogical(AMoreValueLogical node) {
-        FilterAnalyserImpl<V> analyzer = new FilterAnalyserImpl<V>(literalBuilder, collector, uriBuilder);
+        FilterAnalyser analyzer = new FilterAnalyserImpl(literalBuilder, collector, uriBuilder);
         node.getValueLogical().apply(analyzer);
         try {
             expression = analyzer.getExpression();
@@ -103,16 +105,16 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     @Override
     public void caseABooleanNotUnaryExpression(ABooleanNotUnaryExpression node) {
         try {
-            final LogicExpression<V> exp;
+            final LogicExpression<ExpressionVisitor> exp;
             PPrimaryExpression primaryExpression = node.getPrimaryExpression();
             if (primaryExpression instanceof ABracketedExpressionPrimaryExpression) {
                 primaryExpression.apply(this);
-                exp = (LogicExpression<V>) expression;
+                exp = (LogicExpression<ExpressionVisitor>) expression;
             } else {
                 primaryExpression.apply(numericExpressionAnalyser);
-                exp = (LogicExpression<V>) numericExpressionAnalyser.getExpression();
+                exp = (LogicExpression<ExpressionVisitor>) numericExpressionAnalyser.getExpression();
             }
-            expression = new LogicNotExpression<V>(exp);
+            expression = new LogicNotExpression<ExpressionVisitor>(exp);
         } catch (ParserException e) {
             exception = e;
         }
@@ -127,12 +129,12 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     public void caseAConditionalAndExpression(AConditionalAndExpression node) {
         try {
             node.getValueLogical().apply(this);
-            LogicExpression<V> exp1 = (LogicExpression<V>) expression;
+            LogicExpression<ExpressionVisitor> exp1 = (LogicExpression<ExpressionVisitor>) expression;
             final LinkedList<PMoreValueLogical> list = node.getMoreValueLogical();
             for (PMoreValueLogical rhs : list) {
                 rhs.apply(this);
-                final LogicExpression<V> exp2 = getExpression();
-                exp1 = new LogicAndExpression<V>(exp1, exp2);
+                final LogicExpression<ExpressionVisitor> exp2 = getExpression();
+                exp1 = new LogicAndExpression<ExpressionVisitor>(exp1, exp2);
             }
             expression = exp1;
         } catch (ParserException e) {
@@ -144,12 +146,12 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     public void caseAConditionalOrExpression(AConditionalOrExpression node) {
         try {
             node.getConditionalAndExpression().apply(this);
-            LogicExpression<V> exp1 = (LogicExpression<V>) expression;
+            LogicExpression<ExpressionVisitor> exp1 = (LogicExpression<ExpressionVisitor>) expression;
             final LinkedList<PMoreConditionalAndExpression> list = node.getMoreConditionalAndExpression();
             for (PMoreConditionalAndExpression rhs : list) {
                 rhs.apply(this);
-                final LogicExpression<V> exp2 = getExpression();
-                exp1 = new LogicOrExpression<V>(exp1, exp2);
+                final LogicExpression<ExpressionVisitor> exp2 = getExpression();
+                exp1 = new LogicOrExpression<ExpressionVisitor>(exp1, exp2);
             }
             expression = exp1;
         } catch (ParserException e) {
@@ -160,11 +162,11 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     @Override
     public void caseAEMoreNumericExpression(AEMoreNumericExpression node) {
         try {
-            Expression<V> lhsExp = expression;
+            Expression<ExpressionVisitor> lhsExp = expression;
             node.getNumericExpression().apply(numericExpressionAnalyser);
-            Expression<V> rhsExp = numericExpressionAnalyser.getExpression();
-            Expression<V>[] expressions = tryUpdateAttribute(lhsExp, rhsExp);
-            expression = new EqualsExpression<V>(expressions[0], expressions[1]);
+            Expression<ExpressionVisitor> rhsExp = numericExpressionAnalyser.getExpression();
+            final List<Expression<ExpressionVisitor>> expressions = tryUpdateAttribute(lhsExp, rhsExp);
+            expression = new EqualsExpression<ExpressionVisitor>(expressions.get(0), expressions.get(1));
         } catch (ParserException e) {
             exception = e;
         }
@@ -173,11 +175,11 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     @Override
     public void caseANeMoreNumericExpression(ANeMoreNumericExpression node) {
         try {
-            Expression<V> lhsExp = expression;
+            Expression<ExpressionVisitor> lhsExp = expression;
             node.getNumericExpression().apply(numericExpressionAnalyser);
-            Expression<V> rhsExp = numericExpressionAnalyser.getExpression();
-            Expression<V>[] expressions = tryUpdateAttribute(lhsExp, rhsExp);
-            expression = new NEqualsExpression<V>(expressions[0], expressions[1]);
+            Expression<ExpressionVisitor> rhsExp = numericExpressionAnalyser.getExpression();
+            final List<Expression<ExpressionVisitor>> expressions = tryUpdateAttribute(lhsExp, rhsExp);
+            expression = new NEqualsExpression<ExpressionVisitor>(expressions.get(0), expressions.get(1));
         } catch (ParserException e) {
             exception = e;
         }
@@ -186,11 +188,11 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     @Override
     public void caseALtMoreNumericExpression(ALtMoreNumericExpression node) {
         try {
-            Expression<V> lhsExp = expression;
+            Expression<ExpressionVisitor> lhsExp = expression;
             node.getNumericExpression().apply(numericExpressionAnalyser);
-            Expression<V> rhsExp = numericExpressionAnalyser.getExpression();
-            Expression<V>[] expressions = tryUpdateAttribute(lhsExp, rhsExp);
-            expression = new LessThanExpression<V>(expressions[0], expressions[1]);
+            Expression<ExpressionVisitor> rhsExp = numericExpressionAnalyser.getExpression();
+            final List<Expression<ExpressionVisitor>> expressions = tryUpdateAttribute(lhsExp, rhsExp);
+            expression = new LessThanExpression<ExpressionVisitor>(expressions.get(0), expressions.get(1));
         } catch (ParserException e) {
             exception = e;
         }
@@ -200,7 +202,7 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     public void caseATrueBooleanLiteral(ATrueBooleanLiteral node) {
         try {
             node.apply(numericExpressionAnalyser);
-            expression = (LogicExpression<V>) numericExpressionAnalyser.getExpression();
+            expression = numericExpressionAnalyser.getExpression();
         } catch (ParserException e) {
             exception = e;
         }
@@ -210,28 +212,30 @@ public class FilterAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstA
     public void caseAFalseBooleanLiteral(AFalseBooleanLiteral node) {
         try {
             node.apply(numericExpressionAnalyser);
-            expression = (LogicExpression<V>) numericExpressionAnalyser.getExpression();
+            expression = numericExpressionAnalyser.getExpression();
         } catch (ParserException e) {
             exception = e;
         }
     }
 
-    private Expression<V>[] tryUpdateAttribute(Expression<V> lhs, Expression<V> rhs) {
-        Expression<V>[] result = new Expression[2];
+    private List<Expression<ExpressionVisitor>> tryUpdateAttribute(Expression<ExpressionVisitor> lhs,
+        Expression<ExpressionVisitor> rhs) {
+        List<Expression<ExpressionVisitor>> result = new ArrayList<Expression<ExpressionVisitor>>(2);
         Set<Attribute> lhsAttrs = lhs.getAVO().keySet();
         Set<Attribute> rhsAttrs = rhs.getAVO().keySet();
-        result[0] = updateoneExpression(lhs, lhsAttrs, rhsAttrs);
-        result[1] = updateoneExpression(rhs, rhsAttrs, lhsAttrs);
+        result.add(0, updateoneExpression(lhs, lhsAttrs, rhsAttrs));
+        result.add(1, updateoneExpression(rhs, rhsAttrs, lhsAttrs));
         return result;
     }
 
-    private Expression<V> updateoneExpression(Expression<V> lhs, Set<Attribute> lhsAttrs, Set<Attribute> rhsAttrs) {
+    private Expression<ExpressionVisitor> updateoneExpression(Expression<ExpressionVisitor> lhs,
+        Set<Attribute> lhsAttrs, Set<Attribute> rhsAttrs) {
         if (lhs instanceof SingleValue && lhsAttrs.contains(NULLARY_ATTRIBUTE) && rhsAttrs.size() == 1) {
             Map<Attribute, ValueOperation> map = lhs.getAVO();
             ValueOperation vo = map.get(NULLARY_ATTRIBUTE);
             map.clear();
             map.put(rhsAttrs.iterator().next(), vo);
-            ((SingleValue) lhs).setAVO(map);
+            ((SingleValue<ExpressionVisitor>) lhs).setAVO(map);
         }
         return lhs;
     }
