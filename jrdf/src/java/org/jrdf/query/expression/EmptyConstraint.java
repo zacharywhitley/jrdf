@@ -88,9 +88,10 @@ public final class EmptyConstraint<V extends ExpressionVisitor> implements Const
     }
 
     public Map<Attribute, ValueOperation> getAVO() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (EqualsUtil.isNull(obj)) {
             return false;
