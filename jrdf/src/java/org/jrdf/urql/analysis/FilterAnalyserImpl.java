@@ -55,7 +55,8 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
         this.literalBuilder = newLiteralBuilder;
         this.collector = newCollector;
         this.uriBuilder = newUriBuilder;
-        this.numericExpressionAnalyser = new NumericExpressionAnalyserImpl<ExpressionVisitor>(literalBuilder, collector, uriBuilder);
+        this.numericExpressionAnalyser = new NumericExpressionAnalyserImpl<ExpressionVisitor>(literalBuilder,
+            collector, uriBuilder);
     }
 
     public LogicExpression<ExpressionVisitor> getExpression() throws ParserException {
