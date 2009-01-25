@@ -594,45 +594,19 @@
     </library>
     <library name="restlet">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet-1.1rc2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.freemarker_2.3-1.1rc2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.simple_3.1-1.1rc2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet-1.1rc2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework_3.1-1.1rc2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5-1.1rc2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.spring_2.5-1.1rc2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.json_2.0-1.1rc2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.json-1.1rc2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.spring_2.5-1.1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.json_2.0-1.1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet-1.1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet-1.1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.freemarker_2.3-1.1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5-1.1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework_3.1-1.1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.simple_3.1-1.1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.json_2.0-1.1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.simple_3.1" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.gwt" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.spring_2.5" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.spring_2.5" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.jibx_1.1" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.servlet_2.5" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.freemarker_2.3" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.gwt_1.5" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.atom_1.0" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.json_2.0" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.fileupload_1.2" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.example" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.wadl_1.0" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.velocity_1.5" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.ssl" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.jaxb_2.1" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.net" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.jdbc_3.0" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.httpclient_3.1" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.jetty_6.1" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/org.restlet.ext.jaxrs_0.11" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.oauth_1.0" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.javamail_1.4" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.grizzly_1.8" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1rc2-src.zip!/src/com.noelios.restlet.ext.xdb_11.1" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1.2-src.zip!/org.restlet" />
       </SOURCES>
     </library>
     <library name="freemarker">
