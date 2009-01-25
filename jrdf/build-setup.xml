@@ -57,7 +57,7 @@
 
     <property name="spring.version" value="2.5.5"/>
     <property name="restlet.version" value="1.1rc2"/>
-    <property name="freemarker.version" value="2.3.14"/>
+    <property name="freemarker.version" value="2.3.15"/>
     <property name="bdbje.version" value="3.3.69"/>
     <property name="groovy.version" value="1.5.7"/>
 
@@ -116,7 +116,7 @@
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/je/je-${bdbje.version}.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
-        <include name="${lib.dir}/woodstox/wstx-asl-3.2.7.jar"/>
+        <include name="${lib.dir}/woodstox/wstx-asl-3.2.8.jar"/>
     </patternset>
 
     <patternset id="gui.production.classpath.pattern">
