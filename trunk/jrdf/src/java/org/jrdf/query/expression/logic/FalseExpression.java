@@ -74,19 +74,18 @@ import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version $Id:$
+ * @version $Id$
  */
 public final class FalseExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
     private static final long serialVersionUID = -1159936586370099216L;
     private static final int DUMMY_HASHCODE = 47;
-    private static final Map<Attribute, ValueOperation> MAP =
-        singletonMap(NULLARY_ATTRIBUTE,
+    private static final Map<Attribute, ValueOperation> MAP = singletonMap(NULLARY_ATTRIBUTE,
             (ValueOperation) new ValueOperationImpl(new LiteralImpl("false", BOOLEAN), EQUALS));
 
     /**
      * The singleton false expression.
      */
-    public static final FalseExpression FALSE_EXPRESSION = new FalseExpression();
+    public static final FalseExpression<ExpressionVisitor> FALSE_EXPRESSION = new FalseExpression<ExpressionVisitor>();
 
     private Map<Attribute, ValueOperation> avp;
 

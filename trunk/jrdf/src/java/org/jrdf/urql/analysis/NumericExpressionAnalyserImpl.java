@@ -51,16 +51,16 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
     private LiteralBuilder literalBuilder;
     private VariableCollector collector;
     private URIReferenceBuilder uriBuilder;
-    private Expression<V> expression;
+    private Expression<ExpressionVisitor> expression;
 
     public NumericExpressionAnalyserImpl(LiteralBuilder newLiteralBuilder, VariableCollector collector,
-                                         URIReferenceBuilder uriBuilder) {
+        URIReferenceBuilder uriBuilder) {
         this.literalBuilder = newLiteralBuilder;
         this.collector = collector;
         this.uriBuilder = uriBuilder;
     }
 
-    public Expression<V> getExpression() throws ParserException {
+    public Expression<ExpressionVisitor> getExpression() throws ParserException {
         if (exception != null) {
             throw exception;
         }
@@ -87,7 +87,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
         node.getBracketedVar().apply(this);
         this.operation = BoundAVPOperation.BOUND;
         try {
-            this.expression = new BoundOperator<V>(getSingleAvp());
+            this.expression = new BoundOperator<ExpressionVisitor>(getSingleAvp());
         } catch (ParserException e) {
             this.exception = e;
         }
@@ -98,7 +98,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
         node.getBracketedExpression().apply(this);
         this.operation = LangAVPOperator.LANG;
         try {
-            this.expression = new LangOperator<V>(getSingleAvp());
+            this.expression = new LangOperator<ExpressionVisitor>(getSingleAvp());
         } catch (ParserException e) {
             this.exception = e;
         }
@@ -109,7 +109,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
         try {
             this.operation = EQUALS;
             this.value = literalBuilder.createLiteral(node);
-            this.expression = new SingleValue<V>(getSingleAvp());
+            this.expression = new SingleValue<ExpressionVisitor>(getSingleAvp());
         } catch (ParserException e) {
             exception = e;
         }
@@ -120,7 +120,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
         try {
             node.getBracketedExpression().apply(this);
             this.operation = StrAVPOperation.STR;
-            this.expression = new StrOperator<V>(getSingleAvp());
+            this.expression = new StrOperator<ExpressionVisitor>(getSingleAvp());
         } catch (ParserException e) {
             this.exception = e;
         }
@@ -132,7 +132,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
         this.value = AnyNode.ANY_NODE;
         this.operation = EQUALS;
         try {
-            this.expression = new SingleValue<V>(getSingleAvp());
+            this.expression = new SingleValue<ExpressionVisitor>(getSingleAvp());
         } catch (ParserException e) {
             this.exception = e;
         }
@@ -143,7 +143,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
         try {
             this.operation = EQUALS;
             this.value = uriBuilder.createURIReference(node);
-            this.expression = new SingleValue<V>(getSingleAvp());
+            this.expression = new SingleValue<ExpressionVisitor>(getSingleAvp());
         } catch (ParserException e) {
             exception = e;
         }
@@ -154,7 +154,7 @@ public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends 
         try {
             this.operation = EQUALS;
             this.value = uriBuilder.createURIReference(node);
-            this.expression = new SingleValue<V>(getSingleAvp());
+            this.expression = new SingleValue<ExpressionVisitor>(getSingleAvp());
         } catch (ParserException e) {
             exception = e;
         }
