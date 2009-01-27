@@ -71,15 +71,14 @@ import org.restlet.resource.Representation;
 
 import java.util.Map;
 
-public class SparqlXmlRepresentationFactory implements RepresentationFactory, AnswerVisitor {
-    private AnswerXMLWriter xmlWriter;
+public class SparqlXmlRepresentationFactory implements RepresentationFactory, AnswerVisitor<AnswerXMLWriter> {
 
     public Representation createRepresentation(MediaType defaultMediaType, Map<String, Object> dataModel) {
         try {
             Representation representation = Representation.createEmpty();
             final Answer answer = (Answer) dataModel.get("answer");
             if (answer != null) {
-                answer.accept(this);
+                AnswerXMLWriter xmlWriter = answer.accept(this);
                 representation = new SparqlRepresentation(defaultMediaType, xmlWriter);
             }
             return representation;
@@ -88,11 +87,11 @@ public class SparqlXmlRepresentationFactory implements RepresentationFactory, An
         }
     }
 
-    public void visitAskAnswer(AskAnswer askAnswer) {
-        xmlWriter = new AskAnswerXMLStreamWriter(askAnswer);
+    public AnswerXMLWriter visitAskAnswer(AskAnswer askAnswer) {
+        return new AskAnswerXMLStreamWriter(askAnswer);
     }
 
-    public void visitSelectAnswer(SelectAnswer selectAnswer) {
-        xmlWriter = new AnswerXMLPagenatedStreamWriter(selectAnswer);
+    public AnswerXMLWriter visitSelectAnswer(SelectAnswer selectAnswer) {
+        return new AnswerXMLPagenatedStreamWriter(selectAnswer);
     }
 }

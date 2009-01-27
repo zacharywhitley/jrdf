@@ -65,18 +65,18 @@ package org.jrdf.query.answer;
  * @author Andrew Newman
  * @version $Revision: 2003 $
  */
-public interface AnswerVisitor {
+public interface AnswerVisitor<R> {
     /**
      * Visit ask answer.
      *
      * @param askAnswer to visit.
      */
-    void visitAskAnswer(AskAnswer askAnswer);
+    R visitAskAnswer(AskAnswer askAnswer);
 
     /**
      * Visit ask answer.
      *
      * @param selectAnswer to visit.
      */
-    void visitSelectAnswer(SelectAnswer selectAnswer);
+    R visitSelectAnswer(SelectAnswer selectAnswer);
 }

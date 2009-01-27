@@ -125,7 +125,7 @@ public class SparqlStreamingAskAnswer implements AskAnswer {
         }
     }
 
-    public void accept(AnswerVisitor visitor) {
-        visitor.visitAskAnswer(this);
+    public <R> R accept(AnswerVisitor<R> visitor) {
+        return visitor.visitAskAnswer(this);
     }
 }

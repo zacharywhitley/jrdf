@@ -12,7 +12,7 @@ public class EmptyExpression<V extends ExpressionVisitor> implements Expression<
     private static final int DUMMY_HASHCODE = 47;
 
     public Map<Attribute, ValueOperation> getAVO() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     public void accept(ExpressionVisitor v) {

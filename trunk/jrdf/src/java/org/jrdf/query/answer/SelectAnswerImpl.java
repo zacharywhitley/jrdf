@@ -232,7 +232,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
         results = relationFactory.getRelation(newAttributes, newTuples);
     }
 
-    public void accept(AnswerVisitor visitor) {
-        visitor.visitSelectAnswer(this);
+    public <R> R accept(AnswerVisitor<R> visitor) {
+        return visitor.visitSelectAnswer(this);
     }
 }

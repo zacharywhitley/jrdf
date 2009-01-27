@@ -116,7 +116,7 @@ public class RestrictImpl implements Restrict {
         return createRelation(relation, restrictedTuples, hasValidVarName);
     }
 
-    public Relation restrict(Relation relation, LogicExpression<ExpressionVisitor> expression) {
+    public     <V extends ExpressionVisitor> Relation restrict(Relation relation, LogicExpression<V> expression) {
         final Set<Tuple> restrictedTuples = relation.getTuples();
         Set<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple : restrictedTuples) {
