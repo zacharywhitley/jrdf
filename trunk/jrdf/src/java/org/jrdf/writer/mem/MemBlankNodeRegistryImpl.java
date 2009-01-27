@@ -56,6 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+
 package org.jrdf.writer.mem;
 
 import org.jrdf.graph.BlankNode;

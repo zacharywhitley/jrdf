@@ -56,6 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+
 package org.jrdf.writer;
 
 import org.jrdf.graph.Graph;

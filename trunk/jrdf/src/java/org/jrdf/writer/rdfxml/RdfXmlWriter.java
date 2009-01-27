@@ -56,6 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+
 package org.jrdf.writer.rdfxml;
 
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
