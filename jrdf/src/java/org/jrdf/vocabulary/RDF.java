@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 2097 $
- * $Date: 2008-06-23 15:07:25 +1000 (Mon, 23 Jun 2008) $
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2008 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2009 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
