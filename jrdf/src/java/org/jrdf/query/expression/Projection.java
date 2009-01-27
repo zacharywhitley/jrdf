@@ -102,10 +102,6 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         this.allVariables = collector.getAttributes();
     }
 
-    public void accept(V v) {
-        v.visitProjection(this);
-    }
-
     public Map<Attribute, ValueOperation> getAVO() {
         return nextExpression.getAVO();
     }
@@ -153,6 +149,10 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
      */
     public String toString() {
         return "SELECT { " + variableCollector + " } \n" + nextExpression;
+    }
+
+    public void accept(V v) {
+        v.visitProjection(this);
     }
 
     private LinkedHashSet<Attribute> extractAttributes() throws ParserException {

@@ -65,5 +65,5 @@ public interface AnswerVisitable {
      *
      * @param visitor the object doing the visiting.
      */
-    void accept(AnswerVisitor visitor);
+    <R> R accept(AnswerVisitor<R> visitor);
 }

@@ -101,7 +101,7 @@ public final class EmptyAnswer implements SelectAnswer, Serializable {
         return "";
     }
 
-    public void accept(AnswerVisitor visitor) {
-        visitor.visitSelectAnswer(this);
+    public <R> R accept(AnswerVisitor<R> visitor) {
+        return visitor.visitSelectAnswer(this);
     }
 }

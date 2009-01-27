@@ -59,7 +59,7 @@ public class AskAnswerImpl implements AskAnswer, Serializable {
         return ASK_VARIABLE_NAME + "\nValue " + result;
     }
 
-    public void accept(AnswerVisitor visitor) {
-        visitor.visitAskAnswer(this);
+    public <R> R accept(AnswerVisitor<R> visitor) {
+        return visitor.visitAskAnswer(this);
     }
 }

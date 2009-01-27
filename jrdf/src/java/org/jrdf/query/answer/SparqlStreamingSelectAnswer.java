@@ -116,7 +116,7 @@ public class SparqlStreamingSelectAnswer implements SelectAnswer {
         return -1;
     }
 
-    public void accept(AnswerVisitor visitor) {
-        visitor.visitSelectAnswer(this);
+    public <R> R accept(AnswerVisitor<R> visitor) {
+        return visitor.visitSelectAnswer(this);
     }
 }
