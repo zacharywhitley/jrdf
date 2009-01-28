@@ -72,7 +72,6 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Id$
  */
-@SuppressWarnings({ "unchecked" })
 public final class TupleImpl implements Tuple {
     private static final long serialVersionUID = 4135312692643773094L;
     private Map<Attribute, ValueOperation> attributeValues;

@@ -138,7 +138,6 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         assertEquals(expectedResult, result);
     }
 
-    @SuppressWarnings({ "unchecked" })
     private Attribute createAttribute(NodeType type) {
         Attribute att = FACTORY.createMock(Attribute.class);
         att.getType();
@@ -146,7 +145,6 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         return att;
     }
 
-    @SuppressWarnings({ "unchecked" })
     private TypeComparator createTypeComparator(NodeType t1, NodeType t2, int expectedResult) {
         TypeComparator typeComparator = FACTORY.createMock(TypeComparator.class);
         typeComparator.compare(t1, t2);

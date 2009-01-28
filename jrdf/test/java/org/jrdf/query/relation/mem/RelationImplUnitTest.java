@@ -127,7 +127,6 @@ public class RelationImplUnitTest extends TestCase {
 
     private static Set<Attribute> createHeading(Set<Tuple> tuples) {
         Set<Attribute> heading = new TreeSet<Attribute>(FACTORY.getNewAttributeComparator());
-        //noinspection unchecked
         for (Tuple tuple : tuples) {
             heading.addAll(tuple.getAttributeValues().keySet());
         }
