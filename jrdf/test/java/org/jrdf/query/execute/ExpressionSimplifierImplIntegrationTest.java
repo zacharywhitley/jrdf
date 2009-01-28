@@ -221,7 +221,7 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         getExpression(queryText, filter);
     }
 
-    public void testcomplexFilter2() throws Exception {
+    public void testComplexFilter2() throws Exception {
         String queryText = "ASK WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1 && str(?o1) != \"abc\") }";
         Literal literal = createLiteral("abc");
         Map<Attribute, ValueOperation> filterLhs = createSingleAVP(ATTR_O1, ANY_NODE, STR);
@@ -315,6 +315,8 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         } else {
             expression = null;
         }
+        System.err.println("Expected: " + expected);
+        System.err.println("Actual: " + expression);
         assertEquals(expected, expression);
     }
 
