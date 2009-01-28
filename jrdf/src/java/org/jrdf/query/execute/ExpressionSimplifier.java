@@ -66,7 +66,5 @@ public interface ExpressionSimplifier extends ExpressionVisitor {
 
     <V extends ExpressionVisitor> Expression<V> getExpression();
 
-    <V extends ExpressionVisitor> Expression<V> popExpression();
-
     boolean parseAgain();
 }
