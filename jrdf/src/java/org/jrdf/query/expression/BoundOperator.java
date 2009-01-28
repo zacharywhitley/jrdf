@@ -117,7 +117,7 @@ public final class BoundOperator implements Operator, LogicExpression {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitBound(this, v);
+        v.visitBound(this);
     }
 
     private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {

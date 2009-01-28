@@ -66,7 +66,6 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.global.LiteralImpl;
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.Operator;
@@ -112,7 +111,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public void visitSingleValue(SingleValue singleValue, ExpressionVisitor v) {
+    public void visitSingleValue(SingleValue singleValue) {
         Map<Attribute, ValueOperation> avo = singleValue.getAVO();
         Attribute attribute = avo.keySet().iterator().next();
         Node node = avo.get(attribute).getValue();
@@ -129,7 +128,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public void visitStr(StrOperator str, ExpressionVisitor v) {
+    public void visitStr(StrOperator str) {
         final ValueOperation valueOperation = getValueOperation(str);
         if (valueOperation != null) {
             Node node = valueOperation.getValue();
@@ -141,7 +140,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public void visitLang(LangOperator lang, ExpressionVisitor v) {
+    public void visitLang(LangOperator lang) {
         final ValueOperation valueOperation = getValueOperation(lang);
         if (valueOperation != null) {
             Node node = valueOperation.getValue();
@@ -153,14 +152,14 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public void visitBound(BoundOperator bound, ExpressionVisitor v) {
+    public void visitBound(BoundOperator bound) {
         final ValueOperation valueOperation = getValueOperation(bound);
         contradiction = (valueOperation == null);
         value = new LiteralImpl(Boolean.toString(contradiction), XSD.BOOLEAN);
     }
 
     @Override
-    public void visitLogicAnd(LogicAndExpression andExpression, ExpressionVisitor v) {
+    public void visitLogicAnd(LogicAndExpression andExpression) {
         andExpression.getLhs().accept(this);
         boolean lhsBoolean = contradiction;
         andExpression.getRhs().accept(this);
@@ -168,7 +167,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public void visitLogicOr(LogicOrExpression orExpression, ExpressionVisitor v) {
+    public void visitLogicOr(LogicOrExpression orExpression) {
         orExpression.getLhs().accept(this);
         boolean lhsBoolean = contradiction;
         orExpression.getRhs().accept(this);
@@ -176,39 +175,39 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public void visitLogicNot(LogicNotExpression notExpression, ExpressionVisitor v) {
+    public void visitLogicNot(LogicNotExpression notExpression) {
         notExpression.getExpression().accept(this);
         contradiction = !contradiction;
     }
 
     @Override
-    public void visitEqualsExpression(EqualsExpression equalsExpression, ExpressionVisitor v) {
+    public void visitEqualsExpression(EqualsExpression equalsExpression) {
         Node lhsValue = getValue(tuple, equalsExpression.getLhs());
         Node rhsValue = getValue(tuple, equalsExpression.getRhs());
         contradiction = compareNodes(lhsValue, rhsValue) != 0;
     }
 
     @Override
-    public void visitNEqualsExpression(NEqualsExpression nEqualsExpression, ExpressionVisitor v) {
+    public void visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
         Node lhsValue = getValue(tuple, nEqualsExpression.getLhs());
         Node rhsValue = getValue(tuple, nEqualsExpression.getRhs());
         contradiction = compareNodes(lhsValue, rhsValue) == 0;
     }
 
     @Override
-    public void visitLessThanExpression(LessThanExpression lessThanExpression, ExpressionVisitor v) {
+    public void visitLessThanExpression(LessThanExpression lessThanExpression) {
         Node lhsValue = getValue(tuple, lessThanExpression.getLhs());
         Node rhsValue = getValue(tuple, lessThanExpression.getRhs());
         contradiction = compareNodes(lhsValue, rhsValue) >= 0;
     }
 
     @Override
-    public void visitTrue(TrueExpression trueExp, ExpressionVisitor v) {
+    public void visitTrue(TrueExpression trueExp) {
         contradiction = false;
     }
 
     @Override
-    public void visitFalse(FalseExpression falseExp, ExpressionVisitor v) {
+    public void visitFalse(FalseExpression falseExp) {
         contradiction = true;
     }
 

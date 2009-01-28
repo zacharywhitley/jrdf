@@ -97,7 +97,7 @@ public final class Union implements BiOperandExpression, Serializable {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitUnion(this, v);
+        v.visitUnion(this);
     }
 
     public int size() {

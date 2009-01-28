@@ -62,7 +62,6 @@ package org.jrdf.urql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.urql.builder.TripleBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.AAskQueryStart;

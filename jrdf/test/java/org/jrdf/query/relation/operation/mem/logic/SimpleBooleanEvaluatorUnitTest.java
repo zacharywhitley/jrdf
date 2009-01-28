@@ -65,7 +65,6 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
@@ -105,7 +104,6 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     private static final NodeComparator NODE_COMPARATOR = new ComparatorFactoryImpl().createNodeComparator();
 
@@ -194,7 +192,7 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
 
     public void testLangTags() {
         Expression langExp =
-                new LangOperator(createAVO(VAR_BAR1_LITERAL, ANY_NODE_LANG_VO));
+            new LangOperator(createAVO(VAR_BAR1_LITERAL, ANY_NODE_LANG_VO));
         ValueOperation vo1 = new ValueOperationImpl(LITERAL_L1_LANG, EQUALS);
         SingleValue valueExp1 = new SingleValue(createAVO(VAR_BAR1_LITERAL, vo1));
         expression = new NEqualsExpression(langExp, valueExp1);

@@ -80,6 +80,6 @@ public interface ConstraintTupleCacheHandler {
     Attribute findOneCachedAttribute(SingleConstraint constraint);
 
     void addResultToCache(SingleConstraint constraint, Relation result, long time);
-    
+
     void clear();
 }

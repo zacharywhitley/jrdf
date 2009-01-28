@@ -79,7 +79,7 @@ public final class StrOperator implements Operator {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitStr(this, v);
+        v.visitStr(this);
     }
 
     public Map<Attribute, ValueOperation> getAVO() {

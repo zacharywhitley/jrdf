@@ -106,7 +106,7 @@ public class LessThanExpression implements LogicExpression, BiOperandExpression 
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitLessThanExpression(this, v);
+        v.visitLessThanExpression(this);
     }
 
     public int size() {

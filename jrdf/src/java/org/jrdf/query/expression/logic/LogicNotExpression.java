@@ -86,7 +86,7 @@ public class LogicNotExpression implements LogicExpression {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitLogicNot(this, v);
+        v.visitLogicNot(this);
     }
 
     public Map<Attribute, ValueOperation> getAVO() {

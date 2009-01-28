@@ -162,7 +162,7 @@ public final class SingleConstraint implements Constraint {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitConstraint(this, v);
+        v.visitConstraint(this);
     }
 
     @Override

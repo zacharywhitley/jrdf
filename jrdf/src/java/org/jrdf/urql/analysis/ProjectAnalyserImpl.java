@@ -61,7 +61,6 @@ package org.jrdf.urql.analysis;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;

@@ -59,14 +59,13 @@
 
 package org.jrdf.query.expression;
 
-import org.jrdf.util.EqualsUtil;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.type.PositionalNodeType;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.type.PositionalNodeType;
 import org.jrdf.urql.analysis.VariableCollector;
+import org.jrdf.util.EqualsUtil;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -74,7 +73,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class Ask implements Expression, Serializable {
+public class Ask implements Expression {
     private static final long serialVersionUID = 7831085111074741271L;
 
     private static final int DUMMY_HASHCODE = 47;
@@ -134,7 +133,7 @@ public class Ask implements Expression, Serializable {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitAsk(this, v);
+        v.visitAsk(this);
     }
 
     private boolean determineEqualityFromFields(Ask o1, Ask o2) {

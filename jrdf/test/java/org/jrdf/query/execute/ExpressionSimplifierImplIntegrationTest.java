@@ -72,7 +72,6 @@ import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
@@ -80,10 +79,10 @@ import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.Union;
 import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
-import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.query.expression.logic.NEqualsExpression;
-import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.LogicAndExpression;
+import org.jrdf.query.expression.logic.LogicExpression;
+import org.jrdf.query.expression.logic.LogicNotExpression;
+import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.VariableName;
@@ -110,7 +109,6 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
