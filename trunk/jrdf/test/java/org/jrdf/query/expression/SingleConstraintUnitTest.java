@@ -65,6 +65,8 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.attributename.AttributeName;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAR_VAR;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
 import org.jrdf.query.relation.mem.EqAVPOperation;
@@ -87,7 +89,6 @@ import java.util.Map;
  * @author Tom Adams
  * @version $Revision$
  */
-@SuppressWarnings({ "unchecked" })
 public final class SingleConstraintUnitTest extends TestCase {
     private static final LinkedHashMap<Attribute, ValueOperation> AVO_1 =
         createAvoMap(TEST_ATTRIBUTE_FOO_POS, ANY_NODE);
@@ -115,7 +116,7 @@ public final class SingleConstraintUnitTest extends TestCase {
 
     public void getAvp() {
         SingleConstraint constraint = new SingleConstraint(AVO_1);
-        assertEquals(AVO_1, constraint.getAvo(Collections.EMPTY_MAP));
+        assertEquals(AVO_1, constraint.getAvo(Collections.<AttributeName, NodeType>emptyMap()));
     }
 
     public void testEquals() {

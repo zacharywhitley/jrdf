@@ -83,7 +83,7 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 
-import static java.util.Collections.EMPTY_SET;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -103,12 +103,11 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
         checkMinus(RELATION_DUM, RELATION_DEE, RELATION_DEE);
     }
 
-    @SuppressWarnings({ "unchecked" })
     public void testRelationDEEandDumWithRelation() {
         Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE);
         // The minus of R1 and DEE is R1's heading, no tuples.
-        checkMinus(createRelation(heading, EMPTY_SET), relation, RELATION_DEE);
+        checkMinus(createRelation(heading, Collections.<Tuple>emptySet()), relation, RELATION_DEE);
         // The minus of DEE and R1 is DEE.
         checkMinus(RELATION_DEE, RELATION_DEE, relation);
         // The minus of R1 and DUM is R1.

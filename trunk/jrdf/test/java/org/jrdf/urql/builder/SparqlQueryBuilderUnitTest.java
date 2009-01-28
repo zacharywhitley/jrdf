@@ -134,7 +134,6 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
         return parser;
     }
 
-    @SuppressWarnings({ "unchecked" })
     private SparqlParser createParser() throws Exception {
         SparqlParser parser = FACTORY.createMock(SparqlParser.class);
         parser.parseQuery(GRAPH, QUERY_GOOD);

@@ -95,7 +95,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({ "unchecked" })
 public class LiteralBuilderImplUnitTest extends TestCase {
     private static final MockFactory FACTORY = new MockFactory();
     private static final Class[] CONSTRUCTOR_PARAM_TYPES = new Class[]{GraphElementFactory.class, Map.class};

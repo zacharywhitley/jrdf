@@ -82,7 +82,6 @@ import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 
 import java.lang.reflect.Modifier;
 
-@SuppressWarnings({ "unchecked" })
 public class SparqlConnectionImplUnitTest extends TestCase {
     private static final MockFactory FACTORY = new MockFactory();
     private static final String NULL = NULL_STRING;
