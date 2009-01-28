@@ -38,7 +38,7 @@
                        code.path="gen.code.path" code.pattern="production.code.pattern"/>
         <compile.macro src.dir="${prod.src.dir}" classpath.ref="production.class.path" output.dir="${prod.classes.dir}"
                        code.path="production.code.path" code.pattern="production.code.pattern"
-                       compiler.args="-Xlint:all"/>
+                       compiler.args="-Xlint"/>
         <compile.groovy.macro src.dir="${groovy.test.src.dir}:${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
                               code.path="test.code.path" code.pattern="test.code.pattern"/>
 
