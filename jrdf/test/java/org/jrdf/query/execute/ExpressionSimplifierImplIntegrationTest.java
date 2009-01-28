@@ -315,8 +315,6 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         } else {
             expression = null;
         }
-        System.err.println("Expected: " + expected);
-        System.err.println("Actual: " + expression);
         assertEquals(expected, expression);
     }
 

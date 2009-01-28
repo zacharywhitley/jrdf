@@ -148,7 +148,6 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     }
 
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection, V v) {
-        System.err.println("Hello: " + projection);
         declaredVariables = projection.getAttributes();
         Expression<ExpressionVisitor> next = getNext(projection.getNextExpression(), v);
         projection.setNextExpression(next);
