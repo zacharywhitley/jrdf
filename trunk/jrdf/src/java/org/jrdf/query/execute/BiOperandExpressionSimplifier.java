@@ -69,5 +69,5 @@ import java.util.List;
  * @version $Id :$
  */
 public interface BiOperandExpressionSimplifier {
-    List<Expression> flattenAndSortConjunction(BiOperandExpression conjunction, Class expClass);
+    List<Expression> flattenAndSortConjunction(BiOperandExpression conjunction, Class<?> expClass);
 }
