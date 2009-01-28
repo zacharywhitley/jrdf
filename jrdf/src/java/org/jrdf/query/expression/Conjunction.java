@@ -113,7 +113,7 @@ public final class Conjunction<V extends ExpressionVisitor> implements BiOperand
     }
 
     public void accept(V v) {
-        v.visitConjunction(this);
+        v.visitConjunction(this, v);
     }
 
     public boolean equals(Object obj) {

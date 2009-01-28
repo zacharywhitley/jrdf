@@ -73,7 +73,6 @@ import java.util.LinkedHashMap;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class EqualsExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
     private static final long serialVersionUID = 1297973700912646394L;
     private static final int DUMMY_HASHCODE = 47;
@@ -106,7 +105,7 @@ public class EqualsExpression<V extends ExpressionVisitor> implements LogicExpre
     }
 
     public void accept(V v) {
-        v.visitEqualsExpression(this);
+        v.visitEqualsExpression(this, v);
     }
 
     public int size() {

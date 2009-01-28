@@ -97,7 +97,7 @@ public final class Union<V extends ExpressionVisitor> implements BiOperandExpres
     }
 
     public void accept(V v) {
-        v.visitUnion(this);
+        v.visitUnion(this, v);
     }
 
     public int size() {

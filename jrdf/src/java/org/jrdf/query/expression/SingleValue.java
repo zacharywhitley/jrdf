@@ -103,7 +103,7 @@ public final class SingleValue<V extends ExpressionVisitor> implements Constrain
     }
 
     public void accept(V v) {
-        v.visitSingleValue(this);
+        v.visitSingleValue(this, v);
     }
 
     public int size() {

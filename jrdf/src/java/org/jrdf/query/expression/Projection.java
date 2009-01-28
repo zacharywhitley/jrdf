@@ -152,7 +152,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
     }
 
     public void accept(V v) {
-        v.visitProjection(this);
+        v.visitProjection(this, v);
     }
 
     private LinkedHashSet<Attribute> extractAttributes() throws ParserException {
