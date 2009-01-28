@@ -88,7 +88,6 @@ import org.jrdf.query.expression.logic.TrueExpression;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter implements ExpressionComparator {
     private static final long serialVersionUID = 4884876904025513571L;
     private int result;
@@ -101,7 +100,6 @@ public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter imp
     private ExpressionComparatorImpl() {
     }
 
-    @SuppressWarnings("unchecked")
     public int compare(Expression lhs, Expression rhs) {
         int lhsValue = getNext(lhs);
         int rhsValue = getNext(rhs);
@@ -118,103 +116,102 @@ public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter imp
         return result;
     }
 
-    public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint) {
+    public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint, V v) {
         result = constraint.size();
     }
 
-    public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter) {
+    public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter, V v) {
         int lhs = getNext(filter.getLhs());
         int rhs = getNext(filter.getRhs());
         result = lhs + rhs;
     }
 
-    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
+    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction, V v) {
         int lhs = getNext(conjunction.getLhs());
         int rhs = getNext(conjunction.getRhs());
         result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
-    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
+    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection, V v) {
         result = getNext(projection.getNextExpression());
     }
 
-    public <V extends ExpressionVisitor> void visitEmptyConstraint(EmptyConstraint<V> constraint) {
+    public <V extends ExpressionVisitor> void visitEmptyConstraint(EmptyConstraint<V> constraint, V v) {
         result = constraint.size();
     }
 
-    public <V extends ExpressionVisitor> void visitUnion(Union<V> union) {
+    public <V extends ExpressionVisitor> void visitUnion(Union<V> union, V v) {
         int lhs = getNext(union.getLhs());
         int rhs = getNext(union.getRhs());
         result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
-    public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
+    public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional, V v) {
         int lhs = getNext(optional.getLhs());
         int rhs = getNext(optional.getRhs());
         result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
-    private <V extends ExpressionVisitor> int visitOperator(Operator<V> operator) {
+    private <V extends ExpressionVisitor> int visitOperator(Operator<V> operator, V v) {
         return operator.size();
     }
 
-    public <V extends ExpressionVisitor> void visitStr(StrOperator<V> str) {
-        result = visitOperator(str);
+    public <V extends ExpressionVisitor> void visitStr(StrOperator<V> str, V v) {
+        result = visitOperator(str, v);
     }
 
-    public <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang) {
-        result = visitOperator(lang);
+    public <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang, V v) {
+        result = visitOperator(lang, v);
     }
 
-    public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound) {
-        result = visitOperator(bound);
+    public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound, V v) {
+        result = visitOperator(bound, v);
     }
 
-    public <V extends ExpressionVisitor> void visitLogicAnd(LogicAndExpression<V> andExpression) {
+    public <V extends ExpressionVisitor> void visitLogicAnd(LogicAndExpression<V> andExpression, V v) {
         int lhs = getNext(andExpression.getLhs());
         int rhs = getNext(andExpression.getRhs());
         result = (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
     }
 
-    public <V extends ExpressionVisitor> void visitLogicOr(LogicOrExpression<V> orExpression) {
+    public <V extends ExpressionVisitor> void visitLogicOr(LogicOrExpression<V> orExpression, V v) {
         int lhs = getNext(orExpression.getLhs());
         int rhs = getNext(orExpression.getRhs());
         result = (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
     }
 
-    public <V extends ExpressionVisitor> void visitLogicNot(LogicNotExpression<V> notExpression) {
+    public <V extends ExpressionVisitor> void visitLogicNot(LogicNotExpression<V> notExpression, V v) {
         result = notExpression.size();
     }
 
-    public <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression) {
+    public <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression, V v) {
         result = equalsExpression.size();
     }
 
-    public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask) {
+    public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask, V v) {
         result = getNext(ask.getNextExpression());
     }
 
-    public <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression) {
+    public <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression, V v) {
         result = lessThanExpression.size();
     }
 
-    public <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression) {
+    public <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression, V v) {
         result = nEqualsExpression.size();
     }
 
-    public <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value) {
+    public <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value, V v) {
         result = value.size();
     }
 
-    public <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp) {
+    public <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp, V v) {
         result = trueExp.size();
     }
 
-    public <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp) {
+    public <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp, V v) {
         result = falseExp.size();
     }
 
-    @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor> int getNext(Expression<V> expression) {
         ExpressionComparator comparator = new ExpressionComparatorImpl();
         expression.accept((V) comparator);

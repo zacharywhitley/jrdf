@@ -116,7 +116,7 @@ public class LogicOrExpression<V extends ExpressionVisitor> implements LogicExpr
     }
 
     public void accept(V v) {
-        v.visitLogicOr(this);
+        v.visitLogicOr(this, v);
     }
 
     public int hashCode() {

@@ -107,7 +107,7 @@ public class NEqualsExpression<V extends ExpressionVisitor> implements LogicExpr
     }
 
     public void accept(V v) {
-        v.visitNEqualsExpression(this);
+        v.visitNEqualsExpression(this, v);
     }
 
     public int size() {

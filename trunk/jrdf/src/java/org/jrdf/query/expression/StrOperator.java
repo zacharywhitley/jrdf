@@ -78,8 +78,8 @@ public final class StrOperator<V extends ExpressionVisitor> implements Operator<
         this.singleAvp = newSingleAvp;
     }
 
-    public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitStr(this);
+    public void accept(V v) {
+        v.visitStr(this, v);
     }
 
     public Map<Attribute, ValueOperation> getAVO() {

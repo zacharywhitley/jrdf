@@ -71,7 +71,7 @@ import java.util.Map;
  * @version $Id $
  */
 
-public final class BoundOperator <V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
+public final class BoundOperator<V extends ExpressionVisitor> implements Operator<V>, LogicExpression<V> {
     private static final long serialVersionUID = -2026129623510467814L;
     private static final int DUMMY_HASHCODE = 47;
     private Map<Attribute, ValueOperation> singleAvp;
@@ -82,10 +82,6 @@ public final class BoundOperator <V extends ExpressionVisitor> implements Operat
 
     public BoundOperator(Map<Attribute, ValueOperation> singleAvp) {
         this.singleAvp = singleAvp;
-    }
-
-    public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visitBound(this);
     }
 
     public Map<Attribute, ValueOperation> getAVO() {
@@ -119,6 +115,10 @@ public final class BoundOperator <V extends ExpressionVisitor> implements Operat
             return false;
         }
         return determineEqualityFromFields(this, (BoundOperator) obj);
+    }
+
+    public void accept(V v) {
+        v.visitBound(this, v);
     }
 
     private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {

@@ -93,10 +93,6 @@ public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializ
         return nextExpression.getAVO();
     }
 
-    public void accept(V v) {
-        v.visitAsk(this);
-    }
-
     public int size() {
         return nextExpression.size();
     }
@@ -135,6 +131,10 @@ public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializ
             return false;
         }
         return determineEqualityFromFields(this, (Ask) obj);
+    }
+
+    public void accept(V v) {
+        v.visitAsk(this, v);
     }
 
     private boolean determineEqualityFromFields(Ask o1, Ask o2) {

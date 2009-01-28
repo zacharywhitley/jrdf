@@ -117,7 +117,7 @@ public class LogicAndExpression<V extends ExpressionVisitor> implements LogicExp
     }
 
     public void accept(V v) {
-        v.visitLogicAnd(this);
+        v.visitLogicAnd(this, v);
     }
 
     public int hashCode() {

@@ -99,23 +99,20 @@ public final class QueryExecutionPlanner extends ExpressionVisitorAdapter implem
         return PLANNER;
     }
 
-    @SuppressWarnings({ "unchecked" })
     public List<Expression> flattenExpression(BiOperandExpression expression) {
         return simplifier.flattenAndSortConjunction(expression, expression.getClass());
     }
 
-    @SuppressWarnings({ "unchecked" })
     public Set<Relation> processAndRearrangeExpressions(BiOperandExpression expression, List<Expression> operands,
-                                                        OptimizingQueryEngineImpl engine) {
+        OptimizingQueryEngineImpl engine) {
         this.engine = engine;
         this.constraintList = operands;
         expression.accept(this);
         return relations;
     }
 
-    @SuppressWarnings({ "unchecked" })
     @Override
-    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
+    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction, V v) {
         List<Relation> partialResult = new LinkedList<Relation>();
         for (Expression exp : constraintList) {
             Relation tempRelation = engine.getExpression(exp);

@@ -95,7 +95,7 @@ public final class TrueExpression<V extends ExpressionVisitor> implements LogicE
     }
 
     public void accept(V v) {
-        v.visitTrue(this);
+        v.visitTrue(this, v);
     }
 
     public int size() {

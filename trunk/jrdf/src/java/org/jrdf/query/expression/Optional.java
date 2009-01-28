@@ -109,7 +109,7 @@ public final class Optional<V extends ExpressionVisitor> implements BiOperandExp
     }
 
     public void accept(V v) {
-        v.visitOptional(this);
+        v.visitOptional(this, v);
     }
 
     public boolean equals(Object obj) {
