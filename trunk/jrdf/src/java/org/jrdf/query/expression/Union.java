@@ -67,16 +67,16 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
-public final class Union<V extends ExpressionVisitor> implements BiOperandExpression<V>, Serializable {
+public final class Union implements BiOperandExpression, Serializable {
     private static final long serialVersionUID = -3805021039393789553L;
     private static final int DUMMY_HASHCODE = 47;
-    private Expression<V> lhs;
-    private Expression<V> rhs;
+    private Expression lhs;
+    private Expression rhs;
 
     private Union() {
     }
 
-    public Union(Expression<V> lhs, Expression<V> rhs) {
+    public Union(Expression lhs, Expression rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
@@ -88,15 +88,15 @@ public final class Union<V extends ExpressionVisitor> implements BiOperandExpres
         return map;
     }
 
-    public Expression<V> getLhs() {
+    public Expression getLhs() {
         return lhs;
     }
 
-    public Expression<V> getRhs() {
+    public Expression getRhs() {
         return rhs;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitUnion(this, v);
     }
 

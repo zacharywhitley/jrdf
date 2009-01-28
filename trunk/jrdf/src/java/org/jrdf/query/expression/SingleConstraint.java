@@ -89,7 +89,7 @@ import java.util.Set;
  * @author Tom Adams
  * @version $Revision$
  */
-public final class SingleConstraint<V extends ExpressionVisitor> implements Constraint<V> {
+public final class SingleConstraint implements Constraint {
     private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
     private static final String OWL_BASE_URI = "http://www.w3.org/2002/07/owl#";
@@ -161,7 +161,7 @@ public final class SingleConstraint<V extends ExpressionVisitor> implements Cons
         return false;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitConstraint(this, v);
     }
 

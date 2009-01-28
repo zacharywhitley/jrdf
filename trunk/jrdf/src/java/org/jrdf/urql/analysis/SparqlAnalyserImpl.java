@@ -65,7 +65,6 @@ import org.jrdf.query.Query;
 import org.jrdf.query.SelectQueryImpl;
 import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.urql.analysis.NoQuery.NO_QUERY;
@@ -86,7 +85,7 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     private Query query = NO_QUERY;
     private TripleBuilder tripleBuilder;
     private Graph graph;
-    private Expression<ExpressionVisitor> expression;
+    private Expression expression;
     private ParserException exception;
 
     public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, GraphRelationFactory graphRelationFactory) {

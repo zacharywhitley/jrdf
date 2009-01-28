@@ -75,43 +75,43 @@ import org.jrdf.query.expression.logic.TrueExpression;
  * @version $Revision:$
  */
 public interface ExpressionVisitor {
-    <V extends ExpressionVisitor> void visitProjection(Projection<V> projection, V v);
+    void visitProjection(Projection projection, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint, V v);
+    void visitConstraint(SingleConstraint constraint, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitEmptyConstraint(EmptyConstraint<V> constraint, V v);
+    void visitEmptyConstraint(EmptyConstraint constraint, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction, V v);
+    void visitConjunction(Conjunction conjunction, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitUnion(Union<V> union, V v);
+    void visitUnion(Union union, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitOptional(Optional<V> optional, V v);
+    void visitOptional(Optional optional, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitLogicAnd(LogicAndExpression<V> andExpression, V v);
+    void visitLogicAnd(LogicAndExpression andExpression, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitLogicOr(LogicOrExpression<V> orExpression, V v);
+    void visitLogicOr(LogicOrExpression orExpression, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitLogicNot(LogicNotExpression<V> notExpression, V v);
+    void visitLogicNot(LogicNotExpression notExpression, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitFilter(Filter<V> filter, V v);
+    void visitFilter(Filter filter, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression, V v);
+    void visitEqualsExpression(EqualsExpression equalsExpression, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression, V v);
+    void visitLessThanExpression(LessThanExpression lessThanExpression, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression, V v);
+    void visitNEqualsExpression(NEqualsExpression nEqualsExpression, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitAsk(Ask<V> ask, V v);
+    void visitAsk(Ask ask, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value, V v);
+    void visitSingleValue(SingleValue value, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitStr(StrOperator<V> str, V v);
+    void visitStr(StrOperator str, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang, V v);
+    void visitLang(LangOperator lang, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound, V v);
+    void visitBound(BoundOperator bound, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp, V v);
+    void visitTrue(TrueExpression trueExp, ExpressionVisitor v);
 
-    <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp, V v);
+    void visitFalse(FalseExpression falseExp, ExpressionVisitor v);
 }

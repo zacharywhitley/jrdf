@@ -71,21 +71,21 @@ import java.util.Map;
  * @version $Id:$
  */
 
-public class LogicNotExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
+public class LogicNotExpression implements LogicExpression {
     private static final long serialVersionUID = 7468439147872226467L;
     private static final int DUMMY_HASHCODE = 47;
 
-    private LogicExpression<V> expression;
+    private LogicExpression expression;
     protected static final String BANG = "!";
 
     private LogicNotExpression() {
     }
 
-    public LogicNotExpression(LogicExpression<V> exp) {
+    public LogicNotExpression(LogicExpression exp) {
         expression = exp;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitLogicNot(this, v);
     }
 
@@ -93,7 +93,7 @@ public class LogicNotExpression<V extends ExpressionVisitor> implements LogicExp
         return expression.getAVO();
     }
 
-    public LogicExpression<V> getExpression() {
+    public LogicExpression getExpression() {
         return expression;
     }
 

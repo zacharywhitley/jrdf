@@ -59,12 +59,11 @@
 
 package org.jrdf.query.execute;
 
-import org.jrdf.query.relation.ValueOperation;
+import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.SingleConstraint;
 
 import java.util.Set;
 
@@ -78,9 +77,9 @@ public interface ConstraintTupleCacheHandler {
 
     void reset(Relation result, int constraintListSize);
 
-    <V extends ExpressionVisitor> Attribute findOneCachedAttribute(SingleConstraint<V> constraint);
+    Attribute findOneCachedAttribute(SingleConstraint constraint);
 
-    <V extends ExpressionVisitor> void addResultToCache(SingleConstraint<V> constraint,
-                                                               Relation result, long time);
+    void addResultToCache(SingleConstraint constraint, Relation result, long time);
+    
     void clear();
 }

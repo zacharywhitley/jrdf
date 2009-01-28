@@ -64,7 +64,6 @@ import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARA
 import org.jrdf.query.expression.Conjunction;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Union;
 import static org.jrdf.util.test.SparqlQueryTestUtil.ANY_SPO;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
@@ -79,17 +78,17 @@ import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
  */
 
 public class ExpressionComparatorImplUnitTest extends TestCase {
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_CONJUNCTION
-        = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_CONJUNCTION
-        = new Conjunction<ExpressionVisitor>(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_UNION
-        = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_UNION
-        = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
-    private static final Expression<ExpressionVisitor> ALL_AND_EMPTY = new Conjunction<ExpressionVisitor>(ANY_SPO,
+    private static final Expression BOOK1_AND_2_CONJUNCTION
+        = new Conjunction(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+    private static final Expression BOOK1_AND_2_AND_3_CONJUNCTION
+        = new Conjunction(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
+    private static final Expression BOOK1_AND_2_UNION
+        = new Union(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+    private static final Expression BOOK1_AND_2_AND_3_UNION
+        = new Union(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
+    private static final Expression ALL_AND_EMPTY = new Conjunction(ANY_SPO,
         EMPTY_CONSTRAINT);
-    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
+    private static final Expression FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
         "name", 1);
 
     private static final int EQUAL = 0;

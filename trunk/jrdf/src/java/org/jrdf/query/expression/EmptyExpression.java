@@ -66,7 +66,7 @@ import org.jrdf.util.EqualsUtil;
 import java.util.Collections;
 import java.util.Map;
 
-public class EmptyExpression<V extends ExpressionVisitor> implements Expression<V> {
+public class EmptyExpression implements Expression {
     private static final long serialVersionUID = 4636572000909954329L;
     private static final int DUMMY_HASHCODE = 47;
 

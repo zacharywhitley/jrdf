@@ -64,8 +64,8 @@ package org.jrdf.query.expression;
  * @author Yuan-Fang Li
  * @version $Id :$
  */
-public interface BiOperandExpression<V extends ExpressionVisitor> extends Expression<V> {
-    Expression<V> getLhs();
+public interface BiOperandExpression extends Expression {
+    Expression getLhs();
 
-    Expression<V> getRhs();
+    Expression getRhs();
 }

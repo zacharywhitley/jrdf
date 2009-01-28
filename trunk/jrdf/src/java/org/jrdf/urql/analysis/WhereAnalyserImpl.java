@@ -64,7 +64,6 @@ import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.SingleConstraint;
@@ -105,7 +104,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     private TripleBuilder tripleBuilder;
     private Graph graph;
     private VariableCollector collector;
-    private Expression<ExpressionVisitor> expression;
+    private Expression expression;
     private ParserException exception;
 
     public WhereAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, VariableCollector collector) {
@@ -114,7 +113,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         this.collector = collector;
     }
 
-    public Expression<ExpressionVisitor> getExpression() throws ParserException {
+    public Expression getExpression() throws ParserException {
         if (exception != null) {
             throw exception;
         }
@@ -123,12 +122,12 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
 
     @Override
     public void caseAFilteredBasicGraphPatternGraphPattern(AFilteredBasicGraphPatternGraphPattern node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
+        Expression lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
         if (node.getOperationPattern() != null) {
             expression = lhs;
             LinkedList<POperationPattern> list = node.getOperationPattern();
             for (POperationPattern pOperationPattern : list) {
-                Expression<ExpressionVisitor> rhs = getExpression((Node) pOperationPattern.clone());
+                Expression rhs = getExpression((Node) pOperationPattern.clone());
                 handleExpressions(expression, rhs);
             }
         } else {
@@ -136,27 +135,27 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         }
     }
 
-    private void handleExpressions(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
+    private void handleExpressions(Expression lhs, Expression rhs) {
         if (lhs != null) {
             if (Optional.class.isAssignableFrom(rhs.getClass())) {
                 handleOptional(lhs, rhs);
             } else if (Conjunction.class.isAssignableFrom(rhs.getClass())) {
-                Conjunction<ExpressionVisitor> conjunction = (Conjunction<ExpressionVisitor>) rhs;
+                Conjunction conjunction = (Conjunction) rhs;
                 if (conjunction.getLhs() != null) {
-                    expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+                    expression = new Conjunction(lhs, rhs);
                 } else {
                     conjunction.setLhs(lhs);
                     expression = rhs;
                 }
             } else if (Constraint.class.isAssignableFrom(rhs.getClass()) &&
                 (Constraint.class.isAssignableFrom(lhs.getClass()))) {
-                expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+                expression = new Conjunction(lhs, rhs);
             } else if (LogicExpression.class.isAssignableFrom(rhs.getClass())) {
-                expression = new Filter<ExpressionVisitor>(lhs, (LogicExpression<ExpressionVisitor>) rhs);
+                expression = new Filter(lhs, (LogicExpression) rhs);
             } else if (LogicExpression.class.isAssignableFrom(lhs.getClass())) {
-                expression = new Filter<ExpressionVisitor>(rhs, (LogicExpression<ExpressionVisitor>) lhs);
+                expression = new Filter(rhs, (LogicExpression) lhs);
             } else {
-                expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+                expression = new Conjunction(lhs, rhs);
             }
         } else {
             expression = rhs;
@@ -170,7 +169,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             node.apply(tripleBuilder);
             LinkedHashMap<Attribute, ValueOperation> map = tripleBuilder.getTriples();
             collector.addConstraints(map);
-            expression = new SingleConstraint<ExpressionVisitor>(map);
+            expression = new SingleConstraint(map);
         } catch (ParserException e) {
             exception = e;
         }
@@ -179,16 +178,16 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     @Override
     public void caseABlockOfTriples(ABlockOfTriples node) {
         if (node.getMoreTriples().size() != 0) {
-            Expression<ExpressionVisitor> lhs = getExpression((Node) node.getTriple().clone());
+            Expression lhs = getExpression((Node) node.getTriple().clone());
             LinkedList<PMoreTriples> moreTriples = node.getMoreTriples();
-            List<Expression<ExpressionVisitor>> expressions = new ArrayList<Expression<ExpressionVisitor>>();
+            List<Expression> expressions = new ArrayList<Expression>();
             for (PMoreTriples pMoreTriples : moreTriples) {
-                Expression<ExpressionVisitor> rhs = getExpression((Node) pMoreTriples.clone());
+                Expression rhs = getExpression((Node) pMoreTriples.clone());
                 expressions.add(rhs);
             }
-            Expression<ExpressionVisitor> lhsSide = lhs;
-            for (Expression<ExpressionVisitor> currentExpression : expressions) {
-                lhsSide = new Conjunction<ExpressionVisitor>(lhsSide, currentExpression);
+            Expression lhsSide = lhs;
+            for (Expression currentExpression : expressions) {
+                lhsSide = new Conjunction(lhsSide, currentExpression);
             }
             expression = lhsSide;
         } else {
@@ -199,8 +198,8 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     @Override
     public void caseAGraphPatternOrFilterGraphPatternOperationPattern(
         AGraphPatternOrFilterGraphPatternOperationPattern node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getGraphPatternOrFilter().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
+        Expression lhs = getExpression((Node) node.getGraphPatternOrFilter().clone());
+        Expression rhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
         if (lhs != null && rhs != null) {
             handleExpressions(rhs, lhs);
         } else if (lhs != null) {
@@ -228,17 +227,17 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     @Override
     public void caseAGroupOrUnionGraphPattern(AGroupOrUnionGraphPattern node) {
         if (node.getUnionGraphPattern() != null) {
-            Expression<ExpressionVisitor> lhs = getExpressionWithEmptyConstraint(
+            Expression lhs = getExpressionWithEmptyConstraint(
                 (Node) node.getGroupGraphPattern().clone());
             LinkedList<PUnionGraphPattern> unionGraphPattern = node.getUnionGraphPattern();
-            List<Expression<ExpressionVisitor>> expressions = new ArrayList<Expression<ExpressionVisitor>>();
+            List<Expression> expressions = new ArrayList<Expression>();
             for (PUnionGraphPattern pUnionGraphPattern : unionGraphPattern) {
-                Expression<ExpressionVisitor> rhs = getExpressionWithEmptyConstraint((Node) pUnionGraphPattern.clone());
+                Expression rhs = getExpressionWithEmptyConstraint((Node) pUnionGraphPattern.clone());
                 expressions.add(rhs);
             }
-            Expression<ExpressionVisitor> lhsSide = lhs;
-            for (Expression<ExpressionVisitor> currentExpression : expressions) {
-                lhsSide = new Union<ExpressionVisitor>(lhsSide, currentExpression);
+            Expression lhsSide = lhs;
+            for (Expression currentExpression : expressions) {
+                lhsSide = new Union(lhsSide, currentExpression);
             }
             expression = lhsSide;
         } else {
@@ -248,22 +247,22 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
 
     @Override
     public void caseAOptionalGraphPattern(AOptionalGraphPattern node) {
-        Expression<ExpressionVisitor> rhs = getExpression((PGroupGraphPattern) node.getGroupGraphPattern().clone());
-        expression = new Optional<ExpressionVisitor>(rhs);
+        Expression rhs = getExpression((PGroupGraphPattern) node.getGroupGraphPattern().clone());
+        expression = new Optional(rhs);
     }
 
-    private void handleOptional(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
-        Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
+    private void handleOptional(Expression lhs, Expression rhs) {
+        Optional rhsOptional = (Optional) rhs;
         if (rhsOptional.getLhs() != null) {
-            expression = new Conjunction<ExpressionVisitor>(lhs, rhsOptional);
+            expression = new Conjunction(lhs, rhsOptional);
         } else {
             rhsOptional.setLhs(lhs);
             expression = rhsOptional;
         }
     }
 
-    private Expression<ExpressionVisitor> getExpressionWithEmptyConstraint(Node node) {
-        Expression<ExpressionVisitor> result = getExpression(node);
+    private Expression getExpressionWithEmptyConstraint(Node node) {
+        Expression result = getExpression(node);
         if (result == null) {
             return EMPTY_CONSTRAINT;
         } else {
@@ -271,7 +270,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         }
     }
 
-    private Expression<ExpressionVisitor> getExpression(Node node) {
+    private Expression getExpression(Node node) {
         try {
             WhereAnalyser analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
             node.apply(analyser);

@@ -74,17 +74,17 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializable {
+public class Ask implements Expression, Serializable {
     private static final long serialVersionUID = 7831085111074741271L;
 
     private static final int DUMMY_HASHCODE = 47;
-    private Expression<ExpressionVisitor> nextExpression;
+    private Expression nextExpression;
     private Map<AttributeName, PositionalNodeType> allVariables;
 
     private Ask() {
     }
 
-    public Ask(Expression<ExpressionVisitor> nextExpression, VariableCollector variableCollector) {
+    public Ask(Expression nextExpression, VariableCollector variableCollector) {
         this.nextExpression = nextExpression;
         allVariables = variableCollector.getAttributes();
     }
@@ -97,11 +97,11 @@ public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializ
         return nextExpression.size();
     }
 
-    public Expression<ExpressionVisitor> getNextExpression() {
+    public Expression getNextExpression() {
         return nextExpression;
     }
 
-    public void setNextExpression(Expression<ExpressionVisitor> expression) {
+    public void setNextExpression(Expression expression) {
         nextExpression = expression;
     }
 
@@ -133,7 +133,7 @@ public class Ask<V extends ExpressionVisitor> implements Expression<V>, Serializ
         return determineEqualityFromFields(this, (Ask) obj);
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitAsk(this, v);
     }
 

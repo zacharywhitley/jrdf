@@ -71,9 +71,9 @@ import org.jrdf.query.relation.Tuple;
  */
 
 public interface BooleanEvaluator extends ExpressionVisitor {
-    <V extends ExpressionVisitor> boolean evaluate(Tuple tuple, LogicExpression<V> expression);
+    boolean evaluate(Tuple tuple, LogicExpression expression);
 
-    <V extends ExpressionVisitor> Node getValue(Tuple tuple, Expression<V> expression);
+    Node getValue(Tuple tuple, Expression expression);
 
     void setTuple(Tuple tuple);
 

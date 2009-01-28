@@ -123,7 +123,7 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     private static final ValueOperation ANY_NODE_STR_VO = new ValueOperationImpl(ANY_NODE, STR);
 
     private BooleanEvaluator evaluator;
-    private LogicExpression<ExpressionVisitor> expression;
+    private LogicExpression expression;
 
     @Override
     protected void setUp() throws Exception {
@@ -131,10 +131,10 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testLessThanExpression() {
-        SingleValue<ExpressionVisitor> valueExp =
-            new SingleValue<ExpressionVisitor>(createAVO(VAR_BAR1_LITERAL, ANY_NODE_EQUALS_VO));
-        SingleValue<ExpressionVisitor> valueExp1 = new SingleValue<ExpressionVisitor>(VAR_BAR1_LITERAL_L2);
-        expression = new LessThanExpression<ExpressionVisitor>(valueExp, valueExp1);
+        SingleValue valueExp =
+            new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE_EQUALS_VO));
+        SingleValue valueExp1 = new SingleValue(VAR_BAR1_LITERAL_L2);
+        expression = new LessThanExpression(valueExp, valueExp1);
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
         assertTrue(result);
         result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_3, expression);
@@ -143,7 +143,7 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
 
     public void testBoundExpression() {
         ValueOperation vo = new ValueOperationImpl(ANY_NODE, BOUND);
-        expression = new BoundOperator<ExpressionVisitor>(createAVO(VAR_BAR1_LITERAL, vo));
+        expression = new BoundOperator(createAVO(VAR_BAR1_LITERAL, vo));
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
         assertTrue(result);
         result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
@@ -151,10 +151,10 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testNEqualsExpression() {
-        SingleValue<ExpressionVisitor> valueExp =
-            new SingleValue<ExpressionVisitor>(createAVO(VAR_BAR1_LITERAL, ANY_NODE_EQUALS_VO));
+        SingleValue valueExp =
+            new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE_EQUALS_VO));
         SingleValue valueExp1 = new SingleValue(VAR_BAR1_LITERAL_L2);
-        expression = new NEqualsExpression<ExpressionVisitor>(valueExp, valueExp1);
+        expression = new NEqualsExpression(valueExp, valueExp1);
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
         assertTrue(result);
         result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_2, expression);
@@ -162,10 +162,10 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testEqualsExpression() {
-        Expression<ExpressionVisitor> valueExp =
-            new StrOperator<ExpressionVisitor>(createAVO(VAR_FOO1_LITERAL, ANY_NODE_STR_VO));
-        SingleValue<ExpressionVisitor> valueExp1 = new SingleValue<ExpressionVisitor>(VAR_FOO1_LITERAL_L1);
-        expression = new EqualsExpression<ExpressionVisitor>(valueExp, valueExp1);
+        Expression valueExp =
+            new StrOperator(createAVO(VAR_FOO1_LITERAL, ANY_NODE_STR_VO));
+        SingleValue valueExp1 = new SingleValue(VAR_FOO1_LITERAL_L1);
+        expression = new EqualsExpression(valueExp, valueExp1);
         boolean result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
         assertTrue(result);
         result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_2, expression);
@@ -177,27 +177,27 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testLangOperator() {
-        Expression<ExpressionVisitor> valueExp =
-            new LangOperator<ExpressionVisitor>(createAVO(VAR_FOO1_LITERAL, ANY_NODE_LANG_VO));
+        Expression valueExp =
+            new LangOperator(createAVO(VAR_FOO1_LITERAL, ANY_NODE_LANG_VO));
 
         ValueOperation vo1 = new ValueOperationImpl(createLiteral("en"), EQUALS);
-        Expression<ExpressionVisitor> valueExp1 = new SingleValue<ExpressionVisitor>(createAVO(VAR_FOO1_LITERAL, vo1));
-        expression = new EqualsExpression<ExpressionVisitor>(valueExp, valueExp1);
+        Expression valueExp1 = new SingleValue(createAVO(VAR_FOO1_LITERAL, vo1));
+        expression = new EqualsExpression(valueExp, valueExp1);
         boolean result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
         assertFalse(result);
 
-        valueExp1 = new SingleValue<ExpressionVisitor>(createAVO(VAR_BAR1_LITERAL, ANY_NODE_STR_VO));
-        expression = new EqualsExpression<ExpressionVisitor>(valueExp, valueExp1);
+        valueExp1 = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE_STR_VO));
+        expression = new EqualsExpression(valueExp, valueExp1);
         result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
         assertFalse(result);
     }
 
     public void testLangTags() {
-        Expression<ExpressionVisitor> langExp =
-                new LangOperator<ExpressionVisitor>(createAVO(VAR_BAR1_LITERAL, ANY_NODE_LANG_VO));
+        Expression langExp =
+                new LangOperator(createAVO(VAR_BAR1_LITERAL, ANY_NODE_LANG_VO));
         ValueOperation vo1 = new ValueOperationImpl(LITERAL_L1_LANG, EQUALS);
-        SingleValue<ExpressionVisitor> valueExp1 = new SingleValue<ExpressionVisitor>(createAVO(VAR_BAR1_LITERAL, vo1));
-        expression = new NEqualsExpression<ExpressionVisitor>(langExp, valueExp1);
+        SingleValue valueExp1 = new SingleValue(createAVO(VAR_BAR1_LITERAL, vo1));
+        expression = new NEqualsExpression(langExp, valueExp1);
 
         Tuple tuple = createTuple(VAR_BAR1_LITERAL_L1);
         boolean result = evaluator.evaluate(tuple, expression);
@@ -213,7 +213,7 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
         result = evaluator.evaluate(tuple, expression);
         assertTrue(result);
 
-        expression = new EqualsExpression<ExpressionVisitor>(langExp, valueExp1);
+        expression = new EqualsExpression(langExp, valueExp1);
         result = evaluator.evaluate(tuple, expression);
         assertFalse(result);
     }
@@ -227,33 +227,33 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testAndExp() {
-        LogicExpression<ExpressionVisitor> andExp =
-            new LogicAndExpression<ExpressionVisitor>(TRUE_EXPRESSION, FALSE_EXPRESSION);
+        LogicExpression andExp =
+            new LogicAndExpression(TRUE_EXPRESSION, FALSE_EXPRESSION);
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
         assertFalse(result);
 
-        andExp = new LogicAndExpression<ExpressionVisitor>(FALSE_EXPRESSION, TRUE_EXPRESSION);
+        andExp = new LogicAndExpression(FALSE_EXPRESSION, TRUE_EXPRESSION);
         result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
         assertFalse(result);
     }
 
     public void testOrExp() {
-        LogicExpression<ExpressionVisitor> andExp =
-            new LogicOrExpression<ExpressionVisitor>(TRUE_EXPRESSION, FALSE_EXPRESSION);
+        LogicExpression andExp =
+            new LogicOrExpression(TRUE_EXPRESSION, FALSE_EXPRESSION);
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
         assertTrue(result);
 
-        andExp = new LogicOrExpression<ExpressionVisitor>(FALSE_EXPRESSION, TRUE_EXPRESSION);
+        andExp = new LogicOrExpression(FALSE_EXPRESSION, TRUE_EXPRESSION);
         result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
         assertTrue(result);
     }
 
     public void testNotExp() {
-        LogicExpression<ExpressionVisitor> notExp = new LogicNotExpression<ExpressionVisitor>(TRUE_EXPRESSION);
+        LogicExpression notExp = new LogicNotExpression(TRUE_EXPRESSION);
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, notExp);
         assertFalse(result);
 
-        notExp = new LogicNotExpression<ExpressionVisitor>(FALSE_EXPRESSION);
+        notExp = new LogicNotExpression(FALSE_EXPRESSION);
         result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, notExp);
         assertTrue(result);
     }

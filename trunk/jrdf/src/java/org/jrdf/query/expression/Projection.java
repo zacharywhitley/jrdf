@@ -80,20 +80,20 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public final class Projection<V extends ExpressionVisitor> implements Expression<V> {
+public final class Projection implements Expression {
     private static final long serialVersionUID = -202508451953503285L;
     private static final int DUMMY_HASHCODE = 47;
     private VariableCollector variableCollector;
     private LinkedHashSet<Attribute> attributes;
     private LinkedHashSet<AttributeName> declaredVariables;
-    private Expression<ExpressionVisitor> nextExpression;
+    private Expression nextExpression;
     private Map<AttributeName, PositionalNodeType> allVariables;
 
     private Projection() {
     }
 
     public Projection(VariableCollector collector, LinkedHashSet<AttributeName> declaredVariables,
-        Expression<ExpressionVisitor> nextExpression) throws ParserException {
+        Expression nextExpression) throws ParserException {
         checkNotNull(collector, declaredVariables, nextExpression);
         this.variableCollector = collector;
         this.declaredVariables = declaredVariables;
@@ -114,11 +114,11 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         return allVariables;
     }
 
-    public Expression<ExpressionVisitor> getNextExpression() {
+    public Expression getNextExpression() {
         return nextExpression;
     }
 
-    public void setNextExpression(Expression<ExpressionVisitor> expression) {
+    public void setNextExpression(Expression expression) {
         nextExpression = expression;
     }
 
@@ -151,7 +151,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         return "SELECT { " + variableCollector + " } \n" + nextExpression;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitProjection(this, v);
     }
 

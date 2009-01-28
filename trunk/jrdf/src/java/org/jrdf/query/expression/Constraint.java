@@ -59,5 +59,5 @@
 
 package org.jrdf.query.expression;
 
-public interface Constraint<V extends ExpressionVisitor> extends Expression<V> {
+public interface Constraint extends Expression {
 }

@@ -65,7 +65,7 @@ import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
 
-public final class StrOperator<V extends ExpressionVisitor> implements Operator<V> {
+public final class StrOperator implements Operator {
     private static final long serialVersionUID = -3910514962392635053L;
     private static final int DUMMY_HASHCODE = 47;
     private Map<Attribute, ValueOperation> singleAvp;
@@ -78,7 +78,7 @@ public final class StrOperator<V extends ExpressionVisitor> implements Operator<
         this.singleAvp = newSingleAvp;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitStr(this, v);
     }
 

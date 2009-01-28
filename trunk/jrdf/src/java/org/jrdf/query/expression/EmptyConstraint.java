@@ -72,18 +72,18 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class EmptyConstraint<V extends ExpressionVisitor> implements Constraint<V> {
+public final class EmptyConstraint implements Constraint {
     /**
      * Represents the EMPTY GRAPH PATTERN - or empty constraint.
      */
-    public static final EmptyConstraint<ExpressionVisitor> EMPTY_CONSTRAINT = new EmptyConstraint<ExpressionVisitor>();
+    public static final EmptyConstraint EMPTY_CONSTRAINT = new EmptyConstraint();
     private static final int DUMMY_HASHCODE = 47;
     private static final long serialVersionUID = 8277006464668938996L;
 
     private EmptyConstraint() {
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitEmptyConstraint(this, v);
     }
 

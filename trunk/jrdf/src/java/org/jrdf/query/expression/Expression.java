@@ -72,8 +72,8 @@ import java.util.Map;
  * @author Tom Adams
  * @version $Revision$
  */
-public interface Expression<V extends ExpressionVisitor> extends Serializable {
-    void accept(V v);
+public interface Expression extends Serializable {
+    void accept(ExpressionVisitor v);
 
     int size();
 

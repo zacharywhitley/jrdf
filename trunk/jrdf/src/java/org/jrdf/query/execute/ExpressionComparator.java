@@ -60,6 +60,7 @@
 package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -69,6 +70,6 @@ import java.util.Comparator;
  * @version :$
  */
 
-public interface ExpressionComparator extends Comparator<Expression>, Serializable {
+public interface ExpressionComparator extends ExpressionVisitor, Comparator<Expression>, Serializable {
     int getVariableEstimate();
 }

@@ -102,7 +102,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitAsk(Ask<V> ask, V v) {
+    public  void visitAsk(Ask ask, ExpressionVisitor v) {
         clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
@@ -112,7 +112,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection, V v) {
+    public  void visitProjection(Projection projection, ExpressionVisitor v) {
         clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
@@ -120,7 +120,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction, V v) {
+    public  void visitConjunction(Conjunction conjunction, ExpressionVisitor v) {
         List<Expression> operands = planner.flattenExpression(conjunction);
         resetCacheHandler(operands);
         Set<Relation> relations = planner.processAndRearrangeExpressions(conjunction, operands, this);
@@ -129,18 +129,18 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitConstraint(SingleConstraint<V> constraint, V v) {
+    public  void visitConstraint(SingleConstraint constraint, ExpressionVisitor v) {
         long time = System.currentTimeMillis();
         processConstraint(constraint);
         cacheHandler.addResultToCache(constraint, result, time);
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitUnion(org.jrdf.query.expression.Union<V> newUnion, V v) {
+    public  void visitUnion(org.jrdf.query.expression.Union newUnion, ExpressionVisitor v) {
         List<Expression> operands = planner.flattenExpression(newUnion);
         clearCacheHandler();
-        Expression<V> lhsExp = operands.get(0);
-        Expression<V> rhsExp = operands.get(1);
+        Expression lhsExp = operands.get(0);
+        Expression rhsExp = operands.get(1);
         Relation lhs = getExpression(lhsExp);
         if (shortCircuit) {
             result = (lhs.getTuples().isEmpty()) ? getExpression(rhsExp) : lhs;
@@ -153,7 +153,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional, V v) {
+    public  void visitOptional(Optional optional, ExpressionVisitor v) {
         clearCacheHandler();
         Relation lhs = getExpression(optional.getLhs());
         clearCacheHandler();
@@ -171,7 +171,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         cacheHandler.reset(result, constraintList.size());
     }
 
-    private <V extends ExpressionVisitor> void processConstraint(SingleConstraint<V> constraint) {
+    private  void processConstraint(SingleConstraint constraint) {
         Attribute curAttr = cacheHandler.findOneCachedAttribute(constraint);
         if (curAttr != null) {
             doCachedConstraint(constraint, curAttr);
@@ -181,7 +181,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @SuppressWarnings({ "UnusedAssignment" })
-    private <V extends ExpressionVisitor> void doCachedConstraint(SingleConstraint<V> constraint, Attribute curAttr) {
+    private  void doCachedConstraint(SingleConstraint constraint, Attribute curAttr) {
         Set<Tuple> tuples = new HashSet<Tuple>();
         Set<ValueOperation> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
         for (ValueOperation newVO : voSet) {
@@ -204,24 +204,24 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
 
     @Override
     @SuppressWarnings({ "unchecked" })
-    protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
+    protected  Relation getExpression(Expression expression) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
             union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setCacheHandler(cacheHandler);
-        expression.accept((V) queryEngine);
+        expression.accept(queryEngine);
         return queryEngine.getResult();
     }
 
     @SuppressWarnings({ "unchecked" })
-    protected <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression, boolean shortCircuit) {
+    protected  Relation getExpression(Expression expression, boolean shortCircuit) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
             union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(shortCircuit);
-        expression.accept((V) queryEngine);
+        expression.accept(queryEngine);
         return queryEngine.getResult();
     }
 }

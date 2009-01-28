@@ -74,18 +74,18 @@ import java.util.LinkedHashMap;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public class LessThanExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
+public class LessThanExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = -8314509866292119440L;
     private static final int DUMMY_HASHCODE = 47;
 
-    private Expression<V> lhs;
-    private Expression<V> rhs;
+    private Expression lhs;
+    private Expression rhs;
     protected static final String LESS_THAN = "<";
 
     private LessThanExpression() {
     }
 
-    public LessThanExpression(Expression<V> lhs, Expression<V> rhs) {
+    public LessThanExpression(Expression lhs, Expression rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
@@ -97,15 +97,15 @@ public class LessThanExpression<V extends ExpressionVisitor> implements LogicExp
         return map;
     }
 
-    public Expression<V> getLhs() {
+    public Expression getLhs() {
         return lhs;
     }
 
-    public Expression<V> getRhs() {
+    public Expression getRhs() {
         return rhs;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitLessThanExpression(this, v);
     }
 
