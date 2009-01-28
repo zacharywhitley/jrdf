@@ -121,7 +121,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public  void visitProjection(Projection projection) {
+    public void visitProjection(Projection projection) {
         setAllVariables(projection.getAllVariables());
         Relation expression = getExpression(projection.getNextExpression());
         LinkedHashSet<Attribute> attributes = projection.getAttributes();
@@ -130,17 +130,17 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public  void visitEmptyConstraint(EmptyConstraint constraint) {
+    public void visitEmptyConstraint(EmptyConstraint constraint) {
         result = RelationDEE.RELATION_DEE;
     }
 
     @Override
-    public  void visitConstraint(SingleConstraint constraint) {
+    public void visitConstraint(SingleConstraint constraint) {
         result = restrict.restrict(result, constraint.getAvo(allVariables));
     }
 
     @Override
-    public  void visitConjunction(Conjunction conjunction) {
+    public void visitConjunction(Conjunction conjunction) {
         Relation lhs = getExpression(conjunction.getLhs());
         Relation rhs = getExpression(conjunction.getRhs());
         Set<Relation> relations = new HashSet<Relation>();
@@ -150,14 +150,14 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public  void visitUnion(Union conjunction) {
+    public void visitUnion(Union conjunction) {
         Relation lhs = getExpression(conjunction.getLhs());
         Relation rhs = getExpression(conjunction.getRhs());
         result = union.union(lhs, rhs);
     }
 
     @Override
-    public  void visitOptional(Optional optional) {
+    public void visitOptional(Optional optional) {
         // TODO (AN) This really should be nadic and just pass in the rhs
         Relation rhs = getExpression(optional.getRhs());
         Relation lhs;
@@ -170,14 +170,14 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public  void visitFilter(Filter filter) {
+    public void visitFilter(Filter filter) {
         Relation lhsRelation = getExpression(filter.getLhs());
         result = restrict.restrict(lhsRelation, filter.getRhs());
         lhsRelation = null;
     }
 
-    @SuppressWarnings({ "unchecked" })
-    protected  Relation getExpression(Expression expression) {
+    @SuppressWarnings({"unchecked"})
+    protected Relation getExpression(Expression expression) {
         QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
