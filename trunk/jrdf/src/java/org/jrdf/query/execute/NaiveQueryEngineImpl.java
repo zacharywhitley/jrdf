@@ -176,7 +176,6 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         lhsRelation = null;
     }
 
-    @SuppressWarnings({"unchecked"})
     protected Relation getExpression(Expression expression) {
         QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);

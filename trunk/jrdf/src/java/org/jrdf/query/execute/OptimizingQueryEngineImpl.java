@@ -179,7 +179,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         }
     }
 
-    @SuppressWarnings({"UnusedAssignment"})
     private void doCachedConstraint(SingleConstraint constraint, Attribute curAttr) {
         Set<Tuple> tuples = new HashSet<Tuple>();
         Set<ValueOperation> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
@@ -202,7 +201,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
     protected Relation getExpression(Expression expression) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
             union, leftOuterJoin);
@@ -213,7 +211,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         return queryEngine.getResult();
     }
 
-    @SuppressWarnings({"unchecked"})
     protected Relation getExpression(Expression expression, boolean shortCircuit) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
             union, leftOuterJoin);
