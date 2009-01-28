@@ -75,43 +75,43 @@ import org.jrdf.query.expression.logic.TrueExpression;
  * @version $Revision:$
  */
 public interface ExpressionVisitor {
-    void visitProjection(Projection projection, ExpressionVisitor v);
+    void visitProjection(Projection projection);
 
-    void visitConstraint(SingleConstraint constraint, ExpressionVisitor v);
+    void visitConstraint(SingleConstraint constraint);
 
-    void visitEmptyConstraint(EmptyConstraint constraint, ExpressionVisitor v);
+    void visitEmptyConstraint(EmptyConstraint constraint);
 
-    void visitConjunction(Conjunction conjunction, ExpressionVisitor v);
+    void visitConjunction(Conjunction conjunction);
 
-    void visitUnion(Union union, ExpressionVisitor v);
+    void visitUnion(Union union);
 
-    void visitOptional(Optional optional, ExpressionVisitor v);
+    void visitOptional(Optional optional);
 
-    void visitLogicAnd(LogicAndExpression andExpression, ExpressionVisitor v);
+    void visitLogicAnd(LogicAndExpression andExpression);
 
-    void visitLogicOr(LogicOrExpression orExpression, ExpressionVisitor v);
+    void visitLogicOr(LogicOrExpression orExpression);
 
-    void visitLogicNot(LogicNotExpression notExpression, ExpressionVisitor v);
+    void visitLogicNot(LogicNotExpression notExpression);
 
-    void visitFilter(Filter filter, ExpressionVisitor v);
+    void visitFilter(Filter filter);
 
-    void visitEqualsExpression(EqualsExpression equalsExpression, ExpressionVisitor v);
+    void visitEqualsExpression(EqualsExpression equalsExpression);
 
-    void visitLessThanExpression(LessThanExpression lessThanExpression, ExpressionVisitor v);
+    void visitLessThanExpression(LessThanExpression lessThanExpression);
 
-    void visitNEqualsExpression(NEqualsExpression nEqualsExpression, ExpressionVisitor v);
+    void visitNEqualsExpression(NEqualsExpression nEqualsExpression);
 
-    void visitAsk(Ask ask, ExpressionVisitor v);
+    void visitAsk(Ask v);
 
-    void visitSingleValue(SingleValue value, ExpressionVisitor v);
+    void visitSingleValue(SingleValue value);
 
-    void visitStr(StrOperator str, ExpressionVisitor v);
+    void visitStr(StrOperator str);
 
-    void visitLang(LangOperator lang, ExpressionVisitor v);
+    void visitLang(LangOperator lang);
 
-    void visitBound(BoundOperator bound, ExpressionVisitor v);
+    void visitBound(BoundOperator bound);
 
-    void visitTrue(TrueExpression trueExp, ExpressionVisitor v);
+    void visitTrue(TrueExpression trueExp);
 
-    void visitFalse(FalseExpression falseExp, ExpressionVisitor v);
+    void visitFalse(FalseExpression falseExp);
 }

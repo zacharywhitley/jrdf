@@ -116,7 +116,7 @@ public class Filter<V extends ExpressionVisitor> implements BiOperandExpression,
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitFilter(this, v);
+        v.visitFilter(this);
     }
 
     public int hashCode() {

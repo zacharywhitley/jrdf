@@ -116,7 +116,7 @@ public class LogicOrExpression implements LogicExpression, BiOperandExpression {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitLogicOr(this, v);
+        v.visitLogicOr(this);
     }
 
     public int hashCode() {

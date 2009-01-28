@@ -95,7 +95,7 @@ public final class FalseExpression implements LogicExpression {
 
 
     public void accept(ExpressionVisitor v) {
-        v.visitFalse(this, v);
+        v.visitFalse(this);
     }
 
     public int size() {

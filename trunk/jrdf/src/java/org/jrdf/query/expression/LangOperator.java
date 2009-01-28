@@ -88,7 +88,7 @@ public final class LangOperator implements Operator {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitLang(this, v);
+        v.visitLang(this);
     }
 
     public int size() {

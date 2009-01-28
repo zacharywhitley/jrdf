@@ -148,8 +148,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         }
     }
 
-    public  void addResultToCache(SingleConstraint constraint, Relation result, 
-        long time) {
+    public  void addResultToCache(SingleConstraint constraint, Relation result, long time) {
         if (result.getTupleSize() < cacheLimit) {
             Set<Attribute> attributes = constraint.getHeadings();
             Set<Attribute> resultAttributes = result.getHeading();

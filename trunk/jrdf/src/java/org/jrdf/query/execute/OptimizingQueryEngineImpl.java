@@ -59,13 +59,14 @@
 
 package org.jrdf.query.execute;
 
+import org.jrdf.query.QueryFactoryImpl;
+import static org.jrdf.query.execute.QueryExecutionPlanner.getPlanner;
 import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
-import org.jrdf.query.expression.Optional;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
@@ -76,8 +77,6 @@ import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.QueryFactoryImpl;
-import static org.jrdf.query.execute.QueryExecutionPlanner.getPlanner;
 
 import java.util.HashSet;
 import java.util.List;
@@ -102,7 +101,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public  void visitAsk(Ask ask, ExpressionVisitor v) {
+    public  void visitAsk(Ask ask) {
         clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
@@ -112,15 +111,15 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public  void visitProjection(Projection projection, ExpressionVisitor v) {
+    public  void visitProjection(Projection projection) {
         clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
-        super.visitProjection(projection, v);
+        super.visitProjection(projection);
     }
 
     @Override
-    public  void visitConjunction(Conjunction conjunction, ExpressionVisitor v) {
+    public  void visitConjunction(Conjunction conjunction) {
         List<Expression> operands = planner.flattenExpression(conjunction);
         resetCacheHandler(operands);
         Set<Relation> relations = planner.processAndRearrangeExpressions(conjunction, operands, this);
@@ -129,14 +128,14 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public  void visitConstraint(SingleConstraint constraint, ExpressionVisitor v) {
+    public  void visitConstraint(SingleConstraint constraint) {
         long time = System.currentTimeMillis();
         processConstraint(constraint);
         cacheHandler.addResultToCache(constraint, result, time);
     }
 
     @Override
-    public  void visitUnion(org.jrdf.query.expression.Union newUnion, ExpressionVisitor v) {
+    public  void visitUnion(org.jrdf.query.expression.Union newUnion) {
         List<Expression> operands = planner.flattenExpression(newUnion);
         clearCacheHandler();
         Expression lhsExp = operands.get(0);
@@ -153,7 +152,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public  void visitOptional(Optional optional, ExpressionVisitor v) {
+    public  void visitOptional(Optional optional) {
         clearCacheHandler();
         Relation lhs = getExpression(optional.getLhs());
         clearCacheHandler();

@@ -95,7 +95,7 @@ public final class TrueExpression implements LogicExpression {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitTrue(this, v);
+        v.visitTrue(this);
     }
 
     public int size() {

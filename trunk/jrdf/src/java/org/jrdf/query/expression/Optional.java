@@ -109,7 +109,7 @@ public final class Optional implements BiOperandExpression, Serializable {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitOptional(this, v);
+        v.visitOptional(this);
     }
 
     public boolean equals(Object obj) {

@@ -105,7 +105,7 @@ public class EqualsExpression implements LogicExpression, BiOperandExpression {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitEqualsExpression(this, v);
+        v.visitEqualsExpression(this);
     }
 
     public int size() {

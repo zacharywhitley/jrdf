@@ -84,7 +84,7 @@ public final class EmptyConstraint implements Constraint {
     }
 
     public void accept(ExpressionVisitor v) {
-        v.visitEmptyConstraint(this, v);
+        v.visitEmptyConstraint(this);
     }
 
     public Map<Attribute, ValueOperation> getAVO() {

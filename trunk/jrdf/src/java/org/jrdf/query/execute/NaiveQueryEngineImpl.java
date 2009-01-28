@@ -62,7 +62,6 @@ package org.jrdf.query.execute;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.EmptyConstraint;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Optional;
@@ -122,7 +121,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public  void visitProjection(Projection projection, ExpressionVisitor v) {
+    public  void visitProjection(Projection projection) {
         setAllVariables(projection.getAllVariables());
         Relation expression = getExpression(projection.getNextExpression());
         LinkedHashSet<Attribute> attributes = projection.getAttributes();
@@ -131,17 +130,17 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public  void visitEmptyConstraint(EmptyConstraint constraint, ExpressionVisitor v) {
+    public  void visitEmptyConstraint(EmptyConstraint constraint) {
         result = RelationDEE.RELATION_DEE;
     }
 
     @Override
-    public  void visitConstraint(SingleConstraint constraint, ExpressionVisitor v) {
+    public  void visitConstraint(SingleConstraint constraint) {
         result = restrict.restrict(result, constraint.getAvo(allVariables));
     }
 
     @Override
-    public  void visitConjunction(Conjunction conjunction, ExpressionVisitor v) {
+    public  void visitConjunction(Conjunction conjunction) {
         Relation lhs = getExpression(conjunction.getLhs());
         Relation rhs = getExpression(conjunction.getRhs());
         Set<Relation> relations = new HashSet<Relation>();
@@ -151,14 +150,14 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public  void visitUnion(Union conjunction, ExpressionVisitor v) {
+    public  void visitUnion(Union conjunction) {
         Relation lhs = getExpression(conjunction.getLhs());
         Relation rhs = getExpression(conjunction.getRhs());
         result = union.union(lhs, rhs);
     }
 
     @Override
-    public  void visitOptional(Optional optional, ExpressionVisitor v) {
+    public  void visitOptional(Optional optional) {
         // TODO (AN) This really should be nadic and just pass in the rhs
         Relation rhs = getExpression(optional.getRhs());
         Relation lhs;
@@ -171,7 +170,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @Override
-    public  void visitFilter(Filter filter, ExpressionVisitor v) {
+    public  void visitFilter(Filter filter) {
         Relation lhsRelation = getExpression(filter.getLhs());
         result = restrict.restrict(lhsRelation, filter.getRhs());
         lhsRelation = null;
