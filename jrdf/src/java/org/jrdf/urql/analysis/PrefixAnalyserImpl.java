@@ -78,7 +78,7 @@ import java.util.LinkedList;
 public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnalyser {
     private TripleBuilder tripleBuilder;
     private Graph graph;
-    private Expression<ExpressionVisitor> expression;
+    private Expression expression;
     private ParserException exception;
 
     public PrefixAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
@@ -86,7 +86,7 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
         this.graph = graph;
     }
 
-    public Expression<ExpressionVisitor> getExpression() throws ParserException {
+    public Expression getExpression() throws ParserException {
         if (exception != null) {
             throw exception;
         }
@@ -108,12 +108,12 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
         expression = analyseAskClause(node);
     }
 
-    private Expression<ExpressionVisitor> analyseAskClause(AAskQueryStart node) {
+    private Expression analyseAskClause(AAskQueryStart node) {
         try {
             super.caseAAskQueryStart(node);
             VariableCollector variableCollector = new AttributeCollectorImpl();
             WhereAnalyser analyzer = analyseWhereClause(node.getWhereClause(), variableCollector);
-            return new Ask<ExpressionVisitor>(analyzer.getExpression(), variableCollector);
+            return new Ask(analyzer.getExpression(), variableCollector);
         } catch (ParserException e) {
             exception = e;
             return null;
@@ -135,7 +135,7 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
         }
     }
 
-    private Expression<ExpressionVisitor> analyseProjectClause(Node node) {
+    private Expression analyseProjectClause(Node node) {
         try {
             ProjectAnalyser analyser = new ProjectAnalyserImpl(tripleBuilder, graph);
             node.apply(analyser);

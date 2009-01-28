@@ -75,18 +75,18 @@ import java.util.LinkedHashMap;
  * @version $Id$
  */
 
-public class NEqualsExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
+public class NEqualsExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = -5583172009536428369L;
     private static final int DUMMY_HASHCODE = 47;
 
-    private Expression<V> lhs;
-    private Expression<V> rhs;
+    private Expression lhs;
+    private Expression rhs;
     protected static final String NEQUALS = "!=";
 
     private NEqualsExpression() {
     }
 
-    public NEqualsExpression(Expression<V> lhs, Expression<V> rhs) {
+    public NEqualsExpression(Expression lhs, Expression rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
@@ -98,15 +98,15 @@ public class NEqualsExpression<V extends ExpressionVisitor> implements LogicExpr
         return map;
     }
 
-    public Expression<V> getLhs() {
+    public Expression getLhs() {
         return lhs;
     }
 
-    public Expression<V> getRhs() {
+    public Expression getRhs() {
         return rhs;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitNEqualsExpression(this, v);
     }
 

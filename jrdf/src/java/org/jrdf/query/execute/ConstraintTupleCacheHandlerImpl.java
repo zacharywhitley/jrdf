@@ -59,7 +59,6 @@
 
 package org.jrdf.query.execute;
 
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
@@ -133,7 +132,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         timeStamp = time;
     }
 
-    public <V extends ExpressionVisitor> Attribute findOneCachedAttribute(SingleConstraint<V> constraint) {
+    public Attribute findOneCachedAttribute(SingleConstraint constraint) {
         Set<Attribute> attributes = constraint.getHeadings();
         Map<Integer, Attribute> map = new TreeMap<Integer, Attribute>();
         for (Attribute attribute : attributes) {
@@ -149,8 +148,8 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         }
     }
 
-    public <V extends ExpressionVisitor> void addResultToCache(SingleConstraint<V> constraint,
-                                                               Relation result, long time) {
+    public  void addResultToCache(SingleConstraint constraint, Relation result, 
+        long time) {
         if (result.getTupleSize() < cacheLimit) {
             Set<Attribute> attributes = constraint.getHeadings();
             Set<Attribute> resultAttributes = result.getHeading();

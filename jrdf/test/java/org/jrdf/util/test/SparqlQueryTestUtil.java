@@ -60,7 +60,6 @@
 package org.jrdf.util.test;
 
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
@@ -146,11 +145,11 @@ public final class SparqlQueryTestUtil {
         "WHERE { examplebook:book1 dc:title ?title . examplebook:book2 dc:title ?title }";
     public static final String QUERY_SINGLE_OPTIONAL = createSelectClause() +
         "WHERE { { ?x <" + FOAF_NAME + "> ?name } OPTIONAL { ?x <" + FOAF_NICK + "> ?nick } }";
-    public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
-    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
-    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_2 = createBookDcTitleExpression(URI_BOOK_2, 2);
-    public static final Expression<ExpressionVisitor> BOOK_3_DC_TITLE_ID_3 = createBookDcTitleExpression(URI_BOOK_3, 3);
-    public static final Expression<ExpressionVisitor> ANY_SPO = createConstraintExpression("s", "p", "o");
+    public static final Expression BOOK_1_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
+    public static final Expression BOOK_2_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
+    public static final Expression BOOK_2_DC_TITLE_ID_2 = createBookDcTitleExpression(URI_BOOK_2, 2);
+    public static final Expression BOOK_3_DC_TITLE_ID_3 = createBookDcTitleExpression(URI_BOOK_3, 3);
+    public static final Expression ANY_SPO = createConstraintExpression("s", "p", "o");
 
     private SparqlQueryTestUtil() {
     }

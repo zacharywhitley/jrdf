@@ -110,7 +110,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitSingleValue(SingleValue<V> value, V v) {
+    public  void visitSingleValue(SingleValue value, ExpressionVisitor v) {
         Map<Attribute, ValueOperation> avo = value.getAVO();
         Attribute attribute = avo.keySet().iterator().next();
         Node node = avo.get(attribute).getValue();
@@ -127,7 +127,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitStr(StrOperator<V> str, V v) {
+    public  void visitStr(StrOperator str, ExpressionVisitor v) {
         final ValueOperation valueOperation = getValueOperation(str);
         if (valueOperation != null) {
             Node node = valueOperation.getValue();
@@ -139,7 +139,7 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitLang(LangOperator<V> lang, V v) {
+    public  void visitLang(LangOperator lang, ExpressionVisitor v) {
         final ValueOperation valueOperation = getValueOperation(lang);
         if (valueOperation != null) {
             Node node = valueOperation.getValue();
@@ -151,66 +151,66 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitBound(BoundOperator<V> bound, V v) {
+    public  void visitBound(BoundOperator bound, ExpressionVisitor v) {
         final ValueOperation valueOperation = getValueOperation(bound);
         contradiction = (valueOperation == null);
         value = new LiteralImpl(Boolean.toString(contradiction), XSD.BOOLEAN);
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitLogicAnd(LogicAndExpression<V> andExpression, V v) {
-        andExpression.getLhs().accept((V) this);
+    public  void visitLogicAnd(LogicAndExpression andExpression, ExpressionVisitor v) {
+        andExpression.getLhs().accept(this);
         boolean lhsBoolean = contradiction;
-        andExpression.getRhs().accept((V) this);
+        andExpression.getRhs().accept(this);
         contradiction = lhsBoolean || contradiction;
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitLogicOr(LogicOrExpression<V> orExpression, V v) {
-        orExpression.getLhs().accept((V) this);
+    public  void visitLogicOr(LogicOrExpression orExpression, ExpressionVisitor v) {
+        orExpression.getLhs().accept(this);
         boolean lhsBoolean = contradiction;
-        orExpression.getRhs().accept((V) this);
+        orExpression.getRhs().accept(this);
         contradiction = lhsBoolean && contradiction;
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitLogicNot(LogicNotExpression<V> notExpression, V v) {
-        notExpression.getExpression().accept((V) this);
+    public  void visitLogicNot(LogicNotExpression notExpression, ExpressionVisitor v) {
+        notExpression.getExpression().accept(this);
         contradiction = !contradiction;
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression, V v) {
+    public  void visitEqualsExpression(EqualsExpression equalsExpression, ExpressionVisitor v) {
         Node lhsValue = getValue(tuple, equalsExpression.getLhs());
         Node rhsValue = getValue(tuple, equalsExpression.getRhs());
         contradiction = compareNodes(lhsValue, rhsValue) != 0;
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitNEqualsExpression(NEqualsExpression<V> nEqualsExpression, V v) {
+    public  void visitNEqualsExpression(NEqualsExpression nEqualsExpression, ExpressionVisitor v) {
         Node lhsValue = getValue(tuple, nEqualsExpression.getLhs());
         Node rhsValue = getValue(tuple, nEqualsExpression.getRhs());
         contradiction = compareNodes(lhsValue, rhsValue) == 0;
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitLessThanExpression(LessThanExpression<V> lessThanExpression, V v) {
+    public  void visitLessThanExpression(LessThanExpression lessThanExpression, ExpressionVisitor v) {
         Node lhsValue = getValue(tuple, lessThanExpression.getLhs());
         Node rhsValue = getValue(tuple, lessThanExpression.getRhs());
         contradiction = compareNodes(lhsValue, rhsValue) >= 0;
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitTrue(TrueExpression<V> trueExp, V v) {
+    public  void visitTrue(TrueExpression trueExp, ExpressionVisitor v) {
         contradiction = false;
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitFalse(FalseExpression<V> falseExp, V v) {
+    public  void visitFalse(FalseExpression falseExp, ExpressionVisitor v) {
         contradiction = true;
     }
 
-    private <V extends ExpressionVisitor> ValueOperation getValueOperation(Operator<V> str) {
+    private  ValueOperation getValueOperation(Operator str) {
         final Map<Attribute, ValueOperation> avp = str.getAVO();
         Attribute attribute = avp.keySet().iterator().next();
         return tuple.getValueOperation(attribute);
@@ -234,16 +234,16 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         this.tuple = tuple;
     }
 
-    public <V extends ExpressionVisitor> Node getValue(Tuple tuple, Expression<V> expression) {
+    public  Node getValue(Tuple tuple, Expression expression) {
         BooleanEvaluator evaluator = new SimpleBooleanEvaluator(nodeComparator);
         evaluator.setTuple(tuple);
-        expression.accept((V) evaluator);
+        expression.accept(evaluator);
         return evaluator.getValue();
     }
 
-    public <V extends ExpressionVisitor> boolean evaluate(Tuple tuple, LogicExpression<V> expression) {
+    public  boolean evaluate(Tuple tuple, LogicExpression expression) {
         setTuple(tuple);
-        expression.accept((V) this);
+        expression.accept(this);
         return !contradiction;
     }
 }

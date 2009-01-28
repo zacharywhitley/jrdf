@@ -140,12 +140,12 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     protected static final Attribute ATTR_O3 = new AttributeImpl(ATTRIBUTE_O3, OBJECT_NODE_TYPE);
 
     private ExpressionSimplifier simplifier;
-    private static final Expression<ExpressionVisitor> SPO_CONSTRAINT = createConstraintExpression("s", "p", "o");
-    private static final Expression<ExpressionVisitor> SPO1_CONSTRAINT = createConstraintExpression("s", "p", "o1");
-    private static final Expression<ExpressionVisitor> S1PO1_CONSTRAINT = createConstraintExpression("s1", "p", "o1");
-    private static final Expression<ExpressionVisitor> S1PO_CONSTRAINT = createConstraintExpression("s1", "p", "o");
-    private static final Expression<ExpressionVisitor> S2PO2_CONSTRAINT = createConstraintExpression("s2", "p", "o2");
-    private static final Expression<ExpressionVisitor> S3PO3_CONSTRAINT = createConstraintExpression("s3", "p", "o3");
+    private static final Expression SPO_CONSTRAINT = createConstraintExpression("s", "p", "o");
+    private static final Expression SPO1_CONSTRAINT = createConstraintExpression("s", "p", "o1");
+    private static final Expression S1PO1_CONSTRAINT = createConstraintExpression("s1", "p", "o1");
+    private static final Expression S1PO_CONSTRAINT = createConstraintExpression("s1", "p", "o");
+    private static final Expression S2PO2_CONSTRAINT = createConstraintExpression("s2", "p", "o2");
+    private static final Expression S3PO3_CONSTRAINT = createConstraintExpression("s3", "p", "o3");
 
     @Override
     protected void setUp() throws Exception {
@@ -158,7 +158,7 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     public void testSimpleQuery() throws Exception {
         String queryText = "SELECT * WHERE { ?s ?p 'hello'@en }";
         Literal literal = createLiteral("hello", "en");
-        Expression<ExpressionVisitor> constraint = createConstraintExpression("s", "p", literal, 1);
+        Expression constraint = createConstraintExpression("s", "p", literal, 1);
         getExpression(queryText, constraint);
         queryText = "ASK WHERE { ?s ?p 'hello'@en }";
         constraint = createConstraintExpression("s", "p", literal, 2);
@@ -172,7 +172,7 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE, EQUALS);
         Map<Attribute, ValueOperation> obj = createSingleAVP(ATTR_O, literal, STR);
         LinkedHashMap<Attribute, ValueOperation> map = createSingleAVP(subj, pred, obj);
-        SingleConstraint<ExpressionVisitor> constraint = new SingleConstraint<ExpressionVisitor>(map);
+        SingleConstraint constraint = new SingleConstraint(map);
         getExpression(queryText, constraint);
         queryText = "ASK WHERE { ?s ?p ?o FILTER (str(?o) = \"abc\") }";
         getExpression(queryText, constraint);
@@ -180,13 +180,13 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
 
     public void testSimpleEqualFilter1() throws Exception {
         String queryText = "SELECT * WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1) }";
-        Conjunction<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(SPO_CONSTRAINT, S1PO_CONSTRAINT);
+        Conjunction conj = new Conjunction(SPO_CONSTRAINT, S1PO_CONSTRAINT);
         getExpression(queryText, conj);
     }
 
     public void testSimpleEqualFilter2() throws Exception {
         String queryText = "ASK WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1) }";
-        Conjunction<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(SPO1_CONSTRAINT, S1PO1_CONSTRAINT);
+        Conjunction conj = new Conjunction(SPO1_CONSTRAINT, S1PO1_CONSTRAINT);
         getExpression(queryText, conj);
     }
 
@@ -197,12 +197,12 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         Literal literal = createLiteral("abc");
         Map<Attribute, ValueOperation> obj = createSingleAVP(ATTR_O, literal, STR);
         final LinkedHashMap<Attribute, ValueOperation> avp1 = createSingleAVP(subj, pred, obj);
-        SingleConstraint<ExpressionVisitor> constraint1 = new SingleConstraint<ExpressionVisitor>(avp1);
+        SingleConstraint constraint1 = new SingleConstraint(avp1);
         Attribute attrS1 = new AttributeImpl(ATTRIBUTE_S1, SUBJECT_NODE_TYPE);
         Map<Attribute, ValueOperation> subj1 = createSingleAVP(attrS1, ANY_SUBJECT_NODE, EQUALS);
         final LinkedHashMap<Attribute, ValueOperation> avp2 = createSingleAVP(subj1, pred, obj);
-        SingleConstraint<ExpressionVisitor> constraint2 = new SingleConstraint<ExpressionVisitor>(avp2);
-        Conjunction<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(constraint1, constraint2);
+        SingleConstraint constraint2 = new SingleConstraint(avp2);
+        Conjunction conj = new Conjunction(constraint1, constraint2);
         getExpression(queryText, conj);
         queryText = "ASK WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1 && str(?o1) = \"abc\") }";
         getExpression(queryText, conj);
@@ -212,12 +212,12 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         String queryText = "SELECT * WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1 && str(?o1) != \"abc\") }";
         Literal literal = createLiteral("abc");
         Map<Attribute, ValueOperation> filterLhs = createSingleAVP(ATTR_O, ANY_NODE, STR);
-        Expression<ExpressionVisitor> strOp = new StrOperator<ExpressionVisitor>(filterLhs);
+        Expression strOp = new StrOperator(filterLhs);
         Map<Attribute, ValueOperation> filterRhs = createSingleAVP(ATTR_O, literal, EQUALS);
-        Expression<ExpressionVisitor> singleValue = new SingleValue<ExpressionVisitor>(filterRhs);
-        NEqualsExpression<ExpressionVisitor> neq = new NEqualsExpression<ExpressionVisitor>(strOp, singleValue);
-        Conjunction<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(SPO_CONSTRAINT, S1PO_CONSTRAINT);
-        Filter<ExpressionVisitor> filter = new Filter<ExpressionVisitor>(conj, neq);
+        Expression singleValue = new SingleValue(filterRhs);
+        NEqualsExpression neq = new NEqualsExpression(strOp, singleValue);
+        Conjunction conj = new Conjunction(SPO_CONSTRAINT, S1PO_CONSTRAINT);
+        Filter filter = new Filter(conj, neq);
         getExpression(queryText, filter);
     }
 
@@ -225,68 +225,68 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         String queryText = "ASK WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1 && str(?o1) != \"abc\") }";
         Literal literal = createLiteral("abc");
         Map<Attribute, ValueOperation> filterLhs = createSingleAVP(ATTR_O1, ANY_NODE, STR);
-        Expression<ExpressionVisitor> strOp = new StrOperator<ExpressionVisitor>(filterLhs);
+        Expression strOp = new StrOperator(filterLhs);
         Map<Attribute, ValueOperation> filterRhs = createSingleAVP(ATTR_O1, literal, EQUALS);
-        Expression<ExpressionVisitor> singleValue = new SingleValue<ExpressionVisitor>(filterRhs);
-        NEqualsExpression<ExpressionVisitor> neq = new NEqualsExpression<ExpressionVisitor>(strOp, singleValue);
-        Conjunction<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(SPO1_CONSTRAINT, S1PO1_CONSTRAINT);
-        Filter<ExpressionVisitor> filter = new Filter<ExpressionVisitor>(conj, neq);
+        Expression singleValue = new SingleValue(filterRhs);
+        NEqualsExpression neq = new NEqualsExpression(strOp, singleValue);
+        Conjunction conj = new Conjunction(SPO1_CONSTRAINT, S1PO1_CONSTRAINT);
+        Filter filter = new Filter(conj, neq);
         getExpression(queryText, filter);
     }
 
     public void testRightUnionInConjunction() throws Exception {
         String queryText = "SELECT * WHERE { ?s ?p ?o . { { ?s1 ?p ?o1 } UNION { ?s2 ?p ?o2 } } }";
-        Conjunction<ExpressionVisitor> conj1 = new Conjunction<ExpressionVisitor>(SPO_CONSTRAINT, S1PO1_CONSTRAINT);
-        Conjunction<ExpressionVisitor> conj2 = new Conjunction<ExpressionVisitor>(SPO_CONSTRAINT, S2PO2_CONSTRAINT);
-        Union<ExpressionVisitor> union = new Union<ExpressionVisitor>(conj1, conj2);
+        Conjunction conj1 = new Conjunction(SPO_CONSTRAINT, S1PO1_CONSTRAINT);
+        Conjunction conj2 = new Conjunction(SPO_CONSTRAINT, S2PO2_CONSTRAINT);
+        Union union = new Union(conj1, conj2);
         getExpression(queryText, union);
     }
 
     public void testLeftUnionInConjunction() throws Exception {
         String queryText = "SELECT * WHERE { { { ?s1 ?p ?o1 } UNION { ?s2 ?p ?o2 } } . ?s ?p ?o }";
-        Conjunction<ExpressionVisitor> conj1 = new Conjunction<ExpressionVisitor>(SPO_CONSTRAINT, S1PO1_CONSTRAINT);
-        Conjunction<ExpressionVisitor> conj2 = new Conjunction<ExpressionVisitor>(SPO_CONSTRAINT, S2PO2_CONSTRAINT);
-        Union<ExpressionVisitor> union = new Union<ExpressionVisitor>(conj1, conj2);
+        Conjunction conj1 = new Conjunction(SPO_CONSTRAINT, S1PO1_CONSTRAINT);
+        Conjunction conj2 = new Conjunction(SPO_CONSTRAINT, S2PO2_CONSTRAINT);
+        Union union = new Union(conj1, conj2);
         getExpression(queryText, union);
     }
 
     public void testTwoUnionInConjunction() throws Exception {
         String queryText = "SELECT * WHERE { { { ?s ?p ?o } UNION { ?s1 ?p ?o1 } } . " +
             "{ { ?s2 ?p ?o2 } UNION { ?s3 ?p ?o3 } } }";
-        Conjunction<ExpressionVisitor> conj1 = new Conjunction<ExpressionVisitor>(SPO_CONSTRAINT, S2PO2_CONSTRAINT);
-        Conjunction<ExpressionVisitor> conj2 = new Conjunction<ExpressionVisitor>(SPO_CONSTRAINT, S3PO3_CONSTRAINT);
-        Conjunction<ExpressionVisitor> conj3 = new Conjunction<ExpressionVisitor>(S1PO1_CONSTRAINT, S2PO2_CONSTRAINT);
-        Conjunction<ExpressionVisitor> conj4 = new Conjunction<ExpressionVisitor>(S1PO1_CONSTRAINT, S3PO3_CONSTRAINT);
-        Union<ExpressionVisitor> union1 = new Union<ExpressionVisitor>(conj1, conj2);
-        Union<ExpressionVisitor> union2 = new Union<ExpressionVisitor>(conj3, conj4);
-        Union<ExpressionVisitor> union = new Union<ExpressionVisitor>(union1, union2);
+        Conjunction conj1 = new Conjunction(SPO_CONSTRAINT, S2PO2_CONSTRAINT);
+        Conjunction conj2 = new Conjunction(SPO_CONSTRAINT, S3PO3_CONSTRAINT);
+        Conjunction conj3 = new Conjunction(S1PO1_CONSTRAINT, S2PO2_CONSTRAINT);
+        Conjunction conj4 = new Conjunction(S1PO1_CONSTRAINT, S3PO3_CONSTRAINT);
+        Union union1 = new Union(conj1, conj2);
+        Union union2 = new Union(conj3, conj4);
+        Union union = new Union(union1, union2);
         getExpression(queryText, union);
     }
 
     public void testBooleanEquals() throws Exception {
         String queryText = "SELECT * WHERE { ?s ?p ?o FILTER (bound(?o) = true) }";
         Map<Attribute, ValueOperation> obj = createSingleAVP(ATTR_O, ANY_NODE, BOUND);
-        LogicExpression<ExpressionVisitor> boundExp = new BoundOperator<ExpressionVisitor>(obj);
-        Filter<ExpressionVisitor> filter = new Filter<ExpressionVisitor>(SPO_CONSTRAINT, boundExp);
+        LogicExpression boundExp = new BoundOperator(obj);
+        Filter filter = new Filter(SPO_CONSTRAINT, boundExp);
         getExpression(queryText, filter);
         queryText = "SELECT * WHERE { ?s ?p ?o FILTER (false = true) }";
-        filter = new Filter<ExpressionVisitor>(SPO_CONSTRAINT, FALSE_EXPRESSION);
+        filter = new Filter(SPO_CONSTRAINT, FALSE_EXPRESSION);
         getExpression(queryText, filter);
         queryText = "SELECT * WHERE { ?s ?p ?o FILTER (true = false) }";
-        filter = new Filter<ExpressionVisitor>(SPO_CONSTRAINT, FALSE_EXPRESSION);
+        filter = new Filter(SPO_CONSTRAINT, FALSE_EXPRESSION);
         getExpression(queryText, filter);
         queryText = "SELECT * WHERE { ?s ?p ?o FILTER (bound(?o) = false) }";
-        LogicExpression<ExpressionVisitor> notExp = new LogicNotExpression<ExpressionVisitor>(boundExp);
-        filter = new Filter<ExpressionVisitor>(SPO_CONSTRAINT, notExp);
+        LogicExpression notExp = new LogicNotExpression(boundExp);
+        filter = new Filter(SPO_CONSTRAINT, notExp);
         getExpression(queryText, filter);
         queryText = "SELECT * WHERE { ?s ?p ?o FILTER (false = bound(?o)) }";
-        filter = new Filter<ExpressionVisitor>(SPO_CONSTRAINT, notExp);
+        filter = new Filter(SPO_CONSTRAINT, notExp);
         getExpression(queryText, filter);
         queryText = "SELECT * WHERE { ?s ?p ?o FILTER ((bound(?o) && bound(?s)) = true) }";
         Map<Attribute, ValueOperation> subj = createSingleAVP(ATTR_S, ANY_NODE, BOUND);
-        LogicExpression<ExpressionVisitor> boundExp1 = new BoundOperator<ExpressionVisitor>(subj);
-        LogicExpression<ExpressionVisitor> andExp = new LogicAndExpression<ExpressionVisitor>(boundExp, boundExp1);
-        filter = new Filter<ExpressionVisitor>(SPO_CONSTRAINT, andExp);
+        LogicExpression boundExp1 = new BoundOperator(subj);
+        LogicExpression andExp = new LogicAndExpression(boundExp, boundExp1);
+        filter = new Filter(SPO_CONSTRAINT, andExp);
         getExpression(queryText, filter);
     }
 
@@ -305,9 +305,9 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         return lhs;
     }
 
-    private void getExpression(String queryText, Expression<ExpressionVisitor> expected) throws Exception {
+    private void getExpression(String queryText, Expression expected) throws Exception {
         Query query = queryBuilder.buildQuery(GRAPH, queryText);
-        Expression<ExpressionVisitor> expression = getQueryExpression(query);
+        Expression expression = getQueryExpression(query);
         if (expression instanceof Projection) {
             expression = getExpressionField(expression, Projection.class, "nextExpression");
         } else if (expression instanceof Ask) {
@@ -318,8 +318,8 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         assertEquals(expected, expression);
     }
 
-    private Expression<ExpressionVisitor> getQueryExpression(Query query) {
-        Expression<ExpressionVisitor> expression = query.getNext();
+    private Expression getQueryExpression(Query query) {
+        Expression expression = query.getNext();
         expression.accept(simplifier);
         expression = simplifier.getExpression();
         if (simplifier.parseAgain()) {
@@ -328,10 +328,10 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         return simplifier.getExpression();
     }
 
-    private Expression<ExpressionVisitor> getExpressionField(Object obj, Class<?> cls, String fieldName)
+    private Expression getExpressionField(Object obj, Class<?> cls, String fieldName)
         throws IllegalAccessException {
         Field field = ReflectTestUtil.getField(cls, fieldName);
         field.setAccessible(true);
-        return (Expression<ExpressionVisitor>) field.get(obj);
+        return (Expression) field.get(obj);
     }
 }

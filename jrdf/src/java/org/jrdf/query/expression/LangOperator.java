@@ -69,7 +69,7 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public final class LangOperator<V extends ExpressionVisitor> implements Operator<V> {
+public final class LangOperator implements Operator {
     private static final long serialVersionUID = -6423244147349910918L;
 
     private static final int DUMMY_HASHCODE = 47;
@@ -87,7 +87,7 @@ public final class LangOperator<V extends ExpressionVisitor> implements Operator
         return singleAvp;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitLang(this, v);
     }
 

@@ -112,7 +112,7 @@ public final class QueryExecutionPlanner extends ExpressionVisitorAdapter implem
     }
 
     @Override
-    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction, V v) {
+    public  void visitConjunction(Conjunction conjunction, ExpressionVisitor v) {
         List<Relation> partialResult = new LinkedList<Relation>();
         for (Expression exp : constraintList) {
             Relation tempRelation = engine.getExpression(exp);

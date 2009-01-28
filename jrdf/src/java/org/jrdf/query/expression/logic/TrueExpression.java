@@ -76,7 +76,7 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public final class TrueExpression<V extends ExpressionVisitor> implements LogicExpression<V> {
+public final class TrueExpression implements LogicExpression {
     private static final long serialVersionUID = -6113444233155098483L;
     private static final int DUMMY_HASHCODE = 47;
     private static final Map<Attribute, ValueOperation> MAP =
@@ -86,7 +86,7 @@ public final class TrueExpression<V extends ExpressionVisitor> implements LogicE
     /**
      * The singleton true expression.
      */
-    public static final TrueExpression<ExpressionVisitor> TRUE_EXPRESSION = new TrueExpression<ExpressionVisitor>();
+    public static final TrueExpression TRUE_EXPRESSION = new TrueExpression();
 
     private Map<Attribute, ValueOperation> avp;
 
@@ -94,7 +94,7 @@ public final class TrueExpression<V extends ExpressionVisitor> implements LogicE
         this.avp = MAP;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitTrue(this, v);
     }
 

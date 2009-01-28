@@ -74,7 +74,6 @@ import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Conjunction;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.Optional;
@@ -154,35 +153,35 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
     private static final Literal LITERAL = createLiteral("The Pragmatic Programmer");
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_CONJUNCTION
-        = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_CONJUNCTION
-        = new Conjunction<ExpressionVisitor>(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_UNION
-        = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_UNION
-        = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
-    private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_EMPTY_UNION
-        = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, EMPTY_CONSTRAINT);
-    private static final Expression<ExpressionVisitor> EMPTY_AND_BOOK1_AND_2_UNION = new Union<ExpressionVisitor>(
-        new Union<ExpressionVisitor>(EMPTY_CONSTRAINT, BOOK_1_DC_TITLE_ID_1), BOOK_2_DC_TITLE_ID_2);
-    private static final Expression<ExpressionVisitor> ALL_AND_EMPTY = new Conjunction<ExpressionVisitor>(ANY_SPO,
+    private static final Expression BOOK1_AND_2_CONJUNCTION
+        = new Conjunction(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+    private static final Expression BOOK1_AND_2_AND_3_CONJUNCTION
+        = new Conjunction(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
+    private static final Expression BOOK1_AND_2_UNION
+        = new Union(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+    private static final Expression BOOK1_AND_2_AND_3_UNION
+        = new Union(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
+    private static final Expression BOOK1_AND_2_AND_EMPTY_UNION
+        = new Union(BOOK1_AND_2_UNION, EMPTY_CONSTRAINT);
+    private static final Expression EMPTY_AND_BOOK1_AND_2_UNION = new Union(
+        new Union(EMPTY_CONSTRAINT, BOOK_1_DC_TITLE_ID_1), BOOK_2_DC_TITLE_ID_2);
+    private static final Expression ALL_AND_EMPTY = new Conjunction(ANY_SPO,
         EMPTY_CONSTRAINT);
-    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
+    private static final Expression FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
         "name", 1);
-    private static final Expression<ExpressionVisitor> FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK,
+    private static final Expression FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK,
         "nick", 2);
-    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_2 = createConstraintExpression("x", FOAF_NICK,
+    private static final Expression FOAF_ALIAS_EXP_2 = createConstraintExpression("x", FOAF_NICK,
         "alias", 2);
-    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
+    private static final Expression FOAF_MBOX_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
         "mbox", 3);
-    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
+    private static final Expression FOAF_ALIAS_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
         "alias", 3);
-    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_3 = createConstraintExpression("x", FOAF_NAME,
+    private static final Expression FOAF_NAME_EXP_3 = createConstraintExpression("x", FOAF_NAME,
         "name", 3);
-    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX,
+    private static final Expression FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX,
         "mbox", 4);
-    private static final Expression<ExpressionVisitor> DC_DATE_EXP_2 = createConstraintExpression("x",
+    private static final Expression DC_DATE_EXP_2 = createConstraintExpression("x",
         URI.create("http://purl.org/dc/elements/1.1/date"), "date", 2);
 
     private static final String SELECT_WHERE_S_P_O_AND_EMPTY = "SELECT * WHERE { ?s ?p ?o . {} } ";
@@ -246,62 +245,62 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testSingleOptionalConstraint() throws Exception {
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
+        Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
         checkConstraintExpression(QUERY_SINGLE_OPTIONAL, optional1);
     }
 
     public void testOptionalConstraint1() throws Exception {
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NICK_EXP_2, FOAF_MBOX_EXP_3);
-        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, optional1);
+        Optional optional1 = new Optional(FOAF_NICK_EXP_2, FOAF_MBOX_EXP_3);
+        Optional optional2 = new Optional(FOAF_NAME_EXP_1, optional1);
         checkConstraintExpression(QUERY_OPTIONAL_1, optional2);
     }
 
     public void testOptionalConstraint2() throws Exception {
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_ALIAS_EXP_2);
-        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(optional1, FOAF_ALIAS_EXP_3);
+        Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_ALIAS_EXP_2);
+        Optional optional2 = new Optional(optional1, FOAF_ALIAS_EXP_3);
         checkConstraintExpression(QUERY_OPTIONAL_2, optional2);
     }
 
     public void testOptionalConstraint3() throws Exception {
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_ALIAS_EXP_2);
-        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(optional1, FOAF_ALIAS_EXP_3);
+        Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_ALIAS_EXP_2);
+        Optional optional2 = new Optional(optional1, FOAF_ALIAS_EXP_3);
         checkConstraintExpression(QUERY_OPTIONAL_3, optional2);
     }
 
     public void testComplicatedOptional1() throws Exception {
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
-        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
-        Conjunction<ExpressionVisitor> expectedExpression = new Conjunction<ExpressionVisitor>(optional1, optional2);
+        Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
+        Optional optional2 = new Optional(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
+        Conjunction expectedExpression = new Conjunction(optional1, optional2);
         checkConstraintExpression(QUERY_OPTION_4, expectedExpression);
     }
 
     public void testComplicatedOptional2() throws Exception {
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
-        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
-        Optional<ExpressionVisitor> expectedExpression = new Optional<ExpressionVisitor>(optional1, optional2);
+        Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
+        Optional optional2 = new Optional(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
+        Optional expectedExpression = new Optional(optional1, optional2);
         checkConstraintExpression(QUERY_OPTIONAL_5, expectedExpression);
     }
 
     public void testLiteralQuote() throws Exception {
-        Expression<ExpressionVisitor> spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
+        Expression spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'The Pragmatic Programmer' } ", spPrag1);
-        Expression<ExpressionVisitor> spPrag2 = createConstraintExpression("s", "p", LITERAL, 2);
+        Expression spPrag2 = createConstraintExpression("s", "p", LITERAL, 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p \"The Pragmatic Programmer\" } ", spPrag2);
     }
 
     public void testLiteralWithLanguage() throws Exception {
-        Expression<ExpressionVisitor> spHello1 = createConstraintExpression("s", "p", createLiteral("hello", "en"), 1);
+        Expression spHello1 = createConstraintExpression("s", "p", createLiteral("hello", "en"), 1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'@en }", spHello1);
-        Expression<ExpressionVisitor> spHello2 = createConstraintExpression("s", "p", createLiteral("hello", "en"), 2);
+        Expression spHello2 = createConstraintExpression("s", "p", createLiteral("hello", "en"), 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p \"hello\"@en }", spHello2);
     }
 
     public void testLiteralWithDatatype() throws Exception {
         Literal one = createLiteral("1", XSD.INTEGER);
         Literal helloString = createLiteral("hello", XSD.STRING);
-        Expression<ExpressionVisitor> spHello1 = createConstraintExpression("s", "p", one, 1);
-        Expression<ExpressionVisitor> spHello2 = createConstraintExpression("s", "p", helloString, 2);
-        Expression<ExpressionVisitor> spHello3 = createConstraintExpression("s", "p", helloString, 3);
+        Expression spHello1 = createConstraintExpression("s", "p", one, 1);
+        Expression spHello2 = createConstraintExpression("s", "p", helloString, 2);
+        Expression spHello3 = createConstraintExpression("s", "p", helloString, 3);
         checkConstraintExpression("SELECT * WHERE { ?s ?p '1'^^<http://www.w3.org/2001/XMLSchema#integer> }", spHello1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'^^<http://www.w3.org/2001/XMLSchema#string> }",
             spHello2);
@@ -321,8 +320,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void testUnsignedNumericIntegerLiteral() throws Exception {
         Literal one = createLiteral("1", XSD.INTEGER);
         Literal posTwo = createLiteral("+02", XSD.INTEGER);
-        Expression<ExpressionVisitor> spOne = createConstraintExpression("s", "p", one, 1);
-        Expression<ExpressionVisitor> spPosTwo = createConstraintExpression("s", "p", posTwo, 2);
+        Expression spOne = createConstraintExpression("s", "p", one, 1);
+        Expression spPosTwo = createConstraintExpression("s", "p", posTwo, 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1 }", spOne);
         checkConstraintExpression("SELECT * WHERE { ?s ?p +02 }", spPosTwo);
     }
@@ -331,10 +330,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Literal onePointThree = createLiteral("1.3", XSD.DECIMAL);
         Literal onePointThreeZeroZeroZero = createLiteral("1.300", XSD.DECIMAL);
         Literal negOnePointThreeZeroZeroZero = createLiteral("-1.300", XSD.DECIMAL);
-        Expression<ExpressionVisitor> spOnePointThree = createConstraintExpression("s", "p", onePointThree, 1);
-        Expression<ExpressionVisitor> spOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
+        Expression spOnePointThree = createConstraintExpression("s", "p", onePointThree, 1);
+        Expression spOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
             onePointThreeZeroZeroZero, 2);
-        Expression<ExpressionVisitor> spNegOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
+        Expression spNegOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
             negOnePointThreeZeroZeroZero, 3);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.3 }", spOnePointThree);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.300 }", spOnePointThreeZeroZeroZero);
@@ -344,8 +343,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void testUnsignedNumericDoubleLiteral() throws Exception {
         Literal doubleLiteral = createLiteral("1.3e6", XSD.DOUBLE);
         Literal signedDoubleLiteral = createLiteral("+1.3E06", XSD.DOUBLE);
-        Expression<ExpressionVisitor> spDouble = createConstraintExpression("s", "p", doubleLiteral, 1);
-        Expression<ExpressionVisitor> spSignedDouble = createConstraintExpression("s", "p", signedDoubleLiteral, 2);
+        Expression spDouble = createConstraintExpression("s", "p", doubleLiteral, 1);
+        Expression spSignedDouble = createConstraintExpression("s", "p", signedDoubleLiteral, 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.3e6 }", spDouble);
         checkConstraintExpression("SELECT * WHERE { ?s ?p +1.3E06 }", spSignedDouble);
     }
@@ -353,8 +352,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void testBooleanLiteral() throws Exception {
         Literal trueLiteral = createLiteral("true", BOOLEAN);
         Literal falseLiteral = createLiteral("false", BOOLEAN);
-        Expression<ExpressionVisitor> spTrue = createConstraintExpression("s", "p", trueLiteral, 1);
-        Expression<ExpressionVisitor> spFalse = createConstraintExpression("s", "p", falseLiteral, 2);
+        Expression spTrue = createConstraintExpression("s", "p", trueLiteral, 1);
+        Expression spFalse = createConstraintExpression("s", "p", falseLiteral, 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p true }", spTrue);
         checkConstraintExpression("SELECT * WHERE { ?s ?p false }", spFalse);
     }
@@ -363,7 +362,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         String queryString = "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
                 "SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }";
         AttributeName oVar = new VariableName("o");
-        Expression<ExpressionVisitor> spoExpression = createConstraintExpression("s", "p", "o");
+        Expression spoExpression = createConstraintExpression("s", "p", "o");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
         ValueOperation value = new ValueOperationImpl(createLiteral("unknown"), EQUALS);
@@ -371,17 +370,17 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> strAvo = new HashMap<Attribute, ValueOperation>();
         ValueOperation strValue = new ValueOperationImpl(ANY_NODE, STR);
         strAvo.put(attribute, strValue);
-        Expression<ExpressionVisitor> strOpr = new StrOperator<ExpressionVisitor>(strAvo);
-        SingleValue<ExpressionVisitor> valueExp = new SingleValue<ExpressionVisitor>(avo);
-        LogicExpression<ExpressionVisitor> eqnExpression = new EqualsExpression<ExpressionVisitor>(strOpr, valueExp);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(spoExpression, eqnExpression);
+        Expression strOpr = new StrOperator(strAvo);
+        SingleValue valueExp = new SingleValue(avo);
+        LogicExpression eqnExpression = new EqualsExpression(strOpr, valueExp);
+        Expression filterExpression = new Filter(spoExpression, eqnExpression);
         checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER( str(?o) = \"unknown\" ) }", filterExpression);
 
         value = new ValueOperationImpl(createLiteral("unknown", XSD.STRING), EQUALS);
         avo.put(attribute, value);
-        valueExp = new SingleValue<ExpressionVisitor>(avo);
-        eqnExpression = new EqualsExpression<ExpressionVisitor>(strOpr, valueExp);
-        filterExpression = new Filter<ExpressionVisitor>(spoExpression, eqnExpression);
+        valueExp = new SingleValue(avo);
+        eqnExpression = new EqualsExpression(strOpr, valueExp);
+        filterExpression = new Filter(spoExpression, eqnExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -392,16 +391,16 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "WHERE { ?x foaf:name ?name .\n" +
             "OPTIONAL { ?x dc:date ?date } .\n" +
             "FILTER ( bound(?date) ) }";
-        Expression<ExpressionVisitor> optionalExpression = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1,
+        Expression optionalExpression = new Optional(FOAF_NAME_EXP_1,
             DC_DATE_EXP_2);
         AttributeName dateVar = new VariableName("date");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
         ValueOperation value = new ValueOperationImpl(ANY_NODE, BOUND);
         avo.put(attribute, value);
-        LogicExpression<ExpressionVisitor> boundExpression = new BoundOperator<ExpressionVisitor>(avo);
-        Expression<ExpressionVisitor> filterExpression =
-            new Filter<ExpressionVisitor>(optionalExpression, boundExpression);
+        LogicExpression boundExpression = new BoundOperator(avo);
+        Expression filterExpression =
+            new Filter(optionalExpression, boundExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -412,9 +411,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "WHERE { ?x foaf:name ?name .\n" +
             "FILTER ( !bound(?name) ) }";
         Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, BOUND);
-        LogicExpression<ExpressionVisitor> boundExpression = new BoundOperator<ExpressionVisitor>(avo);
-        LogicExpression<ExpressionVisitor> notExpression = new LogicNotExpression<ExpressionVisitor>(boundExpression);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(FOAF_NAME_EXP_1, notExpression);
+        LogicExpression boundExpression = new BoundOperator(avo);
+        LogicExpression notExpression = new LogicNotExpression(boundExpression);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, notExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -427,11 +426,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL, EQUALS);
         Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, STR);
 
-        Expression<ExpressionVisitor> strOpr = new StrOperator<ExpressionVisitor>(nameAvo);
-        Expression<ExpressionVisitor> valueExp = new SingleValue<ExpressionVisitor>(avo);
-        LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression<ExpressionVisitor>(strOpr, valueExp);
-        LogicExpression<ExpressionVisitor> notExp = new LogicNotExpression<ExpressionVisitor>(equalsExpression);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(FOAF_NAME_EXP_1, notExp);
+        Expression strOpr = new StrOperator(nameAvo);
+        Expression valueExp = new SingleValue(avo);
+        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
+        LogicExpression notExp = new LogicNotExpression(equalsExpression);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, notExp);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -444,11 +443,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL, EQUALS);
         Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, STR);
 
-        Expression<ExpressionVisitor> strOpr = new StrOperator<ExpressionVisitor>(nameAvo);
-        Expression<ExpressionVisitor> valueExp = new SingleValue<ExpressionVisitor>(avo);
-        LogicExpression<ExpressionVisitor> neqExpression = new NEqualsExpression<ExpressionVisitor>(strOpr, valueExp);
-        Expression<ExpressionVisitor> filterExpression =
-            new Filter<ExpressionVisitor>(FOAF_NAME_EXP_1, neqExpression);
+        Expression strOpr = new StrOperator(nameAvo);
+        Expression valueExp = new SingleValue(avo);
+        LogicExpression neqExpression = new NEqualsExpression(strOpr, valueExp);
+        Expression filterExpression =
+            new Filter(FOAF_NAME_EXP_1, neqExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -461,10 +460,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, EN_LITERAL, EQUALS);
         Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, LANG);
 
-        Expression<ExpressionVisitor> valueExp = new SingleValue<ExpressionVisitor>(avo);
-        Expression<ExpressionVisitor> langOpr = new LangOperator<ExpressionVisitor>(nameAvo);
-        LogicExpression<ExpressionVisitor> eqnExp = new EqualsExpression<ExpressionVisitor>(langOpr, valueExp);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(FOAF_NAME_EXP_1, eqnExp);
+        Expression valueExp = new SingleValue(avo);
+        Expression langOpr = new LangOperator(nameAvo);
+        LogicExpression eqnExp = new EqualsExpression(langOpr, valueExp);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -477,10 +476,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, EN_LITERAL, EQUALS);
         Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, LANG);
 
-        Expression<ExpressionVisitor> valueExp = new SingleValue<ExpressionVisitor>(avo);
-        Expression<ExpressionVisitor> langOpr = new LangOperator<ExpressionVisitor>(nameAvo);
-        LogicExpression<ExpressionVisitor> eqnExp = new EqualsExpression<ExpressionVisitor>(valueExp, langOpr);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(FOAF_NAME_EXP_1, eqnExp);
+        Expression valueExp = new SingleValue(avo);
+        Expression langOpr = new LangOperator(nameAvo);
+        LogicExpression eqnExp = new EqualsExpression(valueExp, langOpr);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -493,12 +492,12 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> avo = createAvo(X_SUBJ_VAR, ANY_NODE, BOUND);
         Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, BOUND);
 
-        LogicExpression<ExpressionVisitor> bound1 = new BoundOperator<ExpressionVisitor>(avo);
-        LogicExpression<ExpressionVisitor> bound2 = new BoundOperator<ExpressionVisitor>(nameAvo);
-        LogicExpression<ExpressionVisitor> andExp = new LogicAndExpression<ExpressionVisitor>(bound1, bound2);
+        LogicExpression bound1 = new BoundOperator(avo);
+        LogicExpression bound2 = new BoundOperator(nameAvo);
+        LogicExpression andExp = new LogicAndExpression(bound1, bound2);
 
-        LogicExpression<ExpressionVisitor> equalsExp = new EqualsExpression<ExpressionVisitor>(andExp, TRUE_EXPRESSION);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(FOAF_NAME_EXP_1, equalsExp);
+        LogicExpression equalsExp = new EqualsExpression(andExp, TRUE_EXPRESSION);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, equalsExp);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -514,12 +513,12 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Attribute attribute1 = new AttributeImpl(new VariableName("nick"), new ObjectNodeType());
         Map<Attribute, ValueOperation> nickAvo = createAvo(attribute1, ANY_NODE, LANG);
 
-        Expression<ExpressionVisitor> langOpr = new LangOperator<ExpressionVisitor>(nameAvo);
-        Expression<ExpressionVisitor> langOpr1 = new LangOperator<ExpressionVisitor>(nickAvo);
+        Expression langOpr = new LangOperator(nameAvo);
+        Expression langOpr1 = new LangOperator(nickAvo);
 
-        LogicExpression<ExpressionVisitor> eqnExp = new EqualsExpression<ExpressionVisitor>(langOpr, langOpr1);
-        Expression<ExpressionVisitor> conj = new Conjunction<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(conj, eqnExp);
+        LogicExpression eqnExp = new EqualsExpression(langOpr, langOpr1);
+        Expression conj = new Conjunction(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
+        Expression filterExpression = new Filter(conj, eqnExp);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -533,10 +532,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Literal literal = NodeTestUtil.createLiteral("en");
         Map<Attribute, ValueOperation> nameAvo1 = createAvo(NAME_OBJECT_ATTR, literal, EQUALS);
 
-        Expression<ExpressionVisitor> langOpr = new LangOperator<ExpressionVisitor>(nameAvo);
-        Expression<ExpressionVisitor> valueExp = new SingleValue<ExpressionVisitor>(nameAvo1);
-        LogicExpression<ExpressionVisitor> eqnExp = new EqualsExpression<ExpressionVisitor>(langOpr, valueExp);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(FOAF_NAME_EXP_1, eqnExp);
+        Expression langOpr = new LangOperator(nameAvo);
+        Expression valueExp = new SingleValue(nameAvo1);
+        LogicExpression eqnExp = new EqualsExpression(langOpr, valueExp);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -550,13 +549,13 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL, EQUALS);
         Map<Attribute, ValueOperation> xAvo = createAvo(X_SUBJ_VAR, ANY_NODE, BOUND);
 
-        Expression<ExpressionVisitor> strOpr = new StrOperator<ExpressionVisitor>(nameAvo);
-        Expression<ExpressionVisitor> valueExp = new SingleValue<ExpressionVisitor>(avo);
-        LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression<ExpressionVisitor>(strOpr, valueExp);
-        LogicExpression<ExpressionVisitor> boundExpression = new BoundOperator<ExpressionVisitor>(xAvo);
-        LogicExpression<ExpressionVisitor> andExpression =
-            new LogicAndExpression<ExpressionVisitor>(equalsExpression, boundExpression);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(FOAF_NAME_EXP_1, andExpression);
+        Expression strOpr = new StrOperator(nameAvo);
+        Expression valueExp = new SingleValue(avo);
+        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
+        LogicExpression boundExpression = new BoundOperator(xAvo);
+        LogicExpression andExpression =
+            new LogicAndExpression(equalsExpression, boundExpression);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, andExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
 
@@ -570,30 +569,30 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL, EQUALS);
         Map<Attribute, ValueOperation> xAvo = createAvo(X_SUBJ_VAR, ANY_NODE, BOUND);
 
-        Expression<ExpressionVisitor> strOpr = new StrOperator<ExpressionVisitor>(nameAvo);
-        Expression<ExpressionVisitor> valueExp = new SingleValue<ExpressionVisitor>(avo);
-        LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression<ExpressionVisitor>(strOpr, valueExp);
-        LogicExpression<ExpressionVisitor> boundExpression = new BoundOperator<ExpressionVisitor>(xAvo);
-        LogicExpression<ExpressionVisitor> orExpression =
-            new LogicOrExpression<ExpressionVisitor>(equalsExpression, boundExpression);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(FOAF_NAME_EXP_1, orExpression);
+        Expression strOpr = new StrOperator(nameAvo);
+        Expression valueExp = new SingleValue(avo);
+        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
+        LogicExpression boundExpression = new BoundOperator(xAvo);
+        LogicExpression orExpression =
+            new LogicOrExpression(equalsExpression, boundExpression);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, orExpression);
         checkConstraintExpression(queryString, filterExpression);
     }
 
     public void testSimpleAskQuery() throws Exception {
-        Expression<ExpressionVisitor> spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
+        Expression spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
         checkConstraintExpression("ASK WHERE { ?s ?p 'The Pragmatic Programmer' } ", spPrag1);
     }
 
     public void testSimpleTrueBoolean() throws Exception {
-        Expression<ExpressionVisitor> spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
-        Filter<ExpressionVisitor> filter = new Filter<ExpressionVisitor>(spPrag1, TRUE_EXPRESSION);
+        Expression spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
+        Filter filter = new Filter(spPrag1, TRUE_EXPRESSION);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'The Pragmatic Programmer' FILTER (TRUE) } ", filter);
     }
 
     public void testSimpleFalseBoolean() throws Exception {
-        Expression<ExpressionVisitor> spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
-        Filter<ExpressionVisitor> filter = new Filter<ExpressionVisitor>(spPrag1, FALSE_EXPRESSION);
+        Expression spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
+        Filter filter = new Filter(spPrag1, FALSE_EXPRESSION);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'The Pragmatic Programmer' FILTER (FALSE) } ", filter);
     }
 
@@ -601,30 +600,30 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Attribute attribute = new AttributeImpl(new VariableName("o"), new ObjectNodeType());
         Map<Attribute, ValueOperation> avo = createAvo(attribute, createLiteral("unknown", XSD.STRING), EQUALS);
         Map<Attribute, ValueOperation> strAvo = createAvo(attribute, ANY_NODE, STR);
-        Expression<ExpressionVisitor> spoExpression = createConstraintExpression("s", "p", "o");
-        Expression<ExpressionVisitor> strOpr = new StrOperator<ExpressionVisitor>(strAvo);
-        Expression<ExpressionVisitor> valueExp = new SingleValue<ExpressionVisitor>(avo);
-        LogicExpression<ExpressionVisitor> equalsExpression = new EqualsExpression<ExpressionVisitor>(strOpr, valueExp);
-        Expression<ExpressionVisitor> filterExpression = new Filter<ExpressionVisitor>(spoExpression, equalsExpression);
+        Expression spoExpression = createConstraintExpression("s", "p", "o");
+        Expression strOpr = new StrOperator(strAvo);
+        Expression valueExp = new SingleValue(avo);
+        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
+        Expression filterExpression = new Filter(spoExpression, equalsExpression);
         checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
             "ASK WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", filterExpression);
     }
 
-    private void checkConstraintExpression(String queryString, Expression<ExpressionVisitor> expectedExpression)
+    private void checkConstraintExpression(String queryString, Expression expectedExpression)
         throws Exception {
         Query query = parseQuery(queryString);
-        Expression<ExpressionVisitor> actualExpression = getExpression(query);
+        Expression actualExpression = getExpression(query);
         assertEquals(expectedExpression, actualExpression);
     }
 
-    private Expression<ExpressionVisitor> getExpression(Query query) {
+    private Expression getExpression(Query query) {
         try {
             if (query instanceof SelectQueryImpl) {
-                Expression<ExpressionVisitor> expression = getExpressionField(query, SelectQueryImpl.class,
+                Expression expression = getExpressionField(query, SelectQueryImpl.class,
                     "expression");
                 return getExpressionField(expression, Projection.class, "nextExpression");
             } else if (query instanceof AskQueryImpl) {
-                Expression<ExpressionVisitor> expression = getExpressionField(query, AskQueryImpl.class, "expression");
+                Expression expression = getExpressionField(query, AskQueryImpl.class, "expression");
                 return getExpressionField(expression, Ask.class, "nextExpression");
             } else {
                 throw new IllegalArgumentException();
@@ -635,11 +634,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     @SuppressWarnings({ "unchecked" })
-    private Expression<ExpressionVisitor> getExpressionField(Object obj, Class<?> cls, String fieldName)
+    private Expression getExpressionField(Object obj, Class<?> cls, String fieldName)
         throws IllegalAccessException {
         Field field = ReflectTestUtil.getField(cls, fieldName);
         field.setAccessible(true);
-        return (Expression<ExpressionVisitor>) field.get(obj);
+        return (Expression) field.get(obj);
     }
 
     private Query parseQuery(String queryString) throws InvalidQuerySyntaxException {

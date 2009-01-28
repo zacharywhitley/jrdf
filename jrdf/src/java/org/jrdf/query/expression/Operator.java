@@ -59,5 +59,5 @@
 
 package org.jrdf.query.expression;
 
-public interface Operator<V extends ExpressionVisitor> extends Expression<V> {
+public interface Operator extends Expression {
 }

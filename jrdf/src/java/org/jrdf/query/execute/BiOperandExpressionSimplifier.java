@@ -59,9 +59,8 @@
 
 package org.jrdf.query.execute;
 
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.BiOperandExpression;
+import org.jrdf.query.expression.Expression;
 
 import java.util.List;
 
@@ -70,6 +69,5 @@ import java.util.List;
  * @version $Id :$
  */
 public interface BiOperandExpressionSimplifier {
-    <V extends ExpressionVisitor> List<Expression<V>>
-    flattenAndSortConjunction(BiOperandExpression<V> conjunction, Class expClass);
+    List<Expression> flattenAndSortConjunction(BiOperandExpression conjunction, Class expClass);
 }

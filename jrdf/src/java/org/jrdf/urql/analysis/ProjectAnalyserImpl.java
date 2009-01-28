@@ -86,7 +86,7 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
     private Graph graph;
     private final VariableCollector variableCollector;
     private final LinkedHashSet<AttributeName> declaredVariables;
-    private Expression<ExpressionVisitor> expression;
+    private Expression expression;
     private ParserException exception;
 
     public ProjectAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
@@ -96,7 +96,7 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
         this.declaredVariables = new LinkedHashSet<AttributeName>();
     }
 
-    public Expression<ExpressionVisitor> getExpression() throws ParserException {
+    public Expression getExpression() throws ParserException {
         if (exception != null) {
             throw exception;
         }
@@ -107,9 +107,9 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
     public void caseAWildcardSelectClause(AWildcardSelectClause node) {
         try {
             WhereAnalyser analyser = analyseWhereClause(node.parent());
-            Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
+            Expression nextExpression = analyser.getExpression();
             declaredVariables.addAll(variableCollector.getAttributes().keySet());
-            expression = new Projection<ExpressionVisitor>(variableCollector, declaredVariables, nextExpression);
+            expression = new Projection(variableCollector, declaredVariables, nextExpression);
         } catch (ParserException e) {
             exception = e;
         }
@@ -119,9 +119,9 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
     public void caseAVariableListSelectClause(AVariableListSelectClause node) {
         try {
             WhereAnalyser analyser = analyseWhereClause(node.parent());
-            Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
+            Expression nextExpression = analyser.getExpression();
             super.caseAVariableListSelectClause(node);
-            expression = new Projection<ExpressionVisitor>(variableCollector, declaredVariables, nextExpression);
+            expression = new Projection(variableCollector, declaredVariables, nextExpression);
         } catch (ParserException e) {
             exception = e;
         }

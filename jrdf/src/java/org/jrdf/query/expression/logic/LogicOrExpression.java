@@ -72,18 +72,18 @@ import java.util.LinkedHashMap;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public class LogicOrExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
+public class LogicOrExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = 6637326993178600535L;
     private static final int DUMMY_HASHCODE = 47;
 
-    private LogicExpression<V> lhs;
-    private LogicExpression<V> rhs;
+    private LogicExpression lhs;
+    private LogicExpression rhs;
     protected static final String OR_STRING = "||";
 
     private LogicOrExpression() {
     }
 
-    public LogicOrExpression(LogicExpression<V> lhs, LogicExpression<V> rhs) {
+    public LogicOrExpression(LogicExpression lhs, LogicExpression rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
@@ -95,19 +95,19 @@ public class LogicOrExpression<V extends ExpressionVisitor> implements LogicExpr
         return map;
     }
 
-    public LogicExpression<V> getLhs() {
+    public LogicExpression getLhs() {
         return lhs;
     }
 
-    public LogicExpression<V> getRhs() {
+    public LogicExpression getRhs() {
         return rhs;
     }
 
-    public void setLhs(LogicExpression<V> lhs) {
+    public void setLhs(LogicExpression lhs) {
         this.lhs = lhs;
     }
 
-    public void setRhs(LogicExpression<V> rhs) {
+    public void setRhs(LogicExpression rhs) {
         this.rhs = rhs;
     }
 
@@ -115,7 +115,7 @@ public class LogicOrExpression<V extends ExpressionVisitor> implements LogicExpr
         return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitLogicOr(this, v);
     }
 

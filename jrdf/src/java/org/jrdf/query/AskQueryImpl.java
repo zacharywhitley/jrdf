@@ -66,7 +66,6 @@ import org.jrdf.query.execute.ExpressionSimplifier;
 import org.jrdf.query.execute.ExpressionSimplifierImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -77,16 +76,16 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  */
 
 public class AskQueryImpl implements Query {
-    private Expression<ExpressionVisitor> expression;
+    private Expression expression;
     private final GraphRelationFactory graphRelationFactory;
 
-    public AskQueryImpl(Expression<ExpressionVisitor> expression, GraphRelationFactory graphRelationFactory) {
+    public AskQueryImpl(Expression expression, GraphRelationFactory graphRelationFactory) {
         checkNotNull(expression, graphRelationFactory);
         this.expression = expression;
         this.graphRelationFactory = graphRelationFactory;
     }
 
-    public Expression<ExpressionVisitor> getNext() {
+    public Expression getNext() {
         return expression;
     }
 

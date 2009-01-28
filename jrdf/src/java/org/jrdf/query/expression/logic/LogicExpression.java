@@ -62,13 +62,11 @@ package org.jrdf.query.expression.logic;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 
-import java.io.Serializable;
-
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public interface LogicExpression<V extends ExpressionVisitor> extends Expression<V>, Serializable {
-    void accept(V v);
+public interface LogicExpression extends Expression {
+    void accept(ExpressionVisitor v);
 }

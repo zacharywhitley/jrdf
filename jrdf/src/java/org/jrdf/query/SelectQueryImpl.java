@@ -66,7 +66,6 @@ import org.jrdf.query.execute.ExpressionSimplifier;
 import org.jrdf.query.execute.ExpressionSimplifierImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
@@ -83,16 +82,16 @@ import java.util.LinkedHashSet;
  * @version $Revision$
  */
 public final class SelectQueryImpl implements Query {
-    private Expression<ExpressionVisitor> expression;
+    private Expression expression;
     private final GraphRelationFactory graphRelationFactory;
 
-    public SelectQueryImpl(Expression<ExpressionVisitor> expression, GraphRelationFactory graphRelationFactory) {
+    public SelectQueryImpl(Expression expression, GraphRelationFactory graphRelationFactory) {
         checkNotNull(expression, graphRelationFactory);
         this.expression = expression;
         this.graphRelationFactory = graphRelationFactory;
     }
 
-    public Expression<ExpressionVisitor> getNext() {
+    public Expression getNext() {
         return expression;
     }
 
@@ -106,7 +105,7 @@ public final class SelectQueryImpl implements Query {
 
     private LinkedHashSet<Attribute> getHeading(Relation relation) {
         if (hasProjected()) {
-            Projection<ExpressionVisitor> projection = (Projection<ExpressionVisitor>) expression;
+            Projection projection = (Projection) expression;
             return new LinkedHashSet<Attribute>(projection.getAttributes());
         } else {
             return new LinkedHashSet<Attribute>(relation.getSortedHeading());

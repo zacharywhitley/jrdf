@@ -93,10 +93,10 @@ public final class SingleConstraintUnitTest extends TestCase {
         createAvoMap(TEST_ATTRIBUTE_FOO_POS, ANY_NODE);
     private static final LinkedHashMap<Attribute, ValueOperation> AVO_2 =
         createAvoMap(TEST_ATTRIBUTE_BAR_VAR, ANY_SUBJECT_NODE);
-    private static final SingleConstraint<ExpressionVisitor> CONSTRAINT_TRIPLE_1 =
-        new SingleConstraint<ExpressionVisitor>(AVO_1);
-    private static final SingleConstraint<ExpressionVisitor> CONSTRAINT_TRIPLE_2 =
-        new SingleConstraint<ExpressionVisitor>(AVO_2);
+    private static final SingleConstraint CONSTRAINT_TRIPLE_1 =
+        new SingleConstraint(AVO_1);
+    private static final SingleConstraint CONSTRAINT_TRIPLE_2 =
+        new SingleConstraint(AVO_2);
     private static final Class<?>[] PARAM_TYPES = {LinkedHashMap.class};
 
     public void testClassProperties() {
@@ -114,7 +114,7 @@ public final class SingleConstraintUnitTest extends TestCase {
     }
 
     public void getAvp() {
-        SingleConstraint constraint = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint constraint = new SingleConstraint(AVO_1);
         assertEquals(AVO_1, constraint.getAvo(Collections.EMPTY_MAP));
     }
 
@@ -154,8 +154,8 @@ public final class SingleConstraintUnitTest extends TestCase {
     }
 
     private void checkSameValueDifferentReference() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint x = new SingleConstraint(AVO_1);
+        SingleConstraint y = new SingleConstraint(AVO_1);
         checkEquals(x, y);
     }
 
@@ -164,24 +164,24 @@ public final class SingleConstraintUnitTest extends TestCase {
     }
 
     private void checkSymmetric() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint x = new SingleConstraint(AVO_1);
+        SingleConstraint y = new SingleConstraint(AVO_1);
         checkEquals(x, y);
         checkEquals(y, y);
     }
 
     private void checkTransitive() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
-        SingleConstraint z = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint x = new SingleConstraint(AVO_1);
+        SingleConstraint y = new SingleConstraint(AVO_1);
+        SingleConstraint z = new SingleConstraint(AVO_1);
         checkEquals(x, y);
         checkEquals(y, z);
         checkEquals(x, z);
     }
 
     private void checkConsistentEquals() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint x = new SingleConstraint(AVO_1);
+        SingleConstraint y = new SingleConstraint(AVO_1);
         checkEquals(x, y);
         checkEquals(x, y);
     }
@@ -193,8 +193,8 @@ public final class SingleConstraintUnitTest extends TestCase {
     }
 
     private void checkEqualObjectsReturnSameHashCode() {
-        SingleConstraint x = new SingleConstraint<ExpressionVisitor>(AVO_1);
-        SingleConstraint y = new SingleConstraint<ExpressionVisitor>(AVO_1);
+        SingleConstraint x = new SingleConstraint(AVO_1);
+        SingleConstraint y = new SingleConstraint(AVO_1);
         checkEquals(x, y);
         assertEquals(x.hashCode(), y.hashCode());
     }

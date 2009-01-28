@@ -83,5 +83,5 @@ public interface Restrict extends Operation {
     Relation restrict(Relation relation, LinkedHashMap<Attribute, ValueOperation> avo);
     Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, ValueOperation> avo);
     Relation restrict(Map<Attribute, ValueOperation> avo);
-    <V extends ExpressionVisitor> Relation restrict(Relation relation, LogicExpression<V> expression);
+    <V extends ExpressionVisitor> Relation restrict(Relation relation, LogicExpression expression);
 }

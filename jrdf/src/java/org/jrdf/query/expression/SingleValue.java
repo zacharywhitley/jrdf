@@ -73,7 +73,7 @@ import java.util.Set;
  * @version $Id$
  */
 
-public final class SingleValue<V extends ExpressionVisitor> implements Constraint<V> {
+public final class SingleValue implements Constraint {
     private static final long serialVersionUID = -4113675582657624557L;
 
     private static final int DUMMY_HASHCODE = 47;
@@ -102,7 +102,7 @@ public final class SingleValue<V extends ExpressionVisitor> implements Constrain
         }
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitSingleValue(this, v);
     }
 

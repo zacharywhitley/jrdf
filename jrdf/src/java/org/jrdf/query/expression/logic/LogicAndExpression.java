@@ -73,18 +73,18 @@ import java.util.LinkedHashMap;
  * @version $Id:$
  */
 
-public class LogicAndExpression<V extends ExpressionVisitor> implements LogicExpression<V>, BiOperandExpression<V> {
+public class LogicAndExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = -1701496085083842700L;
     private static final int DUMMY_HASHCODE = 47;
 
-    private LogicExpression<V> lhs;
-    private LogicExpression<V> rhs;
+    private LogicExpression lhs;
+    private LogicExpression rhs;
     protected static final String AND_STRING = "&&";
 
     private LogicAndExpression() {
     }
 
-    public LogicAndExpression(LogicExpression<V> lhs, LogicExpression<V> rhs) {
+    public LogicAndExpression(LogicExpression lhs, LogicExpression rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
@@ -96,19 +96,19 @@ public class LogicAndExpression<V extends ExpressionVisitor> implements LogicExp
         return map;
     }
 
-    public LogicExpression<V> getLhs() {
+    public LogicExpression getLhs() {
         return lhs;
     }
 
-    public LogicExpression<V> getRhs() {
+    public LogicExpression getRhs() {
         return rhs;
     }
 
-    public void setLhs(LogicExpression<V> lhs) {
+    public void setLhs(LogicExpression lhs) {
         this.lhs = lhs;
     }
 
-    public void setRhs(LogicExpression<V> rhs) {
+    public void setRhs(LogicExpression rhs) {
         this.rhs = rhs;
     }
 
@@ -116,7 +116,7 @@ public class LogicAndExpression<V extends ExpressionVisitor> implements LogicExp
         return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitLogicAnd(this, v);
     }
 

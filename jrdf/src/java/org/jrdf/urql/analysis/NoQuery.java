@@ -65,7 +65,6 @@ import org.jrdf.query.answer.Answer;
 import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 
 import java.io.Serializable;
 
@@ -80,7 +79,7 @@ public final class NoQuery implements Query, Serializable {
     private NoQuery() {
     }
 
-    public Expression<ExpressionVisitor> getNext() {
+    public Expression getNext() {
         return null;
     }
 

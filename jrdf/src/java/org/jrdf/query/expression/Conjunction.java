@@ -63,7 +63,6 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
-import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -75,16 +74,16 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public final class Conjunction<V extends ExpressionVisitor> implements BiOperandExpression<V>, Serializable {
+public final class Conjunction implements BiOperandExpression {
     private static final long serialVersionUID = -7871756371628747688L;
     private static final int DUMMY_HASHCODE = 47;
-    private Expression<V> lhs;
-    private Expression<V> rhs;
+    private Expression lhs;
+    private Expression rhs;
 
     private Conjunction() {
     }
 
-    public Conjunction(Expression<V> lhs, Expression<V> rhs) {
+    public Conjunction(Expression lhs, Expression rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
@@ -96,15 +95,15 @@ public final class Conjunction<V extends ExpressionVisitor> implements BiOperand
         return map;
     }
 
-    public Expression<V> getLhs() {
+    public Expression getLhs() {
         return lhs;
     }
 
-    public Expression<V> getRhs() {
+    public Expression getRhs() {
         return rhs;
     }
 
-    public void setLhs(Expression<V> lhs) {
+    public void setLhs(Expression lhs) {
         this.lhs = lhs;
     }
 
@@ -112,7 +111,7 @@ public final class Conjunction<V extends ExpressionVisitor> implements BiOperand
         return (int) Math.ceil((lhs.size() + rhs.size()) * 1.0 / 2);
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitConjunction(this, v);
     }
 

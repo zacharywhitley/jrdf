@@ -73,16 +73,16 @@ import java.util.LinkedHashMap;
  * @version :$
  */
 
-public class Filter<V extends ExpressionVisitor> implements BiOperandExpression<V>, Serializable {
+public class Filter<V extends ExpressionVisitor> implements BiOperandExpression, Serializable {
     private static final long serialVersionUID = 7695585379424077889L;
     private static final int DUMMY_HASHCODE = 47;
-    private Expression<V> lhs;
-    private LogicExpression<V> rhs;
+    private Expression lhs;
+    private LogicExpression rhs;
 
     private Filter() {
     }
 
-    public Filter(Expression<V> lhs, LogicExpression<V> rhs) {
+    public Filter(Expression lhs, LogicExpression rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
@@ -95,19 +95,19 @@ public class Filter<V extends ExpressionVisitor> implements BiOperandExpression<
 
     }
 
-    public Expression<V> getLhs() {
+    public Expression getLhs() {
         return lhs;
     }
 
-    public LogicExpression<V> getRhs() {
+    public LogicExpression getRhs() {
         return rhs;
     }
 
-    public void setLhs(Expression<V> lhs) {
+    public void setLhs(Expression lhs) {
         this.lhs = lhs;
     }
 
-    public void setRhs(LogicExpression<V> rhs) {
+    public void setRhs(LogicExpression rhs) {
         this.rhs = rhs;
     }
 
@@ -115,7 +115,7 @@ public class Filter<V extends ExpressionVisitor> implements BiOperandExpression<
         return lhs.size() + rhs.size();
     }
 
-    public void accept(V v) {
+    public void accept(ExpressionVisitor v) {
         v.visitFilter(this, v);
     }
 

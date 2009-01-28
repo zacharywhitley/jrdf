@@ -59,14 +59,13 @@
 
 package org.jrdf.query.execute;
 
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.BiOperandExpression;
+import org.jrdf.query.expression.Expression;
 
-import java.util.List;
-import java.util.LinkedList;
 import java.util.Collection;
 import static java.util.Collections.sort;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Yuan-Fang Li
@@ -79,30 +78,30 @@ public class BiOperandExpressionSimplifierImpl implements BiOperandExpressionSim
         this.comparator = comparator;
     }
 
-    public <V extends ExpressionVisitor> List<Expression<V>>
-    flattenAndSortConjunction(BiOperandExpression<V> conjunction, Class expClass) {
-        List<Expression<V>> constraintList = new LinkedList<Expression<V>>();
+    public  List<Expression>
+    flattenAndSortConjunction(BiOperandExpression conjunction, Class expClass) {
+        List<Expression> constraintList = new LinkedList<Expression>();
         flattenExpression(conjunction, constraintList, expClass);
         reorderExpressionList(constraintList);
         return constraintList;
     }
 
-    private <V extends ExpressionVisitor> void reorderExpressionList(List<Expression<V>> constraintList) {
+    private  void reorderExpressionList(List<Expression> constraintList) {
         sort(constraintList, comparator);
     }
 
-    private <V extends ExpressionVisitor> void
-    flattenExpression(BiOperandExpression<V> expression, Collection<Expression<V>> set, Class expClass) {
-        final Expression<V> lhs = expression.getLhs();
-        final Expression<V> rhs = expression.getRhs();
+    private  void
+    flattenExpression(BiOperandExpression expression, Collection<Expression> set, Class expClass) {
+        final Expression lhs = expression.getLhs();
+        final Expression rhs = expression.getRhs();
         addExpressionToCollection(lhs, set, expClass);
         addExpressionToCollection(rhs, set, expClass);
     }
 
-    private <V extends ExpressionVisitor> void
-    addExpressionToCollection(Expression<V> expression, Collection<Expression<V>> set, Class expClass) {
+    private  void
+    addExpressionToCollection(Expression expression, Collection<Expression> set, Class expClass) {
         if (expClass.isAssignableFrom(expression.getClass())) {
-            flattenExpression((BiOperandExpression<V>) expression, set, expClass);
+            flattenExpression((BiOperandExpression) expression, set, expClass);
         } else {
             set.add(expression);
         }

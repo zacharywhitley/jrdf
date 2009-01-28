@@ -59,7 +59,6 @@
 
 package org.jrdf.query.relation.operation.mem.restrict;
 
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
@@ -116,7 +115,7 @@ public class RestrictImpl implements Restrict {
         return createRelation(relation, restrictedTuples, hasValidVarName);
     }
 
-    public <V extends ExpressionVisitor> Relation restrict(Relation relation, LogicExpression<V> expression) {
+    public  Relation restrict(Relation relation, LogicExpression expression) {
         final Set<Tuple> restrictedTuples = relation.getTuples();
         Set<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple : restrictedTuples) {
