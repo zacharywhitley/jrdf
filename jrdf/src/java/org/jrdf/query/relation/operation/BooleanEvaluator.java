@@ -69,7 +69,6 @@ import org.jrdf.query.relation.Tuple;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public interface BooleanEvaluator extends ExpressionVisitor {
     boolean evaluate(Tuple tuple, LogicExpression expression);
 
