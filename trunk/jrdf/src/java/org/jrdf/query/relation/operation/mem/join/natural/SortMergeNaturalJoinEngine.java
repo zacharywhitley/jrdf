@@ -74,29 +74,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.Iterator;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements TupleEngine {
     private static final Set<Attribute> EMPTY_ATTRIBUTE_SET = Collections.emptySet();
     private TupleComparator tupleAVComparator;
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
-                                         NodeComparator nodeComparator) {
+        NodeComparator nodeComparator) {
         super(newTupleFactory, newRelationHelper);
         this.resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
         this.tupleAVComparator = new TupleAttributeValueComparatorImpl(nodeComparator);
     }
 
     public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-                                 SortedSet<Tuple> result) {
+        SortedSet<Tuple> result) {
         SortedSet<Attribute> commonHeadings = getHeadingsIntersection(relation1, relation2);
         if (commonHeadings.size() == 1) {
             // do sort merge join
@@ -112,7 +111,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private void doMultiSortMergeJoin(SortedSet<Attribute> headings, Relation rel1, Relation rel2,
-                                      SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result) {
+        SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result) {
         Attribute attr = chooseACommonHeading(headings, rel1, rel2);
         commonHeadings.remove(attr);
         doSortMergeJoin(headings, rel1, rel2, attr, commonHeadings, result);
@@ -146,19 +145,19 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private void doSortMergeJoin(SortedSet<Attribute> headings, Relation rel1, Relation rel2,
-                                 Attribute attribute, Set<Attribute> remainingHeadings, SortedSet<Tuple> result) {
-        final Set<Tuple>[] sets1 = partitionWithAttribute(attribute, rel1);
-        final Set<Tuple>[] sets2 = partitionWithAttribute(attribute, rel2);
-        final List<Tuple> list1 = sortSetOfTuples(sets1[0], attribute);
-        final List<Tuple> list2 = sortSetOfTuples(sets2[0], attribute);
+        Attribute attribute, Set<Attribute> remainingHeadings, SortedSet<Tuple> result) {
+        final List<Set<Tuple>> sets1 = partitionWithAttribute(attribute, rel1);
+        final List<Set<Tuple>> sets2 = partitionWithAttribute(attribute, rel2);
+        final List<Tuple> list1 = sortSetOfTuples(sets1.get(0), attribute);
+        final List<Tuple> list2 = sortSetOfTuples(sets2.get(0), attribute);
         if (list1.size() <= list2.size()) {
             doProperSortMergeJoin(attribute, remainingHeadings, result, list1, list2);
         } else {
             doProperSortMergeJoin(attribute, remainingHeadings, result, list2, list1);
         }
-        doNaturalJoin(headings, sets1[0], sets2[1], result);
-        doNaturalJoin(headings, sets2[0], sets1[1], result);
-        doNaturalJoin(headings, sets1[1], sets2[1], result);
+        doNaturalJoin(headings, sets1.get(0), sets2.get(1), result);
+        doNaturalJoin(headings, sets2.get(0), sets1.get(1), result);
+        doNaturalJoin(headings, sets1.get(1), sets2.get(1), result);
     }
 
     private List<Tuple> sortSetOfTuples(Set<Tuple> tuples, Attribute attribute) {
@@ -169,7 +168,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private void doNaturalJoin(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
-                               SortedSet<Tuple> result) {
+        SortedSet<Tuple> result) {
         if (tuples1.size() < tuples2.size()) {
             startDoubleLoopProcessing(headings, result, tuples1, tuples2);
         } else {
@@ -179,11 +178,12 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     /**
      * Returns an array of two sets. The first is a bound set and the second is the unbound set.
+     *
      * @param attribute The attribute used to test for boundness.
-     * @param rel The relation to be partitioned.
+     * @param rel       The relation to be partitioned.
      * @return two sets of tuples, firrst is the bound and the 2nd is the unbound.
      */
-    private Set<Tuple>[] partitionWithAttribute(Attribute attribute, Relation rel) {
+    private List<Set<Tuple>> partitionWithAttribute(Attribute attribute, Relation rel) {
         Set<Tuple> boundSet = new HashSet<Tuple>();
         Set<Tuple> unboundSet = new HashSet<Tuple>();
         for (Tuple tuple : rel.getTuples()) {
@@ -193,11 +193,14 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
                 unboundSet.add(tuple);
             }
         }
-        return (Set<Tuple> []) new Set[] {boundSet, unboundSet};
+        final ArrayList<Set<Tuple>> list = new ArrayList<Set<Tuple>>(2);
+        list.add(boundSet);
+        list.add(unboundSet);
+        return list;
     }
 
     private void doProperSortMergeJoin(Attribute attribute, Set<Attribute> commonHeadings, SortedSet<Tuple> result,
-                                       List<Tuple> list1, List<Tuple> list2) {
+        List<Tuple> list1, List<Tuple> list2) {
         tupleAVComparator.setAttribute(attribute);
         Tuple tuple1, tuple2;
         int i = 0;
@@ -228,7 +231,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private int[] processSameTuples(List<Tuple> l1, List<Tuple> l2, Attribute attribute, SortedSet<Tuple> result,
-                                    Set<Attribute> commonHeadings, int pos1, int pos2, Tuple pivot) {
+        Set<Attribute> commonHeadings, int pos1, int pos2, Tuple pivot) {
         Tuple t1, t2;
         int newPos1 = pos1 + 1;
         int newPos2 = pos2 + 1;
@@ -247,14 +250,14 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
                 addToResult(attribute, result, t1, t2, commonHeadings);
             }
         }
-        return new int[] {newPos1, newPos2};
+        return new int[]{newPos1, newPos2};
     }
 
     private void addToResult(Attribute attribute, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2,
-                             Set<Attribute> commonHeadings) {
+        Set<Attribute> commonHeadings) {
         boolean contradiction =
             avp1NotNull(attribute, tuple1.getValueOperation(attribute), tuple2.getValueOperation(attribute)) ||
-            checkCommonHeadings(commonHeadings, tuple1, tuple2);
+                checkCommonHeadings(commonHeadings, tuple1, tuple2);
 
         if (!contradiction) {
             result.add(tupleFactory.getTuple(tuple1, tuple2));
