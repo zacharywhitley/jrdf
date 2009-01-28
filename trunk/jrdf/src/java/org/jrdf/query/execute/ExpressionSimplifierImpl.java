@@ -72,6 +72,7 @@ import org.jrdf.query.expression.EmptyConstraint;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.Optional;
@@ -81,15 +82,15 @@ import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
+import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
 import org.jrdf.query.expression.logic.LessThanExpression;
-import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicAndExpression;
+import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicNotExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
-import org.jrdf.query.expression.logic.FalseExpression;
-import org.jrdf.query.expression.logic.LogicOrExpression;
-import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
 import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
@@ -110,7 +111,7 @@ import java.util.Set;
  * @version $Id:$
  */
 
-public class ExpressionSimplifierImpl implements ExpressionSimplifier {
+public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implements ExpressionSimplifier {
     private Expression expression;
     private Set<Attribute> declaredVariables;
     private Map<Attribute, Attribute> variableMap;

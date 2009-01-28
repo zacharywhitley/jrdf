@@ -60,35 +60,36 @@
 package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.Ask;
+import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.EmptyConstraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Filter;
+import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
-import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
-import org.jrdf.query.expression.LangOperator;
-import org.jrdf.query.expression.BoundOperator;
+import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicAndExpression;
 import org.jrdf.query.expression.logic.LogicNotExpression;
+import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
-import org.jrdf.query.expression.logic.FalseExpression;
-import org.jrdf.query.expression.logic.LogicOrExpression;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
-public final class ExpressionComparatorImpl implements ExpressionVisitor, ExpressionComparator {
+public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter implements ExpressionComparator {
     private static final long serialVersionUID = 4884876904025513571L;
     private int result;
 
