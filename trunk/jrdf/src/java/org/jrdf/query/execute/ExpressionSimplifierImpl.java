@@ -99,9 +99,11 @@ import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import static org.jrdf.query.relation.mem.StrAVPOperation.STR;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -131,11 +133,6 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
 
     @SuppressWarnings({ "unchecked" })
     public <V extends ExpressionVisitor> Expression<V> getExpression() {
-        return expression;
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    public <V extends ExpressionVisitor> Expression<V> popExpression() {
         return expression;
     }
 
@@ -202,7 +199,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return result;
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor> Expression<V> constructUnionedConjunction(Expression lhs, Expression rhs,
         V v) {
         Expression<V> expression = null;
@@ -243,7 +240,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         expression = new Optional<V>(lhs, rhs);
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({ "unchecked" })
     public <V extends ExpressionVisitor> void visitFilter(Filter<V> filter, V v) {
         LogicExpression<V> logicExpression = (LogicExpression<V>) getNext(filter.getRhs(), v);
         expression = getNext(filter.getLhs(), v);
@@ -284,15 +281,15 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     public <V extends ExpressionVisitor> void visitEqualsExpression(EqualsExpression<V> equalsExpression, V v) {
         Expression<V> lhs = getNext(equalsExpression.getLhs(), v);
         Expression<V> rhs = getNext(equalsExpression.getRhs(), v);
-        final Expression<V>[] pair = reorderPairs(lhs, rhs);
+        final List<Expression<V>> pair = reorderPairs(lhs, rhs);
         boolean changed = equateExpressions(lhs, rhs);
         if (!changed) {
-            changed = equateAVOs(pair[0].getAVO(), pair[1].getAVO());
+            changed = equateAVOs(pair.get(0).getAVO(), pair.get(1).getAVO());
             if (changed) {
                 expression = null;
             } else {
-                lhs = pair[0];
-                rhs = pair[1];
+                lhs = pair.get(0);
+                rhs = pair.get(1);
                 expression = new EqualsExpression<V>(lhs, rhs);
             }
         }
@@ -340,17 +337,16 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return FALSE_EXPRESSION.equals(exp);
     }
 
-    @SuppressWarnings({ "unchecked" })
-    private <V extends ExpressionVisitor> Expression<V>[] reorderPairs(Expression<V> lhs, Expression<V> rhs) {
-        Expression<V>[] result = new Expression[2];
+    private <V extends ExpressionVisitor> List<Expression<V>> reorderPairs(Expression<V> lhs, Expression<V> rhs) {
+        List<Expression<V>> result = new ArrayList<Expression<V>>(2);
         final int lhsSize = lhs.size();
         final int rhsSize = rhs.size();
         if (lhsSize >= rhsSize) {
-            result[0] = lhs;
-            result[1] = rhs;
+            result.add(0, lhs);
+            result.add(1, rhs);
         } else {
-            result[0] = rhs;
-            result[1] = lhs;
+            result.add(0, rhs);
+            result.add(1, lhs);
         }
         return result;
     }
