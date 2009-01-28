@@ -61,7 +61,6 @@ package org.jrdf.query.relation.operation.mem.join.natural;
 
 import org.jrdf.query.relation.operation.mem.join.NadicJoinImpl;
 
-@SuppressWarnings({ "unchecked" })
 public class SortMergeNaturalJoinIntegrationTest extends AbstractNaturalJoinIntegrationTest {
     protected void setUp() throws Exception {
         nadicJoin = new NadicJoinImpl(FACTORY.getNewRelationProcessor(), FACTORY.getNewSortMergeNaturalJoinEngine());

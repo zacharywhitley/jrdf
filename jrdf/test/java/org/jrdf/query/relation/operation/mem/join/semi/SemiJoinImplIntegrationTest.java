@@ -100,7 +100,6 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 717 $
  */
-@SuppressWarnings({ "unchecked" })
 public class SemiJoinImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final DyadicJoin JOIN = FACTORY.getNewSemiJoin();
