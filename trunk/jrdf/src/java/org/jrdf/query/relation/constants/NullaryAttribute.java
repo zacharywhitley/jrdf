@@ -131,9 +131,8 @@ public final class NullaryAttribute implements Attribute, Serializable {
             return "Null";
         }
 
-        @SuppressWarnings({ "unchecked" })
         public Set<? extends NodeType> composedOf() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         public void accept(NodeTypeVisitor visitor) {

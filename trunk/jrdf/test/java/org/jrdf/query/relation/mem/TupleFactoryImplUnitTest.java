@@ -76,7 +76,6 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision:$
  */
-@SuppressWarnings({ "unchecked" })
 public class TupleFactoryImplUnitTest extends TestCase {
     private static final MockFactory FACTORY = new MockFactory();
     private static final Map<Attribute, ValueOperation> MOCK_AVP = FACTORY.createMock(Map.class);
