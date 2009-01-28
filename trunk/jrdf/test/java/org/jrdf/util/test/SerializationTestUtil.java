@@ -59,14 +59,17 @@
 
 package org.jrdf.util.test;
 
-import static com.gargoylesoftware.base.testing.TestUtil.*;
-import static junit.framework.Assert.*;
+import static com.gargoylesoftware.base.testing.TestUtil.testSerialization;
+import static junit.framework.Assert.assertEquals;
 import junit.framework.AssertionFailedError;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkContainsField;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfType;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldStatic;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.*;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -82,7 +85,7 @@ public final class SerializationTestUtil {
     private static final Class<Long> CLASS_LONG_PRIMITIVE = long.class;
     private static final boolean CHECK_BY_EQUALITY = false;
 
-    public static void checkSerializability(Class<? extends Serializable> cls) {
+    public static void checkSerializability(Class<?> cls) {
         checkContainsSerialVersionUid(cls);
         canBeSerialized(cls);
     }

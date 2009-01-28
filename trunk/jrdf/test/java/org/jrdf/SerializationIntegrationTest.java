@@ -78,9 +78,9 @@ import org.jrdf.vocabulary.Vocabulary;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Checks that all classes that claim to be {@link java.io.Serializable} can actually be serialized and contain a
@@ -99,13 +99,13 @@ public final class SerializationIntegrationTest extends TestCase {
     public void testSerializationClaims() {
         File packageRoot = getLocation(PATH_ROOT);
         Collection<File> allClasses = new RecursiveFileFinder().findFiles(packageRoot, new JavaClassFileFilter());
-        Collection<Class<? extends Serializable>> serializableClasses = getSerializableClasses(packageRoot, allClasses);
+        Collection<Class<?>> serializableClasses = getSerializableClasses(packageRoot, allClasses);
         checkSerializability(serializableClasses);
     }
 
     // FIXME TJA: Remove excluded classes once all classes serialize
-    private void checkSerializability(Collection<Class<? extends Serializable>> serializables) {
-        for (Class<? extends Serializable> cls : serializables) {
+    private void checkSerializability(Collection<Class<?>> serializables) {
+        for (Class<?> cls : serializables) {
             if (!excuseFromSerializationCheck(cls)) {
                 SerializationTestUtil.checkSerializability(cls);
             }
@@ -113,7 +113,7 @@ public final class SerializationIntegrationTest extends TestCase {
     }
 
     // Note. We can't & don't check the serializability of interfaces.
-    private boolean excuseFromSerializationCheck(Class<? extends Serializable> cls) {
+    private boolean excuseFromSerializationCheck(Class<?> cls) {
         Collection<Class<?>> excludedClasses = getExcludedClasses();
         return excludedClasses.contains(cls) || ClassPropertiesTestUtil.isClassAnInterface(cls);
     }
@@ -134,15 +134,12 @@ public final class SerializationIntegrationTest extends TestCase {
         return excludedClasses;
     }
 
-    // FIXME TJA: Try to remove unchecked cast below.
-    @SuppressWarnings("unchecked")
-    private Collection<Class<? extends Serializable>> getSerializableClasses(File packageRoot,
-        Collection<File> classes) {
-        Collection<Class<? extends Serializable>> serializables = new ArrayList<Class<? extends Serializable>>();
+    private Collection<Class<?>> getSerializableClasses(File packageRoot, Collection<File> classes) {
+        List<Class<?>> serializables = new ArrayList<Class<?>>();
         for (File file : classes) {
             Class<?> cls = getClass(packageRoot, file);
             if (isMarkedAsSerializable(cls)) {
-                serializables.add((Class<? extends Serializable>) cls);
+                serializables.add(cls);
             }
         }
         return serializables;
