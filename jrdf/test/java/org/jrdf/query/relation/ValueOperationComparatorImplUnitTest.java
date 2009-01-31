@@ -75,7 +75,6 @@ import java.lang.reflect.Modifier;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class ValueOperationComparatorImplUnitTest extends TestCase {
     private static final ComparatorFactory FACTORY = new ComparatorFactoryImpl();
     private ValueOperationComparator comparator;

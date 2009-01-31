@@ -67,7 +67,6 @@ import org.jrdf.query.relation.mem.AVPOperation;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class ValueOperationComparatorImpl implements ValueOperationComparator {
     private static final long serialVersionUID = 176924923562314987L;
     private NodeComparator nodeComparator;
