@@ -72,8 +72,7 @@ import java.util.LinkedHashMap;
  * @author Yuan-Fang Li
  * @version :$
  */
-
-public class Filter<V extends ExpressionVisitor> implements BiOperandExpression, Serializable {
+public class Filter implements BiOperandExpression, Serializable {
     private static final long serialVersionUID = 7695585379424077889L;
     private static final int DUMMY_HASHCODE = 47;
     private Expression lhs;

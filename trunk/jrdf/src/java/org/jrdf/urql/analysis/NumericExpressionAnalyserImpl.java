@@ -63,7 +63,6 @@ import org.jrdf.graph.AnyNode;
 import org.jrdf.graph.Node;
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
@@ -101,7 +100,7 @@ import org.jrdf.urql.parser.parser.ParserException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NumericExpressionAnalyserImpl<V extends ExpressionVisitor> extends DepthFirstAdapter
+public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     implements NumericExpressionAnalyser {
     private ParserException exception;
     private AVPOperation operation;

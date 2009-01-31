@@ -59,7 +59,6 @@
 
 package org.jrdf.query.relation.operation;
 
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
@@ -83,5 +82,5 @@ public interface Restrict extends Operation {
     Relation restrict(Relation relation, LinkedHashMap<Attribute, ValueOperation> avo);
     Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, ValueOperation> avo);
     Relation restrict(Map<Attribute, ValueOperation> avo);
-    <V extends ExpressionVisitor> Relation restrict(Relation relation, LogicExpression expression);
+    Relation restrict(Relation relation, LogicExpression expression);
 }

@@ -69,7 +69,6 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public final class BoundAVPOperation implements AVPOperation {
     private static final long serialVersionUID = 6228838707584485885L;
 
