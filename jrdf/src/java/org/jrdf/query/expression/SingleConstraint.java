@@ -65,10 +65,8 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.util.EqualsUtil.differentClasses;
 import static org.jrdf.util.EqualsUtil.isNull;
@@ -93,30 +91,30 @@ public final class SingleConstraint implements Constraint {
     private static final int DUMMY_HASHCODE = 47;
     private static final String OWL_BASE_URI = "http://www.w3.org/2002/07/owl#";
 
-    private LinkedHashMap<Attribute, ValueOperation> singleAvp;
+    private LinkedHashMap<Attribute, Node> singleAvp;
 
     private SingleConstraint() {
     }
 
-    public SingleConstraint(LinkedHashMap<Attribute, ValueOperation> singleAvp) {
+    public SingleConstraint(LinkedHashMap<Attribute, Node> singleAvp) {
         checkNotNull(singleAvp);
         this.singleAvp = singleAvp;
     }
 
-    public void setAvo(Attribute existingAttribute, ValueOperation newValueOperation) {
-        singleAvp.put(existingAttribute, newValueOperation);
+    public void setAttributeValue(Attribute existingAttribute, Node newValue) {
+        singleAvp.put(existingAttribute, newValue);
     }
 
     public Set<Attribute> getHeadings() {
         return singleAvp.keySet();
     }
 
-    public Map<Attribute, ValueOperation> getAVO() {
+    public Map<Attribute, Node> getValue() {
         return getAvo(null);
     }
 
-    public LinkedHashMap<Attribute, ValueOperation> getAvo(Map<AttributeName, ? extends NodeType> allVariables) {
-        LinkedHashMap<Attribute, ValueOperation> newAvps = new LinkedHashMap<Attribute, ValueOperation>();
+    public LinkedHashMap<Attribute, Node> getAvo(Map<AttributeName, ? extends NodeType> allVariables) {
+        LinkedHashMap<Attribute, Node> newAvps = new LinkedHashMap<Attribute, Node>();
         for (Attribute existingAttribute : singleAvp.keySet()) {
             Attribute newAttribute;
             if (allVariables != null) {
@@ -124,7 +122,7 @@ public final class SingleConstraint implements Constraint {
             } else {
                 newAttribute = existingAttribute;
             }
-            newAvps.put(newAttribute, new ValueOperationImpl(singleAvp.get(existingAttribute).getValue()));
+            newAvps.put(newAttribute, singleAvp.get(existingAttribute));
         }
         return newAvps;
     }
@@ -132,8 +130,7 @@ public final class SingleConstraint implements Constraint {
     public int size() {
         int result = 0;
         for (Attribute attribute : singleAvp.keySet()) {
-            final ValueOperation valueOperation = singleAvp.get(attribute);
-            final Node node = valueOperation.getValue();
+            final Node node = singleAvp.get(attribute);
             if (isAnyNode(node)) {
                 result += 2;
             } else if (isBuiltinNode(node)) {

@@ -59,10 +59,10 @@
 
 package org.jrdf.query.execute;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 
 import java.util.Set;
@@ -73,7 +73,7 @@ import java.util.Set;
  * @version $Id: $
  */
 public interface ConstraintTupleCacheHandler {
-    Set<ValueOperation> getCachedValues(AttributeName name);
+    Set<Node> getCachedValues(AttributeName name);
 
     void reset(Relation result, int constraintListSize);
 

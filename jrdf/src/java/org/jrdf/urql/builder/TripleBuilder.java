@@ -59,16 +59,16 @@
 
 package org.jrdf.urql.builder;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.parser.node.Switch;
 import org.jrdf.urql.parser.parser.ParserException;
 
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public interface TripleBuilder extends Switch {
-    LinkedHashMap<Attribute, ValueOperation> getTriples() throws ParserException;
+    LinkedHashMap<Attribute, Node> getTriples() throws ParserException;
 
     void addPrefix(String identifier, String resource);
 

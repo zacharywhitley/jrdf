@@ -59,8 +59,8 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
@@ -73,17 +73,17 @@ public final class LangOperator implements Operator {
     private static final long serialVersionUID = -6423244147349910918L;
 
     private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
+    private Map<Attribute, Node> singleAvp;
     protected static final String LANG = "lang";
 
     private LangOperator() {
     }
 
-    public LangOperator(Map<Attribute, ValueOperation> singleAvp) {
+    public LangOperator(Map<Attribute, Node> singleAvp) {
         this.singleAvp = singleAvp;
     }
 
-    public Map<Attribute, ValueOperation> getAVO() {
+    public Map<Attribute, Node> getValue() {
         return singleAvp;
     }
 
@@ -102,8 +102,8 @@ public final class LangOperator implements Operator {
 
     @Override
     public String toString() {
-        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
-        Attribute attribute = attributeValueOperationEntry.getKey();
+        Map.Entry<Attribute, Node> attributeValue = singleAvp.entrySet().iterator().next();
+        Attribute attribute = attributeValue.getKey();
         return LANG + " (" + attribute + ")";
     }
 

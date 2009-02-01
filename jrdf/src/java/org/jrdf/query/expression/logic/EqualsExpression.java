@@ -59,15 +59,15 @@
 
 package org.jrdf.query.expression.logic;
 
+import org.jrdf.graph.Node;
+import org.jrdf.query.expression.BiOperandExpression;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.BiOperandExpression;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
@@ -89,10 +89,10 @@ public class EqualsExpression implements LogicExpression, BiOperandExpression {
         this.rhs = rhs;
     }
 
-    public Map<Attribute, ValueOperation> getAVO() {
-        Map<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>();
-        map.putAll(lhs.getAVO());
-        map.putAll(rhs.getAVO());
+    public Map<Attribute, Node> getValue() {
+        Map<Attribute, Node> map = new LinkedHashMap<Attribute, Node>();
+        map.putAll(lhs.getValue());
+        map.putAll(rhs.getValue());
         return map;
     }
 

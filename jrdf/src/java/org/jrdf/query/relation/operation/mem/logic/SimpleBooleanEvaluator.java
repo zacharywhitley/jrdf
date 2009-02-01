@@ -82,7 +82,6 @@ import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.vocabulary.XSD;
 
@@ -112,48 +111,48 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
 
     @Override
     public void visitSingleValue(SingleValue singleValue) {
-        Map<Attribute, ValueOperation> avo = singleValue.getAVO();
+        Map<Attribute, Node> avo = singleValue.getValue();
         Attribute attribute = avo.keySet().iterator().next();
-        Node node = avo.get(attribute).getValue();
-        final ValueOperation valueOperation = tuple.getValueOperation(attribute);
+        Node node = avo.get(attribute);
+        final Node value = tuple.getValue(attribute);
         if (ANY_NODE.equals(node)) {
-            if (valueOperation != null) {
-                value = valueOperation.getValue();
+            if (value != null) {
+                this.value = value;
             } else {
-                value = null;
+                this.value = null;
             }
         } else {
-            value = node;
+            this.value = node;
         }
     }
 
     @Override
     public void visitStr(StrOperator str) {
-        final ValueOperation valueOperation = getValueOperation(str);
-        if (valueOperation != null) {
-            Node node = valueOperation.getValue();
+        final Node value = getValue(str);
+        if (value != null) {
+            Node node = value;
             if (Literal.class.isAssignableFrom(node.getClass())) {
-                Literal literal = (Literal) valueOperation.getValue();
-                value = new LiteralImpl(literal.getLexicalForm());
+                Literal literal = (Literal) value;
+                this.value = new LiteralImpl(literal.getLexicalForm());
             }
         }
     }
 
     @Override
     public void visitLang(LangOperator lang) {
-        final ValueOperation valueOperation = getValueOperation(lang);
-        if (valueOperation != null) {
-            Node node = valueOperation.getValue();
+        final Node value = getValue(lang);
+        if (value != null) {
+            Node node = value;
             if (Literal.class.isAssignableFrom(node.getClass())) {
                 Literal literal = (Literal) node;
-                value = new LiteralImpl(literal.getLanguage());
+                this.value = new LiteralImpl(literal.getLanguage());
             }
         }
     }
 
     @Override
     public void visitBound(BoundOperator bound) {
-        final ValueOperation valueOperation = getValueOperation(bound);
+        final Node valueOperation = getValue(bound);
         contradiction = (valueOperation == null);
         value = new LiteralImpl(Boolean.toString(contradiction), XSD.BOOLEAN);
     }
@@ -211,10 +210,10 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         contradiction = true;
     }
 
-    private ValueOperation getValueOperation(Operator str) {
-        final Map<Attribute, ValueOperation> avp = str.getAVO();
+    private Node getValue(Operator str) {
+        final Map<Attribute, Node> avp = str.getValue();
         Attribute attribute = avp.keySet().iterator().next();
-        return tuple.getValueOperation(attribute);
+        return tuple.getValue(attribute);
     }
 
     private int compareNodes(Node lNode, Node rNode) {

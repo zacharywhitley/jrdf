@@ -59,12 +59,12 @@
 
 package org.jrdf.query.relation.operation.mem.project;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.operation.Project;
 
 import java.util.HashMap;
@@ -126,8 +126,8 @@ public class ProjectImpl implements Project {
     }
 
     private Tuple createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
-        Map<Attribute, ValueOperation> avps = tuple.getAttributeValues();
-        Map<Attribute, ValueOperation> newAvps = new HashMap<Attribute, ValueOperation>();
+        Map<Attribute, Node> avps = tuple.getAttributeValues();
+        Map<Attribute, Node> newAvps = new HashMap<Attribute, Node>();
         for (Attribute attribute : avps.keySet()) {
             if (newHeading.contains(attribute)) {
                 newAvps.put(attribute, avps.get(attribute));

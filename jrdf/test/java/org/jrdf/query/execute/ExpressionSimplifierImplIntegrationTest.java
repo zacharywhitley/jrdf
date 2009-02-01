@@ -84,10 +84,8 @@ import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
@@ -162,10 +160,10 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     public void testSimpleFilter() throws Exception {
         String queryText = "SELECT * WHERE { ?s ?p ?o FILTER (str(?o) = \"abc\") }";
         Literal literal = createLiteral("abc");
-        Map<Attribute, ValueOperation> subj = createSingleAVP(ATTR_S, ANY_SUBJECT_NODE);
-        Map<Attribute, ValueOperation> pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE);
-        Map<Attribute, ValueOperation> obj = createSingleAVP(ATTR_O, literal);
-        LinkedHashMap<Attribute, ValueOperation> map = createSingleAVP(subj, pred, obj);
+        Map<Attribute, Node> subj = createSingleAVP(ATTR_S, ANY_SUBJECT_NODE);
+        Map<Attribute, Node> pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE);
+        Map<Attribute, Node> obj = createSingleAVP(ATTR_O, literal);
+        LinkedHashMap<Attribute, Node> map = createSingleAVP(subj, pred, obj);
         SingleConstraint constraint = new SingleConstraint(map);
         getExpression(queryText, constraint);
         queryText = "ASK WHERE { ?s ?p ?o FILTER (str(?o) = \"abc\") }";
@@ -186,15 +184,15 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
 
     public void testComplexFilter() throws Exception {
         String queryText = "SELECT * WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1 && str(?o1) = \"abc\") }";
-        Map<Attribute, ValueOperation> subj = createSingleAVP(ATTR_S, ANY_SUBJECT_NODE);
-        Map<Attribute, ValueOperation> pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE);
+        Map<Attribute, Node> subj = createSingleAVP(ATTR_S, ANY_SUBJECT_NODE);
+        Map<Attribute, Node> pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE);
         Literal literal = createLiteral("abc");
-        Map<Attribute, ValueOperation> obj = createSingleAVP(ATTR_O, literal);
-        final LinkedHashMap<Attribute, ValueOperation> avp1 = createSingleAVP(subj, pred, obj);
+        Map<Attribute, Node> obj = createSingleAVP(ATTR_O, literal);
+        final LinkedHashMap<Attribute, Node> avp1 = createSingleAVP(subj, pred, obj);
         SingleConstraint constraint1 = new SingleConstraint(avp1);
         Attribute attrS1 = new AttributeImpl(ATTRIBUTE_S1, SUBJECT_NODE_TYPE);
-        Map<Attribute, ValueOperation> subj1 = createSingleAVP(attrS1, ANY_SUBJECT_NODE);
-        final LinkedHashMap<Attribute, ValueOperation> avp2 = createSingleAVP(subj1, pred, obj);
+        Map<Attribute, Node> subj1 = createSingleAVP(attrS1, ANY_SUBJECT_NODE);
+        final LinkedHashMap<Attribute, Node> avp2 = createSingleAVP(subj1, pred, obj);
         SingleConstraint constraint2 = new SingleConstraint(avp2);
         Conjunction conj = new Conjunction(constraint1, constraint2);
         getExpression(queryText, conj);
@@ -205,9 +203,9 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     public void testComplexFilter1() throws Exception {
         String queryText = "SELECT * WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1 && str(?o1) != \"abc\") }";
         Literal literal = createLiteral("abc");
-        Map<Attribute, ValueOperation> filterLhs = createSingleAVP(ATTR_O, ANY_NODE);
+        Map<Attribute, Node> filterLhs = createSingleAVP(ATTR_O, ANY_NODE);
         Expression strOp = new StrOperator(filterLhs);
-        Map<Attribute, ValueOperation> filterRhs = createSingleAVP(ATTR_O, literal);
+        Map<Attribute, Node> filterRhs = createSingleAVP(ATTR_O, literal);
         Expression singleValue = new SingleValue(filterRhs);
         NEqualsExpression neq = new NEqualsExpression(strOp, singleValue);
         Conjunction conj = new Conjunction(SPO_CONSTRAINT, S1PO_CONSTRAINT);
@@ -218,9 +216,9 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     public void testComplexFilter2() throws Exception {
         String queryText = "ASK WHERE { ?s ?p ?o . ?s1 ?p ?o1 FILTER (?o = ?o1 && str(?o1) != \"abc\") }";
         Literal literal = createLiteral("abc");
-        Map<Attribute, ValueOperation> filterLhs = createSingleAVP(ATTR_O1, ANY_NODE);
+        Map<Attribute, Node> filterLhs = createSingleAVP(ATTR_O1, ANY_NODE);
         Expression strOp = new StrOperator(filterLhs);
-        Map<Attribute, ValueOperation> filterRhs = createSingleAVP(ATTR_O1, literal);
+        Map<Attribute, Node> filterRhs = createSingleAVP(ATTR_O1, literal);
         Expression singleValue = new SingleValue(filterRhs);
         NEqualsExpression neq = new NEqualsExpression(strOp, singleValue);
         Conjunction conj = new Conjunction(SPO1_CONSTRAINT, S1PO1_CONSTRAINT);
@@ -259,7 +257,7 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
 
     public void testBooleanEquals() throws Exception {
         String queryText = "SELECT * WHERE { ?s ?p ?o FILTER (bound(?o) = true) }";
-        Map<Attribute, ValueOperation> obj = createSingleAVP(ATTR_O, ANY_NODE);
+        Map<Attribute, Node> obj = createSingleAVP(ATTR_O, ANY_NODE);
         LogicExpression boundExp = new BoundOperator(obj);
         Filter filter = new Filter(SPO_CONSTRAINT, boundExp);
         getExpression(queryText, filter);
@@ -277,24 +275,24 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
         filter = new Filter(SPO_CONSTRAINT, notExp);
         getExpression(queryText, filter);
         queryText = "SELECT * WHERE { ?s ?p ?o FILTER ((bound(?o) && bound(?s)) = true) }";
-        Map<Attribute, ValueOperation> subj = createSingleAVP(ATTR_S, ANY_NODE);
+        Map<Attribute, Node> subj = createSingleAVP(ATTR_S, ANY_NODE);
         LogicExpression boundExp1 = new BoundOperator(subj);
         LogicExpression andExp = new LogicAndExpression(boundExp, boundExp1);
         filter = new Filter(SPO_CONSTRAINT, andExp);
         getExpression(queryText, filter);
     }
 
-    protected LinkedHashMap<Attribute, ValueOperation> createSingleAVP(Map<Attribute, ValueOperation>... avps) {
-        LinkedHashMap<Attribute, ValueOperation> map = new LinkedHashMap<Attribute, ValueOperation>();
-        for (Map<Attribute, ValueOperation> avp : avps) {
+    protected LinkedHashMap<Attribute, Node> createSingleAVP(Map<Attribute, Node>... avps) {
+        LinkedHashMap<Attribute, Node> map = new LinkedHashMap<Attribute, Node>();
+        for (Map<Attribute, Node> avp : avps) {
             map.putAll(avp);
         }
         return map;
     }
 
-    protected Map<Attribute, ValueOperation> createSingleAVP(Attribute attrO, Node node) {
-        Map<Attribute, ValueOperation> lhs = new HashMap<Attribute, ValueOperation>();
-        ValueOperation lvalue = new ValueOperationImpl(node);
+    protected Map<Attribute, Node> createSingleAVP(Attribute attrO, org.jrdf.graph.Node node) {
+        Map<Attribute, Node> lhs = new HashMap<Attribute, Node>();
+        Node lvalue = node;
         lhs.put(attrO, lvalue);
         return lhs;
     }

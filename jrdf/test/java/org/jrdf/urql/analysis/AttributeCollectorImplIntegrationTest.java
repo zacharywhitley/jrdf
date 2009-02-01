@@ -59,18 +59,18 @@
 
 package org.jrdf.urql.analysis;
 
-import static com.gargoylesoftware.base.testing.TestUtil.*;
+import static com.gargoylesoftware.base.testing.TestUtil.copyBySerialization;
 import junit.framework.TestCase;
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.*;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.Map;
 
 public class AttributeCollectorImplIntegrationTest extends TestCase {
-    private static final Map<Attribute, ValueOperation> VALUE_1 = POS_FOO1_SUBJECT_R1;
+    private static final Map<Attribute, Node> VALUE_1 = POS_FOO1_SUBJECT_R1;
 
     public void testSerialization() throws Exception {
         VariableCollector collector = new AttributeCollectorImpl();

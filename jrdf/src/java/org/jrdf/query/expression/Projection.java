@@ -59,8 +59,8 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.NodeType;
@@ -102,8 +102,8 @@ public final class Projection implements Expression {
         this.allVariables = collector.getAttributes();
     }
 
-    public Map<Attribute, ValueOperation> getAVO() {
-        return nextExpression.getAVO();
+    public Map<Attribute, Node> getValue() {
+        return nextExpression.getValue();
     }
 
     public LinkedHashSet<Attribute> getAttributes() {

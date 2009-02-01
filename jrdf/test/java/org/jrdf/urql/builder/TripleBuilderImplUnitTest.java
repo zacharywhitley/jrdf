@@ -62,10 +62,10 @@ package org.jrdf.urql.builder;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
@@ -145,18 +145,18 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     }
 
     private void checkBuiltTripleWithVariable(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
-        Map<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
+        Map<Attribute, Node> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
     private void checkBuiltTripleWithLiteral(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
-        Map<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
+        Map<Attribute, Node> avp = AVP_HELPER.createLinkedAvo(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
-    private void checkBuildTriple(Map<Attribute, ValueOperation> expectedAvp, ATriple triple) throws Exception {
+    private void checkBuildTriple(Map<Attribute, Node> expectedAvp, ATriple triple) throws Exception {
         triple.apply(tripleBuilder);
-        Map<Attribute, ValueOperation> actualAvp = tripleBuilder.getTriples();
+        Map<Attribute, Node> actualAvp = tripleBuilder.getTriples();
         assertEquals(expectedAvp, actualAvp);
     }
 }

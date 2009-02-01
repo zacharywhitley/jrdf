@@ -65,11 +65,9 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.urql.builder.TokenHelper.getResource;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
@@ -98,7 +96,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     private final Attribute attribute;
     private final Graph currentGraph;
     private final Map<String, String> prefixMap;
-    private Map<Attribute, ValueOperation> avp = new HashMap<Attribute, ValueOperation>();
+    private Map<Attribute, Node> avp = new HashMap<Attribute, Node>();
     private ParserException exception;
     private LiteralBuilder literalBuilder;
 
@@ -112,7 +110,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         literalBuilder = new LiteralBuilderImpl(currentGraph.getElementFactory(), prefixMap);
     }
 
-    public Map<Attribute, ValueOperation> getElement() throws ParserException {
+    public Map<Attribute, Node> getElement() throws ParserException {
         if (exception != null) {
             throw exception;
         } else {
@@ -123,14 +121,14 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     @Override
     public void caseAResourceResourceTripleElement(AResourceResourceTripleElement node) {
         Node value = createResource(getResource(node.getResource()));
-        avp.put(attribute, new ValueOperationImpl(value));
+        avp.put(attribute, value);
     }
 
     @Override
     public void caseAQnameResourceTripleElement(AQnameResourceTripleElement node) {
         AQnameQnameElement element = (AQnameQnameElement) node.getQnameElement();
         Node value = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
-        avp.put(attribute, new ValueOperationImpl(value));
+        avp.put(attribute, value);
     }
 
     @Override
@@ -141,14 +139,14 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     @Override
     public void caseAResourceObjectTripleElement(AResourceObjectTripleElement node) {
         Node value = createResource(getResource(node.getResource()));
-        avp.put(attribute, new ValueOperationImpl(value));
+        avp.put(attribute, value);
     }
 
     @Override
     public void caseAQnameObjectTripleElement(AQnameObjectTripleElement node) {
         AQnameQnameElement element = (AQnameQnameElement) node.getQnameElement();
         Node value = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
-        avp.put(attribute, new ValueOperationImpl(value));
+        avp.put(attribute, value);
     }
 
     @Override
@@ -159,13 +157,13 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     @Override
     public void caseALiteralObjectTripleElement(ALiteralObjectTripleElement node) {
         Node value = createLiteral(node);
-        avp.put(attribute, new ValueOperationImpl(value));
+        avp.put(attribute, value);
     }
 
     private void createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
         AttributeName attributeName = new VariableName(variableName);
         Attribute att = new AttributeImpl(attributeName, type);
-        avp.put(att, new ValueOperationImpl(anyNode));
+        avp.put(att, anyNode);
     }
 
     private String getVariableName(AVariableResourceTripleElement element) {

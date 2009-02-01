@@ -65,13 +65,12 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.ValueOperation;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Iterator;
 
 public final class TupleComparatorImpl implements TupleComparator {
     private static final long serialVersionUID = 7276502975947499595L;
@@ -88,8 +87,8 @@ public final class TupleComparatorImpl implements TupleComparator {
 
     public int compare(Tuple o1, Tuple o2) {
         ifNullThrowException(o1, o2);
-        Map<Attribute, ValueOperation> attributeValues1 = o1.getAttributeValues();
-        Map<Attribute, ValueOperation> attributeValues2 = o2.getAttributeValues();
+        Map<Attribute, Node> attributeValues1 = o1.getAttributeValues();
+        Map<Attribute, Node> attributeValues2 = o2.getAttributeValues();
         int result = compareSize(attributeValues1, attributeValues2);
         if (result == 0) {
             result = compareAttributeValues(attributeValues1,  attributeValues2);
@@ -108,8 +107,8 @@ public final class TupleComparatorImpl implements TupleComparator {
         }
     }
 
-    private int compareSize(Map<Attribute, ValueOperation> attributeValues1,
-        Map<Attribute, ValueOperation> attributeValues2) {
+    private int compareSize(Map<Attribute, Node> attributeValues1,
+        Map<Attribute, Node> attributeValues2) {
         int result = 0;
         if (attributeValues1.size() > attributeValues2.size()) {
             result = 1;
@@ -120,13 +119,13 @@ public final class TupleComparatorImpl implements TupleComparator {
     }
 
     // TODO YF doesn't take into consideration different AVPOperations
-    private int compareAttributeValues(Map<Attribute, ValueOperation> attributeValues1,
-        Map<Attribute, ValueOperation> attributeValues2) {
+    private int compareAttributeValues(Map<Attribute, Node> attributeValues1,
+        Map<Attribute, Node> attributeValues2) {
         int result = 0;
         for (Attribute attribute : attributeValues1.keySet()) {
             if (attributeValues2.keySet().contains(attribute)) {
-                final Node value1 = attributeValues1.get(attribute).getValue();
-                final Node value2 = attributeValues2.get(attribute).getValue();
+                final org.jrdf.graph.Node value1 = attributeValues1.get(attribute);
+                final org.jrdf.graph.Node value2 = attributeValues2.get(attribute);
                 result = nodeComparator.compare(value1, value2);
                 if (result != 0) {
                     break;

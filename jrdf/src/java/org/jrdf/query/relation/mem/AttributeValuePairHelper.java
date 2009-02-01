@@ -59,9 +59,9 @@
 
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -73,7 +73,7 @@ import java.util.Map;
  * @version $Revision:$
  */
 public interface AttributeValuePairHelper {
-    LinkedHashMap<Attribute, ValueOperation> createLinkedAvo(Triple triple, Attribute[] attributes);
+    LinkedHashMap<Attribute, Node> createLinkedAvo(Triple triple, Attribute[] attributes);
 
-    Map<Attribute, ValueOperation> createAvo(Triple triple, Attribute[] attributes);
+    Map<Attribute, Node> createAvo(Triple triple, Attribute[] attributes);
 }

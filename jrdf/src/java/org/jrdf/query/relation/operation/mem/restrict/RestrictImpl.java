@@ -59,6 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.restrict;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
@@ -67,7 +68,6 @@ import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.query.relation.operation.Restrict;
@@ -99,7 +99,7 @@ public class RestrictImpl implements Restrict {
     }
 
     // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
-    public Relation restrict(Relation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
+    public Relation restrict(Relation relation, LinkedHashMap<Attribute, Node> avo) {
         if (relation instanceof GraphRelation) {
             return restrict((GraphRelation) relation, avo);
         } else {
@@ -109,7 +109,7 @@ public class RestrictImpl implements Restrict {
         }
     }
 
-    public Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, ValueOperation> avo) {
+    public Relation restrict(GraphRelation relation, LinkedHashMap<Attribute, Node> avo) {
         Set<Tuple> restrictedTuples = relation.getTuples(avo);
         boolean hasValidVarName = relationHasValidVariableNames(relation);
         return createRelation(relation, restrictedTuples, hasValidVarName);
@@ -136,7 +136,7 @@ public class RestrictImpl implements Restrict {
         }
     }
 
-    public Relation restrict(Map<Attribute, ValueOperation> avo) {
+    public Relation restrict(Map<Attribute, Node> avo) {
         Tuple tuple = tupleFactory.getTuple(avo);
         SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
         resultTuples.add(tuple);

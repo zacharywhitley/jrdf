@@ -92,8 +92,6 @@ import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.expression.logic.TrueExpression;
 import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,9 +109,9 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     private Expression expression;
     private Set<Attribute> declaredVariables;
     private Map<Attribute, Attribute> variableMap;
-    private Map<Attribute, ValueOperation> newAttributeValues;
+    private Map<Attribute, Node> newAttributeValues;
 
-    public ExpressionSimplifierImpl(Map<Attribute, ValueOperation> newAttributeValues,
+    public ExpressionSimplifierImpl(Map<Attribute, Node> newAttributeValues,
         Map<Attribute, Attribute> variableMap, Set<Attribute> declaredVariables) {
         this.newAttributeValues = newAttributeValues;
         this.variableMap = variableMap;
@@ -121,7 +119,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     }
 
     public ExpressionSimplifierImpl() {
-        this.newAttributeValues = new HashMap<Attribute, ValueOperation>();
+        this.newAttributeValues = new HashMap<Attribute, Node>();
         this.variableMap = new HashMap<Attribute, Attribute>();
         this.declaredVariables = new LinkedHashSet<Attribute>();
     }
@@ -271,7 +269,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         final List<Expression> pair = reorderPairs(lhs, rhs);
         boolean changed = equateExpressions(lhs, rhs);
         if (!changed) {
-            changed = equateAVOs(pair.get(0).getAVO(), pair.get(1).getAVO());
+            changed = equateAVOs(pair.get(0).getValue(), pair.get(1).getValue());
             if (changed) {
                 expression = null;
             } else {
@@ -338,11 +336,11 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return result;
     }
 
-    private boolean equateAVOs(Map<Attribute, ValueOperation> lhs, Map<Attribute, ValueOperation> rhs) {
+    private boolean equateAVOs(Map<Attribute, Node> lhs, Map<Attribute, Node> rhs) {
         Attribute attribute = lhs.keySet().iterator().next();
-        ValueOperation lvo = lhs.get(attribute);
-        ValueOperation rvo = rhs.get(attribute);
-        if (isAnyNode(lvo.getValue())) {
+        Node lvo = lhs.get(attribute);
+        Node rvo = rhs.get(attribute);
+        if (isAnyNode(lvo)) {
             if (rvo != null) {
                 updateAttributeValue(attribute, lvo, rvo);
             } else {
@@ -354,16 +352,15 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return false;
     }
 
-    private void updateAttributeValue(Attribute attribute, ValueOperation lvo, ValueOperation rvo) {
-        ValueOperation newVO = new ValueOperationImpl(rvo.getValue());
+    private void updateAttributeValue(Attribute attribute, Node lvo, Node rvo) {
         final Attribute value = variableMap.get(attribute);
-        newAttributeValues.put(attribute, newVO);
+        newAttributeValues.put(attribute, rvo);
         if (value != null) {
-            newAttributeValues.put(value, newVO);
+            newAttributeValues.put(value, rvo);
         }
     }
 
-    private void updateVariableMap(Map<Attribute, ValueOperation> rhs, Attribute attribute) {
+    private void updateVariableMap(Map<Attribute, Node> rhs, Attribute attribute) {
         Attribute newAttr = rhs.keySet().iterator().next();
         Attribute key, value;
         if (declaredVariables.contains(attribute)) {
@@ -380,10 +377,10 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         variableMap.put(key, fixPoint);
     }
 
-    private LinkedHashMap<Attribute, ValueOperation> updateAVPVariables(Map<Attribute, ValueOperation> avp) {
-        LinkedHashMap<Attribute, ValueOperation> newAVP = new LinkedHashMap<Attribute, ValueOperation>();
+    private LinkedHashMap<Attribute, Node> updateAVPVariables(Map<Attribute, Node> avp) {
+        LinkedHashMap<Attribute, Node> newAVP = new LinkedHashMap<Attribute, Node>();
         for (Attribute attribute : avp.keySet()) {
-            final ValueOperation vo = avp.get(attribute);
+            final Node vo = avp.get(attribute);
             final Attribute newAttribute = variableMap.get(attribute);
             if (newAttribute != null) {
                 newAVP.put(newAttribute, vo);
@@ -394,13 +391,13 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return newAVP;
     }
 
-    private boolean isAnyNode(Node node) {
+    private boolean isAnyNode(org.jrdf.graph.Node node) {
         return node instanceof AnySubjectNode || node instanceof AnyPredicateNode ||
             node instanceof AnyObjectNode || node instanceof AnyNode;
     }
 
     public void visitConstraint(SingleConstraint constraint) {
-        LinkedHashMap<Attribute, ValueOperation> avo = updateAVO(constraint.getAvo(null));
+        LinkedHashMap<Attribute, Node> avo = updateAVO(constraint.getAvo(null));
         expression = new SingleConstraint(avo);
     }
 
@@ -420,22 +417,22 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
     }
 
     public void visitLang(LangOperator lang) {
-        LinkedHashMap<Attribute, ValueOperation> avo = updateAVPVariables(lang.getAVO());
+        LinkedHashMap<Attribute, Node> avo = updateAVPVariables(lang.getValue());
         expression = new LangOperator(avo);
     }
 
     public void visitStr(StrOperator str) {
-        LinkedHashMap<Attribute, ValueOperation> avo = updateAVPVariables(str.getAVO());
+        LinkedHashMap<Attribute, Node> avo = updateAVPVariables(str.getValue());
         expression = new StrOperator(avo);
     }
 
     public void visitSingleValue(SingleValue value) {
-        LinkedHashMap<Attribute, ValueOperation> avo = updateAVPVariables(value.getAVO());
+        LinkedHashMap<Attribute, Node> avo = updateAVPVariables(value.getValue());
         expression = new SingleValue(avo);
     }
 
-    private LinkedHashMap<Attribute, ValueOperation> updateAVO(Map<Attribute, ValueOperation> oldAvo) {
-        LinkedHashMap<Attribute, ValueOperation> avo = updateAVPVariables(oldAvo);
+    private LinkedHashMap<Attribute, Node> updateAVO(Map<Attribute, Node> oldAvo) {
+        LinkedHashMap<Attribute, Node> avo = updateAVPVariables(oldAvo);
         for (Attribute attribute : avo.keySet()) {
             if (newAttributeValues.get(attribute) != null) {
                 avo.put(attribute, newAttributeValues.get(attribute));

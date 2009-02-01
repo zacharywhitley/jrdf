@@ -59,9 +59,9 @@
 
 package org.jrdf.query.expression.logic;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
@@ -70,7 +70,6 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id:$
  */
-
 public class LogicNotExpression implements LogicExpression {
     private static final long serialVersionUID = 7468439147872226467L;
     private static final int DUMMY_HASHCODE = 47;
@@ -89,8 +88,8 @@ public class LogicNotExpression implements LogicExpression {
         v.visitLogicNot(this);
     }
 
-    public Map<Attribute, ValueOperation> getAVO() {
-        return expression.getAVO();
+    public Map<Attribute, Node> getValue() {
+        return expression.getValue();
     }
 
     public LogicExpression getExpression() {

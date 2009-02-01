@@ -62,6 +62,7 @@ package org.jrdf.query.relation.operation.mem.logic;
 import junit.framework.TestCase;
 import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Expression;
@@ -79,9 +80,7 @@ import org.jrdf.query.expression.logic.NEqualsExpression;
 import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_LITERAL;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_LITERAL_L1;
@@ -112,9 +111,6 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     private static final Tuple TEST_VARFOO_LITERAL_TUPLE_1 = createTuple(VAR_FOO1_LITERAL_L1);
     private static final Tuple TEST_VARFOO_LITERAL_TUPLE_2 = createTuple(VAR_FOO1_LITERAL_L2);
     private static final Tuple TEST_TUPLE_1_2 = createTuple(VAR_BAR1_LITERAL_L1, VAR_FOO1_LITERAL_L1);
-    private static final ValueOperation ANY_NODE_LANG_VO = new ValueOperationImpl(ANY_NODE);
-    private static final ValueOperation ANY_NODE_EQUALS_VO = new ValueOperationImpl(ANY_NODE);
-    private static final ValueOperation ANY_NODE_STR_VO = new ValueOperationImpl(ANY_NODE);
 
     private BooleanEvaluator evaluator;
     private LogicExpression expression;
@@ -125,7 +121,7 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testLessThanExpression() {
-        SingleValue valueExp = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE_EQUALS_VO));
+        SingleValue valueExp = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE));
         SingleValue valueExp1 = new SingleValue(VAR_BAR1_LITERAL_L2);
         expression = new LessThanExpression(valueExp, valueExp1);
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
@@ -135,7 +131,7 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testBoundExpression() {
-        ValueOperation vo = new ValueOperationImpl(ANY_NODE);
+        Node vo = ANY_NODE;
         expression = new BoundOperator(createAVO(VAR_BAR1_LITERAL, vo));
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
         assertTrue(result);
@@ -144,7 +140,7 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testNEqualsExpression() {
-        SingleValue valueExp = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE_EQUALS_VO));
+        SingleValue valueExp = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE));
         SingleValue valueExp1 = new SingleValue(VAR_BAR1_LITERAL_L2);
         expression = new NEqualsExpression(valueExp, valueExp1);
         boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
@@ -154,7 +150,7 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testEqualsExpression() {
-        Expression valueExp = new StrOperator(createAVO(VAR_FOO1_LITERAL, ANY_NODE_STR_VO));
+        Expression valueExp = new StrOperator(createAVO(VAR_FOO1_LITERAL, ANY_NODE));
         SingleValue valueExp1 = new SingleValue(VAR_FOO1_LITERAL_L1);
         expression = new EqualsExpression(valueExp, valueExp1);
         boolean result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
@@ -168,22 +164,22 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     }
 
     public void testLangOperator() {
-        Expression valueExp = new LangOperator(createAVO(VAR_FOO1_LITERAL, ANY_NODE_LANG_VO));
-        ValueOperation vo1 = new ValueOperationImpl(createLiteral("en"));
+        Expression valueExp = new LangOperator(createAVO(VAR_FOO1_LITERAL, ANY_NODE));
+        Node vo1 = createLiteral("en");
         Expression valueExp1 = new SingleValue(createAVO(VAR_FOO1_LITERAL, vo1));
         expression = new EqualsExpression(valueExp, valueExp1);
         boolean result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
         assertFalse(result);
 
-        valueExp1 = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE_STR_VO));
+        valueExp1 = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE));
         expression = new EqualsExpression(valueExp, valueExp1);
         result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
         assertFalse(result);
     }
 
     public void testLangTags() {
-        Expression langExp = new LangOperator(createAVO(VAR_BAR1_LITERAL, ANY_NODE_LANG_VO));
-        ValueOperation vo1 = new ValueOperationImpl(LITERAL_L1_LANG);
+        Expression langExp = new LangOperator(createAVO(VAR_BAR1_LITERAL, ANY_NODE));
+        Node vo1 = LITERAL_L1_LANG;
         SingleValue valueExp1 = new SingleValue(createAVO(VAR_BAR1_LITERAL, vo1));
         expression = new NEqualsExpression(langExp, valueExp1);
 
@@ -191,12 +187,12 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
         boolean result = evaluator.evaluate(tuple, expression);
         assertTrue(result);
 
-        ValueOperation vo2 = new ValueOperationImpl(LITERAL_L1_LANG2);
+        Node vo2 = LITERAL_L1_LANG2;
         tuple = createTuple(createAVO(VAR_BAR1_LITERAL, vo2));
         result = evaluator.evaluate(tuple, expression);
         assertFalse(result);
 
-        vo2 = new ValueOperationImpl(LITERAL_L1_LANG1);
+        vo2 = LITERAL_L1_LANG1;
         tuple = createTuple(createAVO(VAR_BAR1_LITERAL, vo2));
         result = evaluator.evaluate(tuple, expression);
         assertTrue(result);
@@ -246,8 +242,8 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
         assertTrue(result);
     }
 
-    private static Map<Attribute, ValueOperation> createAVO(Attribute key, ValueOperation value) {
-        Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
+    private static Map<Attribute, Node> createAVO(Attribute key, Node value) {
+        Map<Attribute, Node> avo = new HashMap<Attribute, Node>();
         avo.put(key, value);
         return avo;
     }

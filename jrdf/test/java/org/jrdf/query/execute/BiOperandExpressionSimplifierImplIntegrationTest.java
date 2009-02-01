@@ -62,6 +62,7 @@ package org.jrdf.query.execute;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Node;
 import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 import org.jrdf.query.expression.BiOperandExpression;
 import org.jrdf.query.expression.Conjunction;
@@ -69,7 +70,6 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -82,22 +82,22 @@ import java.util.Map;
  */
 public class BiOperandExpressionSimplifierImplIntegrationTest extends ExpressionSimplifierImplIntegrationTest {
     private BiOperandExpressionSimplifier simplifier;
-    private Map<Attribute, ValueOperation> subj;
-    private Map<Attribute, ValueOperation> pred;
-    private Map<Attribute, ValueOperation> obj;
-    private LinkedHashMap<Attribute, ValueOperation> avp1;
+    private Map<Attribute, Node> subj;
+    private Map<Attribute, Node> pred;
+    private Map<Attribute, Node> obj;
+    private LinkedHashMap<Attribute, Node> avp1;
     private SingleConstraint constraint1;
-    private Map<Attribute, ValueOperation> subj1;
-    private Map<Attribute, ValueOperation> obj1;
-    private LinkedHashMap<Attribute, ValueOperation> avp2;
+    private Map<Attribute, Node> subj1;
+    private Map<Attribute, Node> obj1;
+    private LinkedHashMap<Attribute, Node> avp2;
     private SingleConstraint constraint2;
-    private Map<Attribute, ValueOperation> subj2;
-    private Map<Attribute, ValueOperation> obj2;
-    private LinkedHashMap<Attribute, ValueOperation> avp3;
+    private Map<Attribute, Node> subj2;
+    private Map<Attribute, Node> obj2;
+    private LinkedHashMap<Attribute, Node> avp3;
     private SingleConstraint constraint3;
-    private Map<Attribute, ValueOperation> subj3;
-    private Map<Attribute, ValueOperation> obj3;
-    private LinkedHashMap<Attribute, ValueOperation> avp4;
+    private Map<Attribute, Node> subj3;
+    private Map<Attribute, Node> obj3;
+    private LinkedHashMap<Attribute, Node> avp4;
     private SingleConstraint constraint4;
 
     @Override

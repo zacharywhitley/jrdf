@@ -64,6 +64,7 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -71,7 +72,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
@@ -117,12 +117,12 @@ public class TripleTestUtil {
     public static final Triple SPO_VARIABLES = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
-    public static final LinkedHashMap<Attribute, ValueOperation> AVO_BOOK_1_DC_SUBJECT_LITERAL =
+    public static final LinkedHashMap<Attribute, Node> AVO_BOOK_1_DC_SUBJECT_LITERAL =
         createAvo(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
 
     public static Expression createBookDcTitleExpression(URI bookUri, long suffix) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
-        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(dcTitleTriple,
+        LinkedHashMap<Attribute, Node> avp = AVP_HELPER.createLinkedAvo(dcTitleTriple,
             createAttributes(suffix));
         return new SingleConstraint(avp);
     }
@@ -130,7 +130,7 @@ public class TripleTestUtil {
     public static Expression createConstraintExpression(String varSubject, URI predicate,
         String varObject, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, NodeTestUtil.createResource(predicate), ANY_OBJECT_NODE);
-        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(triple,
+        LinkedHashMap<Attribute, Node> avp = AVP_HELPER.createLinkedAvo(triple,
             createSubjectObjectVariableAttributes(varSubject, varObject, suffix));
         return new SingleConstraint(avp);
     }
@@ -140,14 +140,14 @@ public class TripleTestUtil {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Attribute[] attributes = createAttributes(new VariableName(varSubject), new VariableName(varPredicate),
                 new VariableName(varObject));
-        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(triple, attributes);
+        LinkedHashMap<Attribute, Node> avp = AVP_HELPER.createLinkedAvo(triple, attributes);
         return new SingleConstraint(avp);
     }
 
     public static Expression createConstraintExpression(String varSubject, String varPredicate,
         Literal constLiteral, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, constLiteral);
-        LinkedHashMap<Attribute, ValueOperation> avp = AVP_HELPER.createLinkedAvo(triple,
+        LinkedHashMap<Attribute, Node> avp = AVP_HELPER.createLinkedAvo(triple,
             createSubjectPredicateVariableAttributes(varSubject, varPredicate, suffix));
         return new SingleConstraint(avp);
     }
@@ -173,7 +173,7 @@ public class TripleTestUtil {
         return createTripleWithLiteralObject(bookUri, URI_DC_SUBJECT, literal);
     }
 
-    public static LinkedHashMap<Attribute, ValueOperation> createAvo(Triple triple) {
+    public static LinkedHashMap<Attribute, Node> createAvo(Triple triple) {
         return AVP_HELPER.createLinkedAvo(triple, createAttributes(1));
     }
 

@@ -59,6 +59,7 @@
 
 package org.jrdf.urql.analysis;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.expression.EmptyExpression;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.SingleValue;
@@ -70,7 +71,6 @@ import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.builder.URIReferenceBuilder;
@@ -280,8 +280,8 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
     private List<Expression> tryUpdateAttribute(Expression lhs,
         Expression rhs) {
         List<Expression> result = new ArrayList<Expression>(2);
-        Set<Attribute> lhsAttrs = lhs.getAVO().keySet();
-        Set<Attribute> rhsAttrs = rhs.getAVO().keySet();
+        Set<Attribute> lhsAttrs = lhs.getValue().keySet();
+        Set<Attribute> rhsAttrs = rhs.getValue().keySet();
         result.add(0, updateoneExpression(lhs, lhsAttrs, rhsAttrs));
         result.add(1, updateoneExpression(rhs, rhsAttrs, lhsAttrs));
         return result;
@@ -290,8 +290,8 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
     private Expression updateoneExpression(Expression lhs,
         Set<Attribute> lhsAttrs, Set<Attribute> rhsAttrs) {
         if (lhs instanceof SingleValue && lhsAttrs.contains(NULLARY_ATTRIBUTE) && rhsAttrs.size() == 1) {
-            Map<Attribute, ValueOperation> map = lhs.getAVO();
-            ValueOperation vo = map.get(NULLARY_ATTRIBUTE);
+            Map<Attribute, Node> map = lhs.getValue();
+            Node vo = map.get(NULLARY_ATTRIBUTE);
             map.clear();
             map.put(rhsAttrs.iterator().next(), vo);
             ((SingleValue) lhs).setAVO(map);

@@ -59,11 +59,11 @@
 
 package org.jrdf.urql.analysis;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.constants.NullaryAttribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.constants.NullaryAttribute;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
@@ -90,7 +90,7 @@ public class AttributeCollectorImpl implements VariableCollector {
     private transient Map<AttributeName, PositionalNodeType> variables
         = new HashMap<AttributeName, PositionalNodeType>();
 
-    public void addConstraints(final Map<Attribute, ValueOperation> avps) {
+    public void addConstraints(final Map<Attribute, Node> avps) {
         for (final Attribute attribute : avps.keySet()) {
             checkAndAddEntry(attribute);
         }

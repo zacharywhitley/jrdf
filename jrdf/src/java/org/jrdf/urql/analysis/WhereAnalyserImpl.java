@@ -60,6 +60,7 @@
 package org.jrdf.urql.analysis;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Node;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
@@ -70,7 +71,6 @@ import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.builder.LiteralBuilder;
 import org.jrdf.urql.builder.LiteralBuilderImpl;
 import org.jrdf.urql.builder.TripleBuilder;
@@ -84,7 +84,6 @@ import org.jrdf.urql.parser.node.AGraphPatternOrFilterGraphPatternOperationPatte
 import org.jrdf.urql.parser.node.AGroupOrUnionGraphPattern;
 import org.jrdf.urql.parser.node.AOptionalGraphPattern;
 import org.jrdf.urql.parser.node.ATriple;
-import org.jrdf.urql.parser.node.Node;
 import org.jrdf.urql.parser.node.PGroupGraphPattern;
 import org.jrdf.urql.parser.node.PMoreTriples;
 import org.jrdf.urql.parser.node.POperationPattern;
@@ -122,12 +121,12 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
 
     @Override
     public void caseAFilteredBasicGraphPatternGraphPattern(AFilteredBasicGraphPatternGraphPattern node) {
-        Expression lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
+        Expression lhs = getExpression((org.jrdf.urql.parser.node.Node) node.getFilteredBasicGraphPattern().clone());
         if (node.getOperationPattern() != null) {
             expression = lhs;
             LinkedList<POperationPattern> list = node.getOperationPattern();
             for (POperationPattern pOperationPattern : list) {
-                Expression rhs = getExpression((Node) pOperationPattern.clone());
+                Expression rhs = getExpression((org.jrdf.urql.parser.node.Node) pOperationPattern.clone());
                 handleExpressions(expression, rhs);
             }
         } else {
@@ -167,7 +166,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     public void caseATriple(ATriple node) {
         try {
             node.apply(tripleBuilder);
-            LinkedHashMap<Attribute, ValueOperation> map = tripleBuilder.getTriples();
+            LinkedHashMap<Attribute, Node> map = tripleBuilder.getTriples();
             collector.addConstraints(map);
             expression = new SingleConstraint(map);
         } catch (ParserException e) {
@@ -178,11 +177,11 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     @Override
     public void caseABlockOfTriples(ABlockOfTriples node) {
         if (node.getMoreTriples().size() != 0) {
-            Expression lhs = getExpression((Node) node.getTriple().clone());
+            Expression lhs = getExpression((org.jrdf.urql.parser.node.Node) node.getTriple().clone());
             LinkedList<PMoreTriples> moreTriples = node.getMoreTriples();
             List<Expression> expressions = new ArrayList<Expression>();
             for (PMoreTriples pMoreTriples : moreTriples) {
-                Expression rhs = getExpression((Node) pMoreTriples.clone());
+                Expression rhs = getExpression((org.jrdf.urql.parser.node.Node) pMoreTriples.clone());
                 expressions.add(rhs);
             }
             Expression lhsSide = lhs;
@@ -198,8 +197,8 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     @Override
     public void caseAGraphPatternOrFilterGraphPatternOperationPattern(
         AGraphPatternOrFilterGraphPatternOperationPattern node) {
-        Expression lhs = getExpression((Node) node.getGraphPatternOrFilter().clone());
-        Expression rhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
+        Expression lhs = getExpression((org.jrdf.urql.parser.node.Node) node.getGraphPatternOrFilter().clone());
+        Expression rhs = getExpression((org.jrdf.urql.parser.node.Node) node.getFilteredBasicGraphPattern().clone());
         if (lhs != null && rhs != null) {
             handleExpressions(rhs, lhs);
         } else if (lhs != null) {
@@ -228,11 +227,12 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     public void caseAGroupOrUnionGraphPattern(AGroupOrUnionGraphPattern node) {
         if (node.getUnionGraphPattern() != null) {
             Expression lhs = getExpressionWithEmptyConstraint(
-                (Node) node.getGroupGraphPattern().clone());
+                (org.jrdf.urql.parser.node.Node) node.getGroupGraphPattern().clone());
             LinkedList<PUnionGraphPattern> unionGraphPattern = node.getUnionGraphPattern();
             List<Expression> expressions = new ArrayList<Expression>();
             for (PUnionGraphPattern pUnionGraphPattern : unionGraphPattern) {
-                Expression rhs = getExpressionWithEmptyConstraint((Node) pUnionGraphPattern.clone());
+                Expression rhs = getExpressionWithEmptyConstraint(
+                    (org.jrdf.urql.parser.node.Node) pUnionGraphPattern.clone());
                 expressions.add(rhs);
             }
             Expression lhsSide = lhs;
@@ -261,7 +261,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         }
     }
 
-    private Expression getExpressionWithEmptyConstraint(Node node) {
+    private Expression getExpressionWithEmptyConstraint(org.jrdf.urql.parser.node.Node node) {
         Expression result = getExpression(node);
         if (result == null) {
             return EMPTY_CONSTRAINT;
@@ -270,7 +270,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         }
     }
 
-    private Expression getExpression(Node node) {
+    private Expression getExpression(org.jrdf.urql.parser.node.Node node) {
         try {
             WhereAnalyser analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
             node.apply(analyser);

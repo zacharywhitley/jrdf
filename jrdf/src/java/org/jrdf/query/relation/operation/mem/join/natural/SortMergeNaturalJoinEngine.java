@@ -59,13 +59,13 @@
 
 package org.jrdf.query.relation.operation.mem.join.natural;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
@@ -91,7 +91,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
         NodeComparator nodeComparator) {
         super(newTupleFactory, newRelationHelper, nodeComparator);
-        this.resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
+        this.resultantAttributeValues = new HashMap<Attribute, Node>();
         this.tupleAVComparator = new TupleAttributeValueComparatorImpl(nodeComparator);
     }
 
@@ -179,7 +179,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         Set<Tuple> boundSet = new HashSet<Tuple>();
         Set<Tuple> unboundSet = new HashSet<Tuple>();
         for (Tuple tuple : rel.getTuples()) {
-            if (tuple.getValueOperation(attribute) != null) {
+            if (tuple.getValue(attribute) != null) {
                 boundSet.add(tuple);
             } else if (!boundSet.contains(tuple)) {
                 unboundSet.add(tuple);
@@ -247,8 +247,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     private void addToResult(Attribute attribute, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2,
         SortedSet<Attribute> commonHeadings) {
-        final boolean correctTuplesAdded = processAttributeValues(attribute, tuple1.getValueOperation(attribute),
-            tuple2.getValueOperation(attribute));
+        final boolean correctTuplesAdded = processAttributeValues(attribute, tuple1.getValue(attribute),
+            tuple2.getValue(attribute));
         boolean contradiction = correctTuplesAdded || checkCommonHeadings(commonHeadings, tuple1, tuple2);
         if (!contradiction) {
             result.add(tupleFactory.getTuple(tuple1, tuple2));

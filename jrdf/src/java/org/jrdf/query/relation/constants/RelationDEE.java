@@ -59,20 +59,20 @@
 
 package org.jrdf.query.relation.constants;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.query.relation.constants.NullaryTuple.NULLARY_TUPLE;
 import org.jrdf.query.relation.mem.ComparatorFactory;
 import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Map;
 
 /**
  * Dee is a relation with one tuple and is the base relation for NULLARY_TUPLE.
@@ -111,7 +111,7 @@ public final class RelationDEE implements Relation, Serializable {
         return Collections.singleton(NULLARY_TUPLE);
     }
 
-    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
+    public Set<Tuple> getTuples(Map<Attribute, Node> attributeValue) {
         return Collections.singleton(NULLARY_TUPLE);
     }
 

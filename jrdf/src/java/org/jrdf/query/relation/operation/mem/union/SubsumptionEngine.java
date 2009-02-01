@@ -59,11 +59,11 @@
 
 package org.jrdf.query.relation.operation.mem.union;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
@@ -96,8 +96,8 @@ public class SubsumptionEngine implements TupleEngine {
      * @param tuple2
      */
     private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
-        Map<Attribute, ValueOperation> avps1 = tuple1.getAttributeValues();
-        Map<Attribute, ValueOperation> avps2 = tuple2.getAttributeValues();
+        Map<Attribute, Node> avps1 = tuple1.getAttributeValues();
+        Map<Attribute, Node> avps2 = tuple2.getAttributeValues();
         int subsumes = subsumes(headings, avps1, avps2);
         if (tuple2SubsumesTuple1(subsumes)) {
             result.add(tupleFactory.getTuple(avps1));
@@ -116,8 +116,8 @@ public class SubsumptionEngine implements TupleEngine {
      *         common values or are equal.
      */
     // TODO Tuple Refactor.
-    public int subsumes(SortedSet<Attribute> headings, Map<Attribute, ValueOperation> avps1,
-        Map<Attribute, ValueOperation> avps2) {
+    public int subsumes(SortedSet<Attribute> headings, Map<Attribute, Node> avps1,
+        Map<Attribute, Node> avps2) {
 
         // Don't subsume if all the values are collection.
         int noHeadings = headings.size();
@@ -150,7 +150,7 @@ public class SubsumptionEngine implements TupleEngine {
      * @return -1 indicates avps2 subsumes avps1, 1 indicates avps1 subsumes avps2 and 0 means they do not share any
      *         common values or are equal.
      */
-    private int areSubsumedBy(Map<Attribute, ValueOperation> avps1, Map<Attribute, ValueOperation> avps2) {
+    private int areSubsumedBy(Map<Attribute, Node> avps1, Map<Attribute, Node> avps2) {
         if (avps1.size() > avps2.size() && onlyContainsAttributesValues(avps1, avps2)) {
             return 1;
         } else if (avps2.size() > avps1.size() && onlyContainsAttributesValues(avps2, avps1)) {
@@ -159,8 +159,8 @@ public class SubsumptionEngine implements TupleEngine {
         return 0;
     }
 
-    private boolean onlyContainsAttributesValues(Map<Attribute, ValueOperation> avps1,
-        Map<Attribute, ValueOperation> avps2) {
+    private boolean onlyContainsAttributesValues(Map<Attribute, Node> avps1,
+        Map<Attribute, Node> avps2) {
         boolean onlyContainsValues = false;
         for (Attribute attribute : avps2.keySet()) {
             onlyContainsValues = avps1.keySet().contains(attribute) &&
