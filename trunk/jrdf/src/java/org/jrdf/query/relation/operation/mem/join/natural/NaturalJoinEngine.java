@@ -141,7 +141,7 @@ public class NaturalJoinEngine implements TupleEngine {
         return contradiction;
     }
 
-    protected boolean processTuplePair(Tuple tuple1, Tuple tuple2, Attribute attribute) {
+    private boolean processTuplePair(Tuple tuple1, Tuple tuple2, Attribute attribute) {
         boolean contradiction;
         Node avp1 = tuple1.getValue(attribute);
         Node avp2 = tuple2.getValue(attribute);
@@ -149,7 +149,7 @@ public class NaturalJoinEngine implements TupleEngine {
         return contradiction;
     }
 
-    protected boolean compareAVPs(Attribute attribute, Node avp1, Node avp2) {
+    private boolean compareAVPs(Attribute attribute, Node avp1, Node avp2) {
         boolean result;
         if (avp1 == null && avp2 == null) {
             result = false;
