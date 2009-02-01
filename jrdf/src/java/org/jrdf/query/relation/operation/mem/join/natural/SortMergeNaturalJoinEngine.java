@@ -60,6 +60,7 @@
 package org.jrdf.query.relation.operation.mem.join.natural;
 
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.Relation;
@@ -86,10 +87,12 @@ import java.util.TreeSet;
 public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements TupleEngine {
     private static final SortedSet<Attribute> EMPTY_ATTRIBUTE_SET = unmodifiableSortedSet(new TreeSet<Attribute>());
     private AttributeTupleComparator tupleAVComparator;
+    private NodeComparator nodeComparator;
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
         NodeComparator nodeComparator) {
         super(newTupleFactory, newRelationHelper);
+        this.nodeComparator = nodeComparator;
         this.tupleAVComparator = new AttributeTupleComparatorImpl(nodeComparator);
     }
 
@@ -191,14 +194,13 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     private void doProperSortMergeJoin(Attribute attribute, SortedSet<Attribute> commonHeadings,
         SortedSet<Tuple> result, List<Tuple> list1, List<Tuple> list2) {
-        tupleAVComparator.setAttribute(attribute);
         Tuple tuple1, tuple2;
         int i = 0;
         int j = 0;
         tuple1 = getTupleFromList(list1, i);
         tuple2 = getTupleFromList(list2, j);
         while (tuple1 != null && tuple2 != null) {
-            int compare = tupleAVComparator.compare(tuple1, tuple2);
+            int compare = nodeComparator.compare(tuple1.getValue(attribute), tuple2.getValue(attribute));
             if (compare == 0) {
                 int[] newInds = processSameTuples(list1, list2, attribute, result, commonHeadings, i, j, tuple1);
                 i = newInds[0];
@@ -227,14 +229,15 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         int newPos2 = pos2 + 1;
         for (int i = pos1; i < l1.size(); i++) {
             t1 = l1.get(i);
-            if (tupleAVComparator.compare(t1, pivot) != 0) {
+            final Node t1Value = t1.getValue(attribute);
+            if (nodeComparator.compare(t1Value, pivot.getValue(attribute)) != 0) {
                 newPos1 = i;
                 break;
             }
             for (int j = pos2; j < l2.size(); j++) {
                 newPos2 = j;
                 t2 = l2.get(j);
-                if (tupleAVComparator.compare(t1, t2) != 0) {
+                if (nodeComparator.compare(t1Value, t2.getValue(attribute)) != 0) {
                     break;
                 }
                 addToResult(attribute, result, t1, t2, commonHeadings);
@@ -245,9 +248,9 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     private void addToResult(Attribute attribute, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2,
         SortedSet<Attribute> commonHeadings) {
-        final boolean nodesEqual = relationHelper.addNodesIfEqual(attribute, tuple1.getValue(attribute),
+        boolean unequalNodes = relationHelper.addNodesIfEqual(attribute, tuple1.getValue(attribute),
             tuple2.getValue(attribute), resultantAttributeValues);
-        final boolean contradiction = nodesEqual || relationHelper.addTuplesIfEqual(commonHeadings, tuple1, tuple2,
+        final boolean contradiction = unequalNodes || relationHelper.addTuplesIfEqual(commonHeadings, tuple1, tuple2,
             resultantAttributeValues);
         if (!contradiction) {
             result.add(tupleFactory.getTuple(tuple1, tuple2));
