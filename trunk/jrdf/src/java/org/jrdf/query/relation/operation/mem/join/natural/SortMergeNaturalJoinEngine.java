@@ -248,8 +248,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     private void addToResult(Attribute attribute, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2,
         SortedSet<Attribute> commonHeadings) {
-        final boolean correctTuplesAdded = processAttributeValues(attribute, tuple1.getValue(attribute),
-            tuple2.getValue(attribute));
+        final boolean correctTuplesAdded = relationHelper.processAttributeValues(attribute, tuple1.getValue(attribute),
+            tuple2.getValue(attribute), resultantAttributeValues);
         boolean contradiction = correctTuplesAdded || checkCommonHeadings(commonHeadings, tuple1, tuple2);
         if (!contradiction) {
             result.add(tupleFactory.getTuple(tuple1, tuple2));
