@@ -1,3 +1,8 @@
+JRDF Release 0.5.5.5
+====================
+* Removal of ValueOperations with introduction of new FILTER implementation.
+* Significant performance increase with new merge join operations.
+
 JRDF Release 0.5.5.4
 ====================
 * Distribute Server and Local Server for returning SPARQL query results
