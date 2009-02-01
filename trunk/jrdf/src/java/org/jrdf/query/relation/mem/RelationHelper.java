@@ -88,17 +88,16 @@ public interface RelationHelper {
     SortedSet<Attribute> getHeadingIntersections(Relation... relations);
 
     /**
-     * Adds to the result map if the lhs and rhs nodes are equal to one another.  If the nodes are unequal then it
-     * returns true - indicating two unequal values and no value was added to the result.
+     * Adds to the result map if the first and second tuples are equal to one another.  If the tuples are unequal
+     * then returns true - indicating two unequal values within the tuples - a contradiction - no value was added to
+     * the result.
      *
-     * @param attribute The attribute associated with the lhs and rhs nodes.
-     * @param lhs The node to compare.
-     * @param rhs The other node to compare.
-     * @param result If the nodes are equal the attribute and node are added to this node.
-     * @return false if the nodes are equal.
+     * @param headings The shared headings to get between tuple1 and tupl2.
+     * @param tuple1 The first tuple to compare.
+     * @param tuple2 The second tuple to compare.
+     * @param mapResult If the tuples are equal the attribute and nodes are added.
+     * @return true if the tuples have incompatible values.
      */
-    boolean addNodesIfEqual(Attribute attribute, Node lhs, Node rhs, Map<Attribute, Node> result);
-
     boolean addTuplesIfEqual(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2,
         Map<Attribute, Node> mapResult);
 }

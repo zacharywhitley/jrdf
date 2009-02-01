@@ -85,12 +85,10 @@ import java.util.SortedSet;
 public class NaturalJoinEngine implements TupleEngine {
     protected final TupleFactory tupleFactory;
     protected final RelationHelper relationHelper;
-    protected Map<Attribute, Node> resultantAttributeValues;
 
     public NaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper) {
         this.tupleFactory = newTupleFactory;
         this.relationHelper = newRelationHelper;
-        this.resultantAttributeValues = new HashMap<Attribute, Node>();
     }
 
     public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
@@ -121,7 +119,7 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
-        resultantAttributeValues = new HashMap<Attribute, Node>();
+        Map<Attribute, Node> resultantAttributeValues = new HashMap<Attribute, Node>();
         final boolean contradiction = relationHelper.addTuplesIfEqual(headings, tuple1, tuple2,
             resultantAttributeValues);
         // Only add results if we have found more items to add and there wasn't a contradiction in bound values.

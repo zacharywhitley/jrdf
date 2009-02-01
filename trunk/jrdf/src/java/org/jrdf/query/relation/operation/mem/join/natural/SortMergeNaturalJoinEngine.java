@@ -79,6 +79,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.HashMap;
 
 /**
  * @author Yuan-Fang Li
@@ -240,18 +241,15 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
                 if (nodeComparator.compare(t1Value, t2.getValue(attribute)) != 0) {
                     break;
                 }
-                addToResult(attribute, result, t1, t2, commonHeadings);
+                addToResult(result, t1, t2, commonHeadings);
             }
         }
         return new int[]{newPos1, newPos2};
     }
 
-    private void addToResult(Attribute attribute, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2,
-        SortedSet<Attribute> commonHeadings) {
-        boolean unequalNodes = relationHelper.addNodesIfEqual(attribute, tuple1.getValue(attribute),
-            tuple2.getValue(attribute), resultantAttributeValues);
-        final boolean contradiction = unequalNodes || relationHelper.addTuplesIfEqual(commonHeadings, tuple1, tuple2,
-            resultantAttributeValues);
+    private void addToResult(SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2, SortedSet<Attribute> commonHeadings) {
+        final boolean contradiction = relationHelper.addTuplesIfEqual(commonHeadings, tuple1, tuple2,
+            new HashMap<Attribute, Node>());
         if (!contradiction) {
             result.add(tupleFactory.getTuple(tuple1, tuple2));
         }
