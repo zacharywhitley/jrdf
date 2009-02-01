@@ -128,7 +128,6 @@ class NewAnswerXMLPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
     public void testVariables() throws Exception {
         xmlWriter.write();
         xmlWriter.flush();
-        println("XMl: " + resultsWriter.toString())
         def slurper =  new XmlSlurper()
         def sparql = slurper.parseText(resultsWriter.toString())
         def head = sparql.head
