@@ -67,15 +67,15 @@ import org.jrdf.query.relation.Tuple;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 
-public class TupleAttributeValueComparatorImpl implements AttributeTupleComparator {
+public class AttributeTupleComparatorImpl implements AttributeTupleComparator {
     private static final long serialVersionUID = 5341700779351373234L;
     private NodeComparator nodeComparator;
     private Attribute attribute;
 
-    private TupleAttributeValueComparatorImpl() {
+    private AttributeTupleComparatorImpl() {
     }
 
-    public TupleAttributeValueComparatorImpl(NodeComparator nodeComparator) {
+    public AttributeTupleComparatorImpl(NodeComparator nodeComparator) {
         this.nodeComparator = nodeComparator;
     }
 

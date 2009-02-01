@@ -61,6 +61,7 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 import org.jrdf.graph.Node;
 
 import java.util.SortedSet;
@@ -70,10 +71,34 @@ import java.util.Map;
  * Methods on a collection of relations.
  */
 public interface RelationHelper {
+    /**
+     * Returns the set of attribute that are found in any of the given relations.
+     *
+     * @param relations The relations to iterator over to get a complete set of attributes.
+     * @return a set of attributes that are found in any of the given relations.
+     */
     SortedSet<Attribute> getHeadingUnions(Relation... relations);
 
+    /**
+     * Returns a set of attributes that are found in all of the given relations.
+     *
+     * @param relations The relations to iterate over to extract common attributes.
+     * @return a set of attributes that are found in all of the given relations.
+     */
     SortedSet<Attribute> getHeadingIntersections(Relation... relations);
 
-    boolean processAttributeValues(Attribute attribute, Node lhs, Node rhs,
-        Map<Attribute, Node> resultantAttributeValues);
+    /**
+     * Adds to the result map if the lhs and rhs nodes are equal to one another.  If the nodes are unequal then it
+     * returns true - indicating two unequal values and no value was added to the result.
+     *
+     * @param attribute The attribute associated with the lhs and rhs nodes.
+     * @param lhs The node to compare.
+     * @param rhs The other node to compare.
+     * @param result If the nodes are equal the attribute and node are added to this node.
+     * @return false if the nodes are equal.
+     */
+    boolean addNodesIfEqual(Attribute attribute, Node lhs, Node rhs, Map<Attribute, Node> result);
+
+    boolean addTuplesIfEqual(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2,
+        Map<Attribute, Node> mapResult);
 }

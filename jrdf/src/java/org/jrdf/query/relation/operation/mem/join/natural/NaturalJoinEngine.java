@@ -122,49 +122,12 @@ public class NaturalJoinEngine implements TupleEngine {
 
     private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         resultantAttributeValues = new HashMap<Attribute, Node>();
-        final boolean contradiction = checkCommonHeadings(headings, tuple1, tuple2);
+        final boolean contradiction = relationHelper.addTuplesIfEqual(headings, tuple1, tuple2,
+            resultantAttributeValues);
         // Only add results if we have found more items to add and there wasn't a contradiction in bound values.
         if (!contradiction && !resultantAttributeValues.isEmpty()) {
             final Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
-    }
-
-    protected boolean checkCommonHeadings(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2) {
-        boolean contradiction = false;
-        for (final Attribute attribute : headings) {
-            contradiction = processTuplePair(tuple1, tuple2, attribute);
-            if (contradiction) {
-                return contradiction;
-            }
-        }
-        return contradiction;
-    }
-
-    private boolean processTuplePair(Tuple tuple1, Tuple tuple2, Attribute attribute) {
-        boolean contradiction;
-        Node avp1 = tuple1.getValue(attribute);
-        Node avp2 = tuple2.getValue(attribute);
-        contradiction = compareAVPs(attribute, avp1, avp2);
-        return contradiction;
-    }
-
-    private boolean compareAVPs(Attribute attribute, Node avp1, Node avp2) {
-        boolean result;
-        if (avp1 == null && avp2 == null) {
-            result = false;
-        } else if (avp1 == null) {
-            result = processSingleAVP(attribute, avp2);
-        } else if (avp2 == null) {
-            result = processSingleAVP(attribute, avp1);
-        } else {
-            result = relationHelper.processAttributeValues(attribute, avp1, avp2, resultantAttributeValues);
-        }
-        return result;
-    }
-
-    private boolean processSingleAVP(Attribute attribute, Node avp) {
-        resultantAttributeValues.put(attribute, avp);
-        return false;
     }
 }

@@ -298,7 +298,7 @@
         <constructor-arg ref="nodeComparator"/>
     </bean>
 
-    <bean id="attributeTupleComparator" class="org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl">
+    <bean id="attributeTupleComparator" class="org.jrdf.query.relation.mem.AttributeTupleComparatorImpl">
         <constructor-arg ref="nodeComparator"/>
     </bean>
 </beans>

@@ -184,7 +184,7 @@ public final class RelationImpl implements Relation {
     }
 
     public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
-        ((TupleAttributeValueComparatorImpl) tupleComparator).setAttribute(attribute);
+        ((AttributeTupleComparatorImpl) tupleComparator).setAttribute(attribute);
         SortedSet<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
         sortedTuples.addAll(tuples);
         return sortedTuples;

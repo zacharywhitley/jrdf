@@ -66,7 +66,7 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.RelationHelper;
-import org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl;
+import org.jrdf.query.relation.mem.AttributeTupleComparatorImpl;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
         NodeComparator nodeComparator) {
         super(newTupleFactory, newRelationHelper);
-        this.tupleAVComparator = new TupleAttributeValueComparatorImpl(nodeComparator);
+        this.tupleAVComparator = new AttributeTupleComparatorImpl(nodeComparator);
     }
 
     public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
@@ -245,9 +245,10 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     private void addToResult(Attribute attribute, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2,
         SortedSet<Attribute> commonHeadings) {
-        final boolean correctTuplesAdded = relationHelper.processAttributeValues(attribute, tuple1.getValue(attribute),
+        final boolean nodesEqual = relationHelper.addNodesIfEqual(attribute, tuple1.getValue(attribute),
             tuple2.getValue(attribute), resultantAttributeValues);
-        boolean contradiction = correctTuplesAdded || checkCommonHeadings(commonHeadings, tuple1, tuple2);
+        final boolean contradiction = nodesEqual || relationHelper.addTuplesIfEqual(commonHeadings, tuple1, tuple2,
+            resultantAttributeValues);
         if (!contradiction) {
             result.add(tupleFactory.getTuple(tuple1, tuple2));
         }
