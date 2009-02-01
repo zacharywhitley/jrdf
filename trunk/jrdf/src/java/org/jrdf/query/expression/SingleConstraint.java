@@ -68,7 +68,6 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.util.EqualsUtil.differentClasses;
@@ -125,7 +124,7 @@ public final class SingleConstraint implements Constraint {
             } else {
                 newAttribute = existingAttribute;
             }
-            newAvps.put(newAttribute, new ValueOperationImpl(singleAvp.get(existingAttribute).getValue(), EQUALS));
+            newAvps.put(newAttribute, new ValueOperationImpl(singleAvp.get(existingAttribute).getValue()));
         }
         return newAvps;
     }

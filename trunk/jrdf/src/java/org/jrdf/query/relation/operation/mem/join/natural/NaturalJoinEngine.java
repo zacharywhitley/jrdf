@@ -66,8 +66,6 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.mem.AVPOperation;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
@@ -110,19 +108,22 @@ public class NaturalJoinEngine implements TupleEngine {
 
     public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
         SortedSet<Tuple> result) {
-        final Set<Tuple> tuples1 = relation1.getTuples();
-        final Set<Tuple> tuples2 = relation2.getTuples();
+        doNaturalJoin(headings, relation1.getTuples(), relation2.getTuples(), result);
+    }
+
+    protected void doNaturalJoin(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
+        SortedSet<Tuple> result) {
         if (tuples1.size() < tuples2.size()) {
-            startDoubleLoopProcessing(headings, result, tuples1, tuples2);
+            startDoubleLoopProcessing(headings, tuples1, tuples2, result);
         } else {
-            startDoubleLoopProcessing(headings, result, tuples2, tuples1);
+            startDoubleLoopProcessing(headings, tuples2, tuples1, result);
         }
     }
 
-    protected void startDoubleLoopProcessing(SortedSet<Attribute> headings, SortedSet<Tuple> result,
-        Set<Tuple> tuples1, Set<Tuple> tuples2) {
-        for (Tuple tuple1 : tuples1) {
-            for (Tuple tuple2 : tuples2) {
+    protected void startDoubleLoopProcessing(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
+        SortedSet<Tuple> result) {
+        for (final Tuple tuple1 : tuples1) {
+            for (final Tuple tuple2 : tuples2) {
                 process(headings, result, tuple1, tuple2);
             }
         }
@@ -130,19 +131,23 @@ public class NaturalJoinEngine implements TupleEngine {
 
     private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
         resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
-        boolean contradiction = false;
-        for (Attribute attribute : headings) {
-            contradiction = processTuplePair(tuple1, tuple2, attribute);
-            if (contradiction) {
-                break;
-            }
-        }
-
+        final boolean contradiction = checkCommonHeadings(headings, tuple1, tuple2);
         // Only add results if we have found more items to add and there wasn't a contradiction in bound values.
         if (!contradiction && !resultantAttributeValues.isEmpty()) {
-            Tuple t = tupleFactory.getTuple(resultantAttributeValues);
+            final Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
+    }
+
+    protected boolean checkCommonHeadings(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2) {
+        boolean contradiction = false;
+        for (final Attribute attribute : headings) {
+            contradiction = processTuplePair(tuple1, tuple2, attribute);
+            if (contradiction) {
+                return contradiction;
+            }
+        }
+        return contradiction;
     }
 
     protected boolean processTuplePair(Tuple tuple1, Tuple tuple2, Attribute attribute) {
@@ -162,22 +167,17 @@ public class NaturalJoinEngine implements TupleEngine {
         } else if (avp2 == null) {
             result = processSingleAVP(attribute, avp1);
         } else {
-            result = avp1NotNull(attribute, avp1, avp2);
+            result = processAttributeValues(attribute, avp1, avp2);
         }
         return result;
     }
 
     private boolean processSingleAVP(Attribute attribute, ValueOperation avp) {
-        final AVPOperation avpOperation = avp.getOperation();
-        if (avpOperation.equals(EQUALS)) {
-            resultantAttributeValues.put(attribute, avp);
-            return false;
-        } else {
-            return true;
-        }
+        resultantAttributeValues.put(attribute, avp);
+        return false;
     }
 
-    protected boolean avp1NotNull(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
+    protected boolean processAttributeValues(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
         Node lhsValue = avp1.getValue();
         Node rhsValue = avp2.getValue();
         if (lhsValue.hashCode() == rhsValue.hashCode() && nodeComparator.compare(lhsValue, rhsValue) == 0) {

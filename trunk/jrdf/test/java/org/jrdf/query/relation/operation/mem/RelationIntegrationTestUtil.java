@@ -76,7 +76,6 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.RelationFactoryImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
@@ -215,7 +214,7 @@ public class RelationIntegrationTestUtil {
     private static Map<Attribute, ValueOperation> createAvo(final Attribute attribute, final Node node) {
         return new HashMap<Attribute, ValueOperation>() {
             {
-                put(attribute, new ValueOperationImpl(node, EQUALS));
+                put(attribute, new ValueOperationImpl(node));
             }
         };
     }

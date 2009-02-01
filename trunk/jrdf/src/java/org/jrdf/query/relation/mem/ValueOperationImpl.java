@@ -60,33 +60,29 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.util.EqualsUtil.*;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 public final class ValueOperationImpl implements ValueOperation {
     private static final long serialVersionUID = -5045948869879997736L;
     private Node value;
-    private AVPOperation operation;
 
     // For serialization.
     private ValueOperationImpl() {
     }
 
-    public ValueOperationImpl(Node newValue, AVPOperation newOperation) {
+    public ValueOperationImpl(Node newValue) {
         this.value = newValue;
-        this.operation = newOperation;
     }
 
     public Node getValue() {
         return value;
     }
 
-    public AVPOperation getOperation() {
-        return operation;
-    }
-
     @Override
     public int hashCode() {
-        return value.hashCode() ^ operation.hashCode();
+        return value.hashCode();
     }
 
     @Override
@@ -105,14 +101,12 @@ public final class ValueOperationImpl implements ValueOperation {
 
     @Override
     public String toString() {
-        return operation + " " + value;
+        return value.toString();
     }
 
     private boolean determineEqualityFromFields(ValueOperation attributeValuePair) {
         if (attributeValuePair.getValue().equals(getValue())) {
-            if (attributeValuePair.getOperation().equals(getOperation())) {
-                return true;
-            }
+            return true;
         }
         return false;
     }

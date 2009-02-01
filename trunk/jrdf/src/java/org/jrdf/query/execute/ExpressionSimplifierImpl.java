@@ -93,9 +93,6 @@ import org.jrdf.query.expression.logic.TrueExpression;
 import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.mem.AVPOperation;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
-import static org.jrdf.query.relation.mem.StrAVPOperation.STR;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 
 import java.util.ArrayList;
@@ -345,8 +342,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         Attribute attribute = lhs.keySet().iterator().next();
         ValueOperation lvo = lhs.get(attribute);
         ValueOperation rvo = rhs.get(attribute);
-        boolean validForEquate = isValidForEquate(lvo, rvo);
-        if (validForEquate && isAnyNode(lvo.getValue())) {
+        if (isAnyNode(lvo.getValue())) {
             if (rvo != null) {
                 updateAttributeValue(attribute, lvo, rvo);
             } else {
@@ -358,16 +354,8 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return false;
     }
 
-    private boolean isValidForEquate(ValueOperation lvo, ValueOperation rvo) {
-        AVPOperation lOp = lvo.getOperation();
-        boolean validForEquate = lOp.equals(EQUALS) || lOp.equals(STR);
-        validForEquate = validForEquate &&
-            (rvo == null || rvo.getOperation().equals(EQUALS) || rvo.getOperation().equals(STR));
-        return validForEquate;
-    }
-
     private void updateAttributeValue(Attribute attribute, ValueOperation lvo, ValueOperation rvo) {
-        ValueOperation newVO = new ValueOperationImpl(rvo.getValue(), lvo.getOperation());
+        ValueOperation newVO = new ValueOperationImpl(rvo.getValue());
         final Attribute value = variableMap.get(attribute);
         newAttributeValues.put(attribute, newVO);
         if (value != null) {

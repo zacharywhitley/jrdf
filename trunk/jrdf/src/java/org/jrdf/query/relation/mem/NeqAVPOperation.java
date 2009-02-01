@@ -63,7 +63,6 @@ public final class NeqAVPOperation implements AVPOperation {
     /**
      * The constant to indicate not equals operation.
      */
-    public static final AVPOperation NEQUALS = new NeqAVPOperation();
     private static final long serialVersionUID = -5281476871321027939L;
 
     private NeqAVPOperation() {

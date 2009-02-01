@@ -70,7 +70,6 @@ import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -105,21 +104,21 @@ public class BiOperandExpressionSimplifierImplIntegrationTest extends Expression
     protected void setUp() throws Exception {
         super.setUp();
         simplifier = new BiOperandExpressionSimplifierImpl(EXPRESSION_COMPARATOR);
-        subj = createSingleAVP(ATTR_S, ANY_SUBJECT_NODE, EQUALS);
-        pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE, EQUALS);
-        obj = createSingleAVP(ATTR_O, ANY_OBJECT_NODE, EQUALS);
+        subj = createSingleAVP(ATTR_S, ANY_SUBJECT_NODE);
+        pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE);
+        obj = createSingleAVP(ATTR_O, ANY_OBJECT_NODE);
         avp1 = createSingleAVP(subj, pred, obj);
         constraint1 = new SingleConstraint(avp1);
-        subj1 = createSingleAVP(ATTR_S1, ANY_SUBJECT_NODE, EQUALS);
-        obj1 = createSingleAVP(ATTR_O1, ANY_OBJECT_NODE, EQUALS);
+        subj1 = createSingleAVP(ATTR_S1, ANY_SUBJECT_NODE);
+        obj1 = createSingleAVP(ATTR_O1, ANY_OBJECT_NODE);
         avp2 = createSingleAVP(subj1, pred, obj1);
         constraint2 = new SingleConstraint(avp2);
-        subj2 = createSingleAVP(ATTR_S2, ANY_SUBJECT_NODE, EQUALS);
-        obj2 = createSingleAVP(ATTR_O2, ANY_OBJECT_NODE, EQUALS);
+        subj2 = createSingleAVP(ATTR_S2, ANY_SUBJECT_NODE);
+        obj2 = createSingleAVP(ATTR_O2, ANY_OBJECT_NODE);
         avp3 = createSingleAVP(subj2, pred, obj2);
         constraint3 = new SingleConstraint(avp3);
-        subj3 = createSingleAVP(ATTR_S3, ANY_SUBJECT_NODE, EQUALS);
-        obj3 = createSingleAVP(ATTR_O3, ANY_OBJECT_NODE, EQUALS);
+        subj3 = createSingleAVP(ATTR_S3, ANY_SUBJECT_NODE);
+        obj3 = createSingleAVP(ATTR_O3, ANY_OBJECT_NODE);
         avp4 = createSingleAVP(subj3, pred, obj3);
         constraint4 = new SingleConstraint(avp4);
     }

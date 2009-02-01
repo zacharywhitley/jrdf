@@ -73,12 +73,7 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
-import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.BoundAVPOperation;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
-import org.jrdf.query.relation.mem.LangAVPOperator;
-import org.jrdf.query.relation.mem.StrAVPOperation;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
@@ -103,7 +98,6 @@ import java.util.Map;
 public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     implements NumericExpressionAnalyser {
     private ParserException exception;
-    private AVPOperation operation;
     private AttributeName attributeName;
     private Node value;
     private LiteralBuilder literalBuilder;
@@ -134,7 +128,7 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
         NodeType type = namePosMap.get(attributeName);
         type = (type != null) ? type : new ObjectNodeType();
         Attribute attribute = attributeName == null ? NULLARY_ATTRIBUTE : new AttributeImpl(attributeName, type);
-        ValueOperation vo = new ValueOperationImpl(value, operation);
+        ValueOperation vo = new ValueOperationImpl(value);
         returnValue.put(attribute, vo);
         collector.addConstraints(returnValue);
         return returnValue;
@@ -143,7 +137,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     @Override
     public void caseABoundBuiltincall(ABoundBuiltincall node) {
         node.getBracketedVar().apply(this);
-        this.operation = BoundAVPOperation.BOUND;
         try {
             this.expression = new BoundOperator(getSingleAvp());
         } catch (ParserException e) {
@@ -154,7 +147,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     @Override
     public void caseALangBuiltincall(ALangBuiltincall node) {
         node.getBracketedExpression().apply(this);
-        this.operation = LangAVPOperator.LANG;
         try {
             this.expression = new LangOperator(getSingleAvp());
         } catch (ParserException e) {
@@ -165,7 +157,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     @Override
     public void caseARdfLiteralPrimaryExpression(ARdfLiteralPrimaryExpression node) {
         try {
-            this.operation = EQUALS;
             this.value = literalBuilder.createLiteral(node);
             this.expression = new SingleValue(getSingleAvp());
         } catch (ParserException e) {
@@ -177,7 +168,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     public void caseAStrBuiltincall(AStrBuiltincall node) {
         try {
             node.getBracketedExpression().apply(this);
-            this.operation = StrAVPOperation.STR;
             this.expression = new StrOperator(getSingleAvp());
         } catch (ParserException e) {
             this.exception = e;
@@ -188,7 +178,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     public void caseAVariable(AVariable node) {
         this.attributeName = new VariableName(node.getVariablename().getText());
         this.value = AnyNode.ANY_NODE;
-        this.operation = EQUALS;
         try {
             this.expression = new SingleValue(getSingleAvp());
         } catch (ParserException e) {
@@ -199,7 +188,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     @Override
     public void caseAIriRefIriRefOrPrefixedName(AIriRefIriRefOrPrefixedName node) {
         try {
-            this.operation = EQUALS;
             this.value = uriBuilder.createURIReference(node);
             this.expression = new SingleValue(getSingleAvp());
         } catch (ParserException e) {
@@ -210,7 +198,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     @Override
     public void caseAPrefixedNameIriRefOrPrefixedName(APrefixedNameIriRefOrPrefixedName node) {
         try {
-            this.operation = EQUALS;
             this.value = uriBuilder.createURIReference(node);
             this.expression = new SingleValue(getSingleAvp());
         } catch (ParserException e) {
@@ -224,7 +211,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
             if (attributeName == null) {
                 attributeName = NULLARY_ATTRIBUTE.getAttributeName();
             }
-            this.operation = EQUALS;
             this.value = literalBuilder.createLiteral(node);
             this.expression = TRUE_EXPRESSION;
         } catch (ParserException e) {
@@ -238,7 +224,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
             if (attributeName == null) {
                 attributeName = NULLARY_ATTRIBUTE.getAttributeName();
             }
-            this.operation = EQUALS;
             this.value = literalBuilder.createLiteral(node);
             this.expression = FALSE_EXPRESSION;
         } catch (ParserException e) {

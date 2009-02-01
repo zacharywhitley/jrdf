@@ -64,7 +64,6 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.vocabulary.XSD.BOOLEAN;
@@ -80,7 +79,7 @@ public final class FalseExpression implements LogicExpression {
     private static final long serialVersionUID = -1159936586370099216L;
     private static final int DUMMY_HASHCODE = 47;
     private static final Map<Attribute, ValueOperation> MAP = singletonMap(NULLARY_ATTRIBUTE,
-            (ValueOperation) new ValueOperationImpl(new LiteralImpl("false", BOOLEAN), EQUALS));
+            (ValueOperation) new ValueOperationImpl(new LiteralImpl("false", BOOLEAN)));
 
     /**
      * The singleton false expression.
