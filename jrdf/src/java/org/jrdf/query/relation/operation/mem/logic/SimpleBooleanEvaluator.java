@@ -114,15 +114,15 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         Map<Attribute, Node> avo = singleValue.getValue();
         Attribute attribute = avo.keySet().iterator().next();
         Node node = avo.get(attribute);
-        final Node value = tuple.getValue(attribute);
+        final Node newValue = tuple.getValue(attribute);
         if (ANY_NODE.equals(node)) {
-            if (value != null) {
-                this.value = value;
+            if (newValue != null) {
+                value = newValue;
             } else {
-                this.value = null;
+                value = null;
             }
         } else {
-            this.value = node;
+            value = node;
         }
     }
 
