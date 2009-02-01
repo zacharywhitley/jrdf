@@ -103,14 +103,6 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
         return attributes;
     }
 
-    public boolean addNodesIfEqual(Attribute attribute, Node lhs, Node rhs, Map<Attribute, Node> mapResult) {
-        if (lhs.hashCode() == rhs.hashCode() && nodeComparator.compare(lhs, rhs) == 0) {
-            return addNode(attribute, lhs, mapResult);
-        } else {
-            return true;
-        }
-    }
-
     public boolean addTuplesIfEqual(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2,
         Map<Attribute, Node> mapResult) {
         boolean contradiction = false;
@@ -135,6 +127,14 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
             contradiction = addNodesIfEqual(attribute, node1, node2, mapResult);
         }
         return contradiction;
+    }
+
+    private boolean addNodesIfEqual(Attribute attribute, Node lhs, Node rhs, Map<Attribute, Node> mapResult) {
+        if (lhs.hashCode() == rhs.hashCode() && nodeComparator.compare(lhs, rhs) == 0) {
+            return addNode(attribute, lhs, mapResult);
+        } else {
+            return true;
+        }
     }
 
     private boolean addNode(Attribute attribute, Node node, Map<Attribute, Node> mapResult) {
