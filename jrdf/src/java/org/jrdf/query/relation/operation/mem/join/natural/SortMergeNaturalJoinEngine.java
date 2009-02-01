@@ -59,7 +59,6 @@
 
 package org.jrdf.query.relation.operation.mem.join.natural;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeTupleComparator;
@@ -73,7 +72,6 @@ import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import java.util.ArrayList;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableSortedSet;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -91,8 +89,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
         NodeComparator nodeComparator) {
-        super(newTupleFactory, newRelationHelper, nodeComparator);
-        this.resultantAttributeValues = new HashMap<Attribute, Node>();
+        super(newTupleFactory, newRelationHelper);
         this.tupleAVComparator = new TupleAttributeValueComparatorImpl(nodeComparator);
     }
 

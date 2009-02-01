@@ -201,7 +201,6 @@
     <bean id="naturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine">
         <constructor-arg ref="tupleFactory"/>
         <constructor-arg ref="relationHelper"/>
-        <constructor-arg ref="nodeComparator"/>
     </bean>
 
     <bean id="sortMergeNaturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine">
@@ -298,7 +297,7 @@
     <bean id="booleanEvaluator" class="org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator">
         <constructor-arg ref="nodeComparator"/>
     </bean>
-    
+
     <bean id="attributeTupleComparator" class="org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl">
         <constructor-arg ref="nodeComparator"/>
     </bean>
