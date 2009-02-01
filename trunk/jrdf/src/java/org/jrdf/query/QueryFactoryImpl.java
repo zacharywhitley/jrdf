@@ -81,7 +81,7 @@ import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.mem.RelationHelperImpl;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
-import org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl;
+import org.jrdf.query.relation.mem.AttributeTupleComparatorImpl;
 import org.jrdf.query.relation.mem.TupleComparatorImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
@@ -125,7 +125,7 @@ public class QueryFactoryImpl implements QueryFactory {
     private static final ComparatorFactory COMPARATOR_FACTORY = new ComparatorFactoryImpl();
     private static final NodeComparator NODE_COMPARATOR = COMPARATOR_FACTORY.createNodeComparator();
     private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl();
-    private static final AttributeTupleComparator ATT_TUPLE_COMPARATOR = new TupleAttributeValueComparatorImpl(
+    private static final AttributeTupleComparator ATT_TUPLE_COMPARATOR = new AttributeTupleComparatorImpl(
         NODE_COMPARATOR);
     private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(NODE_COMPARATOR,
         ATTRIBUTE_COMPARATOR);

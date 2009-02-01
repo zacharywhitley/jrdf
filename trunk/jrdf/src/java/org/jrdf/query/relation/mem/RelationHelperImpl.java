@@ -64,6 +64,7 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
@@ -97,18 +98,47 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
         TreeSet<Attribute> attributes = new TreeSet<Attribute>(attributeComparator);
         attributes.addAll(relations[0].getSortedHeading());
         for (int i = 1; i < relations.length; i++) {
-            Relation relation = relations[i];
-            attributes.retainAll(relation.getSortedHeading());
+            attributes.retainAll(relations[i].getSortedHeading());
         }
         return attributes;
     }
 
-    public boolean processAttributeValues(Attribute attribute, Node lhs, Node rhs,
-        Map<Attribute, Node> resultantAttributeValues) {
+    public boolean addNodesIfEqual(Attribute attribute, Node lhs, Node rhs, Map<Attribute, Node> mapResult) {
         if (lhs.hashCode() == rhs.hashCode() && nodeComparator.compare(lhs, rhs) == 0) {
-            resultantAttributeValues.put(attribute, lhs);
-            return false;
+            return addNode(attribute, lhs, mapResult);
+        } else {
+            return true;
         }
-        return true;
+    }
+
+    public boolean addTuplesIfEqual(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2,
+        Map<Attribute, Node> mapResult) {
+        boolean contradiction = false;
+        for (final Attribute attribute : headings) {
+            contradiction = processTuples(attribute, tuple1.getValue(attribute), tuple2.getValue(attribute), mapResult);
+            if (contradiction) {
+                return contradiction;
+            }
+        }
+        return contradiction;
+    }
+
+    private boolean processTuples(Attribute attribute, Node node1, Node node2, Map<Attribute, Node> mapResult) {
+        boolean contradiction;
+        if (node1 == null && node2 == null) {
+            contradiction = false;
+        } else if (node1 == null) {
+            contradiction = addNode(attribute, node2, mapResult);
+        } else if (node2 == null) {
+            contradiction = addNode(attribute, node1, mapResult);
+        } else {
+            contradiction = addNodesIfEqual(attribute, node1, node2, mapResult);
+        }
+        return contradiction;
+    }
+
+    private boolean addNode(Attribute attribute, Node node, Map<Attribute, Node> mapResult) {
+        mapResult.put(attribute, node);
+        return false;
     }
 }
