@@ -88,6 +88,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     private static final SortedSet<Attribute> EMPTY_ATTRIBUTE_SET = unmodifiableSortedSet(new TreeSet<Attribute>());
     private AttributeTupleComparator tupleAVComparator;
     private NodeComparator nodeComparator;
+    private int pos1;
+    private int pos2;
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
         NodeComparator nodeComparator) {
@@ -195,22 +197,20 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     private void doProperSortMergeJoin(Attribute attribute, SortedSet<Attribute> commonHeadings,
         SortedSet<Tuple> result, List<Tuple> list1, List<Tuple> list2) {
         Tuple tuple1, tuple2;
-        int i = 0;
-        int j = 0;
-        tuple1 = getTupleFromList(list1, i);
-        tuple2 = getTupleFromList(list2, j);
+        pos1 = 0;
+        pos2 = 0;
+        tuple1 = getTupleFromList(list1, pos1);
+        tuple2 = getTupleFromList(list2, pos2);
         while (tuple1 != null && tuple2 != null) {
             int compare = nodeComparator.compare(tuple1.getValue(attribute), tuple2.getValue(attribute));
             if (compare == 0) {
-                int[] newInds = processSameTuples(list1, list2, attribute, result, commonHeadings, i, j, tuple1);
-                i = newInds[0];
-                j = newInds[1];
-                tuple1 = getTupleFromList(list1, i);
-                tuple2 = getTupleFromList(list2, j);
+                processSameTuples(list1, list2, attribute, result, commonHeadings, tuple1);
+                tuple1 = getTupleFromList(list1, pos1);
+                tuple2 = getTupleFromList(list2, pos2);
             } else if (compare > 0) {
-                tuple2 = getTupleFromList(list2, ++j);
+                tuple2 = getTupleFromList(list2, ++pos2);
             } else {
-                tuple1 = getTupleFromList(list1, ++i);
+                tuple1 = getTupleFromList(list1, ++pos1);
             }
         }
     }
@@ -222,8 +222,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         return null;
     }
 
-    private int[] processSameTuples(List<Tuple> l1, List<Tuple> l2, Attribute attribute, SortedSet<Tuple> result,
-        SortedSet<Attribute> commonHeadings, int pos1, int pos2, Tuple pivot) {
+    private void processSameTuples(List<Tuple> l1, List<Tuple> l2, Attribute attribute, SortedSet<Tuple> result,
+        SortedSet<Attribute> commonHeadings, Tuple pivot) {
         Tuple t1, t2;
         int newPos1 = pos1 + 1;
         int newPos2 = pos2 + 1;
@@ -243,7 +243,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
                 addToResult(commonHeadings, t1, t2, result);
             }
         }
-        return new int[]{newPos1, newPos2};
+        pos1 = newPos1;
+        pos2 = newPos2;
     }
 
     private void addToResult(SortedSet<Attribute> commonHeadings, Tuple tuple1, Tuple tuple2, SortedSet<Tuple> result) {
