@@ -89,7 +89,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
         NodeComparator nodeComparator) {
-        super(newTupleFactory, newRelationHelper);
+        super(newTupleFactory, newRelationHelper, nodeComparator);
         this.resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
         this.tupleAVComparator = new TupleAttributeValueComparatorImpl(nodeComparator);
     }
@@ -99,8 +99,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         SortedSet<Attribute> commonHeadings = getHeadingsIntersection(relation1, relation2);
         if (commonHeadings.size() == 1) {
             // do sort merge join
-            doSortMergeJoin(headings, relation1, relation2, commonHeadings.iterator().next(),
-                EMPTY_ATTRIBUTE_SET, result);
+            doSortMergeJoin(headings, relation1, relation2, commonHeadings.iterator().next(), EMPTY_ATTRIBUTE_SET,
+                result);
         } else if (commonHeadings.size() > 1) {
             // do multi merge join
             doMultiSortMergeJoin(headings, relation1, relation2, commonHeadings, result);

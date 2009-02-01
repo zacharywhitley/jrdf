@@ -59,12 +59,6 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.expression.BoundOperator;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
-
-import java.util.Map;
-
 /**
  * @author Yuan-Fang Li
  * @version :$
@@ -78,17 +72,6 @@ public final class BoundAVPOperation implements AVPOperation {
     public static final BoundAVPOperation BOUND = new BoundAVPOperation();
 
     private BoundAVPOperation() {
-    }
-
-    // TODO YF check whether the bound operator has AnyNode as node, if NullaryNode should return false.
-    public boolean addAttributeValuePair(Attribute attribute, Map<Attribute,
-        ValueOperation> newAttributeValues, ValueOperation lhs, ValueOperation rhs) {
-        if (BoundOperator.class.isAssignableFrom(lhs.getOperation().getClass())) {
-            newAttributeValues.put(attribute, lhs);
-        } else {
-            newAttributeValues.put(attribute, rhs);
-        }
-        return false;
     }
 
     public int hashCode() {

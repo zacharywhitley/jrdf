@@ -59,22 +59,12 @@
 
 package org.jrdf.query.relation.mem;
 
-import static org.jrdf.graph.AnyNode.ANY_NODE;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.query.relation.constants.NullaryNode.NULLARY_NODE;
-
-import java.util.Map;
-
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 
 public final class NegationAVPOperation implements AVPOperation {
-    private static final NodeComparator COMPARATOR = new ComparatorFactoryImpl().createNodeComparator();
     private static final long serialVersionUID = 6132466908097938381L;
 
     /**
@@ -95,45 +85,5 @@ public final class NegationAVPOperation implements AVPOperation {
 
     public boolean equals(Object obj) {
         return obj == this;
-    }
-
-    public boolean addAttributeValuePair(Attribute attribute, Map<Attribute, ValueOperation> newAttributeValues,
-                                         ValueOperation lhs, ValueOperation rhs) {
-        final AVPOperation operation1 = lhs.getOperation();
-        final AVPOperation operation2 = rhs.getOperation();
-        boolean toNegate = NegationAVPOperation.class.isAssignableFrom(operation1.getClass());
-        toNegate = toNegate && NegationAVPOperation.class.isAssignableFrom(operation2.getClass()) ? false : true;
-        final Node node1 = lhs.getValue();
-        final Node node2 = rhs.getValue();
-
-        boolean result = compareNodes(node1, node2);
-        if (toNegate) {
-            result = !result;
-        }
-        addAttributeValues(attribute, newAttributeValues, lhs, rhs, result);
-        return result;
-    }
-
-    private void addAttributeValues(Attribute attribute, Map<Attribute, ValueOperation> newAttributeValues,
-                                    ValueOperation lhs, ValueOperation rhs, boolean result) {
-        if (!result) {
-            if (NegationAVPOperation.class.isAssignableFrom(lhs.getOperation().getClass())) {
-                newAttributeValues.put(attribute, rhs);
-            } else {
-                newAttributeValues.put(attribute, lhs);
-            }
-        }
-    }
-
-    private boolean compareNodes(Node node1, Node node2) {
-        boolean result;
-        if (NULLARY_NODE.equals(node1) || NULLARY_NODE.equals(node2)) {
-            result = false;
-        } else if (ANY_NODE.equals(node1) || ANY_NODE.equals(node2)) {
-            result = true;
-        } else {
-            result = COMPARATOR.compare(node1, node2) == 0;
-        }
-        return result;
     }
 }

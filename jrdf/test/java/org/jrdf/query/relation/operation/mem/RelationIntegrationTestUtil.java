@@ -75,10 +75,8 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
-import org.jrdf.query.relation.mem.NeqAVPOperation;
 import org.jrdf.query.relation.mem.RelationFactoryImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
@@ -181,8 +179,6 @@ public class RelationIntegrationTestUtil {
     public static final Map<Attribute, ValueOperation> POS_BAR3_OBJECT_R1 = createAvo(POS_BAR3_OBJECT, RESOURCE_1);
 
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R3 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_3);
-    public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_NOT_R3 = createAvo(VAR_BAR1_SUBJECT,
-        RESOURCE_3, NeqAVPOperation.NEQUALS);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R4 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_4);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_SUBJECT_R5 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_5);
     public static final Map<Attribute, ValueOperation> VAR_BAR1_PREDICATE_R1 = createAvo(VAR_BAR1_PREDICATE,
@@ -220,15 +216,6 @@ public class RelationIntegrationTestUtil {
         return new HashMap<Attribute, ValueOperation>() {
             {
                 put(attribute, new ValueOperationImpl(node, EQUALS));
-            }
-        };
-    }
-
-    private static Map<Attribute, ValueOperation> createAvo(final Attribute attribute, final Node node,
-        final AVPOperation operation) {
-        return new HashMap<Attribute, ValueOperation>() {
-            {
-                put(attribute, new ValueOperationImpl(node, operation));
             }
         };
     }

@@ -59,6 +59,8 @@
 
 package org.jrdf.query.relation.operation.mem.join.natural;
 
+import org.jrdf.graph.Node;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
@@ -71,8 +73,8 @@ import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Combines two relations attributes if they have common tuple values.  The
@@ -85,13 +87,16 @@ import java.util.Set;
  * <p/>
  */
 public class NaturalJoinEngine implements TupleEngine {
+    private final NodeComparator nodeComparator;
     protected final TupleFactory tupleFactory;
     protected final RelationHelper relationHelper;
     protected Map<Attribute, ValueOperation> resultantAttributeValues;
 
-    public NaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper) {
+    public NaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
+        NodeComparator newNodeComparator) {
         this.tupleFactory = newTupleFactory;
         this.relationHelper = newRelationHelper;
+        this.nodeComparator = newNodeComparator;
         this.resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
     }
 
@@ -101,6 +106,26 @@ public class NaturalJoinEngine implements TupleEngine {
 
     public SortedSet<Attribute> getHeadingsIntersection(Relation relation1, Relation relation2) {
         return relationHelper.getHeadingIntersections(relation1, relation2);
+    }
+
+    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
+        SortedSet<Tuple> result) {
+        final Set<Tuple> tuples1 = relation1.getTuples();
+        final Set<Tuple> tuples2 = relation2.getTuples();
+        if (tuples1.size() < tuples2.size()) {
+            startDoubleLoopProcessing(headings, result, tuples1, tuples2);
+        } else {
+            startDoubleLoopProcessing(headings, result, tuples2, tuples1);
+        }
+    }
+
+    protected void startDoubleLoopProcessing(SortedSet<Attribute> headings, SortedSet<Tuple> result,
+        Set<Tuple> tuples1, Set<Tuple> tuples2) {
+        for (Tuple tuple1 : tuples1) {
+            for (Tuple tuple2 : tuples2) {
+                process(headings, result, tuple1, tuple2);
+            }
+        }
     }
 
     private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
@@ -153,30 +178,12 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     protected boolean avp1NotNull(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
-        if (!avp1.getOperation().equals(EQUALS)) {
-            return avp1.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp1, avp2);
-        } else {
-            return avp2.getOperation().addAttributeValuePair(attribute, resultantAttributeValues, avp2, avp1);
+        Node lhsValue = avp1.getValue();
+        Node rhsValue = avp2.getValue();
+        if (lhsValue.hashCode() == rhsValue.hashCode() && nodeComparator.compare(lhsValue, rhsValue) == 0) {
+            resultantAttributeValues.put(attribute, avp1);
+            return false;
         }
-    }
-
-    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-                                 SortedSet<Tuple> result) {
-        final Set<Tuple> tuples1 = relation1.getTuples();
-        final Set<Tuple> tuples2 = relation2.getTuples();
-        if (tuples1.size() < tuples2.size()) {
-            startDoubleLoopProcessing(headings, result, tuples1, tuples2);
-        } else {
-            startDoubleLoopProcessing(headings, result, tuples2, tuples1);
-        }
-    }
-
-    protected void startDoubleLoopProcessing(SortedSet<Attribute> headings, SortedSet<Tuple> result,
-                                           Set<Tuple> tuples1, Set<Tuple> tuples2) {
-        for (Tuple tuple1 : tuples1) {
-            for (Tuple tuple2 : tuples2) {
-                process(headings, result, tuple1, tuple2);
-            }
-        }
+        return true;
     }
 }

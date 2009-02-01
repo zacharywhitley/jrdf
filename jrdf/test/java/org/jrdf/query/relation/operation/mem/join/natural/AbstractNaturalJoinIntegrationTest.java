@@ -92,10 +92,7 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_NOT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R5;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
@@ -104,7 +101,7 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createTuple;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import java.util.HashSet;
@@ -115,20 +112,18 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version : $Id: $
  */
-
 public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
     protected static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     protected NadicJoin nadicJoin;
-
     protected static final Set<Relation> EMPTY = emptySet();
     protected static final Set<Tuple> EMPTY_SET = emptySet();
 
     public void testRelationDEEandDUM() {
-        // The natural process of empty is DEE.
+        // The natural join of empty is DEE.
         checkRelation(RELATION_DEE, EMPTY);
-        // The natural process of DEE is DEE.
+        // The natural join of DEE is DEE.
         checkRelation(RELATION_DEE, singleton(RELATION_DEE));
-        // The natural process of DUM is DUM.
+        // The natural join of DUM is DUM.
         checkRelation(RELATION_DUM, singleton(RELATION_DUM));
     }
 
@@ -160,9 +155,12 @@ public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
     }
 
     public void testCartesianProduct2() {
+        Set<Tuple> tmpTuple;
+
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-        Set<Tuple> tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO2_PREDICATE_R4);
+        tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO2_PREDICATE_R4);
         tuple1.addAll(tmpTuple);
+
         Set<Tuple> tuple2 = createASingleTuple(POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
         tmpTuple = createASingleTuple(POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
         tuple2.addAll(tmpTuple);
@@ -178,6 +176,7 @@ public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
         tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO2_PREDICATE_R4, POS_FOO4_PREDICATE_R5,
             POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
+
         checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
 
@@ -239,20 +238,20 @@ public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
         final Tuple tp2 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
         final Tuple tp3 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_OBJECT_R4);
         final Tuple tp4 = createTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_OBJECT_R4);
-        Relation rel1 = createRelation(new HashSet<Tuple>(Arrays.asList(new Tuple[]{tp1, tp2, tp3, tp4})));
+        Relation rel1 = createRelation(new HashSet<Tuple>(asList(tp1, tp2, tp3, tp4)));
         final Tuple tq1 = createTuple(POS_FOO1_SUBJECT_B2, POS_FOO3_OBJECT_R3);
         final Tuple tq2 = createTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
         final Tuple tq3 = createTuple(POS_FOO1_SUBJECT_R1, POS_FOO5_OBJECT_R4);
         final Tuple tq4 = createTuple(POS_FOO1_SUBJECT_R4, POS_FOO5_OBJECT_R4);
-        Relation rel2 = createRelation(new HashSet<Tuple>(Arrays.asList(new Tuple[]{tq1, tq2, tq3, tq4})));
+        Relation rel2 = createRelation(new HashSet<Tuple>(asList(tq1, tq2, tq3, tq4)));
         final Tuple tr1 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4, POS_BAR3_OBJECT_R1);
         final Tuple tr2 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4, POS_FOO5_OBJECT_R4);
         final Tuple tr3 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_OBJECT_R4, POS_BAR3_OBJECT_R1);
         final Tuple tr4 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_OBJECT_R4, POS_FOO5_OBJECT_R4);
-        Set<Tuple> resultTuple = new HashSet<Tuple>(Arrays.asList(new Tuple[]{tr1, tr2, tr3, tr4}));
+        Set<Tuple> resultTuple = new HashSet<Tuple>(asList(tr1, tr2, tr3, tr4));
         Set<Attribute> headings = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE, VAR_BAR2_PREDICATE ,
             POS_FOO3_OBJECT, POS_BAR3_OBJECT, POS_FOO5_OBJECT, VAR_BAR1_OBJECT);
-        List<Relation> rels = Arrays.asList(new Relation[]{rel1, rel2});
+        List<Relation> rels = asList(rel1, rel2);
         checkJoin(createRelation(headings, resultTuple), rels);
     }
 
@@ -294,22 +293,6 @@ public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
         Set<Attribute> heading = createHeading(VAR_BAR1_SUBJECT, POS_FOO4_PREDICATE, POS_FOO3_OBJECT);
         tuple2.addAll(tuple3);
         checkJoin(createRelation(heading, EMPTY_SET), createRelation(tuple1, tuple2));
-    }
-
-    public void testNotEqualAttributeValuePair() {
-        Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R4, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
-        tuple1.addAll(tmpTuple);
-        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R5, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
-        tuple1.addAll(tmpTuple);
-        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_NOT_R3);
-
-        Set<Attribute> heading = createHeading(VAR_BAR1_SUBJECT, POS_FOO2_PREDICATE, POS_FOO4_PREDICATE,
-                POS_FOO3_OBJECT, POS_FOO5_OBJECT);
-        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R4, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
-        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R5, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
-        resultTuple.addAll(tmpTuple);
-        checkJoin(createRelation(heading, resultTuple), createRelation(tuple1, tuple2));
     }
 
     private void checkJoin(Relation expectedResult, List<Relation> relations) {
