@@ -66,6 +66,7 @@ import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.SortedSet;
+import java.util.Set;
 
 public class OuterUnionEngine implements TupleEngine {
     private final RelationHelper relationHelper;
@@ -78,18 +79,14 @@ public class OuterUnionEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public SortedSet<Attribute> getHeadingsIntersection(Relation relation1, Relation relation2) {
-        return relationHelper.getHeadingIntersections(relation1, relation2);
-    }
-
     public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-                                 SortedSet<Tuple> result) {
-        process(result, relation1);
-        process(result, relation2);
+        SortedSet<Tuple> result) {
+        process(result, relation1.getTuples());
+        process(result, relation2.getTuples());
     }
 
-    private void process(SortedSet<Tuple> result, Relation relation) {
-        for (Tuple tuple : relation.getTuples()) {
+    private void process(SortedSet<Tuple> result, final Set<Tuple> tuples) {
+        for (Tuple tuple : tuples) {
             result.add(tuple);
         }
     }

@@ -101,10 +101,6 @@ public class NaturalJoinEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public SortedSet<Attribute> getHeadingsIntersection(Relation relation1, Relation relation2) {
-        return relationHelper.getHeadingIntersections(relation1, relation2);
-    }
-
     public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
         SortedSet<Tuple> result) {
         doNaturalJoin(headings, relation1.getTuples(), relation2.getTuples(), result);

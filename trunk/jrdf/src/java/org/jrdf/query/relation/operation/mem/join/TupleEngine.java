@@ -71,8 +71,6 @@ import java.util.SortedSet;
 public interface TupleEngine {
     SortedSet<Attribute> getHeading(Relation relation1, Relation relation2);
 
-    SortedSet<Attribute> getHeadingsIntersection(Relation relation1, Relation relation2);
-
     void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-                          SortedSet<Tuple> result);
+        SortedSet<Tuple> result);
 }
