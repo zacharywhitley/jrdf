@@ -190,6 +190,7 @@
     <!-- Relational Operators -->
     <bean id="relationHelper" class="org.jrdf.query.relation.mem.RelationHelperImpl">
         <constructor-arg ref="attributeComparator"/>
+        <constructor-arg ref="nodeComparator"/>
     </bean>
 
     <bean id="relationProcessor" class="org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl">
@@ -293,9 +294,11 @@
         <constructor-arg ref="sortMergeNaturalJoin"/>
         <constructor-arg ref="minimumUnion"/>
     </bean>
+
     <bean id="booleanEvaluator" class="org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator">
         <constructor-arg ref="nodeComparator"/>
     </bean>
+    
     <bean id="attributeTupleComparator" class="org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl">
         <constructor-arg ref="nodeComparator"/>
     </bean>

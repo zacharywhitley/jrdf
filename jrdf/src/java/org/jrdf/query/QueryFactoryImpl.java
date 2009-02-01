@@ -131,7 +131,7 @@ public class QueryFactoryImpl implements QueryFactory {
         ATTRIBUTE_COMPARATOR);
     private static final RelationFactory RELATION_FACTORY = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR,
         TUPLE_COMPARATOR);
-    private static final RelationHelper RELATION_HELPER = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
+    private static final RelationHelper RELATION_HELPER = new RelationHelperImpl(ATTRIBUTE_COMPARATOR, NODE_COMPARATOR);
     private static final RelationProcessor RELATION_PROCESSOR = new RelationProcessorImpl(RELATION_FACTORY,
         TUPLE_COMPARATOR);
 

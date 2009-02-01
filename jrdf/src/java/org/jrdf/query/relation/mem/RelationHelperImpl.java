@@ -59,25 +59,30 @@
 
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.graph.Node;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 public final class RelationHelperImpl implements RelationHelper, Serializable {
-    private AttributeComparator attributeComparator;
     private static final long serialVersionUID = -2830411524131840319L;
+    private AttributeComparator attributeComparator;
+    private NodeComparator nodeComparator;
 
     private RelationHelperImpl() {
     }
 
-    public RelationHelperImpl(AttributeComparator attributeComparator) {
-        checkNotNull(attributeComparator);
+    public RelationHelperImpl(AttributeComparator attributeComparator, NodeComparator nodeComparator) {
+        checkNotNull(attributeComparator, nodeComparator);
         this.attributeComparator = attributeComparator;
+        this.nodeComparator = nodeComparator;
     }
 
     public SortedSet<Attribute> getHeadingUnions(Relation... relations) {
@@ -96,5 +101,14 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
             attributes.retainAll(relation.getSortedHeading());
         }
         return attributes;
+    }
+
+    public boolean processAttributeValues(Attribute attribute, Node lhs, Node rhs, 
+        Map<Attribute, Node> resultantAttributeValues) {
+        if (lhs.hashCode() == rhs.hashCode() && nodeComparator.compare(lhs, rhs) == 0) {
+            resultantAttributeValues.put(attribute, lhs);
+            return false;
+        }
+        return true;
     }
 }

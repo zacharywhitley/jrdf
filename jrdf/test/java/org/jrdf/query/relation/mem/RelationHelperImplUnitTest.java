@@ -74,6 +74,7 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.graph.NodeComparator;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -84,16 +85,20 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class RelationHelperImplUnitTest extends TestCase {
-    private static final Class[] PARAMETERS = {AttributeComparator.class};
-    private static final String[] PARAMETER_NAMES = {"attributeComparator"};
+    private static final Class[] PARAMETERS = {AttributeComparator.class, NodeComparator.class};
+    private static final String[] PARAMETER_NAMES = {"attributeComparator", "nodeComparator"};
     private MockFactory factory;
     private AttributeComparator mockAttributeComparator;
     private AttributeComparator realAttributeComparator;
+    private NodeComparator mockNodeComparator;
+    private NodeComparator realNodeComparator;
 
     public void setUp() {
         factory = new MockFactory();
         mockAttributeComparator = factory.createMock(AttributeComparator.class);
+        mockNodeComparator = factory.createMock(NodeComparator.class);
         realAttributeComparator = getFactory().getNewAttributeComparator();
+        realNodeComparator = getFactory().getNewNodeComparator();
     }
 
     public void testClassProperties() {
@@ -105,7 +110,7 @@ public class RelationHelperImplUnitTest extends TestCase {
     }
 
     public void testGetMockHeading() {
-        RelationHelper relationHelper = new RelationHelperImpl(mockAttributeComparator);
+        RelationHelper relationHelper = new RelationHelperImpl(mockAttributeComparator, mockNodeComparator);
         Relation relation = createRelation(new HashSet<Attribute>());
         factory.replay();
         Set<Attribute> headingUnions = relationHelper.getHeadingUnions(relation);
@@ -114,7 +119,7 @@ public class RelationHelperImplUnitTest extends TestCase {
     }
 
     public void testGetHeading() {
-        RelationHelper relationHelper = new RelationHelperImpl(realAttributeComparator);
+        RelationHelper relationHelper = new RelationHelperImpl(realAttributeComparator, realNodeComparator);
         Set<Attribute> set1 = new HashSet<Attribute>();
         set1.add(TEST_ATTRIBUTE_BAR_VAR);
         Set<Attribute> set2 = new HashSet<Attribute>();
@@ -129,7 +134,7 @@ public class RelationHelperImplUnitTest extends TestCase {
     }
 
     public void testGetHeadingIntersections() {
-        RelationHelper relationHelper = new RelationHelperImpl(realAttributeComparator);
+        RelationHelper relationHelper = new RelationHelperImpl(realAttributeComparator, realNodeComparator);
         SortedSet<Attribute> set1 = new TreeSet<Attribute>(realAttributeComparator);
         set1.add(TEST_ATTRIBUTE_BAR_VAR);
         set1.add(TEST_ATTRIBUTE_BAZ_VAR);

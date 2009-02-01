@@ -60,7 +60,6 @@
 package org.jrdf.query.relation.operation.mem.join.natural;
 
 import org.jrdf.graph.Node;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
@@ -84,16 +83,13 @@ import java.util.SortedSet;
  * <p/>
  */
 public class NaturalJoinEngine implements TupleEngine {
-    private final NodeComparator nodeComparator;
     protected final TupleFactory tupleFactory;
     protected final RelationHelper relationHelper;
     protected Map<Attribute, Node> resultantAttributeValues;
 
-    public NaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
-        NodeComparator newNodeComparator) {
+    public NaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper) {
         this.tupleFactory = newTupleFactory;
         this.relationHelper = newRelationHelper;
-        this.nodeComparator = newNodeComparator;
         this.resultantAttributeValues = new HashMap<Attribute, Node>();
     }
 
@@ -162,7 +158,7 @@ public class NaturalJoinEngine implements TupleEngine {
         } else if (avp2 == null) {
             result = processSingleAVP(attribute, avp1);
         } else {
-            result = processAttributeValues(attribute, avp1, avp2);
+            result = relationHelper.processAttributeValues(attribute, avp1, avp2, resultantAttributeValues);
         }
         return result;
     }
@@ -170,13 +166,5 @@ public class NaturalJoinEngine implements TupleEngine {
     private boolean processSingleAVP(Attribute attribute, Node avp) {
         resultantAttributeValues.put(attribute, avp);
         return false;
-    }
-
-    protected boolean processAttributeValues(Attribute attribute, Node lhs, Node rhs) {
-        if (lhs.hashCode() == rhs.hashCode() && nodeComparator.compare(lhs, rhs) == 0) {
-            resultantAttributeValues.put(attribute, lhs);
-            return false;
-        }
-        return true;
     }
 }

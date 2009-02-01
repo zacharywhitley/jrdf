@@ -61,8 +61,10 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.graph.Node;
 
 import java.util.SortedSet;
+import java.util.Map;
 
 /**
  * Methods on a collection of relations.
@@ -71,4 +73,7 @@ public interface RelationHelper {
     SortedSet<Attribute> getHeadingUnions(Relation... relations);
 
     SortedSet<Attribute> getHeadingIntersections(Relation... relations);
+
+    boolean processAttributeValues(Attribute attribute, Node lhs, Node rhs,
+        Map<Attribute, Node> resultantAttributeValues);
 }
