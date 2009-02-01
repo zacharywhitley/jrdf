@@ -97,10 +97,6 @@ public final class TupleComparatorImpl implements TupleComparator {
         return result;
     }
 
-    public void setAttribute(Attribute attribute) {
-        throw new UnsupportedOperationException();
-    }
-
     private void ifNullThrowException(Tuple tuple1, Tuple tuple2) {
         if (tuple1 == null || tuple2 == null) {
             throw new NullPointerException();
@@ -118,7 +114,6 @@ public final class TupleComparatorImpl implements TupleComparator {
         return result;
     }
 
-    // TODO YF doesn't take into consideration different AVPOperations
     private int compareAttributeValues(Map<Attribute, Node> attributeValues1,
         Map<Attribute, Node> attributeValues2) {
         int result = 0;

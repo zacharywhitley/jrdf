@@ -62,9 +62,9 @@ package org.jrdf.query.relation.operation.mem.join.natural;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl;
@@ -87,7 +87,7 @@ import java.util.TreeSet;
  */
 public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements TupleEngine {
     private static final SortedSet<Attribute> EMPTY_ATTRIBUTE_SET = unmodifiableSortedSet(new TreeSet<Attribute>());
-    private TupleComparator tupleAVComparator;
+    private AttributeTupleComparator tupleAVComparator;
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
         NodeComparator nodeComparator) {

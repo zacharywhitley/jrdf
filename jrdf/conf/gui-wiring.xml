@@ -183,7 +183,7 @@
     <bean id="graphRelationFactory" class="org.jrdf.query.relation.mem.GraphRelationFactoryImpl">
         <constructor-arg ref="sortedAttributeFactory"/>
         <constructor-arg ref="attributeValuePairHelper"/>
-        <constructor-arg ref="tupleComparator"/>
+        <constructor-arg ref="attributeTupleComparator"/>
         <constructor-arg ref="tupleFactory"/>
     </bean>
 
@@ -294,6 +294,9 @@
         <constructor-arg ref="minimumUnion"/>
     </bean>
     <bean id="booleanEvaluator" class="org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator">
+        <constructor-arg ref="nodeComparator"/>
+    </bean>
+    <bean id="attributeTupleComparator" class="org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl">
         <constructor-arg ref="nodeComparator"/>
     </bean>
 </beans>

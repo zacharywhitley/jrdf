@@ -62,13 +62,13 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 
 // TODO AVP Refactor
-public class TupleAttributeValueComparatorImpl implements TupleComparator {
+public class TupleAttributeValueComparatorImpl implements AttributeTupleComparator {
     private static final long serialVersionUID = 5341700779351373234L;
     private NodeComparator nodeComparator;
     private Attribute attribute;

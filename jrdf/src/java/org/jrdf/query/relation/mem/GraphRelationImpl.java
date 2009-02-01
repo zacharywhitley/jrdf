@@ -71,9 +71,9 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EqualsUtil;
@@ -94,13 +94,13 @@ import java.util.TreeSet;
 public final class GraphRelationImpl implements GraphRelation {
     private static final int TRIPLE = 3;
     private final Graph graph;
-    private final TupleComparator tupleComparator;
+    private final AttributeTupleComparator tupleComparator;
     private final TupleFactory tupleFactory;
     private final SortedAttributeFactory attributeFactory;
     private final AttributeValuePairHelper avpHelper;
 
     public GraphRelationImpl(Graph graph, SortedAttributeFactory attributeFactory, AttributeValuePairHelper avpHelper,
-        TupleComparator tupleComparator, TupleFactory tupleFactory) {
+        AttributeTupleComparator tupleComparator, TupleFactory tupleFactory) {
         this.graph = graph;
         this.attributeFactory = attributeFactory;
         this.avpHelper = avpHelper;

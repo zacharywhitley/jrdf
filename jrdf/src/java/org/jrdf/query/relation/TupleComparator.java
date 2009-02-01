@@ -69,5 +69,4 @@ import java.util.Comparator;
  * @version $Id$
  */
 public interface TupleComparator extends Comparator<Tuple>, Serializable {
-    void setAttribute(Attribute attribute);
 }
