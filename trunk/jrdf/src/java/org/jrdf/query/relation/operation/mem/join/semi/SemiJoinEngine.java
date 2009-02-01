@@ -59,12 +59,12 @@
 
 package org.jrdf.query.relation.operation.mem.join.semi;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.constants.NullaryNode;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
@@ -93,12 +93,12 @@ public class SemiJoinEngine implements TupleEngine {
     }
 
     private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
-        Map<Attribute, ValueOperation> allAttributeValuePairs = new HashMap<Attribute, ValueOperation>();
-        Map<Attribute, ValueOperation> lhsAttributeValuePairs = new HashMap<Attribute, ValueOperation>();
+        Map<Attribute, Node> allAttributeValuePairs = new HashMap<Attribute, Node>();
+        Map<Attribute, Node> lhsAttributeValuePairs = new HashMap<Attribute, Node>();
         boolean contradiction = false;
         for (Attribute attribute : headings) {
-            ValueOperation avp1 = tuple1.getValueOperation(attribute);
-            ValueOperation avp2 = tuple2.getValueOperation(attribute);
+            Node avp1 = tuple1.getValue(attribute);
+            Node avp2 = tuple2.getValue(attribute);
             contradiction = addAttributeValuePair(attribute, avp1, avp2, allAttributeValuePairs,
                 lhsAttributeValuePairs);
 
@@ -115,9 +115,9 @@ public class SemiJoinEngine implements TupleEngine {
         }
     }
 
-    private boolean addAttributeValuePair(Attribute attribute, ValueOperation avp1, ValueOperation avp2,
-        Map<Attribute, ValueOperation> resultantAttributeValues,
-        Map<Attribute, ValueOperation> lhsAttributeValuePairs) {
+    private boolean addAttributeValuePair(Attribute attribute, Node avp1, Node avp2,
+        Map<Attribute, Node> resultantAttributeValues,
+        Map<Attribute, Node> lhsAttributeValuePairs) {
 
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
@@ -128,13 +128,13 @@ public class SemiJoinEngine implements TupleEngine {
         }
     }
 
-    private boolean avp1NotNull(Attribute attribute, ValueOperation avp2, ValueOperation avp1,
-        Map<Attribute, ValueOperation> resultantAttributeValues,
-        Map<Attribute, ValueOperation> lhsAttributeValuePairs) {
+    private boolean avp1NotNull(Attribute attribute, Node avp2, Node avp1,
+        Map<Attribute, Node> resultantAttributeValues,
+        Map<Attribute, Node> lhsAttributeValuePairs) {
         if (avp2 == null) {
             addResults(attribute, avp1, resultantAttributeValues, lhsAttributeValuePairs);
             return false;
-        } else if (nodeComparator.compare(avp1.getValue(), avp2.getValue()) == 0) {
+        } else if (nodeComparator.compare(avp1, avp2) == 0) {
             addNonNullaryAvp(attribute, avp1, avp2, resultantAttributeValues, lhsAttributeValuePairs);
             return false;
         } else {
@@ -142,28 +142,28 @@ public class SemiJoinEngine implements TupleEngine {
         }
     }
 
-    private boolean avp1Null(Attribute attribute, ValueOperation avp2,
-        Map<Attribute, ValueOperation> resultantAttributeValues,
-        Map<Attribute, ValueOperation> lhsAttributeValuePairs) {
+    private boolean avp1Null(Attribute attribute, Node avp2,
+        Map<Attribute, Node> resultantAttributeValues,
+        Map<Attribute, Node> lhsAttributeValuePairs) {
         if (avp2 != null) {
             addResults(attribute, avp2, resultantAttributeValues, lhsAttributeValuePairs);
         }
         return false;
     }
 
-    private void addNonNullaryAvp(Attribute attribute, ValueOperation avp1, ValueOperation avp2,
-        Map<Attribute, ValueOperation> resultantAttributeValues,
-        Map<Attribute, ValueOperation> lhsAttributeValuePairs) {
-        if (!(avp1.getValue() instanceof NullaryNode)) {
+    private void addNonNullaryAvp(Attribute attribute, Node avp1, Node avp2,
+        Map<Attribute, Node> resultantAttributeValues,
+        Map<Attribute, Node> lhsAttributeValuePairs) {
+        if (!(avp1 instanceof NullaryNode)) {
             addResults(attribute, avp1, resultantAttributeValues, lhsAttributeValuePairs);
         } else {
             addResults(attribute, avp2, resultantAttributeValues, lhsAttributeValuePairs);
         }
     }
 
-    private void addResults(Attribute attribute, ValueOperation avp,
-        Map<Attribute, ValueOperation> resultantAttributeValues,
-        Map<Attribute, ValueOperation> lhsAttributeValuePairs) {
+    private void addResults(Attribute attribute, Node avp,
+        Map<Attribute, Node> resultantAttributeValues,
+        Map<Attribute, Node> lhsAttributeValuePairs) {
         resultantAttributeValues.put(attribute, avp);
         lhsAttributeValuePairs.put(attribute, avp);
     }

@@ -59,8 +59,8 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.util.EqualsUtil.differentClasses;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
@@ -77,26 +77,26 @@ public final class SingleValue implements Constraint {
     private static final long serialVersionUID = -4113675582657624557L;
 
     private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> avo;
+    private Map<Attribute, Node> avo;
 
     private SingleValue() {
     }
 
-    public SingleValue(Map<Attribute, ValueOperation> avp) {
+    public SingleValue(Map<Attribute, Node> avp) {
         this.avo = avp;
     }
 
-    public Map<Attribute, ValueOperation> getAVO() {
+    public Map<Attribute, Node> getValue() {
         return avo;
     }
 
-    public void setAVO(Map<Attribute, ValueOperation> newAvo) {
+    public void setAVO(Map<Attribute, Node> newAvo) {
         this.avo = newAvo;
     }
 
-    public void setAvo(Attribute existingAttribute, ValueOperation newValueOperation) {
+    public void setAvo(Attribute existingAttribute, Node newValue) {
         if (avo.containsKey(existingAttribute)) {
-            avo.put(existingAttribute, newValueOperation);
+            avo.put(existingAttribute, newValue);
         } else {
             throw new RuntimeException("Cannot set non-existing attribute: " + existingAttribute);
         }

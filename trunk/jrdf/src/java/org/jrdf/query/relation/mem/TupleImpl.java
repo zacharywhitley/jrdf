@@ -58,11 +58,13 @@
  */
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.util.EqualsUtil.*;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Map;
 
@@ -74,21 +76,21 @@ import java.util.Map;
  */
 public final class TupleImpl implements Tuple {
     private static final long serialVersionUID = 4135312692643773094L;
-    private Map<Attribute, ValueOperation> attributeValues;
+    private Map<Attribute, Node> attributeValues;
 
     private TupleImpl() {
     }
 
-    TupleImpl(Map<Attribute, ValueOperation> attributeValues) {
+    TupleImpl(Map<Attribute, Node> attributeValues) {
         checkNotNull(attributeValues);
         this.attributeValues = attributeValues;
     }
 
-    public Map<Attribute, ValueOperation> getAttributeValues() {
+    public Map<Attribute, Node> getAttributeValues() {
         return attributeValues;
     }
 
-    public ValueOperation getValueOperation(Attribute attribute) {
+    public Node getValue(Attribute attribute) {
         return attributeValues.get(attribute);
     }
 

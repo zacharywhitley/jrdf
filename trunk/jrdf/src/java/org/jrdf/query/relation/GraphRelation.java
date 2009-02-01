@@ -65,6 +65,7 @@ package org.jrdf.query.relation;
  * @author Andrew Newman
  * @version $Revision: 533 $
  */
+// TODO AVP Refactor
 public interface GraphRelation extends Relation {
 
     /**

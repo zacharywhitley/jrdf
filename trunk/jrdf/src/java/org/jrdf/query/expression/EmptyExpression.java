@@ -59,8 +59,8 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.Collections;
@@ -70,7 +70,7 @@ public class EmptyExpression implements Expression {
     private static final long serialVersionUID = 4636572000909954329L;
     private static final int DUMMY_HASHCODE = 47;
 
-    public Map<Attribute, ValueOperation> getAVO() {
+    public Map<Attribute, Node> getValue() {
         return Collections.emptyMap();
     }
 

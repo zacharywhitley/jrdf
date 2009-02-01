@@ -58,12 +58,12 @@
  */
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
@@ -122,10 +122,10 @@ public final class RelationImpl implements Relation {
         return tuples.size();
     }
 
-    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
+    public Set<Tuple> getTuples(Map<Attribute, Node> avo) {
         Set<Tuple> set = new HashSet<Tuple>();
         for (Tuple tuple : tuples) {
-            final Map<Attribute, ValueOperation> map = tuple.getAttributeValues();
+            final Map<Attribute, Node> map = tuple.getAttributeValues();
             if (contains(map, avo)) {
                 set.add(tuple);
             }
@@ -136,17 +136,17 @@ public final class RelationImpl implements Relation {
     public Set<Tuple> getTuples(Attribute attribute) {
         Set<Tuple> set = new HashSet<Tuple>();
         for (Tuple tuple : tuples) {
-            if (tuple.getValueOperation(attribute) != null) {
+            if (tuple.getValue(attribute) != null) {
                 set.add(tuple);
             }
         }
         return set;
     }
 
-    private boolean contains(Map<Attribute, ValueOperation> map, Map<Attribute, ValueOperation> avo) {
+    private boolean contains(Map<Attribute, Node> map, Map<Attribute, Node> avo) {
         final Set<Attribute> keys = avo.keySet();
         for (Attribute attr : keys) {
-            ValueOperation vo = avo.get(attr);
+            Node vo = avo.get(attr);
             if (map.get(attr) == null || !map.get(attr).equals(vo)) {
                 return false;
             }

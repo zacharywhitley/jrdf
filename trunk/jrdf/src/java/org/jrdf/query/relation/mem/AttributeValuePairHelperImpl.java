@@ -59,9 +59,9 @@
 
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -74,23 +74,22 @@ import java.util.Map;
  * @version $Revision:$
  */
 public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
-    public Map<Attribute, ValueOperation> createAvo(Triple triple, Attribute[] attributes) {
-        Map<Attribute, ValueOperation> attributeValueOperations = new HashMap<Attribute, ValueOperation>();
-        addValues(triple, attributes, attributeValueOperations);
-        return attributeValueOperations;
+    public Map<Attribute, Node> createAvo(Triple triple, Attribute[] attributes) {
+        Map<Attribute, Node> attributeValues = new HashMap<Attribute, Node>();
+        addValues(triple, attributes, attributeValues);
+        return attributeValues;
     }
 
-    public LinkedHashMap<Attribute, ValueOperation> createLinkedAvo(Triple triple, Attribute[] attributes) {
-        LinkedHashMap<Attribute, ValueOperation> attributeValueOperations =
-            new LinkedHashMap<Attribute, ValueOperation>();
-        addValues(triple, attributes, attributeValueOperations);
-        return attributeValueOperations;
+    public LinkedHashMap<Attribute, Node> createLinkedAvo(Triple triple, Attribute[] attributes) {
+        LinkedHashMap<Attribute, Node> attributeValues =
+            new LinkedHashMap<Attribute, Node>();
+        addValues(triple, attributes, attributeValues);
+        return attributeValues;
     }
 
-    private void addValues(Triple triple, Attribute[] attributes,
-        Map<Attribute, ValueOperation> attributeValueOperations) {
-        attributeValueOperations.put(attributes[0], new ValueOperationImpl(triple.getSubject()));
-        attributeValueOperations.put(attributes[1], new ValueOperationImpl(triple.getPredicate()));
-        attributeValueOperations.put(attributes[2], new ValueOperationImpl(triple.getObject()));
+    private void addValues(Triple triple, Attribute[] attributes, Map<Attribute, Node> attributeValues) {
+        attributeValues.put(attributes[0], triple.getSubject());
+        attributeValues.put(attributes[1], triple.getPredicate());
+        attributeValues.put(attributes[2], triple.getObject());
     }
 }

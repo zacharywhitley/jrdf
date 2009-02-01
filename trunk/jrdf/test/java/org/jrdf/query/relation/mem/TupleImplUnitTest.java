@@ -59,9 +59,9 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R4;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
@@ -82,8 +82,8 @@ public class TupleImplUnitTest extends TestCase {
     private static final Class<?>[] CONSTRUCTOR_TYPES = {Map.class};
     private static final String[] CONSTRUCTOR_NAMES = {"attributeValues"};
     public static final Tuple TEST_TUPLE_1 = new TupleImpl(POS_FOO1_SUBJECT_R1);
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_1 = POS_FOO1_SUBJECT_R1;
-    private static final Map<Attribute, ValueOperation> ATTRIBUTE_VALUE_SET_2 = POS_FOO1_SUBJECT_R4;
+    private static final Map<Attribute, Node> ATTRIBUTE_VALUE_SET_1 = POS_FOO1_SUBJECT_R1;
+    private static final Map<Attribute, Node> ATTRIBUTE_VALUE_SET_2 = POS_FOO1_SUBJECT_R4;
     private static final String TUPLES_NAME = "attributeValues";
 
     public void testClassProperties() {
@@ -98,7 +98,7 @@ public class TupleImplUnitTest extends TestCase {
         checkStandardConstructor(ATTRIBUTE_VALUE_SET_2);
     }
 
-    private void checkStandardConstructor(Map<Attribute, ValueOperation> tupleSet) {
+    private void checkStandardConstructor(Map<Attribute, Node> tupleSet) {
         Tuple tuple = new TupleImpl(tupleSet);
         checkFieldValue(tuple, TUPLES_NAME, tupleSet);
         assertEquals(tupleSet, tuple.getAttributeValues());

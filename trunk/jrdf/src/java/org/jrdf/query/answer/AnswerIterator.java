@@ -63,7 +63,6 @@ import org.jrdf.graph.Node;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.constants.NullaryNode;
 
 import java.util.Iterator;
@@ -89,13 +88,13 @@ public class AnswerIterator implements Iterator<TypeValue[]> {
         return getDataWithValues(tuple.getAttributeValues());
     }
 
-    private TypeValue[] getDataWithValues(Map<Attribute, ValueOperation> avps) {
+    private TypeValue[] getDataWithValues(Map<Attribute, Node> avps) {
         TypeValue[] results = new TypeValue[heading.size()];
         int index = 0;
         for (Attribute headingAttribute : heading) {
-            Node value;
+            org.jrdf.graph.Node value;
             try {
-                value = avps.get(headingAttribute).getValue();
+                value = avps.get(headingAttribute);
             } catch (Exception e) {
                 value = NullaryNode.NULLARY_NODE;
             }

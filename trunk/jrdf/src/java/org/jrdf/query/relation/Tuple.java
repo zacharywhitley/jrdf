@@ -59,6 +59,8 @@
 
 package org.jrdf.query.relation;
 
+import org.jrdf.graph.Node;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -75,7 +77,7 @@ public interface Tuple extends Serializable {
      *
      * @return the set of tuples (attribute/name values).
      */
-    Map<Attribute, ValueOperation> getAttributeValues();
+    Map<Attribute, Node> getAttributeValues();
 
-    ValueOperation getValueOperation(Attribute attribute);
+    Node getValue(Attribute attribute);
 }

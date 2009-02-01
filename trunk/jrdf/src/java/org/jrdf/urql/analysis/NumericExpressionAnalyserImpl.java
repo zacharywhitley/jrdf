@@ -69,12 +69,10 @@ import org.jrdf.query.expression.StrOperator;
 import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
 import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PositionalNodeType;
@@ -99,7 +97,7 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     implements NumericExpressionAnalyser {
     private ParserException exception;
     private AttributeName attributeName;
-    private Node value;
+    private org.jrdf.graph.Node value;
     private LiteralBuilder literalBuilder;
     private VariableCollector collector;
     private URIReferenceBuilder uriBuilder;
@@ -119,17 +117,16 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
         return expression;
     }
 
-    private Map<Attribute, ValueOperation> getSingleAvp() throws ParserException {
+    private Map<Attribute, Node> getSingleAvp() throws ParserException {
         if (exception != null) {
             throw exception;
         }
-        Map<Attribute, ValueOperation> returnValue = new HashMap<Attribute, ValueOperation>();
+        Map<Attribute, Node> returnValue = new HashMap<Attribute, Node>();
         final Map<AttributeName, PositionalNodeType> namePosMap = collector.getAttributes();
         NodeType type = namePosMap.get(attributeName);
         type = (type != null) ? type : new ObjectNodeType();
         Attribute attribute = attributeName == null ? NULLARY_ATTRIBUTE : new AttributeImpl(attributeName, type);
-        ValueOperation vo = new ValueOperationImpl(value);
-        returnValue.put(attribute, vo);
+        returnValue.put(attribute, value);
         collector.addConstraints(returnValue);
         return returnValue;
     }

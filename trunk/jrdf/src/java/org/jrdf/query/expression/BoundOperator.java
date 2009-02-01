@@ -59,9 +59,9 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;
@@ -73,17 +73,17 @@ import java.util.Map;
 public final class BoundOperator implements Operator, LogicExpression {
     private static final long serialVersionUID = -2026129623510467814L;
     private static final int DUMMY_HASHCODE = 47;
-    private Map<Attribute, ValueOperation> singleAvp;
+    private Map<Attribute, Node> singleAvp;
     protected static final String BOUND = "bound";
 
     private BoundOperator() {
     }
 
-    public BoundOperator(Map<Attribute, ValueOperation> singleAvp) {
+    public BoundOperator(Map<Attribute, Node> singleAvp) {
         this.singleAvp = singleAvp;
     }
 
-    public Map<Attribute, ValueOperation> getAVO() {
+    public Map<Attribute, Node> getValue() {
         return singleAvp;
     }
 
@@ -98,8 +98,8 @@ public final class BoundOperator implements Operator, LogicExpression {
 
     @Override
     public String toString() {
-        Map.Entry<Attribute, ValueOperation> attributeValueOperationEntry = singleAvp.entrySet().iterator().next();
-        Attribute attribute = attributeValueOperationEntry.getKey();
+        Map.Entry<Attribute, Node> attributeValue = singleAvp.entrySet().iterator().next();
+        Attribute attribute = attributeValue.getKey();
         return BOUND + " (" + attribute + ")";
     }
 

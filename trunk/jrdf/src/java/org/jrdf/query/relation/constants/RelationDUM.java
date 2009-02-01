@@ -59,10 +59,10 @@
 
 package org.jrdf.query.relation.constants;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -113,7 +113,7 @@ public final class RelationDUM implements Relation, Serializable {
         return 0;
     }
 
-    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> avo) {
+    public Set<Tuple> getTuples(Map<Attribute, Node> attributeValue) {
         return Collections.emptySet();
     }
 

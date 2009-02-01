@@ -60,11 +60,12 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
 
 import java.lang.reflect.Modifier;
@@ -78,7 +79,7 @@ import java.util.Map;
  */
 public class TupleFactoryImplUnitTest extends TestCase {
     private static final MockFactory FACTORY = new MockFactory();
-    private static final Map<Attribute, ValueOperation> MOCK_AVP = FACTORY.createMock(Map.class);
+    private static final Map<Attribute, Node> MOCK_AVP = FACTORY.createMock(Map.class);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(TupleFactory.class, TupleFactoryImpl.class);

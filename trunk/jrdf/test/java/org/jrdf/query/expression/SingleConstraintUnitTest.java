@@ -64,11 +64,9 @@ import static org.jrdf.graph.AnyNode.ANY_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAR_VAR;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
@@ -89,9 +87,9 @@ import java.util.Map;
  * @version $Revision$
  */
 public final class SingleConstraintUnitTest extends TestCase {
-    private static final LinkedHashMap<Attribute, ValueOperation> AVO_1 =
+    private static final LinkedHashMap<Attribute, Node> AVO_1 =
         createAvoMap(TEST_ATTRIBUTE_FOO_POS, ANY_NODE);
-    private static final LinkedHashMap<Attribute, ValueOperation> AVO_2 =
+    private static final LinkedHashMap<Attribute, Node> AVO_2 =
         createAvoMap(TEST_ATTRIBUTE_BAR_VAR, ANY_SUBJECT_NODE);
     private static final SingleConstraint CONSTRAINT_TRIPLE_1 =
         new SingleConstraint(AVO_1);
@@ -211,13 +209,13 @@ public final class SingleConstraintUnitTest extends TestCase {
         assertFalse(x.equals(y));
     }
 
-    private void checkToStringDelegatesToTriple(Map<Attribute, ValueOperation> avp, SingleConstraint contraint) {
+    private void checkToStringDelegatesToTriple(Map<Attribute, Node> avp, SingleConstraint contraint) {
         assertEquals(avp.toString(), contraint.toString());
     }
 
-    private static LinkedHashMap<Attribute, ValueOperation> createAvoMap(Attribute attribute, Node node) {
-        LinkedHashMap<Attribute, ValueOperation> avo = new LinkedHashMap<Attribute, ValueOperation>();
-        avo.put(attribute, new ValueOperationImpl(node));
+    private static LinkedHashMap<Attribute, Node> createAvoMap(Attribute attribute, org.jrdf.graph.Node node) {
+        LinkedHashMap<Attribute, Node> avo = new LinkedHashMap<Attribute, Node>();
+        avo.put(attribute, node);
         return avo;
     }
 }

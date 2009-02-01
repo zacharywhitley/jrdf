@@ -59,6 +59,7 @@
 
 package org.jrdf.query.execute;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.QueryFactoryImpl;
 import static org.jrdf.query.execute.QueryExecutionPlanner.getPlanner;
 import org.jrdf.query.expression.Ask;
@@ -71,7 +72,6 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
@@ -181,9 +181,9 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
 
     private void doCachedConstraint(SingleConstraint constraint, Attribute curAttr) {
         Set<Tuple> tuples = new HashSet<Tuple>();
-        Set<ValueOperation> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
-        for (ValueOperation newVO : voSet) {
-            constraint.setAvo(curAttr, newVO);
+        Set<Node> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
+        for (Node newVO : voSet) {
+            constraint.setAttributeValue(curAttr, newVO);
             Relation tmpRelation = restrict.restrict(result, constraint.getAvo(allVariables));
             tuples.addAll(tmpRelation.getTuples());
             tmpRelation = null;

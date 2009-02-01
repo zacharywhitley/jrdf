@@ -59,9 +59,9 @@
 
 package org.jrdf.util.test.instantiate;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
@@ -82,7 +82,7 @@ final class ConstraintTripleInstantiator implements Instantiator {
     }
 
     private ParamSpec createParams() {
-        LinkedHashMap<Attribute, ValueOperation> avp = TripleTestUtil.AVO_BOOK_1_DC_SUBJECT_LITERAL;
+        LinkedHashMap<Attribute, Node> avp = TripleTestUtil.AVO_BOOK_1_DC_SUBJECT_LITERAL;
         Object[] params = {avp};
         Class<?>[] types = new Class[]{LinkedHashMap.class};
         return new ParamSpec(types, params);

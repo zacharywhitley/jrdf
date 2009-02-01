@@ -59,8 +59,8 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -77,5 +77,5 @@ public interface Expression extends Serializable {
 
     int size();
 
-    Map<Attribute, ValueOperation> getAVO();
+    Map<Attribute, Node> getValue();
 }

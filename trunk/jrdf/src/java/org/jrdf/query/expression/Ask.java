@@ -59,8 +59,8 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.PositionalNodeType;
 import org.jrdf.urql.analysis.VariableCollector;
@@ -88,8 +88,8 @@ public class Ask implements Expression {
         allVariables = variableCollector.getAttributes();
     }
 
-    public Map<Attribute, ValueOperation> getAVO() {
-        return nextExpression.getAVO();
+    public Map<Attribute, Node> getValue() {
+        return nextExpression.getValue();
     }
 
     public int size() {

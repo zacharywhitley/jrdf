@@ -65,7 +65,6 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
@@ -88,14 +87,14 @@ public class NaturalJoinEngine implements TupleEngine {
     private final NodeComparator nodeComparator;
     protected final TupleFactory tupleFactory;
     protected final RelationHelper relationHelper;
-    protected Map<Attribute, ValueOperation> resultantAttributeValues;
+    protected Map<Attribute, Node> resultantAttributeValues;
 
     public NaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
         NodeComparator newNodeComparator) {
         this.tupleFactory = newTupleFactory;
         this.relationHelper = newRelationHelper;
         this.nodeComparator = newNodeComparator;
-        this.resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
+        this.resultantAttributeValues = new HashMap<Attribute, Node>();
     }
 
     public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
@@ -130,7 +129,7 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
-        resultantAttributeValues = new HashMap<Attribute, ValueOperation>();
+        resultantAttributeValues = new HashMap<Attribute, Node>();
         final boolean contradiction = checkCommonHeadings(headings, tuple1, tuple2);
         // Only add results if we have found more items to add and there wasn't a contradiction in bound values.
         if (!contradiction && !resultantAttributeValues.isEmpty()) {
@@ -152,13 +151,13 @@ public class NaturalJoinEngine implements TupleEngine {
 
     protected boolean processTuplePair(Tuple tuple1, Tuple tuple2, Attribute attribute) {
         boolean contradiction;
-        ValueOperation avp1 = tuple1.getValueOperation(attribute);
-        ValueOperation avp2 = tuple2.getValueOperation(attribute);
+        Node avp1 = tuple1.getValue(attribute);
+        Node avp2 = tuple2.getValue(attribute);
         contradiction = compareAVPs(attribute, avp1, avp2);
         return contradiction;
     }
 
-    protected boolean compareAVPs(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
+    protected boolean compareAVPs(Attribute attribute, Node avp1, Node avp2) {
         boolean result;
         if (avp1 == null && avp2 == null) {
             result = false;
@@ -172,16 +171,14 @@ public class NaturalJoinEngine implements TupleEngine {
         return result;
     }
 
-    private boolean processSingleAVP(Attribute attribute, ValueOperation avp) {
+    private boolean processSingleAVP(Attribute attribute, Node avp) {
         resultantAttributeValues.put(attribute, avp);
         return false;
     }
 
-    protected boolean processAttributeValues(Attribute attribute, ValueOperation avp1, ValueOperation avp2) {
-        Node lhsValue = avp1.getValue();
-        Node rhsValue = avp2.getValue();
-        if (lhsValue.hashCode() == rhsValue.hashCode() && nodeComparator.compare(lhsValue, rhsValue) == 0) {
-            resultantAttributeValues.put(attribute, avp1);
+    protected boolean processAttributeValues(Attribute attribute, Node lhs, Node rhs) {
+        if (lhs.hashCode() == rhs.hashCode() && nodeComparator.compare(lhs, rhs) == 0) {
+            resultantAttributeValues.put(attribute, lhs);
             return false;
         }
         return true;

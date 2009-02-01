@@ -59,11 +59,11 @@
 
 package org.jrdf.query.execute;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 
@@ -83,12 +83,12 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
     private static final int LOAD_FACTOR = 10;
     private static final int DEFAULT_LIMIT = 1000;
 
-    private Map<AttributeName, Set<ValueOperation>> cache;
+    private Map<AttributeName, Set<Node>> cache;
     private long timeStamp;
     private int cacheLimit;
 
     public ConstraintTupleCacheHandlerImpl() {
-        cache = new HashMap<AttributeName, Set<ValueOperation>>();
+        cache = new HashMap<AttributeName, Set<Node>>();
         timeStamp = System.currentTimeMillis();
         cacheLimit = DEFAULT_LIMIT;
     }
@@ -103,7 +103,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         return result.getTupleSize();
     }
 
-    public Set<ValueOperation> getCachedValues(AttributeName name) {
+    public Set<Node> getCachedValues(AttributeName name) {
         return cache.get(name);
     }
 
@@ -113,7 +113,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
 
     public void clear() {
         for (AttributeName name : cache.keySet()) {
-            Set<ValueOperation> vo = cache.get(name);
+            Set<Node> vo = cache.get(name);
             vo.clear();
             vo = null;
         }
@@ -121,7 +121,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
     }
 
     private void clear(AttributeName name) {
-        Set<ValueOperation> set = cache.remove(name);
+        Set<Node> set = cache.remove(name);
         if (set != null) {
             set.clear();
             set = null;
@@ -161,8 +161,8 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
 
     private void updateCache(Relation result, long time, Attribute attribute) {
         AttributeName attributeName = attribute.getAttributeName();
-        Set<ValueOperation> voSet = getMatchingVOs(attribute, result.getTuples(attribute));
-        Set<ValueOperation> cached = cache.get(attributeName);
+        Set<Node> voSet = getMatchingVOs(attribute, result.getTuples(attribute));
+        Set<Node> cached = cache.get(attributeName);
         if (time > timeStamp) {
             setTimeStamp(time);
         }
@@ -173,10 +173,10 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         cache.put(attributeName, voSet);
     }
 
-    private Set<ValueOperation> getMatchingVOs(Attribute attribute, Set<Tuple>tupleSet) {
-        Set<ValueOperation> set = new HashSet<ValueOperation>();
+    private Set<Node> getMatchingVOs(Attribute attribute, Set<Tuple>tupleSet) {
+        Set<Node> set = new HashSet<Node>();
         for (Tuple tuple : tupleSet) {
-            set.add(tuple.getValueOperation(attribute));
+            set.add(tuple.getValue(attribute));
         }
         return set;
     }

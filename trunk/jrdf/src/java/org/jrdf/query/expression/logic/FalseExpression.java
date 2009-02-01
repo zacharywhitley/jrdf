@@ -59,12 +59,11 @@
 
 package org.jrdf.query.expression.logic;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.global.LiteralImpl;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
-import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.vocabulary.XSD.BOOLEAN;
 
@@ -78,15 +77,15 @@ import java.util.Map;
 public final class FalseExpression implements LogicExpression {
     private static final long serialVersionUID = -1159936586370099216L;
     private static final int DUMMY_HASHCODE = 47;
-    private static final Map<Attribute, ValueOperation> MAP = singletonMap(NULLARY_ATTRIBUTE,
-            (ValueOperation) new ValueOperationImpl(new LiteralImpl("false", BOOLEAN)));
+    private static final Node FALSE = new LiteralImpl("false", BOOLEAN);
+    private static final Map<Attribute, Node> MAP = singletonMap(NULLARY_ATTRIBUTE, FALSE);
 
     /**
      * The singleton false expression.
      */
     public static final FalseExpression FALSE_EXPRESSION = new FalseExpression();
 
-    private Map<Attribute, ValueOperation> avp;
+    private Map<Attribute, Node> avp;
 
     private FalseExpression() {
         this.avp = MAP;
@@ -101,7 +100,7 @@ public final class FalseExpression implements LogicExpression {
         return 0;
     }
 
-    public Map<Attribute, ValueOperation> getAVO() {
+    public Map<Attribute, Node> getValue() {
         return avp;
     }
 

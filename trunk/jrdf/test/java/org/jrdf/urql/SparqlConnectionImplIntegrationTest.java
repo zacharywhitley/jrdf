@@ -69,17 +69,19 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
-import org.jrdf.query.answer.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.answer.Answer;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.urql.builder.QueryBuilder;
 import org.jrdf.util.test.ReflectTestUtil;
-import static org.jrdf.util.test.SparqlQueryTestUtil.*;
-import static org.jrdf.util.test.TripleTestUtil.*;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
+import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
+import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
+import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -144,12 +146,12 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
 
     private void checkFirstRowOfAnswer(Set<Tuple> solutions) {
         Tuple tuple = solutions.iterator().next();
-        Map<Attribute, ValueOperation> sortedAttributeValues = tuple.getAttributeValues();
-        final TreeSet<Node> nodes = new TreeSet<Node>(FACTORY.getNewNodeComparator());
-        for (ValueOperation valueOperation : sortedAttributeValues.values()) {
-            nodes.add(valueOperation.getValue());
+        Map<Attribute, Node> sortedAttributeValues = tuple.getAttributeValues();
+        final TreeSet<org.jrdf.graph.Node> nodes = new TreeSet<org.jrdf.graph.Node>(FACTORY.getNewNodeComparator());
+        for (Node value : sortedAttributeValues.values()) {
+            nodes.add(value);
         }
-        Iterator<Node> iterator = nodes.iterator();
+        Iterator<org.jrdf.graph.Node> iterator = nodes.iterator();
         checkSubject((SubjectNode) iterator.next());
         checkPredicate((PredicateNode) iterator.next());
         checkLiteral((Literal) iterator.next());

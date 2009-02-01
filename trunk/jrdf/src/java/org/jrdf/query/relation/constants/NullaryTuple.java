@@ -59,10 +59,10 @@
 
 package org.jrdf.query.relation.constants;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.query.relation.constants.NullaryAttribute.*;
+import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
@@ -81,8 +81,8 @@ public final class NullaryTuple implements Tuple, Serializable {
      */
     public static final Tuple NULLARY_TUPLE = new NullaryTuple();
     private static final long serialVersionUID = 1808216129525892255L;
-    private static final Map<Attribute, ValueOperation> NULLARY_AVP_SET = Collections.singletonMap(NULLARY_ATTRIBUTE,
-            NullaryValueOperation.NULLARY_ATTRIBUTE_VALUE_PAIR);
+    private static final Map<Attribute, Node> NULLARY_AVP_SET = Collections.singletonMap(NULLARY_ATTRIBUTE,
+            NullaryNode.NULLARY_NODE);
 
     private NullaryTuple() {
     }
@@ -91,11 +91,11 @@ public final class NullaryTuple implements Tuple, Serializable {
         return NULLARY_TUPLE;
     }
 
-    public Map<Attribute, ValueOperation> getAttributeValues() {
+    public Map<Attribute, Node> getAttributeValues() {
         return NULLARY_AVP_SET;
     }
 
-    public ValueOperation getValueOperation(Attribute attribute) {
+    public Node getValue(Attribute attribute) {
         return null;
     }
 }

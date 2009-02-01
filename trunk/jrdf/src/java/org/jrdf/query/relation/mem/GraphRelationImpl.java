@@ -64,6 +64,7 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -74,7 +75,6 @@ import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EqualsUtil;
 
@@ -131,11 +131,11 @@ public final class GraphRelationImpl implements GraphRelation {
         }
     }
 
-    public Set<Tuple> getTuples(Map<Attribute, ValueOperation> nameValues) {
+    public Set<Tuple> getTuples(Map<Attribute, Node> nameValues) {
         Attribute[] attributes = nameValues.keySet().toArray(new Attribute[TRIPLE]);
-        Triple searchTriple = new TripleImpl((SubjectNode) nameValues.get(attributes[0]).getValue(),
-                (PredicateNode) nameValues.get(attributes[1]).getValue(),
-                (ObjectNode) nameValues.get(attributes[2]).getValue());
+        Triple searchTriple = new TripleImpl((SubjectNode) nameValues.get(attributes[0]),
+                (PredicateNode) nameValues.get(attributes[1]),
+                (ObjectNode) nameValues.get(attributes[2]));
         return getUnsortedTuplesFromGraph(searchTriple, attributes);
     }
 
@@ -184,7 +184,7 @@ public final class GraphRelationImpl implements GraphRelation {
             SortedSet<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
             while (closableIterator.hasNext()) {
                 Triple triple = closableIterator.next();
-                Map<Attribute, ValueOperation> avo = avpHelper.createAvo(triple, attributes);
+                Map<Attribute, Node> avo = avpHelper.createAvo(triple, attributes);
                 tuples.add(tupleFactory.getTuple(avo));
             }
             return tuples;
@@ -200,7 +200,7 @@ public final class GraphRelationImpl implements GraphRelation {
             Set<Tuple> tuples = new HashSet<Tuple>();
             while (closableIterator.hasNext()) {
                 Triple triple = closableIterator.next();
-                Map<Attribute, ValueOperation> avo = avpHelper.createAvo(triple, attributes);
+                Map<Attribute, Node> avo = avpHelper.createAvo(triple, attributes);
                 tuples.add(tupleFactory.getTuple(avo));
             }
             return tuples;

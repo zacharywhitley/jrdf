@@ -65,7 +65,6 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
@@ -90,7 +89,7 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
     private static final NodeType[] TYPES = {SUBJECT_NODE_TYPE, PREDICATE_NODE_TYPE, OBJECT_NODE_TYPE};
     private final Graph graph;
     private final SortedAttributeFactory sortedAttributeFactory;
-    private LinkedHashMap<Attribute, ValueOperation> avp = new LinkedHashMap<Attribute, ValueOperation>();
+    private LinkedHashMap<Attribute, Node> avp = new LinkedHashMap<Attribute, Node>();
     private Map<String, String> prefixMap = new HashMap<String, String>();
     private ParserException exception;
 
@@ -105,12 +104,12 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
      *
      * @return The local version of the given <var>tripleNode</var>
      */
-    public LinkedHashMap<Attribute, ValueOperation> getTriples() throws ParserException {
+    public LinkedHashMap<Attribute, Node> getTriples() throws ParserException {
         if (exception != null) {
             throw exception;
         } else {
-            LinkedHashMap<Attribute, ValueOperation> toReturn = avp;
-            avp = new LinkedHashMap<Attribute, ValueOperation>();
+            LinkedHashMap<Attribute, Node> toReturn = avp;
+            avp = new LinkedHashMap<Attribute, Node>();
             return toReturn;
         }
     }
@@ -135,7 +134,7 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
         }
     }
 
-    private Map<Attribute, ValueOperation> getElement(org.jrdf.urql.parser.node.Node node, Node graphNode,
+    private Map<Attribute, Node> getElement(org.jrdf.urql.parser.node.Node node, org.jrdf.graph.Node graphNode,
         NodeType nodeType, Attribute attribute) throws ParserException {
         ElementBuilder analyser = new ElementBuilderImpl(nodeType, graphNode, attribute, graph, prefixMap);
         node.apply(analyser);
