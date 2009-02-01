@@ -102,11 +102,6 @@ public final class RelationProcessorImpl implements RelationProcessor {
 
     private Relation processRelationPairs(TupleEngine tupleEngine, Relation relation1, Relation relation2) {
         SortedSet<Attribute> headings = tupleEngine.getHeading(relation1, relation2);
-        return doProcessRelations(tupleEngine, relation1, relation2, headings);
-    }
-
-    private Relation doProcessRelations(TupleEngine tupleEngine, Relation relation1, Relation relation2,
-                                        SortedSet<Attribute> headings) {
         SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         tupleEngine.processRelations(headings, relation1, relation2, result);
         return relationFactory.getRelation(headings, result);

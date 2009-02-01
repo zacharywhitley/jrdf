@@ -83,10 +83,6 @@ public class SubsumptionEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public SortedSet<Attribute> getHeadingsIntersection(Relation relation1, Relation relation2) {
-        return relationHelper.getHeadingIntersections(relation1, relation2);
-    }
-
     /**
      * Returns the tuples to be subsumed in the result set.
      *

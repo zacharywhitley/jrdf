@@ -73,7 +73,7 @@ import java.util.Map;
 import java.util.SortedSet;
 
 /**
- *  Join two relations if they have common tuple values and projects the results back onto the first relation.
+ * Join two relations if they have common tuple values and projects the results back onto the first relation.
  */
 public class SemiJoinEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
@@ -88,8 +88,13 @@ public class SemiJoinEngine implements TupleEngine {
         return relation1.getSortedHeading();
     }
 
-    public SortedSet<Attribute> getHeadingsIntersection(Relation relation1, Relation relation2) {
-        throw new UnsupportedOperationException();
+    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
+        SortedSet<Tuple> result) {
+        for (Tuple tuple1 : relation1.getTuples()) {
+            for (Tuple tuple2 : relation2.getTuples()) {
+                process(headings, result, tuple1, tuple2);
+            }
+        }
     }
 
     private void process(SortedSet<Attribute> headings, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2) {
@@ -166,14 +171,5 @@ public class SemiJoinEngine implements TupleEngine {
         Map<Attribute, Node> lhsAttributeValuePairs) {
         resultantAttributeValues.put(attribute, avp);
         lhsAttributeValuePairs.put(attribute, avp);
-    }
-
-    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-                                 SortedSet<Tuple> result) {
-        for (Tuple tuple1 : relation1.getTuples()) {
-            for (Tuple tuple2 : relation2.getTuples()) {
-                process(headings, result, tuple1, tuple2);
-            }
-        }
     }
 }

@@ -71,7 +71,8 @@ import org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import static java.util.Collections.sort;
+import static java.util.Collections.unmodifiableSortedSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -85,7 +86,7 @@ import java.util.TreeSet;
  * @version :$
  */
 public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements TupleEngine {
-    private static final SortedSet<Attribute> EMPTY_ATTRIBUTE_SET = new TreeSet<Attribute>();
+    private static final SortedSet<Attribute> EMPTY_ATTRIBUTE_SET = unmodifiableSortedSet(new TreeSet<Attribute>());
     private TupleComparator tupleAVComparator;
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
@@ -97,25 +98,25 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
         SortedSet<Tuple> result) {
-        SortedSet<Attribute> commonHeadings = getHeadingsIntersection(relation1, relation2);
-        if (commonHeadings.size() == 1) {
+        SortedSet<Attribute> commonHeadings = relationHelper.getHeadingIntersections(relation1, relation2);
+        if (commonHeadings.size() > 1) {
+            // do multi merge join
+            doMultiSortMergeJoin(headings, relation1, relation2, commonHeadings, result);
+        } else if (commonHeadings.size() == 1) {
             // do sort merge join
             doSortMergeJoin(headings, relation1, relation2, commonHeadings.iterator().next(), EMPTY_ATTRIBUTE_SET,
                 result);
-        } else if (commonHeadings.size() > 1) {
-            // do multi merge join
-            doMultiSortMergeJoin(headings, relation1, relation2, commonHeadings, result);
         } else {
             // do natural join
             doNaturalJoin(headings, relation1.getTuples(), relation2.getTuples(), result);
         }
     }
 
-    private void doMultiSortMergeJoin(SortedSet<Attribute> headings, Relation rel1, Relation rel2,
+    private void doMultiSortMergeJoin(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
         SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result) {
-        Attribute attr = chooseACommonHeading(headings, rel1, rel2);
+        Attribute attr = chooseACommonHeading(headings, relation1, relation2);
         commonHeadings.remove(attr);
-        doSortMergeJoin(headings, rel1, rel2, attr, commonHeadings, result);
+        doSortMergeJoin(headings, relation1, relation2, attr, commonHeadings, result);
     }
 
     private Attribute chooseACommonHeading(Set<Attribute> headings, Relation rel1, Relation rel2) {
@@ -164,7 +165,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     private List<Tuple> sortSetOfTuples(Set<Tuple> tuples, Attribute attribute) {
         tupleAVComparator.setAttribute(attribute);
         List<Tuple> list = new ArrayList<Tuple>(tuples);
-        Collections.sort(list, tupleAVComparator);
+        sort(list, tupleAVComparator);
         return list;
     }
 
