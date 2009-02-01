@@ -67,7 +67,6 @@ import org.jrdf.query.relation.Tuple;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 
-// TODO AVP Refactor
 public class TupleAttributeValueComparatorImpl implements AttributeTupleComparator {
     private static final long serialVersionUID = 5341700779351373234L;
     private NodeComparator nodeComparator;
