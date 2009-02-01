@@ -59,15 +59,15 @@
 
 package org.jrdf.query.relation.operation.mem.join.natural;
 
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.mem.AttributeTupleComparatorImpl;
+import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.ArrayList;
@@ -79,7 +79,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.HashMap;
 
 /**
  * @author Yuan-Fang Li
@@ -241,16 +240,14 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
                 if (nodeComparator.compare(t1Value, t2.getValue(attribute)) != 0) {
                     break;
                 }
-                addToResult(result, t1, t2, commonHeadings);
+                addToResult(commonHeadings, t1, t2, result);
             }
         }
         return new int[]{newPos1, newPos2};
     }
 
-    private void addToResult(SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2, SortedSet<Attribute> commonHeadings) {
-        final boolean contradiction = relationHelper.addTuplesIfEqual(commonHeadings, tuple1, tuple2,
-            new HashMap<Attribute, Node>());
-        if (!contradiction) {
+    private void addToResult(SortedSet<Attribute> commonHeadings, Tuple tuple1, Tuple tuple2, SortedSet<Tuple> result) {
+        if (!relationHelper.areIncompatible(commonHeadings, tuple1, tuple2)) {
             result.add(tupleFactory.getTuple(tuple1, tuple2));
         }
     }

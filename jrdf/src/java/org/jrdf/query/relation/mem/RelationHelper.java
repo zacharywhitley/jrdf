@@ -88,6 +88,16 @@ public interface RelationHelper {
     SortedSet<Attribute> getHeadingIntersections(Relation... relations);
 
     /**
+     * Returns true if the two tuples have values that around bound to the same attribute but have different value.
+     *
+     * @param headings The shared headings between tuple1 and tuple2.
+     * @param tuple1 The first tuple to compare.
+     * @param tuple2 The second tuple to compare.
+     * @return true if the tuples have incompatible values.
+     */
+    boolean areIncompatible(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2);
+
+    /**
      * Adds to the result map if the first and second tuples are equal to one another.  If the tuples are unequal
      * then returns true - indicating two unequal values within the tuples - a contradiction - no value was added to
      * the result.
