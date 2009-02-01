@@ -63,6 +63,7 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.execute.OptimizingQueryEngineImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
@@ -80,6 +81,7 @@ import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.mem.RelationHelperImpl;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
+import org.jrdf.query.relation.mem.TupleAttributeValueComparatorImpl;
 import org.jrdf.query.relation.mem.TupleComparatorImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
@@ -123,6 +125,8 @@ public class QueryFactoryImpl implements QueryFactory {
     private static final ComparatorFactory COMPARATOR_FACTORY = new ComparatorFactoryImpl();
     private static final NodeComparator NODE_COMPARATOR = COMPARATOR_FACTORY.createNodeComparator();
     private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl();
+    private static final AttributeTupleComparator ATT_TUPLE_COMPARATOR = new TupleAttributeValueComparatorImpl(
+        NODE_COMPARATOR);
     private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(NODE_COMPARATOR,
         ATTRIBUTE_COMPARATOR);
     private static final RelationFactory RELATION_FACTORY = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR,
@@ -134,7 +138,7 @@ public class QueryFactoryImpl implements QueryFactory {
     public QueryBuilder createQueryBuilder() {
         AttributeValuePairHelper avpHelper = new AttributeValuePairHelperImpl();
         GraphRelationFactory graphRelationFactory = new GraphRelationFactoryImpl(ATTRIBUTE_FACTORY, avpHelper,
-            TUPLE_COMPARATOR, TUPLE_FACTORY);
+            ATT_TUPLE_COMPARATOR, TUPLE_FACTORY);
         ParserFactory parserFactory = new ParserFactoryImpl();
         SparqlParser sparqlParser = new SableCcSparqllParser(parserFactory, graphRelationFactory,
             ATTRIBUTE_FACTORY);

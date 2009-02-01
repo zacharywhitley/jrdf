@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,34 +57,17 @@
  *
  */
 
-package org.jrdf.query.relation.mem;
+package org.jrdf.query.relation;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.query.relation.AttributeTupleComparator;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.TupleFactory;
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * A factory that produces graph relations.
+ * Compares tuples.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Id$
  */
-public class GraphRelationFactoryImpl implements GraphRelationFactory {
-    private SortedAttributeFactory attributeFactory;
-    private AttributeValuePairHelper avpHelper;
-    private AttributeTupleComparator tupleComparator;
-    private TupleFactory tupleFactory;
-
-    public GraphRelationFactoryImpl(SortedAttributeFactory attributeFactory, AttributeValuePairHelper avpHelper,
-        AttributeTupleComparator tupleComparator, TupleFactory tupleFactory) {
-        this.attributeFactory = attributeFactory;
-        this.tupleComparator = tupleComparator;
-        this.avpHelper = avpHelper;
-        this.tupleFactory = tupleFactory;
-    }
-
-    public GraphRelation createRelation(Graph graph) {
-        return new GraphRelationImpl(graph, attributeFactory, avpHelper, tupleComparator, tupleFactory);
-    }
+public interface AttributeTupleComparator extends Comparator<Tuple>, Serializable {
+    void setAttribute(Attribute attribute);
 }
