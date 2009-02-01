@@ -78,13 +78,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements TupleEngine {
-    private static final Set<Attribute> EMPTY_ATTRIBUTE_SET = Collections.emptySet();
+    private static final SortedSet<Attribute> EMPTY_ATTRIBUTE_SET = new TreeSet<Attribute>();
     private TupleComparator tupleAVComparator;
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
@@ -145,7 +146,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private void doSortMergeJoin(SortedSet<Attribute> headings, Relation rel1, Relation rel2,
-        Attribute attribute, Set<Attribute> remainingHeadings, SortedSet<Tuple> result) {
+        Attribute attribute, SortedSet<Attribute> remainingHeadings, SortedSet<Tuple> result) {
         final List<Set<Tuple>> sets1 = partitionWithAttribute(attribute, rel1);
         final List<Set<Tuple>> sets2 = partitionWithAttribute(attribute, rel2);
         final List<Tuple> list1 = sortSetOfTuples(sets1.get(0), attribute);
@@ -165,15 +166,6 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         List<Tuple> list = new ArrayList<Tuple>(tuples);
         Collections.sort(list, tupleAVComparator);
         return list;
-    }
-
-    private void doNaturalJoin(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
-        SortedSet<Tuple> result) {
-        if (tuples1.size() < tuples2.size()) {
-            startDoubleLoopProcessing(headings, result, tuples1, tuples2);
-        } else {
-            startDoubleLoopProcessing(headings, result, tuples2, tuples1);
-        }
     }
 
     /**
@@ -199,8 +191,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         return list;
     }
 
-    private void doProperSortMergeJoin(Attribute attribute, Set<Attribute> commonHeadings, SortedSet<Tuple> result,
-        List<Tuple> list1, List<Tuple> list2) {
+    private void doProperSortMergeJoin(Attribute attribute, SortedSet<Attribute> commonHeadings,
+        SortedSet<Tuple> result, List<Tuple> list1, List<Tuple> list2) {
         tupleAVComparator.setAttribute(attribute);
         Tuple tuple1, tuple2;
         int i = 0;
@@ -231,7 +223,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private int[] processSameTuples(List<Tuple> l1, List<Tuple> l2, Attribute attribute, SortedSet<Tuple> result,
-        Set<Attribute> commonHeadings, int pos1, int pos2, Tuple pivot) {
+        SortedSet<Attribute> commonHeadings, int pos1, int pos2, Tuple pivot) {
         Tuple t1, t2;
         int newPos1 = pos1 + 1;
         int newPos2 = pos2 + 1;
@@ -254,24 +246,12 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private void addToResult(Attribute attribute, SortedSet<Tuple> result, Tuple tuple1, Tuple tuple2,
-        Set<Attribute> commonHeadings) {
-        boolean contradiction =
-            avp1NotNull(attribute, tuple1.getValueOperation(attribute), tuple2.getValueOperation(attribute)) ||
-                checkCommonHeadings(commonHeadings, tuple1, tuple2);
-
+        SortedSet<Attribute> commonHeadings) {
+        final boolean correctTuplesAdded = processAttributeValues(attribute, tuple1.getValueOperation(attribute),
+            tuple2.getValueOperation(attribute));
+        boolean contradiction = correctTuplesAdded || checkCommonHeadings(commonHeadings, tuple1, tuple2);
         if (!contradiction) {
             result.add(tupleFactory.getTuple(tuple1, tuple2));
         }
-    }
-
-    private boolean checkCommonHeadings(Set<Attribute> commonHeadings, Tuple tuple1, Tuple tuple2) {
-        boolean contradiction = false;
-        for (Attribute attribute : commonHeadings) {
-            contradiction = processTuplePair(tuple1, tuple2, attribute);
-            if (contradiction) {
-                return contradiction;
-            }
-        }
-        return contradiction;
     }
 }

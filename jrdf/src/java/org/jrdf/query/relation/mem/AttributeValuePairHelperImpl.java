@@ -62,7 +62,6 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -90,8 +89,8 @@ public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
 
     private void addValues(Triple triple, Attribute[] attributes,
         Map<Attribute, ValueOperation> attributeValueOperations) {
-        attributeValueOperations.put(attributes[0], new ValueOperationImpl(triple.getSubject(), EQUALS));
-        attributeValueOperations.put(attributes[1], new ValueOperationImpl(triple.getPredicate(), EQUALS));
-        attributeValueOperations.put(attributes[2], new ValueOperationImpl(triple.getObject(), EQUALS));
+        attributeValueOperations.put(attributes[0], new ValueOperationImpl(triple.getSubject()));
+        attributeValueOperations.put(attributes[1], new ValueOperationImpl(triple.getPredicate()));
+        attributeValueOperations.put(attributes[2], new ValueOperationImpl(triple.getObject()));
     }
 }

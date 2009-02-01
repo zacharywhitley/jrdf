@@ -94,14 +94,9 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.mem.AVPOperation;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import static org.jrdf.query.relation.mem.BoundAVPOperation.BOUND;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
-import static org.jrdf.query.relation.mem.LangAVPOperator.LANG;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
-import static org.jrdf.query.relation.mem.StrAVPOperation.STR;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
@@ -365,10 +360,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Expression spoExpression = createConstraintExpression("s", "p", "o");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
-        ValueOperation value = new ValueOperationImpl(createLiteral("unknown"), EQUALS);
+        ValueOperation value = new ValueOperationImpl(createLiteral("unknown"));
         avo.put(attribute, value);
         Map<Attribute, ValueOperation> strAvo = new HashMap<Attribute, ValueOperation>();
-        ValueOperation strValue = new ValueOperationImpl(ANY_NODE, STR);
+        ValueOperation strValue = new ValueOperationImpl(ANY_NODE);
         strAvo.put(attribute, strValue);
         Expression strOpr = new StrOperator(strAvo);
         SingleValue valueExp = new SingleValue(avo);
@@ -376,7 +371,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Expression filterExpression = new Filter(spoExpression, eqnExpression);
         checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER( str(?o) = \"unknown\" ) }", filterExpression);
 
-        value = new ValueOperationImpl(createLiteral("unknown", XSD.STRING), EQUALS);
+        value = new ValueOperationImpl(createLiteral("unknown", XSD.STRING));
         avo.put(attribute, value);
         valueExp = new SingleValue(avo);
         eqnExpression = new EqualsExpression(strOpr, valueExp);
@@ -396,7 +391,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         AttributeName dateVar = new VariableName("date");
         Map<Attribute, ValueOperation> avo = new HashMap<Attribute, ValueOperation>();
         Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
-        ValueOperation value = new ValueOperationImpl(ANY_NODE, BOUND);
+        ValueOperation value = new ValueOperationImpl(ANY_NODE);
         avo.put(attribute, value);
         LogicExpression boundExpression = new BoundOperator(avo);
         Expression filterExpression =
@@ -410,7 +405,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "FILTER ( !bound(?name) ) }";
-        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, BOUND);
+        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
         LogicExpression boundExpression = new BoundOperator(avo);
         LogicExpression notExpression = new LogicNotExpression(boundExpression);
         Expression filterExpression = new Filter(FOAF_NAME_EXP_1, notExpression);
@@ -423,8 +418,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "FILTER ( !(str(?name) = \"abc\")) }";
-        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL, EQUALS);
-        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, STR);
+        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL);
+        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
 
         Expression strOpr = new StrOperator(nameAvo);
         Expression valueExp = new SingleValue(avo);
@@ -440,8 +435,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "FILTER ( str(?name) != \"abc\") }";
-        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL, EQUALS);
-        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, STR);
+        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL);
+        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
 
         Expression strOpr = new StrOperator(nameAvo);
         Expression valueExp = new SingleValue(avo);
@@ -457,8 +452,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "FILTER ( lang(?name) = \"en\") }";
-        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, EN_LITERAL, EQUALS);
-        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, LANG);
+        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, EN_LITERAL);
+        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
 
         Expression valueExp = new SingleValue(avo);
         Expression langOpr = new LangOperator(nameAvo);
@@ -473,8 +468,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "FILTER ( \"en\" = lang(?name)) }";
-        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, EN_LITERAL, EQUALS);
-        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, LANG);
+        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, EN_LITERAL);
+        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
 
         Expression valueExp = new SingleValue(avo);
         Expression langOpr = new LangOperator(nameAvo);
@@ -489,8 +484,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "FILTER ( (bound(?x) && bound(?name)) = true) }";
-        Map<Attribute, ValueOperation> avo = createAvo(X_SUBJ_VAR, ANY_NODE, BOUND);
-        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, BOUND);
+        Map<Attribute, ValueOperation> avo = createAvo(X_SUBJ_VAR, ANY_NODE);
+        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
 
         LogicExpression bound1 = new BoundOperator(avo);
         LogicExpression bound2 = new BoundOperator(nameAvo);
@@ -508,10 +503,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "WHERE { ?x foaf:name ?name .\n" +
             "        ?x foaf:nick ?nick " +
             "FILTER ( lang(?name) = lang(?nick) ) }";
-        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, LANG);
+        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
 
         Attribute attribute1 = new AttributeImpl(new VariableName("nick"), new ObjectNodeType());
-        Map<Attribute, ValueOperation> nickAvo = createAvo(attribute1, ANY_NODE, LANG);
+        Map<Attribute, ValueOperation> nickAvo = createAvo(attribute1, ANY_NODE);
 
         Expression langOpr = new LangOperator(nameAvo);
         Expression langOpr1 = new LangOperator(nickAvo);
@@ -528,9 +523,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name \n" +
             "FILTER ( lang(?name) = \"en\" ) }";
-        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, LANG);
+        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
         Literal literal = NodeTestUtil.createLiteral("en");
-        Map<Attribute, ValueOperation> nameAvo1 = createAvo(NAME_OBJECT_ATTR, literal, EQUALS);
+        Map<Attribute, ValueOperation> nameAvo1 = createAvo(NAME_OBJECT_ATTR, literal);
 
         Expression langOpr = new LangOperator(nameAvo);
         Expression valueExp = new SingleValue(nameAvo1);
@@ -545,9 +540,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "FILTER ( str(?name) = \"abc\" && bound(?x) ) }";
-        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, STR);
-        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL, EQUALS);
-        Map<Attribute, ValueOperation> xAvo = createAvo(X_SUBJ_VAR, ANY_NODE, BOUND);
+        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
+        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL);
+        Map<Attribute, ValueOperation> xAvo = createAvo(X_SUBJ_VAR, ANY_NODE);
 
         Expression strOpr = new StrOperator(nameAvo);
         Expression valueExp = new SingleValue(avo);
@@ -565,9 +560,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "FILTER ( str(?name) = \"abc\" || bound(?x) ) }";
-        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE, STR);
-        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL, EQUALS);
-        Map<Attribute, ValueOperation> xAvo = createAvo(X_SUBJ_VAR, ANY_NODE, BOUND);
+        Map<Attribute, ValueOperation> nameAvo = createAvo(NAME_OBJECT_ATTR, ANY_NODE);
+        Map<Attribute, ValueOperation> avo = createAvo(NAME_OBJECT_ATTR, ABC_LITERAL);
+        Map<Attribute, ValueOperation> xAvo = createAvo(X_SUBJ_VAR, ANY_NODE);
 
         Expression strOpr = new StrOperator(nameAvo);
         Expression valueExp = new SingleValue(avo);
@@ -598,8 +593,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testPrefixInFilteredAsk() throws Exception {
         Attribute attribute = new AttributeImpl(new VariableName("o"), new ObjectNodeType());
-        Map<Attribute, ValueOperation> avo = createAvo(attribute, createLiteral("unknown", XSD.STRING), EQUALS);
-        Map<Attribute, ValueOperation> strAvo = createAvo(attribute, ANY_NODE, STR);
+        Map<Attribute, ValueOperation> avo = createAvo(attribute, createLiteral("unknown", XSD.STRING));
+        Map<Attribute, ValueOperation> strAvo = createAvo(attribute, ANY_NODE);
         Expression spoExpression = createConstraintExpression("s", "p", "o");
         Expression strOpr = new StrOperator(strAvo);
         Expression valueExp = new SingleValue(avo);
@@ -619,8 +614,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private Expression getExpression(Query query) {
         try {
             if (query instanceof SelectQueryImpl) {
-                Expression expression = getExpressionField(query, SelectQueryImpl.class,
-                    "expression");
+                Expression expression = getExpressionField(query, SelectQueryImpl.class, "expression");
                 return getExpressionField(expression, Projection.class, "nextExpression");
             } else if (query instanceof AskQueryImpl) {
                 Expression expression = getExpressionField(query, AskQueryImpl.class, "expression");
@@ -645,11 +639,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         return parser.parseQuery(GRAPH, queryString);
     }
 
-    private static Map<Attribute, ValueOperation> createAvo(final Attribute attribute, final Node node,
-        final AVPOperation operation) {
+    private static Map<Attribute, ValueOperation> createAvo(final Attribute attribute, final Node node) {
         return new HashMap<Attribute, ValueOperation>() {
             {
-                put(attribute, new ValueOperationImpl(node, operation));
+                put(attribute, new ValueOperationImpl(node));
             }
         };
     }

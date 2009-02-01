@@ -65,12 +65,11 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.ValueOperation;
-import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.attributename.AttributeName;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAR_VAR;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
-import org.jrdf.query.relation.mem.EqAVPOperation;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
+import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
@@ -218,7 +217,7 @@ public final class SingleConstraintUnitTest extends TestCase {
 
     private static LinkedHashMap<Attribute, ValueOperation> createAvoMap(Attribute attribute, Node node) {
         LinkedHashMap<Attribute, ValueOperation> avo = new LinkedHashMap<Attribute, ValueOperation>();
-        avo.put(attribute, new ValueOperationImpl(node, EqAVPOperation.EQUALS));
+        avo.put(attribute, new ValueOperationImpl(node));
         return avo;
     }
 }

@@ -60,7 +60,6 @@
 package org.jrdf.query.relation;
 
 import org.jrdf.graph.Node;
-import org.jrdf.query.relation.mem.AVPOperation;
 
 import java.io.Serializable;
 
@@ -71,6 +70,4 @@ public interface ValueOperation extends Serializable {
      * @return the value of the attribute.
      */
     Node getValue();
-
-    AVPOperation getOperation();
 }

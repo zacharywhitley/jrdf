@@ -69,7 +69,6 @@ import org.jrdf.query.relation.ValueOperation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import static org.jrdf.query.relation.mem.EqAVPOperation.EQUALS;
 import org.jrdf.query.relation.mem.ValueOperationImpl;
 import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.urql.builder.TokenHelper.getResource;
@@ -124,14 +123,14 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     @Override
     public void caseAResourceResourceTripleElement(AResourceResourceTripleElement node) {
         Node value = createResource(getResource(node.getResource()));
-        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
+        avp.put(attribute, new ValueOperationImpl(value));
     }
 
     @Override
     public void caseAQnameResourceTripleElement(AQnameResourceTripleElement node) {
         AQnameQnameElement element = (AQnameQnameElement) node.getQnameElement();
         Node value = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
-        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
+        avp.put(attribute, new ValueOperationImpl(value));
     }
 
     @Override
@@ -142,14 +141,14 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     @Override
     public void caseAResourceObjectTripleElement(AResourceObjectTripleElement node) {
         Node value = createResource(getResource(node.getResource()));
-        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
+        avp.put(attribute, new ValueOperationImpl(value));
     }
 
     @Override
     public void caseAQnameObjectTripleElement(AQnameObjectTripleElement node) {
         AQnameQnameElement element = (AQnameQnameElement) node.getQnameElement();
         Node value = createQNameResource(element.getNcnamePrefix().getText(), element.getNcName().getText());
-        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
+        avp.put(attribute, new ValueOperationImpl(value));
     }
 
     @Override
@@ -160,13 +159,13 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     @Override
     public void caseALiteralObjectTripleElement(ALiteralObjectTripleElement node) {
         Node value = createLiteral(node);
-        avp.put(attribute, new ValueOperationImpl(value, EQUALS));
+        avp.put(attribute, new ValueOperationImpl(value));
     }
 
     private void createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
         AttributeName attributeName = new VariableName(variableName);
         Attribute att = new AttributeImpl(attributeName, type);
-        avp.put(att, new ValueOperationImpl(anyNode, EQUALS));
+        avp.put(att, new ValueOperationImpl(anyNode));
     }
 
     private String getVariableName(AVariableResourceTripleElement element) {
