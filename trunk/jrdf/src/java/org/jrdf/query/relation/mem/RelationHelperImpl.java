@@ -103,6 +103,25 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
         return attributes;
     }
 
+    public boolean areIncompatible(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2) {
+        boolean contradiction = false;
+        for (final Attribute attribute : headings) {
+            contradiction = processTuples(tuple1.getValue(attribute), tuple2.getValue(attribute));
+            if (contradiction) {
+                return contradiction;
+            }
+        }
+        return contradiction;
+    }
+
+    private boolean processTuples(Node node1, Node node2) {
+        if (node1 != null && node2 != null) {
+            return node1.hashCode() != node2.hashCode() || nodeComparator.compare(node1, node2) != 0;
+        } else {
+            return false;
+        }
+    }
+
     public boolean addTuplesIfEqual(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2,
         Map<Attribute, Node> mapResult) {
         boolean contradiction = false;
