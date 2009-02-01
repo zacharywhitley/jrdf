@@ -103,7 +103,7 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
         return attributes;
     }
 
-    public boolean processAttributeValues(Attribute attribute, Node lhs, Node rhs, 
+    public boolean processAttributeValues(Attribute attribute, Node lhs, Node rhs,
         Map<Attribute, Node> resultantAttributeValues) {
         if (lhs.hashCode() == rhs.hashCode() && nodeComparator.compare(lhs, rhs) == 0) {
             resultantAttributeValues.put(attribute, lhs);
