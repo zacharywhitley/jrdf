@@ -95,6 +95,7 @@ public class NamespaceAwareTripleParser implements TripleParser {
         tripleParser = newTripleParser;
     }
 
+    // TODO AN FIXME Duplicate with TripleParserImpl
     public Triple parseTriple(final CharSequence line) {
         try {
             final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
