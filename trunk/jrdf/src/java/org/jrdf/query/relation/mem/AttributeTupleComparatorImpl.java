@@ -66,7 +66,6 @@ import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-
 public class AttributeTupleComparatorImpl implements AttributeTupleComparator {
     private static final long serialVersionUID = 5341700779351373234L;
     private NodeComparator nodeComparator;

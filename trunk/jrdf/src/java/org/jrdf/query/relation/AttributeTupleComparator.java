@@ -63,7 +63,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * Compares tuples.
+ * Compares tuples based on a single attribute.
  *
  * @author Andrew Newman
  * @version $Id$
