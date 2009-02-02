@@ -125,7 +125,6 @@ public class N3EventReaderFactory implements RDFEventReaderFactory {
         final NodeMaps nodeMaps = new NamespaceAwareNodeMaps(uriReferenceParser, blankNodeParser, literalParser);
         final RegexTripleParser regexTripleFactory = new RegexTripleParserImpl(REGEX_MATCHER_FACTORY,
             graph.getTripleFactory(), nodeMaps);
-        return new NamespaceAwareTripleParser(REGEX_MATCHER_FACTORY, blankNodeParser, graph.getTripleFactory(),
-            regexTripleFactory);
+        return new NamespaceAwareTripleParser(REGEX_MATCHER_FACTORY, blankNodeParser, regexTripleFactory);
     }
 }

@@ -87,15 +87,15 @@ public class NamespaceAwareTripleParser implements TripleParser {
     private final RegexTripleParser tripleParser;
 
     public NamespaceAwareTripleParser(final RegexMatcherFactory newRegexFactory,
-        final BlankNodeParser newBlankNodeParser, final TripleFactory newTripleFactory,
-        final RegexTripleParser newTripleParser) {
-        checkNotNull(newRegexFactory, newBlankNodeParser, newTripleFactory, newTripleParser);
+        final BlankNodeParser newBlankNodeParser, final RegexTripleParser newTripleParser) {
+        checkNotNull(newRegexFactory, newBlankNodeParser, newTripleParser);
         regexMatcherFactory = newRegexFactory;
         blankNodeParser = newBlankNodeParser;
         tripleParser = newTripleParser;
     }
 
-    // TODO AN FIXME Duplicate with TripleParserImpl
+    // This is a duplicate with TripleParserImpl - but it will stop being a duplicate when all the features of N3 are
+    // implemented (such as blank nodes, short hand for predicates, etc).
     public Triple parseTriple(final CharSequence line) {
         try {
             final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
