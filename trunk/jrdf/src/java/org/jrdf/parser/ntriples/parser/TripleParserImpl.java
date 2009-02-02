@@ -88,7 +88,7 @@ public class TripleParserImpl implements TripleParser {
         tripleParser = newTripleParser;
     }
 
-    // TODO AN FIXME Duplicate with NamespaceAwareTripleParser
+    
     public Triple parseTriple(final CharSequence line) {
         try {
             final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);

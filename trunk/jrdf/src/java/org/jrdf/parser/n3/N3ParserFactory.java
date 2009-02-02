@@ -90,7 +90,7 @@ public class N3ParserFactory implements LineHandlerFactory {
         final RegexTripleParser parser = new RegexTripleParserImpl(matcherFactory, newGraph.getTripleFactory(),
             nodeMaps);
         final TripleParser tripleParser = new NamespaceAwareTripleParser(matcherFactory,
-            parsersFactory.getBlankNodeParser(), newGraph.getTripleFactory(), parser);
+            parsersFactory.getBlankNodeParser(), parser);
         return new N3Parser(new CommentsParserImpl(matcherFactory),
             new PrefixParserImpl(matcherFactory, listener),
             new TriplesParserImpl(tripleParser));
