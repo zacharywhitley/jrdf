@@ -114,8 +114,8 @@ public class Filter implements BiOperandExpression, Serializable {
         return lhs.size() + rhs.size();
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitFilter(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitFilter(this);
     }
 
     public int hashCode() {

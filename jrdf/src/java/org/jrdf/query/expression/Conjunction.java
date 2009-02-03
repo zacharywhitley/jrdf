@@ -111,8 +111,8 @@ public final class Conjunction implements BiOperandExpression {
         return (int) Math.ceil((lhs.size() + rhs.size()) * 1.0 / 2);
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitConjunction(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitConjunction(this);
     }
 
     public boolean equals(Object obj) {

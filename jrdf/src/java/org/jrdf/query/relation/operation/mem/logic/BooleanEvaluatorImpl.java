@@ -59,18 +59,11 @@
 
 package org.jrdf.query.relation.operation.mem.logic;
 
-import static org.jrdf.graph.AnyNode.ANY_NODE;
-import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.global.LiteralImpl;
 import org.jrdf.query.expression.BoundOperator;
-import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
-import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.Operator;
-import org.jrdf.query.expression.SingleValue;
-import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.expression.logic.EqualsExpression;
 import org.jrdf.query.expression.logic.FalseExpression;
 import org.jrdf.query.expression.logic.LessThanExpression;
@@ -83,7 +76,6 @@ import org.jrdf.query.expression.logic.TrueExpression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
-import org.jrdf.vocabulary.XSD;
 
 import java.util.Map;
 
@@ -91,13 +83,12 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id:$
  */
-public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements BooleanEvaluator {
+public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> implements BooleanEvaluator<Boolean> {
+    private static final ValueEvaluatorImpl VALUE_EVALUATOR = new ValueEvaluatorImpl();
     private final NodeComparator nodeComparator;
-    private boolean contradiction;
     private Tuple tuple;
-    private Node value;
 
-    public SimpleBooleanEvaluator(NodeComparator nodeComparator) {
+    public BooleanEvaluatorImpl(NodeComparator nodeComparator) {
         this.nodeComparator = nodeComparator;
     }
 
@@ -105,117 +96,64 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         this.tuple = tuple;
     }
 
-    public Node getValue() {
-        return value;
+    @Override
+    public Boolean visitBound(BoundOperator bound) {
+        final Node valueOperation = getNextValue(bound);
+        return (valueOperation == null);
     }
 
     @Override
-    public void visitSingleValue(SingleValue singleValue) {
-        Map<Attribute, Node> avo = singleValue.getValue();
-        Attribute attribute = avo.keySet().iterator().next();
-        Node node = avo.get(attribute);
-        final Node newValue = tuple.getValue(attribute);
-        if (ANY_NODE.equals(node)) {
-            if (newValue != null) {
-                value = newValue;
-            } else {
-                value = null;
-            }
-        } else {
-            value = node;
-        }
+    public Boolean visitLogicAnd(LogicAndExpression andExpression) {
+        boolean lhsBoolean = andExpression.getLhs().accept(this);
+        boolean rhsBoolean = andExpression.getRhs().accept(this);
+        return lhsBoolean || rhsBoolean;
     }
 
     @Override
-    public void visitStr(StrOperator str) {
-        final Node value = getValue(str);
-        if (value != null) {
-            Node node = value;
-            if (Literal.class.isAssignableFrom(node.getClass())) {
-                Literal literal = (Literal) value;
-                this.value = new LiteralImpl(literal.getLexicalForm());
-            }
-        }
+    public Boolean visitLogicOr(LogicOrExpression orExpression) {
+        boolean lhsBoolean = orExpression.getLhs().accept(this);
+        boolean rhsBoolean = orExpression.getRhs().accept(this);
+        return lhsBoolean && rhsBoolean;
     }
 
     @Override
-    public void visitLang(LangOperator lang) {
-        final Node value = getValue(lang);
-        if (value != null) {
-            Node node = value;
-            if (Literal.class.isAssignableFrom(node.getClass())) {
-                Literal literal = (Literal) node;
-                this.value = new LiteralImpl(literal.getLanguage());
-            }
-        }
+    public Boolean visitLogicNot(LogicNotExpression notExpression) {
+        return !notExpression.getExpression().accept(this);
     }
 
     @Override
-    public void visitBound(BoundOperator bound) {
-        final Node valueOperation = getValue(bound);
-        contradiction = (valueOperation == null);
-        value = new LiteralImpl(Boolean.toString(contradiction), XSD.BOOLEAN);
+    public Boolean visitEqualsExpression(EqualsExpression equalsExpression) {
+        Node lhsValue = VALUE_EVALUATOR.getValue(tuple, equalsExpression.getLhs());
+        Node rhsValue = VALUE_EVALUATOR.getValue(tuple, equalsExpression.getRhs());
+        return compareNodes(lhsValue, rhsValue) != 0;
     }
 
     @Override
-    public void visitLogicAnd(LogicAndExpression andExpression) {
-        andExpression.getLhs().accept(this);
-        boolean lhsBoolean = contradiction;
-        andExpression.getRhs().accept(this);
-        contradiction = lhsBoolean || contradiction;
+    public Boolean visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
+        Node lhsValue = VALUE_EVALUATOR.getValue(tuple, nEqualsExpression.getLhs());
+        Node rhsValue = VALUE_EVALUATOR.getValue(tuple, nEqualsExpression.getRhs());
+        return compareNodes(lhsValue, rhsValue) == 0;
     }
 
     @Override
-    public void visitLogicOr(LogicOrExpression orExpression) {
-        orExpression.getLhs().accept(this);
-        boolean lhsBoolean = contradiction;
-        orExpression.getRhs().accept(this);
-        contradiction = lhsBoolean && contradiction;
+    public Boolean visitLessThanExpression(LessThanExpression lessThanExpression) {
+        Node lhsValue = VALUE_EVALUATOR.getValue(tuple, lessThanExpression.getLhs());
+        Node rhsValue = VALUE_EVALUATOR.getValue(tuple, lessThanExpression.getRhs());
+        return compareNodes(lhsValue, rhsValue) >= 0;
     }
 
     @Override
-    public void visitLogicNot(LogicNotExpression notExpression) {
-        notExpression.getExpression().accept(this);
-        contradiction = !contradiction;
+    public Boolean visitTrue(TrueExpression trueExp) {
+        return false;
     }
 
     @Override
-    public void visitEqualsExpression(EqualsExpression equalsExpression) {
-        Node lhsValue = getValue(tuple, equalsExpression.getLhs());
-        Node rhsValue = getValue(tuple, equalsExpression.getRhs());
-        contradiction = compareNodes(lhsValue, rhsValue) != 0;
+    public Boolean visitFalse(FalseExpression falseExp) {
+        return true;
     }
 
-    @Override
-    public void visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
-        Node lhsValue = getValue(tuple, nEqualsExpression.getLhs());
-        Node rhsValue = getValue(tuple, nEqualsExpression.getRhs());
-        contradiction = compareNodes(lhsValue, rhsValue) == 0;
-    }
-
-    @Override
-    public void visitLessThanExpression(LessThanExpression lessThanExpression) {
-        Node lhsValue = getValue(tuple, lessThanExpression.getLhs());
-        Node rhsValue = getValue(tuple, lessThanExpression.getRhs());
-        contradiction = compareNodes(lhsValue, rhsValue) >= 0;
-    }
-
-    @Override
-    public void visitTrue(TrueExpression trueExp) {
-        contradiction = false;
-    }
-
-    @Override
-    public void visitFalse(FalseExpression falseExp) {
-        contradiction = true;
-    }
-
-    private Node getValue(Operator str) {
-        final Map<Attribute, Node> avp = str.getValue();
-        Attribute attribute = avp.keySet().iterator().next();
-        return tuple.getValue(attribute);
-    }
-
+    // TODO Fixme AN Handling nulls!!  Maybe the getValue should return an EmptyNode or NullaryNode or some node rather
+    // than null.
     private int compareNodes(Node lNode, Node rNode) {
         int result;
         if (lNode == null && rNode == null) {
@@ -230,16 +168,14 @@ public class SimpleBooleanEvaluator extends ExpressionVisitorAdapter implements 
         return result;
     }
 
-    public Node getValue(Tuple tuple, Expression expression) {
-        BooleanEvaluator evaluator = new SimpleBooleanEvaluator(nodeComparator);
-        evaluator.setTuple(tuple);
-        expression.accept(evaluator);
-        return evaluator.getValue();
+    private Node getNextValue(Operator operator) {
+        final Map<Attribute, Node> avp = operator.getValue();
+        Attribute attribute = avp.keySet().iterator().next();
+        return tuple.getValue(attribute);
     }
 
     public boolean evaluate(Tuple tuple, LogicExpression expression) {
         setTuple(tuple);
-        expression.accept(this);
-        return !contradiction;
+        return !expression.accept(this);
     }
 }

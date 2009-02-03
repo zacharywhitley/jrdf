@@ -105,7 +105,8 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version $Id:$
  */
-public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implements ExpressionSimplifier {
+public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Expression>
+    implements ExpressionSimplifier<Expression> {
     private Expression expression;
     private Set<Attribute> declaredVariables;
     private Map<Attribute, Attribute> variableMap;
@@ -128,14 +129,15 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return expression;
     }
 
-    public void visitProjection(Projection projection) {
+    public Expression visitProjection(Projection projection) {
         declaredVariables = projection.getAttributes();
         Expression next = getNext(projection.getNextExpression());
         projection.setNextExpression(next);
         expression = projection;
+        return expression;
     }
 
-    public void visitConjunction(Conjunction conjunction) {
+    public Expression visitConjunction(Conjunction conjunction) {
         final Expression lhs = getNext(conjunction.getLhs());
         final Expression rhs = getNext(conjunction.getRhs());
         if (lhs == null && rhs == null) {
@@ -147,6 +149,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         } else {
             expression = constructNewConjunction(lhs, rhs);
         }
+        return expression;
     }
 
     private Expression constructNewConjunction(Expression lhs, Expression rhs) {
@@ -207,7 +210,7 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return getNext(new Union(newConj1, newConj2));
     }
 
-    public void visitUnion(Union conjunction) {
+    public Expression visitUnion(Union conjunction) {
         final Expression lhs = getNext(conjunction.getLhs());
         final Expression rhs = getNext(conjunction.getRhs());
         if (EXPRESSION_COMPARATOR.compare(lhs, rhs) <= 0) {
@@ -215,9 +218,10 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         } else {
             expression = new Union(rhs, lhs);
         }
+        return expression;
     }
 
-    public void visitOptional(Optional optional) {
+    public Expression visitOptional(Optional optional) {
         Expression lhsExp = optional.getLhs();
         lhsExp = (lhsExp == null) ? EMPTY_CONSTRAINT : lhsExp;
         Expression lhs = getNext(lhsExp);
@@ -225,17 +229,19 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         rhsExp = (rhsExp == null) ? EMPTY_CONSTRAINT : rhsExp;
         Expression rhs = getNext(rhsExp);
         expression = new Optional(lhs, rhs);
+        return expression;
     }
 
-    public void visitFilter(Filter filter) {
+    public Expression visitFilter(Filter filter) {
         LogicExpression logicExpression = (LogicExpression) getNext(filter.getRhs());
         expression = getNext(filter.getLhs());
         if (logicExpression != null) {
             expression = new Filter(expression, logicExpression);
         }
+        return expression;
     }
 
-    public void visitLogicAnd(LogicAndExpression andExpression) {
+    public Expression visitLogicAnd(LogicAndExpression andExpression) {
         Expression lhs = getNext(andExpression.getLhs());
         Expression rhs = getNext(andExpression.getRhs());
         if (lhs == null && rhs == null) {
@@ -247,9 +253,10 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         } else {
             expression = andExpression;
         }
+        return expression;
     }
 
-    public void visitLogicOr(LogicOrExpression orExpression) {
+    public Expression visitLogicOr(LogicOrExpression orExpression) {
         Expression lhs = getNext(orExpression.getLhs());
         Expression rhs = getNext(orExpression.getRhs());
         if (lhs == null && rhs == null) {
@@ -261,9 +268,10 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         } else {
             expression = orExpression;
         }
+        return expression;
     }
 
-    public void visitEqualsExpression(EqualsExpression equalsExpression) {
+    public Expression visitEqualsExpression(EqualsExpression equalsExpression) {
         Expression lhs = getNext(equalsExpression.getLhs());
         Expression rhs = getNext(equalsExpression.getRhs());
         final List<Expression> pair = reorderPairs(lhs, rhs);
@@ -278,14 +286,17 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
                 expression = new EqualsExpression(lhs, rhs);
             }
         }
+        return expression;
     }
 
-    public void visitTrue(TrueExpression trueExp) {
+    public Expression visitTrue(TrueExpression trueExp) {
         expression = trueExp;
+        return expression;
     }
 
-    public void visitFalse(FalseExpression falseExp) {
+    public Expression visitFalse(FalseExpression falseExp) {
         expression = falseExp;
+        return expression;
     }
 
     private boolean equateExpressions(Expression lhs, Expression rhs) {
@@ -396,39 +407,46 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
             node instanceof AnyObjectNode || node instanceof AnyNode;
     }
 
-    public void visitConstraint(SingleConstraint constraint) {
+    public Expression visitConstraint(SingleConstraint constraint) {
         LinkedHashMap<Attribute, Node> avo = updateAVO(constraint.getAvo(null));
         expression = new SingleConstraint(avo);
+        return expression;
     }
 
-    public void visitEmptyConstraint(EmptyConstraint constraint) {
+    public Expression visitEmptyConstraint(EmptyConstraint constraint) {
         expression = constraint;
+        return expression;
     }
 
     // Skip logical not now.
-    public void visitLogicNot(LogicNotExpression notExpression) {
+    public Expression visitLogicNot(LogicNotExpression notExpression) {
 //        LogicExpression exp = (LogicExpression) getNext(notExpression.getExpression());
 //        expression = new LogicNotExpression(exp);
         expression = notExpression;
+        return expression;
     }
 
-    public void visitBound(BoundOperator bound) {
+    public Expression visitBound(BoundOperator bound) {
         expression = bound;
+        return expression;
     }
 
-    public void visitLang(LangOperator lang) {
+    public Expression visitLang(LangOperator lang) {
         LinkedHashMap<Attribute, Node> avo = updateAVPVariables(lang.getValue());
         expression = new LangOperator(avo);
+        return expression;
     }
 
-    public void visitStr(StrOperator str) {
+    public Expression visitStr(StrOperator str) {
         LinkedHashMap<Attribute, Node> avo = updateAVPVariables(str.getValue());
         expression = new StrOperator(avo);
+        return expression;
     }
 
-    public void visitSingleValue(SingleValue value) {
+    public Expression visitSingleValue(SingleValue value) {
         LinkedHashMap<Attribute, Node> avo = updateAVPVariables(value.getValue());
         expression = new SingleValue(avo);
+        return expression;
     }
 
     private LinkedHashMap<Attribute, Node> updateAVO(Map<Attribute, Node> oldAvo) {
@@ -441,22 +459,25 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter implement
         return avo;
     }
 
-    public void visitLessThanExpression(LessThanExpression lessThanExpression) {
+    public Expression visitLessThanExpression(LessThanExpression lessThanExpression) {
         Expression lhs = getNext(lessThanExpression.getLhs());
         Expression rhs = getNext(lessThanExpression.getRhs());
         expression = new LessThanExpression(lhs, rhs);
+        return expression;
     }
 
-    public void visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
+    public Expression visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
         Expression lhs = getNext(nEqualsExpression.getLhs());
         Expression rhs = getNext(nEqualsExpression.getRhs());
         expression = new NEqualsExpression(lhs, rhs);
+        return expression;
     }
 
-    public void visitAsk(Ask ask) {
+    public Expression visitAsk(Ask ask) {
         Expression next = getNext(ask.getNextExpression());
         ask.setNextExpression(next);
         expression = ask;
+        return expression;
     }
 
     public boolean parseAgain() {

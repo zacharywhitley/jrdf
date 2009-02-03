@@ -115,8 +115,8 @@ public class LogicAndExpression implements LogicExpression, BiOperandExpression 
         return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitLogicAnd(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitLogicAnd(this);
     }
 
     public int hashCode() {

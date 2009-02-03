@@ -57,93 +57,96 @@
  *
  */
 
-package org.jrdf.query.expression.logic;
+package org.jrdf.query.relation.operation.mem.logic;
 
+import static org.jrdf.graph.AnyNode.ANY_NODE;
+import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
-import org.jrdf.query.expression.BiOperandExpression;
+import org.jrdf.graph.global.LiteralImpl;
+import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.ExpressionVisitorAdapter;
+import org.jrdf.query.expression.LangOperator;
+import org.jrdf.query.expression.Operator;
+import org.jrdf.query.expression.SingleValue;
+import org.jrdf.query.expression.StrOperator;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.util.EqualsUtil;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.operation.ValueEvaluator;
+import org.jrdf.vocabulary.XSD;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id:$
  */
-public class EqualsExpression implements LogicExpression, BiOperandExpression {
-    private static final long serialVersionUID = 1297973700912646394L;
-    private static final int DUMMY_HASHCODE = 47;
+public class ValueEvaluatorImpl extends ExpressionVisitorAdapter<Node> implements ValueEvaluator<Node> {
+    private Tuple tuple;
 
-    private Expression lhs;
-    private Expression rhs;
-    protected static final String EQUALS = "=";
-
-    private EqualsExpression() {
+    public void setTuple(Tuple tuple) {
+        this.tuple = tuple;
     }
 
-    public EqualsExpression(Expression lhs, Expression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
-    }
-
-    public Map<Attribute, Node> getValue() {
-        Map<Attribute, Node> map = new LinkedHashMap<Attribute, Node>();
-        map.putAll(lhs.getValue());
-        map.putAll(rhs.getValue());
-        return map;
-    }
-
-    public Expression getLhs() {
-        return lhs;
-    }
-
-    public Expression getRhs() {
-        return rhs;
-    }
-
-    public <R> R accept(ExpressionVisitor<R> v) {
-        return v.visitEqualsExpression(this);
-    }
-
-    public int size() {
-        return (lhs.size() + rhs.size()) / 2 + 1;
-    }
-
-    public int hashCode() {
-        int hash = DUMMY_HASHCODE + lhs.hashCode();
-        hash = hash * DUMMY_HASHCODE + rhs.hashCode();
-        return hash * DUMMY_HASHCODE * EQUALS.hashCode();
-    }
-
-    public String toString() {
-        return lhs + (" " + EQUALS + " ") + rhs;
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
+    @Override
+    public Node visitSingleValue(SingleValue singleValue) {
+        Map<Attribute, Node> avo = singleValue.getValue();
+        Attribute attribute = avo.keySet().iterator().next();
+        Node node = avo.get(attribute);
+        final Node newValue = tuple.getValue(attribute);
+        if (ANY_NODE.equals(node)) {
+            if (newValue != null) {
+                return newValue;
+            } else {
+                return null;
+            }
+        } else {
+            return node;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
+    }
+
+    @Override
+    public Node visitStr(StrOperator str) {
+        final Node value = getValue(str);
+        if (value != null) {
+            Node node = value;
+            if (Literal.class.isAssignableFrom(node.getClass())) {
+                Literal literal = (Literal) value;
+                return new LiteralImpl(literal.getLexicalForm());
+            }
         }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
+        return null;
+    }
+
+    @Override
+    public Node visitLang(LangOperator lang) {
+        final Node value = getValue(lang);
+        if (value != null) {
+            Node node = value;
+            if (Literal.class.isAssignableFrom(node.getClass())) {
+                Literal literal = (Literal) node;
+                return new LiteralImpl(literal.getLanguage());
+            }
         }
-        return determineEqualityFromFields(this, (EqualsExpression) obj);
+        return null;
     }
 
-    private boolean determineEqualityFromFields(EqualsExpression o1, EqualsExpression o2) {
-        return lhsEqual(o1, o2) && rhsEqual(o1, o2);
+    @Override
+    public Node visitBound(BoundOperator bound) {
+        final Node valueOperation = getValue(bound);
+        boolean contradiction = (valueOperation == null);
+        return new LiteralImpl(Boolean.toString(contradiction), XSD.BOOLEAN);
     }
 
-    private boolean rhsEqual(EqualsExpression o1, EqualsExpression o2) {
-        return o1.rhs.equals(o2.rhs);
+    private Node getValue(Operator operator) {
+        final Map<Attribute, Node> avp = operator.getValue();
+        Attribute attribute = avp.keySet().iterator().next();
+        return tuple.getValue(attribute);
     }
 
-    private boolean lhsEqual(EqualsExpression o1, EqualsExpression o2) {
-        return o1.lhs.equals(o2.lhs);
+    public Node getValue(Tuple tuple, Expression expression) {
+        ValueEvaluator<Node> evaluator = new ValueEvaluatorImpl();
+        evaluator.setTuple(tuple);
+        return expression.accept(evaluator);
     }
 }

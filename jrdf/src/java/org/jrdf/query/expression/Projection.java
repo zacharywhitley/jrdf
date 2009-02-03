@@ -151,8 +151,8 @@ public final class Projection implements Expression {
         return "SELECT { " + variableCollector + " } \n" + nextExpression;
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitProjection(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitProjection(this);
     }
 
     private LinkedHashSet<Attribute> extractAttributes() throws ParserException {

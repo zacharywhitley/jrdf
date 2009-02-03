@@ -67,6 +67,7 @@ import org.jrdf.query.execute.ExpressionSimplifierImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -74,7 +75,6 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public class AskQueryImpl implements Query {
     private Expression expression;
     private final GraphRelationFactory graphRelationFactory;
@@ -89,24 +89,22 @@ public class AskQueryImpl implements Query {
         return expression;
     }
 
-    public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
+    public Answer executeQuery(Graph graph, QueryEngine<Relation> queryEngine) {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
         boolean result = getResult(graph, queryEngine);
         return new AskAnswerImpl(System.currentTimeMillis() - timeStarted, result);
     }
 
-    private boolean getResult(Graph graph, QueryEngine queryEngine) {
+    private boolean getResult(Graph graph, QueryEngine<Relation> queryEngine) {
         GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
         queryEngine.initialiseBaseRelation(entireGraph);
-        ExpressionSimplifier simplifier = new ExpressionSimplifierImpl();
-        expression.accept(simplifier);
-        expression = simplifier.getExpression();
+        ExpressionSimplifier<Expression> simplifier = new ExpressionSimplifierImpl();
+        expression = expression.accept(simplifier);
         if (simplifier.parseAgain()) {
-            expression.accept(simplifier);
-            expression = simplifier.getExpression();
+            expression = expression.accept(simplifier);
         }
-        expression.accept(queryEngine);
-        return !queryEngine.getResult().getTuples().isEmpty();
+        Relation relation = expression.accept(queryEngine);
+        return !relation.getTuples().isEmpty();
     }
 }

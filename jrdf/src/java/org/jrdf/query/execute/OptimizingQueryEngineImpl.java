@@ -86,7 +86,7 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version $Id:$
  */
-public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
+public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine<Relation> {
     private static final RelationFactory RELATION_FACTORY = new QueryFactoryImpl().createRelationFactory();
     private boolean shortCircuit;
     private QueryExecutionPlanner planner;
@@ -101,41 +101,42 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public void visitAsk(Ask ask) {
+    public Relation visitAsk(Ask ask) {
         clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
         shortCircuit = true;
         allVariables = ask.getAllVariables();
         result = getExpression(ask.getNextExpression(), shortCircuit);
+        return result;
     }
 
     @Override
-    public void visitProjection(Projection projection) {
+    public Relation visitProjection(Projection projection) {
         clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
-        super.visitProjection(projection);
+        return super.visitProjection(projection);
     }
 
     @Override
-    public void visitConjunction(Conjunction conjunction) {
+    public Relation visitConjunction(Conjunction conjunction) {
         List<Expression> operands = planner.flattenExpression(conjunction);
         resetCacheHandler(operands);
         Set<Relation> relations = planner.processAndRearrangeExpressions(conjunction, operands, this);
-        result = naturalJoin.join(relations);
-        relations = null;
+        return naturalJoin.join(relations);
     }
 
     @Override
-    public void visitConstraint(SingleConstraint constraint) {
+    public Relation visitConstraint(SingleConstraint constraint) {
         long time = System.currentTimeMillis();
-        processConstraint(constraint);
-        cacheHandler.addResultToCache(constraint, result, time);
+        Relation relation = processConstraint(constraint);
+        cacheHandler.addResultToCache(constraint, relation, time);
+        return relation;
     }
 
     @Override
-    public void visitUnion(org.jrdf.query.expression.Union newUnion) {
+    public Relation visitUnion(org.jrdf.query.expression.Union newUnion) {
         List<Expression> operands = planner.flattenExpression(newUnion);
         clearCacheHandler();
         Expression lhsExp = operands.get(0);
@@ -146,20 +147,17 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         } else {
             Relation rhs = getExpression(operands.get(1));
             result = union.union(lhs, rhs);
-            rhs = null;
         }
-        lhs = null;
+        return result;
     }
 
     @Override
-    public void visitOptional(Optional optional) {
+    public Relation visitOptional(Optional optional) {
         clearCacheHandler();
         Relation lhs = getExpression(optional.getLhs());
         clearCacheHandler();
         Relation rhs = getExpression(optional.getRhs());
-        result = leftOuterJoin.join(lhs, rhs);
-        lhs = null;
-        rhs = null;
+        return leftOuterJoin.join(lhs, rhs);
     }
 
     void clearCacheHandler() {
@@ -170,16 +168,16 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         cacheHandler.reset(result, constraintList.size());
     }
 
-    private void processConstraint(SingleConstraint constraint) {
+    private Relation processConstraint(SingleConstraint constraint) {
         Attribute curAttr = cacheHandler.findOneCachedAttribute(constraint);
         if (curAttr != null) {
-            doCachedConstraint(constraint, curAttr);
+            return doCachedConstraint(constraint, curAttr);
         } else {
-            result = restrict.restrict(result, constraint.getAvo(allVariables));
+            return restrict.restrict(result, constraint.getAvo(allVariables));
         }
     }
 
-    private void doCachedConstraint(SingleConstraint constraint, Attribute curAttr) {
+    private Relation doCachedConstraint(SingleConstraint constraint, Attribute curAttr) {
         Set<Tuple> tuples = new HashSet<Tuple>();
         Set<Node> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
         for (Node newVO : voSet) {
@@ -188,8 +186,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
             tuples.addAll(tmpRelation.getTuples());
             tmpRelation = null;
         }
-        result = RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
-        tuples = null;
+        return RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
     }
 
     private void setShortCircuit(boolean shortCircuit) {
@@ -202,22 +199,20 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
 
     @Override
     protected Relation getExpression(Expression expression) {
-        QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
+        QueryEngine<Relation> queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
             union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setCacheHandler(cacheHandler);
-        expression.accept(queryEngine);
-        return queryEngine.getResult();
+        return expression.accept(queryEngine);
     }
 
     protected Relation getExpression(Expression expression, boolean shortCircuit) {
-        QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
+        QueryEngine<Relation> queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
             union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(shortCircuit);
-        expression.accept(queryEngine);
-        return queryEngine.getResult();
+        return expression.accept(queryEngine);
     }
 }

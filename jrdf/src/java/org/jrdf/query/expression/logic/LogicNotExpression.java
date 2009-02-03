@@ -84,8 +84,8 @@ public class LogicNotExpression implements LogicExpression {
         expression = exp;
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitLogicNot(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitLogicNot(this);
     }
 
     public Map<Attribute, Node> getValue() {

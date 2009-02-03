@@ -294,7 +294,7 @@
         <constructor-arg ref="minimumUnion"/>
     </bean>
 
-    <bean id="booleanEvaluator" class="org.jrdf.query.relation.operation.mem.logic.SimpleBooleanEvaluator">
+    <bean id="booleanEvaluator" class="org.jrdf.query.relation.operation.mem.logic.BooleanEvaluatorImpl">
         <constructor-arg ref="nodeComparator"/>
     </bean>
 

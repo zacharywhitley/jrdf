@@ -68,5 +68,5 @@ import org.jrdf.query.expression.ExpressionVisitor;
  */
 
 public interface LogicExpression extends Expression {
-    void accept(ExpressionVisitor v);
+    <R> R accept(ExpressionVisitor<R> v);
 }

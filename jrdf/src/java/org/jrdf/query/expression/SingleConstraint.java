@@ -157,8 +157,8 @@ public final class SingleConstraint implements Constraint {
         return false;
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitConstraint(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitConstraint(this);
     }
 
     @Override

@@ -69,7 +69,5 @@ import java.util.Comparator;
  * @author Yuan-Fang Li
  * @version :$
  */
-
-public interface ExpressionComparator extends ExpressionVisitor, Comparator<Expression>, Serializable {
-    int getVariableEstimate();
+public interface ExpressionComparator<R> extends ExpressionVisitor<R>, Comparator<Expression>, Serializable {
 }

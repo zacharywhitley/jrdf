@@ -105,8 +105,8 @@ public class NEqualsExpression implements LogicExpression, BiOperandExpression {
         return rhs;
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitNEqualsExpression(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitNEqualsExpression(this);
     }
 
     public int size() {

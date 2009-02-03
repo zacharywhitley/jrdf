@@ -87,8 +87,8 @@ public final class LangOperator implements Operator {
         return singleAvp;
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitLang(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitLang(this);
     }
 
     public int size() {

@@ -91,9 +91,8 @@ public final class FalseExpression implements LogicExpression {
         this.avp = MAP;
     }
 
-
-    public void accept(ExpressionVisitor v) {
-        v.visitFalse(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitFalse(this);
     }
 
     public int size() {

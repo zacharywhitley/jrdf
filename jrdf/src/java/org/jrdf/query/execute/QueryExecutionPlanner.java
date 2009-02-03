@@ -82,12 +82,11 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public final class QueryExecutionPlanner extends ExpressionVisitorAdapter implements ExpressionVisitor {
+public final class QueryExecutionPlanner extends ExpressionVisitorAdapter<Set<Relation>>
+    implements ExpressionVisitor<Set<Relation>> {
     private static final QueryExecutionPlanner PLANNER = new QueryExecutionPlanner();
-
-    private final RelationComparator relationComparator = new SimpleRelationComparatorImpl();
+    private static final RelationComparator RELATION_COMPARATOR = new SimpleRelationComparatorImpl();
     private BiOperandExpressionSimplifier simplifier;
-    private Set<Relation> relations;
     private List<Expression> constraintList;
     private OptimizingQueryEngineImpl engine;
 
@@ -107,25 +106,22 @@ public final class QueryExecutionPlanner extends ExpressionVisitorAdapter implem
         OptimizingQueryEngineImpl engine) {
         this.engine = engine;
         this.constraintList = operands;
-        expression.accept(this);
-        return relations;
+        return expression.accept(this);
     }
 
     @Override
-    public  void visitConjunction(Conjunction conjunction) {
+    public Set<Relation> visitConjunction(Conjunction conjunction) {
         List<Relation> partialResult = new LinkedList<Relation>();
         for (Expression exp : constraintList) {
             Relation tempRelation = engine.getExpression(exp);
             if (tempRelation.getTuples().isEmpty()) {
-                relations = Collections.singleton(tempRelation);
-                partialResult = null;
-                return;
+                return Collections.singleton(tempRelation);
             }
             partialResult.add(tempRelation);
         }
         engine.clearCacheHandler();
-        Collections.sort(partialResult, relationComparator);
-        relations = matchAttributes(partialResult);
+        Collections.sort(partialResult, RELATION_COMPARATOR);
+        return matchAttributes(partialResult);
     }
 
     private Set<Relation> matchAttributes(List<Relation> partialResults) {

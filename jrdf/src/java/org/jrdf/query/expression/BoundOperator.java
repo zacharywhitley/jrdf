@@ -116,8 +116,8 @@ public final class BoundOperator implements Operator, LogicExpression {
         return determineEqualityFromFields(this, (BoundOperator) obj);
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitBound(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitBound(this);
     }
 
     private boolean determineEqualityFromFields(BoundOperator s1, BoundOperator s2) {

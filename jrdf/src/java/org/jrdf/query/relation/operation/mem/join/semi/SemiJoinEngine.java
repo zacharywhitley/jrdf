@@ -76,7 +76,7 @@ import java.util.SortedSet;
  * Join two relations if they have common tuple values and projects the results back onto the first relation.
  */
 // TODO AN AVP Refactoing - can some of this use RelationHelper?
-// TODO Tuple Refactor.    
+// TODO Tuple Refactor.
 public class SemiJoinEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
     private final NodeComparator nodeComparator;

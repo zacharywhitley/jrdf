@@ -132,8 +132,8 @@ public class Ask implements Expression {
         return determineEqualityFromFields(this, (Ask) obj);
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitAsk(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitAsk(this);
     }
 
     private boolean determineEqualityFromFields(Ask o1, Ask o2) {

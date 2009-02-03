@@ -73,7 +73,7 @@ import java.util.Map;
  * @version $Revision$
  */
 public interface Expression extends Serializable {
-    void accept(ExpressionVisitor v);
+    <R> R accept(ExpressionVisitor<R> v);
 
     int size();
 
