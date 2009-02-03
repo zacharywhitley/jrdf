@@ -75,65 +75,85 @@ import org.jrdf.query.expression.logic.TrueExpression;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class ExpressionVisitorAdapter implements ExpressionVisitor {
+public class ExpressionVisitorAdapter<R> implements ExpressionVisitor<R> {
 
-    public void visitProjection(Projection projection) {
+    public R visitProjection(Projection projection) {
+        return null;
     }
 
-    public void visitConstraint(SingleConstraint constraint) {
+    public R visitConstraint(SingleConstraint constraint) {
+        return null;
     }
 
-    public void visitEmptyConstraint(EmptyConstraint constraint) {
+    public R visitEmptyConstraint(EmptyConstraint constraint) {
+        return null;
     }
 
-    public void visitConjunction(Conjunction conjunction) {
+    public R visitConjunction(Conjunction conjunction) {
+        return null;
     }
 
-    public void visitUnion(Union union) {
+    public R visitUnion(Union union) {
+        return null;
     }
 
-    public void visitOptional(Optional optional) {
+    public R visitOptional(Optional optional) {
+        return null;
     }
 
-    public void visitLogicAnd(LogicAndExpression andExpression) {
+    public R visitLogicAnd(LogicAndExpression andExpression) {
+        return null;
     }
 
-    public void visitLogicOr(LogicOrExpression orExpression) {
+    public R visitLogicOr(LogicOrExpression orExpression) {
+        return null;
     }
 
-    public void visitLogicNot(LogicNotExpression notExpression) {
+    public R visitLogicNot(LogicNotExpression notExpression) {
+        return null;
     }
 
-    public void visitFilter(Filter filter) {
+    public R visitFilter(Filter filter) {
+        return null;
     }
 
-    public void visitEqualsExpression(EqualsExpression equalsExpression) {
+    public R visitEqualsExpression(EqualsExpression equalsExpression) {
+        return null;
     }
 
-    public void visitLessThanExpression(LessThanExpression lessThanExpression) {
+    public R visitLessThanExpression(LessThanExpression lessThanExpression) {
+        return null;
     }
 
-    public void visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
+    public R visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
+        return null;
     }
 
-    public void visitAsk(Ask v) {
+    public R visitAsk(Ask v) {
+        return null;
     }
 
-    public void visitSingleValue(SingleValue value) {
+    public R visitSingleValue(SingleValue value) {
+        return null;
     }
 
-    public void visitStr(StrOperator str) {
+    public R visitStr(StrOperator str) {
+        return null;
     }
 
-    public void visitLang(LangOperator lang) {
+    public R visitLang(LangOperator lang) {
+        return null;
     }
 
-    public void visitBound(BoundOperator bound) {
+    public R visitBound(BoundOperator bound) {
+        return null;
     }
 
-    public void visitTrue(TrueExpression trueExp) {
+    public R visitTrue(TrueExpression trueExp) {
+        return null;
     }
 
-    public void visitFalse(FalseExpression falseExp) {
+    public R visitFalse(FalseExpression falseExp) {
+        return null;
     }
 }

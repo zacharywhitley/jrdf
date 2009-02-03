@@ -99,7 +99,7 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public class SimpleBooleanEvaluatorUnitTest extends TestCase {
+public class BooleanEvaluatorImplUnitTest extends TestCase {
     private static final NodeComparator NODE_COMPARATOR = new ComparatorFactoryImpl().createNodeComparator();
 
     private static final Literal LITERAL_L1_LANG = createLiteral("fr");
@@ -112,12 +112,12 @@ public class SimpleBooleanEvaluatorUnitTest extends TestCase {
     private static final Tuple TEST_VARFOO_LITERAL_TUPLE_2 = createTuple(VAR_FOO1_LITERAL_L2);
     private static final Tuple TEST_TUPLE_1_2 = createTuple(VAR_BAR1_LITERAL_L1, VAR_FOO1_LITERAL_L1);
 
-    private BooleanEvaluator evaluator;
+    private BooleanEvaluator<Boolean> evaluator;
     private LogicExpression expression;
 
     @Override
     protected void setUp() throws Exception {
-        evaluator = new SimpleBooleanEvaluator(NODE_COMPARATOR);
+        evaluator = new BooleanEvaluatorImpl(NODE_COMPARATOR);
     }
 
     public void testLessThanExpression() {

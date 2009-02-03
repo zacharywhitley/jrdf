@@ -102,8 +102,8 @@ public final class SingleValue implements Constraint {
         }
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitSingleValue(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitSingleValue(this);
     }
 
     public int size() {

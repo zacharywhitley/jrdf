@@ -183,6 +183,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         if (node == null || newNode == null) {
             return;
         }
+        // TODO Change to use visitor.
         if (ObjectNode.class.isAssignableFrom(node.getClass()) &&
             ObjectNode.class.isAssignableFrom(newNode.getClass())) {
             final ObjectNode oldONode = (ObjectNode) createNewNode(node);
@@ -202,6 +203,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         if (node == null || newNode == null) {
             return;
         }
+        // TODO Change to use visitor.
         if (PredicateNode.class.isAssignableFrom(node.getClass()) &&
             PredicateNode.class.isAssignableFrom(newNode.getClass())) {
             final PredicateNode oldONode = (PredicateNode) createNewNode(node);
@@ -221,6 +223,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         if (node == null || newNode == null) {
             return;
         }
+        // TODO Change to use visitor.
         if (SubjectNode.class.isAssignableFrom(node.getClass()) &&
             SubjectNode.class.isAssignableFrom(newNode.getClass())) {
             final SubjectNode oldSNode = (SubjectNode) createNewNode(node);

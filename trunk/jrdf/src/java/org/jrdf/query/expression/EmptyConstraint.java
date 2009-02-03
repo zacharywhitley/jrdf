@@ -83,8 +83,8 @@ public final class EmptyConstraint implements Constraint {
     private EmptyConstraint() {
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitEmptyConstraint(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitEmptyConstraint(this);
     }
 
     public Map<Attribute, Node> getValue() {

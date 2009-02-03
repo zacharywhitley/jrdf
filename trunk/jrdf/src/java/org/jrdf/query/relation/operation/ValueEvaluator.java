@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,77 +57,11 @@
  *
  */
 
-package org.jrdf.query.expression.logic;
+package org.jrdf.query.relation.operation;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.global.LiteralImpl;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.relation.Attribute;
-import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
-import org.jrdf.util.EqualsUtil;
-import static org.jrdf.vocabulary.XSD.BOOLEAN;
+import org.jrdf.query.relation.Tuple;
 
-import static java.util.Collections.singletonMap;
-import java.util.Map;
-
-/**
- * @author Yuan-Fang Li
- * @version $Id$
- */
-public final class TrueExpression implements LogicExpression {
-    private static final long serialVersionUID = -6113444233155098483L;
-    private static final int DUMMY_HASHCODE = 47;
-    private static final Node TRUE = new LiteralImpl("true", BOOLEAN);
-    private static final Map<Attribute, Node> MAP = singletonMap(NULLARY_ATTRIBUTE, TRUE);
-
-    /**
-     * The singleton true expression.
-     */
-    public static final TrueExpression TRUE_EXPRESSION = new TrueExpression();
-
-    private Map<Attribute, Node> avp;
-
-    private TrueExpression() {
-        this.avp = MAP;
-    }
-
-    public <R> R accept(ExpressionVisitor<R> v) {
-        return v.visitTrue(this);
-    }
-
-    public int size() {
-        return 0;
-    }
-
-    public Map<Attribute, Node> getValue() {
-        return avp;
-    }
-
-    @Override
-    public int hashCode() {
-        return DUMMY_HASHCODE + avp.hashCode();
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (TrueExpression) obj);
-    }
-
-    private boolean determineEqualityFromFields(TrueExpression s1, TrueExpression s2) {
-        return s1.avp.equals(s2.avp);
-    }
-
-
-    @Override
-    public String toString() {
-        return "TRUE";
-    }
+public interface ValueEvaluator<R> extends ExpressionVisitor<R> {
+    void setTuple(Tuple tuple);
 }

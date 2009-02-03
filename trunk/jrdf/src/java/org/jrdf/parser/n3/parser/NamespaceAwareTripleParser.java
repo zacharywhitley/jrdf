@@ -60,7 +60,6 @@
 package org.jrdf.parser.n3.parser;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.parser.ParseException;
 import static org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps.OBJECT_REGEX;
 import static org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps.PREDICATE_REGEX;

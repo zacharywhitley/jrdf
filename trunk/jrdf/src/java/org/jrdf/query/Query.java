@@ -63,6 +63,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
+import org.jrdf.query.relation.Relation;
 
 /**
  * A query to a graph.
@@ -71,7 +72,7 @@ import org.jrdf.query.expression.Expression;
  * @version $Id$
  */
 public interface Query {
-    Answer executeQuery(Graph graph, QueryEngine queryEngine);
+    Answer executeQuery(Graph graph, QueryEngine<Relation> queryEngine);
 
     Expression getNext();
 }

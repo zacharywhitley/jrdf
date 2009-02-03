@@ -131,7 +131,7 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     protected static final Attribute ATTR_O2 = new AttributeImpl(ATTRIBUTE_O2, OBJECT_NODE_TYPE);
     protected static final Attribute ATTR_O3 = new AttributeImpl(ATTRIBUTE_O3, OBJECT_NODE_TYPE);
 
-    private ExpressionSimplifier simplifier;
+    private ExpressionSimplifier<Expression> simplifier;
     private static final Expression SPO_CONSTRAINT = createConstraintExpression("s", "p", "o");
     private static final Expression SPO1_CONSTRAINT = createConstraintExpression("s", "p", "o1");
     private static final Expression S1PO1_CONSTRAINT = createConstraintExpression("s1", "p", "o1");
@@ -312,12 +312,11 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
 
     private Expression getQueryExpression(Query query) {
         Expression expression = query.getNext();
-        expression.accept(simplifier);
-        expression = simplifier.getExpression();
+        expression = expression.accept(simplifier);
         if (simplifier.parseAgain()) {
-            expression.accept(simplifier);
+            expression = expression.accept(simplifier);
         }
-        return simplifier.getExpression();
+        return expression;
     }
 
     private Expression getExpressionField(Object obj, Class<?> cls, String fieldName)

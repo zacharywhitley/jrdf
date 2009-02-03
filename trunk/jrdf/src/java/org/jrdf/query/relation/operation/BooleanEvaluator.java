@@ -59,8 +59,6 @@
 
 package org.jrdf.query.relation.operation;
 
-import org.jrdf.graph.Node;
-import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Tuple;
@@ -69,12 +67,8 @@ import org.jrdf.query.relation.Tuple;
  * @author Yuan-Fang Li
  * @version :$
  */
-public interface BooleanEvaluator extends ExpressionVisitor {
-    boolean evaluate(Tuple tuple, LogicExpression expression);
-
-    Node getValue(Tuple tuple, Expression expression);
-
+public interface BooleanEvaluator<R> extends ExpressionVisitor<R> {
     void setTuple(Tuple tuple);
 
-    Node getValue();
+    boolean evaluate(Tuple tuple, LogicExpression expression);
 }

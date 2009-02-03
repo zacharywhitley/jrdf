@@ -87,14 +87,14 @@ import org.jrdf.query.expression.logic.TrueExpression;
  * @author Yuan-Fang Li
  * @version :$
  */
-public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter implements ExpressionComparator {
+public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter<Integer>
+    implements ExpressionComparator<Integer> {
     private static final long serialVersionUID = 4884876904025513571L;
-    private int result;
 
     /**
      * The singleton expression comparator.
      */
-    public static final ExpressionComparator EXPRESSION_COMPARATOR = new ExpressionComparatorImpl();
+    public static final ExpressionComparator<Integer> EXPRESSION_COMPARATOR = new ExpressionComparatorImpl();
 
     private ExpressionComparatorImpl() {
     }
@@ -111,109 +111,103 @@ public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter imp
         }
     }
 
-    public int getVariableEstimate() {
-        return result;
+    public Integer visitConstraint(SingleConstraint constraint) {
+        return constraint.size();
     }
 
-    public void visitConstraint(SingleConstraint constraint) {
-        result = constraint.size();
-    }
-
-    public void visitFilter(Filter filter) {
+    public Integer visitFilter(Filter filter) {
         int lhs = getNext(filter.getLhs());
         int rhs = getNext(filter.getRhs());
-        result = lhs + rhs;
+        return (lhs + rhs);
     }
 
-    public void visitConjunction(Conjunction conjunction) {
+    public Integer visitConjunction(Conjunction conjunction) {
         int lhs = getNext(conjunction.getLhs());
         int rhs = getNext(conjunction.getRhs());
-        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
+        return (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
-    public void visitProjection(Projection projection) {
-        result = getNext(projection.getNextExpression());
+    public Integer visitProjection(Projection projection) {
+        return getNext(projection.getNextExpression());
     }
 
-    public void visitEmptyConstraint(EmptyConstraint constraint) {
-        result = constraint.size();
+    public Integer visitEmptyConstraint(EmptyConstraint constraint) {
+        return constraint.size();
     }
 
-    public void visitUnion(Union union) {
+    public Integer visitUnion(Union union) {
         int lhs = getNext(union.getLhs());
         int rhs = getNext(union.getRhs());
-        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
+        return (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
-    public void visitOptional(Optional optional) {
+    public Integer visitOptional(Optional optional) {
         int lhs = getNext(optional.getLhs());
         int rhs = getNext(optional.getRhs());
-        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2);
+        return (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
-    public void visitStr(StrOperator str) {
-        result = visitOperator(str);
+    public Integer visitStr(StrOperator str) {
+        return visitOperator(str);
     }
 
-    public void visitLang(LangOperator lang) {
-        result = visitOperator(lang);
+    public Integer visitLang(LangOperator lang) {
+        return visitOperator(lang);
     }
 
-    public void visitBound(BoundOperator bound) {
-        result = visitOperator(bound);
+    public Integer visitBound(BoundOperator bound) {
+        return visitOperator(bound);
     }
 
-    private int visitOperator(Operator operator) {
+    private Integer visitOperator(Operator operator) {
         return operator.size();
     }
 
-    public void visitLogicAnd(LogicAndExpression andExpression) {
+    public Integer visitLogicAnd(LogicAndExpression andExpression) {
         int lhs = getNext(andExpression.getLhs());
         int rhs = getNext(andExpression.getRhs());
-        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
+        return (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
     }
 
-    public void visitLogicOr(LogicOrExpression orExpression) {
+    public Integer visitLogicOr(LogicOrExpression orExpression) {
         int lhs = getNext(orExpression.getLhs());
         int rhs = getNext(orExpression.getRhs());
-        result = (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
+        return (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
     }
 
-    public void visitLogicNot(LogicNotExpression notExpression) {
-        result = notExpression.size();
+    public Integer visitLogicNot(LogicNotExpression notExpression) {
+        return notExpression.size();
     }
 
-    public void visitEqualsExpression(EqualsExpression equalsExpression) {
-        result = equalsExpression.size();
+    public Integer visitEqualsExpression(EqualsExpression equalsExpression) {
+        return equalsExpression.size();
     }
 
-    public void visitAsk(Ask ask) {
-        result = getNext(ask.getNextExpression());
+    public Integer visitAsk(Ask ask) {
+        return getNext(ask.getNextExpression());
     }
 
-    public void visitLessThanExpression(LessThanExpression lessThanExpression) {
-        result = lessThanExpression.size();
+    public Integer visitLessThanExpression(LessThanExpression lessThanExpression) {
+        return lessThanExpression.size();
     }
 
-    public void visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
-        result = nEqualsExpression.size();
+    public Integer visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
+        return nEqualsExpression.size();
     }
 
-    public void visitSingleValue(SingleValue value) {
-        result = value.size();
+    public Integer visitSingleValue(SingleValue value) {
+        return value.size();
     }
 
-    public void visitTrue(TrueExpression trueExp) {
-        result = trueExp.size();
+    public Integer visitTrue(TrueExpression trueExp) {
+        return trueExp.size();
     }
 
-    public void visitFalse(FalseExpression falseExp) {
-        result = falseExp.size();
+    public Integer visitFalse(FalseExpression falseExp) {
+        return falseExp.size();
     }
 
     private int getNext(Expression expression) {
-        ExpressionComparator comparator = new ExpressionComparatorImpl();
-        expression.accept(comparator);
-        return comparator.getVariableEstimate();
+        return expression.accept(this);
     }
 }

@@ -78,8 +78,8 @@ public final class StrOperator implements Operator {
         this.singleAvp = newSingleAvp;
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitStr(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitStr(this);
     }
 
     public Map<Attribute, Node> getValue() {

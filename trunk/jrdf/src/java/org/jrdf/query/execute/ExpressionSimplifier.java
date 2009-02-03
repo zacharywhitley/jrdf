@@ -59,12 +59,9 @@
 
 package org.jrdf.query.execute;
 
-import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 
-public interface ExpressionSimplifier extends ExpressionVisitor {
-
-    Expression getExpression();
+public interface ExpressionSimplifier<R> extends ExpressionVisitor<R> {
 
     boolean parseAgain();
 }

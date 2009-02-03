@@ -95,7 +95,7 @@ public final class SelectQueryImpl implements Query {
         return expression;
     }
 
-    public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
+    public Answer executeQuery(Graph graph, QueryEngine<Relation> queryEngine) {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
         Relation result = getResult(graph, queryEngine);
@@ -112,18 +112,15 @@ public final class SelectQueryImpl implements Query {
         }
     }
 
-    private Relation getResult(Graph graph, QueryEngine queryEngine) {
+    private Relation getResult(Graph graph, QueryEngine<Relation> queryEngine) {
         GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
         queryEngine.initialiseBaseRelation(entireGraph);
-        ExpressionSimplifier simplifier = new ExpressionSimplifierImpl();
-        expression.accept(simplifier);
-        expression = simplifier.getExpression();
+        ExpressionSimplifier<Expression> simplifier = new ExpressionSimplifierImpl();
+        expression = expression.accept(simplifier);
         if (simplifier.parseAgain()) {
-            expression.accept(simplifier);
-            expression = simplifier.getExpression();
+            expression = expression.accept(simplifier);
         }
-        expression.accept(queryEngine);
-        return queryEngine.getResult();
+        return expression.accept(queryEngine);
     }
 
     private boolean hasProjected() {

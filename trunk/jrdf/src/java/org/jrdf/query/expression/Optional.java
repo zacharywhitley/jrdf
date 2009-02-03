@@ -108,8 +108,8 @@ public final class Optional implements BiOperandExpression, Serializable {
         return lhs.size() + rhs.size();
     }
 
-    public void accept(ExpressionVisitor v) {
-        v.visitOptional(this);
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return v.visitOptional(this);
     }
 
     public boolean equals(Object obj) {

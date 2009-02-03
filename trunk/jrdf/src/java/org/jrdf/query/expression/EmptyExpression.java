@@ -74,7 +74,8 @@ public class EmptyExpression implements Expression {
         return Collections.emptyMap();
     }
 
-    public void accept(ExpressionVisitor v) {
+    public <R> R accept(ExpressionVisitor<R> v) {
+        return null;
     }
 
     public int size() {

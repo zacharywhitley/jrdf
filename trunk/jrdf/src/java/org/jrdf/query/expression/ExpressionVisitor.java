@@ -74,44 +74,44 @@ import org.jrdf.query.expression.logic.TrueExpression;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface ExpressionVisitor {
-    void visitProjection(Projection projection);
+public interface ExpressionVisitor<R> {
+    R visitProjection(Projection projection);
 
-    void visitConstraint(SingleConstraint constraint);
+    R visitConstraint(SingleConstraint constraint);
 
-    void visitEmptyConstraint(EmptyConstraint constraint);
+    R visitEmptyConstraint(EmptyConstraint constraint);
 
-    void visitConjunction(Conjunction conjunction);
+    R visitConjunction(Conjunction conjunction);
 
-    void visitUnion(Union union);
+    R visitUnion(Union union);
 
-    void visitOptional(Optional optional);
+    R visitOptional(Optional optional);
 
-    void visitLogicAnd(LogicAndExpression andExpression);
+    R visitLogicAnd(LogicAndExpression andExpression);
 
-    void visitLogicOr(LogicOrExpression orExpression);
+    R visitLogicOr(LogicOrExpression orExpression);
 
-    void visitLogicNot(LogicNotExpression notExpression);
+    R visitLogicNot(LogicNotExpression notExpression);
 
-    void visitFilter(Filter filter);
+    R visitFilter(Filter filter);
 
-    void visitEqualsExpression(EqualsExpression equalsExpression);
+    R visitEqualsExpression(EqualsExpression equalsExpression);
 
-    void visitLessThanExpression(LessThanExpression lessThanExpression);
+    R visitLessThanExpression(LessThanExpression lessThanExpression);
 
-    void visitNEqualsExpression(NEqualsExpression nEqualsExpression);
+    R visitNEqualsExpression(NEqualsExpression nEqualsExpression);
 
-    void visitAsk(Ask v);
+    R visitAsk(Ask v);
 
-    void visitSingleValue(SingleValue value);
+    R visitSingleValue(SingleValue value);
 
-    void visitStr(StrOperator str);
+    R visitStr(StrOperator str);
 
-    void visitLang(LangOperator lang);
+    R visitLang(LangOperator lang);
 
-    void visitBound(BoundOperator bound);
+    R visitBound(BoundOperator bound);
 
-    void visitTrue(TrueExpression trueExp);
+    R visitTrue(TrueExpression trueExp);
 
-    void visitFalse(FalseExpression falseExp);
+    R visitFalse(FalseExpression falseExp);
 }
