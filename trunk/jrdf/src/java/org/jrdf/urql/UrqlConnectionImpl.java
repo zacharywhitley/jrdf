@@ -64,6 +64,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.query.AskQueryImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswerImpl;
 import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
@@ -82,7 +83,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 public final class UrqlConnectionImpl implements UrqlConnection {
     // FIXME TJA: Ensure connections are threadsafe.
     private final QueryBuilder builder;
-    private final QueryEngine queryEngine;
+    private final QueryEngine<Relation> queryEngine;
 
     /**
      * Creates a new SPARQL connection.
@@ -90,7 +91,7 @@ public final class UrqlConnectionImpl implements UrqlConnection {
      * @param builder     the query builder that builds queries.
      * @param queryEngine the engine that executed the query.
      */
-    public UrqlConnectionImpl(QueryBuilder builder, QueryEngine queryEngine) {
+    public UrqlConnectionImpl(QueryBuilder builder, QueryEngine<Relation> queryEngine) {
         checkNotNull(builder, queryEngine);
         this.queryEngine = queryEngine;
         this.builder = builder;

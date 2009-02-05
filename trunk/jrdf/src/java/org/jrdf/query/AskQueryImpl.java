@@ -99,10 +99,12 @@ public class AskQueryImpl implements Query {
     private boolean getResult(Graph graph, QueryEngine<Relation> queryEngine) {
         GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
         queryEngine.initialiseBaseRelation(entireGraph);
-        ExpressionSimplifier<Expression> simplifier = new ExpressionSimplifierImpl();
-        expression = expression.accept(simplifier);
+        ExpressionSimplifier<Void> simplifier = new ExpressionSimplifierImpl();
+        expression.accept(simplifier);
+        expression = simplifier.getExpression();
         if (simplifier.parseAgain()) {
-            expression = expression.accept(simplifier);
+            expression.accept(simplifier);
+            expression = simplifier.getExpression();
         }
         Relation relation = expression.accept(queryEngine);
         return !relation.getTuples().isEmpty();

@@ -72,9 +72,9 @@ import java.util.List;
  * @version $Id :$
  */
 public class BiOperandExpressionSimplifierImpl implements BiOperandExpressionSimplifier {
-    private ExpressionComparator comparator;
+    private ExpressionComparator<Integer> comparator;
 
-    public BiOperandExpressionSimplifierImpl(ExpressionComparator comparator) {
+    public BiOperandExpressionSimplifierImpl(ExpressionComparator<Integer> comparator) {
         this.comparator = comparator;
     }
 

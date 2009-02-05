@@ -115,10 +115,12 @@ public final class SelectQueryImpl implements Query {
     private Relation getResult(Graph graph, QueryEngine<Relation> queryEngine) {
         GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
         queryEngine.initialiseBaseRelation(entireGraph);
-        ExpressionSimplifier<Expression> simplifier = new ExpressionSimplifierImpl();
-        expression = expression.accept(simplifier);
+        ExpressionSimplifier<Void> simplifier = new ExpressionSimplifierImpl();
+        expression.accept(simplifier);
+        expression = simplifier.getExpression();
         if (simplifier.parseAgain()) {
-            expression = expression.accept(simplifier);
+            expression.accept(simplifier);
+            expression = simplifier.getExpression();
         }
         return expression.accept(queryEngine);
     }
