@@ -63,6 +63,7 @@ import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.answer.EmptyAnswer;
 import org.jrdf.query.Query;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.execute.QueryEngine;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
@@ -88,7 +89,7 @@ public class NoQueryUnitTest extends TestCase {
     public void testNoQueryValues() {
         Query query = NoQuery.NO_QUERY;
         Graph graph = factory.createMock(Graph.class);
-        QueryEngine queryEngine = factory.createMock(QueryEngine.class);
+        QueryEngine<Relation> queryEngine = factory.createMock(QueryEngine.class);
         assertNotNull(query);
         assertEquals(EmptyAnswer.EMPTY_ANSWER, query.executeQuery(graph, queryEngine));
     }

@@ -64,10 +64,6 @@ import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.ReadWriteGraphFactory;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.RelationFactory;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
@@ -79,6 +75,11 @@ import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import org.jrdf.query.relation.type.TypeComparator;
+import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.RelationComparator;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.analysis.VariableCollector;
 import org.jrdf.urql.builder.QueryBuilder;
@@ -219,8 +220,8 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (DyadicJoin) BEAN_FACTORY.getBean("fullOuterJoin");
     }
 
-    public QueryEngine getNewQueryEngine() {
-        return (QueryEngine) BEAN_FACTORY.getBean("queryEngine");
+    public QueryEngine<Relation> getNewQueryEngine() {
+        return (QueryEngine<Relation>) BEAN_FACTORY.getBean("queryEngine");
     }
 
     public DyadicJoin getNewMinimumFullOuterJoin() {
