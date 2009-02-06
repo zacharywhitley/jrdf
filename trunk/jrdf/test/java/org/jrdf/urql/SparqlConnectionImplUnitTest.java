@@ -66,6 +66,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.answer.Answer;
 import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
@@ -92,7 +93,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final QueryBuilder BUILDER = FACTORY.createMock(QueryBuilder.class);
     private static final Answer ANSWER = FACTORY.createMock(Answer.class);
     private static final Graph GRAPH = FACTORY.createMock(Graph.class);
-    private static final QueryEngine QUERY_ENGINE = FACTORY.createMock(QueryEngine.class);
+    private static final QueryEngine<Relation> QUERY_ENGINE = FACTORY.createMock(QueryEngine.class);
     private static final String METHOD_NAME = "executeQuery";
     private static final Class[] PARAM_TYPES = {QueryBuilder.class, QueryEngine.class};
     private static final String[] METHOD_PARAM_NAMES = {"graph", "queryText"};
@@ -128,7 +129,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     public void testExecuteQuery() throws Exception {
-        QueryEngine queryEngine = createQueryEngine();
+        QueryEngine<Relation> queryEngine = createQueryEngine();
         expect(GRAPH.isEmpty()).andReturn(false);
         Query query = createQuery(GRAPH, queryEngine);
         QueryBuilder builder = createBuilder(GRAPH, QUERY_ITQL, query);
@@ -140,7 +141,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     public void testEmptyGraph() throws Exception {
-        QueryEngine queryEngine = createQueryEngine();
+        QueryEngine<Relation> queryEngine = createQueryEngine();
         Graph graph = createEmptyGraph();
         Query query = FACTORY.createMock(Query.class);
         QueryBuilder builder = createBuilder(graph, QUERY_ITQL, query);
@@ -182,14 +183,14 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         return graph;
     }
 
-    private Query createQuery(Graph graph, QueryEngine queryEngine) {
+    private Query createQuery(Graph graph, QueryEngine<Relation> queryEngine) {
         Query query = FACTORY.createMock(Query.class);
         query.executeQuery(graph, queryEngine);
         expectLastCall().andReturn(ANSWER);
         return query;
     }
 
-    private QueryEngine createQueryEngine() {
+    private QueryEngine<Relation> createQueryEngine() {
         return FACTORY.createMock(QueryEngine.class);
     }
 

@@ -61,6 +61,7 @@ package org.jrdf.urql.analysis;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.answer.Answer;
 import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
@@ -83,7 +84,7 @@ public final class NoQuery implements Query, Serializable {
         return null;
     }
 
-    public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
+    public Answer executeQuery(Graph graph, QueryEngine<Relation> queryEngine) {
         return EMPTY_ANSWER;
     }
 }
