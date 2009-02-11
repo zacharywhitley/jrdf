@@ -273,6 +273,7 @@ class SAXFilter implements ContentHandler {
         if (parseLiteralMode) {
             appendStartTag(qName, attributes);
             xmlLiteralStackHeight++;
+            newNamespaceMappings.clear();
         } else {
             ElementInfo parent = peekStack();
             ElementInfo elInfo = new ElementInfo(parent, qName, namespaceURI, localName);
