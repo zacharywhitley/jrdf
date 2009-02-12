@@ -49,7 +49,7 @@ JAVA_BIN=${JAVA_HOME}/bin/java
 CLASSPATH=${CLASSPATH}:${LIBDIR}/ant/ant-1.7.1.jar
 CLASSPATH=${CLASSPATH}:${LIBDIR}/ant/ant-launcher-1.7.1.jar
 CLASSPATH=${CLASSPATH}:${LIBDIR}/ant/ant-junit-1.7.1.jar
-CLASSPATH=${CLASSPATH}:${LIBDIR}/junit/junit-3.8.1.jar
+CLASSPATH=${CLASSPATH}:${LIBDIR}/junit/junit-4.5.jar
 
 # Try to include tools.jar for compilation
 if test -f ${JAVA_HOME}/lib/tools.jar ; then
