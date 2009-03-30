@@ -92,7 +92,7 @@ public final class NullaryAttribute implements Attribute, Serializable {
     /**
      * Test whether a given attribute is nullary attribute.
      * @param attribute
-     * @return
+     * @return true if the given attribute is this attribute or attribute and type are nullary.
      */
     public static boolean isNullaryAttribute(Attribute attribute) {
         return NULLARY_ATTRIBUTE == attribute ||
