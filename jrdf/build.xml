@@ -204,7 +204,7 @@
         <javadoc destdir="${javadoc.dir}" author="true" version="true"
                  packagenames="org.jrdf.*"
                  sourcepath="${prod.src.dir};${gen.src.dir}"
-                 classpath="${prod.classes.dir};${lib.dir}/je/je-${bdbje.version}.jar;${lib.dir}/woodstox/stax-api-1.0.1.jar;${lib.dir}/woodstox/wstx-asl-3.2.8.jar;${lib.dir}/spring-rcp/swingx-0.9.1.jar;${lib.dir}/spring/spring-beans-${spring.version}.jar;${lib.dir}/spring/spring-context-${spring.version}.jar;${lib.dir}/spring/spring-core-${spring.version}.jar;${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar"
+                 classpath="${prod.classes.dir};${lib.dir}/je/je-${bdbje.version}.jar;${lib.dir}/woodstox/stax-api-1.0.1.jar;${lib.dir}/woodstox/wstx-asl-3.2.8.jar;${lib.dir}/spring-rcp/swingx-0.9.1.jar;${lib.dir}/spring/spring-beans-${spring.version}.jar;${lib.dir}/spring/spring-context-${spring.version}.jar;${lib.dir}/spring/spring-core-${spring.version}.jar;${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar;${lib.dir}/restlet/org.restlet-${restlet.version}.jar;${lib.dir}/restlet/org.restlet.ext.json_2.0-${restlet.version}.jar;${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar;${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"
                  failonerror="true"
                  additionalparam="-breakiterator" Use="true"
                  source="${java.src.version}"

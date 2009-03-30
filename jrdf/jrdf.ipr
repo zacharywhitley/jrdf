@@ -104,6 +104,9 @@
       <entry name="?*.n3" />
     </wildcardResourcePatterns>
   </component>
+  <component name="CopyrightManager" default="">
+    <module2copyright />
+  </component>
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -843,6 +846,9 @@
     <option name="projectName" value="jrdf" />
   </component>
   <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectKey">
+    <option name="state" value="https://jrdf.svn.sf.net/svnroot/jrdf/trunk/jrdf/jrdf.ipr" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/jrdf.iml" filepath="$PROJECT_DIR$/jrdf.iml" />
@@ -888,6 +894,7 @@
       </map>
     </option>
     <option name="myVersion" value="124" />
+    <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="ToggleTest">
     <toggle from="*" to="*UnitTest" />
