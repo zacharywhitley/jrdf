@@ -12,7 +12,7 @@
             width: 100%;
             background: #fff;
             min-width: 600px;
-            font-size: 90%;
+            font: normal 13px / 22px Verdana, Arial, Helvetica, sans-serif;
         }
 
         a:link, a:visited {
@@ -25,56 +25,34 @@
         }
 
         h1#maintitle {
-            margin: 0 0 0 10px;
+            margin: 0 0 0 20px;
             padding: 18px 0 18px 20%;
-            font-size: 1.1em;
             line-height: 1.6;
-            text-transform: uppercase;
             letter-spacing: 2px;
             color: #000;
         }
 
-        #headercontent {
-            background: #0C479C
-        }
-
         #header {
-            clear: both;
-            float: left;
             width: 100%;
             background: #0C479C;
             border-bottom: 2px solid #000;
         }
 
-        #columnwrapper {
-            float: left;
-            position: relative;
-            clear: both;
-            width: 100%;
-            overflow: hidden;
+        #main {
+            width: 80%;
+            background: #FFFFFF;
         }
 
-        #columns {
+        #sidebar {
+            width: 19%;
             float: left;
-            right: 85%;
-            position: relative;
+            padding: 1% 1%;
         }
 
-        #contentcontent {
-            float: left;
-            position: relative;
-            overflow: hidden;
-            width: 81%;
-            left: 102%;
-        }
-
-        #leftcontent {
-            float: left;
-            position: relative;
-            overflow: hidden;
-            width: 11%;
-            left: 6%;
-            padding: 10px 0 0 0;
+        #content {
+            width:100%;
+            padding: 1px 1px;
+            margin-left: 21%;
         }
 
         #footer {
@@ -99,246 +77,243 @@
 </head>
 <body>
 <div id="header">
-    <div id="headercontent">
-        <h1 id="maintitle">JRDF - An RDF Library in Java </h1>
+    <h1 id="maintitle">JRDF - An RDF Library in Java </h1>
+    
+</div>
+<div id="main">
+    <div id="sidebar">
+        <a href="http://www.w3.org/RDF/" title="RDF Resource Description Framework"> <img border="0" src="http://www.w3.org/RDF/icons/rdf_powered_button.48" alt="RDF Resource Description Framework Powered Icon"/></a>
+    </div>
+    <div id="content">
+        <p>JRDF is an attempt to create a standard set of APIs and base implementations to
+        <a href="http://www.w3.org/RDF/">RDF</a> (Resource Description Framework)
+        using the latest version of the Java language.&nbsp; The API will cover anything that is deemed to be useful for
+        Java programmers.&nbsp; A key aspect will be to ensure a high degree of modularity and to follow standard Java
+        conventions.&nbsp; It will be similar to other standard Java APIs such as JDBC, XML, Collections, etc.</p>
+
+    <p>Current Java APIs for RDF have some drawbacks and many strengths.&nbsp; Some do not follow the current RDF
+        specification exactly or lack features that are appropriate to certain use cases.&nbsp; Also, there are many common
+        aspects to existing APIs with only slight differences in method names, package hierarchies and exception
+        handling.</p>
+
+    <h2>APIs Provided</h2>
+    JRDF has the following features (or will have in the near future):<br>
+    <ul>
+        <li>A Graph API (including graph comparison and graph set-based operations),</li>
+        <li>Creating and manipulating Graph objects (Statements, Resources, Nodes, etc.),</li>
+        <li>In memory and disk based graphs with a standard system level interface for storing triples,</li>
+        <li>IoC support (currently using Spring 2),</li>
+        <li>RDF Datatypes,</li>
+        <li>Local (where nodes are tied to a graph/store) and global (where they are not) RDF statements,</li>
+        <li>An RDF to Java object API (similar to Hibernate or Sesame's Elmo), and</li>
+        <li>Query Handling including SPARQL support (including results, transport, etc).</li>
+    </ul>
+    Future features may include:
+    <ul>
+        <li>Transactions,</li>
+        <li>Event Handling (addition/removal of nodes from a graph),</li>
+        <li>Security, and</li>
+        <li>Inferencing.</li>
+    </ul>
+    Being able to talk directly to a triple store in a common manner with the ability to swap differing implementations
+    is one of the key aims of the project.&nbsp; There are obvious benefits, especially when running in the same JVM,
+    that a common API provides.&nbsp; At the same time it will allow higher level APIs to be developed on top of the
+    existing agreed upon APIs.<br>
+    <br>
+
+    <h2>Existing Work<br>
+    </h2>
+    This project is based on the existing RDF libraries and is designed to include the best features from all available
+    sources.<br>
+    <ul>
+        <li><a href="http://www.hpl.hp.com/semweb/jena.htm">Jena</a>,</li>
+        <li><a href="http://www.openrdf.org/">Sesame</a>,</li>
+        <li><a href="http://www.angelite.nl/aquamarine/">Aquamarine</a>, and</li>
+        <li><a href="http://www-db.stanford.edu/%7Emelnik/rdf/api.html">Sergey Melnik's RDF API</a>.</li>
+    </ul>
+    Other standard APIs will be used where possible.<br>
+    <br>
+
+    <h2>Documentation<br>
+    </h2>
+
+    <h3>Wiki</h3>
+    <ul>
+        <li>Documentation is being developed on <a href="http://code.google.com/p/jrdf/">Google Code</a>.</li>
+        <ul>
+            <li><a href="http://code.google.com/p/jrdf/wiki/GettingStarted">Getting Started</a></li>
+        </ul>
+        <ul>
+            <li><a href="http://code.google.com/p/jrdf/wiki/JRDFWiring">Wiring and Entry Points in JRDF</a></li>
+        </ul>
+        <ul>
+            <li><a href="http://code.google.com/p/jrdf/wiki/RelationalSPARQLOperations">Relational SPARQL Operations</a>
+            </li>
+        </ul>
+        <ul>
+            <li><a href="http://code.google.com/p/jrdf/wiki/Servers">Setting up Local and Distributed Querying</a></li>
+        </ul>
+        <ul>
+            <li><a href="http://code.google.com/p/jrdf/wiki/GlobalGraphs">Global JRDF Graphs</a> - a way to distribute RDF
+                across a
+                distributed cluster of computing nodes such as Hadoop.
+            </li>
+        </ul>
+    </ul>
+    <h3>Publications</h3>
+    <ul>
+        <li>Honours Thesis, Querying the Semantic Web using a Relational Based SPARQL
+            (<a
+                    href="thesis/2006/RelationalBasedSPARQL.html">HTML</a>, <a
+                    href="thesis/2006/RelationalBasedSPARQL.pdf">PDF</a>).
+        </li>
+        <ul>
+            <li>Dataset used was <a href="http://www.mindswap.org/2005/sparql/unbound/">scutter.rdf</a> (
+                <a href="thesis/2006/data/scutter-100K.rdf.bz">100K</a>, <a
+                        href="thesis/2006/data/scutter-50K.rdf.bz">50K</a>,
+                <a href="thesis/2006/data/scutter-25K.rdf.bz">25K</a>).
+            </li>
+        </ul>
+    </ul>
+    <h3>Javadoc</h3>
+    <ul>
+        <li><a href="0.5.5.4/doc/javadoc/index.html">JRDF
+            0.5.5.4</a>.
+        </li>
+        <li><a href="0.5.4/doc/javadoc/index.html">JRDF
+            0.5.4</a>.
+        </li>
+        <li><a href="0.5.3/doc/javadoc/index.html">JRDF
+            0.5.3</a>.
+        </li>
+        <li><a href="0.4.1/doc/javadoc/index.html">JRDF
+            0.4.1</a>.
+        </li>
+        <li><a href="0.3.4/doc/javadoc/index.html">JRDF
+            0.3.4</a>.
+        </li>
+    </ul>
+
+
+    <h2>Status</h2>
+    22/10/2008 - <A
+            HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=635032"
+            style="font-weight: bold;">JRDF 0.5.5.4</A> - Server support including
+    distributed querying using the SPARQL protocol, streaming answers, iterable results returned, BOUND support and bug
+    fixes.<br>
+    11/08/2008 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=619107"
+            style="font-weight: bold;">JRDF 0.5.5.3</A> - Bug fixes and optimizations.<br>
+    01/08/2008 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=617049"
+            style="font-weight: bold;">JRDF 0.5.5.2</A> - Bug fix release and initial work on supporting SPARQL FILTER.<br>
+    04/07/2008 - <A
+            HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=611274"
+            style="font-weight: bold;">JRDF 0.5.5.1</A> - Permanent graph support (for both molecules and normal
+    graph store) and text based serialization of molecules. Fixes to molecule store and graph implementations.<br>
+    25/06/2008 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=609329"
+            style="font-weight: bold;">JRDF 0.5.5</A> - On disk and in memory molecule store, NTriples writer,
+    RDF/XML parser bugs fixed, Resource API extended and general bugs fixed and other improvements.<br>
+    05/02/2008 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=574096"
+            style="font-weight: bold;">JRDF 0.5.4</A> - Fixed
+    <a href="http://www.openrdf.org/issues/browse/SES-519">btree bug</a> and added
+    <a href="http://jrdf.sourceforge.net/0.5.4/doc/javadoc/org/jrdf/graph/Resource.html">Resource</a> methods for easier
+    triple addition/removal.<br>
+    23/01/2008 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=570777"
+            style="font-weight: bold;">JRDF 0.5.3</A> - Improved find() performance, finds by node type, bug fixed in
+    RDF/XML
+    parser, allow Literals and URI directly across graphs, and other bug fixes.<br>
+    22/11/2007 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=555802"
+            style="font-weight: bold;">JRDF 0.5.2</A> - Improved performance and support for reading writing large RDF/XML
+    files (millions of triples).<br>
+    09/11/2007 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=552929"
+            style="font-weight: bold;">JRDF 0.5.1</A> - Improved Bdb implementation and db4o support added. Bugs fixed with
+    the Resource API and data
+    type support.<br>
+    26/08/2007 - <A
+            HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=534936"
+            style="font-weight: bold;">JRDF 0.5.0</A> - Java 6 support. New APIs for Persistence, Resources and data
+    types.<br>
+    05/06/2007 - <A
+            HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=513552"
+            style="font-weight: bold;">JRDF 0.4.1.1 and SPARQL GUI 0.3.1.1</A> - Bug fix release for wiring errors.<br>
+    27/02/2007 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=489659"
+            style="font-weight: bold;">SPARQL GUI 0.3.1</A> - Syncs with 0.4.1 release.<br>
+    27/02/2007 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=489657"
+            style="font-weight: bold;">0.4.1</A> - First source release with SPARQL implementation, RDF/XML Writer, and
+    NTriples
+    pull and push parser.<br>
+    16/11/2006 - <A
+            HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=464117"
+            style="font-weight: bold;">SPARQL GUI 0.3</A> - Removes bug associated with project.<br>
+    20/08/2006 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=440607"
+            style="font-weight: bold;">SPARQL GUI 0.2</A> - Removes bugs associated with parsing SPARQL and produces
+    correct results for OPTIONAL and UNION <a href="http://www.w3.org/2001/sw/DataAccess/tests">DAWG test cases</a>.<br>
+    13/08/2006 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=439009"
+            style="font-weight: bold;">SPARQL GUI 0.1</A> - A simple GUI that allows user's to submit SPARQL queries.
+    Supports
+    a subset of SPARQL: PREFIX, pattern matching, UNION, join (.) and OPTIONAL.<br>
+    24/06/2006 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=427294"
+            style="font-weight: bold;">0.3.4.3</A> - Bug fix release for 0.3.4
+    branch. XML Literal parsing regression bug.<br>
+    03/04/2006 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=406779"
+            style="font-weight: bold;">0.4.0</A> - First Java 1.5 only release.
+    Began work on relational and graph operations. Began work on NTriples
+    parser and SPARQL support. RDF/XML improved to add proper handling of
+    XML Literals, relative URIs and xml:base processing.<br>
+    24/11/2005 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=373455"
+            style="font-weight: bold;">0.3.4.2</A> - Another bug fix release. Fixes to RDF/XML literal parsing and
+    NTriple escaping.<br>
+    08/10/2005 - <A
+            HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=362121"
+            style="font-weight: bold;">0.3.4.1</A> - Bug Fix Release. Fixes to xml:base handling and
+    resolving of relative URIs.<br>
+    12/07/2005 - <a
+            href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=341581"><span
+            style="font-weight: bold;">0.3.4</span></a> - RDF/XML parser based on RIO
+    released (with improved support for blank nodes), start of SPARQL and remote query support, bugs fixed, and general
+    code refactoring and preparation for move to Java 1.5.<br>
+    27/09/2004 - <a
+            href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=270827"><span
+            style="font-weight: bold;">0.3.3</span></a> - Single bug fix - correction to reification
+    semantics. No changes to API.<br>
+    14/09/2004 - <a
+            href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=267807"><span
+            style="font-weight: bold;">0.3.2</span></a> - Further in memory bug fixes and
+    improved iterator support.<br>
+    23/08/2004 - <a
+            href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=262565"><span
+            style="font-weight: bold;">0.3.1</span></a> - In memory bug fix release.<br>
+    15/08/2004 - <a
+            href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=260670"><span
+            style="font-weight: bold;">0.3</span></a> - In memory implementation,
+    visitor support, collection and container support.<br>
+    21/02/2004 - <a
+            href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=218562"><span
+            style="font-weight: bold;">0.2.1</span></a> - Updated graph, added
+    vocabularies and iterator for results.<br>
+    18/12/2003 - <a
+            href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;release_id=203283"><span
+            style="font-weight: bold;">0.2</span></a> - Update of graph level interface.<br>
+    <br>
     </div>
 </div>
-<div id="columnwrapper">
-<div id="columns">
-<div id="contentcontent">
-<p>JRDF is an attempt to create a standard set of APIs and base implementations to
-    <a href="http://www.w3.org/RDF/">RDF</a> (Resource Description Framework)
-    using the latest version of the Java language.&nbsp; The API will cover anything that is deemed to be useful for
-    Java programmers.&nbsp; A key aspect will be to ensure a high degree of modularity and to follow standard Java
-    conventions.&nbsp; It will be similar to other standard Java APIs such as JDBC, XML, Collections, etc.</p>
-
-<p>Current Java APIs for RDF have some drawbacks and many strengths.&nbsp; Some do not follow the current RDF
-    specification exactly or lack features that are appropriate to certain use cases.&nbsp; Also, there are many common
-    aspects to existing APIs with only slight differences in method names, package hierarchies and exception
-    handling.</p>
-
-<h2>APIs Provided</h2>
-JRDF has the following features (or will have in the near future):<br>
-<ul>
-    <li>A Graph API (including graph comparison and graph set-based operations),</li>
-    <li>Creating and manipulating Graph objects (Statements, Resources, Nodes, etc.),</li>
-    <li>In memory and disk based graphs with a standard system level interface for storing triples,</li>
-    <li>IoC support (currently using Spring 2),</li>
-    <li>RDF Datatypes,</li>
-    <li>Local (where nodes are tied to a graph/store) and global (where they are not) RDF statements,</li>
-    <li>An RDF to Java object API (similar to Hibernate or Sesame's Elmo), and</li>
-    <li>Query Handling including SPARQL support (including results, transport, etc).</li>
-</ul>
-Future features may include:
-<ul>
-    <li>Transactions,</li>
-    <li>Event Handling (addition/removal of nodes from a graph),</li>
-    <li>Security, and</li>
-    <li>Inferencing.</li>
-</ul>
-Being able to talk directly to a triple store in a common manner with the ability to swap differing implementations
-is one of the key aims of the project.&nbsp; There are obvious benefits, especially when running in the same JVM,
-that a common API provides.&nbsp; At the same time it will allow higher level APIs to be developed on top of the
-existing agreed upon APIs.<br>
-<br>
-
-<h2>Existing Work<br>
-</h2>
-This project is based on the existing RDF libraries and is designed to include the best features from all available
-sources.<br>
-<ul>
-    <li><a href="http://www.hpl.hp.com/semweb/jena.htm">Jena</a>,</li>
-    <li><a href="http://www.openrdf.org/">Sesame</a>,</li>
-    <li><a href="http://www.angelite.nl/aquamarine/">Aquamarine</a>, and</li>
-    <li><a href="http://www-db.stanford.edu/%7Emelnik/rdf/api.html">Sergey Melnik's RDF API</a>.</li>
-</ul>
-Other standard APIs will be used where possible.<br>
-<br>
-
-<h2>Documentation<br>
-</h2>
-
-<h3>Wiki</h3>
-<ul>
-    <li>Documentation is being developed on <a href="http://code.google.com/p/jrdf/">Google Code</a>.</li>
-    <ul>
-        <li><a href="http://code.google.com/p/jrdf/wiki/GettingStarted">Getting Started</a></li>
-    </ul>
-    <ul>
-        <li><a href="http://code.google.com/p/jrdf/wiki/JRDFWiring">Wiring and Entry Points in JRDF</a></li>
-    </ul>
-    <ul>
-        <li><a href="http://code.google.com/p/jrdf/wiki/RelationalSPARQLOperations">Relational SPARQL Operations</a>
-        </li>
-    </ul>
-    <ul>
-        <li><a href="http://code.google.com/p/jrdf/wiki/Servers">Setting up Local and Distributed Querying</a></li>
-    </ul>
-    <ul>
-        <li><a href="http://code.google.com/p/jrdf/wiki/GlobalGraphs">Global JRDF Graphs</a> - a way to distribute RDF
-            across a
-            distributed cluster of computing nodes such as Hadoop.
-        </li>
-    </ul>
-</ul>
-<h3>Publications</h3>
-<ul>
-    <li>Honours Thesis, Querying the Semantic Web using a Relational Based SPARQL
-        (<a
-                href="thesis/2006/RelationalBasedSPARQL.html">HTML</a>, <a
-                href="thesis/2006/RelationalBasedSPARQL.pdf">PDF</a>).
-    </li>
-    <ul>
-        <li>Dataset used was <a href="http://www.mindswap.org/2005/sparql/unbound/">scutter.rdf</a> (
-            <a href="thesis/2006/data/scutter-100K.rdf.bz">100K</a>, <a
-                    href="thesis/2006/data/scutter-50K.rdf.bz">50K</a>,
-            <a href="thesis/2006/data/scutter-25K.rdf.bz">25K</a>).
-        </li>
-    </ul>
-</ul>
-<h3>Javadoc</h3>
-<ul>
-    <li><a href="0.5.5.4/doc/javadoc/index.html">JRDF
-        0.5.5.4</a>.
-    </li>
-    <li><a href="0.5.4/doc/javadoc/index.html">JRDF
-        0.5.4</a>.
-    </li>
-    <li><a href="0.5.3/doc/javadoc/index.html">JRDF
-        0.5.3</a>.
-    </li>
-    <li><a href="0.4.1/doc/javadoc/index.html">JRDF
-        0.4.1</a>.
-    </li>
-    <li><a href="0.3.4/doc/javadoc/index.html">JRDF
-        0.3.4</a>.
-    </li>
-</ul>
-
-
-<h2>Status</h2>
-22/10/2008 - <A
-        HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=635032"
-        style="font-weight: bold;">JRDF 0.5.5.4</A> - Server support including
-distributed querying using the SPARQL protocol, streaming answers, iterable results returned, BOUND support and bug
-fixes.<br>
-11/08/2008 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=619107"
-        style="font-weight: bold;">JRDF 0.5.5.3</A> - Bug fixes and optimizations.<br>
-01/08/2008 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=617049"
-        style="font-weight: bold;">JRDF 0.5.5.2</A> - Bug fix release and initial work on supporting SPARQL FILTER.<br>
-04/07/2008 - <A
-        HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=611274"
-        style="font-weight: bold;">JRDF 0.5.5.1</A> - Permanent graph support (for both molecules and normal
-graph store) and text based serialization of molecules. Fixes to molecule store and graph implementations.<br>
-25/06/2008 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=609329"
-        style="font-weight: bold;">JRDF 0.5.5</A> - On disk and in memory molecule store, NTriples writer,
-RDF/XML parser bugs fixed, Resource API extended and general bugs fixed and other improvements.<br>
-05/02/2008 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=574096"
-        style="font-weight: bold;">JRDF 0.5.4</A> - Fixed
-<a href="http://www.openrdf.org/issues/browse/SES-519">btree bug</a> and added
-<a href="http://jrdf.sourceforge.net/0.5.4/doc/javadoc/org/jrdf/graph/Resource.html">Resource</a> methods for easier
-triple addition/removal.<br>
-23/01/2008 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=570777"
-        style="font-weight: bold;">JRDF 0.5.3</A> - Improved find() performance, finds by node type, bug fixed in
-RDF/XML
-parser, allow Literals and URI directly across graphs, and other bug fixes.<br>
-22/11/2007 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=555802"
-        style="font-weight: bold;">JRDF 0.5.2</A> - Improved performance and support for reading writing large RDF/XML
-files (millions of triples).<br>
-09/11/2007 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=552929"
-        style="font-weight: bold;">JRDF 0.5.1</A> - Improved Bdb implementation and db4o support added. Bugs fixed with
-the Resource API and data
-type support.<br>
-26/08/2007 - <A
-        HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=534936"
-        style="font-weight: bold;">JRDF 0.5.0</A> - Java 6 support. New APIs for Persistence, Resources and data
-types.<br>
-05/06/2007 - <A
-        HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=513552"
-        style="font-weight: bold;">JRDF 0.4.1.1 and SPARQL GUI 0.3.1.1</A> - Bug fix release for wiring errors.<br>
-27/02/2007 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=489659"
-        style="font-weight: bold;">SPARQL GUI 0.3.1</A> - Syncs with 0.4.1 release.<br>
-27/02/2007 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=489657"
-        style="font-weight: bold;">0.4.1</A> - First source release with SPARQL implementation, RDF/XML Writer, and
-NTriples
-pull and push parser.<br>
-16/11/2006 - <A
-        HREF="https://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=464117"
-        style="font-weight: bold;">SPARQL GUI 0.3</A> - Removes bug associated with project.<br>
-20/08/2006 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=440607"
-        style="font-weight: bold;">SPARQL GUI 0.2</A> - Removes bugs associated with parsing SPARQL and produces
-correct results for OPTIONAL and UNION <a href="http://www.w3.org/2001/sw/DataAccess/tests">DAWG test cases</a>.<br>
-13/08/2006 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=439009"
-        style="font-weight: bold;">SPARQL GUI 0.1</A> - A simple GUI that allows user's to submit SPARQL queries.
-Supports
-a subset of SPARQL: PREFIX, pattern matching, UNION, join (.) and OPTIONAL.<br>
-24/06/2006 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=427294"
-        style="font-weight: bold;">0.3.4.3</A> - Bug fix release for 0.3.4
-branch. XML Literal parsing regression bug.<br>
-03/04/2006 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=406779"
-        style="font-weight: bold;">0.4.0</A> - First Java 1.5 only release.
-Began work on relational and graph operations. Began work on NTriples
-parser and SPARQL support. RDF/XML improved to add proper handling of
-XML Literals, relative URIs and xml:base processing.<br>
-24/11/2005 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=373455"
-        style="font-weight: bold;">0.3.4.2</A> - Another bug fix release. Fixes to RDF/XML literal parsing and
-NTriple escaping.<br>
-08/10/2005 - <A
-        HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=362121"
-        style="font-weight: bold;">0.3.4.1</A> - Bug Fix Release. Fixes to xml:base handling and
-resolving of relative URIs.<br>
-12/07/2005 - <a
-        href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=341581"><span
-        style="font-weight: bold;">0.3.4</span></a> - RDF/XML parser based on RIO
-released (with improved support for blank nodes), start of SPARQL and remote query support, bugs fixed, and general
-code refactoring and preparation for move to Java 1.5.<br>
-27/09/2004 - <a
-        href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=270827"><span
-        style="font-weight: bold;">0.3.3</span></a> - Single bug fix - correction to reification
-semantics. No changes to API.<br>
-14/09/2004 - <a
-        href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=267807"><span
-        style="font-weight: bold;">0.3.2</span></a> - Further in memory bug fixes and
-improved iterator support.<br>
-23/08/2004 - <a
-        href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=262565"><span
-        style="font-weight: bold;">0.3.1</span></a> - In memory bug fix release.<br>
-15/08/2004 - <a
-        href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=260670"><span
-        style="font-weight: bold;">0.3</span></a> - In memory implementation,
-visitor support, collection and container support.<br>
-21/02/2004 - <a
-        href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=218562"><span
-        style="font-weight: bold;">0.2.1</span></a> - Updated graph, added
-vocabularies and iterator for results.<br>
-18/12/2003 - <a
-        href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;release_id=203283"><span
-        style="font-weight: bold;">0.2</span></a> - Update of graph level interface.<br>
-<br>
+<div id="footer">
+    <a href="http://sf.net/projects/jrdf">JRDF Project Page</a>
+    <a href="http://sourceforge.net/users/newmana/">Andrew Newman</a>
 </div>
-<div id="leftcontent">
-    <a href="http://www.w3.org/RDF/" title="RDF Resource Description
-Framework"> <img border="0" src="http://www.w3.org/RDF/icons/rdf_powered_button.48"
-alt="RDF Resource Description Framework Powered Icon"/></a>    
-</div>
-</div>
-</div>
-<div id="footer"><a href="http://sf.net/projects/jrdf">JRDF Project Page</a> <a
-        href="http://sourceforge.net/users/newmana/">Andrew Newman</a></div>
 <div id="sponsors">
     <a href="http://sourceforge.net"><img style="border: 0 solid ; width: 88px; height: 31px;" alt="SF Logo"
                                           src="http://sourceforge.net/sflogo.php?group_id=96347"></a><br>
