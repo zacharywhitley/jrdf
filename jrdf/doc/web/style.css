@@ -50,7 +50,7 @@ h1#maintitle {
 
 #footer {
     clear: both;
-    float: left;
+    float: right;
     width: 100%;
     background: black;
     color: white;
@@ -65,8 +65,4 @@ h1#maintitle {
     text-decoration: none;
     left: 15px;
     line-height: 1.3em;
-}
-
-sponsors {
-    clear: both;
 }
