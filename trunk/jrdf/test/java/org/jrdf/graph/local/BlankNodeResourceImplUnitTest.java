@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.local;
 
-import com.gargoylesoftware.base.testing.EqualsTester;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.BlankNode;
@@ -67,6 +66,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
 import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.EqualsTestUtil.assertEquality;
 
 public class BlankNodeResourceImplUnitTest extends TestCase {
     private Graph newGraph;
@@ -87,7 +87,7 @@ public class BlankNodeResourceImplUnitTest extends TestCase {
     }
 
     public void testEquals() throws Exception {
-        new EqualsTester(resource1, resource2, resource3, null);
+        assertEquality(resource1, resource2, resource3, null);
         assertTrue(blankNode1.equals(resource1));
         assertTrue(resource1.equals(blankNode1));
     }

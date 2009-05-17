@@ -59,7 +59,8 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -68,18 +69,21 @@ import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.net.URI;
 
 /**
  * Abstract Test case for Graph Element Factories. Implementing packages should extend this class and implement the
- * {@link #newGraph}, {@link #getDefaultLiteralType} and {@link #getDefaultLiteralLanguage} methods.
+ * {@link #newGraph}, {@link #defaultLiteralType} and {@link #getDefaultLiteralLanguage} methods.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
-public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
+public abstract class AbstractGraphElementFactoryUnitTest {
 
     /**
      * Instance of a graph element factory.
@@ -97,22 +101,20 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
     private Graph graph;
     private static final String TEST_STR_1 = "A test string";
     private static final String TEST_STR_2 = "Another test string";
+    private static final String EMPTY_STRING = "";
+    private Literal testLiteral1;
+    private Literal testLiteral2;
+    private Literal newTestLiteral1;
 
-    /**
-     * Create test instance.
-     *
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
-     */
-    public void setUp() throws Exception {
+    @Before
+    public void initGraphElementFactoryAndCreateTestLiterals() throws Exception {
         graph = newGraph();
         elementFactory = graph.getElementFactory();
         tripleFactory = graph.getTripleFactory();
+        testLiteral1 = elementFactory.createLiteral(TEST_STR_1);
+        testLiteral2 = elementFactory.createLiteral(TEST_STR_2);
+        newTestLiteral1 = elementFactory.createLiteral(TEST_STR_1);
     }
-
-    //
-    // abstract methods specific to the implementation.
-    //
 
     /**
      * Create a new graph of the appropriate type.
@@ -128,7 +130,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      *
      * @return The default Literal type.
      */
-    protected abstract URI getDefaultLiteralType();
+    protected abstract URI defaultLiteralType();
 
     /**
      * Get the default literal language from the implementation.
@@ -137,13 +139,30 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      */
     public abstract String getDefaultLiteralLanguage();
 
-    //
-    // Test cases
-    //
-
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(GraphElementFactory.class,
-            elementFactory.getClass());
+        checkImplementationOfInterfaceAndFinal(GraphElementFactory.class, elementFactory.getClass());
+    }
+
+    @Test
+    public void sameLiteralValuesAreEqual() {
+        assertThat(testLiteral1, equalTo(newTestLiteral1));
+    }
+
+    @Test
+    public void differentLiteralValuesAreUnequal() {
+        assertThat(testLiteral1, not(equalTo(testLiteral2)));
+    }
+
+    @Test
+    public void defaultLiteralProperties() {
+        checkDefaultLiteralProperties(testLiteral1, TEST_STR_1);
+        checkDefaultLiteralProperties(testLiteral2, TEST_STR_2);
+    }
+
+    public void checkDefaultLiteralProperties(Literal literal, String lexicalValue) {
+        assertThat(literal.getDatatypeURI(), equalTo(defaultLiteralType()));
+        assertThat(literal.getLanguage(), equalTo(EMPTY_STRING));
+        assertThat(literal.getLexicalForm(), equalTo(lexicalValue));
     }
 
     /**
@@ -151,41 +170,33 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      *
      * @throws Exception if query fails when it should have succeeded
      */
+    @Test
     public void testCreateLiterals() throws Exception {
-        // createLiteral(String lexicalValue)
-        Literal l1 = elementFactory.createLiteral(TEST_STR_1);
-        Literal l2 = elementFactory.createLiteral(TEST_STR_2);
-        Literal l3 = elementFactory.createLiteral(TEST_STR_1);
-        assertFalse(l1.equals(l2));
-        assertEquals(l1, l3);
-        assertEquals(getDefaultLiteralType(), l1.getDatatypeURI());
-        assertEquals("", l1.getLanguage());
-        assertEquals(TEST_STR_1, l1.getLexicalForm());
 
         // createLiteral(String lexicalValue, String languageType)
-        l1 = elementFactory.createLiteral(TEST_STR_1, "it");
-        l2 = elementFactory.createLiteral(TEST_STR_2, "it");
-        l3 = elementFactory.createLiteral(TEST_STR_1, "it");
+        testLiteral1 = elementFactory.createLiteral(TEST_STR_1, "it");
+        testLiteral2 = elementFactory.createLiteral(TEST_STR_2, "it");
+        newTestLiteral1 = elementFactory.createLiteral(TEST_STR_1, "it");
         Literal l4 = elementFactory.createLiteral(TEST_STR_1);
-        assertFalse(l1.equals(l2));
-        assertFalse(l1.equals(l4));
-        assertEquals(l1, l3);
-        assertEquals(getDefaultLiteralType(), l1.getDatatypeURI());
-        assertEquals("it", l1.getLanguage());
-        assertEquals(TEST_STR_1, l1.getLexicalForm());
+        assertFalse(testLiteral1.equals(testLiteral2));
+        assertFalse(testLiteral1.equals(l4));
+        assertEquals(testLiteral1, newTestLiteral1);
+        assertEquals(defaultLiteralType(), testLiteral1.getDatatypeURI());
+        assertEquals("it", testLiteral1.getLanguage());
+        assertEquals(TEST_STR_1, testLiteral1.getLexicalForm());
 
         // createLiteral(String lexicalValue, URI datatypeURI)
         URI type = new URI("xsd:long");
-        l1 = elementFactory.createLiteral("42", type);
-        l2 = elementFactory.createLiteral("0", type);
-        l3 = elementFactory.createLiteral("42", type);
+        testLiteral1 = elementFactory.createLiteral("42", type);
+        testLiteral2 = elementFactory.createLiteral("0", type);
+        newTestLiteral1 = elementFactory.createLiteral("42", type);
         l4 = elementFactory.createLiteral("42");
-        assertFalse(l1.equals(l2));
-        assertFalse(l1.equals(l4));
-        assertEquals(l1, l3);
-        assertEquals(type, l1.getDatatypeURI());
-        assertEquals("", l1.getLanguage());
-        assertEquals("42", l1.getLexicalForm());
+        assertFalse(testLiteral1.equals(testLiteral2));
+        assertFalse(testLiteral1.equals(l4));
+        assertEquals(testLiteral1, newTestLiteral1);
+        assertEquals(type, testLiteral1.getDatatypeURI());
+        assertEquals(EMPTY_STRING, testLiteral1.getLanguage());
+        assertEquals("42", testLiteral1.getLexicalForm());
 
     }
 
@@ -194,6 +205,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      *
      * @throws Exception if query fails when it should have succeeded
      */
+    @Test
     public void testCreateResources() throws Exception {
         // test blank node creation
         BlankNode blank1 = elementFactory.createBlankNode();
@@ -214,6 +226,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
     /**
      * Test using the other methods of resource
      */
+    @Test
     public void testResourceUsage() throws Exception {
         final Resource supplier = elementFactory.createResource();
         final URIReference sno = elementFactory.createURIReference(URI.create("urn:sno"));
@@ -230,6 +243,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      *
      * @throws Exception if query fails when it should have succeeded
      */
+    @Test
     public void testCreateTriples() throws Exception {
         BlankNode blank1 = elementFactory.createBlankNode();
         BlankNode blank2 = elementFactory.createBlankNode();
@@ -294,6 +308,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      *
      * @throws Exception if query fails when it should have succeeded
      */
+    @Test
     public void testTwoGraphs() throws Exception {
         Graph g1 = newGraph();
         final Graph g2 = newGraph();

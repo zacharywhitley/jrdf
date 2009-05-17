@@ -59,20 +59,14 @@
 
 package org.jrdf.util.test.runner;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
+import org.junit.extensions.cpsuite.ClasspathSuite;
+import static org.junit.extensions.cpsuite.SuiteType.JUNIT38_TEST_CLASSES;
+import static org.junit.extensions.cpsuite.SuiteType.TEST_CLASSES;
+import org.junit.runner.RunWith;
 
-import java.io.IOException;
-
-/**
- * Run all the unit tests in the project.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public class IntegrationTestRunner extends TestCase {
-    public static Test suite() throws IOException {
-        return new DefaultTestRunner("IntegrationTest");
-    }
+@RunWith(ClasspathSuite.class)
+@ClasspathSuite.SuiteTypes({ JUNIT38_TEST_CLASSES, TEST_CLASSES })
+@ClasspathSuite.ClassnameFilters({ ".*IntegrationTest" })
+public class IntegrationTestRunner {
 }
 

@@ -59,10 +59,10 @@
 
 package org.jrdf.util.test.runner;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-
-import java.io.IOException;
+import org.junit.extensions.cpsuite.ClasspathSuite;
+import static org.junit.extensions.cpsuite.SuiteType.JUNIT38_TEST_CLASSES;
+import static org.junit.extensions.cpsuite.SuiteType.TEST_CLASSES;
+import org.junit.runner.RunWith;
 
 /**
  * Run all the unit tests in the project.
@@ -70,8 +70,8 @@ import java.io.IOException;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class PerformanceTestRunner extends TestCase {
-    public static Test suite() throws IOException {
-        return new DefaultTestRunner("PerformanceTest");
-    }
+@RunWith(ClasspathSuite.class)
+@ClasspathSuite.SuiteTypes({ JUNIT38_TEST_CLASSES, TEST_CLASSES })
+@ClasspathSuite.ClassnameFilters({ ".*PerformanceTest" })
+public class PerformanceTestRunner {
 }
