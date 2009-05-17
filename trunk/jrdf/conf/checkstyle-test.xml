@@ -1,13 +1,19 @@
 <?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
-    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
-    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
     <module name="SuppressionFilter">
         <property name="file" value="conf/test-suppressions.xml"/>
     </module>
     <property name="severity" value="error"/>
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+    <module name="RegexpSingleline">
+        <property name="format" value="\s+$"/>
+    </module>
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
         <module name="AvoidStarImport"/>
@@ -16,9 +22,6 @@
         <module name="EmptyForIteratorPad"/>
         <module name="EqualsHashCode"/>
         <module name="ExplicitInitialization"/>
-        <module name="GenericIllegalRegexp">
-            <property name="format" value="\s$"/>
-        </module>
         <module name="IllegalImport"/>
         <module name="IllegalInstantiation"/>
         <module name="Indentation"/>
@@ -68,7 +71,6 @@
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="StaticVariableName"/>
-        <module name="TabCharacter"/>
         <module name="TypeName"/>
         <module name="UnusedImports"/>
         <module name="UpperEll"/>

@@ -131,8 +131,7 @@ public class LiteralImpl extends AbstractLiteral implements LiteralMutableId {
      * Provide a legible representation of a literal.  Caches the immutable value
      * so it gets mapped efficiently.
      *
-     * @return the <var>lexicalForm</var> property, enclosed in <code>"</code>
-     *         characters.
+     * @return the lexicalForm property, enclosed in <code>"</code> characters.
      */
     @Override
     public String toString() {

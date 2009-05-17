@@ -155,7 +155,7 @@ public abstract class AbstractURIReference implements URIReference, Serializable
      * Provide a legible representation of a URI reference. Currently, just the
      * URI of the reference.
      *
-     * @return the <var>uri</var> property called toString() on.
+     * @return the uri property called toString() on.
      */
     public String toString() {
         return uri.toString();

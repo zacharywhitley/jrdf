@@ -118,8 +118,8 @@ public final class EscapeUtil {
     /**
      * Escapes a string literal to a string that is N-Triple escaped.
      *
-     * @param string a string to escape, never <code>null</code>.
-     * @return a version of the <var>string</var> with N-Triples escapes applied.
+     * @param string a string to escape, never null.
+     * @return a version of the string with N-Triples escapes applied.
      * @throws IllegalStateException if there is no handler to perform the relevant match.
      */
     public static StringBuffer escape(String string) throws IllegalStateException {
