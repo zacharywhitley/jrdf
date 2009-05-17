@@ -100,9 +100,9 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
     }
 
     /**
-     * Builds the given <var>tripleNode</var> into a local Triple.
+     * Builds the given tripleNode into a local Triple.
      *
-     * @return The local version of the given <var>tripleNode</var>
+     * @return The local version of the given tripleNode
      */
     public LinkedHashMap<Attribute, Node> getTriples() throws ParserException {
         if (exception != null) {

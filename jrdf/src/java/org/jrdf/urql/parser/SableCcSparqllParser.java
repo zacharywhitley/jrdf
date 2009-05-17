@@ -94,8 +94,8 @@ public final class SableCcSparqllParser implements SparqlParser {
      * Parses a textual query into a {@link org.jrdf.query.Query} object.
      *
      * @param queryText The textual query to applyAnalyser.
-     * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
-     * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
+     * @return A query object representing the queryText, will never be null.
+     * @throws InvalidQuerySyntaxException If the syntax of the query is incorrect.
      */
     public Query parseQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
         checkNotNull(graph);
