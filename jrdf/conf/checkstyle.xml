@@ -61,6 +61,8 @@
         <module name="MethodName"/>
         <module name="MethodParamPad"/>
         <module name="MissingSwitchDefault"/>
+        <module name="MissingDeprecated"/>
+        <module name="MissingOverride"/>
         <module name="ModifierOrder"/>
         <module name="NeedBraces"/>
         <module name="NestedIfDepth">
