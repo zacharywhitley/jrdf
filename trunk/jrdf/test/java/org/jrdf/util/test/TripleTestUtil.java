@@ -237,10 +237,10 @@ public class TripleTestUtil {
         return new Attribute[]{att1, att2, att3};
     }
 
-    private static class SimpleClosableIterator<Triple> implements ClosableIterator<Triple> {
-        private Iterator<Triple> iter;
+    private static class SimpleClosableIterator<E> implements ClosableIterator<E> {
+        private Iterator<E> iter;
 
-        private SimpleClosableIterator(Iterator<Triple> iter) {
+        private SimpleClosableIterator(Iterator<E> iter) {
             this.iter = iter;
         }
 
@@ -252,7 +252,7 @@ public class TripleTestUtil {
             return iter.hasNext();
         }
 
-        public Triple next() {
+        public E next() {
             return iter.next();
         }
 

@@ -15,26 +15,11 @@
         <property name="format" value="\s+$"/>
     </module>
     <module name="TreeWalker">
-        <property name="tabWidth" value="4"/>
-        <module name="AvoidStarImport"/>
-        <module name="ConstantName"/>
-        <module name="EmptyBlock"/>
-        <module name="EmptyForIteratorPad"/>
-        <module name="EqualsHashCode"/>
-        <module name="ExplicitInitialization"/>
+        <!-- Start Production specific checks -->
         <module name="FinalClass"/>
-        <!--        <module name="Header">
-          <property name="headerFile" value="${checkstyle.header.file}"/>
-        </module>-->
-        <!-- module name="IllegalCatch"/ -->
-        <module name="IllegalImport"/>
-        <module name="IllegalInstantiation"/>
         <module name="IllegalThrows">
             <property name="illegalClassNames" value="java.lang.Error, java.lang.RuntimeException"/>
         </module>
-        <module name="Indentation"/>
-        <module name="InnerAssignment"/>
-        <module name="InterfaceIsType"/>
         <module name="JavadocMethod">
             <property name="scope" value="public"/>
             <property name="excludeScope" value="protected"/>
@@ -45,6 +30,23 @@
         <module name="JavadocStyle">
             <property name="scope" value="public"/>
         </module>
+        <module name="MagicNumber">
+            <property name="ignoreNumbers" value="-1, 0, 1, 2, 3"/>
+        </module>
+        <!-- End Production specific checks -->
+        <property name="tabWidth" value="4"/>
+        <module name="AvoidStarImport"/>
+        <module name="ClassTypeParameterName"/>
+        <module name="ConstantName"/>
+        <module name="EmptyBlock"/>
+        <module name="EmptyForIteratorPad"/>
+        <module name="EqualsHashCode"/>
+        <module name="ExplicitInitialization"/>
+        <module name="IllegalImport"/>
+        <module name="IllegalInstantiation"/>
+        <module name="Indentation"/>
+        <module name="InnerAssignment"/>
+        <module name="InterfaceIsType"/>
         <module name="LeftCurly"/>
         <module name="LineLength">
             <!-- Ignore Header lines -->
@@ -53,13 +55,11 @@
         </module>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
-        <module name="MagicNumber">
-            <property name="ignoreNumbers" value="-1, 0, 1, 2, 3"/>
-        </module>
         <module name="MemberName"/>
         <module name="MethodLength"/>
         <module name="MethodName"/>
         <module name="MethodParamPad"/>
+        <module name="MethodTypeParameterName"/>
         <module name="MissingSwitchDefault"/>
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
@@ -75,11 +75,11 @@
             <property name="tokens" value="DOT"/>
             <property name="allowLineBreaks" value="true"/>
         </module>
-
         <module name="OperatorWrap">
             <property name="option" value="eol"/>
         </module>
         <module name="PackageName"/>
+        <module name="ParameterName"/>
         <module name="ParameterNumber">
             <property name="max" value="5"/>
         </module>

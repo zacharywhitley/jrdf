@@ -17,6 +17,7 @@
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
         <module name="AvoidStarImport"/>
+        <module name="ClassTypeParameterName"/>
         <module name="ConstantName"/>
         <module name="EmptyBlock"/>
         <module name="EmptyForIteratorPad"/>
@@ -39,6 +40,7 @@
         <module name="MethodLength"/>
         <module name="MethodName"/>
         <module name="MethodParamPad"/>
+        <module name="MethodTypeParameterName"/>
         <module name="MissingSwitchDefault"/>
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
@@ -58,6 +60,7 @@
             <property name="option" value="eol"/>
         </module>
         <module name="PackageName"/>
+        <module name="ParameterName"/>
         <module name="ParameterNumber">
             <property name="max" value="5"/>
         </module>
@@ -95,11 +98,14 @@
 
         <!-- Metrics -->
         <module name="BooleanExpressionComplexity"/>
-        <module name="ClassDataAbstractionCoupling">
-            <property name="max" value="20"/>
-        </module>
+        <!--<module name="ClassDataAbstractionCoupling"/>-->
         <module name="CyclomaticComplexity">
             <property name="max" value="6"/>
         </module>
+        <!--<module name="JavaNCSS">-->
+            <!--<property name="methodMaximum" value="15"/>-->
+            <!--<property name="classMaximum" value="125"/>-->
+            <!--<property name="fileMaximum" value="150"/>-->
+        <!--</module>-->
     </module>
 </module>
