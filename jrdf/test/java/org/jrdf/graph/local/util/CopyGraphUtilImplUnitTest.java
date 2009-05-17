@@ -236,8 +236,8 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         ClosableIterator<Triple> triples = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
             iterator();
         Triple trip = triples.next();
-        assertTrue("Value ok", ((Literal) trip.getObject()).getValue().equals("whatever"));
-        assertTrue("Type ok", ((Literal) trip.getObject()).getDatatypeURI().toString().equals("xsd:string"));
+        assertTrue("Value ok", "whatever".equals(((Literal) trip.getObject()).getValue()));
+        assertTrue("Type ok", "xsd:string".equals(((Literal) trip.getObject()).getDatatypeURI().toString()));
     }
 
     public void testBNodeReference() throws GraphException {

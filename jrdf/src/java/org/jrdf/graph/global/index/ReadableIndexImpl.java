@@ -67,6 +67,7 @@ import org.jrdf.util.EntryIteratorOneFixedOneQuinArray;
 import org.jrdf.util.EntryIteratorTwoFixedFourArray;
 
 import static java.util.Arrays.asList;
+import static java.lang.Long.valueOf;
 
 public class ReadableIndexImpl implements ReadableIndex<Long> {
     private final MoleculeStructureIndex<Long>[] structureIndex;
@@ -102,7 +103,7 @@ public class ReadableIndexImpl implements ReadableIndex<Long> {
             while (index.hasNext()) {
                 Long[] oMidAndPid = index.next();
                 // Make sure object equals required value and mid is not 1L (not in a molecule).
-                if (!oMidAndPid[0].equals(1L)) {
+                if (!valueOf(1).equals(oMidAndPid[0])) {
                     index.close();
                     return oMidAndPid[0];
                 }

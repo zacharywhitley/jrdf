@@ -41,6 +41,7 @@
         <module name="EmptyBlock"/>
         <module name="EmptyForIteratorPad"/>
         <module name="EqualsHashCode"/>
+        <module name="EqualsAvoidNull"/>
         <module name="ExplicitInitialization"/>
         <module name="IllegalImport"/>
         <module name="IllegalInstantiation"/>
@@ -75,6 +76,7 @@
             <property name="tokens" value="DOT"/>
             <property name="allowLineBreaks" value="true"/>
         </module>
+        <module name="OuterTypeNumber"/>
         <module name="OperatorWrap">
             <property name="option" value="eol"/>
         </module>
