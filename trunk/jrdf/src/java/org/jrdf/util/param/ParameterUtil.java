@@ -77,7 +77,7 @@ public final class ParameterUtil {
         if (param == null) {
             throw new IllegalArgumentException("Parameter " + name + " cannot be null");
         }
-        if (param.trim().equals("")) {
+        if ("".equals(param.trim())) {
             throw new IllegalArgumentException("Parameter " + name + " cannot be the empty string");
         }
     }

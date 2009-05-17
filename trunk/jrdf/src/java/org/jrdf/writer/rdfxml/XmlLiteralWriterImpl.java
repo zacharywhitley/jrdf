@@ -143,7 +143,7 @@ public class XmlLiteralWriterImpl implements XmlLiteralWriter {
     }
 
     private void handleCharacters(XMLStreamReader reader, XMLStreamWriter writer) throws XMLStreamException {
-        if (!reader.getText().equals("\n")) {
+        if (!"\n".equals(reader.getText())) {
             writer.writeCharacters(reader.getText());
         }
     }
