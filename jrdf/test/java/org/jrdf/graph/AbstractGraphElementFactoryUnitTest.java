@@ -73,10 +73,8 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 import java.net.URI;
 
 /**
- * Abstract Test case for Graph Element Factories.
- * Implementing packages should extend this class and implement the
- * {@link #newGraph}, {@link #getDefaultLiteralType} and
- * {@link #getDefaultLiteralLanguage} methods.
+ * Abstract Test case for Graph Element Factories. Implementing packages should extend this class and implement the
+ * {@link #newGraph}, {@link #getDefaultLiteralType} and {@link #getDefaultLiteralLanguage} methods.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
