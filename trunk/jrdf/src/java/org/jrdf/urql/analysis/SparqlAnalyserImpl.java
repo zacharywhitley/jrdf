@@ -98,6 +98,7 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     /**
      * {@inheritDoc}
      */
+    @Override
     public Query getQuery() throws ParserException {
         if (exception != null) {
             throw exception;

@@ -109,6 +109,7 @@ public class AbstractTriple implements Triple, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals(Object obj) {
         if (isNull(obj)) {
             return false;
@@ -125,6 +126,7 @@ public class AbstractTriple implements Triple, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         return getNodeHashCode(subjectNode) ^ getNodeHashCode(predicateNode) ^ getNodeHashCode(objectNode);
     }

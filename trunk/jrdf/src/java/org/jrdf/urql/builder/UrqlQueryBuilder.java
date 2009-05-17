@@ -84,6 +84,7 @@ public final class UrqlQueryBuilder implements QueryBuilder {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
         checkNotNull(graph);
         checkNotEmptyString("queryText", queryText);
