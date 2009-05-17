@@ -59,7 +59,6 @@
 
 package org.jrdf.query.answer;
 
-import com.gargoylesoftware.base.testing.TestUtil;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
@@ -69,6 +68,7 @@ import org.jrdf.query.relation.mem.TupleImplUnitTest;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.RESOURCE_1;
 import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.SerializationTestUtil.copyBySerialization;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -91,7 +91,7 @@ public final class SelectAnswerImplIntegrationTest extends TestCase {
         tuples.add(TupleImplUnitTest.TEST_TUPLE_1);
         SelectAnswer answer = new SelectAnswerImpl(heading, relationFactory.getRelation(tuples), 1000L, true);
         checkAnswer(answer, FOO_SUBJECT_VARIABLE, RESOURCE_1.toString(), 1000L, true);
-        SelectAnswer answer2 = (SelectAnswer) TestUtil.copyBySerialization(answer);
+        SelectAnswer answer2 = (SelectAnswer) copyBySerialization(answer);
         // read the graph
         checkAnswer(answer2, FOO_SUBJECT_VARIABLE, RESOURCE_1.toString(), 1000L, true);
     }

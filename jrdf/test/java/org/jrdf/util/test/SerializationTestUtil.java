@@ -59,17 +59,17 @@
 
 package org.jrdf.util.test;
 
-import static com.gargoylesoftware.base.testing.TestUtil.testSerialization;
 import static junit.framework.Assert.assertEquals;
 import junit.framework.AssertionFailedError;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkContainsField;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfType;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldStatic;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.*;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
+import static org.junit.Assert.assertNotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -110,7 +110,7 @@ public final class SerializationTestUtil {
             throw new AssertionFailedError("Class " + getClassName(instanceToBeSerialized) + ", " + afe.getMessage());
         } catch (IOException ioe) {
             throw new RuntimeException("Exception while checking serialization of " +
-                getClassName(instanceToBeSerialized), ioe);
+                    getClassName(instanceToBeSerialized), ioe);
         }
     }
 
@@ -146,6 +146,42 @@ public final class SerializationTestUtil {
             return field.getLong(cls);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static Object testSerialization(final Object object, final boolean checkEquality) throws IOException {
+        assertNotNull("object", object);
+        final Object copy = copyBySerialization(object);
+        if (checkEquality) {
+            checkEquality(object, copy);
+        }
+        return copy;
+    }
+
+    public static Object copyBySerialization(final Object object) throws IOException {
+        try {
+            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            final ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(object);
+            oos.flush();
+
+            final byte[] b = bos.toByteArray();
+            final ByteArrayInputStream bis = new ByteArrayInputStream(b);
+            final ObjectInputStream ois = new ObjectInputStream(bis);
+            return ois.readObject();
+        } catch (final ClassNotFoundException e) {
+            // Theoretically impossible
+            throw new NoClassDefFoundError("Class not found: " + e.getMessage());
+        }
+    }
+
+    private static void checkEquality(final Object original, final Object copy) {
+        if (!copy.equals(original)) {
+            throw new AssertionFailedError("Objects are different: original=[" + original + "] copy=[" + copy + "]");
+        }
+        if (copy.hashCode() != original.hashCode()) {
+            throw new AssertionFailedError("Hashcodes are different: original=[" + original.hashCode() + "] copy=[" +
+                    copy.hashCode() + "]");
         }
     }
 }

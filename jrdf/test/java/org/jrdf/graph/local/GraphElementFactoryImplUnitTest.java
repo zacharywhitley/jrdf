@@ -60,8 +60,6 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.AssertThrows.*;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
@@ -71,6 +69,9 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import static org.jrdf.graph.NullURI.NULL_URI;
 import org.jrdf.graph.Resource;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
+import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
 
@@ -98,7 +99,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
      *
      * @return The default Literal type.
      */
-    public URI getDefaultLiteralType() {
+    public URI defaultLiteralType() {
         return NULL_URI;
     }
 

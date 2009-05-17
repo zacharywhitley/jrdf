@@ -1113,8 +1113,8 @@
     </library>
     <library name="junit">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/junit/gsbase-2.0.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/junit-4.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/cpsuite-1.2.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

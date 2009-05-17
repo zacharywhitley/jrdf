@@ -58,7 +58,6 @@
  */
 package org.jrdf.query.relation.mem;
 
-import com.gargoylesoftware.base.testing.EqualsTester;
 import junit.framework.TestCase;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -72,6 +71,7 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfIn
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkMarkedAsSerializable;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypeAndPrivate;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
+import static org.jrdf.util.test.EqualsTestUtil.assertEquality;
 
 import java.lang.reflect.Modifier;
 
@@ -111,7 +111,7 @@ public class AttributeImplUnitTest extends TestCase {
         Attribute original = TEST_ATTRIBUTE_FOO_POS;
         Attribute equal = TEST_ATTRIBUTE_FOO_POS;
         Attribute notEqual = TEST_ATTRIBUTE_BAR_VAR;
-        new EqualsTester(original, equal, notEqual, null);
+        assertEquality(original, equal, notEqual, null);
     }
 
     private void checkStandardConstructor(AttributeName attributeName, NodeType type) {

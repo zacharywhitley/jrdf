@@ -59,10 +59,10 @@
 
 package org.jrdf.query.relation.type;
 
-import com.gargoylesoftware.base.testing.EqualsTester;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
+import static org.jrdf.util.test.EqualsTestUtil.assertEquality;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -93,6 +93,6 @@ public class NodeTypeTestUtil extends TestCase {
     }
 
     public static void checkEquals(NodeType nodeType, NodeType secondNodeType) {
-        new EqualsTester(nodeType, secondNodeType, null, null);
+        assertEquality(nodeType, secondNodeType, null, null);
     }
 }
