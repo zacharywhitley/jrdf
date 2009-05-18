@@ -6,3 +6,6 @@ the Sesame project (http://www.openrdf.org).  Licenced under LGPL (see LGPL-LICE
 Original BTree implmentation also part of Sesame 2.0 (found in org.jrdf.graph.local.index.nodepool.sesame and
 org.jrdf.graph.local.index.nodepool.sesame).  Part of the Sesame project (http://www.openrdf.org).  Licenced under
 Apache.
+
+Original code was devoped by Paul Gearon, Andrew Newman, and Simon Raboczi.  With contributions from Tom Adams
+Yuan-Fang Li and Robert Turner.
