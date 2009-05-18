@@ -1095,7 +1095,7 @@
     </library>
     <library name="je">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/je/je-3.3.75.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/je/je-3.3.82.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -1113,8 +1113,8 @@
     </library>
     <library name="junit">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/junit/junit-4.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/cpsuite-1.2.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/junit-4.6.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
