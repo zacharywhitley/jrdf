@@ -63,7 +63,9 @@
         <module name="MethodTypeParameterName"/>
         <module name="MissingSwitchDefault"/>
         <module name="MissingDeprecated"/>
-        <module name="MissingOverride"/>
+        <module name="MissingOverride">
+            <property name="javaFiveCompatibility" value="true"/>
+        </module>
         <module name="ModifierOrder"/>
         <module name="NeedBraces"/>
         <module name="NestedIfDepth">
