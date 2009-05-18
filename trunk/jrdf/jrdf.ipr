@@ -7,7 +7,7 @@
         <entry path="file://$PROJECT_DIR$/lib/sablecc-3.2.jar" />
         <entry path="file://$PROJECT_DIR$/lib/emma/emma-2.0.5312.jar" />
         <entry path="file://$PROJECT_DIR$/lib/emma/emma_ant-2.0.5312.jar" />
-        <entry path="file://$PROJECT_DIR$/lib/junit/junit-4.5.jar" />
+        <entry path="file://$PROJECT_DIR$/lib/junit/junit-4.6.jar" />
       </additionalClassPath>
       <antReference projectDefault="true" />
       <customJdkName value="" />
