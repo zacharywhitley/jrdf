@@ -210,10 +210,10 @@
     </target>
 
     <target name="test" depends="unit-test, integration-test, code-coverage"/>
-    <target name="unit-test" depends="dist">
+    <target name="unit-test" depends="code-coverage, dist">
         <test.macro type="unit"/>
     </target>
-    <target name="integration-test" depends="dist">
+    <target name="integration-test" depends="code-coverage, dist">
         <test.macro type="integration"/>
     </target>
     <target name="performance-test" depends="dist">
@@ -221,7 +221,6 @@
     </target>
     <target name="code-coverage" depends="-code-coverage, compile">
         <antcall target="-instrument-classes"/>
-        <test.macro type="unit"/>
     </target>
 
     <target name="-code-coverage" description="turns on code coverage">
