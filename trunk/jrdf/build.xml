@@ -44,8 +44,6 @@
                               output.dir="${test.classes.dir}"
                               code.path="test.code.path" code.pattern="test.code.pattern"/>
 
-        <antcall target="-instrument-classes"/>
-
         <!-- Configuration for Wiring up the various components using Spring and other configuration files-->
         <copy todir="${prod.gui.dir}">
             <fileset dir="${prod.src.dir}" includes="**/commands-context.xml"/>
@@ -211,7 +209,7 @@
         </javadoc>
     </target>
 
-    <target name="test" depends="unit-test, integration-test"/>
+    <target name="test" depends="unit-test, integration-test, code-coverage"/>
     <target name="unit-test" depends="dist">
         <test.macro type="unit"/>
     </target>
@@ -222,6 +220,7 @@
         <test.macro type="performance"/>
     </target>
     <target name="code-coverage" depends="-code-coverage, compile">
+        <antcall target="-instrument-classes"/>
         <test.macro type="unit"/>
     </target>
 
