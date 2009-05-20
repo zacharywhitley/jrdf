@@ -70,6 +70,7 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.vocabulary.XSD;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -104,12 +105,16 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     private static final String TEST_STR_2 = "Another test string";
     private static final String EMPTY_STRING = "";
     private static final String ITALIAN_LANGUAGE = "it";
+    private static final URI TYPE = XSD.STRING;
     private Literal testLiteral1;
     private Literal testLiteral2;
     private Literal newTestLiteral1;
     private Literal languageLiteral1;
     private Literal languageLiteral2;
     private Literal newLanguageLiteral1;
+    private Literal typedLiteral1;
+    private Literal typedLiteral2;
+    private Literal newTypedLiteral;
 
     @Before
     public void initGraphElementFactoryAndCreateTestLiterals() throws Exception {
@@ -122,6 +127,9 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         languageLiteral1 = elementFactory.createLiteral(TEST_STR_1, ITALIAN_LANGUAGE);
         languageLiteral2 = elementFactory.createLiteral(TEST_STR_2, ITALIAN_LANGUAGE);
         newLanguageLiteral1 = elementFactory.createLiteral(TEST_STR_1, ITALIAN_LANGUAGE);
+        typedLiteral1 = elementFactory.createLiteral(TEST_STR_1, TYPE);
+        typedLiteral2 = elementFactory.createLiteral(TEST_STR_2, TYPE);
+        newTypedLiteral = elementFactory.createLiteral(TEST_STR_1, TYPE);
     }
 
     /**
@@ -157,6 +165,8 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         checkLiteralProperties(testLiteral2, TEST_STR_2, defaultLiteralType(), EMPTY_STRING);
         checkLiteralProperties(languageLiteral1,  TEST_STR_1, defaultLiteralType(), ITALIAN_LANGUAGE);
         checkLiteralProperties(languageLiteral2,  TEST_STR_2, defaultLiteralType(), ITALIAN_LANGUAGE);
+        checkLiteralProperties(typedLiteral1, TEST_STR_1, TYPE, EMPTY_STRING);
+        checkLiteralProperties(typedLiteral2, TEST_STR_2, TYPE, EMPTY_STRING);
     }
 
     @Test
@@ -184,32 +194,26 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         assertThat(languageLiteral1, not(equalTo(testLiteral1)));
     }
 
+    @Test
+    public void sameTypeLiteralsAreEqual() {
+        assertThat(typedLiteral1, equalTo(newTypedLiteral));
+    }
+
+    @Test
+    public void differentLiteralValuesSameTypeAreUnequal() {
+        assertThat(typedLiteral1, not(equalTo(languageLiteral2)));
+    }
+
+    @Test
+    public void sameLiteralValueDifferentTypesAreUnequal() throws Exception {
+        assertThat(typedLiteral1, not(equalTo(elementFactory.createLiteral(TEST_STR_1, XSD.ANY_URI))));
+        assertThat(typedLiteral1, not(equalTo(testLiteral1)));
+    }
+
     public void checkLiteralProperties(Literal literal, String lexicalValue, URI datatype, String language) {
         assertThat(literal.getDatatypeURI(), equalTo(datatype));
         assertThat(literal.getLanguage(), equalTo(language));
         assertThat(literal.getLexicalForm(), equalTo(lexicalValue));
-    }
-
-    /**
-     * Tests that each of the createLiteral methods work as expected.
-     *
-     * @throws Exception if query fails when it should have succeeded
-     */
-    @Test
-    public void testCreateLiterals() throws Exception {
-        // createLiteral(String lexicalValue, URI datatypeURI)
-        URI type = new URI("xsd:long");
-        testLiteral1 = elementFactory.createLiteral("42", type);
-        testLiteral2 = elementFactory.createLiteral("0", type);
-        newTestLiteral1 = elementFactory.createLiteral("42", type);
-        Literal l4 = elementFactory.createLiteral("42");
-        assertFalse(testLiteral1.equals(testLiteral2));
-        assertFalse(testLiteral1.equals(l4));
-        assertEquals(testLiteral1, newTestLiteral1);
-        assertEquals(type, testLiteral1.getDatatypeURI());
-        assertEquals(EMPTY_STRING, testLiteral1.getLanguage());
-        assertEquals("42", testLiteral1.getLexicalForm());
-
     }
 
     /**
