@@ -227,7 +227,7 @@
     <target name="-code-coverage" description="turns on code coverage">
         <mkdir dir="${out.instr.dir}"/>
         <mkdir dir="${coverage.dir}"/>
-        <delete file="${coverage.dir}/cobertura.ser"/>
+        <delete file="${basedir}/cobertura.ser"/>
         <property name="code.coverage.enabled" value="true"/>
     </target>
 
@@ -236,7 +236,7 @@
         <sequential>
             <mkdir dir="${@{type}.test.results.dir}"/>
             <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
-                <sysproperty key="net.sourceforge.cobertura.datafile" file="${coverage.dir}/cobertura.ser"/>
+                <sysproperty key="net.sourceforge.cobertura.datafile" file="${basedir}/cobertura.ser"/>
                 <classpath refid="@{type}.test.class.path"/>
                 <classpath refid="cobertura.classpath" />
                 <batchtest todir="${@{type}.test.results.dir}">
@@ -259,7 +259,7 @@
     </target>
 
     <target name="-instrument-report" if="code.coverage.enabled">
-        <cobertura-report format="html" destdir="${coverage.dir}" datafile="${coverage.dir}/cobertura.ser">
+        <cobertura-report format="html" destdir="${coverage.dir}" datafile="${basedir}/cobertura.ser">
             <fileset dir="${prod.src.dir}">
                 <include name="**/*.java"/>
             </fileset>
