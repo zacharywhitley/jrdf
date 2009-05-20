@@ -103,6 +103,7 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     private static final String TEST_STR_1 = "A test string";
     private static final String TEST_STR_2 = "Another test string";
     private static final String EMPTY_STRING = "";
+    private static final String ITALIAN_LANGUAGE = "it";
     private Literal testLiteral1;
     private Literal testLiteral2;
     private Literal newTestLiteral1;
@@ -118,9 +119,9 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         testLiteral1 = elementFactory.createLiteral(TEST_STR_1);
         testLiteral2 = elementFactory.createLiteral(TEST_STR_2);
         newTestLiteral1 = elementFactory.createLiteral(TEST_STR_1);
-        languageLiteral1 = elementFactory.createLiteral(TEST_STR_1, "it");
-        languageLiteral2 = elementFactory.createLiteral(TEST_STR_2, "it");
-        newLanguageLiteral1 = elementFactory.createLiteral(TEST_STR_1, "it");
+        languageLiteral1 = elementFactory.createLiteral(TEST_STR_1, ITALIAN_LANGUAGE);
+        languageLiteral2 = elementFactory.createLiteral(TEST_STR_2, ITALIAN_LANGUAGE);
+        newLanguageLiteral1 = elementFactory.createLiteral(TEST_STR_1, ITALIAN_LANGUAGE);
     }
 
     /**
@@ -151,6 +152,14 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     }
 
     @Test
+    public void defaultLiteralProperties() {
+        checkLiteralProperties(testLiteral1, TEST_STR_1, defaultLiteralType(), EMPTY_STRING);
+        checkLiteralProperties(testLiteral2, TEST_STR_2, defaultLiteralType(), EMPTY_STRING);
+        checkLiteralProperties(languageLiteral1,  TEST_STR_1, defaultLiteralType(), ITALIAN_LANGUAGE);
+        checkLiteralProperties(languageLiteral2,  TEST_STR_2, defaultLiteralType(), ITALIAN_LANGUAGE);
+    }
+
+    @Test
     public void sameLiteralValuesAreEqual() {
         assertThat(testLiteral1, equalTo(newTestLiteral1));
     }
@@ -158,12 +167,6 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     @Test
     public void differentLiteralValuesAreUnequal() {
         assertThat(testLiteral1, not(equalTo(testLiteral2)));
-    }
-
-    @Test
-    public void defaultLiteralProperties() {
-        checkLiteralProperties(testLiteral1, TEST_STR_1, defaultLiteralType(), EMPTY_STRING);
-        checkLiteralProperties(testLiteral2, TEST_STR_2, defaultLiteralType(), EMPTY_STRING);
     }
 
     @Test
@@ -177,12 +180,8 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     }
 
     @Test
-    public void xxx() throws Exception {
-        assertFalse(languageLiteral1.equals(testLiteral1));
-        assertEquals(languageLiteral1, newLanguageLiteral1);
-        assertEquals(defaultLiteralType(), languageLiteral1.getDatatypeURI());
-        assertEquals("it", languageLiteral1.getLanguage());
-        assertEquals(TEST_STR_1, languageLiteral1.getLexicalForm());
+    public void sameLiteralValueDifferentLanguageValuesAreUnequal() {
+        assertThat(languageLiteral1, not(equalTo(testLiteral1)));
     }
 
     public void checkLiteralProperties(Literal literal, String lexicalValue, URI datatype, String language) {
@@ -198,8 +197,6 @@ public abstract class AbstractGraphElementFactoryUnitTest {
      */
     @Test
     public void testCreateLiterals() throws Exception {
-
-
         // createLiteral(String lexicalValue, URI datatypeURI)
         URI type = new URI("xsd:long");
         testLiteral1 = elementFactory.createLiteral("42", type);
