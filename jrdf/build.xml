@@ -224,10 +224,9 @@
         <mkdir dir="${out.instr.dir}"/>
         <mkdir dir="${coverage.dir}"/>
         <delete file="${basedir}/cobertura.ser"/>
-        <property name="code.coverage.enabled" value="true"/>
     </target>
 
-    <target name="-instrument-classes" if="code.coverage.enabled">
+    <target name="-instrument-classes">
         <cobertura-instrument todir="${out.instr.dir}/classes">
             <fileset dir="${prod.classes.dir}">
                 <include name="**/*.class"/>
@@ -235,13 +234,13 @@
         </cobertura-instrument>
     </target>
 
-    <target name="coverage-report" if="code.coverage.enabled">
+    <target name="coverage-report">
         <cobertura-report format="html" destdir="${coverage.dir}" datafile="${basedir}/cobertura.ser">
             <fileset dir="${prod.src.dir}">
                 <include name="**/*.java"/>
             </fileset>
         </cobertura-report>
-        <cobertura-check linerate="0" branchrate="0" totalbranchrate="45" totallinerate="62"
+        <cobertura-check linerate="0" branchrate="0" totalbranchrate="45" totallinerate="61"
                          haltonfailure="yes" datafile="${basedir}/cobertura.ser"/>
     </target>
 
