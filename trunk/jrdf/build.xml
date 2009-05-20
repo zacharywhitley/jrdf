@@ -209,18 +209,15 @@
         </javadoc>
     </target>
 
-    <target name="test" depends="unit-test, integration-test, code-coverage"/>
-    <target name="unit-test" depends="code-coverage, dist">
+    <target name="test" depends="-code-coverage, unit-test, integration-test, coverage-report"/>
+    <target name="unit-test" depends="dist, -instrument-classes">
         <test.macro type="unit"/>
     </target>
-    <target name="integration-test" depends="code-coverage, dist">
+    <target name="integration-test" depends="dist, -instrument-classes">
         <test.macro type="integration"/>
     </target>
     <target name="performance-test" depends="dist">
         <test.macro type="performance"/>
-    </target>
-    <target name="code-coverage" depends="-code-coverage, compile">
-        <antcall target="-instrument-classes"/>
     </target>
 
     <target name="-code-coverage" description="turns on code coverage">
@@ -230,25 +227,6 @@
         <property name="code.coverage.enabled" value="true"/>
     </target>
 
-    <macrodef name="test.macro">
-        <attribute name="type"/>
-        <sequential>
-            <mkdir dir="${@{type}.test.results.dir}"/>
-            <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
-                <sysproperty key="net.sourceforge.cobertura.datafile" file="${basedir}/cobertura.ser"/>
-                <classpath refid="@{type}.test.class.path"/>
-                <classpath refid="cobertura.classpath" />
-                <batchtest todir="${@{type}.test.results.dir}">
-                    <fileset refid="@{type}.test.code.fileset"/>
-                </batchtest>
-                <formatter type="xml"/>
-                <formatter type="brief" usefile="false"/>
-            </junit>
-            <fail if="@{type}.test.failed" message="@{type} tests failed."/>
-            <antcall target="-instrument-report"/>
-        </sequential>
-    </macrodef>
-
     <target name="-instrument-classes" if="code.coverage.enabled">
         <cobertura-instrument todir="${out.instr.dir}/classes">
             <fileset dir="${prod.classes.dir}">
@@ -257,13 +235,33 @@
         </cobertura-instrument>
     </target>
 
-    <target name="-instrument-report" if="code.coverage.enabled">
+    <target name="coverage-report" if="code.coverage.enabled">
         <cobertura-report format="html" destdir="${coverage.dir}" datafile="${basedir}/cobertura.ser">
             <fileset dir="${prod.src.dir}">
                 <include name="**/*.java"/>
             </fileset>
         </cobertura-report>
+        <cobertura-check linerate="0" branchrate="0" totalbranchrate="45" totallinerate="62"
+                         haltonfailure="yes" datafile="${basedir}/cobertura.ser"/>
     </target>
+
+    <macrodef name="test.macro">
+        <attribute name="type"/>
+        <sequential>
+            <mkdir dir="${@{type}.test.results.dir}"/>
+            <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
+                <sysproperty key="net.sourceforge.cobertura.datafile" file="${basedir}/cobertura.ser"/>
+                <classpath refid="@{type}.test.class.path"/>
+                <classpath refid="cobertura.classpath"/>
+                <batchtest todir="${@{type}.test.results.dir}">
+                    <fileset refid="@{type}.test.code.fileset"/>
+                </batchtest>
+                <formatter type="xml"/>
+                <formatter type="brief" usefile="false"/>
+            </junit>
+            <fail if="@{type}.test.failed" message="@{type} tests failed."/>
+        </sequential>
+    </macrodef>
 
     <target name="jester" depends="dist">
         <delete dir="${modified.src.dir}"/>
