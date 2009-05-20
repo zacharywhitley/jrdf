@@ -10,8 +10,7 @@
 
     <target name="gen-src" depends="gen-urql-parser"/>
 
-    <target name="checkstyle" depends="checkstyle-production, checkstyle-test">
-    </target>
+    <target name="checkstyle" depends="checkstyle-production, checkstyle-test"/>
 
     <target name="checkstyle-production">
         <checkstyle.macro checkstyle.configuration="checkstyle.xml" src.dir="${prod.src.dir}"/>
@@ -41,16 +40,11 @@
         <compile.macro src.dir="${prod.src.dir}" classpath.ref="production.class.path" output.dir="${prod.classes.dir}"
                        code.path="production.code.path" code.pattern="production.code.pattern"
                        compiler.args="-Xlint"/>
-        <compile.groovy.macro src.dir="${groovy.test.src.dir}:${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
+        <compile.groovy.macro src.dir="${groovy.test.src.dir}:${test.src.dir}" classpath.ref="test.class.path"
+                              output.dir="${test.classes.dir}"
                               code.path="test.code.path" code.pattern="test.code.pattern"/>
 
-        <!-- Create emma instrumented classes if turned on -->
-        <emma enabled="${emma.enabled}">
-            <instr instrpath="${prod.classes.dir}" destdir="${out.instr.dir}/classes"
-                   metadatafile="${coverage.dir}/metadata.emma" merge="true">
-                <filter value="${emma.filter}"/>
-            </instr>
-        </emma>
+        <antcall target="-instrument-classes"/>
 
         <!-- Configuration for Wiring up the various components using Spring and other configuration files-->
         <copy todir="${prod.gui.dir}">
@@ -227,14 +221,15 @@
     <target name="performance-test" depends="dist">
         <test.macro type="performance"/>
     </target>
-    <target name="emma-unit-test" depends="-emma, dist">
+    <target name="code-coverage" depends="-code-coverage, compile">
         <test.macro type="unit"/>
     </target>
 
-    <target name="-emma" description="turns on EMMA instrumentation/reporting">
+    <target name="-code-coverage" description="turns on code coverage">
         <mkdir dir="${out.instr.dir}"/>
         <mkdir dir="${coverage.dir}"/>
-        <property name="emma.enabled" value="true"/>
+        <delete file="${coverage.dir}/cobertura.ser"/>
+        <property name="code.coverage.enabled" value="true"/>
     </target>
 
     <macrodef name="test.macro">
@@ -242,25 +237,35 @@
         <sequential>
             <mkdir dir="${@{type}.test.results.dir}"/>
             <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
+                <sysproperty key="net.sourceforge.cobertura.datafile" file="${coverage.dir}/cobertura.ser"/>
                 <classpath refid="@{type}.test.class.path"/>
+                <classpath refid="cobertura.classpath" />
                 <batchtest todir="${@{type}.test.results.dir}">
                     <fileset refid="@{type}.test.code.fileset"/>
                 </batchtest>
-                <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma"/>
                 <formatter type="xml"/>
                 <formatter type="brief" usefile="false"/>
             </junit>
             <fail if="@{type}.test.failed" message="@{type} tests failed."/>
-            <emma enabled="${emma.enabled}">
-                <report sourcepath="${prod.src.dir}" depth="method">
-                    <fileset dir="${coverage.dir}">
-                        <include name="*.emma"/>
-                    </fileset>
-                    <html outfile="${coverage.dir}/coverage.html"/>
-                </report>
-            </emma>
+            <antcall target="-instrument-report"/>
         </sequential>
     </macrodef>
+
+    <target name="-instrument-classes" if="code.coverage.enabled">
+        <cobertura-instrument todir="${out.instr.dir}/classes">
+            <fileset dir="${prod.classes.dir}">
+                <include name="**/*.class"/>
+            </fileset>
+        </cobertura-instrument>
+    </target>
+
+    <target name="-instrument-report" if="code.coverage.enabled">
+        <cobertura-report format="html" destdir="${coverage.dir}" datafile="${coverage.dir}/cobertura.ser">
+            <fileset dir="${prod.src.dir}">
+                <include name="**/*.java"/>
+            </fileset>
+        </cobertura-report>
+    </target>
 
     <target name="jester" depends="dist">
         <delete dir="${modified.src.dir}"/>

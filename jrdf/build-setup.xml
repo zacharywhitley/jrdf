@@ -60,13 +60,14 @@
     <property name="freemarker.version" value="2.3.15"/>
     <property name="bdbje.version" value="3.3.82"/>
     <property name="groovy.version" value="1.5.7"/>
+    <property name="cobertura.version" value="1.9.1"/>
 
-    <!-- EMMA coverage data output directory: -->
+    <!-- Code coverage data output directory: -->
     <property name="coverage.dir" value="${build.dir}/coverage"/>
-    <!-- EMMA instrumented classes output directory: -->
+    <!-- Code instrumented classes output directory: -->
     <property name="out.instr.dir" value="${build.dir}/outinstr"/>
     <!-- Filter for classes to instrument -->
-    <property name="emma.filter" value="org.jrdf.*"/>
+    <property name="coverage.filter" value="org.jrdf.*"/>
 
     <patternset id="production.code.pattern">
         <include name="**/*.java"/>
@@ -149,8 +150,6 @@
         <include name="${lib.dir}/easymock/easymock-2.4.0.jar"/>
         <include name="${lib.dir}/easymock/easymockclassextension-2.4.0.jar"/>
         <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
-        <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
-        <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
         <include name="${lib.dir}/groovy/groovy-${groovy.version}/embeddable/groovy-all-${groovy.version}.jar"/>
     </patternset>
 
@@ -209,14 +208,15 @@
             <patternset refid="server.production.classpath.pattern"/>
         </fileset>
     </path>
+    
     <path id="test.class.path">
+        <pathelement location="${out.instr.dir}/classes"/>
         <fileset dir="${basedir}">
             <patternset refid="base.production.classpath.pattern"/>
             <patternset refid="gui.production.classpath.pattern"/>
             <patternset refid="server.production.classpath.pattern"/>
             <patternset refid="test.classpath.pattern"/>
         </fileset>
-        <pathelement location="${out.instr.dir}/classes"/>
         <pathelement location="${prod.classes.dir}"/>
         <pathelement location="${prod.gui.dir}"/>
         <pathelement location="${prod.server.dir}"/>
@@ -236,7 +236,15 @@
         <path refid="test.class.path"/>
     </path>
 
-    <taskdef resource="emma_ant.properties" classpathref="test.class.path"/>
+    <path id="cobertura.classpath">
+        <fileset dir="${lib.dir}/cobertura">
+            <include name="cobertura-${cobertura.version}.jar" />
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <taskdef resource="tasks.properties" classpathref="cobertura.classpath"/>
+
     <taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask"
              classpath="${one-jar.lib.dir}/one-jar-ant-task-0.96.jar" onerror="report"/>
 
