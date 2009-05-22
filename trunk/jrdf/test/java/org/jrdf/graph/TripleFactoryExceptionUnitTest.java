@@ -1,18 +1,20 @@
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
 import static org.jrdf.util.test.ExceptionTestUtil.*;
-import static org.jrdf.util.test.ExceptionTestUtil.testMessageAndThrowableConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
+import org.junit.Test;
 
-public class TripleFactoryExceptionUnitTest extends TestCase {
+public class TripleFactoryExceptionUnitTest {
     private static final Class<TripleFactoryException> CLASS = TripleFactoryException.class;
 
-    public void testClassProperties() {
+    @Test
+    public void finalRuntimeExceptionClassProperties() {
         testInheritableClassProperties(CLASS);
-        testIsRuntimeExcpetion(CLASS);
+        checkExtensionOf(RuntimeException.class, CLASS);
     }
 
-    public void testConstructors() {
+    @Test
+    public void supportAllThreeExceptionConstructors() {
         testMessageConstructor(CLASS);
         testThrowableConstructor(CLASS);
         testMessageAndThrowableConstructor(CLASS);
