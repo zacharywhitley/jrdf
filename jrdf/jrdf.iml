@@ -43,6 +43,15 @@
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
     <orderEntry type="library" name="groovy" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
   <component name="RSpecModuleSettingsStorage">
     <RSPEC_MODULE_SETTINGS_STORAGE_ID NAME="RSPEC_SUPPORT_TYPE" VALUE="NONE" />

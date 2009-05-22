@@ -65,7 +65,7 @@ package org.jrdf.graph;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class TripleFactoryException extends Exception {
+public class TripleFactoryException extends RuntimeException {
 
     /**
      * Allow newer compiled version of the stub to operate when changes

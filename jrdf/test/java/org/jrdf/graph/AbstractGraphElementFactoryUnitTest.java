@@ -210,6 +210,11 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         assertThat(typedLiteral1, not(equalTo(testLiteral1)));
     }
 
+    @Test
+    public void twoNewBlankNodesAreAlwaysUnequal() throws Exception {
+        assertThat(elementFactory.createBlankNode(), not(equalTo(elementFactory.createBlankNode())));
+    }
+
     public void checkLiteralProperties(Literal literal, String lexicalValue, URI datatype, String language) {
         assertThat(literal.getDatatypeURI(), equalTo(datatype));
         assertThat(literal.getLanguage(), equalTo(language));
@@ -224,9 +229,6 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     @Test
     public void testCreateResources() throws Exception {
         // test blank node creation
-        BlankNode blank1 = elementFactory.createBlankNode();
-        BlankNode blank2 = elementFactory.createBlankNode();
-        assertFalse(blank1.equals(blank2));
 
         // test named node creation
         URI uri1 = new URI("http://namespace#somevalue");

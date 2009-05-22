@@ -60,7 +60,7 @@
 package org.jrdf.graph;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ExceptionTestUtil;
+import static org.jrdf.util.test.ExceptionTestUtil.*;
 
 /**
  * Test properties of exception.
@@ -72,12 +72,13 @@ public class GraphExceptionUnitTest extends TestCase {
     private static final Class<GraphException> CLASS = GraphException.class;
 
     public void testClassProperties() {
-        ExceptionTestUtil.testInheritableClassProperties(CLASS);
+        testInheritableClassProperties(CLASS);
+        testIsRuntimeExcpetion(CLASS);
     }
 
     public void testConstructors() {
-        ExceptionTestUtil.testMessageConstructor(CLASS);
-        ExceptionTestUtil.testThrowableConstructor(CLASS);
-        ExceptionTestUtil.testMessageAndThrowableConstructor(CLASS);
+        testMessageConstructor(CLASS);
+        testThrowableConstructor(CLASS);
+        testMessageAndThrowableConstructor(CLASS);
     }
 }

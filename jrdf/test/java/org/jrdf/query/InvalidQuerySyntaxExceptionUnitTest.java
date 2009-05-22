@@ -60,10 +60,7 @@
 package org.jrdf.query;
 
 import junit.framework.TestCase;
-import static org.jrdf.util.test.ExceptionTestUtil.testFinalClassProperties;
-import static org.jrdf.util.test.ExceptionTestUtil.testMessageAndThrowableConstructor;
-import static org.jrdf.util.test.ExceptionTestUtil.testMessageConstructor;
-import static org.jrdf.util.test.ExceptionTestUtil.testThrowableConstructor;
+import static org.jrdf.util.test.ExceptionTestUtil.*;
 
 /**
  * Test properties of exception.
@@ -76,6 +73,7 @@ public class InvalidQuerySyntaxExceptionUnitTest extends TestCase {
 
     public void testClassProperties() {
         testFinalClassProperties(CLASS);
+        testIsRuntimeExcpetion(CLASS);
     }
 
     public void testConstructors() {

@@ -84,6 +84,10 @@ public class ExceptionTestUtil {
         ClassPropertiesTestUtil.checkExtensionOf(Exception.class, clazz);
     }
 
+    public static void testIsRuntimeExcpetion(Class<?> clazz) {
+        ClassPropertiesTestUtil.checkExtensionOf(RuntimeException.class, clazz);
+    }
+
     public static void testMessageConstructor(Class<?> clazz) {
         checkGetMessage(clazz, FIRST_MESSAGE);
         checkGetMessage(clazz, FIRST_SECOND);
