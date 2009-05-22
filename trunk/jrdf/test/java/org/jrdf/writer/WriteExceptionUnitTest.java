@@ -60,10 +60,7 @@
 package org.jrdf.writer;
 
 import junit.framework.TestCase;
-import static org.jrdf.util.test.ExceptionTestUtil.testInheritableClassProperties;
-import static org.jrdf.util.test.ExceptionTestUtil.testMessageAndThrowableConstructor;
-import static org.jrdf.util.test.ExceptionTestUtil.testMessageConstructor;
-import static org.jrdf.util.test.ExceptionTestUtil.testThrowableConstructor;
+import static org.jrdf.util.test.ExceptionTestUtil.*;
 
 /**
  * Test properties of an exception.
@@ -76,6 +73,7 @@ public class WriteExceptionUnitTest extends TestCase {
 
     public void testClassProperties() {
         testInheritableClassProperties(CLASS);
+        testIsRuntimeExcpetion(CLASS);
     }
 
     public void testConstructors() {

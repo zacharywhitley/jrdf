@@ -65,7 +65,7 @@ package org.jrdf.writer;
  * @author TurnerRX
  * @version $Id$
  */
-public class WriteException extends Exception {
+public class WriteException extends RuntimeException {
     private static final long serialVersionUID = 2419814921997551107L;
 
     public WriteException() {

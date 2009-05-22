@@ -65,7 +65,7 @@ package org.jrdf.query;
  * @author Tom Adams
  * @version $Revision$
  */
-public final class InvalidQuerySyntaxException extends Exception {
+public final class InvalidQuerySyntaxException extends RuntimeException {
 
     private static final long serialVersionUID = -4108587331671842402L;
 
