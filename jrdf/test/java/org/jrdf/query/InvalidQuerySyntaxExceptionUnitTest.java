@@ -59,8 +59,9 @@
 
 package org.jrdf.query;
 
-import junit.framework.TestCase;
 import static org.jrdf.util.test.ExceptionTestUtil.*;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
+import org.junit.Test;
 
 /**
  * Test properties of exception.
@@ -68,15 +69,17 @@ import static org.jrdf.util.test.ExceptionTestUtil.*;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class InvalidQuerySyntaxExceptionUnitTest extends TestCase {
+public class InvalidQuerySyntaxExceptionUnitTest {
     private static final Class<InvalidQuerySyntaxException> CLASS = InvalidQuerySyntaxException.class;
 
-    public void testClassProperties() {
+    @Test
+    public void finalRuntimeExceptionClassProperties() {
         testFinalClassProperties(CLASS);
-        testIsRuntimeExcpetion(CLASS);
+        checkExtensionOf(RuntimeException.class, CLASS);
     }
 
-    public void testConstructors() {
+    @Test
+    public void supportAllThreeExceptionConstructors() {
         testMessageConstructor(CLASS);
         testThrowableConstructor(CLASS);
         testMessageAndThrowableConstructor(CLASS);

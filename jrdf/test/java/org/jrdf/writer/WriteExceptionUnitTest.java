@@ -60,6 +60,7 @@
 package org.jrdf.writer;
 
 import junit.framework.TestCase;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ExceptionTestUtil.*;
 
 /**
@@ -73,7 +74,7 @@ public class WriteExceptionUnitTest extends TestCase {
 
     public void testClassProperties() {
         testInheritableClassProperties(CLASS);
-        testIsRuntimeExcpetion(CLASS);
+        checkExtensionOf(RuntimeException.class, CLASS);
     }
 
     public void testConstructors() {

@@ -59,8 +59,9 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ExceptionTestUtil.*;
+import org.junit.Test;
 
 /**
  * Test properties of exception.
@@ -68,15 +69,17 @@ import static org.jrdf.util.test.ExceptionTestUtil.*;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class GraphElementFactoryExceptionUnitTest extends TestCase {
+public class GraphElementFactoryExceptionUnitTest {
     private static final Class<GraphElementFactoryException> CLASS = GraphElementFactoryException.class;
 
-    public void testClassProperties() {
+    @Test
+    public void finalRuntimeExceptionClassProperties() {
         testFinalClassProperties(CLASS);
-        testIsRuntimeExcpetion(CLASS);
+        checkExtensionOf(RuntimeException.class, CLASS);
     }
 
-    public void testConstructors() {
+    @Test
+    public void supportAllThreeExceptionConstructors() {
         testMessageConstructor(CLASS);
         testThrowableConstructor(CLASS);
         testMessageAndThrowableConstructor(CLASS);

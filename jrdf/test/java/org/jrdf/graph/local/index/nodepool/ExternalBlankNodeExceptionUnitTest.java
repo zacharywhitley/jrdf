@@ -59,22 +59,24 @@
 
 package org.jrdf.graph.local.index.nodepool;
 
-import junit.framework.TestCase;
 import org.jrdf.graph.GraphException;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.ExceptionTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
+import static org.jrdf.util.test.ExceptionTestUtil.*;
+import org.junit.Test;
 
-public class ExternalBlankNodeExceptionUnitTest extends TestCase {
+public class ExternalBlankNodeExceptionUnitTest {
     private static final Class<ExternalBlankNodeException> CLASS = ExternalBlankNodeException.class;
 
-    public void testClassProperties() {
-        ExceptionTestUtil.testFinalClassProperties(CLASS);
-        ClassPropertiesTestUtil.checkInstanceExtendsClass(GraphException.class, new ExternalBlankNodeException("foo"));
+    @Test
+    public void finalRuntimeExceptionClassProperties() {
+        testFinalClassProperties(CLASS);
+        checkExtensionOf(GraphException.class, CLASS);
     }
 
-    public void testConstructors() {
-        ExceptionTestUtil.testMessageConstructor(CLASS);
-        ExceptionTestUtil.testThrowableConstructor(CLASS);
-        ExceptionTestUtil.testMessageAndThrowableConstructor(CLASS);
+    @Test
+    public void supportAllThreeExceptionConstructors() {
+        testMessageConstructor(CLASS);
+        testThrowableConstructor(CLASS);
+        testMessageAndThrowableConstructor(CLASS);
     }
 }

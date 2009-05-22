@@ -59,8 +59,9 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.ExceptionTestUtil;
+import static org.jrdf.util.test.ExceptionTestUtil.*;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
+import org.junit.Test;
 
 /**
  * Test properties of exception.
@@ -68,16 +69,19 @@ import org.jrdf.util.test.ExceptionTestUtil;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class AlreadyReifiedExceptionUnitTest extends TestCase {
+public class AlreadyReifiedExceptionUnitTest {
     private static final Class<AlreadyReifiedException> CLASS = AlreadyReifiedException.class;
 
-    public void testClassProperties() {
-        ExceptionTestUtil.testFinalClassProperties(CLASS);
+    @Test
+    public void finalRuntimeExceptionClassProperties() {
+        testFinalClassProperties(CLASS);
+        checkExtensionOf(TripleFactoryException.class, CLASS);
     }
 
-    public void testConstructors() {
-        ExceptionTestUtil.testMessageConstructor(CLASS);
-        ExceptionTestUtil.testThrowableConstructor(CLASS);
-        ExceptionTestUtil.testMessageAndThrowableConstructor(CLASS);
+    @Test
+    public void supportAllThreeExceptionConstructors() {
+        testMessageConstructor(CLASS);
+        testThrowableConstructor(CLASS);
+        testMessageAndThrowableConstructor(CLASS);
     }
 }
