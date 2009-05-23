@@ -76,6 +76,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URI;
+import static java.net.URI.create;
 
 /**
  * Abstract Test case for Graph Element Factories. Implementing packages should extend this class and implement the
@@ -136,8 +137,7 @@ public abstract class AbstractGraphElementFactoryUnitTest {
      * Create a new graph of the appropriate type.
      *
      * @return A new graph implementation object.
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
+     * @throws Exception A generic exception - this should cause the tests to fail.
      */
     protected abstract Graph newGraph() throws Exception;
 
@@ -205,13 +205,13 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     }
 
     @Test
-    public void sameLiteralValueDifferentTypesAreUnequal() throws Exception {
+    public void sameLiteralValueDifferentTypesAreUnequal() {
         assertThat(typedLiteral1, not(equalTo(elementFactory.createLiteral(TEST_STR_1, XSD.ANY_URI))));
         assertThat(typedLiteral1, not(equalTo(testLiteral1)));
     }
 
     @Test
-    public void twoNewBlankNodesAreAlwaysUnequal() throws Exception {
+    public void twoNewBlankNodesAreAlwaysUnequal() {
         assertThat(elementFactory.createBlankNode(), not(equalTo(elementFactory.createBlankNode())));
     }
 
@@ -221,6 +221,11 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         assertThat(literal.getLexicalForm(), equalTo(lexicalValue));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void tryValidateInvalidUri() {
+        elementFactory.createURIReference(create("invalidURI"), true);
+    }
+
     /**
      * Tests that each of the createResource methods work as expected.
      *
@@ -228,8 +233,6 @@ public abstract class AbstractGraphElementFactoryUnitTest {
      */
     @Test
     public void testCreateResources() throws Exception {
-        // test blank node creation
-
         // test named node creation
         URI uri1 = new URI("http://namespace#somevalue");
         URI uri2 = new URI("http://namespace#someothervalue");
@@ -247,7 +250,7 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     @Test
     public void testResourceUsage() throws Exception {
         final Resource supplier = elementFactory.createResource();
-        final URIReference sno = elementFactory.createURIReference(URI.create("urn:sno"));
+        final URIReference sno = elementFactory.createURIReference(create("urn:sno"));
         supplier.addValue(sno, elementFactory.createLiteral("sno"));
         supplier.addValue(sno, elementFactory.createLiteral(20));
         assertEquals(2, graph.getNumberOfTriples());

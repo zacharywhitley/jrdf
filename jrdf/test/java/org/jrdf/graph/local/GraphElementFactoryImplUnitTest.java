@@ -69,9 +69,13 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import static org.jrdf.graph.NullURI.NULL_URI;
 import org.jrdf.graph.Resource;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import static org.easymock.EasyMock.*;
 
 import java.net.URI;
 
@@ -112,9 +116,24 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
         return "";
     }
 
-    public void testCreateResource() throws GraphException {
-        final Graph graph = newGraph();
-        final GraphElementFactory factory = graph.getElementFactory();
+    @Test(expected = GraphElementFactoryException.class)
+    public void failToCreateBlankNodeCreatesGraphElementFactoryException() {
+        // Setup
+        final GraphElementFactory elementFactory = newGraph().getElementFactory();
+        Localizer mockLocalizer = createMock(Localizer.class);
+        insertFieldValue(elementFactory, "localizer", mockLocalizer);
+        // Expectations
+        mockLocalizer.createLocalBlankNode();
+        expectLastCall().andThrow(new GraphException("hello"));
+        replay(mockLocalizer);
+        // Do
+        elementFactory.createBlankNode();
+        verify(mockLocalizer);
+    }
+
+    @Test
+    public void createResource() {
+        final GraphElementFactory factory = newGraph().getElementFactory();
         String literal = "abc";
         String expectedMessage = "Resource cannot be created from: \"" + literal + "\"";
         final Literal lit = factory.createLiteral(literal);
