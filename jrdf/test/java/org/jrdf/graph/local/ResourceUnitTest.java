@@ -80,13 +80,12 @@ public class ResourceUnitTest extends AbstractResourceUnitTest {
     }
 
     @Override
-    public Resource createBlankNodeResource(ReadWriteGraph graph, GraphElementFactory factory) throws Exception {
+    public Resource createBlankNodeResource(ReadWriteGraph graph, GraphElementFactory factory) {
         return new BlankNodeResourceImpl(graph, factory, factory.createBlankNode());
     }
 
     @Override
-    public Resource createURIReferenceResource(ReadWriteGraph graph, GraphElementFactory factory, URI uri)
-        throws Exception {
+    public Resource createURIReferenceResource(ReadWriteGraph graph, GraphElementFactory factory, URI uri) {
         return new URIReferenceResourceImpl(graph, factory, factory.createURIReference(uri));
     }
 }
