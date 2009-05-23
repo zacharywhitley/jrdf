@@ -107,6 +107,8 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     private static final String EMPTY_STRING = "";
     private static final String ITALIAN_LANGUAGE = "it";
     private static final URI TYPE = XSD.STRING;
+    private static final URI URI_1 = create("http://namespace#somevalue");
+    private static final URI URI_2 = create("http://namespace#someothervalue");
     private Literal testLiteral1;
     private Literal testLiteral2;
     private Literal newTestLiteral1;
@@ -210,20 +212,41 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         assertThat(typedLiteral1, not(equalTo(testLiteral1)));
     }
 
-    @Test
-    public void twoNewBlankNodesAreAlwaysUnequal() {
-        assertThat(elementFactory.createBlankNode(), not(equalTo(elementFactory.createBlankNode())));
-    }
-
     public void checkLiteralProperties(Literal literal, String lexicalValue, URI datatype, String language) {
         assertThat(literal.getDatatypeURI(), equalTo(datatype));
         assertThat(literal.getLanguage(), equalTo(language));
         assertThat(literal.getLexicalForm(), equalTo(lexicalValue));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
+    public void twoNewBlankNodesAreAlwaysUnequal() {
+        assertThat(elementFactory.createBlankNode(), not(equalTo(elementFactory.createBlankNode())));
+    }
+
+    @Test
+    public void theSameInvalidURICanBeRetrieved() {
+        elementFactory.createURIReference(create("invalidURI"), false);
+        elementFactory.createURIReference(create("invalidURI"), false);
+    }
+
+    @Test
     public void tryValidateInvalidUri() {
-        elementFactory.createURIReference(create("invalidURI"), true);
+        assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                elementFactory.createURIReference(create("invalidURI"), true);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                elementFactory.createResource(create("invalidURI"), true);
+            }
+        });
+    }
+
+    @Test
+    public void dontValidateInvalidUri() {
+        elementFactory.createURIReference(create("invalidURI"), false);
+        elementFactory.createResource(create("invalidURI"), false);
     }
 
     /**
@@ -234,21 +257,16 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     @Test
     public void testCreateResources() throws Exception {
         // test named node creation
-        URI uri1 = new URI("http://namespace#somevalue");
-        URI uri2 = new URI("http://namespace#someothervalue");
-        URIReference ref1 = elementFactory.createURIReference(uri1);
-        URIReference ref2 = elementFactory.createURIReference(uri2);
-        URIReference ref3 = elementFactory.createURIReference(uri1);
+        URIReference ref1 = elementFactory.createURIReference(URI_1);
+        URIReference ref2 = elementFactory.createURIReference(URI_2);
+        URIReference ref3 = elementFactory.createURIReference(URI_1);
         assertFalse(ref1.equals(ref2));
         assertEquals(ref1, ref3);
-        assertEquals(ref1.getURI(), uri1);
+        assertEquals(ref1.getURI(), URI_1);
     }
 
-    /**
-     * Test using the other methods of resource
-     */
     @Test
-    public void testResourceUsage() throws Exception {
+    public void testResourceUsage() {
         final Resource supplier = elementFactory.createResource();
         final URIReference sno = elementFactory.createURIReference(create("urn:sno"));
         supplier.addValue(sno, elementFactory.createLiteral("sno"));

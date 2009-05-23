@@ -110,6 +110,12 @@
         <exclude name="**/TestJRDFFactory*"/>
     </patternset>
 
+    <patternset id="cobertura.pattern">
+        <include name="cobertura-${cobertura.version}.jar" />
+        <include name="**/*.jar" />
+    </patternset>
+
+
     <patternset id="base.production.classpath.pattern">
         <include name="${lib.dir}/spring/spring-beans-${spring.version}.jar"/>
         <include name="${lib.dir}/spring/spring-context-${spring.version}.jar"/>
@@ -222,6 +228,9 @@
         <pathelement location="${prod.server.dir}"/>
         <pathelement location="${test.classes.dir}"/>
         <pathelement location="${test.dir}/rdf"/>
+        <fileset id="cobertura.fileset" dir="${lib.dir}/cobertura">
+            <patternset refid="cobertura.pattern"/>
+        </fileset>
     </path>
 
     <path id="unit.test.class.path">
@@ -236,14 +245,13 @@
         <path refid="test.class.path"/>
     </path>
 
-    <path id="cobertura.classpath">
-        <fileset dir="${lib.dir}/cobertura">
-            <include name="cobertura-${cobertura.version}.jar" />
-            <include name="**/*.jar" />
+    <path id="cobertura.path">
+        <fileset id="cobertura.fileset" dir="${lib.dir}/cobertura">
+            <patternset refid="cobertura.pattern"/>
         </fileset>
     </path>
 
-    <taskdef resource="tasks.properties" classpathref="cobertura.classpath"/>
+    <taskdef resource="tasks.properties" classpathref="cobertura.path"/>
 
     <taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask"
              classpath="${one-jar.lib.dir}/one-jar-ant-task-0.96.jar" onerror="report"/>

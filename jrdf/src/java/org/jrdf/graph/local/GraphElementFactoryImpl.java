@@ -122,7 +122,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     }
 
     public Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException {
-        return createResource(createURIReference(uri));
+        return createResource(createURIReference(uri, validate));
     }
 
     public Resource createResource(Node node) throws GraphElementFactoryException {

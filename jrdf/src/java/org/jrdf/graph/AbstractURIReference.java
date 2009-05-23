@@ -119,13 +119,10 @@ public abstract class AbstractURIReference implements URIReference, Serializable
     }
 
     private void validateAndAddUri(URI newUri, boolean validate) {
-        // Validate "newUri" parameter
         checkNotNull(newUri);
-        if (validate && !newUri.isAbsolute()) {
-            throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
+        if (validate) {
+            validateURI(newUri);
         }
-
-        // Initialize the field
         uri = newUri;
     }
 
@@ -177,5 +174,11 @@ public abstract class AbstractURIReference implements URIReference, Serializable
 
     private boolean determineEqualityFromFields(URIReference uriReference) {
         return uri.hashCode() == uriReference.hashCode() && uri.equals(uriReference.getURI());
+    }
+
+    public static void validateURI(URI newUri) {
+        if (!newUri.isAbsolute()) {
+            throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
+        }
     }
 }

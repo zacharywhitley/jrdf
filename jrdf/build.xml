@@ -251,7 +251,7 @@
             <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
                 <sysproperty key="net.sourceforge.cobertura.datafile" file="${basedir}/cobertura.ser"/>
                 <classpath refid="@{type}.test.class.path"/>
-                <classpath refid="cobertura.classpath"/>
+                <classpath refid="cobertura.path"/>
                 <batchtest todir="${@{type}.test.results.dir}">
                     <fileset refid="@{type}.test.code.fileset"/>
                 </batchtest>
