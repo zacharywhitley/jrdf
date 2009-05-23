@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.local;
 
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.BlankNode;
@@ -69,13 +71,13 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import static org.jrdf.graph.NullURI.NULL_URI;
 import org.jrdf.graph.Resource;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
-import static org.junit.Assert.assertEquals;
+import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
-import static org.easymock.EasyMock.*;
 
 import java.net.URI;
 
@@ -131,6 +133,38 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
         verify(mockLocalizer);
     }
 
+    @Test(expected = GraphElementFactoryException.class)
+    public void failToCreateResourceBlankNodeGraphElementFactoryException() {
+        BlankNode node = createMock(BlankNode.class);
+        // Setup
+        final GraphElementFactory elementFactory1 = newGraph().getElementFactory();
+        ResourceFactory mockResourceFactory = createMock(ResourceFactory.class);
+        insertFieldValue(elementFactory1, "resourceFactory", mockResourceFactory);
+        // Expectations
+        mockResourceFactory.createResource(node);
+        expectLastCall().andThrow(new IllegalArgumentException("hello"));
+        replay(mockResourceFactory);
+        // Do
+        elementFactory1.createResource(node);
+        verify(mockResourceFactory);
+    }
+
+    @Test(expected = GraphElementFactoryException.class)
+    public void failToCreateURIReferenceResourceGraphElementFactoryException() {
+        URIReference node = createMock(URIReference.class);
+        // Setup
+        final GraphElementFactory elementFactory1 = newGraph().getElementFactory();
+        ResourceFactory mockResourceFactory = createMock(ResourceFactory.class);
+        insertFieldValue(elementFactory1, "resourceFactory", mockResourceFactory);
+        // Expectations
+        mockResourceFactory.createResource(node);
+        expectLastCall().andThrow(new IllegalArgumentException("hello"));
+        replay(mockResourceFactory);
+        // Do
+        elementFactory1.createResource(node);
+        verify(mockResourceFactory);
+    }
+
     @Test
     public void createResource() {
         final GraphElementFactory factory = newGraph().getElementFactory();
@@ -142,10 +176,16 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
                 factory.createResource(lit);
             }
         });
-        BlankNode bn = factory.createBlankNode();
-        Resource res = factory.createResource(bn);
-        Resource res1 = factory.createResource(bn);
-        assertEquals("same blank node", bn, res.getUnderlyingNode());
-        assertEquals("same blank node", bn, res1.getUnderlyingNode());
+    }
+
+    @Test
+    public void resourcesWrapRawNodes() {
+        final GraphElementFactory factory = newGraph().getElementFactory();
+        BlankNode blankNode = factory.createBlankNode();
+        Resource resource1 = factory.createResource(blankNode);
+        Resource resource2 = factory.createResource(blankNode);
+        assertThat(blankNode, equalTo(resource1.getUnderlyingNode()));
+        assertThat(blankNode, equalTo(resource2.getUnderlyingNode()));
+        assertThat(resource1, equalTo(resource1));
     }
 }

@@ -59,14 +59,15 @@
 
 package org.jrdf.graph.local;
 
+import static org.jrdf.graph.AbstractURIReference.validateURI;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphValueFactory;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import static org.jrdf.util.param.ParameterUtil.*;
 import org.jrdf.util.EscapeUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
 
@@ -90,6 +91,9 @@ public final class GraphValueFactoryImpl implements GraphValueFactory {
     public URIReference createURIReference(URI uri, boolean validate) throws GraphElementFactoryException {
         if (null == uri) {
             throw new GraphElementFactoryException("URI may not be null for a URIReference");
+        }
+        if (validate) {
+            validateURI(uri);
         }
         return getLocalURIReference(uri, validate);
     }

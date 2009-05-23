@@ -102,7 +102,7 @@ public class StringNodeMapperImpl implements StringNodeMapper, Serializable {
     }
 
     public URIReference convertToURIReference(String string, Long nodeId) {
-        return new URIReferenceImpl(URI.create(string), nodeId);
+        return new URIReferenceImpl(URI.create(string), false, nodeId);
     }
 
     public Literal convertToLiteral(String string, Long nodeId) {
