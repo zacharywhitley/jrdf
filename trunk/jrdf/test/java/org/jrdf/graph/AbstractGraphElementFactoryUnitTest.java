@@ -117,7 +117,10 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     private Literal newLanguageLiteral1;
     private Literal typedLiteral1;
     private Literal typedLiteral2;
-    private Literal newTypedLiteral;
+    private Literal newTypedLiteral1;
+    private URIReference reference1;
+    private URIReference reference2;
+    private URIReference newReference;
 
     @Before
     public void initGraphElementFactoryAndCreateTestLiterals() throws Exception {
@@ -132,7 +135,10 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         newLanguageLiteral1 = elementFactory.createLiteral(TEST_STR_1, ITALIAN_LANGUAGE);
         typedLiteral1 = elementFactory.createLiteral(TEST_STR_1, TYPE);
         typedLiteral2 = elementFactory.createLiteral(TEST_STR_2, TYPE);
-        newTypedLiteral = elementFactory.createLiteral(TEST_STR_1, TYPE);
+        newTypedLiteral1 = elementFactory.createLiteral(TEST_STR_1, TYPE);
+        reference1 = elementFactory.createURIReference(URI_1);
+        reference2 = elementFactory.createURIReference(URI_2);
+        newReference = elementFactory.createURIReference(URI_1);
     }
 
     /**
@@ -198,7 +204,7 @@ public abstract class AbstractGraphElementFactoryUnitTest {
 
     @Test
     public void sameTypeLiteralsAreEqual() {
-        assertThat(typedLiteral1, equalTo(newTypedLiteral));
+        assertThat(typedLiteral1, equalTo(newTypedLiteral1));
     }
 
     @Test
@@ -249,32 +255,12 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         elementFactory.createResource(create("invalidURI"), false);
     }
 
-    /**
-     * Tests that each of the createResource methods work as expected.
-     *
-     * @throws Exception if query fails when it should have succeeded
-     */
     @Test
-    public void testCreateResources() throws Exception {
-        // test named node creation
-        URIReference ref1 = elementFactory.createURIReference(URI_1);
-        URIReference ref2 = elementFactory.createURIReference(URI_2);
-        URIReference ref3 = elementFactory.createURIReference(URI_1);
-        assertFalse(ref1.equals(ref2));
-        assertEquals(ref1, ref3);
-        assertEquals(ref1.getURI(), URI_1);
-    }
-
-    @Test
-    public void testResourceUsage() {
-        final Resource supplier = elementFactory.createResource();
-        final URIReference sno = elementFactory.createURIReference(create("urn:sno"));
-        supplier.addValue(sno, elementFactory.createLiteral("sno"));
-        supplier.addValue(sno, elementFactory.createLiteral(20));
-        assertEquals(2, graph.getNumberOfTriples());
-        final Triple triple = new TripleImpl((SubjectNode) supplier.getUnderlyingNode(), sno,
-            elementFactory.createLiteral("sno"));
-        assertEquals(true, graph.contains(triple));
+    public void createResourcesAndCheckEquality() {
+        assertThat(reference1, not(equalTo(reference2)));
+        assertThat(reference1, equalTo(newReference));
+        assertThat(reference1.getURI(), equalTo(URI_1));
+        assertThat(reference2.getURI(), equalTo(URI_2));
     }
 
     /**
