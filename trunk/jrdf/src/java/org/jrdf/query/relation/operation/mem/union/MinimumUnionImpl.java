@@ -68,9 +68,9 @@ import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import java.util.LinkedHashSet;
 
 /**
- * Minimum union is a combination of outer union and tuple subsumption.  That is, it is similar to the relational
- * union operation except that the types of the two relations do not need to match and then rows that contain
- * the less values bound than another row (i.e. more nulls than other rows) is removed.
+ * Minimum union is a combination of outer union and tuple subsumption.  It is similar to the relational
+ * union operation except that the types of the two relations do not need to match and rows that contain
+ * less values bound than another row (more nulls than another row or are subsumed by) are removed.
  */
 public class MinimumUnionImpl implements Union {
     private RelationProcessor relationProcessor;
