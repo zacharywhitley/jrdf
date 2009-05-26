@@ -86,8 +86,10 @@ public final class SerializationTestUtil {
     private static final boolean CHECK_BY_EQUALITY = false;
 
     public static void checkSerializability(Class<?> cls) {
-        checkContainsSerialVersionUid(cls);
-        canBeSerialized(cls);
+        if (!cls.toString().contains("$")) {
+            checkContainsSerialVersionUid(cls);
+            canBeSerialized(cls);
+        }
     }
 
     public static void checkSerialialVersionUid(Class<?> cls, long expectedUid) {
