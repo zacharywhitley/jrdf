@@ -82,7 +82,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends TestCase {
     private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil();
     private InputStream stream1, stream2;
     private XMLStreamReader streamReader;
-    private AnswerXMLWriter xmlWriter;
+    private AnswerXmlWriter xmlWriter;
     private Writer writer = new StringWriter();
 
     @Override
@@ -90,7 +90,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends TestCase {
         super.setUp();
         stream1 = TEST_UTIL.getData().openStream();
         stream2 = TEST_UTIL.getData().openStream();
-        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1);
+        xmlWriter = new MultiAnswerXmlStreamQueueWriter(stream1);
         xmlWriter.setWriter(writer);
     }
 
@@ -119,7 +119,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends TestCase {
         assertEquals(2, count);
         checkTwoResults(writer);
         assertFalse(xmlWriter.hasMoreResults());
-        ((MultiAnswerXMLStreamWriter) xmlWriter).addStream(stream2);
+        ((MultiAnswerXmlStreamWriter) xmlWriter).addStream(stream2);
         assertTrue(xmlWriter.hasMoreResults());
         while (xmlWriter.hasMoreResults()) {
             count++;
@@ -132,7 +132,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends TestCase {
 
     public void test2Streams() throws Exception {
         int count = 0;
-        ((MultiAnswerXMLStreamWriter) xmlWriter).addStream(stream2);
+        ((MultiAnswerXmlStreamWriter) xmlWriter).addStream(stream2);
         xmlWriter.writeStartResults();
         while (xmlWriter.hasMoreResults()) {
             count++;
@@ -148,7 +148,7 @@ public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends TestCase {
         stream1 = TEST_UTIL.getData().openStream();
         xmlWriter.close();
         writer = new StringWriter();
-        xmlWriter = new MultiAnswerXMLStreamQueueWriter(stream1, stream2);
+        xmlWriter = new MultiAnswerXmlStreamQueueWriter(stream1, stream2);
         xmlWriter.setWriter(writer);
         int count = 0;
         xmlWriter.writeStartResults();

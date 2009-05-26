@@ -62,10 +62,10 @@ package org.jrdf.query.answer.xml;
 import static com.ctc.wstx.api.WstxInputProperties.PARSING_MODE_FRAGMENT;
 import static com.ctc.wstx.api.WstxInputProperties.P_INPUT_PARSING_MODE;
 import static junit.framework.Assert.assertEquals;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.BINDING;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.NAME;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULTS;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.BINDING;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.NAME;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULT;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULTS;
 
 import javax.xml.stream.XMLInputFactory;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -86,7 +86,7 @@ public final class AnswerXMLTestUtil {
     private AnswerXMLTestUtil() {
     }
 
-    public static void checkNumberOfResults(final int expectedNumber, final AnswerXMLWriter xmlWriter)
+    public static void checkNumberOfResults(final int expectedNumber, final AnswerXmlWriter xmlWriter)
         throws Exception {
         int count = 0;
         xmlWriter.writeStartResults();

@@ -75,14 +75,14 @@ import java.util.Set;
 
 public class MultiAnswerXMLStreamWriterIntegrationTest extends TestCase {
     private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil();
-    private AnswerXMLWriter xmlWriter;
+    private AnswerXmlWriter xmlWriter;
     private Writer writer = new StringWriter();
     private InputStream stream;
 
     @Override
     public void setUp() throws Exception {
         stream = TEST_UTIL.getData().openStream();
-        xmlWriter = new MultiAnswerXMLStreamWriterImpl(stream);
+        xmlWriter = new MultiAnswerXmlStreamWriterImpl(stream);
         xmlWriter.setWriter(writer);
     }
 
@@ -111,7 +111,7 @@ public class MultiAnswerXMLStreamWriterIntegrationTest extends TestCase {
         Thread thread = new Thread(sWriter);
         thread.start();
 
-        xmlWriter = new MultiAnswerXMLStreamWriterImpl(inputStream);
+        xmlWriter = new MultiAnswerXmlStreamWriterImpl(inputStream);
         writer = new StringWriter();
         xmlWriter.setWriter(writer);
         Thread wThread = new Thread((Runnable) xmlWriter);
@@ -136,7 +136,7 @@ public class MultiAnswerXMLStreamWriterIntegrationTest extends TestCase {
         xml += xml;
         InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
         writer = new StringWriter();
-        xmlWriter = new MultiAnswerXMLStreamWriterImpl(inputStream);
+        xmlWriter = new MultiAnswerXmlStreamWriterImpl(inputStream);
         xmlWriter.setWriter(writer);
         int count = 0;
         xmlWriter.writeStartResults();

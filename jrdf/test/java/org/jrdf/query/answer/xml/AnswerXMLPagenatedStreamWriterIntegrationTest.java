@@ -86,7 +86,7 @@ public class AnswerXMLPagenatedStreamWriterIntegrationTest extends TestCase {
     private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil();
     private UrqlConnection urqlConnection;
     private MoleculeGraph graph;
-    private AnswerXMLWriter xmlWriter;
+    private AnswerXmlWriter xmlWriter;
     private Writer writer = new StringWriter();
 
     @Override
@@ -118,7 +118,7 @@ public class AnswerXMLPagenatedStreamWriterIntegrationTest extends TestCase {
     public void testVariables() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = urqlConnection.executeQuery(graph, queryString);
-        xmlWriter = new AnswerXMLPagenatedStreamWriter((SelectAnswer) answer, writer);
+        xmlWriter = new AnswerXmlPagenatedStreamWriter((SelectAnswer) answer, writer);
         Set<String> vars = TEST_UTIL.getVariables(xmlWriter, writer);
         Set<String> set = new HashSet<String>();
         set.addAll(asList("s", "p", "o"));
@@ -128,7 +128,7 @@ public class AnswerXMLPagenatedStreamWriterIntegrationTest extends TestCase {
     public void testResult() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = urqlConnection.executeQuery(graph, queryString);
-        xmlWriter = new AnswerXMLPagenatedStreamWriter((SelectAnswer) answer, writer);
+        xmlWriter = new AnswerXmlPagenatedStreamWriter((SelectAnswer) answer, writer);
         xmlWriter.writeStartResults();
         int count = 0;
         while (xmlWriter.hasMoreResults()) {

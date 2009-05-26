@@ -59,7 +59,7 @@
 
 package org.jrdf.query.server;
 
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
+import org.jrdf.query.answer.xml.AnswerXmlWriter;
 import static org.restlet.data.CharacterSet.UTF_8;
 import org.restlet.data.MediaType;
 import org.restlet.resource.WriterRepresentation;
@@ -69,9 +69,9 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class SparqlRepresentation extends WriterRepresentation {
-    private AnswerXMLWriter answerWriter;
+    private AnswerXmlWriter answerWriter;
 
-    public SparqlRepresentation(MediaType mediaType, AnswerXMLWriter newAnswerWriter) {
+    public SparqlRepresentation(MediaType mediaType, AnswerXmlWriter newAnswerWriter) {
         super(mediaType);
         this.answerWriter = newAnswerWriter;
         setCharacterSet(UTF_8);

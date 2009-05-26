@@ -59,8 +59,8 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.BINDING;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.BINDING;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULT;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
 

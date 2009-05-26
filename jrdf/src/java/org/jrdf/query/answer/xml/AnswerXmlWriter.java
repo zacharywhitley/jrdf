@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,83 +54,116 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.answer.xml;
 
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
-import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version  $Id:$
  */
-public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
-    protected static final String ENCODING_DEFAULT = "UTF-8";
-    protected static final String VERSION_NUMBER = "1.0";
-    protected static final XMLOutputFactory OUTPUT_FACTORY = javax.xml.stream.XMLOutputFactory.newInstance();
-    protected XMLStreamWriter streamWriter;
+public interface AnswerXmlWriter {
 
-    public void writeStartDocument() throws XMLStreamException {
-        streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
-        String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
-        streamWriter.writeProcessingInstruction("xml-stylesheet", target);
+    /**
+     * The XML -> HTML XSLT.
+     */
+    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
 
-        streamWriter.writeStartElement(SPARQL);
-        streamWriter.writeDefaultNamespace(SPARQL_NS);
-        streamWriter.writeNamespace("xsi", W3C_XML_SCHEMA_INSTANCE_NS_URI);
-        streamWriter.writeNamespace("schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
-    }
+    /**
+     * The sparql keyword.
+     */
+    String SPARQL = "sparql";
 
-    public void writeEndDocument() throws XMLStreamException {
-        streamWriter.writeEndElement();
-        streamWriter.writeEndDocument();
-    }
+    /**
+     * The element "head".
+     */
+    String HEAD = "head";
 
-    public void writeStartResults() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULTS);
-    }
+    /**
+     * The element "variable".
+     */
+    String VARIABLE = "variable";
 
-    public void writeEndResults() throws XMLStreamException {
-        streamWriter.writeEndElement();
-    }
+    /**
+     * The element "name".
+     */
+    String NAME = "name";
 
-    public void close() throws XMLStreamException, IOException {
-        if (streamWriter != null) {
-            streamWriter.flush();
-            streamWriter.close();
-        }
-    }
+    /**
+     * The element "results".
+     */
+    String RESULTS = "results";
 
-    public void flush() throws XMLStreamException {
-        streamWriter.flush();
-    }
+    /**
+     * The element "result".
+     */
+    String RESULT = "result";
 
-    public void write() throws XMLStreamException {
-        checkNotNull(streamWriter);
-        writeStartDocument();
-        writeHead();
-        writeAllResults();
-        writeEndDocument();
-    }
+    /**
+     * The element "binding".
+     */
+    String BINDING = "binding";
 
-    public void writeHead() throws XMLStreamException {
-        streamWriter.writeStartElement(HEAD);
-        streamWriter.writeEndElement();
-    }
+    /**
+     * The element "bnode".
+     */
+    String BNODE = "bnode";
 
-    protected void writeAllResults() throws XMLStreamException {
-        writeStartResults();
-        while (hasMoreResults()) {
-            writeResult();
-        }
-        writeEndResults();
-        streamWriter.flush();
-    }
+    /**
+     * The element "literal".
+     */
+    String LITERAL = "literal";
+
+    /**
+     * The element "uri".
+     */
+    String URI = "uri";
+
+    /**
+     * The element "datatype".
+     */
+    String DATATYPE = "datatype";
+
+    /**
+     * The element "lang".
+     */
+    String XML_LANG = "lang";
+
+    /**
+     * The Sparql namespace.
+     */
+    String SPARQL_NS = "http://www.w3.org/2005/sparql-results#";
+
+    /**
+     * The element "boolean".
+     */
+    String BOOLEAN = "boolean";
+
+    void write(Writer writer) throws XMLStreamException;
+
+    void close() throws XMLStreamException, IOException;
+
+    boolean hasMoreResults();
+
+    void writeStartDocument() throws XMLStreamException;
+
+    void writeHead() throws XMLStreamException;
+
+    void writeStartResults() throws XMLStreamException;
+
+    void writeEndResults() throws XMLStreamException;
+
+    void writeResult() throws XMLStreamException;
+
+    void writeEndDocument() throws XMLStreamException;
+
+    void write() throws XMLStreamException;
+
+    void setWriter(Writer writer) throws XMLStreamException, IOException;
+
+    void flush() throws XMLStreamException;
 }

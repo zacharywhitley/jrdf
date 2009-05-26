@@ -72,7 +72,7 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.AskAnswer;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.BOOLEAN;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.BOOLEAN;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
@@ -91,7 +91,6 @@ import java.net.URI;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public class AskAnswerXMLStreamWriterIntegrationTest extends TestCase {
     private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
     {
@@ -104,7 +103,7 @@ public class AskAnswerXMLStreamWriterIntegrationTest extends TestCase {
 
     private Writer writer;
     private XMLStreamReader reader;
-    private AnswerXMLWriter xmlWriter;
+    private AnswerXmlWriter xmlWriter;
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private BlankNode b1;
@@ -151,14 +150,14 @@ public class AskAnswerXMLStreamWriterIntegrationTest extends TestCase {
         graph.add(b3, p3, l3);
         String queryString = "ASK WHERE {?s ?p ?o .}";
         final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new AskAnswerXMLStreamWriter(answer, writer);
+        xmlWriter = new AskAnswerXmlStreamWriter(answer, writer);
         checkResult(true);
     }
 
     public void testAskEmptyGraph() throws XMLStreamException, InvalidQuerySyntaxException, GraphException {
         String queryString = "ASK WHERE {?s ?p ?o .}";
         final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new AskAnswerXMLStreamWriter(answer, writer);
+        xmlWriter = new AskAnswerXmlStreamWriter(answer, writer);
         checkResult(false);
     }
 
@@ -166,7 +165,7 @@ public class AskAnswerXMLStreamWriterIntegrationTest extends TestCase {
         graph.add(b1, p1, l1);
         String queryString = "ASK WHERE {?s ?p ?o FILTER ( str(?o) = \"ab\" ) }";
         final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new AskAnswerXMLStreamWriter(answer, writer);
+        xmlWriter = new AskAnswerXmlStreamWriter(answer, writer);
         checkResult(false);
     }
 

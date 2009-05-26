@@ -104,8 +104,8 @@
     </bean>
 
     <bean id="server" class="org.restlet.ext.spring.SpringServer">
-        <constructor-arg value="http"/>
-        <constructor-arg value="${server.port}"/>
+        <constructor-arg index="0" value="http"/>
+        <constructor-arg index="1" value="${server.port}"/>
     </bean>
 
     <bean id="logService" class="org.restlet.service.LogService">

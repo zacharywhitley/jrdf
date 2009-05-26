@@ -63,22 +63,22 @@ import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AnswerVisitor;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
-import org.jrdf.query.answer.xml.AnswerXMLPagenatedStreamWriter;
-import org.jrdf.query.answer.xml.AnswerXMLWriter;
-import org.jrdf.query.answer.xml.AskAnswerXMLStreamWriter;
+import org.jrdf.query.answer.xml.AnswerXmlPagenatedStreamWriter;
+import org.jrdf.query.answer.xml.AnswerXmlWriter;
+import org.jrdf.query.answer.xml.AskAnswerXmlStreamWriter;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
 
 import java.util.Map;
 
-public class SparqlXmlRepresentationFactory implements RepresentationFactory, AnswerVisitor<AnswerXMLWriter> {
+public class SparqlXmlRepresentationFactory implements RepresentationFactory, AnswerVisitor<AnswerXmlWriter> {
 
     public Representation createRepresentation(MediaType defaultMediaType, Map<String, Object> dataModel) {
         try {
             Representation representation = Representation.createEmpty();
             final Answer answer = (Answer) dataModel.get("answer");
             if (answer != null) {
-                AnswerXMLWriter xmlWriter = answer.accept(this);
+                AnswerXmlWriter xmlWriter = answer.accept(this);
                 representation = new SparqlRepresentation(defaultMediaType, xmlWriter);
             }
             return representation;
@@ -87,11 +87,11 @@ public class SparqlXmlRepresentationFactory implements RepresentationFactory, An
         }
     }
 
-    public AnswerXMLWriter visitAskAnswer(AskAnswer askAnswer) {
-        return new AskAnswerXMLStreamWriter(askAnswer);
+    public AnswerXmlWriter visitAskAnswer(AskAnswer askAnswer) {
+        return new AskAnswerXmlStreamWriter(askAnswer);
     }
 
-    public AnswerXMLWriter visitSelectAnswer(SelectAnswer selectAnswer) {
-        return new AnswerXMLPagenatedStreamWriter(selectAnswer);
+    public AnswerXmlWriter visitSelectAnswer(SelectAnswer selectAnswer) {
+        return new AnswerXmlPagenatedStreamWriter(selectAnswer);
     }
 }
