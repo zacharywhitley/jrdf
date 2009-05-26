@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,7 +54,6 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.answer.xml;
@@ -74,29 +73,28 @@ import java.util.Iterator;
  * @author Yuan-Fang Li
  * @version :$
  */
-
-public class AnswerXMLPagenatedStreamWriter extends AbstractXMLStreamWriter implements AnswerXMLWriter {
+public class AnswerXmlPagenatedStreamWriter extends AbstractXmlStreamWriter implements AnswerXmlWriter {
     private long maxRows;
     private long count;
     private SelectAnswer answer;
     private Iterator<TypeValue[]> iterator;
 
-    private AnswerXMLPagenatedStreamWriter() {
+    private AnswerXmlPagenatedStreamWriter() {
     }
 
-    public AnswerXMLPagenatedStreamWriter(SelectAnswer answer) {
+    public AnswerXmlPagenatedStreamWriter(SelectAnswer answer) {
         checkNotNull(answer);
         this.answer = answer;
         this.iterator = answer.columnValuesIterator();
         this.maxRows = answer.numberOfTuples();
     }
 
-    public AnswerXMLPagenatedStreamWriter(SelectAnswer answer, Writer writer) throws XMLStreamException {
+    public AnswerXmlPagenatedStreamWriter(SelectAnswer answer, Writer writer) throws XMLStreamException {
         this(answer);
         this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
-    public AnswerXMLPagenatedStreamWriter(SelectAnswer answer, Writer writer, int maxRows) throws XMLStreamException {
+    public AnswerXmlPagenatedStreamWriter(SelectAnswer answer, Writer writer, int maxRows) throws XMLStreamException {
         this(answer, writer);
         this.maxRows = maxRows;
     }

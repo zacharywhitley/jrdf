@@ -59,12 +59,12 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.BNODE;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.DATATYPE;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.LITERAL;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.NAME;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.URI;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.XML_LANG;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.BNODE;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.DATATYPE;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.LITERAL;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.NAME;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.URI;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.XML_LANG;
 import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;

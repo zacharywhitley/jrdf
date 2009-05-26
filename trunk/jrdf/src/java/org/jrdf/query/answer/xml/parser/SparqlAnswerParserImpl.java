@@ -63,12 +63,12 @@ import org.jrdf.query.answer.AnswerType;
 import static org.jrdf.query.answer.AnswerType.ASK;
 import static org.jrdf.query.answer.AnswerType.SELECT;
 import static org.jrdf.query.answer.AnswerType.UNKNOWN;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.BOOLEAN;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.HEAD;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.NAME;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULT;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.RESULTS;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.VARIABLE;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.BOOLEAN;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.HEAD;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.NAME;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULT;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULTS;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.VARIABLE;
 import org.jrdf.query.answer.xml.TypeValue;
 
 import javax.xml.stream.XMLInputFactory;

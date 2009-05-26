@@ -3,7 +3,7 @@
  * $Revision$
  * $Date$
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,7 +54,6 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.answer.xml;
@@ -67,6 +66,6 @@ import java.io.InputStream;
  * @version $Id$
  */
 
-public interface MultiAnswerXMLStreamWriter extends AnswerXMLWriter {
+public interface MultiAnswerXmlStreamWriter extends AnswerXmlWriter {
     void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
 }

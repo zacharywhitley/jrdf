@@ -66,9 +66,9 @@ import static junit.framework.Assert.assertTrue;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.HEAD;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.NAME;
-import static org.jrdf.query.answer.xml.AnswerXMLWriter.VARIABLE;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.HEAD;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.NAME;
+import static org.jrdf.query.answer.xml.AnswerXmlWriter.VARIABLE;
 
 import javax.xml.stream.XMLInputFactory;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -79,8 +79,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.Writer;
-import java.net.URL;
 import static java.net.URI.create;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,9 +90,11 @@ import java.util.Set;
 
 public final class AnswerXMLStreamWriterTestUtil {
     private XMLInputFactory factory = XMLInputFactory.newInstance();
+
     {
         factory.setProperty(P_INPUT_PARSING_MODE, PARSING_MODE_FRAGMENT);
     }
+
     private static final String[][] VALUES_1 = new String[][]{
         new String[]{"x", "r1"},
         new String[]{"hpage", "http://work.example.org/alice/"},
@@ -129,7 +131,7 @@ public final class AnswerXMLStreamWriterTestUtil {
         b3.addValue(create("urn:p3"), "l3");
     }
 
-    public Set<String> getVariables(final AnswerXMLWriter xmlWriter, final Writer writer) throws Exception {
+    public Set<String> getVariables(final AnswerXmlWriter xmlWriter, final Writer writer) throws Exception {
         xmlWriter.writeHead();
         xmlWriter.flush();
         final Set<String> varSet = new HashSet<String>();
@@ -163,7 +165,7 @@ public final class AnswerXMLStreamWriterTestUtil {
         }
     }
 
-    public void checkResult(final URL url, final Writer writer, final AnswerXMLWriter xmlWriter) throws Exception {
+    public void checkResult(final URL url, final Writer writer, final AnswerXmlWriter xmlWriter) throws Exception {
         final InputStream resultStream = url.openStream();
         try {
             final List<Map<String, String>> maps = new ArrayList<Map<String, String>>();

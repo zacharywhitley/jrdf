@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,7 +54,6 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.answer.xml;
@@ -78,8 +77,8 @@ import java.util.Set;
  * @version :Id: $
  */
 
-public class MultiAnswerXMLStreamWriterImpl extends AbstractXMLStreamWriter
-    implements MultiAnswerXMLStreamWriter, Runnable {
+public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
+    implements MultiAnswerXmlStreamWriter, Runnable {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     {
         INPUT_FACTORY.setProperty(P_INPUT_PARSING_MODE, PARSING_MODE_DOCUMENTS);
@@ -92,7 +91,7 @@ public class MultiAnswerXMLStreamWriterImpl extends AbstractXMLStreamWriter
     private boolean gotVariables;
     private int currentEvent;
 
-    public MultiAnswerXMLStreamWriterImpl(InputStream inputStream) throws XMLStreamException {
+    public MultiAnswerXmlStreamWriterImpl(InputStream inputStream) throws XMLStreamException {
         this.inputStream = inputStream;
         variables = new HashSet<String>();
         createParser();
