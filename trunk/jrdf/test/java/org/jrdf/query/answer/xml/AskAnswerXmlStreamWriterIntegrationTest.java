@@ -91,7 +91,7 @@ import java.net.URI;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public class AskAnswerXMLStreamWriterIntegrationTest extends TestCase {
+public class AskAnswerXmlStreamWriterIntegrationTest extends TestCase {
     private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
     {
         XML_INPUT_FACTORY.setProperty(WstxInputProperties.P_INPUT_PARSING_MODE,

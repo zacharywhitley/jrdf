@@ -73,13 +73,13 @@ import org.jrdf.util.DirectoryHandler
 import org.jrdf.util.TempDirectoryHandler
 import static org.jrdf.util.test.SetUtil.asSet
 
-class NewAnswerXMLPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
+class NewAnswerXmlPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
 
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler()
     private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory()
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER)
     private static final String QUERY = "SELECT ?s ?p ?o WHERE {?s ?p ?o .}"
-    private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil()
+    private static final AnswerXmlStreamWriterTestUtil TEST_UTIL = new AnswerXmlStreamWriterTestUtil()
     private static final def VARIABLES = asSet(["s", "p", "o"])
     public static final def RESULT1 = [
         "s": new TypeValueImpl(URI_REFERENCE, "urn:s1"),
