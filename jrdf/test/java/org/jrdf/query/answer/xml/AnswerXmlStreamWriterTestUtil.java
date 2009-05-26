@@ -88,7 +88,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public final class AnswerXMLStreamWriterTestUtil {
+public final class AnswerXmlStreamWriterTestUtil {
     private XMLInputFactory factory = XMLInputFactory.newInstance();
 
     {
@@ -114,7 +114,7 @@ public final class AnswerXMLStreamWriterTestUtil {
     private static final Map<String, String> RESULT1 = addToMap(VALUES_1);
     private static final Map<String, String> RESULT2 = addToMap(VALUES_2);
 
-    public AnswerXMLStreamWriterTestUtil() {
+    public AnswerXmlStreamWriterTestUtil() {
     }
 
     public URL getData() {
@@ -171,8 +171,8 @@ public final class AnswerXMLStreamWriterTestUtil {
             final List<Map<String, String>> maps = new ArrayList<Map<String, String>>();
             maps.add(RESULT1);
             maps.add(RESULT2);
-            AnswerXMLTestUtil.checkNumberOfResults(maps.size(), xmlWriter);
-            AnswerXMLTestUtil.checkContentsOfResults(maps, writer);
+            AnswerXmlTestUtil.checkNumberOfResults(maps.size(), xmlWriter);
+            AnswerXmlTestUtil.checkContentsOfResults(maps, writer);
         } finally {
             resultStream.close();
         }

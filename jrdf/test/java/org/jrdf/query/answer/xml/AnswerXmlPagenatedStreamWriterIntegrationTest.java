@@ -79,11 +79,11 @@ import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AnswerXMLPagenatedStreamWriterIntegrationTest extends TestCase {
+public class AnswerXmlPagenatedStreamWriterIntegrationTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-    private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil();
+    private static final AnswerXmlStreamWriterTestUtil TEST_UTIL = new AnswerXmlStreamWriterTestUtil();
     private UrqlConnection urqlConnection;
     private MoleculeGraph graph;
     private AnswerXmlWriter xmlWriter;

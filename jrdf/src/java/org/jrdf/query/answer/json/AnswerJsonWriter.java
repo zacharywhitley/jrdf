@@ -62,21 +62,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
 
-/**
- * @author Yuan-Fang Li
- * @version  $Id:$
- */
 public interface AnswerJsonWriter {
-
-    /**
-     * The XML -> HTML XSLT.
-     */
-    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
-
-    /**
-     * The sparql keyword.
-     */
-    String SPARQL = "sparql";
 
     /**
      * The element "head".
@@ -84,14 +70,14 @@ public interface AnswerJsonWriter {
     String HEAD = "head";
 
     /**
-     * The element "variable".
+     * The element "link".
      */
-    String VARIABLE = "variable";
+    String LINK = "link";
 
     /**
-     * The element "name".
+     * The element "vars".
      */
-    String NAME = "name";
+    String VARS = "vars";
 
     /**
      * The element "results".
@@ -99,14 +85,19 @@ public interface AnswerJsonWriter {
     String RESULTS = "results";
 
     /**
-     * The element "result".
+     * The element "bindings".
      */
-    String RESULT = "result";
+    String BINDINGS = "bindings";
 
     /**
-     * The element "binding".
+     * The element "type".
      */
-    String BINDING = "binding";
+    String RESULT = "type";
+
+    /**
+     * The element "uri".
+     */
+    String URI = "uri";
 
     /**
      * The element "bnode".
@@ -119,29 +110,14 @@ public interface AnswerJsonWriter {
     String LITERAL = "literal";
 
     /**
-     * The element "uri".
-     */
-    String URI = "uri";
-
-    /**
      * The element "datatype".
      */
     String DATATYPE = "datatype";
 
     /**
-     * The element "lang".
+     * The element "value".
      */
-    String XML_LANG = "lang";
-
-    /**
-     * The Sparql namespace.
-     */
-    String SPARQL_NS = "http://www.w3.org/2005/sparql-results#";
-
-    /**
-     * The element "boolean".
-     */
-    String BOOLEAN = "boolean";
+    String BINDING = "value";
 
     void write(Writer writer) throws XMLStreamException;
 

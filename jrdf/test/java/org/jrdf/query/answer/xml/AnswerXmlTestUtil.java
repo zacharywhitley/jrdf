@@ -77,13 +77,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class AnswerXMLTestUtil {
+public final class AnswerXmlTestUtil {
     private static final XMLInputFactory FACTORY = XMLInputFactory.newInstance();
     {
         FACTORY.setProperty(P_INPUT_PARSING_MODE, PARSING_MODE_FRAGMENT);
     }
 
-    private AnswerXMLTestUtil() {
+    private AnswerXmlTestUtil() {
     }
 
     public static void checkNumberOfResults(final int expectedNumber, final AnswerXmlWriter xmlWriter)

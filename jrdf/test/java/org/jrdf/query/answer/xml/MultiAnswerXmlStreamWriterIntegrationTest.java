@@ -73,8 +73,8 @@ import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MultiAnswerXMLStreamWriterIntegrationTest extends TestCase {
-    private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil();
+public class MultiAnswerXmlStreamWriterIntegrationTest extends TestCase {
+    private static final AnswerXmlStreamWriterTestUtil TEST_UTIL = new AnswerXmlStreamWriterTestUtil();
     private AnswerXmlWriter xmlWriter;
     private Writer writer = new StringWriter();
     private InputStream stream;

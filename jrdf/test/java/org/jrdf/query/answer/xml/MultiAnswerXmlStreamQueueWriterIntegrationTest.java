@@ -78,8 +78,8 @@ import java.util.Set;
 import java.util.HashSet;
 import static java.util.Arrays.asList;
 
-public class MultiAnswerXMLStreamQueueWriterIntegrationTest extends TestCase {
-    private static final AnswerXMLStreamWriterTestUtil TEST_UTIL = new AnswerXMLStreamWriterTestUtil();
+public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
+    private static final AnswerXmlStreamWriterTestUtil TEST_UTIL = new AnswerXmlStreamWriterTestUtil();
     private InputStream stream1, stream2;
     private XMLStreamReader streamReader;
     private AnswerXmlWriter xmlWriter;
