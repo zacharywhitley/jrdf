@@ -104,16 +104,12 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
 
     @Override
     public Boolean visitLogicAnd(LogicAndExpression andExpression) {
-        boolean lhsBoolean = andExpression.getLhs().accept(this);
-        boolean rhsBoolean = andExpression.getRhs().accept(this);
-        return lhsBoolean && rhsBoolean;
+        return andExpression.getLhs().accept(this) && andExpression.getRhs().accept(this);
     }
 
     @Override
     public Boolean visitLogicOr(LogicOrExpression orExpression) {
-        boolean lhsBoolean = orExpression.getLhs().accept(this);
-        boolean rhsBoolean = orExpression.getRhs().accept(this);
-        return lhsBoolean || rhsBoolean;
+        return orExpression.getLhs().accept(this) || orExpression.getRhs().accept(this);
     }
 
     @Override
