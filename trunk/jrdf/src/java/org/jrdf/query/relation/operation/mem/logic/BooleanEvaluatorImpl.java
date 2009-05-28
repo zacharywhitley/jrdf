@@ -99,21 +99,21 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
     @Override
     public Boolean visitBound(BoundOperator bound) {
         final Node valueOperation = getNextValue(bound);
-        return (valueOperation == null);
+        return (valueOperation != null);
     }
 
     @Override
     public Boolean visitLogicAnd(LogicAndExpression andExpression) {
         boolean lhsBoolean = andExpression.getLhs().accept(this);
         boolean rhsBoolean = andExpression.getRhs().accept(this);
-        return lhsBoolean || rhsBoolean;
+        return lhsBoolean && rhsBoolean;
     }
 
     @Override
     public Boolean visitLogicOr(LogicOrExpression orExpression) {
         boolean lhsBoolean = orExpression.getLhs().accept(this);
         boolean rhsBoolean = orExpression.getRhs().accept(this);
-        return lhsBoolean && rhsBoolean;
+        return lhsBoolean || rhsBoolean;
     }
 
     @Override
@@ -125,31 +125,31 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
     public Boolean visitEqualsExpression(EqualsExpression equalsExpression) {
         Node lhsValue = VALUE_EVALUATOR.getValue(tuple, equalsExpression.getLhs());
         Node rhsValue = VALUE_EVALUATOR.getValue(tuple, equalsExpression.getRhs());
-        return compareNodes(lhsValue, rhsValue) != 0;
+        return compareNodes(lhsValue, rhsValue) == 0;
     }
 
     @Override
     public Boolean visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
         Node lhsValue = VALUE_EVALUATOR.getValue(tuple, nEqualsExpression.getLhs());
         Node rhsValue = VALUE_EVALUATOR.getValue(tuple, nEqualsExpression.getRhs());
-        return compareNodes(lhsValue, rhsValue) == 0;
+        return compareNodes(lhsValue, rhsValue) != 0;
     }
 
     @Override
     public Boolean visitLessThanExpression(LessThanExpression lessThanExpression) {
         Node lhsValue = VALUE_EVALUATOR.getValue(tuple, lessThanExpression.getLhs());
         Node rhsValue = VALUE_EVALUATOR.getValue(tuple, lessThanExpression.getRhs());
-        return compareNodes(lhsValue, rhsValue) >= 0;
+        return compareNodes(lhsValue, rhsValue) < 0;
     }
 
     @Override
     public Boolean visitTrue(TrueExpression trueExp) {
-        return false;
+        return true;
     }
 
     @Override
     public Boolean visitFalse(FalseExpression falseExp) {
-        return true;
+        return false;
     }
 
     // TODO Fixme AN Handling nulls!!  Maybe the getValue should return an EmptyNode or NullaryNode or some node rather
@@ -176,6 +176,6 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
 
     public boolean evaluate(Tuple tuple, LogicExpression expression) {
         setTuple(tuple);
-        return !expression.accept(this);
+        return expression.accept(this);
     }
 }
