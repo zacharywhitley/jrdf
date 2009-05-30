@@ -75,36 +75,34 @@ import java.io.Serializable;
  * @version :$
  */
 
-public class AttributeBinding extends TupleBinding implements Serializable {
+public class AttributeBinding extends TupleBinding<Attribute> implements Serializable {
     private static final long serialVersionUID = -6106464996541411484L;
     private static final int NORMAL_ATTRIBUTE = 0;
     private static final int NULLARY_ATTRIBUTE = 1;
-    private TupleBinding nameBinding = new AttributeNameBinding();
-    private NodeTypeBinding typeBinding = new NodeTypeBinding();
+    private TupleBinding<AttributeName> nameBinding = new AttributeNameBinding();
+    private TupleBinding<NodeType> typeBinding = new NodeTypeBinding();
 
-    public Object entryToObject(TupleInput tupleInput) {
+    public Attribute entryToObject(TupleInput tupleInput) {
         final byte b = tupleInput.readByte();
-        Object o;
+        Attribute attribute;
         if (b == NORMAL_ATTRIBUTE) {
-            AttributeName name = (AttributeName) nameBinding.entryToObject(tupleInput);
-            NodeType type = (NodeType) typeBinding.entryToObject(tupleInput);
-            o = new AttributeImpl(name, type);
+            AttributeName name = nameBinding.entryToObject(tupleInput);
+            NodeType type = typeBinding.entryToObject(tupleInput);
+            attribute = new AttributeImpl(name, type);
         } else if (b == NULLARY_ATTRIBUTE) {
-            o = NullaryAttribute.NULLARY_ATTRIBUTE;
+            attribute = NullaryAttribute.NULLARY_ATTRIBUTE;
         } else {
             throw new IllegalArgumentException("Cannot read class type: " + b);
         }
-        return o;
+        return attribute;
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public void objectToEntry(Object o, TupleOutput tupleOutput) {
-        Attribute object = (Attribute) o;
-        if (object instanceof AttributeImpl) {
+    public void objectToEntry(Attribute attribute, TupleOutput tupleOutput) {
+        if (attribute instanceof AttributeImpl) {
             tupleOutput.writeByte(NORMAL_ATTRIBUTE);
-            nameBinding.objectToEntry(object.getAttributeName(), tupleOutput);
-            typeBinding.objectToEntry(object.getType(), tupleOutput);
-        } else if (object instanceof NullaryAttribute) {
+            nameBinding.objectToEntry(attribute.getAttributeName(), tupleOutput);
+            typeBinding.objectToEntry(attribute.getType(), tupleOutput);
+        } else if (attribute instanceof NullaryAttribute) {
             tupleOutput.writeByte(NULLARY_ATTRIBUTE);
         }
     }

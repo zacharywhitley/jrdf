@@ -59,7 +59,6 @@
 
 package org.jrdf.util.bdb;
 
-import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
 import com.sleepycat.bind.tuple.TupleBinding;
@@ -85,7 +84,7 @@ import java.util.Map;
 import java.util.SortedSet;
 
 public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
-    private Map<Class<?>, TupleBinding> binding = new HashMap<Class<?>, TupleBinding>();
+    private Map<Class<?>, TupleBinding<?>> binding = new HashMap<Class<?>, TupleBinding<?>>();
     private final DirectoryHandler handler;
 
     public BdbEnvironmentHandlerImpl(DirectoryHandler handler) {
@@ -119,28 +118,26 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         return env.openDatabase(null, dbName, dbConfig);
     }
 
-    @SuppressWarnings({ "unchecked" })
     public <T> SortedSet<T> createSet(Database database, Class<T> clazz) {
-        EntryBinding keyBinding = getBinding(clazz);
-        return new StoredSortedKeySet(database, keyBinding, true);
+        TupleBinding<T> binding = getBinding(clazz);
+        return new StoredSortedKeySet<T>(database, binding, true);
     }
 
-    @SuppressWarnings({ "unchecked" })
     public <T, A, U extends A> Map<T, U> createMap(Database database, Class<T> clazz1, Class<A> clazz2) {
-        EntryBinding keyBinding = getBinding(clazz1);
-        EntryBinding dataBinding = getBinding(clazz2);
-        return new StoredMap(database, keyBinding, dataBinding, true);
+        TupleBinding<T> keyBinding = getBinding(clazz1);
+        TupleBinding<U> dataBinding = getBinding(clazz2);
+        return new StoredMap<T, U>(database, keyBinding, dataBinding, true);
+    }
+
+    public <T> List<T> createList(Database database, Class<T> clazz) {
+        TupleBinding<T> valueBinding = getBinding(clazz);
+        return new StoredList<T>(database, valueBinding, true);
     }
 
     @SuppressWarnings({ "unchecked" })
-    public <T> List<T> createList(Database database, Class<T> clazz) {
-        EntryBinding valueBinding = getBinding(clazz);
-        return new StoredList(database, valueBinding, true);
-    }
-
-    private EntryBinding getBinding(Class<?> clazz) {
+    private <T> TupleBinding<T> getBinding(Class<?> clazz) {
         if (binding.keySet().contains(clazz)) {
-            return binding.get(clazz);
+            return (TupleBinding<T>) binding.get(clazz);
         } else {
             throw new IllegalArgumentException("Cannot retrieve binding for class: " + clazz);
         }

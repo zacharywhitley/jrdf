@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="AntConfiguration" />
+  <component name="CopyrightManager" />
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
       <configuration />
@@ -53,6 +55,7 @@
       </library>
     </orderEntry>
   </component>
+  <component name="ProjectKey" />
   <component name="RSpecModuleSettingsStorage">
     <RSPEC_MODULE_SETTINGS_STORAGE_ID NAME="RSPEC_SUPPORT_TYPE" VALUE="NONE" />
   </component>
@@ -61,5 +64,6 @@
       <setting name="state" value="1" />
     </Base>
   </component>
+  <component name="libraryTable" />
 </module>
 

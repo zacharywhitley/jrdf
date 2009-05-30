@@ -79,7 +79,7 @@ import java.io.Serializable;
  * @version :$
  */
 
-public class NodeTypeBinding extends TupleBinding implements NodeTypeVisitor, Serializable {
+public class NodeTypeBinding extends TupleBinding<NodeType> implements NodeTypeVisitor, Serializable {
     private static final long serialVersionUID = 331268501059754264L;
     private NodeType object;
     private TupleOutput tupleOutput;
@@ -91,39 +91,39 @@ public class NodeTypeBinding extends TupleBinding implements NodeTypeVisitor, Se
     private static final int OBJECT_NODE_TYPE = 5;
     private static final int RESOURCE_NODE_TYPE = 6;
 
-    public Object entryToObject(TupleInput tupleInput) {
-        Object object;
+    public NodeType entryToObject(TupleInput tupleInput) {
+        NodeType nodeType;
         byte b = tupleInput.readByte();
         switch (b) {
             case BLANK_NODE_TYPE:
-                object = new BlankNodeType();
+                nodeType = new BlankNodeType();
                 break;
             case LITERAL_NODE_TYPE:
-                object = new LiteralNodeType();
+                nodeType = new LiteralNodeType();
                 break;
             case URI_NODE_TYPE:
-                object = new URIReferenceNodeType();
+                nodeType = new URIReferenceNodeType();
                 break;
             case SUBJECT_NODE_TYPE:
-                object = new SubjectNodeType();
+                nodeType = new SubjectNodeType();
                 break;
             case PREDICATE_NODE_TYPE:
-                object = new PredicateNodeType();
+                nodeType = new PredicateNodeType();
                 break;
             case OBJECT_NODE_TYPE:
-                object = new ObjectNodeType();
+                nodeType = new ObjectNodeType();
                 break;
             case RESOURCE_NODE_TYPE:
-                object = new ResourceNodeType();
+                nodeType = new ResourceNodeType();
                 break;
             default:
                 throw new IllegalArgumentException("Cannot read class type: " + b);
         }
-        return object;
+        return nodeType;
     }
 
-    public void objectToEntry(Object o, TupleOutput tupleOutput) {
-        this.object = (NodeType) o;
+    public void objectToEntry(NodeType o, TupleOutput tupleOutput) {
+        this.object = o;
         this.tupleOutput = tupleOutput;
         object.accept(this);
     }

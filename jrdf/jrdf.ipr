@@ -741,6 +741,7 @@
     <option name="FILTER_INFO" value="true" />
     <option name="CUSTOM_FILTER" />
   </component>
+  <component name="NewModuleRootManager" />
   <component name="Palette2">
     <group name="Swing">
       <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
@@ -867,7 +868,7 @@
   </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectKey">
-    <option name="state" value="https://jrdf.svn.sourceforge.net/svnroot/jrdf/trunk/jrdf/jrdf.ipr" />
+    <option name="state" value="https://jrdf.svn.sf.net/svnroot/jrdf/trunk/jrdf/jrdf.ipr" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
