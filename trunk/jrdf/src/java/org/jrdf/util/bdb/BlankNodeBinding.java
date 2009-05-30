@@ -63,18 +63,18 @@ import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 import org.jrdf.graph.local.BlankNodeImpl;
+import org.jrdf.graph.BlankNode;
 
-public class BlankNodeBinding extends TupleBinding {
-    public Object entryToObject(TupleInput tupleInput) {
+public class BlankNodeBinding extends TupleBinding<BlankNode> {
+    public BlankNode entryToObject(TupleInput tupleInput) {
         return BlankNodeImpl.valueOf(tupleInput.readString());
     }
 
-    public void objectToEntry(Object object, TupleOutput tupleOutput) {
-        if (object instanceof BlankNodeImpl) {
-            BlankNodeImpl node = (BlankNodeImpl) object;
+    public void objectToEntry(BlankNode node, TupleOutput tupleOutput) {
+        if (node instanceof BlankNodeImpl) {
             tupleOutput.writeString(node.toString());
         } else {
-            throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
+            throw new IllegalArgumentException("Cannot persist class of type: " + node.getClass());
         }
     }
 }

@@ -64,6 +64,7 @@ import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.attributename.AttributeName;
 
 import java.io.Serializable;
 
@@ -72,35 +73,34 @@ import java.io.Serializable;
  * @version :$
  */
 
-public class AttributeNameBinding extends TupleBinding implements Serializable {
+public class AttributeNameBinding extends TupleBinding<AttributeName> implements Serializable {
     private static final long serialVersionUID = -4579363911884744137L;
     private static final int POSITION_NAME = 0;
     private static final int VARIABLE_NAME = 1;
 
-    public Object entryToObject(TupleInput tupleInput) {
+    public AttributeName entryToObject(TupleInput tupleInput) {
         final byte b = tupleInput.readByte();
         final String name = tupleInput.readString();
-        Object o;
+        AttributeName attributeName;
         switch (b) {
             case POSITION_NAME:
-                o = new PositionName(name);
+                attributeName = new PositionName(name);
                 break;
             case VARIABLE_NAME:
-                o = new VariableName(name);
+                attributeName = new VariableName(name);
                 break;
             default:
                 throw new IllegalArgumentException("Cannot read class type: " + b);
         }
-        return o;
+        return attributeName;
     }
 
-    public void objectToEntry(Object o, TupleOutput tupleOutput) {
-        if (o instanceof PositionName) {
+    public void objectToEntry(AttributeName attributeName, TupleOutput tupleOutput) {
+        if (attributeName instanceof PositionName) {
             tupleOutput.writeByte(POSITION_NAME);
-            tupleOutput.writeString(((PositionName) o).getLiteral());
-        } else if (o instanceof VariableName) {
+        } else if (attributeName instanceof VariableName) {
             tupleOutput.writeByte(VARIABLE_NAME);
-            tupleOutput.writeString(((VariableName) o).getLiteral());
         }
+        tupleOutput.writeString(attributeName.getLiteral());
     }
 }

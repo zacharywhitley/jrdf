@@ -66,7 +66,6 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
-import org.jrdf.graph.TypedNodeVisitable;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.LocalizedNode;
@@ -75,7 +74,7 @@ import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 
 import java.io.Serializable;
 
-public class NodeBinding extends TupleBinding implements TypedNodeVisitor, Serializable {
+public class NodeBinding extends TupleBinding<Node> implements TypedNodeVisitor, Serializable {
     private static final long serialVersionUID = 2361309903891433676L;
     private static final byte BLANK_NODE = 0;
     private static final byte URI_REFERENCE = 1;
@@ -84,26 +83,26 @@ public class NodeBinding extends TupleBinding implements TypedNodeVisitor, Seria
     private TupleOutput tupleOutput;
     private Object object;
 
-    public Object entryToObject(TupleInput tupleInput) {
-        Object object;
+    public Node entryToObject(TupleInput tupleInput) {
+        Node node;
         byte b = tupleInput.readByte();
         String str = tupleInput.readString();
         if (b == BLANK_NODE) {
-            object = mapper.convertToBlankNode(str);
+            node = mapper.convertToBlankNode(str);
         } else if (b == URI_REFERENCE) {
-            object = mapper.convertToURIReference(str, tupleInput.readLong());
+            node = mapper.convertToURIReference(str, tupleInput.readLong());
         } else if (b == LITERAL) {
-            object = mapper.convertToLiteral(str, tupleInput.readLong());
+            node = mapper.convertToLiteral(str, tupleInput.readLong());
         } else {
             throw new IllegalArgumentException("Cannot read class type: " + b);
         }
-        return object;
+        return node;
     }
 
-    public void objectToEntry(Object object, TupleOutput tupleOutput) {
-        this.object = object;
+    public void objectToEntry(Node node, TupleOutput tupleOutput) {
+        this.object = node;
         this.tupleOutput = tupleOutput;
-        ((TypedNodeVisitable) object).accept(this);
+        node.accept(this);
     }
 
     public void visitBlankNode(BlankNode blankNode) {

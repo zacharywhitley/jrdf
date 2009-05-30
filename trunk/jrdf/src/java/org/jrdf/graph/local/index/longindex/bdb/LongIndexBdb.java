@@ -59,15 +59,15 @@
 
 package org.jrdf.graph.local.index.longindex.bdb;
 
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.LongArrayEmptyClosableIterator;
-import org.jrdf.util.LongEmptyClosableIterator;
-import org.jrdf.collection.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.FlatteningEntrySetClosableIterator;
 import org.jrdf.util.ListToOneValueClosableIterator;
+import org.jrdf.util.LongArrayEmptyClosableIterator;
+import org.jrdf.util.LongEmptyClosableIterator;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -180,10 +180,10 @@ public final class LongIndexBdb implements LongIndex {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         for (Long longIndexId : index.keySet()) {
-            builder.append("Index: " + longIndexId + "\n");
+            builder.append("Index: ").append(longIndexId).append("\n");
             LinkedList<Long[]> list = index.get(longIndexId);
             for (Long[] values : list) {
-                builder.append("\tValues:" + Arrays.asList(values) + "\n");
+                builder.append("\tValues:").append(Arrays.asList(values)).append("\n");
             }
         }
         return builder.toString();

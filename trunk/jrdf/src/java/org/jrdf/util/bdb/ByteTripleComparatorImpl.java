@@ -81,8 +81,8 @@ public class ByteTripleComparatorImpl implements Comparator<byte[]>, Serializabl
     }
 
     public int compare(byte[] o1, byte[] o2) {
-        Triple triple1 = (Triple) tripleBinding.entryToObject(new TupleInput(o1));
-        Triple triple2 = (Triple) tripleBinding.entryToObject(new TupleInput(o2));
+        Triple triple1 = tripleBinding.entryToObject(new TupleInput(o1));
+        Triple triple2 = tripleBinding.entryToObject(new TupleInput(o2));
         return tripleComparator.compare(triple1, triple2);
     }
 }

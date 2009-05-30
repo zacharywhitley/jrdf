@@ -64,10 +64,11 @@ import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 
 import java.util.LinkedList;
+import java.util.List;
 
-public class LongListBinding extends TupleBinding {
-    public Object entryToObject(TupleInput tupleInput) {
-        LinkedList<Long[]> list = new LinkedList<Long[]>();
+public class LongListBinding extends TupleBinding<List<Long[]>> {
+    public List<Long[]> entryToObject(TupleInput tupleInput) {
+        List<Long[]> list = new LinkedList<Long[]>();
         long size = tupleInput.readLong();
         int arrayLength = tupleInput.readInt();
         for (int i = 0; i < size; i++) {
@@ -80,17 +81,14 @@ public class LongListBinding extends TupleBinding {
         return list;
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public void objectToEntry(Object object, TupleOutput tupleOutput) {
-        LinkedList<Long[]> list = (LinkedList<Long[]>) object;
+    public void objectToEntry(List<Long[]> list, TupleOutput tupleOutput) {
         tupleOutput.writeLong(list.size());
         int arrayLength = 0;
         if (list.size() != 0) {
             arrayLength = list.get(0).length;
         }
         tupleOutput.writeInt(arrayLength);
-        for (int i = 0; i < list.size(); i++) {
-            Long[] longs = list.get(i);
+        for (Long[] longs : list) {
             for (int j = 0; j < arrayLength; j++) {
                 tupleOutput.writeLong(longs[j]);
             }
