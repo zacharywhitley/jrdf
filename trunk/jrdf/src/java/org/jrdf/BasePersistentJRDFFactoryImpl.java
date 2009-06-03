@@ -59,15 +59,15 @@
 
 package org.jrdf;
 
-import org.jrdf.collection.CollectionFactory;
 import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.CollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
+import org.jrdf.parser.RdfReader;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
-import org.jrdf.query.relation.Relation;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
@@ -77,7 +77,6 @@ import org.jrdf.util.Models;
 import org.jrdf.util.ModelsImpl;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import static org.jrdf.writer.Writer.writeNTriples;
-import org.jrdf.parser.RdfReader;
 
 import java.io.File;
 import java.util.HashSet;
@@ -85,7 +84,7 @@ import java.util.Set;
 
 public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
-    private static final QueryEngine<Relation> QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
+    private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private final Set<NodePoolFactory> openNodePoolFactories = new HashSet<NodePoolFactory>();
     private final BdbEnvironmentHandler bdbHandler;

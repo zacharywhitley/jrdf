@@ -68,7 +68,6 @@ import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
-import org.jrdf.query.relation.Relation;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.urql.UrqlConnectionImpl;
@@ -83,7 +82,7 @@ import org.jrdf.urql.builder.QueryBuilder;
 public final class SortedMemoryJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final QueryEngine<Relation> QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
+    private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
 
     private SortedMemoryJRDFFactory() {
     }

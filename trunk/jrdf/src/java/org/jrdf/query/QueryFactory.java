@@ -61,13 +61,12 @@ package org.jrdf.query;
 
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.RelationFactory;
-import org.jrdf.query.relation.Relation;
 import org.jrdf.urql.builder.QueryBuilder;
 
 public interface QueryFactory {
     QueryBuilder createQueryBuilder();
 
-    QueryEngine<Relation> createQueryEngine();
+    QueryEngine createQueryEngine();
 
     RelationFactory createRelationFactory();
 }

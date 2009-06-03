@@ -67,7 +67,6 @@ import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeComparatorImpl;
@@ -150,7 +149,7 @@ public class QueryFactoryImpl implements QueryFactory {
         return RELATION_FACTORY;
     }
 
-    public QueryEngine<Relation> createQueryEngine() {
+    public QueryEngine createQueryEngine() {
         Project project = new ProjectImpl(TUPLE_FACTORY, RELATION_FACTORY);
         TupleEngine joinTupleEngine =
             new SortMergeNaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER, NODE_COMPARATOR);

@@ -90,7 +90,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<Relation> implements QueryEngine<Relation> {
+public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<Relation> implements QueryEngine {
     protected Relation result;
     protected Project project;
     protected Restrict restrict;
@@ -121,8 +121,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<Relation> imp
         setAllVariables(projection.getAllVariables());
         Relation expression = getExpression(projection.getNextExpression());
         LinkedHashSet<Attribute> attributes = projection.getAttributes();
-        Relation tmpExpression = expression;
-        result = project.include(tmpExpression, attributes);
+        result = project.include(expression, attributes);
         return result;
     }
 
@@ -179,8 +178,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<Relation> imp
     }
 
     protected Relation getExpression(Expression expression) {
-        QueryEngine<Relation> queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union,
-            leftOuterJoin);
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         return expression.accept(queryEngine);
