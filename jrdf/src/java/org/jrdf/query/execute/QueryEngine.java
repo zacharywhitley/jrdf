@@ -72,7 +72,7 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface QueryEngine<R> extends ExpressionVisitor<R> {
+public interface QueryEngine extends ExpressionVisitor<Relation> {
     void initialiseBaseRelation(Relation newRelation);
 
     void setAllVariables(Map<AttributeName, PositionalNodeType> variables);

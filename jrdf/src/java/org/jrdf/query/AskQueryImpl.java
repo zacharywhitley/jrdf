@@ -89,14 +89,14 @@ public class AskQueryImpl implements Query {
         return expression;
     }
 
-    public Answer executeQuery(Graph graph, QueryEngine<Relation> queryEngine) {
+    public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
         boolean result = getResult(graph, queryEngine);
         return new AskAnswerImpl(System.currentTimeMillis() - timeStarted, result);
     }
 
-    private boolean getResult(Graph graph, QueryEngine<Relation> queryEngine) {
+    private boolean getResult(Graph graph, QueryEngine queryEngine) {
         GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
         queryEngine.initialiseBaseRelation(entireGraph);
         ExpressionSimplifier<Void> simplifier = new ExpressionSimplifierImpl();

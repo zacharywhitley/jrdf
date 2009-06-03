@@ -95,7 +95,7 @@ public final class SelectQueryImpl implements Query {
         return expression;
     }
 
-    public Answer executeQuery(Graph graph, QueryEngine<Relation> queryEngine) {
+    public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
         Relation result = getResult(graph, queryEngine);
@@ -112,7 +112,7 @@ public final class SelectQueryImpl implements Query {
         }
     }
 
-    private Relation getResult(Graph graph, QueryEngine<Relation> queryEngine) {
+    private Relation getResult(Graph graph, QueryEngine queryEngine) {
         GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
         queryEngine.initialiseBaseRelation(entireGraph);
         ExpressionSimplifier<Void> simplifier = new ExpressionSimplifierImpl();

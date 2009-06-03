@@ -101,7 +101,7 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final QueryBuilder QUERY_BUILDER = FACTORY.getNewQueryBuilder();
     private static final Graph GRAPH = FACTORY.getNewGraph();
-    private static final QueryEngine<Relation> QUERY_ENGINE = FACTORY.getNewQueryEngine();
+    private static final QueryEngine QUERY_ENGINE = FACTORY.getNewQueryEngine();
 
     @Override
     public void setUp() throws Exception {

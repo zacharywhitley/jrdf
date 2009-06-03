@@ -75,9 +75,11 @@ public interface QueryBuilder {
     /**
      * Builds a query in {@link String} form into a {@link org.jrdf.query.Query}.
      *
+     * @param graph the graph to perform the query upon.
      * @param queryText The query in {@link String} form of the query.
      * @return The <code>queryText</code> in {@link org.jrdf.query.Query} form.
      * @throws org.jrdf.query.InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
+     * @throws org.jrdf.graph.GraphException if there were any exceptions accessing the graph.
      */
     Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
 }

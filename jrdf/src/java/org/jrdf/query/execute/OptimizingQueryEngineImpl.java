@@ -86,7 +86,7 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version $Id:$
  */
-public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine<Relation> {
+public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements QueryEngine {
     private static final RelationFactory RELATION_FACTORY = new QueryFactoryImpl().createRelationFactory();
     private boolean shortCircuit;
     private QueryExecutionPlanner planner;
@@ -199,8 +199,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
 
     @Override
     protected Relation getExpression(Expression expression) {
-        QueryEngine<Relation> queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
-            union, leftOuterJoin);
+        QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setCacheHandler(cacheHandler);
@@ -208,8 +207,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     protected Relation getExpression(Expression expression, boolean shortCircuit) {
-        QueryEngine<Relation> queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict,
-            union, leftOuterJoin);
+        QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(shortCircuit);
