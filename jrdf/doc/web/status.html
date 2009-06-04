@@ -11,102 +11,104 @@
     
 </div>
 <div id="main">
-    <div id="sidebar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="status.html">Status</a></li>
-            <li><a href="documentation.html">Documentation</a></li>
-            <li><a href="download.html">Download</a></li>
-        </ul>
-        <a href="http://www.w3.org/RDF/" title="RDF Resource Description Framework"> <img style="border:0;" src="http://www.w3.org/RDF/icons/rdf_powered_button.48" alt="RDF Resource Description Framework Powered Icon"/></a>
+    <div id="wrapper">
+        <div id="content">
+        <h2>Status</h2>
+        22/10/2008 - <a href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=635032"
+                style="font-weight: bold;">JRDF 0.5.5.4</a> - Server support including distributed querying using the
+            SPARQL protocol, streaming answers, iterable results returned, BOUND support and bug fixes.<br/>
+        11/08/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=619107"
+                style="font-weight: bold;">JRDF 0.5.5.3</a> - Bug fixes and optimizations.<br/>
+        01/08/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=617049"
+                style="font-weight: bold;">JRDF 0.5.5.2</a> - Bug fix release and initial work on supporting SPARQL FILTER.<br/>
+        04/07/2008 - <a href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=611274"
+                style="font-weight: bold;">JRDF 0.5.5.1</a> - Permanent graph support (for both molecules and normal
+        graph store) and text based serialization of molecules. Fixes to molecule store and graph implementations.<br/>
+        25/06/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=609329"
+                style="font-weight: bold;">JRDF 0.5.5</a> - On disk and in memory molecule store, NTriples writer,
+        RDF/XML parser bugs fixed, Resource API extended and general bugs fixed and other improvements.<br/>
+        05/02/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=574096"
+                        style="font-weight: bold;">JRDF 0.5.4</a> - Fixed
+            <a href="http://www.openrdf.org/issues/browse/SES-519">btree bug</a> and added
+            <a href="http://jrdf.sourceforge.net/0.5.4/doc/javadoc/org/jrdf/graph/Resource.html">Resource</a> methods for easier
+            triple addition/removal.<br/>
+        23/01/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=570777"
+                        style="font-weight: bold;">JRDF 0.5.3</a> - Improved find() performance, finds by node type, bug fixed in
+            RDF/XML parser, allow Literals and URI directly across graphs, and other bug fixes.<br/>
+        22/11/2007 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=555802"
+                        style="font-weight: bold;">JRDF 0.5.2</a> - Improved performance and support for reading writing large RDF/XML
+            files (millions of triples).<br/>
+        09/11/2007 - <a
+                href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=552929"
+                style="font-weight: bold;">JRDF 0.5.1</a> - Improved Bdb implementation and db4o support added. Bugs fixed with
+            the Resource API and data type support.<br/>
+        26/08/2007 - <a
+                href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=534936"
+                style="font-weight: bold;">JRDF 0.5.0</a> - Java 6 support. New APIs for Persistence, Resources and data
+        types.<br/>
+        05/06/2007 - <a href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=513552"
+                        style="font-weight: bold;">JRDF 0.4.1.1 and SPARQL GUI 0.3.1.1</a> - Bug fix release for wiring
+            errors.<br/>
+        27/02/2007 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=489659"
+                        style="font-weight: bold;">SPARQL GUI 0.3.1</a> - Syncs with 0.4.1 release.<br/>
+        27/02/2007 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=489657"
+                        style="font-weight: bold;">0.4.1</a> - First source release with SPARQL implementation, RDF/XML
+            Writer, and NTriples pull and push parser.<br/>
+        16/11/2006 - <a href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=464117"
+                        style="font-weight: bold;">SPARQL GUI 0.3</a> - Removes bug associated with project.<br/>
+        20/08/2006 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=440607"
+                        style="font-weight: bold;">SPARQL GUI 0.2</a> - Removes bugs associated with parsing SPARQL and
+            produces correct results for OPTIONAL and UNION <a href="http://www.w3.org/2001/sw/DataAccess/tests">DAWG test
+            cases</a>.<br/>
+        13/08/2006 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=439009"
+                        style="font-weight: bold;">SPARQL GUI 0.1</a> - A simple GUI that allows user's to submit SPARQL
+            queries. Supports a subset of SPARQL: PREFIX, pattern matching, UNION, join (.) and OPTIONAL.<br/>
+        24/06/2006 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=427294"
+                        style="font-weight: bold;">0.3.4.3</a> - Bug fix release for 0.3.4 branch. XML Literal parsing
+            regression bug.<br/>
+        03/04/2006 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=406779"
+                        style="font-weight: bold;">0.4.0</a> - First Java 1.5 only release. Began work on relational and
+            graph operations. Began work on NTriples parser and SPARQL support. RDF/XML improved to add proper handling of
+            XML Literals, relative URIs and xml:base processing.<br/>
+        24/11/2005 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=373455"
+                        style="font-weight: bold;">0.3.4.2</a> - Another bug fix release. Fixes to RDF/XML literal parsing and
+            NTriple escaping.<br/>
+        08/10/2005 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=362121"
+                        style="font-weight: bold;">0.3.4.1</a> - Bug Fix Release. Fixes to xml:base handling and resolving
+            of relative URIs.<br/>
+        12/07/2005 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=341581"
+                        style="font-weight: bold;">0.3.4</a> - RDF/XML parser based on RIO released (with improved support
+            for blank nodes), start of SPARQL and remote query support, bugs fixed, and general
+        code refactoring and preparation for move to Java 1.5.<br/>
+        27/09/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=270827"
+                        style="font-weight: bold;">0.3.3</a> - Single bug fix - correction to reification semantics. No
+            changes to API.<br/>
+        14/09/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=267807"
+                        style="font-weight: bold;">0.3.2</a> - Further in memory bug fixes and improved iterator support.<br/>
+        23/08/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=262565"
+                        style="font-weight: bold;">0.3.1</a> - In memory bug fix release.<br/>
+        15/08/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=260670"
+                        style="font-weight: bold;">0.3</a> - In memory implementation, visitor support, collection and
+            container support.<br/>
+        21/02/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=218562"
+                        style="font-weight: bold;">0.2.1</a> - Updated graph, added vocabularies and iterator for results.<br/>
+        18/12/2003 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=204558"
+                        style="font-weight: bold;">0.2</a> - Update of graph level interface.<br/>
         <br/>
-        <a href="http://sourceforge.net"><img style="border: 0 solid ; width: 88px; height: 31px;" alt="SF Logo"
-                                              src="http://sourceforge.net/sflogo.php?group_id=96347"/></a>
-        <br/>
-    </div>
-    <div id="content">
-    <h2>Status</h2>
-    22/10/2008 - <a href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=635032"
-            style="font-weight: bold;">JRDF 0.5.5.4</a> - Server support including distributed querying using the
-        SPARQL protocol, streaming answers, iterable results returned, BOUND support and bug fixes.<br/>
-    11/08/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=619107"
-            style="font-weight: bold;">JRDF 0.5.5.3</a> - Bug fixes and optimizations.<br/>
-    01/08/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=617049"
-            style="font-weight: bold;">JRDF 0.5.5.2</a> - Bug fix release and initial work on supporting SPARQL FILTER.<br/>
-    04/07/2008 - <a href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=611274"
-            style="font-weight: bold;">JRDF 0.5.5.1</a> - Permanent graph support (for both molecules and normal
-    graph store) and text based serialization of molecules. Fixes to molecule store and graph implementations.<br/>
-    25/06/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=609329"
-            style="font-weight: bold;">JRDF 0.5.5</a> - On disk and in memory molecule store, NTriples writer,
-    RDF/XML parser bugs fixed, Resource API extended and general bugs fixed and other improvements.<br/>
-    05/02/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=574096"
-                    style="font-weight: bold;">JRDF 0.5.4</a> - Fixed
-        <a href="http://www.openrdf.org/issues/browse/SES-519">btree bug</a> and added
-        <a href="http://jrdf.sourceforge.net/0.5.4/doc/javadoc/org/jrdf/graph/Resource.html">Resource</a> methods for easier
-        triple addition/removal.<br/>
-    23/01/2008 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=570777"
-                    style="font-weight: bold;">JRDF 0.5.3</a> - Improved find() performance, finds by node type, bug fixed in
-        RDF/XML parser, allow Literals and URI directly across graphs, and other bug fixes.<br/>
-    22/11/2007 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=555802"
-                    style="font-weight: bold;">JRDF 0.5.2</a> - Improved performance and support for reading writing large RDF/XML
-        files (millions of triples).<br/>
-    09/11/2007 - <a
-            href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=552929"
-            style="font-weight: bold;">JRDF 0.5.1</a> - Improved Bdb implementation and db4o support added. Bugs fixed with
-        the Resource API and data type support.<br/>
-    26/08/2007 - <a
-            href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=534936"
-            style="font-weight: bold;">JRDF 0.5.0</a> - Java 6 support. New APIs for Persistence, Resources and data
-    types.<br/>
-    05/06/2007 - <a href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=513552"
-                    style="font-weight: bold;">JRDF 0.4.1.1 and SPARQL GUI 0.3.1.1</a> - Bug fix release for wiring
-        errors.<br/>
-    27/02/2007 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=489659"
-                    style="font-weight: bold;">SPARQL GUI 0.3.1</a> - Syncs with 0.4.1 release.<br/>
-    27/02/2007 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=489657"
-                    style="font-weight: bold;">0.4.1</a> - First source release with SPARQL implementation, RDF/XML
-        Writer, and NTriples pull and push parser.<br/>
-    16/11/2006 - <a href="https://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=464117"
-                    style="font-weight: bold;">SPARQL GUI 0.3</a> - Removes bug associated with project.<br/>
-    20/08/2006 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=440607"
-                    style="font-weight: bold;">SPARQL GUI 0.2</a> - Removes bugs associated with parsing SPARQL and
-        produces correct results for OPTIONAL and UNION <a href="http://www.w3.org/2001/sw/DataAccess/tests">DAWG test
-        cases</a>.<br/>
-    13/08/2006 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=439009"
-                    style="font-weight: bold;">SPARQL GUI 0.1</a> - A simple GUI that allows user's to submit SPARQL
-        queries. Supports a subset of SPARQL: PREFIX, pattern matching, UNION, join (.) and OPTIONAL.<br/>
-    24/06/2006 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=427294"
-                    style="font-weight: bold;">0.3.4.3</a> - Bug fix release for 0.3.4 branch. XML Literal parsing
-        regression bug.<br/>
-    03/04/2006 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=406779"
-                    style="font-weight: bold;">0.4.0</a> - First Java 1.5 only release. Began work on relational and
-        graph operations. Began work on NTriples parser and SPARQL support. RDF/XML improved to add proper handling of
-        XML Literals, relative URIs and xml:base processing.<br/>
-    24/11/2005 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=373455"
-                    style="font-weight: bold;">0.3.4.2</a> - Another bug fix release. Fixes to RDF/XML literal parsing and
-        NTriple escaping.<br/>
-    08/10/2005 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=362121"
-                    style="font-weight: bold;">0.3.4.1</a> - Bug Fix Release. Fixes to xml:base handling and resolving
-        of relative URIs.<br/>
-    12/07/2005 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=341581"
-                    style="font-weight: bold;">0.3.4</a> - RDF/XML parser based on RIO released (with improved support
-        for blank nodes), start of SPARQL and remote query support, bugs fixed, and general
-    code refactoring and preparation for move to Java 1.5.<br/>
-    27/09/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=270827"
-                    style="font-weight: bold;">0.3.3</a> - Single bug fix - correction to reification semantics. No
-        changes to API.<br/>
-    14/09/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=267807"
-                    style="font-weight: bold;">0.3.2</a> - Further in memory bug fixes and improved iterator support.<br/>
-    23/08/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=262565"
-                    style="font-weight: bold;">0.3.1</a> - In memory bug fix release.<br/>
-    15/08/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=260670"
-                    style="font-weight: bold;">0.3</a> - In memory implementation, visitor support, collection and
-        container support.<br/>
-    21/02/2004 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=218562"
-                    style="font-weight: bold;">0.2.1</a> - Updated graph, added vocabularies and iterator for results.<br/>
-    18/12/2003 - <a href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;package_id=103763&amp;release_id=204558"
-                    style="font-weight: bold;">0.2</a> - Update of graph level interface.<br/>
-    <br/>
+        </div>
+        <div id="sidebar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="status.html">Status</a></li>
+                <li><a href="documentation.html">Documentation</a></li>
+                <li><a href="download.html">Download</a></li>
+            </ul>
+            <a href="http://www.w3.org/RDF/" title="RDF Resource Description Framework"> <img style="border:0;" src="http://www.w3.org/RDF/icons/rdf_powered_button.48" alt="RDF Resource Description Framework Powered Icon"/></a>
+            <br/>
+            <a href="http://sourceforge.net"><img style="border: 0 solid ; width: 88px; height: 31px;" alt="SF Logo"
+                                                  src="http://sourceforge.net/sflogo.php?group_id=96347"/></a>
+            <br/>
+        </div>
     </div>
 </div>
 <div id="footer">

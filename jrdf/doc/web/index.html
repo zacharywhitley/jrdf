@@ -11,66 +11,68 @@
     
 </div>
 <div id="main">
-    <div id="sidebar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="status.html">Status</a></li>
-            <li><a href="documentation.html">Documentation</a></li>
-            <li><a href="download.html">Download</a></li>
-        </ul>
-        <a href="http://www.w3.org/RDF/" title="RDF Resource Description Framework"> <img style="border:0;" src="http://www.w3.org/RDF/icons/rdf_powered_button.48" alt="RDF Resource Description Framework Powered Icon"/></a>
-        <br/>
-        <a href="http://sourceforge.net"><img style="border: 0 solid ; width: 88px; height: 31px;" alt="SF Logo"
-                                              src="http://sourceforge.net/sflogo.php?group_id=96347"/></a>
-        <br/>
-    </div>
-    <div id="content">
-        <p>JRDF is an attempt to create a standard set of APIs and base implementations to
-        <a href="http://www.w3.org/RDF/">RDF</a> (Resource Description Framework)
-        using the latest version of the Java language.&nbsp; The API will cover anything that is deemed to be useful for
-        Java programmers.&nbsp; A key aspect will be to ensure a high degree of modularity and to follow standard Java
-        conventions.&nbsp; It will be similar to other standard Java APIs such as JDBC, XML, Collections, etc.</p>
+    <div id="wrapper">
+        <div id="content">
+            <p>JRDF is an attempt to create a standard set of APIs and base implementations to
+            <a href="http://www.w3.org/RDF/">RDF</a> (Resource Description Framework)
+            using the latest version of the Java language.&nbsp; The API will cover anything that is deemed to be useful for
+            Java programmers.&nbsp; A key aspect will be to ensure a high degree of modularity and to follow standard Java
+            conventions.&nbsp; It will be similar to other standard Java APIs such as JDBC, XML, Collections, etc.</p>
 
-        <p>Current Java APIs for RDF have some drawbacks and many strengths.&nbsp; Some do not follow the current RDF
-            specification exactly or lack features that are appropriate to certain use cases.&nbsp; Also, there are many common
-            aspects to existing APIs with only slight differences in method names, package hierarchies and exception
-            handling.</p>
+            <p>Current Java APIs for RDF have some drawbacks and many strengths.&nbsp; Some do not follow the current RDF
+                specification exactly or lack features that are appropriate to certain use cases.&nbsp; Also, there are many common
+                aspects to existing APIs with only slight differences in method names, package hierarchies and exception
+                handling.</p>
 
-        <h2>Features</h2>
-        JRDF has the following features:<br/>
-        <ul>
-            <li>A Graph API (including graph comparison and graph set-based operations),</li>
-            <li>Creating and manipulating Graph objects (Statements, Resources, Nodes, etc.),</li>
-            <li>In memory and disk based graphs with a standard system level interface for storing triples,</li>
-            <li>IoC support (currently using Spring 2),</li>
-            <li>RDF Datatypes,</li>
-            <li>Local (where nodes are tied to a graph/store) and global (where they are not) RDF statements, and</li>
-            <li>Query Handling including SPARQL support (including results, transport, etc).</li>
-        </ul>
-        Future features may include:
-        <ul>
-            <li>An RDF to Java object API (similar to Hibernate or Sesame's Elmo), </li>
-            <li>Transactions,</li>
-            <li>Event Handling (addition/removal of nodes from a graph),</li>
-            <li>Security, and</li>
-            <li>Inferencing.</li>
-        </ul>
-        Being able to talk directly to a triple store in a common manner with the ability to swap differing implementations
-        is one of the key aims of the project.&nbsp; There are obvious benefits, especially when running in the same JVM,
-        that a common API provides.&nbsp; At the same time it will allow higher level APIs to be developed on top of the
-        existing agreed upon APIs.<br/>
-        <br/>
+            <h2>Features</h2>
+            JRDF has the following features:<br/>
+            <ul>
+                <li>A Graph API (including graph comparison and graph set-based operations),</li>
+                <li>Creating and manipulating Graph objects (Statements, Resources, Nodes, etc.),</li>
+                <li>In memory and disk based graphs with a standard system level interface for storing triples,</li>
+                <li>IoC support (currently using Spring 2),</li>
+                <li>RDF Datatypes,</li>
+                <li>Local (where nodes are tied to a graph/store) and global (where they are not) RDF statements, and</li>
+                <li>Query Handling including SPARQL support (including results, transport, etc).</li>
+            </ul>
+            Future features may include:
+            <ul>
+                <li>An RDF to Java object API (similar to Hibernate or Sesame's Elmo), </li>
+                <li>Transactions,</li>
+                <li>Event Handling (addition/removal of nodes from a graph),</li>
+                <li>Security, and</li>
+                <li>Inferencing.</li>
+            </ul>
+            Being able to talk directly to a triple store in a common manner with the ability to swap differing implementations
+            is one of the key aims of the project.&nbsp; There are obvious benefits, especially when running in the same JVM,
+            that a common API provides.&nbsp; At the same time it will allow higher level APIs to be developed on top of the
+            existing agreed upon APIs.<br/>
+            <br/>
 
-        <h2>JOther Libraries</h2>
-        This project is based on the existing RDF libraries and is designed to include the best features from all available
-        sources, such as:<br/>
-        <ul>
-            <li><a href="http://www.hpl.hp.com/semweb/jena.htm">Jena</a>,</li>
-            <li><a href="http://www.openrdf.org/">Sesame</a>,</li>
-            <li><a href="http://www.angelite.nl/aquamarine/">Aquamarine</a>, and</li>
-            <li><a href="http://www-db.stanford.edu/%7Emelnik/rdf/api.html">Sergey Melnik's RDF API</a>.</li>
-        </ul>
-        <p>Other standard APIs will be used where possible.</p>
+            <h2>Other Libraries</h2>
+            This project is based on the existing RDF libraries and is designed to include the best features from all available
+            sources, such as:<br/>
+            <ul>
+                <li><a href="http://www.hpl.hp.com/semweb/jena.htm">Jena</a>,</li>
+                <li><a href="http://www.openrdf.org/">Sesame</a>,</li>
+                <li><a href="http://www.angelite.nl/aquamarine/">Aquamarine</a>, and</li>
+                <li><a href="http://www-db.stanford.edu/%7Emelnik/rdf/api.html">Sergey Melnik's RDF API</a>.</li>
+            </ul>
+            <p>Other standard APIs will be used where possible.</p>
+        </div>
+        <div id="sidebar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="status.html">Status</a></li>
+                <li><a href="documentation.html">Documentation</a></li>
+                <li><a href="download.html">Download</a></li>
+            </ul>
+            <a href="http://www.w3.org/RDF/" title="RDF Resource Description Framework"> <img style="border:0;" src="http://www.w3.org/RDF/icons/rdf_powered_button.48" alt="RDF Resource Description Framework Powered Icon"/></a>
+            <br/>
+            <a href="http://sourceforge.net"><img style="border: 0 solid ; width: 88px; height: 31px;" alt="SF Logo"
+                                                  src="http://sourceforge.net/sflogo.php?group_id=96347"/></a>
+            <br/>
+        </div>
     </div>
 </div>
 <div id="footer">
