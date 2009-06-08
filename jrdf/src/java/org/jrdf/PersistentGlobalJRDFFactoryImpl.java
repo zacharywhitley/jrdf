@@ -59,7 +59,7 @@
 
 package org.jrdf;
 
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.MoleculeGraphImpl;
@@ -164,7 +164,7 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
             new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
-        CollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
+        IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
         final long curMaxMoleculeId = readIndex.getMaxMoleculeId();
         Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);

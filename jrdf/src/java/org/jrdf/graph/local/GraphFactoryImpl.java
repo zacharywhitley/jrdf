@@ -58,9 +58,10 @@
  */
 package org.jrdf.graph.local;
 
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphValueFactory;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphValueFactory;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
@@ -72,11 +73,10 @@ import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
-import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.CopyingLocalIteratorFactory;
-import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
+import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -95,7 +95,7 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
     private ResourceIteratorFactory resourceIteratorFactory;
 
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
-        CollectionFactory newCollectionFactory) {
+        IteratorTrackingCollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNewNodePool();
         this.nodePool.clear();

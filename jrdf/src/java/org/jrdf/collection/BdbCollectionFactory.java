@@ -66,20 +66,23 @@ import com.sleepycat.je.Environment;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 
 /**
  * An on disk implementation that uses Java BDB edition.
  */
-public class BdbCollectionFactory implements CollectionFactory {
+public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
     private final BdbEnvironmentHandler handler;
     private final String databaseName;
     private Environment env;
-    private List<Database> databases = new ArrayList<Database>();
+    private Map<Iterator<?>, Database> databases = new HashMap<Iterator<?>, Database>();
     private long collectionNumber;
+    private Database currentDatabase;
 
     public BdbCollectionFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
         checkNotNull(newHandler, newDatabaseName);
@@ -89,12 +92,8 @@ public class BdbCollectionFactory implements CollectionFactory {
 
     public <T> SortedSet<T> createSet(Class<T> clazz) {
         try {
-            collectionNumber++;
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            Database database = handler.setupDatabase(env, databaseName + collectionNumber, dbConfig);
-            databases.add(database);
-            final SortedSet<T> set = handler.createSet(database, clazz);
+            createDatabase(null);
+            final SortedSet<T> set = handler.createSet(currentDatabase, clazz);
             set.clear();
             return set;
         } catch (DatabaseException e) {
@@ -105,14 +104,8 @@ public class BdbCollectionFactory implements CollectionFactory {
     @SuppressWarnings({ "unchecked" })
     public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
         try {
-            collectionNumber++;
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            dbConfig.setOverrideBtreeComparator(true);
-            dbConfig.setBtreeComparator((Comparator<byte[]>) comparator);
-            Database database = handler.setupDatabase(env, databaseName + collectionNumber, dbConfig);
-            databases.add(database);
-            final SortedSet<T> set = handler.createSet(database, clazz);
+            createDatabase((Comparator<byte[]>) comparator);
+            final SortedSet<T> set = handler.createSet(currentDatabase, clazz);
             set.clear();
             return set;
         } catch (DatabaseException e) {
@@ -122,12 +115,8 @@ public class BdbCollectionFactory implements CollectionFactory {
 
     public <T> List<T> createList(Class<T> clazz) {
         try {
-            collectionNumber++;
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            Database database = handler.setupDatabase(env, databaseName + collectionNumber, dbConfig);
-            databases.add(database);
-            List<T> list = handler.createList(database, clazz);
+            createDatabase(null);
+            List<T> list = handler.createList(currentDatabase, clazz);
             list.clear();
             return list;
         } catch (DatabaseException e) {
@@ -138,16 +127,45 @@ public class BdbCollectionFactory implements CollectionFactory {
     public void close() {
         try {
             collectionNumber = 0;
-            closeDatabase();
+            closeDatabases();
         } finally {
             closeEnvironment();
         }
     }
 
-    private void closeDatabase() {
+    public void trackCurrentIteratorResource(Iterator<?> iterator) {
+        databases.put(iterator, currentDatabase);
+        databases.remove(null);
+    }
+
+    public void removeIteratorResources(Iterator<?> iterator) {
+        final Database database = databases.get(iterator);
+        if (database != null) {
+            try {
+                database.close();
+                databases.remove(iterator);
+            } catch (DatabaseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void createDatabase(Comparator<byte[]> comparator) throws DatabaseException {
+        collectionNumber++;
+        env = handler.setUpEnvironment();
+        DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
+        if (comparator != null) {
+            dbConfig.setOverrideBtreeComparator(true);
+            dbConfig.setBtreeComparator(comparator);
+        }
+        currentDatabase = handler.setupDatabase(env, databaseName + collectionNumber, dbConfig);
+        databases.put(null, currentDatabase);
+    }
+
+    private void closeDatabases() {
         try {
             if (!databases.isEmpty()) {
-                for (Database database : databases) {
+                for (Database database : databases.values()) {
                     database.close();
                 }
             }

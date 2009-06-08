@@ -59,7 +59,7 @@
 
 package org.jrdf;
 
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.urql.UrqlConnection;
 
@@ -68,7 +68,7 @@ public interface BasePersistentJRDFFactory {
 
     NodePool createNodePool(long graphNumber);
 
-    CollectionFactory createCollectionFactory(long graphNumber);
+    IteratorTrackingCollectionFactory createCollectionFactory(long graphNumber);
 
     boolean hasGraph(String name);
 

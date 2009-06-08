@@ -60,7 +60,7 @@
 package org.jrdf;
 
 import org.jrdf.collection.BdbCollectionFactory;
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
@@ -88,7 +88,7 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private final Set<NodePoolFactory> openNodePoolFactories = new HashSet<NodePoolFactory>();
     private final BdbEnvironmentHandler bdbHandler;
-    private CollectionFactory collectionFactory;
+    private IteratorTrackingCollectionFactory collectionFactory;
     private Models models;
     private File file;
     private Graph modelsGraph;
@@ -110,7 +110,7 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
         return nodePool;
     }
 
-    public CollectionFactory createCollectionFactory(long graphNumber) {
+    public IteratorTrackingCollectionFactory createCollectionFactory(long graphNumber) {
         collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
         return collectionFactory;
     }

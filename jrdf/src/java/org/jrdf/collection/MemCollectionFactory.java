@@ -78,11 +78,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Iterator;
 
 /**
  * An in memory implementation that uses Java's TreeSet and LinkedList.
  */
-public class MemCollectionFactory implements CollectionFactory {
+public class MemCollectionFactory implements IteratorTrackingCollectionFactory {
     private Map<Class<?>, Comparator<?>> defaultComparators = new HashMap<Class<?>, Comparator<?>>();
 
     public MemCollectionFactory() {
@@ -115,5 +116,11 @@ public class MemCollectionFactory implements CollectionFactory {
     }
 
     public void close() {
+    }
+
+    public void trackCurrentIteratorResource(Iterator<?> iterator) {
+    }
+
+    public void removeIteratorResources(Iterator<?> iterator) {
     }
 }

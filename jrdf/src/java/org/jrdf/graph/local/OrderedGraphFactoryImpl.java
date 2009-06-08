@@ -58,11 +58,11 @@
  */
 package org.jrdf.graph.local;
 
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.GraphValueFactory;
+import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
@@ -89,7 +89,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private GraphHandler[] graphHandlers;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
-    private CollectionFactory collectionFactory;
+    private IteratorTrackingCollectionFactory collectionFactory;
     private ReadWriteGraph readWriteGraph;
     private Localizer localizer;
     private GraphElementFactory elementFactory;
@@ -97,7 +97,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private ResourceIteratorFactory resourceIteratorFactory;
 
     public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePool newNodePool,
-        CollectionFactory newCollectionFactory) {
+        IteratorTrackingCollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePool;
         this.collectionFactory = newCollectionFactory;
@@ -105,7 +105,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     }
 
     public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
-        CollectionFactory newCollectionFactory) {
+        IteratorTrackingCollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNewNodePool();
         this.nodePool.clear();
