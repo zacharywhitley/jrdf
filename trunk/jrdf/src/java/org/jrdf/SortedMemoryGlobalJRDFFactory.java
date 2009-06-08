@@ -59,7 +59,7 @@
 
 package org.jrdf;
 
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.global.MoleculeGraph;
@@ -125,7 +125,7 @@ public final class SortedMemoryGlobalJRDFFactory implements GlobalJRDFFactory {
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
             new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
-        CollectionFactory collectionFactory = new MemCollectionFactory();
+        IteratorTrackingCollectionFactory collectionFactory = new MemCollectionFactory();
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
         return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph, nodePool);
     }

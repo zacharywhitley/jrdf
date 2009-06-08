@@ -61,6 +61,7 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 
 import java.util.Iterator;
 
@@ -72,23 +73,32 @@ import java.util.Iterator;
  * @version $Revision$
  */
 public class TripleClosableIterator implements ClosableLocalIterator<Triple> {
+    private IteratorTrackingCollectionFactory collectionFactory;
     private Iterator<Triple> iter;
     private Localizer localizer;
     private GraphHandler handler;
     private Triple triple;
+    private boolean closed;
 
-    public TripleClosableIterator(Iterator<Triple> newIter, Localizer newLocalizer, GraphHandler newHandler) {
+    public TripleClosableIterator(IteratorTrackingCollectionFactory collectionFactory, Iterator<Triple> newIter,
+        Localizer newLocalizer, GraphHandler newHandler) {
+        this.collectionFactory = collectionFactory;
         this.iter = newIter;
         this.localizer = newLocalizer;
         this.handler = newHandler;
+        collectionFactory.trackCurrentIteratorResource(iter);
     }
 
     public boolean close() {
-        return true;
+        if (!closed) {
+            collectionFactory.removeIteratorResources(iter);
+            closed = true;
+        }
+        return closed;
     }
 
     public boolean hasNext() {
-        return iter.hasNext();
+        return !closed && iter.hasNext();
     }
 
     public Triple next() {

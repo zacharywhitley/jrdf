@@ -58,11 +58,11 @@
  */
 package org.jrdf.graph.local.iterator;
 
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -77,10 +77,10 @@ import java.util.List;
 public final class CopyingLocalIteratorFactory implements IteratorFactory {
     private final GraphHandler[] graphHandlers;
     private final Localizer localizer;
-    private final CollectionFactory collectionFactory;
+    private final IteratorTrackingCollectionFactory collectionFactory;
 
     public CopyingLocalIteratorFactory(final GraphHandler[] newGraphHandlers, final Localizer newLocalizer,
-        final CollectionFactory newCollectionFactory) {
+        final IteratorTrackingCollectionFactory newCollectionFactory) {
         checkNotNull(newGraphHandlers, newLocalizer, newCollectionFactory);
         this.graphHandlers = newGraphHandlers;
         this.localizer = newLocalizer;
@@ -125,6 +125,6 @@ public final class CopyingLocalIteratorFactory implements IteratorFactory {
             list.add(closableIterator.next());
         }
         closableIterator.close();
-        return new TripleClosableIterator(list.iterator(), localizer, graphHandlers[0]);
+        return new TripleClosableIterator(collectionFactory, list.iterator(), localizer, graphHandlers[0]);
     }
 }

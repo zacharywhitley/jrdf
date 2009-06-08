@@ -61,7 +61,7 @@ package org.jrdf;
 
 import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.BdbMapFactory;
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.global.MoleculeGraph;
@@ -118,7 +118,7 @@ public final class SortedDiskBdbGlobalJRDFFactory implements GlobalJRDFFactory {
     private Set<MoleculeStructureIndex<Long>> openStructureIndexes = new HashSet<MoleculeStructureIndex<Long>>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private Set<MapFactory> openMapFactories = new HashSet<MapFactory>();
-    private CollectionFactory collectionFactory;
+    private IteratorTrackingCollectionFactory collectionFactory;
 
     private SortedDiskBdbGlobalJRDFFactory() {
     }

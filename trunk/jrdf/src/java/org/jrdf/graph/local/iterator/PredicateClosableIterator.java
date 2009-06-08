@@ -61,22 +61,32 @@ package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 
 import java.util.Iterator;
 
 public class PredicateClosableIterator implements ClosableIterator<PredicateNode> {
+    private final IteratorTrackingCollectionFactory collectionFactory;
     private final Iterator<PredicateNode> iterator;
+    private boolean closed;
 
-    public PredicateClosableIterator(Iterator<PredicateNode> iterator) {
+    public PredicateClosableIterator(IteratorTrackingCollectionFactory collectionFactory,
+        Iterator<PredicateNode> iterator) {
+        this.collectionFactory = collectionFactory;
         this.iterator = iterator;
+        collectionFactory.trackCurrentIteratorResource(iterator);
     }
 
     public boolean close() {
-        return true;
+        if (!closed) {
+            collectionFactory.removeIteratorResources(iterator);
+            closed = true;
+        }
+        return closed;
     }
 
     public boolean hasNext() {
-        return iterator.hasNext();
+        return !closed && iterator.hasNext();
     }
 
     public PredicateNode next() {
@@ -84,6 +94,6 @@ public class PredicateClosableIterator implements ClosableIterator<PredicateNode
     }
 
     public void remove() {
-        iterator.remove();
+        throw new UnsupportedOperationException("Cannot remove from a predicate iterator");
     }
 }

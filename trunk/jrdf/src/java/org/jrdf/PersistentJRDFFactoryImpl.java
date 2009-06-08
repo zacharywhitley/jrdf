@@ -59,7 +59,7 @@
 
 package org.jrdf;
 
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
@@ -149,7 +149,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     private Graph getGraph(long graphNumber) {
         LongIndex[] indexes = createIndexes(graphNumber);
         final NodePool nodePool = base.createNodePool(graphNumber);
-        CollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
+        IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
         return new OrderedGraphFactoryImpl(indexes, nodePool, collectionFactory).getGraph();
     }
 

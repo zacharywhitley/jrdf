@@ -61,7 +61,7 @@ package org.jrdf;
 
 import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.BdbMapFactory;
-import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.OrderedGraphFactoryImpl;
@@ -100,7 +100,7 @@ public final class SortedDiskBdbJRDFFactory implements JRDFFactory {
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
     private Set<MapFactory> openMapFactories = new HashSet<MapFactory>();
-    private CollectionFactory collectionFactory;
+    private IteratorTrackingCollectionFactory collectionFactory;
 
     private SortedDiskBdbJRDFFactory() {
     }

@@ -58,11 +58,11 @@
  */
 package org.jrdf.graph.local.iterator;
 
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -74,10 +74,10 @@ import java.util.SortedSet;
 public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     private final Localizer localizer;
     private final GraphHandler[] graphHandlers;
-    private final CollectionFactory collectionFactory;
+    private final IteratorTrackingCollectionFactory collectionFactory;
 
     public OrderedIteratorFactoryImpl(Localizer newLocalizer, GraphHandler[] newGraphHandlers,
-        CollectionFactory newCollectionFactory) {
+        IteratorTrackingCollectionFactory newCollectionFactory) {
         checkNotNull(newLocalizer, newGraphHandlers, newCollectionFactory);
         this.localizer = newLocalizer;
         this.graphHandlers = newGraphHandlers;
@@ -122,7 +122,7 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
             orderedSet.add(closableIterator.next());
         }
         closableIterator.close();
-        return new TripleClosableIterator(orderedSet.iterator(), localizer, graphHandlers[0]);
+        return new TripleClosableIterator(collectionFactory, orderedSet.iterator(), localizer, graphHandlers[0]);
     }
 
     private ClosableIterator<PredicateNode> sortPredicates(ClosableIterator<PredicateNode> closableIterator) {
@@ -131,6 +131,6 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
             orderedSet.add(closableIterator.next());
         }
         closableIterator.close();
-        return new PredicateClosableIterator(orderedSet.iterator());
+        return new PredicateClosableIterator(collectionFactory, orderedSet.iterator());
     }
 }

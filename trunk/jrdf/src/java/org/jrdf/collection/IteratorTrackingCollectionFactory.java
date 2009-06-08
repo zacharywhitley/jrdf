@@ -1,9 +1,9 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,24 +54,18 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
-package org.jrdf.graph.local.iterator;
 
-import junit.framework.TestCase;
-import org.jrdf.collection.IteratorTrackingCollectionFactory;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.nodepool.Localizer;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+package org.jrdf.collection;
 
-import java.lang.reflect.Modifier;
+import java.util.Iterator;
 
-public class LocalIteratorFactoryUnitTest extends TestCase {
+/**
+ * An iterator tracking collection factory.  This is used when creating/removing iterators relies on some underlying
+ * resources.
+ */
+public interface IteratorTrackingCollectionFactory extends CollectionFactory {
+    void trackCurrentIteratorResource(Iterator<?> iterator);
 
-    public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(IteratorFactory.class, CopyingLocalIteratorFactory.class);
-        checkConstructor(CopyingLocalIteratorFactory.class, Modifier.PUBLIC, GraphHandler[].class, Localizer.class,
-            IteratorTrackingCollectionFactory.class);
-    }
+    void removeIteratorResources(Iterator<?> iterator);
 }
