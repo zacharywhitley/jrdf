@@ -82,6 +82,10 @@ public interface CollectionFactory {
      * Creates a sorted set for a known type with a given comparator.  This allows non-supported types to be added.
      * This is optional and may not be supported by all implementations.
      *
+     * Currently, this does not follow the Java Collections signature as underlying implementations may have
+     * different requirements.  For example, Java BDB uses a byte comparison that is not associated with the type of
+     * the class.
+     *
      * @param clazz The type of set to create.
      * @param comparator The comparator to use to determine the sort order.
      * @return A sorted set.
