@@ -102,14 +102,14 @@ public class BdbCollectionFactory implements CollectionFactory {
         }
     }
 
-    @SuppressWarnings({ "RawUseOfParameterizedType", "unchecked" })
+    @SuppressWarnings({ "unchecked" })
     public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
         try {
             collectionNumber++;
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
             dbConfig.setOverrideBtreeComparator(true);
-            dbConfig.setBtreeComparator((Comparator) comparator);
+            dbConfig.setBtreeComparator((Comparator<byte[]>) comparator);
             Database database = handler.setupDatabase(env, databaseName + collectionNumber, dbConfig);
             databases.add(database);
             final SortedSet<T> set = handler.createSet(database, clazz);

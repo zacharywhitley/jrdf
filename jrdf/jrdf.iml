@@ -53,7 +53,6 @@
       </library>
     </orderEntry>
   </component>
-  <component name="ProjectKey" />
   <component name="RSpecModuleSettingsStorage">
     <RSPEC_MODULE_SETTINGS_STORAGE_ID NAME="RSPEC_SUPPORT_TYPE" VALUE="NONE" />
   </component>
@@ -62,6 +61,5 @@
       <setting name="state" value="1" />
     </Base>
   </component>
-  <component name="libraryTable" />
 </module>
 
