@@ -81,7 +81,7 @@ public class IteratorStack<T> implements Iterator<T> {
             throw new IllegalArgumentException("Iterator is null.");
         }
         this.iter = iter;
-        prefetch();
+        pushNextItemOntoStack();
     }
 
     /*--------------------------------------------------------------------------
@@ -97,7 +97,7 @@ public class IteratorStack<T> implements Iterator<T> {
      */
     public T peek() {
         if (stack.isEmpty()) {
-            prefetch();
+            pushNextItemOntoStack();
         }
         return stack.peek();
     }
@@ -111,7 +111,7 @@ public class IteratorStack<T> implements Iterator<T> {
      */
     public T pop() {
         if (stack.isEmpty()) {
-            prefetch();
+            pushNextItemOntoStack();
         }
         return stack.pop();
     }
@@ -125,10 +125,7 @@ public class IteratorStack<T> implements Iterator<T> {
         stack.push(item);
     }
 
-    /**
-     * Pushes the next item in the Iterator onto the stack.
-     */
-    private void prefetch() {
+    private void pushNextItemOntoStack() {
         if (iter.hasNext()) {
             push(iter.next());
         }
@@ -142,7 +139,7 @@ public class IteratorStack<T> implements Iterator<T> {
         return iter.hasNext() || !stack.isEmpty();
     }
 
-    // TODO AN Do this break the iterator contract - and not throw NoSuchElementException - rather it will throw an
+    // TODO AN Does this break the iterator contract - and not throw NoSuchElementException - rather it will throw an
     // EmptyStackException.
     public T next() {
         return pop();
