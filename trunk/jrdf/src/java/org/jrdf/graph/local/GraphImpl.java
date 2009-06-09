@@ -165,9 +165,10 @@ public class GraphImpl implements Graph {
     public ClosableIterable<Triple> find(final SubjectNode subject, final PredicateNode predicate,
         final ObjectNode object) throws GraphException {
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
+        final ClosableIterator<Triple> closableIterator = readWriteGraph.find(subject, predicate, object);
         return new ClosableIterable<Triple>() {
             public ClosableIterator<Triple> iterator() {
-                return readWriteGraph.find(subject, predicate, object);
+                return closableIterator;
             }
         };
     }

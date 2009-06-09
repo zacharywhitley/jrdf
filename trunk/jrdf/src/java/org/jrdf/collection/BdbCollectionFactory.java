@@ -72,6 +72,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.Stack;
 
 /**
  * An on disk implementation that uses Java BDB edition.
@@ -82,7 +83,7 @@ public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
     private Environment env;
     private Map<Iterator<?>, Database> databases = new HashMap<Iterator<?>, Database>();
     private long collectionNumber;
-    private Database currentDatabase;
+    private Stack<Database> currentDatabase = new Stack<Database>();
 
     public BdbCollectionFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
         checkNotNull(newHandler, newDatabaseName);
@@ -91,21 +92,16 @@ public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
     }
 
     public <T> SortedSet<T> createSet(Class<T> clazz) {
-        try {
-            createDatabase(null);
-            final SortedSet<T> set = handler.createSet(currentDatabase, clazz);
-            set.clear();
-            return set;
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+        final SortedSet<T> set = createSet(clazz, null);
+        set.clear();
+        return set;
     }
 
     @SuppressWarnings({ "unchecked" })
     public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
         try {
             createDatabase((Comparator<byte[]>) comparator);
-            final SortedSet<T> set = handler.createSet(currentDatabase, clazz);
+            final SortedSet<T> set = handler.createSet(currentDatabase.peek(), clazz);
             set.clear();
             return set;
         } catch (DatabaseException e) {
@@ -116,7 +112,7 @@ public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
     public <T> List<T> createList(Class<T> clazz) {
         try {
             createDatabase(null);
-            List<T> list = handler.createList(currentDatabase, clazz);
+            final List<T> list = handler.createList(currentDatabase.peek(), clazz);
             list.clear();
             return list;
         } catch (DatabaseException e) {
@@ -134,15 +130,17 @@ public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
     }
 
     public void trackCurrentIteratorResource(Iterator<?> iterator) {
-        databases.put(iterator, currentDatabase);
         databases.remove(null);
+        databases.put(iterator, currentDatabase.peek());
     }
 
     public void removeIteratorResources(Iterator<?> iterator) {
-        final Database database = databases.get(iterator);
+        final Database database = currentDatabase.pop();
         if (database != null) {
             try {
+                final String name = database.getDatabaseName();
                 database.close();
+                env.removeDatabase(null, name);
                 databases.remove(iterator);
             } catch (DatabaseException e) {
                 throw new RuntimeException(e);
@@ -158,8 +156,8 @@ public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
             dbConfig.setOverrideBtreeComparator(true);
             dbConfig.setBtreeComparator(comparator);
         }
-        currentDatabase = handler.setupDatabase(env, databaseName + collectionNumber, dbConfig);
-        databases.put(null, currentDatabase);
+        currentDatabase.push(handler.setupDatabase(env, databaseName + collectionNumber, dbConfig));
+        databases.put(null, currentDatabase.peek());
     }
 
     private void closeDatabases() {

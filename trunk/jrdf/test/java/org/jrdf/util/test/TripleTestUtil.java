@@ -162,9 +162,10 @@ public class TripleTestUtil {
     public static ClosableIterable<Triple> createTripleIterable(Triple[] triples) {
         List<Triple> triplesList = Arrays.asList(triples);
         final Iterator<Triple> iterator = triplesList.iterator();
+        final SimpleClosableIterator<Triple> closableIterator = new SimpleClosableIterator<Triple>(iterator);
         return new ClosableIterable<Triple>() {
             public ClosableIterator<Triple> iterator() {
-                return new SimpleClosableIterator<Triple>(iterator);
+                return closableIterator;
             }
         };
     }
