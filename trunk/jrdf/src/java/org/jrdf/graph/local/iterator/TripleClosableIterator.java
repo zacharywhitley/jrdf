@@ -58,12 +58,13 @@
  */
 package org.jrdf.graph.local.iterator;
 
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.collection.IteratorTrackingCollectionFactory;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * A simple iterator that provides removal of nodes from the underlying store - irrespectively of the order given
@@ -81,7 +82,7 @@ public class TripleClosableIterator implements ClosableLocalIterator<Triple> {
     private boolean closed;
 
     public TripleClosableIterator(IteratorTrackingCollectionFactory collectionFactory, Iterator<Triple> newIter,
-        Localizer newLocalizer, GraphHandler newHandler) {
+                                  Localizer newLocalizer, GraphHandler newHandler) {
         this.collectionFactory = collectionFactory;
         this.iter = newIter;
         this.localizer = newLocalizer;
@@ -98,10 +99,21 @@ public class TripleClosableIterator implements ClosableLocalIterator<Triple> {
     }
 
     public boolean hasNext() {
-        return !closed && iter.hasNext();
+        if (closed) {
+            return !closed;
+        } else {
+            final boolean hasNext = iter.hasNext();
+            if (!hasNext) {
+                close();
+            }
+            return hasNext;
+        }
     }
 
     public Triple next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
         triple = iter.next();
         return triple;
     }

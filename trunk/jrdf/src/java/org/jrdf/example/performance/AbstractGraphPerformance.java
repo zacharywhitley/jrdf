@@ -65,10 +65,10 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.writer.BlankNodeRegistry;
 
 public abstract class AbstractGraphPerformance implements GraphPerformance {
-    private static final int NUMBER_OF_NODES_TO_ADD = 10000;
-    private static final int NUMBER_OF_NODES_TO_FIND = 1000;
-    private static final int NUMBER_OF_NODES_TO_UPDATE = 1000;
-    private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
+    private static final int NUMBER_OF_NODES_TO_ADD = 1000;
+    private static final int NUMBER_OF_NODES_TO_FIND = 100;
+    private static final int NUMBER_OF_NODES_TO_UPDATE = 100;
+    private static final int NO_MILLISECONDS_IN_A_SECOND = 100;
     private static final int NUMBER_OF_PREDICATES = 10;
     private static final int EXPECTED_ARGS = 3;
     private static final String SUBJECT_PREFIX = "http://foo";

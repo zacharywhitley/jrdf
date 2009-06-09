@@ -59,11 +59,12 @@
 
 package org.jrdf.graph.local.iterator;
 
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.collection.IteratorTrackingCollectionFactory;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class PredicateClosableIterator implements ClosableIterator<PredicateNode> {
     private final IteratorTrackingCollectionFactory collectionFactory;
@@ -71,7 +72,7 @@ public class PredicateClosableIterator implements ClosableIterator<PredicateNode
     private boolean closed;
 
     public PredicateClosableIterator(IteratorTrackingCollectionFactory collectionFactory,
-        Iterator<PredicateNode> iterator) {
+                                     Iterator<PredicateNode> iterator) {
         this.collectionFactory = collectionFactory;
         this.iterator = iterator;
         collectionFactory.trackCurrentIteratorResource(iterator);
@@ -86,10 +87,21 @@ public class PredicateClosableIterator implements ClosableIterator<PredicateNode
     }
 
     public boolean hasNext() {
-        return !closed && iterator.hasNext();
+        if (closed) {
+            return closed;
+        } else {
+            final boolean hasNext = iterator.hasNext();
+            if (!hasNext) {
+                close();
+            }
+            return hasNext;
+        }
     }
 
     public PredicateNode next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
         return iterator.next();
     }
 
