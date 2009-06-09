@@ -89,17 +89,9 @@ public final class BdbMapFactory implements MapFactory {
     }
 
     public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
-        try {
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
-            databases.add(database);
-            final Map<T, U> map = handler.createMap(database, clazz1, clazz2);
-            map.clear();
-            return map;
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+        final Map<T, U> map = openExistingMap(clazz1, clazz2, name);
+        map.clear();
+        return map;
     }
 
     public <A, T, U extends A> Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name) {
@@ -113,7 +105,6 @@ public final class BdbMapFactory implements MapFactory {
             throw new RuntimeException(e);
         }
     }
-
 
     public void close() {
         try {

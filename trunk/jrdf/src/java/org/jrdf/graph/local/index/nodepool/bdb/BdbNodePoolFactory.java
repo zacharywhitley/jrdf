@@ -85,7 +85,6 @@ public class BdbNodePoolFactory implements NodePoolFactory {
         this.graphNumber = newGraphNumber;
     }
 
-    @SuppressWarnings({ "unchecked" })
     public NodePool createNewNodePool() {
         nodePoolMapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
         stringPoolMapFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
@@ -100,7 +99,6 @@ public class BdbNodePoolFactory implements NodePoolFactory {
         return pool;
     }
 
-    @SuppressWarnings({ "unchecked" })
     public NodePool openExistingNodePool() {
         nodePoolMapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
         stringPoolMapFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
