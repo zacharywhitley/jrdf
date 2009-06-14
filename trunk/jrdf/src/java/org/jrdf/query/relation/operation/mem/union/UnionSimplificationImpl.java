@@ -93,9 +93,9 @@ public class UnionSimplificationImpl implements UnionSimplification {
         LinkedHashSet<EvaluatedRelation> relations) {
         if (relation1.equals(relation2)) {
             relations.add(relation1);
-        } else if (relation1.getTuples().isEmpty() && !relation2.getTuples().isEmpty()) {
+        } else if (relation1.isEmpty() && !relation2.isEmpty()) {
             relations.add(relation2);
-        } else if (!relation1.getTuples().isEmpty() && relation2.getTuples().isEmpty()) {
+        } else if (!relation1.isEmpty() && relation2.isEmpty()) {
             relations.add(relation1);
         }
     }

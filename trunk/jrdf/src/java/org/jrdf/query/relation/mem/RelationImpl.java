@@ -124,6 +124,10 @@ public final class RelationImpl implements EvaluatedRelation {
         return tuples.size();
     }
 
+    public boolean isEmpty() {
+        return tuples.isEmpty();
+    }
+
     public Set<Tuple> getTuples(Map<Attribute, Node> avo) {
         Set<Tuple> set = new HashSet<Tuple>();
         for (Tuple tuple : tuples) {

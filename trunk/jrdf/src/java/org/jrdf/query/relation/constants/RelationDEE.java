@@ -122,7 +122,11 @@ public final class RelationDEE implements EvaluatedRelation, Serializable {
     }
 
     public long getTupleSize() {
-        return  NULLARY_TUPLE.getAttributeValues().size();
+        return NULLARY_TUPLE.getAttributeValues().size();
+    }
+
+    public boolean isEmpty() {
+        return false;
     }
 
     // TODO (AN) Test drive me

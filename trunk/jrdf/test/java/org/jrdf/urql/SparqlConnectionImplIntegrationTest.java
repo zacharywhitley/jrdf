@@ -129,8 +129,7 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
 
     private void checkConnectionReturnsNoSolutions(UrqlConnection connection) {
         EvaluatedRelation relation = executeQuery(connection, QUERY_SHOULD_RETURN_NOTHING);
-        Set<Tuple> solutions = relation.getTuples();
-        assertTrue(solutions.isEmpty());
+        assertTrue(relation.isEmpty());
     }
 
     private EvaluatedRelation executeQuery(UrqlConnection connection, String query) {

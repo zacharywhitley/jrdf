@@ -127,7 +127,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     }
 
     public long numberOfTuples() {
-        return results.getTuples().size();
+        return results.getTupleSize();
     }
 
     public long getTimeTaken() {

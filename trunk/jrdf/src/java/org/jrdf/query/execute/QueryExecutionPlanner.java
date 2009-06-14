@@ -114,7 +114,7 @@ public final class QueryExecutionPlanner extends ExpressionVisitorAdapter<Set<Ev
         List<EvaluatedRelation> partialResult = new LinkedList<EvaluatedRelation>();
         for (Expression exp : constraintList) {
             EvaluatedRelation tempRelation = engine.getExpression(exp);
-            if (tempRelation.getTuples().isEmpty()) {
+            if (tempRelation.isEmpty()) {
                 return Collections.singleton(tempRelation);
             }
             partialResult.add(tempRelation);
