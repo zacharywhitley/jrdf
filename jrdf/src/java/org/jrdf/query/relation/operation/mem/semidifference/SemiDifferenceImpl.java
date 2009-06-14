@@ -124,8 +124,8 @@ public class SemiDifferenceImpl implements SemiDifference {
     }
 
     private void performMinus(EvaluatedRelation relation1, EvaluatedRelation relation2, SortedSet<Tuple> resultTuples) {
-        SortedSet<Tuple> set1 = relation1.getSortedTuples();
-        SortedSet<Tuple> set2 = relation2.getSortedTuples();
+        Set<Tuple> set1 = relation1.getTuples();
+        Set<Tuple> set2 = relation2.getTuples();
         for (Tuple tuple1 : set1) {
             if (!set2.contains(tuple1)) {
                 resultTuples.add(tuple1);

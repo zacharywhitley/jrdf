@@ -113,22 +113,14 @@ public final class GraphRelationImpl implements GraphRelation {
         return attributeFactory.createHeading();
     }
 
+    public SortedSet<Attribute> getSortedHeading() {
+        return attributeFactory.createHeading();
+    }
+
     public Set<Tuple> getTuples() {
         SortedSet<Attribute> heading = attributeFactory.createHeading();
         Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
         return getUnsortedTuplesFromGraph(ALL_TRIPLE, attributes);
-    }
-
-    public Set<Tuple> getTuples(Attribute attribute) {
-        throw new UnsupportedOperationException("Cannot find tuples with attribute in graph relation.");
-    }
-
-    public long getTupleSize() {
-        return graph.getNumberOfTriples();
-    }
-
-    public boolean isEmpty() {
-        return graph.getNumberOfTriples() != 0;
     }
 
     public Set<Tuple> getTuples(Map<Attribute, Node> nameValues) {
@@ -139,21 +131,16 @@ public final class GraphRelationImpl implements GraphRelation {
         return getUnsortedTuplesFromGraph(searchTriple, attributes);
     }
 
-    public SortedSet<Attribute> getSortedHeading() {
-        return attributeFactory.createHeading();
-    }
-
     public ClosableIterator<Tuple> getTupleIterator() {
-        SortedSet<Attribute> heading = attributeFactory.createHeading();
-        Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
-        return new ClosableIteratorImpl<Tuple>(getUnsortedTuplesFromGraph(ALL_TRIPLE, attributes).iterator());
+        return new ClosableIteratorImpl<Tuple>(getTuples().iterator());
     }
 
-    public SortedSet<Tuple> getSortedTuples() {
-        SortedSet<Attribute> heading = attributeFactory.createHeading();
-        Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
-        Triple searchTriple = ALL_TRIPLE;
-        return getTuplesFromGraph(searchTriple, attributes);
+    public long getTupleSize() {
+        return graph.getNumberOfTriples();
+    }
+
+    public boolean isEmpty() {
+        return graph.getNumberOfTriples() != 0;
     }
 
     @Override

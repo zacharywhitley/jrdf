@@ -63,14 +63,9 @@ import org.jrdf.graph.Node;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 public interface EvaluatedRelation extends Relation {
     Set<Tuple> getTuples();
 
-    Set<Tuple> getTuples(Attribute attribute);
-
     Set<Tuple> getTuples(Map<Attribute, Node> avo);
-
-    SortedSet<Tuple> getSortedTuples();
 }

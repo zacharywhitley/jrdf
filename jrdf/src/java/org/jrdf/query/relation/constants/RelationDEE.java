@@ -117,10 +117,6 @@ public final class RelationDEE implements EvaluatedRelation, Serializable {
         return Collections.singleton(NULLARY_TUPLE);
     }
 
-    public Set<Tuple> getTuples(Attribute attribute) {
-        return Collections.singleton(NULLARY_TUPLE);
-    }
-
     public long getTupleSize() {
         return NULLARY_TUPLE.getAttributeValues().size();
     }
