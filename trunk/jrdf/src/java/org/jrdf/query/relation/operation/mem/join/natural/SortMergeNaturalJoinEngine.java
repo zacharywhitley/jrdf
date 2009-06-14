@@ -138,14 +138,14 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     }
 
     private long estimateJoinCost(Attribute attribute, EvaluatedRelation rel1, EvaluatedRelation rel2) {
-        int b1, b2, ub1, ub2;
+        long b1, b2, ub1, ub2;
         int size1 = rel1.getTuples().size();
         int size2 = rel2.getTuples().size();
         b1 = rel1.getTuples(attribute).size();
         b2 = rel2.getTuples(attribute).size();
         ub1 = size1 - b1;
         ub2 = size2 - b2;
-        return (long) b1 + b2 + (b1 * ub2) + (b2 * ub1) + (ub1 * ub2);
+        return b1 + b2 + (b1 * ub2) + (b2 * ub1) + (ub1 * ub2);
     }
 
     private void doSortMergeJoin(SortedSet<Attribute> headings, EvaluatedRelation rel1, EvaluatedRelation rel2,

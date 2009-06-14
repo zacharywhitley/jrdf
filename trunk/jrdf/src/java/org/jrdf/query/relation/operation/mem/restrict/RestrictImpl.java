@@ -62,7 +62,6 @@ package org.jrdf.query.relation.operation.mem.restrict;
 import org.jrdf.graph.Node;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
@@ -73,9 +72,7 @@ import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.query.relation.operation.Restrict;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -98,19 +95,8 @@ public class RestrictImpl implements Restrict {
         this.evaluator = evaluator;
     }
 
-    // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
     public EvaluatedRelation restrict(EvaluatedRelation relation, LinkedHashMap<Attribute, Node> avo) {
-        if (relation instanceof GraphRelation) {
-            return restrict((GraphRelation) relation, avo);
-        } else {
-            final Set<Tuple> restrictedTuples = relation.getTuples(avo);
-            boolean hasValidVarName = relationHasValidVariableNames(relation);
-            return createRelation(relation, restrictedTuples, hasValidVarName);
-        }
-    }
-
-    public EvaluatedRelation restrict(GraphRelation relation, LinkedHashMap<Attribute, Node> avo) {
-        Set<Tuple> restrictedTuples = relation.getTuples(avo);
+        final Set<Tuple> restrictedTuples = relation.getTuples(avo);
         boolean hasValidVarName = relationHasValidVariableNames(relation);
         return createRelation(relation, restrictedTuples, hasValidVarName);
     }
@@ -127,23 +113,6 @@ public class RestrictImpl implements Restrict {
         return createRelation(relation, result, hasValidVarName);
     }
 
-    // TODO YF may not get all headings, but should be potentially faster
-    private EvaluatedRelation createRelation(EvaluatedRelation relation, Set<Tuple> restrictedTuples,
-        boolean hasValidVarName) {
-        if (hasValidVarName) {
-            return relationFactory.getRelation(relation.getHeading(), restrictedTuples);
-        } else {
-            return relationFactory.getRelation(restrictedTuples);
-        }
-    }
-
-    public EvaluatedRelation restrict(Map<Attribute, Node> avo) {
-        Tuple tuple = tupleFactory.getTuple(avo);
-        SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
-        resultTuples.add(tuple);
-        return relationFactory.getRelation(resultTuples);
-    }
-
     private boolean relationHasValidVariableNames(EvaluatedRelation relation) {
         boolean hasValidVarName = false;
         for (Attribute att : relation.getHeading()) {
@@ -155,5 +124,15 @@ public class RestrictImpl implements Restrict {
             }
         }
         return hasValidVarName;
+    }
+
+    // TODO YF may not get all headings, but should be potentially faster
+    private EvaluatedRelation createRelation(EvaluatedRelation relation, Set<Tuple> restrictedTuples,
+        boolean hasValidVarName) {
+        if (hasValidVarName) {
+            return relationFactory.getRelation(relation.getHeading(), restrictedTuples);
+        } else {
+            return relationFactory.getRelation(restrictedTuples);
+        }
     }
 }
