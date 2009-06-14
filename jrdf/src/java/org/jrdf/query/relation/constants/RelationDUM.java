@@ -127,7 +127,7 @@ public final class RelationDUM implements EvaluatedRelation, Serializable {
         return new TreeSet<Attribute>(getHeading());
     }
 
-    public ClosableIterator<Tuple> getTupleIterator() {
+    public ClosableIterator<Tuple> iterator() {
         return new EmptyClosableIterator<Tuple>();
     }
 

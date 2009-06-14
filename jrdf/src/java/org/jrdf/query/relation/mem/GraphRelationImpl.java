@@ -131,7 +131,7 @@ public final class GraphRelationImpl implements GraphRelation {
         return getUnsortedTuplesFromGraph(searchTriple, attributes);
     }
 
-    public ClosableIterator<Tuple> getTupleIterator() {
+    public ClosableIterator<Tuple> iterator() {
         return new ClosableIteratorImpl<Tuple>(getTuples().iterator());
     }
 
