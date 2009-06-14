@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 3022 $
+ * $Date: 2009-06-14 18:42:18 +1000 (Sun, 14 Jun 2009) $
  *
  *  ====================================================================
  *
@@ -67,7 +67,7 @@ import java.util.SortedSet;
  * Relations containing a set of tuples and a set of attributes.  The attribute constitute a heading the maps to the
  * tuple values.
  *
- * @version $Revision$
+ * @version $Revision: 3022 $
  */
 public interface Relation {
 
@@ -83,4 +83,6 @@ public interface Relation {
     ClosableIterator<Tuple> getTupleIterator();
 
     long getTupleSize();
+
+    boolean isEmpty();
 }

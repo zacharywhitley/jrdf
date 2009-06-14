@@ -74,8 +74,8 @@ public class SimpleRelationComparatorImpl implements RelationComparator {
     private static final long serialVersionUID = -4668248062961568304L;
 
     public int compare(EvaluatedRelation o1, EvaluatedRelation o2) {
-        int size1 = o1.getTuples().size();
-        int size2 = o2.getTuples().size();
+        long size1 = o1.getTupleSize();
+        long size2 = o2.getTupleSize();
         if (size1 < size2) {
             return -1;
         } else if (size1 == size2) {

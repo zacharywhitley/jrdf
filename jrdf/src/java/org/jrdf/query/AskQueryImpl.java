@@ -107,6 +107,6 @@ public class AskQueryImpl implements Query {
             expression = simplifier.getExpression();
         }
         EvaluatedRelation relation = expression.accept(queryEngine);
-        return !relation.getTuples().isEmpty();
+        return !relation.isEmpty();
     }
 }

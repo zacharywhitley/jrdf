@@ -63,7 +63,6 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -125,18 +124,18 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     public long getTupleSize() {
-        try {
-            return graph.getNumberOfTriples();
-        } catch (GraphException e) {
-            throw new RuntimeException(e);
-        }
+        return graph.getNumberOfTriples();
+    }
+
+    public boolean isEmpty() {
+        return graph.getNumberOfTriples() != 0;
     }
 
     public Set<Tuple> getTuples(Map<Attribute, Node> nameValues) {
         Attribute[] attributes = nameValues.keySet().toArray(new Attribute[TRIPLE]);
         Triple searchTriple = new TripleImpl((SubjectNode) nameValues.get(attributes[0]),
-                (PredicateNode) nameValues.get(attributes[1]),
-                (ObjectNode) nameValues.get(attributes[2]));
+            (PredicateNode) nameValues.get(attributes[1]),
+            (ObjectNode) nameValues.get(attributes[2]));
         return getUnsortedTuplesFromGraph(searchTriple, attributes);
     }
 

@@ -139,8 +139,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     private long estimateJoinCost(Attribute attribute, EvaluatedRelation rel1, EvaluatedRelation rel2) {
         long b1, b2, ub1, ub2;
-        int size1 = rel1.getTuples().size();
-        int size2 = rel2.getTuples().size();
+        long size1 = rel1.getTupleSize();
+        long size2 = rel2.getTupleSize();
         b1 = rel1.getTuples(attribute).size();
         b2 = rel2.getTuples(attribute).size();
         ub1 = size1 - b1;

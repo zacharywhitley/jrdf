@@ -115,6 +115,10 @@ public final class RelationDUM implements EvaluatedRelation, Serializable {
         return 0;
     }
 
+    public boolean isEmpty() {
+        return true;
+    }
+
     public Set<Tuple> getTuples(Map<Attribute, Node> attributeValue) {
         return Collections.emptySet();
     }

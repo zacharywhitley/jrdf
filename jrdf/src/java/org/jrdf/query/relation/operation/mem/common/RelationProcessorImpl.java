@@ -110,7 +110,7 @@ public final class RelationProcessorImpl implements RelationProcessor {
 
     public EvaluatedRelation convertToConstants(EvaluatedRelation resultRelation) {
         if (resultRelation.getHeading().isEmpty()) {
-            if (resultRelation.getTuples().isEmpty()) {
+            if (resultRelation.isEmpty()) {
                 return RELATION_DUM;
             } else {
                 return RELATION_DEE;
