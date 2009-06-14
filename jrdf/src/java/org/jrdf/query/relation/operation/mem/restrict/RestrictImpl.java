@@ -90,8 +90,8 @@ public class RestrictImpl implements Restrict {
     private final TupleComparator tupleComparator;
     private final BooleanEvaluator evaluator;
 
-    public RestrictImpl(RelationFactory relationFactory, TupleFactory tupleFactory,
-        TupleComparator tupleComparator, BooleanEvaluator evaluator) {
+    public RestrictImpl(RelationFactory relationFactory, TupleFactory tupleFactory, TupleComparator tupleComparator,
+        BooleanEvaluator evaluator) {
         this.relationFactory = relationFactory;
         this.tupleFactory = tupleFactory;
         this.tupleComparator = tupleComparator;
@@ -115,7 +115,7 @@ public class RestrictImpl implements Restrict {
         return createRelation(relation, restrictedTuples, hasValidVarName);
     }
 
-    public  Relation restrict(Relation relation, LogicExpression expression) {
+    public Relation restrict(Relation relation, LogicExpression expression) {
         final Set<Tuple> restrictedTuples = relation.getTuples();
         Set<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple : restrictedTuples) {
