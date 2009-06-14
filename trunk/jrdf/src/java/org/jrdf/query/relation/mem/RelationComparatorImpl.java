@@ -112,7 +112,7 @@ public final class RelationComparatorImpl implements RelationComparator {
         long tuplesSize1 = relation1.getTupleSize();
         long tuplesSize2 = relation2.getTupleSize();
         if (tuplesSize1 == tuplesSize2) {
-            return compareTuplesWithSameCardinality(relation1.getTupleIterator(), relation2.getTupleIterator());
+            return compareTuplesWithSameCardinality(relation1.iterator(), relation2.iterator());
         } else {
             if (tuplesSize1 > tuplesSize2) {
                 return 1;

@@ -132,7 +132,7 @@ public final class RelationDEE implements EvaluatedRelation, Serializable {
         return heading;
     }
 
-    public ClosableIterator<Tuple> getTupleIterator() {
+    public ClosableIterator<Tuple> iterator() {
         return new ClosableIteratorImpl<Tuple>(getTuples().iterator());
     }
 

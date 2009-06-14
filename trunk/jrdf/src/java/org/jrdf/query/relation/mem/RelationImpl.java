@@ -165,7 +165,7 @@ public final class RelationImpl implements EvaluatedRelation {
         return sortedHeading;
     }
 
-    public ClosableIterator<Tuple> getTupleIterator() {
+    public ClosableIterator<Tuple> iterator() {
         return new ClosableIteratorImpl<Tuple>(getTuples().iterator());
     }
 

@@ -67,7 +67,6 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -177,9 +176,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
 
     public Set<Tuple> getTuples(Relation relation, Attribute attribute) {
         Set<Tuple> set = new HashSet<Tuple>();
-        final ClosableIterator<Tuple> tupleIterator = relation.getTupleIterator();
-        while (tupleIterator.hasNext()) {
-            Tuple tuple = tupleIterator.next();
+        for (Tuple tuple : relation) {
             if (tuple.getValue(attribute) != null) {
                 set.add(tuple);
             }

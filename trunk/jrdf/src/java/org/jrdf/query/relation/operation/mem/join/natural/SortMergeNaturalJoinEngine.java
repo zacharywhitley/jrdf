@@ -69,7 +69,6 @@ import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.AttributeTupleComparatorImpl;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
-import org.jrdf.util.ClosableIterator;
 
 import java.util.ArrayList;
 import static java.util.Collections.sort;
@@ -151,9 +150,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
 
     private long getNumberOfBoundAttributes(Attribute attribute, EvaluatedRelation relation) {
         long size = 0;
-        final ClosableIterator<Tuple> tupleIterator = relation.getTupleIterator();
-        while (tupleIterator.hasNext()) {
-            final Tuple tuple = tupleIterator.next();
+        for (Tuple tuple : relation) {
             if (tuple.getValue(attribute) != null) {
                 size++;
             }

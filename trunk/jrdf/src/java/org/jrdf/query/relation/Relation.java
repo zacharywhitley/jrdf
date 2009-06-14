@@ -58,6 +58,7 @@
 
 package org.jrdf.query.relation;
 
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Set;
@@ -69,7 +70,7 @@ import java.util.SortedSet;
  *
  * @version $Revision: 3022 $
  */
-public interface Relation {
+public interface Relation extends ClosableIterable<Tuple> {
 
     /**
      * Returns the set of attributes or heading of the relation.
@@ -80,8 +81,7 @@ public interface Relation {
 
     SortedSet<Attribute> getSortedHeading();
 
-    // TODO (AN) Turn this into Iterable.
-    ClosableIterator<Tuple> getTupleIterator();
+    ClosableIterator<Tuple> iterator();
 
     long getTupleSize();
 
