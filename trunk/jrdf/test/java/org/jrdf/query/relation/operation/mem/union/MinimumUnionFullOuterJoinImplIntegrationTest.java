@@ -61,7 +61,7 @@ package org.jrdf.query.relation.operation.mem.union;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
@@ -109,8 +109,8 @@ public class MinimumUnionFullOuterJoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
-    private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = FULL_OUTER_JOIN.join(relation1, relation2);
+    private void checkJoin(EvaluatedRelation expectedResult, EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        EvaluatedRelation relation = FULL_OUTER_JOIN.join(relation1, relation2);
         assertEquals(expectedResult, relation);
     }
 

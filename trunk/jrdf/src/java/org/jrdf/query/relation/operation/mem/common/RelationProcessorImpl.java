@@ -60,7 +60,7 @@
 package org.jrdf.query.relation.operation.mem.common;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
@@ -87,27 +87,28 @@ public final class RelationProcessorImpl implements RelationProcessor {
         this.tupleComparator = tupleComparator;
     }
 
-    public Relation processRelations(Set<Relation> relations, TupleEngine tupleEngine) {
-        Iterator<Relation> iterator = relations.iterator();
-        Relation relation1 = iterator.next();
-        Relation relation2 = iterator.next();
-        Relation resultRelation = processRelationPairs(tupleEngine, relation1, relation2);
+    public EvaluatedRelation processRelations(Set<EvaluatedRelation> relations, TupleEngine tupleEngine) {
+        Iterator<EvaluatedRelation> iterator = relations.iterator();
+        EvaluatedRelation relation1 = iterator.next();
+        EvaluatedRelation relation2 = iterator.next();
+        EvaluatedRelation resultRelation = processRelationPairs(tupleEngine, relation1, relation2);
         while (iterator.hasNext()) {
-            Relation nextRelation = iterator.next();
+            EvaluatedRelation nextRelation = iterator.next();
             resultRelation = processRelationPairs(tupleEngine, resultRelation, nextRelation);
         }
 
         return convertToConstants(resultRelation);
     }
 
-    private Relation processRelationPairs(TupleEngine tupleEngine, Relation relation1, Relation relation2) {
+    private EvaluatedRelation processRelationPairs(TupleEngine tupleEngine, EvaluatedRelation relation1,
+        EvaluatedRelation relation2) {
         SortedSet<Attribute> headings = tupleEngine.getHeading(relation1, relation2);
         SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         tupleEngine.processRelations(headings, relation1, relation2, result);
         return relationFactory.getRelation(headings, result);
     }
 
-    public Relation convertToConstants(Relation resultRelation) {
+    public EvaluatedRelation convertToConstants(EvaluatedRelation resultRelation) {
         if (resultRelation.getHeading().isEmpty()) {
             if (resultRelation.getTuples().isEmpty()) {
                 return RELATION_DUM;

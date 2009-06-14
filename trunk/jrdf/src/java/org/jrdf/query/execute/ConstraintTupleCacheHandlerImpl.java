@@ -62,7 +62,7 @@ package org.jrdf.query.execute;
 import org.jrdf.graph.Node;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
@@ -93,13 +93,13 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         cacheLimit = DEFAULT_LIMIT;
     }
 
-    public void reset(Relation result, int constraintListSize) {
+    public void reset(EvaluatedRelation result, int constraintListSize) {
         clear();
         long tupleSize = estimateTupleSize(result);
         this.cacheLimit = calculateCacheSize(tupleSize, constraintListSize);
     }
 
-    private long estimateTupleSize(Relation result) {
+    private long estimateTupleSize(EvaluatedRelation result) {
         return result.getTupleSize();
     }
 
@@ -148,7 +148,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         }
     }
 
-    public  void addResultToCache(SingleConstraint constraint, Relation result, long time) {
+    public  void addResultToCache(SingleConstraint constraint, EvaluatedRelation result, long time) {
         if (result.getTupleSize() < cacheLimit) {
             Set<Attribute> attributes = constraint.getHeadings();
             Set<Attribute> resultAttributes = result.getHeading();
@@ -159,7 +159,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         }
     }
 
-    private void updateCache(Relation result, long time, Attribute attribute) {
+    private void updateCache(EvaluatedRelation result, long time, Attribute attribute) {
         AttributeName attributeName = attribute.getAttributeName();
         Set<Node> voSet = getMatchingVOs(attribute, result.getTuples(attribute));
         Set<Node> cached = cache.get(attributeName);

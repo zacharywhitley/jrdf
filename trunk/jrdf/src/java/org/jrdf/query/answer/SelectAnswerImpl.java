@@ -62,7 +62,7 @@ package org.jrdf.query.answer;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.util.EqualsUtil;
@@ -87,10 +87,10 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     private Set<Attribute> heading;
     private long timeTaken;
     private boolean hasProjected;
-    private transient Relation results;
+    private transient EvaluatedRelation results;
     private transient TypeValueToString valueToString = new TypeValueToStringImpl();
 
-    public SelectAnswerImpl(LinkedHashSet<Attribute> newHeading, Relation newResults,
+    public SelectAnswerImpl(LinkedHashSet<Attribute> newHeading, EvaluatedRelation newResults,
         long timeTaken, boolean hasProjected) {
         checkNotNull(newHeading, newResults);
         this.heading = newHeading;

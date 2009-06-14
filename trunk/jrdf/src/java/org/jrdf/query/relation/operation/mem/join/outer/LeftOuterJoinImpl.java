@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.join.outer;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.operation.AntiJoin;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
@@ -79,12 +79,12 @@ public class LeftOuterJoinImpl implements DyadicJoin {
         this.union = union;
     }
 
-    public Relation join(Relation relation1, Relation relation2) {
-        Relation antiJoinResult = antiJoin.join(relation1, relation2);
-        Set<Relation> relations = new HashSet<Relation>();
+    public EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        EvaluatedRelation antiJoinResult = antiJoin.join(relation1, relation2);
+        Set<EvaluatedRelation> relations = new HashSet<EvaluatedRelation>();
         relations.add(relation1);
         relations.add(relation2);
-        Relation joinResult = naturalJoin.join(relations);
+        EvaluatedRelation joinResult = naturalJoin.join(relations);
         return union.union(joinResult, antiJoinResult);
     }
 }

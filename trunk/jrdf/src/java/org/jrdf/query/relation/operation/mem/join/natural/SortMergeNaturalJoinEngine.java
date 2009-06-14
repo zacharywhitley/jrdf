@@ -63,7 +63,7 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeTupleComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.AttributeTupleComparatorImpl;
@@ -98,8 +98,8 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         this.tupleAVComparator = new AttributeTupleComparatorImpl(nodeComparator);
     }
 
-    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-        SortedSet<Tuple> result) {
+    public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
+        EvaluatedRelation relation2, SortedSet<Tuple> result) {
         SortedSet<Attribute> commonHeadings = relationHelper.getHeadingIntersections(relation1, relation2);
         if (commonHeadings.size() > 1) {
             // do multi merge join
@@ -114,14 +114,14 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         }
     }
 
-    private void doMultiSortMergeJoin(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-        SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result) {
+    private void doMultiSortMergeJoin(SortedSet<Attribute> headings, EvaluatedRelation relation1,
+        EvaluatedRelation relation2, SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result) {
         Attribute attr = chooseACommonHeading(headings, relation1, relation2);
         commonHeadings.remove(attr);
         doSortMergeJoin(headings, relation1, relation2, attr, commonHeadings, result);
     }
 
-    private Attribute chooseACommonHeading(Set<Attribute> headings, Relation rel1, Relation rel2) {
+    private Attribute chooseACommonHeading(Set<Attribute> headings, EvaluatedRelation rel1, EvaluatedRelation rel2) {
         final Iterator<Attribute> iterator = headings.iterator();
         Attribute attribute = iterator.next();
         Attribute result = attribute;
@@ -137,7 +137,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         return result;
     }
 
-    private long estimateJoinCost(Attribute attribute, Relation rel1, Relation rel2) {
+    private long estimateJoinCost(Attribute attribute, EvaluatedRelation rel1, EvaluatedRelation rel2) {
         int b1, b2, ub1, ub2;
         int size1 = rel1.getTuples().size();
         int size2 = rel2.getTuples().size();
@@ -148,7 +148,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         return (long) b1 + b2 + (b1 * ub2) + (b2 * ub1) + (ub1 * ub2);
     }
 
-    private void doSortMergeJoin(SortedSet<Attribute> headings, Relation rel1, Relation rel2,
+    private void doSortMergeJoin(SortedSet<Attribute> headings, EvaluatedRelation rel1, EvaluatedRelation rel2,
         Attribute attribute, SortedSet<Attribute> remainingHeadings, SortedSet<Tuple> result) {
         final List<Set<Tuple>> sets1 = partitionWithAttribute(attribute, rel1);
         final List<Set<Tuple>> sets2 = partitionWithAttribute(attribute, rel2);
@@ -178,7 +178,7 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
      * @param rel       The relation to be partitioned.
      * @return two sets of tuples, firrst is the bound and the 2nd is the unbound.
      */
-    private List<Set<Tuple>> partitionWithAttribute(Attribute attribute, Relation rel) {
+    private List<Set<Tuple>> partitionWithAttribute(Attribute attribute, EvaluatedRelation rel) {
         Set<Tuple> boundSet = new HashSet<Tuple>();
         Set<Tuple> unboundSet = new HashSet<Tuple>();
         for (Tuple tuple : rel.getTuples()) {

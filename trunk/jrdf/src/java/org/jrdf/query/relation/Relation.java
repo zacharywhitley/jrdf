@@ -3,7 +3,7 @@
  * $Revision$
  * $Date$
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,14 +54,12 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.relation;
 
-import org.jrdf.graph.Node;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -69,7 +67,6 @@ import java.util.SortedSet;
  * Relations containing a set of tuples and a set of attributes.  The attribute constitute a heading the maps to the
  * tuple values.
  *
- * @author Andrew Newman
  * @version $Revision$
  */
 public interface Relation {
@@ -81,24 +78,9 @@ public interface Relation {
      */
     Set<Attribute> getHeading();
 
-    /**
-     * Returns the set of tuples.
-     *
-     * @return a set of tuples.
-     */
-    Set<Tuple> getTuples();
-
-    Set<Tuple> getTuples(Attribute attribute);
-
-    // TODO (AN) Test drive me
     SortedSet<Attribute> getSortedHeading();
 
-    // TODO (AN) Test drive me
-    SortedSet<Tuple> getSortedTuples();
-
-    Set<Tuple> getTuples(Map<Attribute, Node> avo);
-
-    SortedSet<Tuple> getSortedTuples(Attribute attribute);
+    ClosableIterator<Tuple> getTupleIterator();
 
     long getTupleSize();
 }

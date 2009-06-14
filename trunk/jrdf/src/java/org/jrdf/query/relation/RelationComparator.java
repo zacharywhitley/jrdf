@@ -68,5 +68,5 @@ import java.util.Comparator;
  * @author Andrew Newman
  * @version $Id$
  */
-public interface RelationComparator extends Comparator<Relation>, Serializable {
+public interface RelationComparator extends Comparator<EvaluatedRelation>, Serializable {
 }

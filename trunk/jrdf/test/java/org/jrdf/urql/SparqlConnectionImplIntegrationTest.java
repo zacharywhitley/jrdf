@@ -73,7 +73,7 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.urql.builder.QueryBuilder;
 import org.jrdf.util.test.ReflectTestUtil;
@@ -122,21 +122,21 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
     }
 
     private void checkConnectionReturnsOneSolution(UrqlConnection connection) {
-        Relation relation = executeQuery(connection, QUERY_SHOULD_RETURN_ONE_SOLUTION);
+        EvaluatedRelation relation = executeQuery(connection, QUERY_SHOULD_RETURN_ONE_SOLUTION);
         Set<Tuple> answer = relation.getTuples();
         checkFirstRowOfAnswer(answer);
     }
 
     private void checkConnectionReturnsNoSolutions(UrqlConnection connection) {
-        Relation relation = executeQuery(connection, QUERY_SHOULD_RETURN_NOTHING);
+        EvaluatedRelation relation = executeQuery(connection, QUERY_SHOULD_RETURN_NOTHING);
         Set<Tuple> solutions = relation.getTuples();
         assertTrue(solutions.isEmpty());
     }
 
-    private Relation executeQuery(UrqlConnection connection, String query) {
+    private EvaluatedRelation executeQuery(UrqlConnection connection, String query) {
         try {
             Answer answer = connection.executeQuery(GRAPH, query);
-            return (Relation) ReflectTestUtil.getFieldValue(answer, "results");
+            return (EvaluatedRelation) ReflectTestUtil.getFieldValue(answer, "results");
         } catch (InvalidQuerySyntaxException e) {
             throw new RuntimeException(e);
         } catch (GraphException e) {

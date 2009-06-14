@@ -57,30 +57,20 @@
  *
  */
 
-package org.jrdf.query.relation.operation;
+package org.jrdf.query.relation;
 
 import org.jrdf.graph.Node;
-import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.EvaluatedRelation;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
 
-/**
- * Returns the list of relations with the same set of attributes.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public interface Restrict extends Operation {
+public interface EvaluatedRelation extends Relation {
+    Set<Tuple> getTuples();
 
-    // TODO (AN) Does this break symmetry and closure?
-    // TODO (AN) Must be three specific attribute value pairs - where the attributes are Subject, Predicate and Object
-    // or Blank Node, URI or Literal and the values either ANY_NODE or constants.
-    EvaluatedRelation restrict(EvaluatedRelation relation, LinkedHashMap<Attribute, Node> avo);
-    EvaluatedRelation restrict(GraphRelation relation, LinkedHashMap<Attribute, Node> avo);
-    EvaluatedRelation restrict(Map<Attribute, Node> avo);
-    EvaluatedRelation restrict(EvaluatedRelation relation, LogicExpression expression);
+    Set<Tuple> getTuples(Attribute attribute);
+
+    Set<Tuple> getTuples(Map<Attribute, Node> avo);
+
+    SortedSet<Tuple> getSortedTuples();
 }

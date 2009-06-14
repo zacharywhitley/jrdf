@@ -60,7 +60,7 @@
 package org.jrdf.query.relation.operation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
@@ -169,8 +169,8 @@ public abstract class AbstractLeftOuterJoinIntegrationTest extends TestCase {
 
     public abstract DyadicJoin getJoin();
 
-    private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = getJoin().join(relation1, relation2);
+    private void checkJoin(EvaluatedRelation expectedResult, EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        EvaluatedRelation relation = getJoin().join(relation1, relation2);
         assertEquals(expectedResult, relation);
     }
 }

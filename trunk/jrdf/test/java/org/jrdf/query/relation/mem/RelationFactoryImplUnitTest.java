@@ -62,7 +62,7 @@ package org.jrdf.query.relation.mem;
 import junit.framework.TestCase;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
@@ -95,18 +95,18 @@ public class RelationFactoryImplUnitTest extends TestCase {
 
     public void testGetRelation() {
         RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
-        Relation relation = relationFactory.getRelation(TUPLES);
+        EvaluatedRelation relation = relationFactory.getRelation(TUPLES);
         checkRelation(relation);
     }
 
     public void testGetRelationWithHeading() {
         RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
-        Relation relation = relationFactory.getRelation(HEADING, TUPLES);
+        EvaluatedRelation relation = relationFactory.getRelation(HEADING, TUPLES);
         checkRelation(relation);
         assertSame(HEADING, relation.getHeading());
     }
 
-    private void checkRelation(Relation relation) {
+    private void checkRelation(EvaluatedRelation relation) {
         assertSame(TUPLES, relation.getTuples());
         assertTrue(relation instanceof RelationImpl);
     }

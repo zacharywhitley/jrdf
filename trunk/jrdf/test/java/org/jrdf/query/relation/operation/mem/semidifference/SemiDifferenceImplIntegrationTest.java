@@ -62,7 +62,7 @@ package org.jrdf.query.relation.operation.mem.semidifference;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
@@ -104,7 +104,7 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
     }
 
     public void testRelationDEEandDumWithRelation() {
-        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        EvaluatedRelation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE);
         // The minus of R1 and DEE is R1's heading, no tuples.
         checkMinus(createRelation(heading, Collections.<Tuple>emptySet()), relation, RELATION_DEE);
@@ -192,8 +192,9 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 //        checkMinus(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
 //    }
 
-    private void checkMinus(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = MINUS.minus(relation1, relation2);
+    private void checkMinus(EvaluatedRelation expectedResult, EvaluatedRelation relation1,
+        EvaluatedRelation relation2) {
+        EvaluatedRelation relation = MINUS.minus(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();

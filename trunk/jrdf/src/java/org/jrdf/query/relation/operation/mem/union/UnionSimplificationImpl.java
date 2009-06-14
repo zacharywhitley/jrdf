@@ -59,15 +59,15 @@
 
 package org.jrdf.query.relation.operation.mem.union;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 
 import java.util.LinkedHashSet;
 
 public class UnionSimplificationImpl implements UnionSimplification {
-    public LinkedHashSet<Relation> simplify(Relation relation1, Relation relation2) {
-        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+    public LinkedHashSet<EvaluatedRelation> simplify(EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        LinkedHashSet<EvaluatedRelation> relations = new LinkedHashSet<EvaluatedRelation>();
         checkForDeeOrDum(relation1, relation2, relations);
         checkForSame(relation1, relation2, relations);
         if (relations.isEmpty()) {
@@ -78,7 +78,8 @@ public class UnionSimplificationImpl implements UnionSimplification {
         return relations;
     }
 
-    private void checkForDeeOrDum(Relation relation1, Relation relation2, LinkedHashSet<Relation> relations) {
+    private void checkForDeeOrDum(EvaluatedRelation relation1, EvaluatedRelation relation2,
+        LinkedHashSet<EvaluatedRelation> relations) {
         if (relation1 == RELATION_DUM) {
             relations.add(relation2);
         } else if (relation2 == RELATION_DUM) {
@@ -88,7 +89,8 @@ public class UnionSimplificationImpl implements UnionSimplification {
         }
     }
 
-    private void checkForSame(Relation relation1, Relation relation2, LinkedHashSet<Relation> relations) {
+    private void checkForSame(EvaluatedRelation relation1, EvaluatedRelation relation2,
+        LinkedHashSet<EvaluatedRelation> relations) {
         if (relation1.equals(relation2)) {
             relations.add(relation1);
         } else if (relation1.getTuples().isEmpty() && !relation2.getTuples().isEmpty()) {

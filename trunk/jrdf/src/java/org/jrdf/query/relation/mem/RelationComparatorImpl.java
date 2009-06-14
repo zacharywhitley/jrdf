@@ -60,7 +60,7 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
@@ -81,7 +81,7 @@ public final class RelationComparatorImpl implements RelationComparator {
         this.tupleComparator = newTupleComparator;
     }
 
-    public int compare(Relation relation1, Relation relation2) {
+    public int compare(EvaluatedRelation relation1, EvaluatedRelation relation2) {
         ifNullThrowException(relation1, relation2);
         int result;
         result = compareAttributes(relation1, relation2);
@@ -92,7 +92,7 @@ public final class RelationComparatorImpl implements RelationComparator {
     }
 
     // TODO Tuple Refactor Duplicate of TupleComparator.
-    private int compareAttributes(Relation relation1, Relation relation2) {
+    private int compareAttributes(EvaluatedRelation relation1, EvaluatedRelation relation2) {
         int result = 0;
         Set<Attribute> sortedHeading1 = relation1.getSortedHeading();
         Set<Attribute> sortedHeading2 = relation2.getSortedHeading();
@@ -108,7 +108,7 @@ public final class RelationComparatorImpl implements RelationComparator {
         return result;
     }
 
-    private int compareTuples(Relation relation1, Relation relation2) {
+    private int compareTuples(EvaluatedRelation relation1, EvaluatedRelation relation2) {
         Set<Tuple> sortedTuples1 = relation1.getSortedTuples();
         Set<Tuple> sortedTuples2 = relation2.getSortedTuples();
 
@@ -140,7 +140,7 @@ public final class RelationComparatorImpl implements RelationComparator {
     }
 
 
-    private void ifNullThrowException(Relation relation1, Relation relation2) {
+    private void ifNullThrowException(EvaluatedRelation relation1, EvaluatedRelation relation2) {
         if (relation1 == null || relation2 == null) {
             throw new NullPointerException();
         }

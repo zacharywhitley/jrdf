@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.common;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.Set;
@@ -76,7 +76,7 @@ public interface RelationProcessor {
      * @param tupleEngine the engine.
      * @return the result of calling the tuple engine with all relations given as input.
      */
-    Relation processRelations(Set<Relation> relations, TupleEngine tupleEngine);
+    EvaluatedRelation processRelations(Set<EvaluatedRelation> relations, TupleEngine tupleEngine);
 
     /**
      * Converts a relation with no heading and no tuples to false (TABLE_DUM) and a relation with no heading but some
@@ -85,5 +85,5 @@ public interface RelationProcessor {
      * @param resultRelation the relation to convert.
      * @return either TABLE_DUM (false), TABLE_DEE (true) or the same relation.
      */
-    Relation convertToConstants(Relation resultRelation);
+    EvaluatedRelation convertToConstants(EvaluatedRelation resultRelation);
 }

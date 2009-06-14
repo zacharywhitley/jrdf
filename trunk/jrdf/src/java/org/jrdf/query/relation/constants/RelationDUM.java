@@ -61,8 +61,10 @@ package org.jrdf.query.relation.constants;
 
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.EmptyClosableIterator;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -77,13 +79,13 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class RelationDUM implements Relation, Serializable {
+public final class RelationDUM implements EvaluatedRelation, Serializable {
     private static final long serialVersionUID = -6414359849752251621L;
 
     /**
      * The singleton version of RelationDUM.
      */
-    public static final Relation RELATION_DUM = new RelationDUM();
+    public static final EvaluatedRelation RELATION_DUM = new RelationDUM();
 
     /**
      * There can be only one RelationDUM.
@@ -121,13 +123,12 @@ public final class RelationDUM implements Relation, Serializable {
         return Collections.emptySet();
     }
 
-    public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
-        return getSortedTuples();
-    }
-
-    // TODO (AN) Test drive me
     public SortedSet<Attribute> getSortedHeading() {
         return new TreeSet<Attribute>(getHeading());
+    }
+
+    public ClosableIterator<Tuple> getTupleIterator() {
+        return new EmptyClosableIterator<Tuple>();
     }
 
     // TODO (AN) Test drive me

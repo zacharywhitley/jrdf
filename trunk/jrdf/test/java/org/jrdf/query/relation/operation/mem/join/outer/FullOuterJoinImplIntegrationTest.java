@@ -61,7 +61,7 @@ package org.jrdf.query.relation.operation.mem.join.outer;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.operation.DyadicJoin;
 
 /**
@@ -92,8 +92,8 @@ public class FullOuterJoinImplIntegrationTest extends TestCase {
 //        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
-    private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = FullOuterJoinImplIntegrationTest.FULL_OUTER_JOIN.join(relation1, relation2);
+    private void checkJoin(EvaluatedRelation expectedResult, EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        EvaluatedRelation relation = FullOuterJoinImplIntegrationTest.FULL_OUTER_JOIN.join(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();

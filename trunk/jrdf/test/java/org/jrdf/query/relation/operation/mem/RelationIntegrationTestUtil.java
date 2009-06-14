@@ -67,7 +67,7 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.BlankNodeImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
@@ -239,16 +239,16 @@ public class RelationIntegrationTestUtil {
         return allAvos;
     }
 
-    public static List<Relation> createRelation(Set<Tuple>... tuples) {
-        List<Relation> relations = new ArrayList<Relation>();
+    public static List<EvaluatedRelation> createRelation(Set<Tuple>... tuples) {
+        List<EvaluatedRelation> relations = new ArrayList<EvaluatedRelation>();
         for (Set<Tuple> tuple : tuples) {
-            Relation relation = createRelation(tuple);
+            EvaluatedRelation relation = createRelation(tuple);
             relations.add(relation);
         }
         return relations;
     }
 
-    public static Relation createRelation(Set<Tuple> newTuples) {
+    public static EvaluatedRelation createRelation(Set<Tuple> newTuples) {
         return RELATION_FACTORY.getRelation(newTuples);
     }
 
@@ -260,18 +260,18 @@ public class RelationIntegrationTestUtil {
         return newAttributes;
     }
 
-    public static Relation createEmptyRelation(Set<Attribute> newAttributes) {
+    public static EvaluatedRelation createEmptyRelation(Set<Attribute> newAttributes) {
         RelationFactory rf = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, FACTORY.getNewTupleComparator());
         return rf.getRelation(newAttributes, Collections.<Tuple>emptySet());
     }
 
-    public static Relation createRelation(Set<Attribute> attributes, Set<Tuple> tuples) {
+    public static EvaluatedRelation createRelation(Set<Attribute> attributes, Set<Tuple> tuples) {
         AttributeComparator attributeComparator = FACTORY.getNewAttributeComparator();
         RelationFactory rf = new RelationFactoryImpl(attributeComparator, FACTORY.getNewTupleComparator());
         return rf.getRelation(attributes, tuples);
     }
 
-    public static Set<Relation> createRelations(Relation... relations) {
-        return new HashSet<Relation>(asList(relations));
+    public static Set<EvaluatedRelation> createRelations(EvaluatedRelation... relations) {
+        return new HashSet<EvaluatedRelation>(asList(relations));
     }
 }

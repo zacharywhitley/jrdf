@@ -59,12 +59,12 @@
 
 package org.jrdf.query.relation.operation;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 
 /**
  * An extension to DyadicJoin - use to differentiate itself from other DyadicJoins The complement of semijoin.
  * The semijoin of R1 and R2 to give R3, then R1 minus R3.
  */
 public interface AntiJoin extends DyadicJoin {
-    Relation join(Relation relation1, Relation relation2);
+    EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2);
 }

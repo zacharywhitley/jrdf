@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.join;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
@@ -81,7 +81,7 @@ public final class DyadicJoinImpl implements DyadicJoin {
         this.relationProcessor = relationProcessor;
     }
 
-    public Relation join(Relation relation1, Relation relation2) {
+    public EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2) {
         if (relation1 == RELATION_DUM || relation2 == RELATION_DUM) {
             return RELATION_DUM;
         }
@@ -90,7 +90,7 @@ public final class DyadicJoinImpl implements DyadicJoin {
             return relation1;
         }
 
-        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+        LinkedHashSet<EvaluatedRelation> relations = new LinkedHashSet<EvaluatedRelation>();
         relations.add(relation1);
         relations.add(relation2);
 

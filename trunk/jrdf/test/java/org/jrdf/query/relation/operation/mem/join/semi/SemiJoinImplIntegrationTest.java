@@ -62,7 +62,7 @@ package org.jrdf.query.relation.operation.mem.join.semi;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
@@ -112,7 +112,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
     }
 
     public void testRelationDEEandDumWithRelation() {
-        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        EvaluatedRelation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         // The semijoin of R1 and DEE is R1.
         checkJoin(relation, relation, RELATION_DEE);
         // The semijoin of DEE and R1 is DEE.
@@ -183,7 +183,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
 
         Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
 
-        Relation relation = createRelation(resultTuple);
+        EvaluatedRelation relation = createRelation(resultTuple);
         checkJoin(relation, createRelation(tuple1), createRelation(tuple2));
     }
 
@@ -197,7 +197,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
 
-        Relation relation = createRelation(resultTuple);
+        EvaluatedRelation relation = createRelation(resultTuple);
         checkJoin(relation, createRelation(tuple1), createRelation(tuple2));
     }
 
@@ -221,8 +221,8 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
-    private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = JOIN.join(relation1, relation2);
+    private void checkJoin(EvaluatedRelation expectedResult, EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        EvaluatedRelation relation = JOIN.join(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();

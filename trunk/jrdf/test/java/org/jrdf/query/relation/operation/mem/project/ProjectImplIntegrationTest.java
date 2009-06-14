@@ -62,7 +62,7 @@ package org.jrdf.query.relation.operation.mem.project;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.operation.Project;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
@@ -213,13 +213,15 @@ public class ProjectImplIntegrationTest extends TestCase {
         return tuple;
     }
 
-    private void checkExcludeProject(Set<Attribute> remove, Relation relation, Relation expectedRelation) {
-        Relation actualRelation = PROJECT.exclude(relation, remove);
+    private void checkExcludeProject(Set<Attribute> remove, EvaluatedRelation relation,
+        EvaluatedRelation expectedRelation) {
+        EvaluatedRelation actualRelation = PROJECT.exclude(relation, remove);
         assertEquals(expectedRelation, actualRelation);
     }
 
-    private void checkIncludeProject(Set<Attribute> keep, Relation relation, Relation expectedRelation) {
-        Relation actualRelation = PROJECT.include(relation, keep);
+    private void checkIncludeProject(Set<Attribute> keep, EvaluatedRelation relation,
+        EvaluatedRelation expectedRelation) {
+        EvaluatedRelation actualRelation = PROJECT.include(relation, keep);
         assertEquals(expectedRelation, actualRelation);
     }
 }

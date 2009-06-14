@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.semidifference;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
@@ -85,8 +85,8 @@ public class SemiDifferenceImpl implements SemiDifference {
         this.relationProcessor = relationProcessor;
     }
 
-    public Relation minus(Relation relation1, Relation relation2) {
-        Relation result = deeOrDumOperations(relation1, relation2);
+    public EvaluatedRelation minus(EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        EvaluatedRelation result = deeOrDumOperations(relation1, relation2);
         if (result != null) {
             return result;
         }
@@ -96,8 +96,8 @@ public class SemiDifferenceImpl implements SemiDifference {
         return relationProcessor.convertToConstants(result);
     }
 
-    private Relation deeOrDumOperations(Relation relation1, Relation relation2) {
-        Relation result = null;
+    private EvaluatedRelation deeOrDumOperations(EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        EvaluatedRelation result = null;
         // DUM - Anything is DUM.
         if (relation1 == RELATION_DUM) {
             result = RELATION_DUM;
@@ -115,7 +115,7 @@ public class SemiDifferenceImpl implements SemiDifference {
         return result;
     }
 
-    private Relation relationDeeShortcuts(Relation relation2) {
+    private EvaluatedRelation relationDeeShortcuts(EvaluatedRelation relation2) {
         if (relation2 == RELATION_DEE) {
             return RELATION_DUM;
         } else {
@@ -123,7 +123,7 @@ public class SemiDifferenceImpl implements SemiDifference {
         }
     }
 
-    private void performMinus(Relation relation1, Relation relation2, SortedSet<Tuple> resultTuples) {
+    private void performMinus(EvaluatedRelation relation1, EvaluatedRelation relation2, SortedSet<Tuple> resultTuples) {
         SortedSet<Tuple> set1 = relation1.getSortedTuples();
         SortedSet<Tuple> set2 = relation2.getSortedTuples();
         for (Tuple tuple1 : set1) {

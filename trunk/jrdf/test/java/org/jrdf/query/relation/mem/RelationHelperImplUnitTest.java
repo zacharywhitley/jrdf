@@ -64,7 +64,7 @@ import static org.easymock.EasyMock.expect;
 import static org.jrdf.TestJRDFFactory.getFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAR_VAR;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAZ_VAR;
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
@@ -111,7 +111,7 @@ public class RelationHelperImplUnitTest extends TestCase {
 
     public void testGetMockHeading() {
         RelationHelper relationHelper = new RelationHelperImpl(mockAttributeComparator, mockNodeComparator);
-        Relation relation = createRelation(new HashSet<Attribute>());
+        EvaluatedRelation relation = createRelation(new HashSet<Attribute>());
         factory.replay();
         Set<Attribute> headingUnions = relationHelper.getHeadingUnions(relation);
         checkIsSorted(headingUnions);
@@ -124,8 +124,8 @@ public class RelationHelperImplUnitTest extends TestCase {
         set1.add(TEST_ATTRIBUTE_BAR_VAR);
         Set<Attribute> set2 = new HashSet<Attribute>();
         set2.add(TEST_ATTRIBUTE_FOO_POS);
-        Relation relation1 = createRelation(set1);
-        Relation relation2 = createRelation(set2);
+        EvaluatedRelation relation1 = createRelation(set1);
+        EvaluatedRelation relation2 = createRelation(set2);
         factory.replay();
         Set<Attribute> headingUnions = relationHelper.getHeadingUnions(relation1, relation2);
         factory.verify();
@@ -141,8 +141,8 @@ public class RelationHelperImplUnitTest extends TestCase {
         SortedSet<Attribute> set2 = new TreeSet<Attribute>(realAttributeComparator);
         set2.add(TEST_ATTRIBUTE_FOO_POS);
         set2.add(TEST_ATTRIBUTE_BAZ_VAR);
-        Relation relation1 = createSortedRelation(set1);
-        Relation relation2 = createSortedRelation(set2);
+        EvaluatedRelation relation1 = createSortedRelation(set1);
+        EvaluatedRelation relation2 = createSortedRelation(set2);
         factory.replay();
         Set<Attribute> headingIntersections = relationHelper.getHeadingIntersections(relation1, relation2);
         factory.verify();
@@ -158,14 +158,14 @@ public class RelationHelperImplUnitTest extends TestCase {
         assertTrue(comparator instanceof AttributeComparator);
     }
 
-    private Relation createRelation(Set<Attribute> set) {
-        Relation relation = factory.createMock(Relation.class);
+    private EvaluatedRelation createRelation(Set<Attribute> set) {
+        EvaluatedRelation relation = factory.createMock(EvaluatedRelation.class);
         expect(relation.getHeading()).andReturn(set);
         return relation;
     }
 
-    private Relation createSortedRelation(SortedSet<Attribute> set) {
-        Relation relation = factory.createMock(Relation.class);
+    private EvaluatedRelation createSortedRelation(SortedSet<Attribute> set) {
+        EvaluatedRelation relation = factory.createMock(EvaluatedRelation.class);
         expect(relation.getSortedHeading()).andReturn(set);
         return relation;
     }

@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.join;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.NadicJoin;
@@ -83,18 +83,18 @@ public final class NadicJoinImpl implements NadicJoin {
         this.relationProcessor = relationProcessor;
     }
 
-    public Relation join(Set<Relation> relations) {
-        Relation relation = isDeeDumOrSingle(relations);
+    public EvaluatedRelation join(Set<EvaluatedRelation> relations) {
+        EvaluatedRelation relation = isDeeDumOrSingle(relations);
         if (relation == null) {
             relation = relationProcessor.processRelations(relations, tupleEngine);
         }
         return relation;
     }
 
-    private Relation isDeeDumOrSingle(Set<Relation> relations) {
-        Relation relation = null;
+    private EvaluatedRelation isDeeDumOrSingle(Set<EvaluatedRelation> relations) {
+        EvaluatedRelation relation = null;
         // Is it the empty collection return DEE.
-        if (relations.equals(Collections.<Relation>emptySet())) {
+        if (relations.equals(Collections.<EvaluatedRelation>emptySet())) {
             relation = RELATION_DEE;
         }
         // Is it DUM - therefore return DUM

@@ -60,7 +60,7 @@
 package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.graph.Node;
 
@@ -77,7 +77,7 @@ public interface RelationHelper {
      * @param relations The relations to iterator over to get a complete set of attributes.
      * @return a set of attributes that are found in any of the given relations.
      */
-    SortedSet<Attribute> getHeadingUnions(Relation... relations);
+    SortedSet<Attribute> getHeadingUnions(EvaluatedRelation... relations);
 
     /**
      * Returns a set of attributes that are found in all of the given relations.
@@ -85,7 +85,7 @@ public interface RelationHelper {
      * @param relations The relations to iterate over to extract common attributes.
      * @return a set of attributes that are found in all of the given relations.
      */
-    SortedSet<Attribute> getHeadingIntersections(Relation... relations);
+    SortedSet<Attribute> getHeadingIntersections(EvaluatedRelation... relations);
 
     /**
      * Returns true if the two tuples have values that around bound to the same attribute but have different value.

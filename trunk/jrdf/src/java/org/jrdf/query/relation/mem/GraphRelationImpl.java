@@ -76,6 +76,7 @@ import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.HashSet;
@@ -92,6 +93,7 @@ import java.util.TreeSet;
  */
 // TODO (AN) Come back and add unit tests and integration tests!!!!!
 public final class GraphRelationImpl implements GraphRelation {
+    private static final Triple ALL_TRIPLE = new TripleImpl(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
     private static final int TRIPLE = 3;
     private final Graph graph;
     private final AttributeTupleComparator tupleComparator;
@@ -115,8 +117,7 @@ public final class GraphRelationImpl implements GraphRelation {
     public Set<Tuple> getTuples() {
         SortedSet<Attribute> heading = attributeFactory.createHeading();
         Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
-        Triple searchTriple = new TripleImpl(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        return getUnsortedTuplesFromGraph(searchTriple, attributes);
+        return getUnsortedTuplesFromGraph(ALL_TRIPLE, attributes);
     }
 
     public Set<Tuple> getTuples(Attribute attribute) {
@@ -143,18 +144,17 @@ public final class GraphRelationImpl implements GraphRelation {
         return attributeFactory.createHeading();
     }
 
+    public ClosableIterator<Tuple> getTupleIterator() {
+        SortedSet<Attribute> heading = attributeFactory.createHeading();
+        Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
+        return new ClosableIteratorImpl<Tuple>(getUnsortedTuplesFromGraph(ALL_TRIPLE, attributes).iterator());
+    }
+
     public SortedSet<Tuple> getSortedTuples() {
         SortedSet<Attribute> heading = attributeFactory.createHeading();
         Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
-        Triple searchTriple = new TripleImpl(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        Triple searchTriple = ALL_TRIPLE;
         return getTuplesFromGraph(searchTriple, attributes);
-    }
-
-    public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
-        tupleComparator.setAttribute(attribute);
-        SortedSet<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
-        sortedTuples.addAll(getTuples());
-        return sortedTuples;
     }
 
     @Override

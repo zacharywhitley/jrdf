@@ -61,7 +61,7 @@ package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.RelationHelper;
@@ -79,7 +79,7 @@ public class SubsumptionEngine implements TupleEngine {
         this.relationHelper = relationHelper;
     }
 
-    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
+    public SortedSet<Attribute> getHeading(EvaluatedRelation relation1, EvaluatedRelation relation2) {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
@@ -176,8 +176,8 @@ public class SubsumptionEngine implements TupleEngine {
         return subsumes == -1;
     }
 
-    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-                                 SortedSet<Tuple> result) {
+    public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
+        EvaluatedRelation relation2, SortedSet<Tuple> result) {
         for (Tuple tuple1 : relation1.getTuples()) {
             for (Tuple tuple2 : relation2.getTuples()) {
                 process(headings, result, tuple1, tuple2);

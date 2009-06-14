@@ -61,7 +61,7 @@ package org.jrdf.query.relation.operation.mem.project;
 
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
@@ -87,7 +87,7 @@ public class ProjectImpl implements Project {
         this.relationFactory = relationFactory;
     }
 
-    public Relation include(Relation relation, Set<Attribute> attributes) {
+    public EvaluatedRelation include(EvaluatedRelation relation, Set<Attribute> attributes) {
         // TODO (AN) Test drive short circuit
         if (relation.getHeading().equals(attributes)) {
             return relation;
@@ -99,7 +99,7 @@ public class ProjectImpl implements Project {
         return project(relation, newHeading);
     }
 
-    public Relation exclude(Relation relation, Set<Attribute> attributes) {
+    public EvaluatedRelation exclude(EvaluatedRelation relation, Set<Attribute> attributes) {
         // TODO (AN) Test drive short circuit
         if (attributes.size() == 0) {
             return relation;
@@ -110,7 +110,7 @@ public class ProjectImpl implements Project {
         return project(relation, newHeading);
     }
 
-    private Relation project(Relation relation, Set<Attribute> newHeading) {
+    private EvaluatedRelation project(EvaluatedRelation relation, Set<Attribute> newHeading) {
         Set<Tuple> newTuples = new HashSet<Tuple>();
         Set<Tuple> tuples = relation.getTuples();
         for (Tuple tuple : tuples) {
