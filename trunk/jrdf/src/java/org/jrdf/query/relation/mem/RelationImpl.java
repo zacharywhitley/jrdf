@@ -139,16 +139,6 @@ public final class RelationImpl implements EvaluatedRelation {
         return set;
     }
 
-    public Set<Tuple> getTuples(Attribute attribute) {
-        Set<Tuple> set = new HashSet<Tuple>();
-        for (Tuple tuple : tuples) {
-            if (tuple.getValue(attribute) != null) {
-                set.add(tuple);
-            }
-        }
-        return set;
-    }
-
     private boolean contains(Map<Attribute, Node> map, Map<Attribute, Node> avo) {
         final Set<Attribute> keys = avo.keySet();
         for (Attribute attr : keys) {

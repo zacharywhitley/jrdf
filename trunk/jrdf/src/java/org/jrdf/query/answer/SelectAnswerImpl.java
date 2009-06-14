@@ -110,8 +110,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     }
 
     public Iterator<TypeValue[]> columnValuesIterator() {
-        Set<Tuple> sortedTuples = results.getTuples();
-        return new AnswerIterator(heading, sortedTuples.iterator());
+        return new AnswerIterator(heading, results.getTupleIterator());
     }
 
     public String[][] getColumnValues() {

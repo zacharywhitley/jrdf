@@ -109,13 +109,10 @@ public final class RelationComparatorImpl implements RelationComparator {
     }
 
     private int compareTuples(EvaluatedRelation relation1, EvaluatedRelation relation2) {
-        Set<Tuple> sortedTuples1 = relation1.getSortedTuples();
-        Set<Tuple> sortedTuples2 = relation2.getSortedTuples();
-
-        int tuplesSize1 = sortedTuples1.size();
-        int tuplesSize2 = sortedTuples2.size();
+        long tuplesSize1 = relation1.getTupleSize();
+        long tuplesSize2 = relation2.getTupleSize();
         if (tuplesSize1 == tuplesSize2) {
-            return compareTuplesWithSameCardinality(sortedTuples1, sortedTuples2);
+            return compareTuplesWithSameCardinality(relation1.getTupleIterator(), relation2.getTupleIterator());
         } else {
             if (tuplesSize1 > tuplesSize2) {
                 return 1;
@@ -125,10 +122,8 @@ public final class RelationComparatorImpl implements RelationComparator {
         }
     }
 
-    private int compareTuplesWithSameCardinality(Set<Tuple> sortedTuples1, Set<Tuple> sortedTuples2) {
+    private int compareTuplesWithSameCardinality(final Iterator<Tuple> iterator1, final Iterator<Tuple> iterator2) {
         int result = 0;
-        Iterator<Tuple> iterator1 = sortedTuples1.iterator();
-        Iterator<Tuple> iterator2 = sortedTuples2.iterator();
         boolean equal = true;
         while (iterator1.hasNext() && iterator2.hasNext() && equal) {
             Tuple tuple1 = iterator1.next();

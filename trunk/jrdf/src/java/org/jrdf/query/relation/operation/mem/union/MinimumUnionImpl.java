@@ -97,7 +97,7 @@ public class MinimumUnionImpl implements Union {
     private EvaluatedRelation performMinimumUnion(LinkedHashSet<EvaluatedRelation> relations) {
         EvaluatedRelation relation = relationProcessor.processRelations(relations, unionTupleEngine);
         EvaluatedRelation subsumptionRelation = relationProcessor.processRelations(relations, subsumptionTupleEngine);
-        for (Tuple tuple : subsumptionRelation.getSortedTuples()) {
+        for (Tuple tuple : subsumptionRelation.getTuples()) {
             relation.getTuples().remove(tuple);
         }
         return relation;

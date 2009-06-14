@@ -69,6 +69,7 @@ import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.AttributeTupleComparatorImpl;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.ArrayList;
 import static java.util.Collections.sort;
@@ -141,11 +142,23 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
         long b1, b2, ub1, ub2;
         long size1 = rel1.getTupleSize();
         long size2 = rel2.getTupleSize();
-        b1 = rel1.getTuples(attribute).size();
-        b2 = rel2.getTuples(attribute).size();
+        b1 = getNumberOfBoundAttributes(attribute, rel1);
+        b2 = getNumberOfBoundAttributes(attribute, rel2);
         ub1 = size1 - b1;
         ub2 = size2 - b2;
         return b1 + b2 + (b1 * ub2) + (b2 * ub1) + (ub1 * ub2);
+    }
+
+    private long getNumberOfBoundAttributes(Attribute attribute, EvaluatedRelation relation) {
+        long size = 0;
+        final ClosableIterator<Tuple> tupleIterator = relation.getTupleIterator();
+        while (tupleIterator.hasNext()) {
+            final Tuple tuple = tupleIterator.next();
+            if (tuple.getValue(attribute) != null) {
+                size++;
+            }
+        }
+        return size;
     }
 
     private void doSortMergeJoin(SortedSet<Attribute> headings, EvaluatedRelation rel1, EvaluatedRelation rel2,

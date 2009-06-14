@@ -123,10 +123,6 @@ public final class RelationDUM implements EvaluatedRelation, Serializable {
         return Collections.emptySet();
     }
 
-    public Set<Tuple> getTuples(Attribute attribute) {
-        return Collections.emptySet();
-    }
-
     public SortedSet<Attribute> getSortedHeading() {
         return new TreeSet<Attribute>(getHeading());
     }
