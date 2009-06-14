@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.join.outer;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.operation.AntiJoin;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.Union;
@@ -79,9 +79,9 @@ public class FullOuterJoinImpl implements DyadicJoin {
     // that have null values.  Or add it to a new time of join.  Or replace this with minimum union and tuple
     // subsumption.
 
-    public Relation join(Relation relation1, Relation relation2) {
-        Relation leftOuterJoinResult = leftOuterJoin.join(relation1, relation2);
-        Relation antiJoinResult = antiJoin.join(relation2, relation1);
+    public EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        EvaluatedRelation leftOuterJoinResult = leftOuterJoin.join(relation1, relation2);
+        EvaluatedRelation antiJoinResult = antiJoin.join(relation2, relation1);
         return union.union(leftOuterJoinResult, antiJoinResult);
     }
 }

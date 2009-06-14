@@ -61,9 +61,11 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
@@ -82,7 +84,7 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class RelationImpl implements Relation {
+public final class RelationImpl implements EvaluatedRelation {
     private Set<Attribute> heading;
     private Set<Tuple> tuples;
     private AttributeComparator attributeComparator;
@@ -169,6 +171,10 @@ public final class RelationImpl implements Relation {
         return sortedHeading;
     }
 
+    public ClosableIterator<Tuple> getTupleIterator() {
+        return new ClosableIteratorImpl<Tuple>(getTuples().iterator());
+    }
+
     // TODO (AN) Test drive me
     public SortedSet<Tuple> getSortedTuples() {
         if (tuples instanceof SortedSet) {
@@ -183,13 +189,6 @@ public final class RelationImpl implements Relation {
         return sortedTuples;
     }
 
-    public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
-        ((AttributeTupleComparatorImpl) tupleComparator).setAttribute(attribute);
-        SortedSet<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
-        sortedTuples.addAll(tuples);
-        return sortedTuples;
-    }
-
     public int hashCode() {
         return tuples.hashCode();
     }
@@ -201,8 +200,8 @@ public final class RelationImpl implements Relation {
         if (sameReference(this, obj)) {
             return true;
         }
-        if (hasSuperClassOrInterface(Relation.class, obj)) {
-            return determineEqualityFromFields((Relation) obj);
+        if (hasSuperClassOrInterface(EvaluatedRelation.class, obj)) {
+            return determineEqualityFromFields((EvaluatedRelation) obj);
         }
         return false;
     }
@@ -211,7 +210,7 @@ public final class RelationImpl implements Relation {
         return tuples.toString();
     }
 
-    private boolean determineEqualityFromFields(Relation answer) {
+    private boolean determineEqualityFromFields(EvaluatedRelation answer) {
         if (answer.getHeading().equals(getHeading())) {
             if (answer.getTuples().equals(getTuples())) {
                 return true;

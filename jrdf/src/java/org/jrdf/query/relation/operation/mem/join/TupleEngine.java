@@ -60,7 +60,7 @@
 package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 
 import java.util.SortedSet;
@@ -69,8 +69,8 @@ import java.util.SortedSet;
  * Implementation of different types of Join algorithms.
  */
 public interface TupleEngine {
-    SortedSet<Attribute> getHeading(Relation relation1, Relation relation2);
+    SortedSet<Attribute> getHeading(EvaluatedRelation relation1, EvaluatedRelation relation2);
 
-    void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
+    void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1, EvaluatedRelation relation2,
         SortedSet<Tuple> result);
 }

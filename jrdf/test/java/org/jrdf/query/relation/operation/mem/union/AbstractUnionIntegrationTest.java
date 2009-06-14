@@ -61,7 +61,7 @@ package org.jrdf.query.relation.operation.mem.union;
 
 import junit.framework.TestCase;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
@@ -109,7 +109,7 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
     }
 
     public void testRelationDEEandDumWithRelation() {
-        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        EvaluatedRelation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         // The union of DEE and R1 is DEE (everything matches the 0-tuple).
         checkUnion(RELATION_DEE, relation, RELATION_DEE);
         checkUnion(RELATION_DEE, RELATION_DEE, relation);
@@ -119,9 +119,9 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
     }
 
     public void testWithNoRowsRelation() {
-        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        EvaluatedRelation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE);
-        Relation emptyRelation = createRelation(heading, EMPTY_SET);
+        EvaluatedRelation emptyRelation = createRelation(heading, EMPTY_SET);
         checkUnion(relation, relation, emptyRelation);
         checkUnion(relation, emptyRelation, relation);
     }
@@ -184,8 +184,9 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
 
     public abstract Union getUnion();
 
-    protected void checkUnion(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = getUnion().union(relation1, relation2);
+    protected void checkUnion(EvaluatedRelation expectedResult, EvaluatedRelation relation1,
+        EvaluatedRelation relation2) {
+        EvaluatedRelation relation = getUnion().union(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();

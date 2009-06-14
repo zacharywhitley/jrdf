@@ -66,7 +66,7 @@ package org.jrdf.query.relation;
  * @version $Revision: 533 $
  */
 // TODO AVP Refactor
-public interface GraphRelation extends Relation {
+public interface GraphRelation extends EvaluatedRelation {
 
     /**
      * Returns the set of tuples based on the constraints given 3 attribute/value pairs.  Either of variable, type

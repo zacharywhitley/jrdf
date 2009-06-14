@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 
 /**
  * A more general form of difference - maybe replace by more basic operations
@@ -69,5 +69,5 @@ import org.jrdf.query.relation.Relation;
  * @version $Revision$
  */
 public interface SemiDifference {
-    Relation minus(Relation relation1, Relation relation2);
+    EvaluatedRelation minus(EvaluatedRelation relation1, EvaluatedRelation relation2);
 }

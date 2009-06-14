@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.union;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 
 import java.util.LinkedHashSet;
 
@@ -68,5 +68,5 @@ import java.util.LinkedHashSet;
  * returns null.
  */
 public interface UnionSimplification {
-    LinkedHashSet<Relation> simplify(Relation relation1, Relation relation2);
+    LinkedHashSet<EvaluatedRelation> simplify(EvaluatedRelation relation1, EvaluatedRelation relation2);
 }

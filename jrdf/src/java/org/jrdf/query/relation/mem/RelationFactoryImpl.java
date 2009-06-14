@@ -61,7 +61,7 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
@@ -79,11 +79,11 @@ public final class RelationFactoryImpl implements RelationFactory {
         this.tupleComparator = tupleComparator;
     }
 
-    public Relation getRelation(Set<Tuple> tuples) {
+    public EvaluatedRelation getRelation(Set<Tuple> tuples) {
         return new RelationImpl(tuples, attributeComparator, tupleComparator);
     }
 
-    public Relation getRelation(Set<Attribute> heading, Set<Tuple> tuples) {
+    public EvaluatedRelation getRelation(Set<Attribute> heading, Set<Tuple> tuples) {
         return new RelationImpl(heading, tuples, attributeComparator, tupleComparator);
     }
 }

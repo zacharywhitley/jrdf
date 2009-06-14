@@ -61,7 +61,7 @@ package org.jrdf.query.answer;
 
 import junit.framework.TestCase;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
@@ -80,7 +80,7 @@ import java.util.LinkedHashSet;
  */
 public final class SelectAnswerImplUnitTest extends TestCase {
     private static final Class<?>[] PARAM_TYPES =
-        new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE, Boolean.TYPE};
+        new Class[]{LinkedHashSet.class, EvaluatedRelation.class, Long.TYPE, Boolean.TYPE};
     private MockFactory factory = new MockFactory();
 
     public void testClassProperties() {
@@ -95,7 +95,7 @@ public final class SelectAnswerImplUnitTest extends TestCase {
     }
 
     public void testNullArgument() {
-        Relation relation = factory.createMock(Relation.class);
+        EvaluatedRelation relation = factory.createMock(EvaluatedRelation.class);
         LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
         factory.replay();
         new SelectAnswerImpl(heading, relation, 100, true);

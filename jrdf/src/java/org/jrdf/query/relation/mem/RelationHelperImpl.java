@@ -63,7 +63,7 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -86,15 +86,15 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
         this.nodeComparator = nodeComparator;
     }
 
-    public SortedSet<Attribute> getHeadingUnions(Relation... relations) {
+    public SortedSet<Attribute> getHeadingUnions(EvaluatedRelation... relations) {
         TreeSet<Attribute> attributes = new TreeSet<Attribute>(attributeComparator);
-        for (Relation relation : relations) {
+        for (EvaluatedRelation relation : relations) {
             attributes.addAll(relation.getHeading());
         }
         return attributes;
     }
 
-    public SortedSet<Attribute> getHeadingIntersections(Relation... relations) {
+    public SortedSet<Attribute> getHeadingIntersections(EvaluatedRelation... relations) {
         TreeSet<Attribute> attributes = new TreeSet<Attribute>(attributeComparator);
         attributes.addAll(relations[0].getSortedHeading());
         for (int i = 1; i < relations.length; i++) {

@@ -69,7 +69,7 @@ import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.constants.RelationDEE;
 import org.jrdf.query.relation.operation.DyadicJoin;
@@ -90,8 +90,8 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<Relation> implements QueryEngine {
-    protected Relation result;
+public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<EvaluatedRelation> implements QueryEngine {
+    protected EvaluatedRelation result;
     protected Project project;
     protected Restrict restrict;
     protected NadicJoin naturalJoin;
@@ -108,7 +108,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<Relation> imp
         this.leftOuterJoin = leftOuterJoin;
     }
 
-    public void initialiseBaseRelation(Relation initialRelation) {
+    public void initialiseBaseRelation(EvaluatedRelation initialRelation) {
         result = initialRelation;
     }
 
@@ -117,31 +117,31 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<Relation> imp
     }
 
     @Override
-    public Relation visitProjection(Projection projection) {
+    public EvaluatedRelation visitProjection(Projection projection) {
         setAllVariables(projection.getAllVariables());
-        Relation expression = getExpression(projection.getNextExpression());
+        EvaluatedRelation expression = getExpression(projection.getNextExpression());
         LinkedHashSet<Attribute> attributes = projection.getAttributes();
         result = project.include(expression, attributes);
         return result;
     }
 
     @Override
-    public Relation visitEmptyConstraint(EmptyConstraint constraint) {
+    public EvaluatedRelation visitEmptyConstraint(EmptyConstraint constraint) {
         result = RelationDEE.RELATION_DEE;
         return result;
     }
 
     @Override
-    public Relation visitConstraint(SingleConstraint constraint) {
+    public EvaluatedRelation visitConstraint(SingleConstraint constraint) {
         result = restrict.restrict(result, constraint.getAvo(allVariables));
         return result;
     }
 
     @Override
-    public Relation visitConjunction(Conjunction conjunction) {
-        Relation lhs = getExpression(conjunction.getLhs());
-        Relation rhs = getExpression(conjunction.getRhs());
-        Set<Relation> relations = new HashSet<Relation>();
+    public EvaluatedRelation visitConjunction(Conjunction conjunction) {
+        EvaluatedRelation lhs = getExpression(conjunction.getLhs());
+        EvaluatedRelation rhs = getExpression(conjunction.getRhs());
+        Set<EvaluatedRelation> relations = new HashSet<EvaluatedRelation>();
         relations.add(lhs);
         relations.add(rhs);
         result = naturalJoin.join(relations);
@@ -149,18 +149,18 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<Relation> imp
     }
 
     @Override
-    public Relation visitUnion(Union conjunction) {
-        Relation lhs = getExpression(conjunction.getLhs());
-        Relation rhs = getExpression(conjunction.getRhs());
+    public EvaluatedRelation visitUnion(Union conjunction) {
+        EvaluatedRelation lhs = getExpression(conjunction.getLhs());
+        EvaluatedRelation rhs = getExpression(conjunction.getRhs());
         result = union.union(lhs, rhs);
         return result;
     }
 
     @Override
-    public Relation visitOptional(Optional optional) {
+    public EvaluatedRelation visitOptional(Optional optional) {
         // TODO (AN) This really should be nadic and just pass in the rhs
-        Relation rhs = getExpression(optional.getRhs());
-        Relation lhs;
+        EvaluatedRelation rhs = getExpression(optional.getRhs());
+        EvaluatedRelation lhs;
         if (optional.getLhs() != null) {
             lhs = getExpression(optional.getLhs());
         } else {
@@ -171,13 +171,13 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<Relation> imp
     }
 
     @Override
-    public Relation visitFilter(Filter filter) {
-        Relation lhsRelation = getExpression(filter.getLhs());
+    public EvaluatedRelation visitFilter(Filter filter) {
+        EvaluatedRelation lhsRelation = getExpression(filter.getLhs());
         result = restrict.restrict(lhsRelation, filter.getRhs());
         return result;
     }
 
-    protected Relation getExpression(Expression expression) {
+    protected EvaluatedRelation getExpression(Expression expression) {
         QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);

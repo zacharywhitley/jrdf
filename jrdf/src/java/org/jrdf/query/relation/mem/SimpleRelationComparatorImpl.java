@@ -60,7 +60,7 @@
 package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 
 /**
  * @author Yuan-Fang Li
@@ -73,7 +73,7 @@ import org.jrdf.query.relation.Relation;
 public class SimpleRelationComparatorImpl implements RelationComparator {
     private static final long serialVersionUID = -4668248062961568304L;
 
-    public int compare(Relation o1, Relation o2) {
+    public int compare(EvaluatedRelation o1, EvaluatedRelation o2) {
         int size1 = o1.getTuples().size();
         int size2 = o2.getTuples().size();
         if (size1 < size2) {

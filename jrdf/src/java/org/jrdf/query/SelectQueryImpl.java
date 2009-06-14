@@ -69,7 +69,7 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -98,12 +98,12 @@ public final class SelectQueryImpl implements Query {
     public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
-        Relation result = getResult(graph, queryEngine);
+        EvaluatedRelation result = getResult(graph, queryEngine);
         LinkedHashSet<Attribute> heading = getHeading(result);
         return new SelectAnswerImpl(heading, result, System.currentTimeMillis() - timeStarted, hasProjected());
     }
 
-    private LinkedHashSet<Attribute> getHeading(Relation relation) {
+    private LinkedHashSet<Attribute> getHeading(EvaluatedRelation relation) {
         if (hasProjected()) {
             Projection projection = (Projection) expression;
             return new LinkedHashSet<Attribute>(projection.getAttributes());
@@ -112,7 +112,7 @@ public final class SelectQueryImpl implements Query {
         }
     }
 
-    private Relation getResult(Graph graph, QueryEngine queryEngine) {
+    private EvaluatedRelation getResult(Graph graph, QueryEngine queryEngine) {
         GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
         queryEngine.initialiseBaseRelation(entireGraph);
         ExpressionSimplifier<Void> simplifier = new ExpressionSimplifierImpl();

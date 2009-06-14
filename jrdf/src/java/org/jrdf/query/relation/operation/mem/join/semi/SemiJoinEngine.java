@@ -62,7 +62,7 @@ package org.jrdf.query.relation.operation.mem.join.semi;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.constants.NullaryNode;
@@ -86,12 +86,12 @@ public class SemiJoinEngine implements TupleEngine {
         this.nodeComparator = newNodeComparator;
     }
 
-    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
+    public SortedSet<Attribute> getHeading(EvaluatedRelation relation1, EvaluatedRelation relation2) {
         return relation1.getSortedHeading();
     }
 
-    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-        SortedSet<Tuple> result) {
+    public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
+        EvaluatedRelation relation2, SortedSet<Tuple> result) {
         for (Tuple tuple1 : relation1.getTuples()) {
             for (Tuple tuple2 : relation2.getTuples()) {
                 process(headings, result, tuple1, tuple2);

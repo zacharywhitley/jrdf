@@ -59,9 +59,9 @@
 
 package org.jrdf.query.relation.operation;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 
 public interface Union extends Operation {
     // TODO (AN) This really should be nadic
-    Relation union(Relation relation1, Relation relation2);
+    EvaluatedRelation union(EvaluatedRelation relation1, EvaluatedRelation relation2);
 }

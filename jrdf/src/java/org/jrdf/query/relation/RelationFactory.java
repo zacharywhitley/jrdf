@@ -68,7 +68,7 @@ import java.util.Set;
  * @version $Revision:$
  */
 public interface RelationFactory {
-    Relation getRelation(Set<Tuple> tuples);
+    EvaluatedRelation getRelation(Set<Tuple> tuples);
 
-    Relation getRelation(Set<Attribute> heading, Set<Tuple> tuples);
+    EvaluatedRelation getRelation(Set<Attribute> heading, Set<Tuple> tuples);
 }

@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 
 /**
  * Merely a marker interface - used to differentiate between two types of join.  This is a join that combines only
@@ -69,5 +69,5 @@ import org.jrdf.query.relation.Relation;
  * @version $Revision: 436 $
  */
 public interface DyadicJoin extends Operation {
-    Relation join(Relation relation1, Relation relation2);
+    EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2);
 }

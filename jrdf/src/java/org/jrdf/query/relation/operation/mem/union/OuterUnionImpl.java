@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.union;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
@@ -75,9 +75,9 @@ public class OuterUnionImpl implements Union {
         this.relationProcessor = relationProcessor;
     }
 
-    public Relation union(Relation relation1, Relation relation2) {
+    public EvaluatedRelation union(EvaluatedRelation relation1, EvaluatedRelation relation2) {
         UnionSimplification unionSimplification = new UnionSimplificationImpl();
-        LinkedHashSet<Relation> relations = unionSimplification.simplify(relation1, relation2);
+        LinkedHashSet<EvaluatedRelation> relations = unionSimplification.simplify(relation1, relation2);
         if (relations.size() == 1) {
             return relations.iterator().next();
         } else {

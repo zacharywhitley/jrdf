@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 
 import java.util.Set;
 
@@ -71,5 +71,5 @@ import java.util.Set;
  * @version $Revision$
  */
 public interface NadicJoin extends Operation {
-    Relation join(Set<Relation> relation);
+    EvaluatedRelation join(Set<EvaluatedRelation> relation);
 }

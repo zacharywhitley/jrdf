@@ -61,11 +61,13 @@ package org.jrdf.query.relation.constants;
 
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.NullaryTuple.NULLARY_TUPLE;
 import org.jrdf.query.relation.mem.ComparatorFactory;
 import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -83,14 +85,14 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class RelationDEE implements Relation, Serializable {
+public final class RelationDEE implements EvaluatedRelation, Serializable {
     private static final ComparatorFactory FACTORY = new ComparatorFactoryImpl();
     private static final long serialVersionUID = -8473232661811978990L;
 
     /**
      * The singleton version of RelationDEE.
      */
-    public static final Relation RELATION_DEE = new RelationDEE();
+    public static final EvaluatedRelation RELATION_DEE = new RelationDEE();
 
     /**
      * There can be only one RelationDEE.
@@ -115,10 +117,6 @@ public final class RelationDEE implements Relation, Serializable {
         return Collections.singleton(NULLARY_TUPLE);
     }
 
-    public SortedSet<Tuple> getSortedTuples(Attribute attribute) {
-        return getSortedTuples();
-    }
-
     public Set<Tuple> getTuples(Attribute attribute) {
         return Collections.singleton(NULLARY_TUPLE);
     }
@@ -132,6 +130,10 @@ public final class RelationDEE implements Relation, Serializable {
         SortedSet<Attribute> heading = new TreeSet<Attribute>(FACTORY.createAttributeComparator());
         heading.addAll(getHeading());
         return heading;
+    }
+
+    public ClosableIterator<Tuple> getTupleIterator() {
+        return new ClosableIteratorImpl<Tuple>(getTuples().iterator());
     }
 
     // TODO (AN) Test drive me

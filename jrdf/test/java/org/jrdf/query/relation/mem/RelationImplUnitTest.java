@@ -62,7 +62,7 @@ import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6;
@@ -94,12 +94,12 @@ public class RelationImplUnitTest extends TestCase {
     private static final Set<Tuple> TUPLES_1 = createASingleTuple(VAR_BAR1_LITERAL_L2);
     private static final Set<Tuple> TUPLES_2 = createASingleTuple(VAR_FOO1_LITERAL_L2);
     private static final Set<Tuple> TUPLES_3 = createASingleTuple(POS_FOO5_OBJECT_R6);
-    public static final Relation TEST_RELATION_1 = createRelation(TUPLES_1);
-    public static final Relation TEST_RELATION_2 = createRelation(TUPLES_2);
-    public static final Relation TEST_RELATION_3 = createRelation(TUPLES_3);
+    public static final EvaluatedRelation TEST_RELATION_1 = createRelation(TUPLES_1);
+    public static final EvaluatedRelation TEST_RELATION_2 = createRelation(TUPLES_2);
+    public static final EvaluatedRelation TEST_RELATION_3 = createRelation(TUPLES_3);
 
     public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
+        checkImplementationOfInterfaceAndFinal(EvaluatedRelation.class, RelationImpl.class);
         checkConstructor(RelationImpl.class, 0, PARAM_TYPES_1);
         checkConstructor(RelationImpl.class, 0, PARAM_TYPES_2);
     }
@@ -118,7 +118,7 @@ public class RelationImplUnitTest extends TestCase {
         checkStandardConstructor(createHeading(TUPLES_2), TUPLES_2, TEST_RELATION_2);
     }
 
-    private void checkStandardConstructor(Set<Attribute> heading, Set<Tuple> tuples, Relation relation) {
+    private void checkStandardConstructor(Set<Attribute> heading, Set<Tuple> tuples, EvaluatedRelation relation) {
         checkFieldValue(relation, HEADING_NAME, heading);
         checkFieldValue(relation, TUPLES_NAME, tuples);
         assertEquals(heading, relation.getHeading());
@@ -133,7 +133,7 @@ public class RelationImplUnitTest extends TestCase {
         return heading;
     }
 
-    private static Relation createRelation(Set<Tuple> newTuples) {
+    private static EvaluatedRelation createRelation(Set<Tuple> newTuples) {
         return new RelationImpl(newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
     }
 }

@@ -69,7 +69,7 @@ import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.operation.DyadicJoin;
@@ -101,7 +101,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public Relation visitAsk(Ask ask) {
+    public EvaluatedRelation visitAsk(Ask ask) {
         clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
@@ -112,7 +112,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public Relation visitProjection(Projection projection) {
+    public EvaluatedRelation visitProjection(Projection projection) {
         clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
@@ -120,43 +120,43 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    public Relation visitConjunction(Conjunction conjunction) {
+    public EvaluatedRelation visitConjunction(Conjunction conjunction) {
         List<Expression> operands = planner.flattenExpression(conjunction);
         resetCacheHandler(operands);
-        Set<Relation> relations = planner.processAndRearrangeExpressions(conjunction, operands, this);
+        Set<EvaluatedRelation> relations = planner.processAndRearrangeExpressions(conjunction, operands, this);
         return naturalJoin.join(relations);
     }
 
     @Override
-    public Relation visitConstraint(SingleConstraint constraint) {
+    public EvaluatedRelation visitConstraint(SingleConstraint constraint) {
         long time = System.currentTimeMillis();
-        Relation relation = processConstraint(constraint);
+        EvaluatedRelation relation = processConstraint(constraint);
         cacheHandler.addResultToCache(constraint, relation, time);
         return relation;
     }
 
     @Override
-    public Relation visitUnion(org.jrdf.query.expression.Union newUnion) {
+    public EvaluatedRelation visitUnion(org.jrdf.query.expression.Union newUnion) {
         List<Expression> operands = planner.flattenExpression(newUnion);
         clearCacheHandler();
         Expression lhsExp = operands.get(0);
         Expression rhsExp = operands.get(1);
-        Relation lhs = getExpression(lhsExp);
+        EvaluatedRelation lhs = getExpression(lhsExp);
         if (shortCircuit) {
             result = (lhs.getTuples().isEmpty()) ? getExpression(rhsExp) : lhs;
         } else {
-            Relation rhs = getExpression(operands.get(1));
+            EvaluatedRelation rhs = getExpression(operands.get(1));
             result = union.union(lhs, rhs);
         }
         return result;
     }
 
     @Override
-    public Relation visitOptional(Optional optional) {
+    public EvaluatedRelation visitOptional(Optional optional) {
         clearCacheHandler();
-        Relation lhs = getExpression(optional.getLhs());
+        EvaluatedRelation lhs = getExpression(optional.getLhs());
         clearCacheHandler();
-        Relation rhs = getExpression(optional.getRhs());
+        EvaluatedRelation rhs = getExpression(optional.getRhs());
         return leftOuterJoin.join(lhs, rhs);
     }
 
@@ -168,7 +168,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         cacheHandler.reset(result, constraintList.size());
     }
 
-    private Relation processConstraint(SingleConstraint constraint) {
+    private EvaluatedRelation processConstraint(SingleConstraint constraint) {
         Attribute curAttr = cacheHandler.findOneCachedAttribute(constraint);
         if (curAttr != null) {
             return doCachedConstraint(constraint, curAttr);
@@ -177,12 +177,12 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         }
     }
 
-    private Relation doCachedConstraint(SingleConstraint constraint, Attribute curAttr) {
+    private EvaluatedRelation doCachedConstraint(SingleConstraint constraint, Attribute curAttr) {
         Set<Tuple> tuples = new HashSet<Tuple>();
         Set<Node> voSet = cacheHandler.getCachedValues(curAttr.getAttributeName());
         for (Node newVO : voSet) {
             constraint.setAttributeValue(curAttr, newVO);
-            Relation tmpRelation = restrict.restrict(result, constraint.getAvo(allVariables));
+            EvaluatedRelation tmpRelation = restrict.restrict(result, constraint.getAvo(allVariables));
             tuples.addAll(tmpRelation.getTuples());
             tmpRelation = null;
         }
@@ -198,7 +198,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     }
 
     @Override
-    protected Relation getExpression(Expression expression) {
+    protected EvaluatedRelation getExpression(Expression expression) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
@@ -206,7 +206,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         return expression.accept(queryEngine);
     }
 
-    protected Relation getExpression(Expression expression, boolean shortCircuit) {
+    protected EvaluatedRelation getExpression(Expression expression, boolean shortCircuit) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);

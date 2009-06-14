@@ -60,7 +60,7 @@
 package org.jrdf.query.relation.operation;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 
 import java.util.Set;
 
@@ -78,12 +78,12 @@ public interface Project {
      *
      * @param attributes the set of attributes to keep during projection.
      */
-    Relation include(Relation relation, Set<Attribute> attributes);
+    EvaluatedRelation include(EvaluatedRelation relation, Set<Attribute> attributes);
 
     /**
      * The attributes to exclude in the project.  Will overwrite any existing inclusion or exclusion.
      *
      * @param attributes the set of attributes to remove during projection.
      */
-    Relation exclude(Relation relation, Set<Attribute> attributes);
+    EvaluatedRelation exclude(EvaluatedRelation relation, Set<Attribute> attributes);
 }

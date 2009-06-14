@@ -62,7 +62,7 @@ package org.jrdf.query.relation.operation.mem.join.natural;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
@@ -115,7 +115,7 @@ import java.util.Set;
 public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
     protected static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     protected NadicJoin nadicJoin;
-    protected static final Set<Relation> EMPTY = emptySet();
+    protected static final Set<EvaluatedRelation> EMPTY = emptySet();
     protected static final Set<Tuple> EMPTY_SET = emptySet();
 
     public void testRelationDEEandDUM() {
@@ -137,7 +137,7 @@ public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
 
     public void testRelationDEEandDumWithRelation() {
         Set<Tuple> tuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-        Relation relation = createRelation(tuple);
+        EvaluatedRelation relation = createRelation(tuple);
         // The natural process of DEE and R1 is R1.
         checkRelation(relation, createRelations(relation, RELATION_DEE));
         checkRelation(relation, createRelations(RELATION_DEE, relation));
@@ -238,12 +238,12 @@ public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
         final Tuple tp2 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
         final Tuple tp3 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_OBJECT_R4);
         final Tuple tp4 = createTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_OBJECT_R4);
-        Relation rel1 = createRelation(new HashSet<Tuple>(asList(tp1, tp2, tp3, tp4)));
+        EvaluatedRelation rel1 = createRelation(new HashSet<Tuple>(asList(tp1, tp2, tp3, tp4)));
         final Tuple tq1 = createTuple(POS_FOO1_SUBJECT_B2, POS_FOO3_OBJECT_R3);
         final Tuple tq2 = createTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
         final Tuple tq3 = createTuple(POS_FOO1_SUBJECT_R1, POS_FOO5_OBJECT_R4);
         final Tuple tq4 = createTuple(POS_FOO1_SUBJECT_R4, POS_FOO5_OBJECT_R4);
-        Relation rel2 = createRelation(new HashSet<Tuple>(asList(tq1, tq2, tq3, tq4)));
+        EvaluatedRelation rel2 = createRelation(new HashSet<Tuple>(asList(tq1, tq2, tq3, tq4)));
         final Tuple tr1 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4, POS_BAR3_OBJECT_R1);
         final Tuple tr2 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4, POS_FOO5_OBJECT_R4);
         final Tuple tr3 = createTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_OBJECT_R4, POS_BAR3_OBJECT_R1);
@@ -251,7 +251,7 @@ public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
         Set<Tuple> resultTuple = new HashSet<Tuple>(asList(tr1, tr2, tr3, tr4));
         Set<Attribute> headings = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE, VAR_BAR2_PREDICATE ,
             POS_FOO3_OBJECT, POS_BAR3_OBJECT, POS_FOO5_OBJECT, VAR_BAR1_OBJECT);
-        List<Relation> rels = asList(rel1, rel2);
+        List<EvaluatedRelation> rels = asList(rel1, rel2);
         checkJoin(createRelation(headings, resultTuple), rels);
     }
 
@@ -267,7 +267,7 @@ public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
             POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
 
-        Relation relation = createRelation(resultTuple);
+        EvaluatedRelation relation = createRelation(resultTuple);
         checkJoin(relation, createRelation(tuple1, tuple2));
     }
 
@@ -295,13 +295,13 @@ public abstract class AbstractNaturalJoinIntegrationTest extends TestCase {
         checkJoin(createRelation(heading, EMPTY_SET), createRelation(tuple1, tuple2));
     }
 
-    private void checkJoin(Relation expectedResult, List<Relation> relations) {
-        Set<Relation> tuples = createRelations(relations.toArray(new Relation[relations.size()]));
+    private void checkJoin(EvaluatedRelation expectedResult, List<EvaluatedRelation> relations) {
+        Set<EvaluatedRelation> tuples = createRelations(relations.toArray(new EvaluatedRelation[relations.size()]));
         checkRelation(expectedResult, tuples);
     }
 
-    private void checkRelation(Relation expected, Set<Relation> actual) {
-        Relation relation = nadicJoin.join(actual);
+    private void checkRelation(EvaluatedRelation expected, Set<EvaluatedRelation> actual) {
+        EvaluatedRelation relation = nadicJoin.join(actual);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();

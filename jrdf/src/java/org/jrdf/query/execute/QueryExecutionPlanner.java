@@ -66,7 +66,7 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.mem.SimpleRelationComparatorImpl;
 
@@ -82,8 +82,8 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public final class QueryExecutionPlanner extends ExpressionVisitorAdapter<Set<Relation>>
-    implements ExpressionVisitor<Set<Relation>> {
+public final class QueryExecutionPlanner extends ExpressionVisitorAdapter<Set<EvaluatedRelation>>
+    implements ExpressionVisitor<Set<EvaluatedRelation>> {
     private static final QueryExecutionPlanner PLANNER = new QueryExecutionPlanner();
     private static final RelationComparator RELATION_COMPARATOR = new SimpleRelationComparatorImpl();
     private BiOperandExpressionSimplifier simplifier;
@@ -102,18 +102,18 @@ public final class QueryExecutionPlanner extends ExpressionVisitorAdapter<Set<Re
         return simplifier.flattenAndSortConjunction(expression, expression.getClass());
     }
 
-    public Set<Relation> processAndRearrangeExpressions(BiOperandExpression expression, List<Expression> operands,
-        OptimizingQueryEngineImpl engine) {
+    public Set<EvaluatedRelation> processAndRearrangeExpressions(BiOperandExpression expression,
+        List<Expression> operands, OptimizingQueryEngineImpl engine) {
         this.engine = engine;
         this.constraintList = operands;
         return expression.accept(this);
     }
 
     @Override
-    public Set<Relation> visitConjunction(Conjunction conjunction) {
-        List<Relation> partialResult = new LinkedList<Relation>();
+    public Set<EvaluatedRelation> visitConjunction(Conjunction conjunction) {
+        List<EvaluatedRelation> partialResult = new LinkedList<EvaluatedRelation>();
         for (Expression exp : constraintList) {
-            Relation tempRelation = engine.getExpression(exp);
+            EvaluatedRelation tempRelation = engine.getExpression(exp);
             if (tempRelation.getTuples().isEmpty()) {
                 return Collections.singleton(tempRelation);
             }
@@ -124,19 +124,19 @@ public final class QueryExecutionPlanner extends ExpressionVisitorAdapter<Set<Re
         return matchAttributes(partialResult);
     }
 
-    private Set<Relation> matchAttributes(List<Relation> partialResults) {
+    private Set<EvaluatedRelation> matchAttributes(List<EvaluatedRelation> partialResults) {
         for (int i = 0; i < partialResults.size(); i++) {
             matchAttributes(partialResults, i);
         }
-        return new LinkedHashSet<Relation>(partialResults);
+        return new LinkedHashSet<EvaluatedRelation>(partialResults);
     }
 
     // TODO YF join those with common attributes first.
-    private void matchAttributes(List<Relation> relations, int pos) {
-        Relation first = relations.get(pos);
+    private void matchAttributes(List<EvaluatedRelation> relations, int pos) {
+        EvaluatedRelation first = relations.get(pos);
         int idx, badPos = -1;
         for (idx = pos + 1; idx < relations.size(); idx++) {
-            final Relation nextRel = relations.get(idx);
+            final EvaluatedRelation nextRel = relations.get(idx);
             final Set<Attribute> headings = getCommonHeadings(first, nextRel);
             if (headings.size() >= 1) {
                 break;
@@ -149,7 +149,7 @@ public final class QueryExecutionPlanner extends ExpressionVisitorAdapter<Set<Re
         }
     }
 
-    private Set<Attribute> getCommonHeadings(Relation rel1, Relation rel2) {
+    private Set<Attribute> getCommonHeadings(EvaluatedRelation rel1, EvaluatedRelation rel2) {
         final Set<Attribute> set1 = new HashSet<Attribute>(rel1.getHeading());
         set1.retainAll(rel2.getHeading());
         return set1;

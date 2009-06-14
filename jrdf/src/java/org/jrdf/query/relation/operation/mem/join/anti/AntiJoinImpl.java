@@ -59,7 +59,7 @@
 
 package org.jrdf.query.relation.operation.mem.join.anti;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.operation.AntiJoin;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.SemiDifference;
@@ -73,8 +73,8 @@ public class AntiJoinImpl implements AntiJoin {
         this.semiDifference = semiDifference;
     }
 
-    public Relation join(Relation relation1, Relation relation2) {
-        Relation semiJoinResult = semiJoin.join(relation1, relation2);
+    public EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2) {
+        EvaluatedRelation semiJoinResult = semiJoin.join(relation1, relation2);
         return semiDifference.minus(relation1, semiJoinResult);
     }
 }

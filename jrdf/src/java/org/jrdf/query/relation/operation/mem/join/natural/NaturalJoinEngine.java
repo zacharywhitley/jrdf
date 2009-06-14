@@ -61,7 +61,7 @@ package org.jrdf.query.relation.operation.mem.join.natural;
 
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.RelationHelper;
@@ -91,12 +91,12 @@ public class NaturalJoinEngine implements TupleEngine {
         this.relationHelper = newRelationHelper;
     }
 
-    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
+    public SortedSet<Attribute> getHeading(EvaluatedRelation relation1, EvaluatedRelation relation2) {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public void processRelations(SortedSet<Attribute> headings, Relation relation1, Relation relation2,
-        SortedSet<Tuple> result) {
+    public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
+        EvaluatedRelation relation2, SortedSet<Tuple> result) {
         doNaturalJoin(headings, relation1.getTuples(), relation2.getTuples(), result);
     }
 
