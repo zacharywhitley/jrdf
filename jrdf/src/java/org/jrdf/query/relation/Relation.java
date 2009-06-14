@@ -80,6 +80,7 @@ public interface Relation {
 
     SortedSet<Attribute> getSortedHeading();
 
+    // TODO (AN) Turn this into Iterable.
     ClosableIterator<Tuple> getTupleIterator();
 
     long getTupleSize();
