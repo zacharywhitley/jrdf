@@ -163,7 +163,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
 
     private void updateCache(EvaluatedRelation result, long time, Attribute attribute) {
         AttributeName attributeName = attribute.getAttributeName();
-        Set<Node> voSet = getMatchingVOs(attribute, result.getTuples(attribute));
+        Set<Node> voSet = getMatchingVOs(attribute, getTuples(result, attribute));
         Set<Node> cached = cache.get(attributeName);
         if (time > timeStamp) {
             setTimeStamp(time);
