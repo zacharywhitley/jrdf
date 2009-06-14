@@ -72,7 +72,7 @@ public class PredicateClosableIterator implements ClosableIterator<PredicateNode
     private boolean closed;
 
     public PredicateClosableIterator(IteratorTrackingCollectionFactory collectionFactory,
-                                     Iterator<PredicateNode> iterator) {
+        Iterator<PredicateNode> iterator) {
         this.collectionFactory = collectionFactory;
         this.iterator = iterator;
         collectionFactory.trackCurrentIteratorResource(iterator);

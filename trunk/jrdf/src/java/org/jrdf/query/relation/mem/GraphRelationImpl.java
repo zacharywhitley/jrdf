@@ -157,7 +157,6 @@ public final class GraphRelationImpl implements GraphRelation {
         return sortedTuples;
     }
 
-
     @Override
     public int hashCode() {
         return graph.hashCode() ^ tupleComparator.hashCode() ^ attributeFactory.hashCode();
