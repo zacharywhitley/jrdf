@@ -62,11 +62,9 @@ package org.jrdf.query.relation.operation;
 import org.jrdf.graph.Node;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.EvaluatedRelation;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Returns the list of relations with the same set of attributes.
@@ -76,11 +74,7 @@ import java.util.Map;
  */
 public interface Restrict extends Operation {
 
-    // TODO (AN) Does this break symmetry and closure?
-    // TODO (AN) Must be three specific attribute value pairs - where the attributes are Subject, Predicate and Object
-    // or Blank Node, URI or Literal and the values either ANY_NODE or constants.
     EvaluatedRelation restrict(EvaluatedRelation relation, LinkedHashMap<Attribute, Node> avo);
-    EvaluatedRelation restrict(GraphRelation relation, LinkedHashMap<Attribute, Node> avo);
-    EvaluatedRelation restrict(Map<Attribute, Node> avo);
+
     EvaluatedRelation restrict(EvaluatedRelation relation, LogicExpression expression);
 }
