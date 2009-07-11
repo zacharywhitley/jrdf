@@ -30,12 +30,10 @@
       <excludeFolder url="file://$MODULE_DIR$/build/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/unit-test-results" />
     </content>
-    <orderEntry type="library" name="groovy-1.5.7" level="project" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="groovy-1.6.3" level="project" />
     <orderEntry type="library" name="spring" level="project" />
-    <orderEntry type="library" name="gsbase-2.0.1" level="project" />
     <orderEntry type="library" name="easymock" level="project" />
     <orderEntry type="library" name="wstx-asl" level="project" />
     <orderEntry type="library" name="je" level="project" />

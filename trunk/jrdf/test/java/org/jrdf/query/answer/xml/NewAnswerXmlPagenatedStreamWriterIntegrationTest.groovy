@@ -113,7 +113,7 @@ class NewAnswerXmlPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
         graph = FACTORY.newGraph
         TEST_UTIL.createTestGraph(graph)
         answer = urqlConnection.executeQuery(graph, QUERY)
-        xmlWriter = new AnswerXmlPagenatedStreamWriter((SelectAnswer) answer, resultsWriter)
+        xmlWriter = new AnswerXmlPagenatedStreamWriter(resultsWriter, (SelectAnswer) answer)
     }
 
     @Override
@@ -126,7 +126,7 @@ class NewAnswerXmlPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
     }
 
     public void testVariables() throws Exception {
-        xmlWriter.write();
+        xmlWriter.writeFullDocument();
         xmlWriter.flush();
         def slurper =  new XmlSlurper()
         def sparql = slurper.parseText(resultsWriter.toString())

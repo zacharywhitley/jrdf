@@ -82,8 +82,7 @@ public class MultiAnswerXmlStreamWriterIntegrationTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         stream = TEST_UTIL.getData().openStream();
-        xmlWriter = new MultiAnswerXmlStreamWriterImpl(stream);
-        xmlWriter.setWriter(writer);
+        xmlWriter = new MultiAnswerXmlStreamWriterImpl(writer, stream);
     }
 
     @Override
@@ -111,9 +110,8 @@ public class MultiAnswerXmlStreamWriterIntegrationTest extends TestCase {
         Thread thread = new Thread(sWriter);
         thread.start();
 
-        xmlWriter = new MultiAnswerXmlStreamWriterImpl(inputStream);
         writer = new StringWriter();
-        xmlWriter.setWriter(writer);
+        xmlWriter = new MultiAnswerXmlStreamWriterImpl(writer, inputStream);
         Thread wThread = new Thread((Runnable) xmlWriter);
         wThread.start();
 
@@ -136,8 +134,7 @@ public class MultiAnswerXmlStreamWriterIntegrationTest extends TestCase {
         xml += xml;
         InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
         writer = new StringWriter();
-        xmlWriter = new MultiAnswerXmlStreamWriterImpl(inputStream);
-        xmlWriter.setWriter(writer);
+        xmlWriter = new MultiAnswerXmlStreamWriterImpl(writer, inputStream);
         int count = 0;
         xmlWriter.writeStartResults();
         while (xmlWriter.hasMoreResults()) {

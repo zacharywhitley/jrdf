@@ -65,32 +65,52 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.IOException;
+import java.io.Writer;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
-    protected static final String ENCODING_DEFAULT = "UTF-8";
-    protected static final String VERSION_NUMBER = "1.0";
-    protected static final XMLOutputFactory OUTPUT_FACTORY = javax.xml.stream.XMLOutputFactory.newInstance();
+    private static final String ENCODING_DEFAULT = "UTF-8";
+    private static final String VERSION_NUMBER = "1.0";
+    private static final XMLOutputFactory OUTPUT_FACTORY = javax.xml.stream.XMLOutputFactory.newInstance();
     protected XMLStreamWriter streamWriter;
+
+    public void writeFullDocument() throws XMLStreamException {
+        checkNotNull(streamWriter);
+        writeStartDocument();
+        writeHead();
+        writeAllResults();
+        writeEndDocument();
+    }
 
     public void writeStartDocument() throws XMLStreamException {
         streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
         String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
         streamWriter.writeProcessingInstruction("xml-stylesheet", target);
-
         streamWriter.writeStartElement(SPARQL);
         streamWriter.writeDefaultNamespace(SPARQL_NS);
         streamWriter.writeNamespace("xsi", W3C_XML_SCHEMA_INSTANCE_NS_URI);
         streamWriter.writeNamespace("schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
     }
 
-    public void writeEndDocument() throws XMLStreamException {
+    public void writeHead() throws XMLStreamException {
+        streamWriter.writeStartElement(HEAD);
         streamWriter.writeEndElement();
-        streamWriter.writeEndDocument();
+    }
+
+    protected void createXmlStreamWriter(Writer writer) throws XMLStreamException {
+        this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
+    }
+
+    protected void writeAllResults() throws XMLStreamException {
+        writeStartResults();
+        while (hasMoreResults()) {
+            writeResult();
+        }
+        writeEndResults();
+        streamWriter.flush();
     }
 
     public void writeStartResults() throws XMLStreamException {
@@ -101,36 +121,24 @@ public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
         streamWriter.writeEndElement();
     }
 
-    public void close() throws XMLStreamException, IOException {
-        if (streamWriter != null) {
-            streamWriter.flush();
-            streamWriter.close();
-        }
+    public void writeEndDocument() throws XMLStreamException {
+        streamWriter.writeEndElement();
+        streamWriter.writeEndDocument();
     }
 
     public void flush() throws XMLStreamException {
         streamWriter.flush();
     }
 
-    public void write() throws XMLStreamException {
-        checkNotNull(streamWriter);
-        writeStartDocument();
-        writeHead();
-        writeAllResults();
-        writeEndDocument();
-    }
-
-    public void writeHead() throws XMLStreamException {
-        streamWriter.writeStartElement(HEAD);
-        streamWriter.writeEndElement();
-    }
-
-    protected void writeAllResults() throws XMLStreamException {
-        writeStartResults();
-        while (hasMoreResults()) {
-            writeResult();
+    public void close() throws XMLStreamException {
+        if (streamWriter != null) {
+            streamWriter.flush();
+            try {
+                streamWriter.close();
+            } catch (XMLStreamException e) {
+                // We did our best.
+                ;
+            }
         }
-        writeEndResults();
-        streamWriter.flush();
     }
 }

@@ -180,7 +180,9 @@ public class DistributedQueryIntegrationTest extends TestCase {
         assertEquals(0, graph.getNumberOfTriples());
         QueryClient client = new QueryClientImpl("127.0.0.1:8182");
         client.getQuery(FOO, ASK_QUERY_STRING, "all");
-        AskAnswer answer = (AskAnswer) client.executeQuery();
+        final Answer answer1 = client.executeQuery();
+        System.err.println("got " + answer1.getClass());
+        AskAnswer answer = (AskAnswer) answer1;
         assertEquals(false, answer.getResult());
     }
 
