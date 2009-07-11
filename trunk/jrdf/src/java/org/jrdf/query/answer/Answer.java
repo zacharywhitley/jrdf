@@ -64,7 +64,7 @@ import org.jrdf.query.answer.xml.TypeValue;
 import java.util.Iterator;
 
 /**
- * An answer to a SPARQL query.  A SPARQL query does not represent and RDF graph or relation but a series of variables
+ * An answer to a SPARQL query.  A SPARQL query does not represent an RDF graph or relation but a series of variables
  * and bindings to those variables.
  *
  * @version $Id$
