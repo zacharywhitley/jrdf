@@ -63,23 +63,21 @@ import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AnswerVisitor;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
-import org.jrdf.query.answer.xml.AnswerXmlPagenatedStreamWriter;
-import org.jrdf.query.answer.xml.AnswerXmlWriter;
-import org.jrdf.query.answer.xml.AskAnswerXmlStreamWriter;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
 
 import java.util.Map;
 
-public class SparqlXmlRepresentationFactory implements RepresentationFactory, AnswerVisitor<AnswerXmlWriter> {
+public class SparqlXmlRepresentationFactory implements RepresentationFactory, AnswerVisitor<Representation> {
+    private MediaType mediaType;
 
     public Representation createRepresentation(MediaType defaultMediaType, Map<String, Object> dataModel) {
         try {
             Representation representation = Representation.createEmpty();
             final Answer answer = (Answer) dataModel.get("answer");
             if (answer != null) {
-                AnswerXmlWriter xmlWriter = answer.accept(this);
-                representation = new SparqlRepresentation(defaultMediaType, xmlWriter);
+                mediaType = defaultMediaType;
+                representation = answer.accept(this);
             }
             return representation;
         } catch (Exception e) {
@@ -87,11 +85,11 @@ public class SparqlXmlRepresentationFactory implements RepresentationFactory, An
         }
     }
 
-    public AnswerXmlWriter visitAskAnswer(AskAnswer askAnswer) {
-        return new AskAnswerXmlStreamWriter(askAnswer);
+    public Representation visitAskAnswer(AskAnswer askAnswer) {
+        return new AskAnswerSparqlRepresentation(mediaType, askAnswer);
     }
 
-    public AnswerXmlWriter visitSelectAnswer(SelectAnswer selectAnswer) {
-        return new AnswerXmlPagenatedStreamWriter(selectAnswer);
+    public Representation visitSelectAnswer(SelectAnswer selectAnswer) {
+        return new SelectAnswerSparqlRepresentation(mediaType, selectAnswer);
     }
 }

@@ -90,8 +90,7 @@ public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
         super.setUp();
         stream1 = TEST_UTIL.getData().openStream();
         stream2 = TEST_UTIL.getData().openStream();
-        xmlWriter = new MultiAnswerXmlStreamQueueWriter(stream1);
-        xmlWriter.setWriter(writer);
+        xmlWriter = new MultiAnswerXmlStreamQueueWriter(writer, stream1);
     }
 
     @Override
@@ -148,8 +147,7 @@ public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
         stream1 = TEST_UTIL.getData().openStream();
         xmlWriter.close();
         writer = new StringWriter();
-        xmlWriter = new MultiAnswerXmlStreamQueueWriter(stream1, stream2);
-        xmlWriter.setWriter(writer);
+        xmlWriter = new MultiAnswerXmlStreamQueueWriter(writer, stream1, stream2);
         int count = 0;
         xmlWriter.writeStartResults();
         while (xmlWriter.hasMoreResults()) {

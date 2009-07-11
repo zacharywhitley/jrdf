@@ -65,7 +65,6 @@ import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
 
 import static javax.xml.XMLConstants.XML_NS_PREFIX;
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Iterator;
@@ -78,19 +77,14 @@ import java.util.Iterator;
 public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter implements MultiAnswerXmlStreamWriter {
     private SparqlAnswerStreamParser streamParser;
 
-    public MultiAnswerXmlStreamQueueWriter(InputStream... streams) throws InterruptedException, XMLStreamException {
+    public MultiAnswerXmlStreamQueueWriter(Writer writer, InputStream... streams)
+        throws XMLStreamException, InterruptedException {
+        createXmlStreamWriter(writer);
         this.streamParser = new SparqlAnswerStreamParserImpl(streams);
     }
 
     public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
         this.streamParser.addStream(stream);
-    }
-
-    public void setWriter(Writer writer) throws XMLStreamException, IOException {
-        if (streamWriter != null) {
-            streamWriter.close();
-        }
-        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
     }
 
     public boolean hasMoreResults() {
@@ -126,22 +120,11 @@ public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter imp
         streamWriter.flush();
     }
 
-    public void write(Writer writer) throws XMLStreamException {
-        try {
-            setWriter(writer);
-            write();
-        } catch (IOException e) {
-            throw new XMLStreamException(e);
-        }
-    }
-
     public void close() throws XMLStreamException {
-        if (streamWriter != null) {
-            try {
-                streamWriter.close();
-            } catch (XMLStreamException e) {
-                ;
-            } finally {
+        try {
+            super.close();
+        } finally {
+            if (streamParser != null) {
                 streamParser.close();
             }
         }

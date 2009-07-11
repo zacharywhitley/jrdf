@@ -59,10 +59,8 @@
 package org.jrdf.query.answer.xml;
 
 import org.jrdf.query.answer.AskAnswer;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.Writer;
 
 /**
@@ -78,38 +76,21 @@ public class AskAnswerXmlStreamWriter extends AbstractXmlStreamWriter {
     }
 
     public AskAnswerXmlStreamWriter(AskAnswer answer) {
+    }
+
+    public AskAnswerXmlStreamWriter(Writer writer, AskAnswer answer) throws XMLStreamException {
+        createXmlStreamWriter(writer);
         this.answer = answer;
-        hasMore = true;
-    }
-
-    public AskAnswerXmlStreamWriter(AskAnswer answer, Writer writer) throws XMLStreamException {
-        this(answer);
-        this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
-    }
-
-    public void setWriter(Writer writer) throws XMLStreamException, IOException {
-        close();
-        this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
+        this.hasMore = true;
     }
 
     public boolean hasMoreResults() {
         return hasMore;
     }
 
-    @Override
-    public void write() throws XMLStreamException {
-        checkNotNull(streamWriter);
-        writeStartDocument();
-        writeHead();
+    public void writeAllResults() throws XMLStreamException {
         writeResult();
-        writeEndDocument();
     }
-
-    public void write(Writer writer) throws XMLStreamException {
-        streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
-        write();
-    }
-
 
     public void writeResult() throws XMLStreamException {
         if (hasMoreResults()) {

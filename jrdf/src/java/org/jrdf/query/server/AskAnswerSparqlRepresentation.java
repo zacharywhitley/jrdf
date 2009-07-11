@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- *  ====================================================================
+ * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,110 +54,42 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
+ *
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.server;
+
+import org.jrdf.query.answer.AskAnswer;
+import org.jrdf.query.answer.xml.AnswerXmlWriter;
+import org.jrdf.query.answer.xml.AskAnswerXmlStreamWriter;
+import static org.restlet.data.CharacterSet.UTF_8;
+import org.restlet.data.MediaType;
+import org.restlet.resource.WriterRepresentation;
 
 import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.io.Writer;
 
-/**
- * @author Yuan-Fang Li
- * @version  $Id:$
- */
-public interface AnswerXmlWriter {
+public class AskAnswerSparqlRepresentation extends WriterRepresentation {
+    private final AskAnswer answer;
 
-    /**
-     * The XML -> HTML XSLT.
-     */
-    String XSLT_URL_STRING = "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
+    public AskAnswerSparqlRepresentation(MediaType mediaType, AskAnswer newAnswer) {
+        super(mediaType);
+        this.answer = newAnswer;
+        setCharacterSet(UTF_8);
+    }
 
-    /**
-     * The sparql keyword.
-     */
-    String SPARQL = "sparql";
-
-    /**
-     * The element "head".
-     */
-    String HEAD = "head";
-
-    /**
-     * The element "variable".
-     */
-    String VARIABLE = "variable";
-
-    /**
-     * The element "name".
-     */
-    String NAME = "name";
-
-    /**
-     * The element "results".
-     */
-    String RESULTS = "results";
-
-    /**
-     * The element "result".
-     */
-    String RESULT = "result";
-
-    /**
-     * The element "binding".
-     */
-    String BINDING = "binding";
-
-    /**
-     * The element "bnode".
-     */
-    String BNODE = "bnode";
-
-    /**
-     * The element "literal".
-     */
-    String LITERAL = "literal";
-
-    /**
-     * The element "uri".
-     */
-    String URI = "uri";
-
-    /**
-     * The element "datatype".
-     */
-    String DATATYPE = "datatype";
-
-    /**
-     * The element "lang".
-     */
-    String XML_LANG = "lang";
-
-    /**
-     * The Sparql namespace.
-     */
-    String SPARQL_NS = "http://www.w3.org/2005/sparql-results#";
-
-    /**
-     * The element "boolean".
-     */
-    String BOOLEAN = "boolean";
-
-    boolean hasMoreResults();
-
-    void writeStartDocument() throws XMLStreamException;
-
-    void writeHead() throws XMLStreamException;
-
-    void writeStartResults() throws XMLStreamException;
-
-    void writeEndResults() throws XMLStreamException;
-
-    void writeResult() throws XMLStreamException;
-
-    void writeEndDocument() throws XMLStreamException;
-
-    void writeFullDocument() throws XMLStreamException;
-
-    void flush() throws XMLStreamException;
-
-    void close() throws XMLStreamException;
+    @Override
+    public void write(Writer writer) throws IOException {
+        try {
+            final AnswerXmlWriter answerWriter = new AskAnswerXmlStreamWriter(writer, answer);
+            try {
+                answerWriter.writeFullDocument();
+            } finally {
+                answerWriter.close();
+            }
+        } catch (XMLStreamException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
 }
