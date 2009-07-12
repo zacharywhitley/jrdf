@@ -1,7 +1,17 @@
 JRDF Release 0.5.5.5
 ====================
-* Removal of ValueOperations with introduction of new FILTER implementation.
-* Significant performance increase with new merge join operations.
+* Removal of ValueOperations with introduction of new FILTER implementation (Feature 2820351).
+* Significant performance increase with new merge join operations. (Feature 2820350).
+* ASK query support (Feature 2820352).
+* Create Groovy RDF Builder (Feature 2820362).
+* N3 Parser and SPARQL Benchmarking (Feature 2820363).
+* Follows SPARQL rather than Relational semantics for empty graph patterns (Bug 2405529).
+* RdfWriter has the wrong kinds of exceptions (Bug 2302897).
+* Make Checked Exceptions Unchecked (Bug 2820359).
+* Java 6 sTaX (XML Pull Parser) has different behavior than Woodstox causing
+a problem with XML Literal writing (Bug 2272447).
+* Multiple calls to find do not release memory (Bug 2820364).
+
 
 JRDF Release 0.5.5.4
 ====================
