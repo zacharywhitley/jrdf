@@ -4,7 +4,7 @@
     <property name="project.longname" value="Java RDF API"/>
     <property name="project.shortname" value="jrdf"/>
     <property name="project.version.major" value="0"/>
-    <property name="project.version.minor" value="5.5.5"/>
+    <property name="project.version.minor" value="5.5.6"/>
     <property name="gui.version" value="${project.version.major}.${project.version.minor}"/>
     <property name="server.version" value="${project.version.major}.${project.version.minor}"/>
     <property name="version-status" value=""/>
@@ -214,7 +214,7 @@
             <patternset refid="server.production.classpath.pattern"/>
         </fileset>
     </path>
-    
+
     <path id="test.class.path">
         <pathelement location="${out.instr.dir}/classes"/>
         <fileset dir="${basedir}">
