@@ -71,21 +71,25 @@ public final class EmptyAnswer implements SelectAnswer, Serializable {
     /**
      * An empty answer the returns no columns, values and 0 time taken.
      */
+    private static final String[][] NO_COLUMN_VALUES = new String[0][];
+    private static final String[] NO_VARIABLES = new String[]{};
+    private static final EmptyClosableIterator<TypeValue[]> NO_COLUMN_VALUES_ITERATOR =
+        new EmptyClosableIterator<TypeValue[]>();
     public static final Answer EMPTY_ANSWER = new EmptyAnswer();
 
     private EmptyAnswer() {
     }
 
     public String[] getVariableNames() {
-        return new String[0];
+        return NO_VARIABLES;
     }
 
     public Iterator<TypeValue[]> columnValuesIterator() {
-        return new EmptyClosableIterator<TypeValue[]>();
+        return NO_COLUMN_VALUES_ITERATOR;
     }
 
     public String[][] getColumnValues() {
-        return new String[0][];
+        return NO_COLUMN_VALUES;
     }
 
     public long numberOfTuples() {

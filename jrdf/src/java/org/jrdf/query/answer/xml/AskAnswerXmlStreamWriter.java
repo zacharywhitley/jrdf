@@ -69,13 +69,11 @@ import java.io.Writer;
  */
 
 public class AskAnswerXmlStreamWriter extends AbstractXmlStreamWriter {
+    private static final String[] NO_VARIABLES = new String[]{};
     private AskAnswer answer;
     private boolean hasMore;
 
     private AskAnswerXmlStreamWriter() {
-    }
-
-    public AskAnswerXmlStreamWriter(AskAnswer answer) {
     }
 
     public AskAnswerXmlStreamWriter(Writer writer, AskAnswer answer) throws XMLStreamException {
@@ -86,6 +84,10 @@ public class AskAnswerXmlStreamWriter extends AbstractXmlStreamWriter {
 
     public boolean hasMoreResults() {
         return hasMore;
+    }
+
+    public void writeHead() throws XMLStreamException {
+        writeHead(NO_VARIABLES);
     }
 
     public void writeAllResults() throws XMLStreamException {

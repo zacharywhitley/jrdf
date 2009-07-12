@@ -59,17 +59,17 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
+import static org.jrdf.query.answer.xml.SparqlResultType.BOOLEAN;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
-import static org.jrdf.query.answer.xml.SparqlResultType.BOOLEAN;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * @author Yuan-Fang Li
@@ -77,6 +77,7 @@ import java.util.HashSet;
  */
 
 public class SparqlStreamingAskAnswer implements AskAnswer {
+    private static final String[] NO_VARIABLES = new String[]{};
     private SparqlAnswerStreamParser answerStreamParser;
     private boolean result;
 
@@ -95,7 +96,7 @@ public class SparqlStreamingAskAnswer implements AskAnswer {
     }
 
     public long getTimeTaken() {
-        return -1;
+        return 0;
     }
 
     public long numberOfTuples() {
@@ -103,7 +104,7 @@ public class SparqlStreamingAskAnswer implements AskAnswer {
     }
 
     public String[] getVariableNames() {
-        return new String[]{ASK_VARIABLE_NAME};
+        return NO_VARIABLES;
     }
 
     public String[][] getColumnValues() {
