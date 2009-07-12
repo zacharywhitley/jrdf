@@ -87,13 +87,11 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
     private XMLStreamReader parser;
     private boolean hasMore;
     private List<String> variables;
-    private boolean gotVariables;
     private int currentEvent;
 
     public MultiAnswerXmlStreamWriterImpl(Writer writer, InputStream inputStream) throws XMLStreamException {
         createXmlStreamWriter(writer);
         this.inputStream = inputStream;
-        this.variables = new ArrayList<String>();
         createParser();
     }
 
@@ -112,8 +110,8 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
     }
 
     public void writeHead() throws XMLStreamException {
-        if (!gotVariables) {
-            gotVariables = getVariables();
+        if (variables == null) {
+            getVariables();
         }
         writeHead(variables.toArray(new String[variables.size()]));
     }
@@ -174,6 +172,7 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
     }
 
     private boolean getVariables() throws XMLStreamException {
+        variables = new ArrayList<String>();
         while (parser.hasNext()) {
             currentEvent = parser.getEventType();
             if (currentEvent == START_ELEMENT && VARIABLE.equals(parser.getLocalName())) {
@@ -200,8 +199,8 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
                 final String tagName = parser.getLocalName();
                 if (RESULT.equals(tagName)) {
                     return true;
-                } else if (!gotVariables && VARIABLE.equals(tagName)) {
-                    gotVariables = getVariables();
+                } else if (variables == null && VARIABLE.equals(tagName)) {
+                    getVariables();
                 }
             }
             parser.next();

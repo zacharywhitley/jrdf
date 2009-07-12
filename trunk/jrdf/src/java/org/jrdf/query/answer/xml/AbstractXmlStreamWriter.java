@@ -59,9 +59,12 @@
 
 package org.jrdf.query.answer.xml;
 
+import static org.jrdf.query.answer.xml.DatatypeType.NONE;
+import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
+import static javax.xml.XMLConstants.XML_NS_PREFIX;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -76,6 +79,10 @@ public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
     private static final String VERSION_NUMBER = "1.0";
     private static final XMLOutputFactory OUTPUT_FACTORY = javax.xml.stream.XMLOutputFactory.newInstance();
     protected XMLStreamWriter streamWriter;
+
+    protected void createXmlStreamWriter(Writer writer) throws XMLStreamException {
+        this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
+    }
 
     public void writeFullDocument() throws XMLStreamException {
         checkNotNull(streamWriter);
@@ -105,8 +112,36 @@ public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
         streamWriter.writeEndElement();
     }
 
-    protected void createXmlStreamWriter(Writer writer) throws XMLStreamException {
-        this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
+    protected void writeResult(String[] currentVariables, final TypeValue[] results) throws XMLStreamException {
+        streamWriter.writeStartElement(RESULT);
+        int index = 0;
+        for (TypeValue result : results) {
+            writeBinding(result, currentVariables[index]);
+            index++;
+        }
+        streamWriter.writeEndElement();
+    }
+
+    protected void writeBinding(TypeValue result, String currentVariable) throws XMLStreamException {
+        if (!result.getType().equals(UNBOUND)) {
+            realWriteBinding(result, currentVariable);
+        }
+    }
+
+    protected void realWriteBinding(TypeValue result, String currentVariable) throws XMLStreamException {
+        streamWriter.writeStartElement(BINDING);
+        streamWriter.writeAttribute(NAME, currentVariable);
+        streamWriter.writeStartElement(result.getType().getXmlElementName());
+        if (result.getSuffixType() != NONE) {
+            if (result.getSuffixType().equals(DatatypeType.DATATYPE)) {
+                streamWriter.writeAttribute(DATATYPE, result.getSuffix());
+            } else if (result.getSuffixType().equals(DatatypeType.XML_LANG)) {
+                streamWriter.writeAttribute(XML_NS_PREFIX + ":lang", result.getSuffix());
+            }
+        }
+        streamWriter.writeCharacters(result.getValue());
+        streamWriter.writeEndElement();
+        streamWriter.writeEndElement();
     }
 
     protected void writeAllResults() throws XMLStreamException {

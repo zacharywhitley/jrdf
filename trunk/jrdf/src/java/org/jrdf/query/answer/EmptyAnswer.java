@@ -67,14 +67,14 @@ import java.util.Iterator;
 
 public final class EmptyAnswer implements SelectAnswer, Serializable {
     private static final long serialVersionUID = -7374613298128439580L;
-
-    /**
-     * An empty answer the returns no columns, values and 0 time taken.
-     */
     private static final String[][] NO_COLUMN_VALUES = new String[0][];
     private static final String[] NO_VARIABLES = new String[]{};
     private static final EmptyClosableIterator<TypeValue[]> NO_COLUMN_VALUES_ITERATOR =
         new EmptyClosableIterator<TypeValue[]>();
+
+    /**
+     * An empty answer the returns no columns, values and 0 time taken.
+     */
     public static final Answer EMPTY_ANSWER = new EmptyAnswer();
 
     private EmptyAnswer() {

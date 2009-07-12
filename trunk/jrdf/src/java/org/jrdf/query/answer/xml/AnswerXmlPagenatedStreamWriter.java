@@ -59,11 +59,8 @@
 package org.jrdf.query.answer.xml;
 
 import org.jrdf.query.answer.SelectAnswer;
-import static org.jrdf.query.answer.xml.DatatypeType.NONE;
-import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import static javax.xml.XMLConstants.XML_NS_PREFIX;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
@@ -107,37 +104,11 @@ public class AnswerXmlPagenatedStreamWriter extends AbstractXmlStreamWriter impl
     // TODO AN/YF This is a duplicate of MultiAnswerXMLStreamQueueWriter except uses iterator instead of streamParser.
     // Same with next method
     public void writeResult() throws XMLStreamException {
+        String[] currentVariables = answer.getVariableNames();
         if (iterator.hasNext()) {
-            streamWriter.writeStartElement(RESULT);
-            TypeValue[] results = iterator.next();
-            String[] currentVariables = answer.getVariableNames();
-            int index = 0;
-            for (TypeValue result : results) {
-                String currentVariable = currentVariables[index];
-                if (!result.getType().equals(UNBOUND)) {
-                    writeBinding(result, currentVariable);
-                }
-                index++;
-            }
-            streamWriter.writeEndElement();
+            writeResult(currentVariables, iterator.next());
         }
         count++;
         streamWriter.flush();
-    }
-
-    private void writeBinding(TypeValue result, String currentVariable) throws XMLStreamException {
-        streamWriter.writeStartElement(BINDING);
-        streamWriter.writeAttribute(NAME, currentVariable);
-        streamWriter.writeStartElement(result.getType().getXmlElementName());
-        if (result.getSuffixType() != NONE) {
-            if (result.getSuffixType().equals(DatatypeType.DATATYPE)) {
-                streamWriter.writeAttribute(DATATYPE, result.getSuffix());
-            } else if (result.getSuffixType().equals(DatatypeType.XML_LANG)) {
-                streamWriter.writeAttribute(XML_NS_PREFIX + ":lang", result.getSuffix());
-            }
-        }
-        streamWriter.writeCharacters(result.getValue());
-        streamWriter.writeEndElement();
-        streamWriter.writeEndElement();
     }
 }
