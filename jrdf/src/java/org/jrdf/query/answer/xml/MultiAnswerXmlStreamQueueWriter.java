@@ -58,16 +58,12 @@
 
 package org.jrdf.query.answer.xml;
 
-import static org.jrdf.query.answer.xml.DatatypeType.NONE;
-import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
 import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
 import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
 
-import static javax.xml.XMLConstants.XML_NS_PREFIX;
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 /**
@@ -100,17 +96,11 @@ public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter imp
     // TODO AN/YF This is a duplicate of AnswerXMLPagenatedStreamWriter except uses streamParser instead of iterator.
     // Same with next method
     public void writeResult() throws XMLStreamException {
+        final LinkedHashSet<String> variables = streamParser.getVariables();
+        final String[] currentVariables = variables.toArray(new String[variables.size()]);
         if (streamParser.hasMoreResults()) {
-            streamWriter.writeStartElement(RESULT);
             TypeValue[] results = streamParser.getResults();
-            Iterator<String> currentVariableIterator = streamParser.getVariables().iterator();
-            for (TypeValue result : results) {
-                String currentVariable = currentVariableIterator.next();
-                if (!result.getType().equals(UNBOUND)) {
-                    writeBinding(result, currentVariable);
-                }
-            }
-            streamWriter.writeEndElement();
+            writeResult(currentVariables, results);
         }
         streamWriter.flush();
     }
@@ -123,22 +113,5 @@ public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter imp
                 streamParser.close();
             }
         }
-    }
-
-    private void writeBinding(TypeValue result, String currentVariable) throws XMLStreamException {
-        streamWriter.writeStartElement(BINDING);
-        streamWriter.writeAttribute(NAME, currentVariable);
-        streamWriter.writeStartElement(result.getType().getXmlElementName());
-        if (result.getSuffixType() != NONE) {
-            if (result.getSuffixType().equals(DatatypeType.DATATYPE)) {
-                streamWriter.writeAttribute(DATATYPE, result.getSuffix());
-            } else if (result.getSuffixType().equals(DatatypeType.XML_LANG)) {
-                streamWriter.writeAttribute(XML_NS_PREFIX + ":lang", result.getSuffix());
-            }
-        }
-        final String nodeString = result.getValue();
-        streamWriter.writeCharacters(nodeString);
-        streamWriter.writeEndElement();
-        streamWriter.writeEndElement();
     }
 }
