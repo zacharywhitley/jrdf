@@ -100,15 +100,8 @@ public class AnswerXmlPagenatedStreamWriter extends AbstractXmlStreamWriter impl
         return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
     }
 
-    @Override
     public void writeHead() throws XMLStreamException {
-        streamWriter.writeStartElement(HEAD);
-        for (String variable : answer.getVariableNames()) {
-            streamWriter.writeStartElement(VARIABLE);
-            streamWriter.writeAttribute(NAME, variable);
-            streamWriter.writeEndElement();
-        }
-        streamWriter.writeEndElement();
+        writeHead(answer.getVariableNames());
     }
 
     // TODO AN/YF This is a duplicate of MultiAnswerXMLStreamQueueWriter except uses iterator instead of streamParser.

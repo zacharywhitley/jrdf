@@ -68,6 +68,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 /**
  * @author Yuan-Fang Li
@@ -91,15 +92,9 @@ public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter imp
         return streamParser.hasMoreResults();
     }
 
-    @Override
     public void writeHead() throws XMLStreamException {
-        streamWriter.writeStartElement(HEAD);
-        for (String variable : streamParser.getVariables()) {
-            streamWriter.writeStartElement(VARIABLE);
-            streamWriter.writeAttribute(NAME, variable);
-            streamWriter.writeEndElement();
-        }
-        streamWriter.writeEndElement();
+        final LinkedHashSet<String> variables = streamParser.getVariables();
+        writeHead(variables.toArray(new String[variables.size()]));
     }
 
     // TODO AN/YF This is a duplicate of AnswerXMLPagenatedStreamWriter except uses streamParser instead of iterator.

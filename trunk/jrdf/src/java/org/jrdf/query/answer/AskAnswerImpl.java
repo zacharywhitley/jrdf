@@ -74,10 +74,11 @@ import java.util.Set;
  */
 
 public class AskAnswerImpl implements AskAnswer, Serializable {
+    private static final String[] NO_VARIABLES = new String[]{};
     private static final long serialVersionUID = 432026021050798815L;
-
     private long timeTaken;
     private boolean result;
+    private static final int ONE_RESULT = 1;
 
     private AskAnswerImpl() {
     }
@@ -96,11 +97,11 @@ public class AskAnswerImpl implements AskAnswer, Serializable {
     }
 
     public long numberOfTuples() {
-        return 1;
+        return ONE_RESULT;
     }
 
     public String[] getVariableNames() {
-        return new String[]{ASK_VARIABLE_NAME};
+        return NO_VARIABLES;
     }
 
     public String[][] getColumnValues() {

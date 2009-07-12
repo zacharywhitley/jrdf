@@ -68,8 +68,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yuan-Fang Li
@@ -86,14 +86,14 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
     private InputStream inputStream;
     private XMLStreamReader parser;
     private boolean hasMore;
-    private Set<String> variables;
+    private List<String> variables;
     private boolean gotVariables;
     private int currentEvent;
 
     public MultiAnswerXmlStreamWriterImpl(Writer writer, InputStream inputStream) throws XMLStreamException {
         createXmlStreamWriter(writer);
         this.inputStream = inputStream;
-        this.variables = new HashSet<String>();
+        this.variables = new ArrayList<String>();
         createParser();
     }
 
@@ -111,18 +111,11 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
         this.parser = INPUT_FACTORY.createXMLStreamReader(inputStream);
     }
 
-    @Override
     public void writeHead() throws XMLStreamException {
         if (!gotVariables) {
             gotVariables = getVariables();
         }
-        streamWriter.writeStartElement(HEAD);
-        for (String variable : variables) {
-            streamWriter.writeStartElement(VARIABLE);
-            streamWriter.writeAttribute(NAME, variable);
-            streamWriter.writeEndElement();
-        }
-        streamWriter.writeEndElement();
+        writeHead(variables.toArray(new String[variables.size()]));
     }
 
     public boolean hasMoreResults() {

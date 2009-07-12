@@ -95,8 +95,13 @@ public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
         streamWriter.writeNamespace("schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
     }
 
-    public void writeHead() throws XMLStreamException {
+    protected void writeHead(String[] variables) throws XMLStreamException {
         streamWriter.writeStartElement(HEAD);
+        for (String variable : variables) {
+            streamWriter.writeStartElement(VARIABLE);
+            streamWriter.writeAttribute(NAME, variable);
+            streamWriter.writeEndElement();
+        }
         streamWriter.writeEndElement();
     }
 
