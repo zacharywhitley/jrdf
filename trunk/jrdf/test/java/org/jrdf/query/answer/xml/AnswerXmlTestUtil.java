@@ -62,10 +62,7 @@ package org.jrdf.query.answer.xml;
 import static com.ctc.wstx.api.WstxInputProperties.PARSING_MODE_FRAGMENT;
 import static com.ctc.wstx.api.WstxInputProperties.P_INPUT_PARSING_MODE;
 import static junit.framework.Assert.assertEquals;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.BINDING;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.NAME;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULT;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULTS;
+import org.jrdf.query.answer.SparqlProtocol;
 
 import javax.xml.stream.XMLInputFactory;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -109,7 +106,7 @@ public final class AnswerXmlTestUtil {
             if (eventType == START_ELEMENT) {
                 actualResultsMap = createActualResultsMap(reader);
             } else if (eventType == END_ELEMENT) {
-                if (RESULT.equals(reader.getLocalName())) {
+                if (SparqlProtocol.RESULT.equals(reader.getLocalName())) {
                     checkMaps(expectedResults.get(pos), actualResultsMap);
                     pos++;
                 }
@@ -119,7 +116,7 @@ public final class AnswerXmlTestUtil {
 
     private static Map<String, String> createActualResultsMap(final XMLStreamReader reader) throws Exception {
         Map<String, String> actualResultsMap = new HashMap<String, String>();
-        if (RESULT.equals(reader.getLocalName())) {
+        if (SparqlProtocol.RESULT.equals(reader.getLocalName())) {
             actualResultsMap = createBindings(reader);
         }
         return actualResultsMap;
@@ -129,7 +126,7 @@ public final class AnswerXmlTestUtil {
         final Map<String, String> newMap = new HashMap<String, String>();
         while (reader.hasNext() && !endOfResult(reader)) {
             if (reader.next() == START_ELEMENT) {
-                assertEquals(BINDING, reader.getLocalName());
+                assertEquals(SparqlProtocol.BINDING, reader.getLocalName());
                 addBinding(newMap, reader);
             }
         }
@@ -139,7 +136,7 @@ public final class AnswerXmlTestUtil {
     private static void addBinding(final Map<String, String> map, final XMLStreamReader reader) throws Exception {
         while (reader.hasNext() && !endOfBinding(reader)) {
             if (reader.next() == START_ELEMENT) {
-                map.put(reader.getAttributeValue(null, NAME), reader.getElementText());
+                map.put(reader.getAttributeValue(null, SparqlProtocol.NAME), reader.getElementText());
             }
         }
     }
@@ -152,14 +149,14 @@ public final class AnswerXmlTestUtil {
     }
 
     private static boolean endOfResults(final XMLStreamReader reader) {
-        return (reader.getEventType() == END_ELEMENT) && (RESULTS.equals(reader.getLocalName()));
+        return (reader.getEventType() == END_ELEMENT) && (SparqlProtocol.RESULTS.equals(reader.getLocalName()));
     }
 
     private static boolean endOfResult(final XMLStreamReader reader) {
-        return (reader.getEventType() == END_ELEMENT) && (RESULT.equals(reader.getLocalName()));
+        return (reader.getEventType() == END_ELEMENT) && (SparqlProtocol.RESULT.equals(reader.getLocalName()));
     }
 
     private static boolean endOfBinding(final XMLStreamReader reader) {
-        return (reader.getEventType() == END_ELEMENT) && (BINDING.equals(reader.getLocalName()));
+        return (reader.getEventType() == END_ELEMENT) && (SparqlProtocol.BINDING.equals(reader.getLocalName()));
     }
 }

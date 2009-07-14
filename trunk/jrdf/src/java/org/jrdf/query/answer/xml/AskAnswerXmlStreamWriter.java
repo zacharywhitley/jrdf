@@ -59,6 +59,7 @@
 package org.jrdf.query.answer.xml;
 
 import org.jrdf.query.answer.AskAnswer;
+import org.jrdf.query.answer.SparqlProtocol;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.Writer;
@@ -96,7 +97,7 @@ public class AskAnswerXmlStreamWriter extends AbstractXmlStreamWriter {
 
     public void writeResult() throws XMLStreamException {
         if (hasMoreResults()) {
-            streamWriter.writeStartElement(BOOLEAN);
+            streamWriter.writeStartElement(SparqlProtocol.BOOLEAN);
             streamWriter.writeCharacters(Boolean.toString(answer.getResult()));
             streamWriter.writeEndElement();
             streamWriter.flush();

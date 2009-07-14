@@ -66,9 +66,7 @@ import static junit.framework.Assert.assertTrue;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.HEAD;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.NAME;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.VARIABLE;
+import org.jrdf.query.answer.SparqlProtocol;
 
 import javax.xml.stream.XMLInputFactory;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -139,7 +137,7 @@ public final class AnswerXmlStreamWriterTestUtil {
         final XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));
         while (reader.hasNext()) {
             if (reader.getEventType() == START_ELEMENT) {
-                assertEquals(HEAD, reader.getLocalName());
+                assertEquals(SparqlProtocol.HEAD, reader.getLocalName());
                 addVar(varSet, reader);
             }
             reader.next();
@@ -151,8 +149,8 @@ public final class AnswerXmlStreamWriterTestUtil {
         reader.next();
         while (reader.hasNext()) {
             if (reader.getEventType() == START_ELEMENT) {
-                assertEquals(VARIABLE, reader.getLocalName());
-                variables.add(reader.getAttributeValue(null, NAME));
+                assertEquals(SparqlProtocol.VARIABLE, reader.getLocalName());
+                variables.add(reader.getAttributeValue(null, SparqlProtocol.NAME));
             }
             reader.next();
         }
