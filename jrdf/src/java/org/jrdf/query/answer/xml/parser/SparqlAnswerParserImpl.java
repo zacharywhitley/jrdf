@@ -63,12 +63,12 @@ import org.jrdf.query.answer.AnswerType;
 import static org.jrdf.query.answer.AnswerType.ASK;
 import static org.jrdf.query.answer.AnswerType.SELECT;
 import static org.jrdf.query.answer.AnswerType.UNKNOWN;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.BOOLEAN;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.HEAD;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.NAME;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULT;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULTS;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.VARIABLE;
+import static org.jrdf.query.answer.SparqlProtocol.BOOLEAN;
+import static org.jrdf.query.answer.SparqlProtocol.HEAD;
+import static org.jrdf.query.answer.SparqlProtocol.NAME;
+import static org.jrdf.query.answer.SparqlProtocol.RESULT;
+import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
+import static org.jrdf.query.answer.SparqlProtocol.VARIABLE;
 import org.jrdf.query.answer.xml.TypeValue;
 
 import javax.xml.stream.XMLInputFactory;

@@ -62,7 +62,6 @@ import org.jrdf.query.answer.SelectAnswer;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -87,8 +86,7 @@ public class AnswerXmlPagenatedStreamWriter extends AbstractXmlStreamWriter impl
         this.maxRows = answer.numberOfTuples();
     }
 
-    public AnswerXmlPagenatedStreamWriter(Writer writer, SelectAnswer answer, int maxRows)
-        throws XMLStreamException, IOException {
+    public AnswerXmlPagenatedStreamWriter(Writer writer, SelectAnswer answer, int maxRows) throws XMLStreamException {
         this(writer, answer);
         this.maxRows = maxRows;
     }

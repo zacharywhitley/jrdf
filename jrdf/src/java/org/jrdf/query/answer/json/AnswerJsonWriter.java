@@ -58,88 +58,27 @@
 
 package org.jrdf.query.answer.json;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
+import org.json.JSONException;
 
 public interface AnswerJsonWriter {
 
-    /**
-     * The element "head".
-     */
-    String HEAD = "head";
-
-    /**
-     * The element "link".
-     */
-    String LINK = "link";
-
-    /**
-     * The element "vars".
-     */
-    String VARS = "vars";
-
-    /**
-     * The element "results".
-     */
-    String RESULTS = "results";
-
-    /**
-     * The element "bindings".
-     */
-    String BINDINGS = "bindings";
-
-    /**
-     * The element "type".
-     */
-    String RESULT = "type";
-
-    /**
-     * The element "uri".
-     */
-    String URI = "uri";
-
-    /**
-     * The element "bnode".
-     */
-    String BNODE = "bnode";
-
-    /**
-     * The element "literal".
-     */
-    String LITERAL = "literal";
-
-    /**
-     * The element "datatype".
-     */
-    String DATATYPE = "datatype";
-
-    /**
-     * The element "value".
-     */
-    String BINDING = "value";
-
-    void write(Writer writer) throws XMLStreamException;
-
-    void close() throws XMLStreamException, IOException;
-
     boolean hasMoreResults();
 
-    void writeStartDocument() throws XMLStreamException;
+    void writeStartDocument() throws JSONException;
 
-    void writeHead() throws XMLStreamException;
+    void writeHead() throws JSONException;
 
-    void writeStartResults() throws XMLStreamException;
+    void writeStartResults();
 
-    void writeEndResults() throws XMLStreamException;
+    void writeEndResults();
 
-    void writeResult() throws XMLStreamException;
+    void writeResult();
 
-    void writeEndDocument() throws XMLStreamException;
+    void writeEndDocument() throws JSONException;
 
-    void write() throws XMLStreamException;
+    void writeFullDocument();
 
-    void setWriter(Writer writer) throws XMLStreamException, IOException;
+    void flush();
 
-    void flush() throws XMLStreamException;
+    void close();
 }

@@ -59,18 +59,13 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.BNODE;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.DATATYPE;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.LITERAL;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.NAME;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.URI;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.XML_LANG;
 import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
 import org.jrdf.query.answer.xml.SparqlResultType;
+import org.jrdf.query.answer.SparqlProtocol;
 
 import static javax.xml.XMLConstants.XML_NS_URI;
 import javax.xml.stream.XMLStreamException;
@@ -85,7 +80,7 @@ public class SparqlAnswerResultParserImpl implements SparqlAnswerResultParser {
     }
 
     public void getOneBinding(Map<String, TypeValue> variableToValue) throws XMLStreamException {
-        String variableName = parser.getAttributeValue(null, NAME);
+        String variableName = parser.getAttributeValue(null, SparqlProtocol.NAME);
         TypeValue binding = getOneNode();
         variableToValue.put(variableName, binding);
     }
@@ -94,11 +89,11 @@ public class SparqlAnswerResultParserImpl implements SparqlAnswerResultParser {
         parser.next();
         String tagName = parser.getLocalName();
         TypeValue typeValue = new TypeValueImpl();
-        if (URI.equals(tagName)) {
+        if (SparqlProtocol.URI.equals(tagName)) {
             typeValue = createURI(parser.getElementText());
-        } else if (LITERAL.equals(tagName)) {
+        } else if (SparqlProtocol.LITERAL.equals(tagName)) {
             typeValue = createLiteral();
-        } else if (BNODE.equals(tagName)) {
+        } else if (SparqlProtocol.BNODE.equals(tagName)) {
             typeValue = createBNode(parser.getElementText());
         }
         return typeValue;
@@ -110,8 +105,8 @@ public class SparqlAnswerResultParserImpl implements SparqlAnswerResultParser {
 
     private TypeValue createLiteral() throws XMLStreamException {
         TypeValue typeValue;
-        String datatype = parser.getAttributeValue(null, DATATYPE);
-        String language = parser.getAttributeValue(XML_NS_URI, XML_LANG);
+        String datatype = parser.getAttributeValue(null, SparqlProtocol.DATATYPE);
+        String language = parser.getAttributeValue(XML_NS_URI, SparqlProtocol.XML_LANG);
         if (datatype != null) {
             typeValue = createDatatypeLiteral(parser.getElementText(), datatype);
         } else if (language != null) {

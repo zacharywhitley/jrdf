@@ -71,6 +71,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jrdf.query.answer.SparqlProtocol;
+
 /**
  * @author Yuan-Fang Li
  * @version :Id: $
@@ -126,12 +128,12 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
     }
 
     public void writeResult() throws XMLStreamException {
-        streamWriter.writeStartElement(RESULT);
+        streamWriter.writeStartElement(SparqlProtocol.RESULT);
         while (parser.hasNext()) {
             currentEvent = parser.getEventType();
-            if (currentEvent == START_ELEMENT && BINDING.equals(parser.getLocalName())) {
+            if (currentEvent == START_ELEMENT && SparqlProtocol.BINDING.equals(parser.getLocalName())) {
                 writeOneBinding();
-            } else if (currentEvent == END_ELEMENT && RESULT.equals(parser.getLocalName())) {
+            } else if (currentEvent == END_ELEMENT && SparqlProtocol.RESULT.equals(parser.getLocalName())) {
                 break;
             }
             parser.next();
@@ -145,9 +147,9 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
     }
 
     private void writeOneBinding() throws XMLStreamException {
-        streamWriter.writeStartElement(BINDING);
-        String variableName = parser.getAttributeValue(null, NAME);
-        streamWriter.writeAttribute(NAME, variableName);
+        streamWriter.writeStartElement(SparqlProtocol.BINDING);
+        String variableName = parser.getAttributeValue(null, SparqlProtocol.NAME);
+        streamWriter.writeAttribute(SparqlProtocol.NAME, variableName);
         currentEvent = parser.next();
         writeOneNode();
         streamWriter.writeEndElement();
@@ -156,14 +158,14 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
     private void writeOneNode() throws XMLStreamException {
         String tagName = parser.getLocalName();
         streamWriter.writeStartElement(tagName);
-        if (LITERAL.equals(tagName)) {
-            String datatype = parser.getAttributeValue(null, DATATYPE);
+        if (SparqlProtocol.LITERAL.equals(tagName)) {
+            String datatype = parser.getAttributeValue(null, SparqlProtocol.DATATYPE);
             if (datatype != null) {
-                streamWriter.writeAttribute(DATATYPE, datatype);
+                streamWriter.writeAttribute(SparqlProtocol.DATATYPE, datatype);
             }
-            String language = parser.getAttributeValue(null, XML_LANG);
+            String language = parser.getAttributeValue(null, SparqlProtocol.XML_LANG);
             if (language != null) {
-                streamWriter.writeAttribute(XML_LANG, language);
+                streamWriter.writeAttribute(SparqlProtocol.XML_LANG, language);
             }
         }
         final String text = parser.getElementText();
@@ -175,10 +177,10 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
         variables = new ArrayList<String>();
         while (parser.hasNext()) {
             currentEvent = parser.getEventType();
-            if (currentEvent == START_ELEMENT && VARIABLE.equals(parser.getLocalName())) {
+            if (currentEvent == START_ELEMENT && SparqlProtocol.VARIABLE.equals(parser.getLocalName())) {
                 addVariable();
             } else if (currentEvent == END_ELEMENT) {
-                if (HEAD.equals(parser.getLocalName())) {
+                if (SparqlProtocol.HEAD.equals(parser.getLocalName())) {
                     return true;
                 }
             }
@@ -189,7 +191,7 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
 
     private void addVariable() {
         assert currentEvent == START_ELEMENT;
-        variables.add(parser.getAttributeValue(null, NAME));
+        variables.add(parser.getAttributeValue(null, SparqlProtocol.NAME));
     }
 
     private boolean getToNextResult() throws XMLStreamException {
@@ -197,9 +199,9 @@ public class MultiAnswerXmlStreamWriterImpl extends AbstractXmlStreamWriter
             int eventType = parser.getEventType();
             if (eventType == START_ELEMENT) {
                 final String tagName = parser.getLocalName();
-                if (RESULT.equals(tagName)) {
+                if (SparqlProtocol.RESULT.equals(tagName)) {
                     return true;
-                } else if (variables == null && VARIABLE.equals(tagName)) {
+                } else if (variables == null && SparqlProtocol.VARIABLE.equals(tagName)) {
                     getVariables();
                 }
             }

@@ -59,10 +59,9 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.BINDING;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.RESULT;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
+import org.jrdf.query.answer.SparqlProtocol;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -104,11 +103,11 @@ public class SparqlAnswerResultsParserImpl implements SparqlAnswerResultsParser 
     }
 
     private boolean startOfBinding(int currentEvent) {
-        return currentEvent == START_ELEMENT && BINDING.equals(parser.getLocalName());
+        return currentEvent == START_ELEMENT && SparqlProtocol.BINDING.equals(parser.getLocalName());
     }
 
     private boolean endOfResult(int currentEvent) {
-        return currentEvent == END_ELEMENT && RESULT.equals(parser.getLocalName());
+        return currentEvent == END_ELEMENT && SparqlProtocol.RESULT.equals(parser.getLocalName());
     }
 
     private TypeValue[] mapToArray(LinkedHashSet<String> variables, Map<String, TypeValue> variableToValue) {

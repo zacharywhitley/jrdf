@@ -72,7 +72,7 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.AskAnswer;
-import static org.jrdf.query.answer.xml.AnswerXmlWriter.BOOLEAN;
+import org.jrdf.query.answer.SparqlProtocol;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
@@ -178,7 +178,7 @@ public class AskAnswerXmlStreamWriterIntegrationTest extends TestCase {
             int eventType = reader.getEventType();
             switch (eventType) {
                 case START_ELEMENT:
-                    assertEquals(BOOLEAN, reader.getLocalName());
+                    assertEquals(SparqlProtocol.BOOLEAN, reader.getLocalName());
                     break;
                 case CHARACTERS:
                     assertEquals(value, Boolean.parseBoolean(reader.getText()));
