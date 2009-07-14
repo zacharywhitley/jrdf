@@ -93,8 +93,6 @@ public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter imp
         writeHead(variables.toArray(new String[variables.size()]));
     }
 
-    // TODO AN/YF This is a duplicate of AnswerXMLPagenatedStreamWriter except uses streamParser instead of iterator.
-    // Same with next method
     public void writeResult() throws XMLStreamException {
         final LinkedHashSet<String> variables = streamParser.getVariables();
         final String[] currentVariables = variables.toArray(new String[variables.size()]);
