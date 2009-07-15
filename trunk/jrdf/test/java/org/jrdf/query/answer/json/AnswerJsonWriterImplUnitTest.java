@@ -94,8 +94,10 @@ public class AnswerJsonWriterImplUnitTest {
     public void creation() throws Exception {
         expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
         expect(selectAnswer.numberOfTuples()).andReturn(0L);
+
         mockFactory.replay();
         new AnswerJsonWriterImpl(stringWriter, selectAnswer);
+
         mockFactory.verify();
     }
 
@@ -103,8 +105,12 @@ public class AnswerJsonWriterImplUnitTest {
     public void testNoVariablesNoResults() throws Exception {
         expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
         expect(selectAnswer.numberOfTuples()).andReturn(0L);
+        expect(selectAnswer.getVariableNames()).andReturn(NO_VARIABLES);
+
         mockFactory.replay();
-        new AnswerJsonWriterImpl(stringWriter, selectAnswer);
+        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer);
+        writer.writeFullDocument();
+
         mockFactory.verify();
     }
 
@@ -116,11 +122,9 @@ public class AnswerJsonWriterImplUnitTest {
 
         mockFactory.replay();
         final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer);
-        writer.writeStartDocument();
-        writer.writeHead();
-        writer.writeEndDocument();
-        mockFactory.verify();
+        writer.writeFullDocument();
 
+        mockFactory.verify();
         final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
         checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
     }
