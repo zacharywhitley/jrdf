@@ -76,7 +76,7 @@ public interface AnswerJsonWriter {
 
     void writeEndDocument() throws JSONException;
 
-    void writeFullDocument();
+    void writeFullDocument() throws JSONException;
 
     void flush();
 

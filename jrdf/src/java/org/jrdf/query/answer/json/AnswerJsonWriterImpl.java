@@ -120,7 +120,10 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         jsonWriter.endObject();
     }
 
-    public void writeFullDocument() {
+    public void writeFullDocument() throws JSONException {
+        writeStartDocument();
+        writeHead();
+        writeEndDocument();
     }
 
     public void flush() {
