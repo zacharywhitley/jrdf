@@ -72,7 +72,7 @@ public interface AnswerJsonWriter {
 
     void writeEndResults() throws JSONException;
 
-    void writeResult();
+    void writeResult() throws JSONException;
 
     void writeEndDocument() throws JSONException;
 
