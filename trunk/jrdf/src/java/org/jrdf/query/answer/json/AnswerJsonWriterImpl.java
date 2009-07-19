@@ -67,7 +67,6 @@ import org.json.JSONException;
 import org.json.JSONWriter;
 
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.Iterator;
 
 public class AnswerJsonWriterImpl implements AnswerJsonWriter {
@@ -138,8 +137,6 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     private void writeResult(String[] currentVariables, TypeValue[] results) throws JSONException {
         jsonWriter.object();
         int index = 0;
-        System.err.println("Got: " + Arrays.asList(currentVariables));
-        System.err.println("Got: " + Arrays.asList(results));
         for (TypeValue result : results) {
             writeBinding(result, currentVariables[index]);
             index++;
