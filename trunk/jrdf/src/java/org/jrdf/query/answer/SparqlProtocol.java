@@ -76,9 +76,17 @@ public class SparqlProtocol {
      */
     public static final String HEAD = "head";
     /**
-     * The element "variable".
+     * The element "link".  An array of URIs.
+     */
+    public static final String LINK = "link";
+    /**
+     * A single variable.
      */
     public static final String VARIABLE = "variable";
+    /**
+     * An array of variables.
+     */
+    public static final String VARS = "vars";
     /**
      * The element "name".
      */
@@ -95,6 +103,10 @@ public class SparqlProtocol {
      * The element "binding".
      */
     public static final String BINDING = "binding";
+    /**
+     * An array of bindings.
+     */
+    public static final String BINDINGS = "bindings";
     /**
      * The element "bnode".
      */

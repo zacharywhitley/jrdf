@@ -59,9 +59,18 @@
 
 package org.jrdf.query.answer.xml;
 
+import static org.jrdf.query.answer.SparqlProtocol.BINDING;
+import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
+import static org.jrdf.query.answer.SparqlProtocol.HEAD;
+import static org.jrdf.query.answer.SparqlProtocol.NAME;
+import static org.jrdf.query.answer.SparqlProtocol.RESULT;
+import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
+import static org.jrdf.query.answer.SparqlProtocol.SPARQL;
+import static org.jrdf.query.answer.SparqlProtocol.SPARQL_NS;
+import static org.jrdf.query.answer.SparqlProtocol.VARIABLE;
+import static org.jrdf.query.answer.SparqlProtocol.XSLT_URL_STRING;
 import static org.jrdf.query.answer.xml.DatatypeType.NONE;
 import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
-import org.jrdf.query.answer.SparqlProtocol;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
@@ -95,26 +104,26 @@ public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
 
     public void writeStartDocument() throws XMLStreamException {
         streamWriter.writeStartDocument(ENCODING_DEFAULT, VERSION_NUMBER);
-        String target = "type=\"text/xsl\" href=\"" + SparqlProtocol.XSLT_URL_STRING + "\"";
+        String target = "type=\"text/xsl\" href=\"" + XSLT_URL_STRING + "\"";
         streamWriter.writeProcessingInstruction("xml-stylesheet", target);
-        streamWriter.writeStartElement(SparqlProtocol.SPARQL);
-        streamWriter.writeDefaultNamespace(SparqlProtocol.SPARQL_NS);
+        streamWriter.writeStartElement(SPARQL);
+        streamWriter.writeDefaultNamespace(SPARQL_NS);
         streamWriter.writeNamespace("xsi", W3C_XML_SCHEMA_INSTANCE_NS_URI);
         streamWriter.writeNamespace("schemaLocation", "http://www.w3.org/2007/SPARQL/result.xsd");
     }
 
     protected void writeHead(String[] variables) throws XMLStreamException {
-        streamWriter.writeStartElement(SparqlProtocol.HEAD);
+        streamWriter.writeStartElement(HEAD);
         for (String variable : variables) {
-            streamWriter.writeStartElement(SparqlProtocol.VARIABLE);
-            streamWriter.writeAttribute(SparqlProtocol.NAME, variable);
+            streamWriter.writeStartElement(VARIABLE);
+            streamWriter.writeAttribute(NAME, variable);
             streamWriter.writeEndElement();
         }
         streamWriter.writeEndElement();
     }
 
     protected void writeResult(String[] currentVariables, final TypeValue[] results) throws XMLStreamException {
-        streamWriter.writeStartElement(SparqlProtocol.RESULT);
+        streamWriter.writeStartElement(RESULT);
         int index = 0;
         for (TypeValue result : results) {
             writeBinding(result, currentVariables[index]);
@@ -130,12 +139,12 @@ public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
     }
 
     protected void realWriteBinding(TypeValue result, String currentVariable) throws XMLStreamException {
-        streamWriter.writeStartElement(SparqlProtocol.BINDING);
-        streamWriter.writeAttribute(SparqlProtocol.NAME, currentVariable);
+        streamWriter.writeStartElement(BINDING);
+        streamWriter.writeAttribute(NAME, currentVariable);
         streamWriter.writeStartElement(result.getType().getXmlElementName());
         if (result.getSuffixType() != NONE) {
             if (result.getSuffixType().equals(DatatypeType.DATATYPE)) {
-                streamWriter.writeAttribute(SparqlProtocol.DATATYPE, result.getSuffix());
+                streamWriter.writeAttribute(DATATYPE, result.getSuffix());
             } else if (result.getSuffixType().equals(DatatypeType.XML_LANG)) {
                 streamWriter.writeAttribute(XML_NS_PREFIX + ":lang", result.getSuffix());
             }
@@ -155,7 +164,7 @@ public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
     }
 
     public void writeStartResults() throws XMLStreamException {
-        streamWriter.writeStartElement(SparqlProtocol.RESULTS);
+        streamWriter.writeStartElement(RESULTS);
     }
 
     public void writeEndResults() throws XMLStreamException {
