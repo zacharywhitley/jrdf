@@ -81,7 +81,6 @@ class LineParserTestUtil {
     private LineParserTestUtil() {
     }
 
-
     static InputStream getSampleData(Class clazz, String fileName) throws IOException {
         URL source = clazz.getClassLoader().getResource(fileName)
         return source.openStream()
@@ -92,19 +91,19 @@ class LineParserTestUtil {
         eventReader.each {
             actualResults.add(it);
         }
-        return actualResults;
+        return actualResults
     }
 
     static Set<Triple> parseNTriplesFile(InputStream input, Graph graph, MapFactory mapFactory) {
         def parserFactory = new NTriplesParserFactory()
         def ntriplesParser = parserFactory.createParser(graph, mapFactory)
-        return parseFile(ntriplesParser, input, graph);
+        return parseFile(ntriplesParser, input, graph)
     }
 
     static Set<Triple> parseN3File(InputStream input, Graph graph, MapFactory mapFactory) {
         def parserFactory = new N3ParserFactory()
         def ntriplesParser = parserFactory.createParser(graph, mapFactory)
-        return parseFile(ntriplesParser, input, graph);
+        return parseFile(ntriplesParser, input, graph)
     }
 
     static Set<Triple> parseFile(LineHandler lineHandler, InputStream input, Graph graph) {

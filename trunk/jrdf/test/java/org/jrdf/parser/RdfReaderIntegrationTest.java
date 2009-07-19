@@ -59,14 +59,34 @@
 
 package org.jrdf.parser;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.is;
 import org.jrdf.graph.Graph;
+import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
+import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
-import java.io.File;
+import java.io.InputStream;
 
-public class RdfReaderUnitTest extends TestCase {
-    public void testNoFile() throws Exception {
-        Graph graph = new RdfReader().parseNTriples(new File(""));
-        assertTrue(graph.getNumberOfTriples() == 0);
+public class RdfReaderIntegrationTest {
+
+    @Test
+    public void readingNTriplesFromStream() throws Exception {
+        final InputStream in = getSampleData(this.getClass(), "org/jrdf/parser/ntriples/test.nt");
+        Graph graph = new RdfReader().parseNTriples(in);
+        assertThat(graph.getNumberOfTriples(), is(33L));
+    }
+
+    @Test
+    public void readingRdfXmlFromStream() throws Exception {
+        final InputStream in = getSampleData(this.getClass(), "org/jrdf/writer/rdfxml/data/rdf/literalParseType.rdf");
+        Graph graph = new RdfReader().parseRdfXml(in);
+        assertThat(graph.getNumberOfTriples(), is(1L));
+    }
+
+    @Test
+    public void readingFromN3() throws Exception {
+        final InputStream in = getSampleData(this.getClass(), "org/jrdf/parser/n3/test.n3");
+        Graph graph = new RdfReader().parseN3(in);
+        assertThat(graph.getNumberOfTriples(), is(35L));
     }
 }
