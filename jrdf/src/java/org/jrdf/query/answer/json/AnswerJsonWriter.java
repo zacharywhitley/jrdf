@@ -68,9 +68,9 @@ public interface AnswerJsonWriter {
 
     void writeHead() throws JSONException;
 
-    void writeStartResults();
+    void writeStartResults() throws JSONException;
 
-    void writeEndResults();
+    void writeEndResults() throws JSONException;
 
     void writeResult();
 

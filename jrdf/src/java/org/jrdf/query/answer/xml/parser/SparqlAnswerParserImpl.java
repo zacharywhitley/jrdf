@@ -81,6 +81,7 @@ import java.io.InputStream;
 import java.util.LinkedHashSet;
 
 // TODO AN/YF Refactor out the tryGetVariables
+// TODO AN Missing link support for head tag.
 public class SparqlAnswerParserImpl implements SparqlAnswerParser {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader parser;

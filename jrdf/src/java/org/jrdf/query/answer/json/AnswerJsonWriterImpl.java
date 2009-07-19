@@ -59,6 +59,7 @@
 package org.jrdf.query.answer.json;
 
 import org.jrdf.query.answer.SelectAnswer;
+import org.jrdf.query.answer.SparqlProtocol;
 import org.jrdf.query.answer.xml.TypeValue;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.json.JSONException;
@@ -98,8 +99,8 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     }
 
     public void writeHead() throws JSONException {
-        jsonWriter.key("head");
-        jsonWriter.object().key("vars").array();
+        jsonWriter.key(SparqlProtocol.HEAD);
+        jsonWriter.object().key(SparqlProtocol.VARS).array();
         for (final String variable : answer.getVariableNames()) {
             jsonWriter.value(variable);
         }
@@ -107,10 +108,22 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         jsonWriter.endObject();
     }
 
-    public void writeStartResults() {
+    public void writeStartResults() throws JSONException {
+        jsonWriter.key(SparqlProtocol.RESULTS);
+        jsonWriter.object().key(SparqlProtocol.BINDINGS).array();
     }
 
-    public void writeEndResults() {
+    public void writeEndResults() throws JSONException {
+        jsonWriter.endArray();
+        jsonWriter.endObject();
+    }
+
+    protected void writeAllResults() throws JSONException {
+        writeStartResults();
+        while (hasMoreResults()) {
+            writeResult();
+        }
+        writeEndResults();
     }
 
     public void writeResult() {
@@ -123,6 +136,7 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     public void writeFullDocument() throws JSONException {
         writeStartDocument();
         writeHead();
+        writeAllResults();
         writeEndDocument();
     }
 

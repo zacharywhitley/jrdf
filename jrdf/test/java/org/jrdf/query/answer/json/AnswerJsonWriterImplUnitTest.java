@@ -76,6 +76,7 @@ import java.util.Iterator;
 
 public class AnswerJsonWriterImplUnitTest {
     private static final String[] NO_VARIABLES = {};
+    private static final String[] NO_BINDINGS = {};
     private static final String[] TEST_VARIABLES = {"abc", "123", "doh", "ray", "me"};
     private final MockFactory mockFactory = new MockFactory();
     private SelectAnswer selectAnswer;
@@ -127,6 +128,8 @@ public class AnswerJsonWriterImplUnitTest {
         mockFactory.verify();
         final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
         checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
+        final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
+        checkJSONStringArrayValues(results, "bindings", NO_BINDINGS);
     }
 
     private void checkJSONStringArrayValues(final JSONObject jsonObject, final String arrayName,
