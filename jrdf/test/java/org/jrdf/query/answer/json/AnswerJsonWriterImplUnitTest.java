@@ -62,11 +62,14 @@ import static org.easymock.EasyMock.expect;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import org.jrdf.query.answer.SelectAnswer;
+import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
+import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.xml.TypeValueImpl;
 import org.jrdf.util.test.MockFactory;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONObject;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
@@ -103,7 +106,8 @@ public class AnswerJsonWriterImplUnitTest {
     }
 
     @Test
-    public void testNoVariablesNoResults() throws Exception {
+    public void emptyAnswer() throws Exception {
+        expect(mockIterator.hasNext()).andReturn(false);
         expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
         expect(selectAnswer.numberOfTuples()).andReturn(0L);
         expect(selectAnswer.getVariableNames()).andReturn(NO_VARIABLES);
@@ -116,7 +120,8 @@ public class AnswerJsonWriterImplUnitTest {
     }
 
     @Test
-    public void sampleHeadCreation() throws Exception {
+    public void noResults() throws Exception {
+        expect(mockIterator.hasNext()).andReturn(false);
         expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
         expect(selectAnswer.numberOfTuples()).andReturn(0L);
         expect(selectAnswer.getVariableNames()).andReturn(TEST_VARIABLES);
@@ -130,6 +135,29 @@ public class AnswerJsonWriterImplUnitTest {
         checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
         final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
         checkJSONStringArrayValues(results, "bindings", NO_BINDINGS);
+    }
+
+
+    @Test
+    public void oneResult() throws Exception {
+        expect(mockIterator.hasNext()).andReturn(true).times(2);
+        expect(mockIterator.hasNext()).andReturn(false).once();
+        expect(mockIterator.next()).andReturn(new TypeValue[]{
+            new TypeValueImpl(BLANK_NODE, "r1"),
+            new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/")});
+        expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
+        expect(selectAnswer.numberOfTuples()).andReturn(1L);
+        expect(selectAnswer.getVariableNames()).andReturn(TEST_VARIABLES).anyTimes();
+
+        mockFactory.replay();
+        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer);
+        writer.writeFullDocument();
+
+        mockFactory.verify();
+        final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
+        checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
+        final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
+        // Add assertion!
     }
 
     private void checkJSONStringArrayValues(final JSONObject jsonObject, final String arrayName,

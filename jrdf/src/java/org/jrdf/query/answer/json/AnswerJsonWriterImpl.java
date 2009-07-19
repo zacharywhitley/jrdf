@@ -60,12 +60,14 @@ package org.jrdf.query.answer.json;
 
 import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.SparqlProtocol;
+import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
 import org.jrdf.query.answer.xml.TypeValue;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class AnswerJsonWriterImpl implements AnswerJsonWriter {
@@ -91,7 +93,7 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     }
 
     public boolean hasMoreResults() {
-        return false;
+        return iterator.hasNext();
     }
 
     public void writeStartDocument() throws JSONException {
@@ -126,7 +128,39 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         writeEndResults();
     }
 
-    public void writeResult() {
+    public void writeResult() throws JSONException {
+        final String[] currentVariables = answer.getVariableNames();
+        if (iterator.hasNext()) {
+            writeResult(currentVariables, iterator.next());
+        }
+    }
+
+    private void writeResult(String[] currentVariables, TypeValue[] results) throws JSONException {
+        jsonWriter.object();
+        int index = 0;
+        System.err.println("Got: " + Arrays.asList(currentVariables));
+        System.err.println("Got: " + Arrays.asList(results));
+        for (TypeValue result : results) {
+            writeBinding(result, currentVariables[index]);
+            index++;
+        }
+        jsonWriter.endObject();
+    }
+
+    private void writeBinding(TypeValue result, String currentVariable) throws JSONException {
+        if (!result.getType().equals(UNBOUND)) {
+            realWriteBinding(result, currentVariable);
+        }
+    }
+
+    private void realWriteBinding(TypeValue result, String currentVariable) throws JSONException {
+        jsonWriter.key(currentVariable);
+        jsonWriter.object();
+        jsonWriter.key("value");
+        jsonWriter.value(result.getValue());
+        jsonWriter.key("type");
+        jsonWriter.value(result.getType().toString());
+        jsonWriter.endObject();
     }
 
     public void writeEndDocument() throws JSONException {
