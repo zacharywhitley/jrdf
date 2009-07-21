@@ -60,6 +60,8 @@ package org.jrdf.query.answer.json;
 
 import org.json.JSONException;
 
+import java.io.IOException;
+
 public interface AnswerJsonWriter {
 
     boolean hasMoreResults();
@@ -78,7 +80,7 @@ public interface AnswerJsonWriter {
 
     void writeFullDocument() throws JSONException;
 
-    void flush();
+    void flush() throws IOException, JSONException;
 
-    void close();
+    void close() throws IOException, JSONException;
 }

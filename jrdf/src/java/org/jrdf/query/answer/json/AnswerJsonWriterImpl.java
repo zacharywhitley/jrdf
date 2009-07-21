@@ -67,13 +67,16 @@ import org.json.JSONException;
 import org.json.JSONWriter;
 
 import java.io.Writer;
+import java.io.IOException;
 import java.util.Iterator;
 
 public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     private SelectAnswer answer;
     private Iterator<TypeValue[]> iterator;
-    private long maxRows;
     private JSONWriter jsonWriter;
+    private long maxRows;
+    private long count;
+    private Writer writer;
 
     private AnswerJsonWriterImpl() {
     }
@@ -83,7 +86,8 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         this.answer = answer;
         this.iterator = answer.columnValuesIterator();
         this.maxRows = answer.numberOfTuples();
-        this.jsonWriter = new JSONWriter(writer);
+        this.writer = writer;
+        this.jsonWriter = new JSONWriter(this.writer);
     }
 
     public AnswerJsonWriterImpl(Writer writer, SelectAnswer answer, int maxRows) {
@@ -92,7 +96,7 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     }
 
     public boolean hasMoreResults() {
-        return iterator.hasNext();
+        return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
     }
 
     public void writeStartDocument() throws JSONException {
@@ -132,6 +136,7 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         if (iterator.hasNext()) {
             writeResult(currentVariables, iterator.next());
         }
+        count++;
     }
 
     private void writeResult(String[] currentVariables, TypeValue[] results) throws JSONException {
@@ -171,9 +176,19 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         writeEndDocument();
     }
 
-    public void flush() {
+    public void flush() throws JSONException {
+        try {
+            writer.flush();
+        } catch (IOException e) {
+            throw new JSONException(e);
+        }
     }
 
-    public void close() {
+    public void close() throws JSONException {
+        try {
+            writer.close();
+        } catch (IOException e) {
+            throw new JSONException(e);
+        }
     }
 }

@@ -70,7 +70,6 @@ import java.util.LinkedHashSet;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter implements MultiAnswerXmlStreamWriter {
     private SparqlAnswerStreamParser streamParser;
 
