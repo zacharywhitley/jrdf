@@ -59,6 +59,7 @@
 package org.jrdf.query.answer.json;
 
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import org.jrdf.query.answer.SelectAnswer;
@@ -77,7 +78,9 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -94,87 +97,162 @@ public class AnswerJsonWriterImplUnitTest {
             put("me", new TypeValueImpl(LITERAL, ""));
         }
     };
+    private static final Map<String, TypeValue> TEST_BINDINGS_2 = new HashMap<String, TypeValue>() {
+        {
+            put("abc", new TypeValueImpl(BLANK_NODE, "r2"));
+            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/bob/"));
+            put("ray", new TypeValueImpl(TYPED_LITERAL, "321", true, XSD.INT.toString()));
+            put("doh", new TypeValueImpl(LITERAL, "qwerty"));
+        }
+    };
+    private static final Map<String, TypeValue> TEST_BINDINGS_3 = new HashMap<String, TypeValue>() {
+        {
+            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/charles/"));
+            put("ray", new TypeValueImpl(TYPED_LITERAL, "231", true, XSD.INT.toString()));
+            put("doh", new TypeValueImpl(LITERAL, "asdf"));
+        }
+    };
     private final MockFactory mockFactory = new MockFactory();
     private SelectAnswer selectAnswer;
     private Iterator<TypeValue[]> mockIterator;
     private StringWriter stringWriter;
+    private Writer mockWriter;
 
     @SuppressWarnings({ "unchecked" })
     @Before
     public void createMocks() throws Exception {
         selectAnswer = mockFactory.createMock(SelectAnswer.class);
         mockIterator = mockFactory.createMock(Iterator.class);
+        mockWriter = mockFactory.createMock(Writer.class);
         stringWriter = new StringWriter();
     }
 
     @Test
-    public void creation() throws Exception {
+    public void creationAndClosing() throws Exception {
         expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
         expect(selectAnswer.numberOfTuples()).andReturn(0L);
+        mockWriter.flush();
+        expectLastCall();
+        mockWriter.close();
+        expectLastCall();
 
         mockFactory.replay();
-        new AnswerJsonWriterImpl(stringWriter, selectAnswer);
+        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, selectAnswer);
+        writer.flush();
+        writer.close();
+
+        mockFactory.verify();
+    }
+
+    @Test(expected = JSONException.class)
+    public void wrapIOExceptionOnFlush() throws Exception {
+        expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
+        expect(selectAnswer.numberOfTuples()).andReturn(0L);
+        mockWriter.flush();
+        expectLastCall().andThrow(new IOException());
+
+        mockFactory.replay();
+        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, selectAnswer);
+        writer.flush();
+
+        mockFactory.verify();
+    }
+
+    @Test(expected = JSONException.class)
+    public void wrapIOExceptionOnClose() throws Exception {
+        expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
+        expect(selectAnswer.numberOfTuples()).andReturn(0L);
+        mockWriter.close();
+        expectLastCall().andThrow(new IOException());
+
+        mockFactory.replay();
+        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, selectAnswer);
+        writer.close();
 
         mockFactory.verify();
     }
 
     @Test
     public void emptyAnswer() throws Exception {
-        expect(mockIterator.hasNext()).andReturn(false);
-        expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
-        expect(selectAnswer.numberOfTuples()).andReturn(0L);
-        expect(selectAnswer.getVariableNames()).andReturn(NO_VARIABLES);
-
+        setupExpectationsForResults(NO_VARIABLES, 0);
         mockFactory.replay();
+
         final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer);
         writer.writeFullDocument();
-
         mockFactory.verify();
+
+        final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
+        checkJSONStringArrayValues(head, "vars", NO_VARIABLES);
     }
 
     @Test
     public void noResults() throws Exception {
-        expect(mockIterator.hasNext()).andReturn(false);
-        expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
-        expect(selectAnswer.numberOfTuples()).andReturn(0L);
-        expect(selectAnswer.getVariableNames()).andReturn(TEST_VARIABLES);
-
+        setupExpectationsForResults(TEST_VARIABLES, 0);
         mockFactory.replay();
+
         final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer);
         writer.writeFullDocument();
-
         mockFactory.verify();
+
         final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
         checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
         final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
         checkJSONStringArrayValues(results, "bindings", NO_BINDINGS);
     }
 
-
     @Test
-    public void oneResult() throws Exception {
-        expect(mockIterator.hasNext()).andReturn(true).times(2);
-        expect(mockIterator.hasNext()).andReturn(false).once();
-        expect(mockIterator.next()).andReturn(convertBindingMapToArray(TEST_BINDINGS_1, TEST_VARIABLES));
-        expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
-        expect(selectAnswer.numberOfTuples()).andReturn(1L);
-        expect(selectAnswer.getVariableNames()).andReturn(TEST_VARIABLES).anyTimes();
+    public void hasResults() throws Exception {
+        setupExpectationsForResults(TEST_VARIABLES, 3, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
 
         mockFactory.replay();
+
         final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer);
         writer.writeFullDocument();
-
         mockFactory.verify();
+
+        final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
+        checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
+        final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
+        checkBindings(results.getJSONArray("bindings"), TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+    }
+
+    @Test
+    public void maxRows() throws Exception {
+        setupExpectationsForResults(TEST_VARIABLES, 1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+        mockFactory.replay();
+
+        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer, 1);
+        writer.writeFullDocument();
+        mockFactory.verify();
+
         final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
         checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
         final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
         checkBindings(results.getJSONArray("bindings"), TEST_BINDINGS_1);
     }
 
+    private void setupExpectationsForResults(final String[] variables, final int numberOfResults,
+        final Map<String, TypeValue>... results) {
+        // Number of loops around the iterator
+        if (numberOfResults > 0) {
+            expect(mockIterator.hasNext()).andReturn(true).times(numberOfResults * 2);
+        }
+        expect(mockIterator.hasNext()).andReturn(false).once();
+        // Number of results
+        for (int i = 0; i < numberOfResults; i++) {
+            expect(mockIterator.next()).andReturn(convertBindingMapToArray(results[i], variables));
+        }
+        // Actual returned results from answer
+        expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
+        expect(selectAnswer.numberOfTuples()).andReturn((long) numberOfResults);
+        expect(selectAnswer.getVariableNames()).andReturn(variables).anyTimes();
+    }
+
+
     private TypeValue[] convertBindingMapToArray(final Map<String, TypeValue> binding, final String[] variables) {
-        TypeValue[] typeValues = new TypeValue[variables.length];
+        final TypeValue[] typeValues = new TypeValue[variables.length];
         for (int i = 0; i < variables.length; i++) {
-            String variable = variables[i];
+            final String variable = variables[i];
             final TypeValue typeValue = binding.get(variable);
             if (typeValue != null) {
                 typeValues[i] = typeValue;
@@ -191,7 +269,7 @@ public class AnswerJsonWriterImplUnitTest {
         assertThat(vars, notNullValue());
         assertThat(vars.length(), equalTo(expectedValues.length));
         int counter = 0;
-        for (String value : expectedValues) {
+        for (final String value : expectedValues) {
             assertThat(vars.getString(counter++), equalTo(value));
         }
     }
@@ -201,14 +279,14 @@ public class AnswerJsonWriterImplUnitTest {
             final JSONObject aBinding = bindings.getJSONObject(i);
             final Map<String, TypeValue> expectedBindings = allResults[i];
             assertThat(aBinding, notNullValue());
-            for (String variable : TEST_VARIABLES) {
+            for (final String variable : TEST_VARIABLES) {
                 if (aBinding.has(variable)) {
                     final JSONObject aVariable = aBinding.getJSONObject(variable);
                     assertThat(aVariable, notNullValue());
-                    final String type = aVariable.getString("type");
-                    final String value = aVariable.getString("value");
-                    assertThat(type, equalTo(expectedBindings.get(variable).getType().toString()));
-                    assertThat(value, equalTo(expectedBindings.get(variable).getValue()));
+                    final String expectedType = expectedBindings.get(variable).getType().toString();
+                    assertThat(aVariable.getString("type"), equalTo(expectedType));
+                    final String expectedValue = expectedBindings.get(variable).getValue();
+                    assertThat(aVariable.getString("value"), equalTo(expectedValue));
                 }
             }
         }
