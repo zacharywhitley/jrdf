@@ -59,7 +59,7 @@
 
 package org.jrdf.query.client;
 
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL;
+import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
@@ -120,6 +120,7 @@ public class QueryClientImpl implements CallableGraphQueryClient {
         if (status.isSuccess()) {
             return response.getEntity();
         } else {
+            status.getThrowable().printStackTrace();
             throw new RuntimeException(status.getThrowable());
         }
     }
@@ -142,7 +143,7 @@ public class QueryClientImpl implements CallableGraphQueryClient {
     private void setAcceptedMediaTypes(Request theRequest) {
         ClientInfo clientInfo = theRequest.getClientInfo();
         List<Preference<MediaType>> preferenceList = new ArrayList<Preference<MediaType>>();
-        preferenceList.add(new Preference<MediaType>(APPLICATION_SPARQL));
+        preferenceList.add(new Preference<MediaType>(APPLICATION_SPARQL_XML));
         clientInfo.setAcceptedMediaTypes(preferenceList);
     }
 

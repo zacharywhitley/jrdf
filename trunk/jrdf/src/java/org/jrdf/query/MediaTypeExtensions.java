@@ -65,7 +65,13 @@ public final class MediaTypeExtensions {
     /**
      * The media type for sparql result in XML.
      */
-    public static final MediaType APPLICATION_SPARQL = MediaType.register("application/sparql-results+xml",
+    public static final MediaType APPLICATION_SPARQL_XML = MediaType.register("application/sparql-results+xml",
+        "SPARQL Query Results");
+
+    /**
+     * The media type for sparql result in JSON.
+     */
+    public static final MediaType APPLICATION_SPARQL_JSON = MediaType.register("application/sparql-results+json",
         "SPARQL Query Results");
 
     private MediaTypeExtensions() {

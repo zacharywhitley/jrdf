@@ -67,10 +67,10 @@
     <bean id="org.restlet.data.MediaType.TEXT_HTML"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
-    <bean id="org.restlet.data.MediaType.APPLICATION_JSON"
+    <bean id="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
-    <bean id="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL"
+    <bean id="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
     <bean id="org.restlet.data.MediaType.APPLICATION_XML"
@@ -207,7 +207,7 @@
         <property name="representationTemplates">
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="graphsResourceHtml"/>
-                <entry key-ref="org.restlet.data.MediaType.APPLICATION_JSON" value-ref="jsonRepresentationFactory"/>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON" value-ref="jsonRepresentationFactory"/>
             </map>
         </property>
     </bean>
@@ -224,8 +224,8 @@
         <property name="representationTemplates">
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="localGraphsResourceHtml"/>
-                <entry key-ref="org.restlet.data.MediaType.APPLICATION_JSON" value-ref="jsonRepresentationFactory"/>
-                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL" value-ref="sparqlXmlRepresentationFactory"/>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON" value-ref="jsonRepresentationFactory"/>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML" value-ref="sparqlXmlRepresentationFactory"/>
             </map>
         </property>
     </bean>
