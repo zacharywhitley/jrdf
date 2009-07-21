@@ -63,10 +63,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import org.jrdf.query.answer.SelectAnswer;
 import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
+import static org.jrdf.query.answer.xml.SparqlResultType.LITERAL;
+import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.vocabulary.XSD;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,12 +78,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class AnswerJsonWriterImplUnitTest {
     private static final String[] NO_VARIABLES = {};
     private static final String[] NO_BINDINGS = {};
     private static final String[] TEST_VARIABLES = {"abc", "123", "doh", "ray", "me"};
+    private static final Map<String, TypeValue> TEST_BINDINGS_1 = new HashMap<String, TypeValue>() {
+        {
+            put("abc", new TypeValueImpl(BLANK_NODE, "r1"));
+            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/"));
+            put("doh", new TypeValueImpl(LITERAL, "a deer"));
+            put("ray", new TypeValueImpl(TYPED_LITERAL, "123", true, XSD.INT.toString()));
+            put("me", new TypeValueImpl(LITERAL, ""));
+        }
+    };
     private final MockFactory mockFactory = new MockFactory();
     private SelectAnswer selectAnswer;
     private Iterator<TypeValue[]> mockIterator;
@@ -143,8 +157,10 @@ public class AnswerJsonWriterImplUnitTest {
         expect(mockIterator.hasNext()).andReturn(true).times(2);
         expect(mockIterator.hasNext()).andReturn(false).once();
         expect(mockIterator.next()).andReturn(new TypeValue[]{
-            new TypeValueImpl(BLANK_NODE, "r1"),
-            new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/")});
+            TEST_BINDINGS_1.get(TEST_VARIABLES[0]),
+            TEST_BINDINGS_1.get(TEST_VARIABLES[1]),
+            TEST_BINDINGS_1.get(TEST_VARIABLES[2]),
+            TEST_BINDINGS_1.get(TEST_VARIABLES[3])});
         expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
         expect(selectAnswer.numberOfTuples()).andReturn(1L);
         expect(selectAnswer.getVariableNames()).andReturn(TEST_VARIABLES).anyTimes();
@@ -157,7 +173,7 @@ public class AnswerJsonWriterImplUnitTest {
         final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
         checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
         final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
-        // Add assertion!
+        checkBindings(results.getJSONArray("bindings"), TEST_BINDINGS_1);
     }
 
     private void checkJSONStringArrayValues(final JSONObject jsonObject, final String arrayName,
@@ -168,6 +184,24 @@ public class AnswerJsonWriterImplUnitTest {
         int counter = 0;
         for (String value : expectedValues) {
             assertThat(vars.getString(counter++), equalTo(value));
+        }
+    }
+
+    private void checkBindings(final JSONArray bindings, Map<String, TypeValue>... allResults) throws JSONException {
+        for (int i = 0; i < bindings.length(); i++) {
+            final JSONObject aBinding = bindings.getJSONObject(i);
+            final Map<String, TypeValue> expectedBindings = allResults[i];
+            assertThat(aBinding, notNullValue());
+            for (String variable : TEST_VARIABLES) {
+                if (aBinding.has(variable)) {
+                    final JSONObject aVariable = aBinding.getJSONObject(variable);
+                    assertThat(aVariable, notNullValue());
+                    final String type = aVariable.getString("type");
+                    final String value = aVariable.getString("value");
+                    assertThat(type, equalTo(expectedBindings.get(variable).getType().toString()));
+                    assertThat(value, equalTo(expectedBindings.get(variable).getValue()));
+                }
+            }
         }
     }
 }
