@@ -90,7 +90,6 @@ public class AnswerJsonWriterImplUnitTest {
         {
             put("abc", new TypeValueImpl(BLANK_NODE, "r1"));
             put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/"));
-            put("doh", new TypeValueImpl(LITERAL, "a deer"));
             put("ray", new TypeValueImpl(TYPED_LITERAL, "123", true, XSD.INT.toString()));
             put("me", new TypeValueImpl(LITERAL, ""));
         }
@@ -156,11 +155,7 @@ public class AnswerJsonWriterImplUnitTest {
     public void oneResult() throws Exception {
         expect(mockIterator.hasNext()).andReturn(true).times(2);
         expect(mockIterator.hasNext()).andReturn(false).once();
-        expect(mockIterator.next()).andReturn(new TypeValue[]{
-            TEST_BINDINGS_1.get(TEST_VARIABLES[0]),
-            TEST_BINDINGS_1.get(TEST_VARIABLES[1]),
-            TEST_BINDINGS_1.get(TEST_VARIABLES[2]),
-            TEST_BINDINGS_1.get(TEST_VARIABLES[3])});
+        expect(mockIterator.next()).andReturn(convertBindingMapToArray(TEST_BINDINGS_1, TEST_VARIABLES));
         expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
         expect(selectAnswer.numberOfTuples()).andReturn(1L);
         expect(selectAnswer.getVariableNames()).andReturn(TEST_VARIABLES).anyTimes();
@@ -174,6 +169,20 @@ public class AnswerJsonWriterImplUnitTest {
         checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
         final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
         checkBindings(results.getJSONArray("bindings"), TEST_BINDINGS_1);
+    }
+
+    private TypeValue[] convertBindingMapToArray(final Map<String, TypeValue> binding, final String[] variables) {
+        TypeValue[] typeValues = new TypeValue[variables.length];
+        for (int i = 0; i < variables.length; i++) {
+            String variable = variables[i];
+            final TypeValue typeValue = binding.get(variable);
+            if (typeValue != null) {
+                typeValues[i] = typeValue;
+            } else {
+                typeValues[i] = new TypeValueImpl();
+            }
+        }
+        return typeValues;
     }
 
     private void checkJSONStringArrayValues(final JSONObject jsonObject, final String arrayName,
