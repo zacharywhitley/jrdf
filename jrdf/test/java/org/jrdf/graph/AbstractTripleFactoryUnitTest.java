@@ -72,7 +72,6 @@ import org.jrdf.vocabulary.RDF;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -268,59 +267,55 @@ public abstract class AbstractTripleFactoryUnitTest {
         // test for double insertion (allowed)
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri1));
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri1));
-        assertEquals(4, graph.getNumberOfTriples());
+        assertThat(graph.getNumberOfTriples(), is(4L));
 
         BlankNode node = elementFactory.createBlankNode();
         tripleFactory.reifyTriple(blank1, ref1, blank2, node);
         tripleFactory.reifyTriple(blank1, ref1, blank2, node);
-        assertEquals(8, graph.getNumberOfTriples());
+        assertThat(graph.getNumberOfTriples(), is(8L));
 
         // test for double insertion (allowed)
         Triple t = tripleFactory.createTriple(blank1, ref2, blank2);
         graph.add(t);
         tripleFactory.reifyTriple(t, elementFactory.createURIReference(uri2));
         tripleFactory.reifyTriple(t, elementFactory.createURIReference(uri2));
-        assertEquals(13, graph.getNumberOfTriples());
+        assertThat(graph.getNumberOfTriples(), is(13L));
 
         t = tripleFactory.createTriple(blank1, ref3, blank2);
         graph.add(t);
         node = elementFactory.createBlankNode();
         tripleFactory.reifyTriple(t, node);
         tripleFactory.reifyTriple(t, node);
-        assertEquals(18, graph.getNumberOfTriples());
+        assertThat(graph.getNumberOfTriples(), is(18L));
 
         // test for insertion with a different reference (allowed)
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri3));
-        assertEquals(22, graph.getNumberOfTriples());
+        assertThat(graph.getNumberOfTriples(), is(22L));
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createBlankNode());
-        assertEquals(26, graph.getNumberOfTriples());
+        assertThat(graph.getNumberOfTriples(), is(26L));
     }
 
     @Test
     public void disallowInsertionOfANewTripleWithExistingReference() throws Exception {
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri1));
         testCantInsert(blank2, ref1, blank1, elementFactory.createURIReference(uri1));
-        assertEquals(4, graph.getNumberOfTriples());
+        assertThat(graph.getNumberOfTriples(), is(4L));
 
         // test for insertion with a different reference (disallowed)
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri2));
         testCantInsert(tripleFactory.createTriple(blank1, ref2, blank2), uri2);
-        assertEquals(8, graph.getNumberOfTriples());
+        assertThat(graph.getNumberOfTriples(), is(8L));
     }
 
     @Test
     public void disallowInsertionOfANewTripleWithAnExistingReference() throws Exception {
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri2));
         testCantInsert(tripleFactory.createTriple(blank2, ref2, blank2), uri2);
-        assertEquals(4, graph.getNumberOfTriples());
+        assertThat(graph.getNumberOfTriples(), is(4L));
     }
 
     @Test
     public void collections() throws Exception {
-
-        // Ensure graph is empty before starting.
-        assertTrue(graph.isEmpty());
-
         // Create initial statement
         SubjectNode s = elementFactory.createURIReference(new URI("http://example.org/basket"));
         PredicateNode p = elementFactory.createURIReference(new URI("http://example.org/stuff/1.0/hasFruit"));
@@ -384,10 +379,6 @@ public abstract class AbstractTripleFactoryUnitTest {
 
     @Test
     public void alternative() throws Exception {
-
-        // Ensure graph is empty before starting.
-        assertTrue(graph.isEmpty());
-
         // Create initial statement
         SubjectNode s = elementFactory.createURIReference(new URI("http://example.org/favourite-bananas"));
 
@@ -433,10 +424,6 @@ public abstract class AbstractTripleFactoryUnitTest {
 
     @Test
     public void bag() throws Exception {
-
-        // Ensure graph is empty before starting.
-        assertTrue(graph.isEmpty());
-
         // Create initial statement
         SubjectNode s = elementFactory.createURIReference(new URI("http://example.org/favourite-fruit"));
 
@@ -483,10 +470,6 @@ public abstract class AbstractTripleFactoryUnitTest {
 
     @Test
     public void sequence() throws Exception {
-
-        // Ensure graph is empty before starting.
-        assertTrue(graph.isEmpty());
-
         // Create initial statement
         SubjectNode s = elementFactory.createURIReference(new URI("http://example.org/favourite-fruit"));
 
@@ -562,7 +545,6 @@ public abstract class AbstractTripleFactoryUnitTest {
         });
     }
 
-
     /**
      * Utility method to check that a triple cannot be reified.
      *
@@ -576,33 +558,5 @@ public abstract class AbstractTripleFactoryUnitTest {
                 tripleFactory.reifyTriple(triple, elementFactory.createURIReference(r));
             }
         });
-    }
-
-
-    /**
-     * Utility method to check that a triple cannot be reified with a blank node.
-     *
-     * @param subject   The subject for the triple.
-     * @param predicate The predicate for the triple.
-     * @param object    The object for the triple.
-     * @throws Exception The triple could be reified.
-     */
-    private void testCanInsert(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws Exception {
-        try {
-            tripleFactory.reifyTriple(subject, predicate, object, elementFactory.createBlankNode());
-        } catch (AlreadyReifiedException e) {
-            fail("Threw exception when refying triple: " + e.toString());
-        }
-    }
-
-
-    /**
-     * Utility method to check that a triple cannot be reified with a blank node.
-     *
-     * @param triple The triple to reify.
-     * @throws Exception The triple could be reified.
-     */
-    private void testCanInsert(Triple triple) throws Exception {
-        testCanInsert(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 }
