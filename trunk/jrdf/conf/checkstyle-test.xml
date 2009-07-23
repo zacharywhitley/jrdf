@@ -108,10 +108,10 @@
         <module name="CyclomaticComplexity">
             <property name="max" value="6"/>
         </module>
-        <!--<module name="JavaNCSS">-->
-            <!--<property name="methodMaximum" value="15"/>-->
-            <!--<property name="classMaximum" value="125"/>-->
-            <!--<property name="fileMaximum" value="150"/>-->
-        <!--</module>-->
+        <module name="JavaNCSS">
+            <property name="methodMaximum" value="78"/>
+            <property name="classMaximum" value="500"/>
+            <property name="fileMaximum" value="500"/>
+        </module>
     </module>
 </module>
