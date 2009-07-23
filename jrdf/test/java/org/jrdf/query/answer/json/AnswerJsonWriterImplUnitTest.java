@@ -174,61 +174,37 @@ public class AnswerJsonWriterImplUnitTest {
 
     @Test
     public void emptyAnswer() throws Exception {
-        setupExpectationsForResults(NO_VARIABLES, 0);
-        mockFactory.replay();
-
-        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer);
-        writer.writeFullDocument();
-        mockFactory.verify();
-
-        final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
-        checkJSONStringArrayValues(head, "vars", NO_VARIABLES);
+        checkAnswer(NO_VARIABLES, 0);
     }
 
     @Test
     public void noResults() throws Exception {
-        setupExpectationsForResults(TEST_VARIABLES, 0);
-        mockFactory.replay();
-
-        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer);
-        writer.writeFullDocument();
-        mockFactory.verify();
-
-        final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
-        checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
-        final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
-        checkJSONStringArrayValues(results, "bindings", NO_BINDINGS);
+        checkAnswer(TEST_VARIABLES, 0);
     }
 
     @Test
     public void hasResults() throws Exception {
-        setupExpectationsForResults(TEST_VARIABLES, 3, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
-
-        mockFactory.replay();
-
-        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer);
-        writer.writeFullDocument();
-        mockFactory.verify();
-
-        final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
-        checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
-        final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
-        checkBindings(results.getJSONArray("bindings"), TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+        checkAnswer(TEST_VARIABLES, 3, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
     }
 
     @Test
     public void maxRows() throws Exception {
-        setupExpectationsForResults(TEST_VARIABLES, 1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+        checkAnswer(TEST_VARIABLES, 1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+    }
+
+    private void checkAnswer(final String[] variables, final int numberOfResults,
+        final Map<String, TypeValue>... bindings) throws JSONException {
+        setupExpectationsForResults(variables, numberOfResults, bindings);
         mockFactory.replay();
 
-        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer, 1);
+        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer, numberOfResults);
         writer.writeFullDocument();
         mockFactory.verify();
 
         final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
-        checkJSONStringArrayValues(head, "vars", TEST_VARIABLES);
+        checkJSONStringArrayValues(head, "vars", variables);
         final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
-        checkBindings(results.getJSONArray("bindings"), TEST_BINDINGS_1);
+        checkBindings(results.getJSONArray("bindings"), numberOfResults, bindings);
     }
 
     private void setupExpectationsForResults(final String[] variables, final int numberOfResults,
@@ -274,8 +250,9 @@ public class AnswerJsonWriterImplUnitTest {
         }
     }
 
-    private void checkBindings(final JSONArray bindings, Map<String, TypeValue>... allResults) throws JSONException {
-        for (int i = 0; i < bindings.length(); i++) {
+    private void checkBindings(final JSONArray bindings, int numberOfResults, Map<String, TypeValue>... allResults)
+        throws JSONException {
+        for (int i = 0; i < numberOfResults; i++) {
             final JSONObject aBinding = bindings.getJSONObject(i);
             final Map<String, TypeValue> expectedBindings = allResults[i];
             assertThat(aBinding, notNullValue());
