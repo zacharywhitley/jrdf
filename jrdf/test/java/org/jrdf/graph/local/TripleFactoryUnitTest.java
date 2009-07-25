@@ -76,7 +76,7 @@ import org.jrdf.graph.local.mem.CollectionImpl;
 import org.jrdf.graph.local.mem.SequenceImpl;
 import org.jrdf.vocabulary.RDF;
 
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * Implementation of {@link AbstractTripleFactoryUnitTest} test
@@ -143,30 +143,30 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     }
 
     @Override
-    public Collection createCollection(ObjectNode[] objects) {
+    public Collection createCollection(List<ObjectNode> objects) {
         Collection collection = new CollectionImpl();
-        collection.addAll(Arrays.asList(objects));
+        collection.addAll(objects);
         return collection;
     }
 
     @Override
-    public Alternative createAlternative(ObjectNode[] objects) {
+    public Alternative createAlternative(List<ObjectNode> objects) {
         Alternative alternative = new AlternativeImpl();
-        alternative.addAll(Arrays.asList(objects));
+        alternative.addAll(objects);
         return alternative;
     }
 
     @Override
-    public Bag createBag(ObjectNode[] objects) {
+    public Bag createBag(List<ObjectNode> objects) {
         Bag bag = new BagImpl();
-        bag.addAll(Arrays.asList(objects));
+        bag.addAll(objects);
         return bag;
     }
 
     @Override
-    public Sequence createSequence(ObjectNode[] objects) {
+    public Sequence createSequence(List<ObjectNode> objects) {
         Sequence sequence = new SequenceImpl();
-        sequence.addAll(Arrays.asList(objects));
+        sequence.addAll(objects);
         return sequence;
     }
 }

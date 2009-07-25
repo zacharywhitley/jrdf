@@ -77,6 +77,8 @@ import org.junit.Test;
 
 import java.net.URI;
 import static java.net.URI.create;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract test case for graph implementations.
@@ -198,28 +200,28 @@ public abstract class AbstractTripleFactoryUnitTest {
      *
      * @return the new collection.
      */
-    protected abstract Collection createCollection(ObjectNode[] objects);
+    protected abstract Collection createCollection(List<ObjectNode> objects);
 
     /**
      * Create a concrete alternative
      *
      * @return the new alternative.
      */
-    protected abstract Alternative createAlternative(ObjectNode[] objects);
+    protected abstract Alternative createAlternative(List<ObjectNode> objects);
 
     /**
      * Create a concrete bag
      *
      * @return the new bag.
      */
-    protected abstract Bag createBag(ObjectNode[] objects);
+    protected abstract Bag createBag(List<ObjectNode> objects);
 
     /**
      * Create a concrete sequence
      *
      * @return the new sequence.
      */
-    protected abstract Sequence createSequence(ObjectNode[] objects);
+    protected abstract Sequence createSequence(List<ObjectNode> objects);
 
     @Test
     public void reificationOfNonExistentTripleWithReferenceAddsFourTriples() throws Exception {
@@ -325,10 +327,13 @@ public abstract class AbstractTripleFactoryUnitTest {
         graph.add(s, p, o);
 
         // Create collection object.
-        ObjectNode[] fruit = new ObjectNode[3];
-        fruit[0] = elementFactory.createURIReference(new URI("http://example.org/banana"));
-        fruit[1] = elementFactory.createURIReference(new URI("http://example.org/kiwi"));
-        fruit[2] = elementFactory.createURIReference(new URI("http://example.org/pineapple"));
+        List<ObjectNode> fruit = new ArrayList<ObjectNode>() {
+            {
+                add(elementFactory.createURIReference(create("http://example.org/banana")));
+                add(elementFactory.createURIReference(create("http://example.org/kiwi")));
+                add(elementFactory.createURIReference(create("http://example.org/pineapple")));
+            }
+        };
 
         PredicateNode rdfFirst = elementFactory.createURIReference(RDF.FIRST);
         PredicateNode rdfRest = elementFactory.createURIReference(RDF.REST);
@@ -344,7 +349,7 @@ public abstract class AbstractTripleFactoryUnitTest {
         assertEquals("Should have seven statements", 7, graph.getNumberOfTriples());
         assertTrue("Should have first statement", graph.contains(s, p, o));
         assertTrue("Should have first object and first collection object",
-            graph.contains((SubjectNode) o, rdfFirst, fruit[0]));
+            graph.contains((SubjectNode) o, rdfFirst, fruit.get(0)));
 
         // Get all rdf:first statements
         ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, rdfFirst, ANY_OBJECT_NODE);
@@ -383,11 +388,14 @@ public abstract class AbstractTripleFactoryUnitTest {
         SubjectNode s = elementFactory.createURIReference(new URI("http://example.org/favourite-bananas"));
 
         // Create collection object.
-        ObjectNode[] fruit = new ObjectNode[4];
-        fruit[0] = elementFactory.createURIReference(new URI("http://example.org/banana"));
-        fruit[1] = elementFactory.createURIReference(new URI("http://example.org/cavendish"));
-        fruit[2] = elementFactory.createURIReference(new URI("http://example.org/ladyfinger"));
-        fruit[3] = elementFactory.createURIReference(new URI("http://example.org/banana"));
+        List<ObjectNode> fruit = new ArrayList<ObjectNode>() {
+            {
+                add(elementFactory.createURIReference(create("http://example.org/banana")));
+                add(elementFactory.createURIReference(create("http://example.org/cavendish")));
+                add(elementFactory.createURIReference(create("http://example.org/ladyfinger")));
+                add(elementFactory.createURIReference(create("http://example.org/banana")));
+            }
+        };
 
         PredicateNode rdfType = elementFactory.createURIReference(RDF.TYPE);
         ObjectNode rdfAlternative = elementFactory.createURIReference(RDF.ALT);
@@ -402,18 +410,18 @@ public abstract class AbstractTripleFactoryUnitTest {
         assertEquals("Should have five statements", 4, graph.getNumberOfTriples());
         assertTrue("Should have statement",
             graph.contains(s, rdfType, rdfAlternative));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[0]));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[1]));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[2]));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[3]));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(0)));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(1)));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(2)));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(3)));
 
         // Check that it doesn't allow duplicates.
-        ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit[0]);
+        ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit.get(0));
         int count = 0;
         for (Triple triple : triples) {
             count++;
         }
-        assertTrue("Should have only the same statements: " + fruit[0], 1 == count);
+        assertTrue("Should have only the same statements: " + fruit.get(0), 1 == count);
 
         Alternative alt2 = createAlternative(fruit);
         assertEquals(alt, alt2);
@@ -428,12 +436,15 @@ public abstract class AbstractTripleFactoryUnitTest {
         SubjectNode s = elementFactory.createURIReference(new URI("http://example.org/favourite-fruit"));
 
         // Create collection object.
-        ObjectNode[] fruit = new ObjectNode[5];
-        fruit[0] = elementFactory.createURIReference(new URI("http://example.org/banana"));
-        fruit[1] = elementFactory.createURIReference(new URI("http://example.org/kiwi"));
-        fruit[2] = elementFactory.createURIReference(new URI("http://example.org/pineapple"));
-        fruit[3] = elementFactory.createURIReference(new URI("http://example.org/pineapple"));
-        fruit[4] = elementFactory.createURIReference(new URI("http://example.org/banana"));
+        List<ObjectNode> fruit = new ArrayList<ObjectNode>() {
+            {
+                add(elementFactory.createURIReference(create("http://example.org/banana")));
+                add(elementFactory.createURIReference(create("http://example.org/kiwi")));
+                add(elementFactory.createURIReference(create("http://example.org/pineapple")));
+                add(elementFactory.createURIReference(create("http://example.org/pineapple")));
+                add(elementFactory.createURIReference(create("http://example.org/banana")));
+            }
+        };
 
         PredicateNode rdfType = elementFactory.createURIReference(RDF.TYPE);
         ObjectNode rdfBag = elementFactory.createURIReference(RDF.BAG);
@@ -447,17 +458,17 @@ public abstract class AbstractTripleFactoryUnitTest {
         // Check we've inserted it correctly
         assertEquals("Should have six statements", 6, graph.getNumberOfTriples());
         assertTrue("Should have statement", graph.contains(s, rdfType, rdfBag));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[0]));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[1]));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[2]));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(0)));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(1)));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(2)));
 
         // Check that it allows duplicates.
-        ClosableIterable<Triple> triples = graph.find(s, ANY_PREDICATE_NODE, fruit[2]);
+        ClosableIterable<Triple> triples = graph.find(s, ANY_PREDICATE_NODE, fruit.get(2));
         int count = 0;
         for (Triple triple : triples) {
             count++;
         }
-        assertTrue("Should have two of the same statements: " + fruit[2], 2 == count);
+        assertTrue("Should have two of the same statements: " + fruit.get(2), 2 == count);
 
         Bag bag2 = createBag(fruit);
         // Equal before being added to graph.
@@ -474,11 +485,14 @@ public abstract class AbstractTripleFactoryUnitTest {
         SubjectNode s = elementFactory.createURIReference(new URI("http://example.org/favourite-fruit"));
 
         // Create collection object.
-        ObjectNode[] fruit = new ObjectNode[4];
-        fruit[0] = elementFactory.createURIReference(new URI("http://example.org/banana"));
-        fruit[1] = elementFactory.createURIReference(new URI("http://example.org/kiwi"));
-        fruit[2] = elementFactory.createURIReference(new URI("http://example.org/pineapple"));
-        fruit[3] = elementFactory.createURIReference(new URI("http://example.org/kiwi"));
+        List<ObjectNode> fruit = new ArrayList<ObjectNode>() {
+            {
+                add(elementFactory.createURIReference(create("http://example.org/banana")));
+                add(elementFactory.createURIReference(create("http://example.org/kiwi")));
+                add(elementFactory.createURIReference(create("http://example.org/pineapple")));
+                add(elementFactory.createURIReference(create("http://example.org/kiwi")));
+            }
+        };
 
         PredicateNode rdfType = elementFactory.createURIReference(RDF.TYPE);
         PredicateNode rdfOne = elementFactory.createURIReference(new URI(RDF.BASE_URI + "_1"));
@@ -497,10 +511,10 @@ public abstract class AbstractTripleFactoryUnitTest {
         assertEquals("Should have five statements", 5, graph.getNumberOfTriples());
         assertTrue("Should have statement",
             graph.contains(s, rdfType, rdfSequence));
-        assertTrue("Should have statement", graph.contains(s, rdfOne, fruit[0]));
-        assertTrue("Should have statement", graph.contains(s, rdfTwo, fruit[1]));
-        assertTrue("Should have statement", graph.contains(s, rdfThree, fruit[2]));
-        assertTrue("Should have statement", graph.contains(s, rdfFour, fruit[3]));
+        assertTrue("Should have statement", graph.contains(s, rdfOne, fruit.get(0)));
+        assertTrue("Should have statement", graph.contains(s, rdfTwo, fruit.get(1)));
+        assertTrue("Should have statement", graph.contains(s, rdfThree, fruit.get(2)));
+        assertTrue("Should have statement", graph.contains(s, rdfFour, fruit.get(3)));
 
         Sequence sequence2 = createSequence(fruit);
         assertEquals(sequence, sequence2);
