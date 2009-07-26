@@ -120,7 +120,7 @@ public class AnswerJsonWriterImplUnitTest {
 
     @SuppressWarnings({ "unchecked" })
     @Before
-    public void createMocks() throws Exception {
+    public void setUp() throws Exception {
         selectAnswer = mockFactory.createMock(SelectAnswer.class);
         mockIterator = mockFactory.createMock(Iterator.class);
         mockWriter = mockFactory.createMock(Writer.class);
