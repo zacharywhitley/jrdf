@@ -346,10 +346,10 @@ public abstract class AbstractTripleFactoryUnitTest {
         tripleFactory.addCollection((SubjectNode) o, collection);
 
         // Check we've inserted it correctly.
-        assertEquals("Should have seven statements", 7, graph.getNumberOfTriples());
-        assertTrue("Should have first statement", graph.contains(s, p, o));
-        assertTrue("Should have first object and first collection object",
-            graph.contains((SubjectNode) o, rdfFirst, fruit.get(0)));
+        assertThat("Should have seven statements", graph.getNumberOfTriples(), is(7L));
+        assertThat("Should have first statement", graph.contains(s, p, o), is(true));
+        assertThat("Should have first object and first collection object", graph.contains((SubjectNode) o, rdfFirst,
+            fruit.get(0)), is(true));
 
         // Get all rdf:first statements
         ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, rdfFirst, ANY_OBJECT_NODE);
@@ -357,11 +357,11 @@ public abstract class AbstractTripleFactoryUnitTest {
         for (Triple triple : triples) {
             counter++;
         }
-        assertTrue("Should have three rdf:first statements, not " + counter, 3 == counter);
+        assertThat("Should have three rdf:first statements, not " + counter, counter, is(3));
 
         // Find all three parts of the collection.
         for (ObjectNode aFruit : fruit) {
-            assertTrue("Should contain: " + aFruit, graph.contains(ANY_SUBJECT_NODE, rdfFirst, aFruit));
+            assertThat("Should contain: " + aFruit, graph.contains(ANY_SUBJECT_NODE, rdfFirst, aFruit), is(true));
         }
 
         // Get all rdf:rest statements
@@ -370,7 +370,7 @@ public abstract class AbstractTripleFactoryUnitTest {
         for (Triple triple : triples) {
             counter++;
         }
-        assertTrue("Should have three rdf:rest statements", 3 == counter);
+        assertThat("Should have three rdf:rest statements", counter, is(3));
 
         // Get all rdf:rest with rdf:nil statements
         triples = graph.find(ANY_SUBJECT_NODE, rdfRest, rdfNil);
@@ -378,8 +378,7 @@ public abstract class AbstractTripleFactoryUnitTest {
         for (Triple triple : triples) {
             counter++;
         }
-
-        assertTrue("Should have one rdf:rest with rdf:nil statements", 1 == counter);
+        assertThat("Should have one rdf:rest with rdf:nil statements", counter, is(1));
     }
 
     @Test
@@ -408,8 +407,7 @@ public abstract class AbstractTripleFactoryUnitTest {
 
         // Check we've inserted it correctly (banana is in twice should be removed)
         assertEquals("Should have five statements", 4, graph.getNumberOfTriples());
-        assertTrue("Should have statement",
-            graph.contains(s, rdfType, rdfAlternative));
+        assertTrue("Should have statement", graph.contains(s, rdfType, rdfAlternative));
         assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(0)));
         assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(1)));
         assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(2)));
