@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,10 +54,9 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.query.server.distributed;
+package org.jrdf.query.server.local;
 
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
@@ -68,36 +67,24 @@ import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.client.CallableGraphQueryClient;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
-import org.jrdf.query.server.SpringDistributedServer;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import static org.jrdf.util.test.SetUtil.asSet;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
-import org.restlet.Client;
-import org.restlet.data.Method;
-import static org.restlet.data.Protocol.HTTP;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
-import static org.restlet.data.Status.SUCCESS_OK;
-import org.restlet.resource.StringRepresentation;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-public class DistributedQueryIntegrationTest {
+public class LocalQueryIntegrationTest {
+    private static final String LOCAL_HOST = "127.0.0.1";
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
@@ -106,10 +93,6 @@ public class DistributedQueryIntegrationTest {
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
-    private SpringDistributedServer distributedServer;
-    private static final int DISTRIBUTED_PORT = 8183;
-    private static final String LOCAL_HOST = "127.0.0.1";
-    private static final String BASE_URI = "/graphs";
 
     @Before
     public void setUp() throws Exception {
@@ -120,8 +103,6 @@ public class DistributedQueryIntegrationTest {
         elementFactory = graph.getElementFactory();
         localQueryServer = new SpringLocalServer();
         localQueryServer.start();
-        distributedServer = new SpringDistributedServer();
-        distributedServer.start();
     }
 
     @After
@@ -129,60 +110,31 @@ public class DistributedQueryIntegrationTest {
         graph.close();
         FACTORY.close();
         localQueryServer.stop();
-        distributedServer.stop();
     }
 
     @Test
-    public void testDistributedServerGraphsResource() throws Exception {
-        URL url = new URL(HTTP.getSchemeName(), LOCAL_HOST, DISTRIBUTED_PORT, BASE_URI);
-        Request request = new Request(Method.GET, url.toString(), new StringRepresentation(""));
-        Client client = new Client(HTTP);
-        final Response response = client.handle(request);
-        assertEquals(SUCCESS_OK, response.getStatus());
-        assertNotNull(response);
-    }
-
-    @Test
-    public void testDistributedClient() throws Exception {
-        final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
-        final BlankNode b1 = elementFactory.createBlankNode();
-        final BlankNode b2 = elementFactory.createBlankNode();
-        graph.add(b1, p, b2);
-        graph.add(b2, p, b1);
-        assertEquals(2, graph.getNumberOfTriples());
-        DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
-        serverClient.postDistributedServer("add", LOCAL_HOST);
-        QueryClient client = new QueryClientImpl(LOCAL_HOST);
-        client.getQuery(FOO, SELECT_QUERY_STRING, "all");
-        Answer answer = client.executeQuery();
-        checkAnswer(answer, 2, asSet("s", "p", "o"));
-    }
-
-    @Test
-    public void testDistributedClientEmptyAskQuery() throws Exception {
+    public void falseAnswerUsingAnAskQueryOnEmptyGraph() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
-        DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
-        serverClient.postDistributedServer("add", LOCAL_HOST);
         QueryClient client = new QueryClientImpl(LOCAL_HOST);
         client.getQuery(FOO, ASK_QUERY_STRING, "all");
-        AskAnswer answer = (AskAnswer) client.executeQuery();
+        final Answer answer1 = client.executeQuery();
+        AskAnswer answer = (AskAnswer) answer1;
         assertEquals(false, answer.getResult());
     }
 
     @Test
-    public void testDistributedClientAskQuery() throws Exception {
+    public void createSimpleGraphAndGetAllResults() throws Exception {
         final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
         final BlankNode b1 = elementFactory.createBlankNode();
         final BlankNode b2 = elementFactory.createBlankNode();
-        graph.add(b1, p, b2);
-        graph.add(b2, p, b1);
+        graph.add(b1, p, b1);
+        graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
-        DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
-        serverClient.postDistributedServer("add", LOCAL_HOST);
-        QueryClient client = new QueryClientImpl(LOCAL_HOST);
-        client.getQuery(FOO, ASK_QUERY_STRING, "all");
-        AskAnswer answer = (AskAnswer) client.executeQuery();
-        assertEquals(true, answer.getResult());
+        CallableGraphQueryClient queryClient = new QueryClientImpl(LOCAL_HOST);
+        queryClient.getQuery(FOO, SELECT_QUERY_STRING, "all");
+        Answer answer = queryClient.executeQuery();
+        System.err.println("got " + answer.getClass());
+        checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 
     private void checkAnswer(Answer answer, int noResults, Set<String> expectedVariableNames) throws Exception {

@@ -123,7 +123,7 @@ public abstract class AbstractGraphElementFactoryUnitTest {
     private URIReference newReference;
 
     @Before
-    public void initGraphElementFactoryAndCreateTestLiterals() throws Exception {
+    public void setUp() throws Exception {
         graph = newGraph();
         elementFactory = graph.getElementFactory();
         tripleFactory = graph.getTripleFactory();

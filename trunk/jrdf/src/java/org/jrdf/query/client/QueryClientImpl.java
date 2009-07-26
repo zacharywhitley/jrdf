@@ -86,7 +86,6 @@ import java.util.List;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class QueryClientImpl implements CallableGraphQueryClient {
     private static final int DEFAULT_PORT = 8182;
     private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
