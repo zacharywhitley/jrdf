@@ -70,6 +70,7 @@ import static org.jrdf.query.answer.SparqlProtocol.RESULT;
 import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
 import static org.jrdf.query.answer.SparqlProtocol.VARIABLE;
 import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.xml.TypeValueFactoryImpl;
 
 import javax.xml.stream.XMLInputFactory;
 import static javax.xml.stream.XMLStreamConstants.CHARACTERS;
@@ -93,7 +94,7 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
 
     public SparqlAnswerXmlParserImpl(InputStream stream) throws XMLStreamException {
         this.parser = INPUT_FACTORY.createXMLStreamReader(stream);
-        this.resultsParser = new SparqlAnswerResultsXmlParserImpl(parser);
+        this.resultsParser = new SparqlAnswerResultsXmlParserImpl(parser, new TypeValueFactoryImpl());
         this.finishedVariableParsing = false;
         this.hasMore = false;
         parseHeadElement();
