@@ -62,11 +62,14 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import org.jrdf.query.answer.xml.SparqlResultType;
 import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.xml.SparqlResultType.LITERAL;
+import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
+import org.jrdf.vocabulary.RDF;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
@@ -84,6 +87,22 @@ public class SparqlAnswerResultJsonParserImplUnitTest {
     public void untypedLiteralBinding() throws Exception {
         checkParser("{ \"name\" : {\"type\": \"literal\", \"value\": \"Alice\" }}", "name",
             new TypeValueImpl(LITERAL, "Alice"));
+    }
+
+    @Test
+    public void typedLiteralBinding() throws Exception {
+        checkParser("{ \"name\" : {\"type\": \"typed-literal\", " +
+            "\"value\": \"<p xmlns=\\\"http://www.w3.org/1999/xhtml\\\">My name is <b>alice</b></p>\"," +
+            "\"datatype\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral\" }}", "name",
+            new TypeValueImpl(TYPED_LITERAL,
+                "<p xmlns=\\\"http://www.w3.org/1999/xhtml\\\">My name is <b>alice</b></p>",
+                true, RDF.XML_LITERAL.toString()));
+    }
+
+    @Test
+    public void languageLiteralBinding() throws Exception {
+        checkParser("{ \"name\" : {\"type\": \"literal\", \"value\": \"Bob\",\"xml:lang\": \"en\" }}", "name",
+            new TypeValueImpl(SparqlResultType.LITERAL, "bob", false, "en"));
     }
 
     @Test

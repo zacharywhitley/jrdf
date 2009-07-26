@@ -58,6 +58,7 @@
 
 package org.jrdf.query.answer.xml;
 
+import org.jrdf.query.answer.SparqlProtocol;
 import static org.jrdf.query.answer.SparqlProtocol.BNODE;
 import static org.jrdf.query.answer.SparqlProtocol.LITERAL;
 import static org.jrdf.query.answer.SparqlProtocol.URI;
@@ -73,6 +74,8 @@ public class TypeValueFactoryImpl implements TypeValueFactory {
             typeValue = createURI(value);
         } else if (LITERAL.equals(type)) {
             typeValue = createLiteral(value, datatype, xmlLang);
+        } else if (SparqlProtocol.TYPED_LITERAL.equals(type)) {
+            typeValue = createDatatypeLiteral(value, datatype);
         } else if (BNODE.equals(type)) {
             typeValue = createBNode(value);
         }
