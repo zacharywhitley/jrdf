@@ -67,15 +67,13 @@ import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
 
-import javax.xml.stream.XMLInputFactory;
 import java.io.InputStream;
 import java.net.URL;
 import static java.util.Arrays.asList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class SparqlAnswerParserImplUnitTest extends TestCase {
-    private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
+public class SparqlAnswerXmlParserImplUnitTest extends TestCase {
     private static final TypeValueImpl R1C1 = new TypeValueImpl(BLANK_NODE, "r1");
     private static final TypeValueImpl R2C1 = new TypeValueImpl(BLANK_NODE, "r2");
     private static final TypeValueImpl R1C2 = new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/");
@@ -97,12 +95,12 @@ public class SparqlAnswerParserImplUnitTest extends TestCase {
         "name", "mbox", "age", "blurb", "friend"));
     public static final List<TypeValueImpl> ROW_1 = asList(R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7);
     public static final List<TypeValueImpl> ROW_2 = asList(R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7);
-    private SparqlAnswerParser parser;
+    private SparqlAnswerXmlParser parser;
 
     public void testParse() throws Exception {
         URL resource = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml");
         InputStream stream = resource.openStream();
-        parser = new SparqlAnswerParserImpl(stream);
+        parser = new SparqlAnswerXmlParserImpl(stream);
         assertTrue(parser.hasMoreResults());
         assertEquals(EXPECTED_VARIABLES, parser.getVariables());
         checkHasMoreAndGetResult(ROW_1);

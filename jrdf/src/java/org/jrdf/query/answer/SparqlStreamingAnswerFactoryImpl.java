@@ -61,8 +61,8 @@ package org.jrdf.query.answer;
 
 import static org.jrdf.query.answer.AnswerType.ASK;
 import static org.jrdf.query.answer.AnswerType.SELECT;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -74,11 +74,11 @@ import java.io.InputStream;
 
 public class SparqlStreamingAnswerFactoryImpl implements SparqlStreamingAnswerFactory {
     public Answer createStreamingAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
-        SparqlAnswerStreamParser streamAnswerParser = new SparqlAnswerStreamParserImpl(stream);
+        SparqlAnswerStreamXmlParser streamAnswerParser = new SparqlAnswerStreamXmlParserImpl(stream);
         return createStreamingAnswer(streamAnswerParser);
     }
 
-    public Answer createStreamingAnswer(SparqlAnswerStreamParser answerStreamParser) throws XMLStreamException {
+    public Answer createStreamingAnswer(SparqlAnswerStreamXmlParser answerStreamParser) throws XMLStreamException {
         final AnswerType answerType = answerStreamParser.getAnswerType();
         if (answerType == SELECT) {
             return new SparqlStreamingSelectAnswer(answerStreamParser);

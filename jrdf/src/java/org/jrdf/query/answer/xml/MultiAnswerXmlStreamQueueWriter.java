@@ -58,8 +58,8 @@
 
 package org.jrdf.query.answer.xml;
 
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParserImpl;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -71,12 +71,12 @@ import java.util.LinkedHashSet;
  * @version :$
  */
 public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter implements MultiAnswerXmlStreamWriter {
-    private SparqlAnswerStreamParser streamParser;
+    private SparqlAnswerStreamXmlParser streamParser;
 
     public MultiAnswerXmlStreamQueueWriter(Writer writer, InputStream... streams)
         throws XMLStreamException, InterruptedException {
         createXmlStreamWriter(writer);
-        this.streamParser = new SparqlAnswerStreamParserImpl(streams);
+        this.streamParser = new SparqlAnswerStreamXmlParserImpl(streams);
     }
 
     public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {

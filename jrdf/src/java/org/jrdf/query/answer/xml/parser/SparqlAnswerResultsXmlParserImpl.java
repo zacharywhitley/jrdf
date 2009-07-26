@@ -59,82 +59,74 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import static org.jrdf.query.answer.SparqlProtocol.BNODE;
-import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
-import static org.jrdf.query.answer.SparqlProtocol.LITERAL;
-import static org.jrdf.query.answer.SparqlProtocol.NAME;
-import static org.jrdf.query.answer.SparqlProtocol.URI;
-import static org.jrdf.query.answer.SparqlProtocol.XML_LANG;
-import org.jrdf.query.answer.xml.SparqlResultType;
-import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
-import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
-import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.answer.xml.TypeValueImpl;
+import org.jrdf.query.answer.SparqlProtocol;
 
-import static javax.xml.XMLConstants.XML_NS_URI;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
-public class SparqlAnswerResultParserImpl implements SparqlAnswerResultParser {
+public class SparqlAnswerResultsXmlParserImpl implements SparqlAnswerResultsXmlParser {
     private XMLStreamReader parser;
+    private SparqlAnswerResultXmlParser resultParser;
 
-    public SparqlAnswerResultParserImpl(XMLStreamReader newParser) {
+    public SparqlAnswerResultsXmlParserImpl(XMLStreamReader newParser) {
         this.parser = newParser;
+        this.resultParser = new SparqlAnswerResultXmlParserImpl(parser);
     }
 
-    public void getOneBinding(Map<String, TypeValue> variableToValue) throws XMLStreamException {
-        String variableName = parser.getAttributeValue(null, NAME);
-        TypeValue binding = getOneNode();
-        variableToValue.put(variableName, binding);
-    }
-
-    private TypeValue getOneNode() throws XMLStreamException {
-        parser.next();
-        String tagName = parser.getLocalName();
-        TypeValue typeValue = new TypeValueImpl();
-        if (URI.equals(tagName)) {
-            typeValue = createURI(parser.getElementText());
-        } else if (LITERAL.equals(tagName)) {
-            typeValue = createLiteral();
-        } else if (BNODE.equals(tagName)) {
-            typeValue = createBNode(parser.getElementText());
+    public TypeValue[] getResults(LinkedHashSet<String> variables) {
+        Map<String, TypeValue> variableToValue;
+        try {
+            variableToValue = parseAllResults();
+        } catch (XMLStreamException e) {
+            variableToValue = new HashMap<String, TypeValue>();
         }
-        return typeValue;
+        return mapToArray(variables, variableToValue);
     }
 
-    private TypeValue createURI(String elementText) {
-        return new TypeValueImpl(URI_REFERENCE, elementText);
+    private Map<String, TypeValue> parseAllResults() throws XMLStreamException {
+        Map<String, TypeValue> variableToValue = new HashMap<String, TypeValue>();
+        int currentEvent = parser.getEventType();
+        while (parser.hasNext() && !endOfResult(currentEvent)) {
+            if (startOfBinding(currentEvent)) {
+                resultParser.getOneBinding(variableToValue);
+            }
+            currentEvent = parser.next();
+        }
+        return variableToValue;
     }
 
-    private TypeValue createLiteral() throws XMLStreamException {
-        TypeValue typeValue;
-        String datatype = parser.getAttributeValue(null, DATATYPE);
-        String language = parser.getAttributeValue(XML_NS_URI, XML_LANG);
-        if (datatype != null) {
-            typeValue = createDatatypeLiteral(parser.getElementText(), datatype);
-        } else if (language != null) {
-            typeValue = createLanguageLiteral(parser.getElementText(), language);
+    private boolean startOfBinding(int currentEvent) {
+        return currentEvent == START_ELEMENT && SparqlProtocol.BINDING.equals(parser.getLocalName());
+    }
+
+    private boolean endOfResult(int currentEvent) {
+        return currentEvent == END_ELEMENT && SparqlProtocol.RESULT.equals(parser.getLocalName());
+    }
+
+    private TypeValue[] mapToArray(LinkedHashSet<String> variables, Map<String, TypeValue> variableToValue) {
+        TypeValue[] result = new TypeValue[variables.size()];
+        int index = 0;
+        for (String variable : variables) {
+            getValueOrUnbound(variableToValue, result, index, variable);
+            index++;
+        }
+        return result;
+    }
+
+    private void getValueOrUnbound(Map<String, TypeValue> variableToValue, TypeValue[] result, int index,
+        String variable) {
+        TypeValue value = variableToValue.get(variable);
+        if (value == null) {
+            result [index] = new TypeValueImpl();
         } else {
-            typeValue = createLiteral(parser.getElementText());
+            result[index] = value;
         }
-        return typeValue;
-    }
-
-    private TypeValue createLiteral(String elementText) {
-        return new TypeValueImpl(SparqlResultType.LITERAL, elementText);
-    }
-
-    private TypeValue createLanguageLiteral(String elementText, String language) {
-        return new TypeValueImpl(SparqlResultType.LITERAL, elementText, false, language);
-    }
-
-    private TypeValue createDatatypeLiteral(String elementText, String datatype) {
-        return new TypeValueImpl(TYPED_LITERAL, elementText, true, datatype);
-    }
-
-    private TypeValue createBNode(String elementText) {
-        return new TypeValueImpl(BLANK_NODE, elementText);
     }
 }

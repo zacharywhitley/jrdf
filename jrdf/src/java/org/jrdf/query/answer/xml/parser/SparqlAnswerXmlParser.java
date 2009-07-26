@@ -59,10 +59,22 @@
 
 package org.jrdf.query.answer.xml.parser;
 
+import org.jrdf.query.answer.AnswerType;
 import org.jrdf.query.answer.xml.TypeValue;
 
+import javax.xml.stream.XMLStreamException;
 import java.util.LinkedHashSet;
 
-public interface SparqlAnswerResultsParser {
-    TypeValue[] getResults(LinkedHashSet<String> variables);
+public interface SparqlAnswerXmlParser {
+    boolean getAskResult() throws XMLStreamException;
+
+    AnswerType getAnswerType() throws XMLStreamException;
+
+    LinkedHashSet<String> getVariables();
+
+    boolean hasMoreResults();
+
+    TypeValue[] getResults();
+
+    void close();
 }
