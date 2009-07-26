@@ -160,7 +160,7 @@ public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
             writeResult();
         }
         writeEndResults();
-        streamWriter.flush();
+        flush();
     }
 
     public void writeStartResults() throws XMLStreamException {
@@ -182,7 +182,7 @@ public abstract class AbstractXmlStreamWriter implements AnswerXmlWriter {
 
     public void close() throws XMLStreamException {
         if (streamWriter != null) {
-            streamWriter.flush();
+            flush();
             try {
                 streamWriter.close();
             } catch (XMLStreamException e) {

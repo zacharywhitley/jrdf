@@ -99,7 +99,7 @@ public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter imp
             TypeValue[] results = streamParser.getResults();
             writeResult(currentVariables, results);
         }
-        streamWriter.flush();
+        flush();
     }
 
     public void close() throws XMLStreamException {
