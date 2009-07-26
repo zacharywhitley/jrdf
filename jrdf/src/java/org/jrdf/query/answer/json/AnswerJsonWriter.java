@@ -58,11 +58,12 @@
 
 package org.jrdf.query.answer.json;
 
+import org.jrdf.query.answer.AnswerWriter;
 import org.json.JSONException;
 
 import java.io.IOException;
 
-public interface AnswerJsonWriter {
+public interface AnswerJsonWriter extends AnswerWriter {
 
     boolean hasMoreResults();
 
