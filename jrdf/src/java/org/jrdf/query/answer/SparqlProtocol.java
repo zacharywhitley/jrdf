@@ -120,9 +120,13 @@ public class SparqlProtocol {
      */
     public static final String BNODE = "bnode";
     /**
-     * The element "literal".
+     * Untyped literal element.
      */
     public static final String LITERAL = "literal";
+    /**
+     * Type literal element.
+     */
+    public static final String TYPED_LITERAL = "typed-literal";
     /**
      * The element "uri".
      */
@@ -131,6 +135,10 @@ public class SparqlProtocol {
      * The element "datatype".
      */
     public static final String DATATYPE = "datatype";
+    /**
+     * The element "xml:lang".
+     */
+    public static final String JSON_XML_LANG = "xml:lang";
     /**
      * The element "lang".
      */

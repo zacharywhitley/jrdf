@@ -62,15 +62,12 @@ import org.codehaus.jackson.JsonParser;
 import static org.codehaus.jackson.JsonToken.END_OBJECT;
 import static org.codehaus.jackson.JsonToken.FIELD_NAME;
 import static org.codehaus.jackson.JsonToken.START_OBJECT;
-import static org.jrdf.query.answer.SparqlProtocol.BNODE;
-import static org.jrdf.query.answer.SparqlProtocol.LITERAL;
+import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
+import static org.jrdf.query.answer.SparqlProtocol.JSON_XML_LANG;
 import static org.jrdf.query.answer.SparqlProtocol.TYPE;
-import static org.jrdf.query.answer.SparqlProtocol.URI;
 import static org.jrdf.query.answer.SparqlProtocol.VALUE;
-import org.jrdf.query.answer.xml.SparqlResultType;
-import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
-import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.xml.TypeValueFactoryImpl;
 import org.jrdf.query.answer.xml.TypeValueImpl;
 
 import java.io.IOException;
@@ -78,6 +75,10 @@ import java.util.Map;
 
 public class SparqlAnswerResultJsonParserImpl {
     private final JsonParser parser;
+    private String type;
+    private String value;
+    private String datatype;
+    private String xmlLang;
 
     public SparqlAnswerResultJsonParserImpl(JsonParser parser) {
         this.parser = parser;
@@ -99,46 +100,52 @@ public class SparqlAnswerResultJsonParserImpl {
     private TypeValue getTypeValue() throws IOException {
         TypeValue typeValue = new TypeValueImpl();
         if (parser.nextToken() == START_OBJECT) {
-            String type = "";
-            String value = "";
-            while (parser.nextToken() != END_OBJECT) {
-                if (parser.getCurrentToken() == FIELD_NAME) {
-                    if (parser.getCurrentName().equals(TYPE)) {
-                        parser.nextToken();
-                        type = parser.getText();
-                    }
-                    if (parser.getCurrentName().equals(VALUE)) {
-                        parser.nextToken();
-                        value = parser.getText();
-                    }
-                }
+            typeValue = parseObject();
+        }
+        return typeValue;
+    }
+
+    private TypeValue parseObject() throws IOException {
+        type = "";
+        value = "";
+        datatype = null;
+        xmlLang = null;
+        while (parser.nextToken() != END_OBJECT) {
+            if (parser.getCurrentToken() == FIELD_NAME) {
+                parseType();
+                parseValue();
+                parseDatatype();
+                parseXmlLang();
             }
-            typeValue = createTypeValue(type, value);
         }
-        return typeValue;
+        return new TypeValueFactoryImpl().createTypeValue(type, value, datatype, xmlLang);
     }
 
-    private TypeValue createTypeValue(final String type, final String value) {
-        TypeValue typeValue = new TypeValueImpl();
-        if (URI.equals(type)) {
-            typeValue = createURI(value);
-        } else if (LITERAL.equals(type)) {
-            typeValue = createLiteral(value);
-        } else if (BNODE.equals(type)) {
-            typeValue = createBNode(value);
+    private void parseType() throws IOException {
+        if (parser.getCurrentName().equals(TYPE)) {
+            parser.nextToken();
+            type = parser.getText();
         }
-        return typeValue;
     }
 
-    private TypeValue createURI(final String value) {
-        return new TypeValueImpl(URI_REFERENCE, value);
+    private void parseValue() throws IOException {
+        if (parser.getCurrentName().equals(VALUE)) {
+            parser.nextToken();
+            value = parser.getText();
+        }
     }
 
-    private TypeValue createLiteral(final String value) {
-        return new TypeValueImpl(SparqlResultType.LITERAL, value);
+    private void parseDatatype() throws IOException {
+        if (parser.getCurrentName().equals(DATATYPE)) {
+            parser.nextToken();
+            datatype = parser.getText();
+        }
     }
 
-    private TypeValue createBNode(final String value) {
-        return new TypeValueImpl(BLANK_NODE, value);
+    private void parseXmlLang() throws IOException {
+        if (parser.getCurrentName().equals(JSON_XML_LANG)) {
+            parser.nextToken();
+            xmlLang = parser.getText();
+        }
     }
 }
