@@ -100,7 +100,7 @@ public class AskAnswerXmlStreamWriter extends AbstractXmlStreamWriter {
             streamWriter.writeStartElement(SparqlProtocol.BOOLEAN);
             streamWriter.writeCharacters(Boolean.toString(answer.getResult()));
             streamWriter.writeEndElement();
-            streamWriter.flush();
+            flush();
             hasMore = false;
         }
     }
