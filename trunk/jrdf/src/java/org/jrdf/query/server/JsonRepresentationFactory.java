@@ -59,17 +59,37 @@
 
 package org.jrdf.query.server;
 
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.AnswerVisitor;
+import org.jrdf.query.answer.AskAnswer;
+import org.jrdf.query.answer.SelectAnswer;
 import org.restlet.data.MediaType;
-import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.resource.Representation;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class JsonRepresentationFactory implements RepresentationFactory {
+public class JsonRepresentationFactory implements RepresentationFactory, AnswerVisitor<Representation> {
+    private MediaType mediaType;
+
     public Representation createRepresentation(MediaType defaultMediaType, Map<String, Object> dataModel) {
-        final Map<Object, Object> model = new HashMap<Object, Object>();
-        model.putAll(dataModel);
-        return new JsonRepresentation(model);
+        try {
+            Representation representation = Representation.createEmpty();
+            final Answer answer = (Answer) dataModel.get("answer");
+            if (answer != null) {
+                mediaType = defaultMediaType;
+                representation = answer.accept(this);
+            }
+            return representation;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Representation visitAskAnswer(AskAnswer askAnswer) {
+        return new AskAnswerSparqlRepresentation(mediaType, askAnswer);
+    }
+
+    public Representation visitSelectAnswer(SelectAnswer selectAnswer) {
+        return new SelectAnswerSparqlRepresentation(mediaType, selectAnswer);
     }
 }

@@ -59,9 +59,10 @@
 
 package org.jrdf.query.server;
 
+import org.jrdf.query.answer.AnswerWriter;
 import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.xml.AnswerXmlWriter;
 import org.jrdf.query.answer.xml.AskAnswerXmlStreamWriter;
+import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import static org.restlet.data.CharacterSet.UTF_8;
 import org.restlet.data.MediaType;
 import org.restlet.resource.WriterRepresentation;
@@ -82,14 +83,22 @@ public class AskAnswerSparqlRepresentation extends WriterRepresentation {
     @Override
     public void write(Writer writer) throws IOException {
         try {
-            final AnswerXmlWriter answerWriter = new AskAnswerXmlStreamWriter(writer, answer);
+            final AnswerWriter answerWriter = createAnswerWriter(writer);
             try {
                 answerWriter.writeFullDocument();
             } finally {
                 answerWriter.close();
             }
-        } catch (XMLStreamException e) {
+        } catch (Exception e) {
             throw new IOException(e.getMessage());
+        }
+    }
+
+    private AskAnswerXmlStreamWriter createAnswerWriter(Writer writer) throws XMLStreamException {
+        if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
+            return new AskAnswerXmlStreamWriter(writer, answer);
+        } else {
+            throw new RuntimeException("Unknown media type: " + getMediaType());
         }
     }
 }
