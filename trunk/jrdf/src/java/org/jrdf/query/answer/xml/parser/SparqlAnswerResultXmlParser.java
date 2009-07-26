@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,76 +57,13 @@
  *
  */
 
-package org.jrdf.query.answer;
+package org.jrdf.query.answer.xml.parser;
 
-import static org.jrdf.query.answer.xml.SparqlResultType.BOOLEAN;
 import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueImpl;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
-/**
- * @author Yuan-Fang Li
- * @version $Id$
- */
-
-public class SparqlStreamingAskAnswer implements AskAnswer {
-    private static final String[] NO_VARIABLES = new String[]{};
-    private SparqlAnswerStreamXmlParser answerStreamParser;
-    private boolean result;
-
-    public SparqlStreamingAskAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
-        this(new SparqlAnswerStreamXmlParserImpl(stream));
-    }
-
-    public SparqlStreamingAskAnswer(SparqlAnswerStreamXmlParser answerStreamParser) {
-        this.answerStreamParser = answerStreamParser;
-        this.result = false;
-    }
-
-    public boolean getResult() throws XMLStreamException {
-        result = answerStreamParser.getAskResult();
-        return result;
-    }
-
-    public long getTimeTaken() {
-        return 0;
-    }
-
-    public long numberOfTuples() {
-        return 0;
-    }
-
-    public String[] getVariableNames() {
-        return NO_VARIABLES;
-    }
-
-    public String[][] getColumnValues() {
-        try {
-            return new String[][]{{Boolean.toString(getResult())}};
-        } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Iterator<TypeValue[]> columnValuesIterator() {
-        try {
-            TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(getResult()));
-            Set<TypeValue[]> set = new HashSet<TypeValue[]>();
-            set.add(new TypeValue[]{typeValue});
-            return set.iterator();
-        } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <R> R accept(AnswerVisitor<R> visitor) {
-        return visitor.visitAskAnswer(this);
-    }
+public interface SparqlAnswerResultXmlParser {
+    void getOneBinding(Map<String, TypeValue> variableToValue) throws XMLStreamException;
 }

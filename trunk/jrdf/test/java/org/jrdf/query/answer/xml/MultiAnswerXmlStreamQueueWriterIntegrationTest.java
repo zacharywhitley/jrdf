@@ -60,12 +60,12 @@
 package org.jrdf.query.answer.xml;
 
 import junit.framework.TestCase;
-import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.EXPECTED_VARIABLES;
-import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.ROW_1;
-import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.ROW_2;
-import static org.jrdf.query.answer.xml.parser.SparqlAnswerParserImplUnitTest.checkRow;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsParserImpl;
+import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest.EXPECTED_VARIABLES;
+import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest.ROW_1;
+import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest.ROW_2;
+import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest.checkRow;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsXmlParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsXmlParserImpl;
 
 import static javax.xml.stream.XMLInputFactory.newInstance;
 import javax.xml.stream.XMLStreamException;
@@ -160,14 +160,14 @@ public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
     }
 
     private void checkTwoResults(Writer writer) throws Exception {
-        SparqlAnswerResultsParser parser = getParser(writer);
+        SparqlAnswerResultsXmlParser parser = getParser(writer);
         checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_1);
         streamReader.next();
         checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_2);
     }
 
     private void checkFourResults(Writer writer) throws Exception {
-        SparqlAnswerResultsParser parser = getParser(writer);
+        SparqlAnswerResultsXmlParser parser = getParser(writer);
         checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_1);
         streamReader.next();
         checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_2);
@@ -177,10 +177,10 @@ public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
         checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_2);
     }
 
-    private SparqlAnswerResultsParser getParser(Writer writer) throws XMLStreamException {
+    private SparqlAnswerResultsXmlParser getParser(Writer writer) throws XMLStreamException {
         String result = writer.toString();
         InputStream stringStream = new ByteArrayInputStream(result.getBytes());
         streamReader = newInstance().createXMLStreamReader(stringStream);
-        return new SparqlAnswerResultsParserImpl(streamReader);
+        return new SparqlAnswerResultsXmlParserImpl(streamReader);
     }
 }

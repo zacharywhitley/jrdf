@@ -115,7 +115,6 @@
         <include name="**/*.jar" />
     </patternset>
 
-
     <patternset id="base.production.classpath.pattern">
         <include name="${lib.dir}/spring/spring-beans-${spring.version}.jar"/>
         <include name="${lib.dir}/spring/spring-context-${spring.version}.jar"/>
@@ -136,6 +135,7 @@
     </patternset>
 
     <patternset id="server.production.classpath.pattern">
+        <include name="${lib.dir}/jackson/jackson-core-asl-1.1.1.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.simple_3.1-${restlet.version}.jar"/>

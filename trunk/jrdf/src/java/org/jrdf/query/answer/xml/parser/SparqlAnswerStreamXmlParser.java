@@ -62,6 +62,6 @@ package org.jrdf.query.answer.xml.parser;
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 
-public interface SparqlAnswerStreamParser extends SparqlAnswerParser {
+public interface SparqlAnswerStreamXmlParser extends SparqlAnswerXmlParser {
     void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
 }

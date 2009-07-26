@@ -59,15 +59,15 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
 import org.jrdf.query.answer.xml.TypeValue;
 
 import java.util.Iterator;
 
 public class StreamingAnswerIterator implements Iterator<TypeValue[]> {
-    private SparqlAnswerStreamParser answerStreamParser;
+    private SparqlAnswerStreamXmlParser answerStreamParser;
 
-    public StreamingAnswerIterator(SparqlAnswerStreamParser newAnswerStreamParser) {
+    public StreamingAnswerIterator(SparqlAnswerStreamXmlParser newAnswerStreamParser) {
         this.answerStreamParser = newAnswerStreamParser;
     }
 

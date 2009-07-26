@@ -56,91 +56,56 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.answer;
+package org.jrdf.query.answer.json.parser;
 
-/**
- * Class description goes here.
- */
-public class SparqlProtocol {
-    /**
-     * The XML -> HTML XSLT.
-     */
-    public static final String XSLT_URL_STRING =
-        "http://www.w3.org/TR/2007/CR-rdf-sparql-XMLres-20070925/result2-to-html.xsl";
-    /**
-     * The sparql keyword.
-     */
-    public static final String SPARQL = "sparql";
-    /**
-     * The element "head".
-     */
-    public static final String HEAD = "head";
-    /**
-     * The element "link".  An array of URIs.
-     */
-    public static final String LINK = "link";
-    /**
-     * A single variable.
-     */
-    public static final String VARIABLE = "variable";
-    /**
-     * An array of variables.
-     */
-    public static final String VARS = "vars";
-    /**
-     * The element "name".
-     */
-    public static final String NAME = "name";
-    /**
-     * The element "results".
-     */
-    public static final String RESULTS = "results";
-    /**
-     * The element "result".
-     */
-    public static final String RESULT = "result";
-    /**
-     * The element "binding".
-     */
-    public static final String BINDING = "binding";
-    /**
-     * An array of bindings.
-     */
-    public static final String BINDINGS = "bindings";
-    /**
-     * Type name.
-     */
-    public static final String TYPE = "type";
-    /**
-     * Value name.
-     */
-    public static final String VALUE = "value";
-    /**
-     * The element "bnode".
-     */
-    public static final String BNODE = "bnode";
-    /**
-     * The element "literal".
-     */
-    public static final String LITERAL = "literal";
-    /**
-     * The element "uri".
-     */
-    public static final String URI = "uri";
-    /**
-     * The element "datatype".
-     */
-    public static final String DATATYPE = "datatype";
-    /**
-     * The element "lang".
-     */
-    public static final String XML_LANG = "lang";
-    /**
-     * The Sparql namespace.
-     */
-    public static final String SPARQL_NS = "http://www.w3.org/2005/sparql-results#";
-    /**
-     * The element "boolean".
-     */
-    public static final String BOOLEAN = "boolean";
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonParser;
+import org.jrdf.query.answer.AnswerType;
+import org.jrdf.query.answer.xml.TypeValue;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.LinkedHashSet;
+
+public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
+    private InputStreamReader reader;
+    private JsonParser parser;
+    private boolean hasMoreResults;
+
+    public SparqlAnswerJsonParserImpl(InputStream inputStream) throws IOException {
+        this.reader = new InputStreamReader(inputStream);
+        this.parser = new JsonFactory().createJsonParser(inputStream);
+    }
+
+    public boolean getAskResult() {
+        return false;
+    }
+
+    public AnswerType getAnswerType() {
+        return AnswerType.SELECT;
+    }
+
+    public LinkedHashSet<String> getVariables() {
+        return null;
+    }
+
+    public boolean hasMoreResults() throws IOException {
+        return hasMoreResults;
+    }
+
+    public TypeValue[] getResults() throws IOException {
+        if (parser.nextToken() == null) {
+            hasMoreResults = false;
+        }
+        return null;
+    }
+
+    public void close() {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
+    }
 }

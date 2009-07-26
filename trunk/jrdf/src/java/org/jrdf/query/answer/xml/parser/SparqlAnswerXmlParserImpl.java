@@ -82,18 +82,18 @@ import java.util.LinkedHashSet;
 
 // TODO AN/YF Refactor out the tryGetVariables
 // TODO AN Missing link support for head tag.
-public class SparqlAnswerParserImpl implements SparqlAnswerParser {
+public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader parser;
-    private final SparqlAnswerResultsParser resultsParser;
+    private final SparqlAnswerResultsXmlParser resultsParser;
     private LinkedHashSet<String> variables = new LinkedHashSet<String>();
     private boolean hasMore;
     private boolean finishedVariableParsing;
     private AnswerType answerType = UNKNOWN;
 
-    public SparqlAnswerParserImpl(InputStream stream) throws XMLStreamException {
+    public SparqlAnswerXmlParserImpl(InputStream stream) throws XMLStreamException {
         this.parser = INPUT_FACTORY.createXMLStreamReader(stream);
-        this.resultsParser = new SparqlAnswerResultsParserImpl(parser);
+        this.resultsParser = new SparqlAnswerResultsXmlParserImpl(parser);
         this.finishedVariableParsing = false;
         this.hasMore = false;
         parseHeadElement();
@@ -109,29 +109,6 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
 
     public AnswerType getAnswerType() throws XMLStreamException {
         return answerType;
-    }
-
-    /**
-     * Parses the HEAD element of the XML stream, get answer type and variable list (for SELECT queries).
-     *
-     * @return Answer type.
-     * @throws XMLStreamException
-     */
-    private void parseHeadElement() throws XMLStreamException {
-        int eventType = parser.getEventType();
-        while (parser.hasNext()) {
-            if (startOfElement(eventType, BOOLEAN)) {
-                finishedVariableParsing = true;
-                hasMore = true;
-                answerType = ASK;
-                break;
-            } else if (startOfElement(eventType, VARIABLE) || startOfElement(eventType, RESULTS)) {
-                tryGetVariables();
-                answerType = SELECT;
-                break;
-            }
-            eventType = parser.next();
-        }
     }
 
     public boolean hasMoreResults() {
@@ -173,9 +150,26 @@ public class SparqlAnswerParserImpl implements SparqlAnswerParser {
         }
     }
 
-    private boolean hasNextResult() throws XMLStreamException {
+    private void parseHeadElement() throws XMLStreamException {
         int eventType = parser.getEventType();
         while (parser.hasNext()) {
+            if (startOfElement(eventType, BOOLEAN)) {
+                finishedVariableParsing = true;
+                hasMore = true;
+                answerType = ASK;
+                break;
+            } else if (startOfElement(eventType, VARIABLE) || startOfElement(eventType, RESULTS)) {
+                tryGetVariables();
+                answerType = SELECT;
+                break;
+            }
+            eventType = parser.next();
+        }
+    }
+
+    private boolean hasNextResult() throws XMLStreamException {
+        while (parser.hasNext()) {
+            int eventType = parser.getEventType();
             if (startOfElement(eventType, RESULT) || startOfElement(eventType, BOOLEAN)) {
                 return true;
             }
