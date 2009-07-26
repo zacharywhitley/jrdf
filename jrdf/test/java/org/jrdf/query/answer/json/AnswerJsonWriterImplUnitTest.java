@@ -87,7 +87,6 @@ import java.util.Map;
 
 public class AnswerJsonWriterImplUnitTest {
     private static final String[] NO_VARIABLES = {};
-    private static final String[] NO_BINDINGS = {};
     private static final String[] TEST_VARIABLES = {"abc", "123", "doh", "ray", "me"};
     private static final Map<String, TypeValue> TEST_BINDINGS_1 = new HashMap<String, TypeValue>() {
         {

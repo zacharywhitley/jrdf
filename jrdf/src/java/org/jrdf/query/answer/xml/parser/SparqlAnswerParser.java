@@ -66,15 +66,15 @@ import javax.xml.stream.XMLStreamException;
 import java.util.LinkedHashSet;
 
 public interface SparqlAnswerParser {
+    boolean getAskResult() throws XMLStreamException;
+
+    AnswerType getAnswerType() throws XMLStreamException;
+
     LinkedHashSet<String> getVariables();
 
     boolean hasMoreResults();
 
     TypeValue[] getResults();
 
-    boolean getAskResult() throws XMLStreamException;
-
     void close();
-
-    AnswerType getAnswerType() throws XMLStreamException;
 }

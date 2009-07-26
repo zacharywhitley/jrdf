@@ -185,6 +185,7 @@
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="graphsResourceHtml"/>
                 <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON" value-ref="jsonRepresentationFactory"/>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML" value-ref="sparqlXmlRepresentationFactory"/>
             </map>
         </property>
     </bean>
