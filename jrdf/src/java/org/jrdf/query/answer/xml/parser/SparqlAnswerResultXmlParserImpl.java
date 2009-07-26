@@ -59,18 +59,11 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import static org.jrdf.query.answer.SparqlProtocol.BNODE;
 import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
-import static org.jrdf.query.answer.SparqlProtocol.LITERAL;
 import static org.jrdf.query.answer.SparqlProtocol.NAME;
-import static org.jrdf.query.answer.SparqlProtocol.URI;
 import static org.jrdf.query.answer.SparqlProtocol.XML_LANG;
-import org.jrdf.query.answer.xml.SparqlResultType;
-import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
-import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
-import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueImpl;
+import org.jrdf.query.answer.xml.TypeValueFactory;
 
 import static javax.xml.XMLConstants.XML_NS_URI;
 import javax.xml.stream.XMLStreamException;
@@ -79,66 +72,25 @@ import java.util.Map;
 
 public class SparqlAnswerResultXmlParserImpl implements SparqlAnswerResultXmlParser {
     private XMLStreamReader parser;
+    private TypeValueFactory typeValueFactory;
 
-    public SparqlAnswerResultXmlParserImpl(XMLStreamReader newParser) {
+    public SparqlAnswerResultXmlParserImpl(final XMLStreamReader newParser, final TypeValueFactory typeValueFactory) {
         this.parser = newParser;
+        this.typeValueFactory = typeValueFactory;
     }
 
     public void getOneBinding(Map<String, TypeValue> variableToValue) throws XMLStreamException {
         String variableName = parser.getAttributeValue(null, NAME);
-        TypeValue binding = getOneNode();
+        TypeValue binding = getTypeValue();
         variableToValue.put(variableName, binding);
     }
 
-    private TypeValue getOneNode() throws XMLStreamException {
+    private TypeValue getTypeValue() throws XMLStreamException {
         parser.next();
         String tagName = parser.getLocalName();
-        return createTypeValue(tagName);
-    }
-
-    private TypeValue createTypeValue(String type) throws XMLStreamException {
-        TypeValue typeValue = new TypeValueImpl();
-        if (URI.equals(type)) {
-            typeValue = createURI(parser.getElementText());
-        } else if (LITERAL.equals(type)) {
-            typeValue = createLiteral();
-        } else if (BNODE.equals(type)) {
-            typeValue = createBNode(parser.getElementText());
-        }
-        return typeValue;
-    }
-
-    private TypeValue createURI(String elementText) {
-        return new TypeValueImpl(URI_REFERENCE, elementText);
-    }
-
-    private TypeValue createLiteral() throws XMLStreamException {
-        TypeValue typeValue;
-        String datatype = parser.getAttributeValue(null, DATATYPE);
-        String language = parser.getAttributeValue(XML_NS_URI, XML_LANG);
-        if (datatype != null) {
-            typeValue = createDatatypeLiteral(parser.getElementText(), datatype);
-        } else if (language != null) {
-            typeValue = createLanguageLiteral(parser.getElementText(), language);
-        } else {
-            typeValue = createLiteral(parser.getElementText());
-        }
-        return typeValue;
-    }
-
-    private TypeValue createLiteral(String elementText) {
-        return new TypeValueImpl(SparqlResultType.LITERAL, elementText);
-    }
-
-    private TypeValue createLanguageLiteral(String elementText, String language) {
-        return new TypeValueImpl(SparqlResultType.LITERAL, elementText, false, language);
-    }
-
-    private TypeValue createDatatypeLiteral(String elementText, String datatype) {
-        return new TypeValueImpl(TYPED_LITERAL, elementText, true, datatype);
-    }
-
-    private TypeValue createBNode(String elementText) {
-        return new TypeValueImpl(BLANK_NODE, elementText);
+        final String datatype = parser.getAttributeValue(null, DATATYPE);
+        final String xmlLang = parser.getAttributeValue(XML_NS_URI, XML_LANG);
+        final String value = parser.getElementText();
+        return typeValueFactory.createTypeValue(tagName, value, datatype, xmlLang);
     }
 }

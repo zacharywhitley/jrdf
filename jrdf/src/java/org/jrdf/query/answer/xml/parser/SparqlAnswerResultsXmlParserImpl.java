@@ -59,9 +59,10 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueImpl;
 import org.jrdf.query.answer.SparqlProtocol;
+import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.xml.TypeValueFactory;
+import org.jrdf.query.answer.xml.TypeValueImpl;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -75,9 +76,9 @@ public class SparqlAnswerResultsXmlParserImpl implements SparqlAnswerResultsXmlP
     private XMLStreamReader parser;
     private SparqlAnswerResultXmlParser resultParser;
 
-    public SparqlAnswerResultsXmlParserImpl(XMLStreamReader newParser) {
+    public SparqlAnswerResultsXmlParserImpl(final XMLStreamReader newParser, final TypeValueFactory typeValueFactory) {
         this.parser = newParser;
-        this.resultParser = new SparqlAnswerResultXmlParserImpl(parser);
+        this.resultParser = new SparqlAnswerResultXmlParserImpl(parser, typeValueFactory);
     }
 
     public TypeValue[] getResults(LinkedHashSet<String> variables) {

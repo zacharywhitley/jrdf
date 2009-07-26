@@ -181,6 +181,6 @@ public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
         String result = writer.toString();
         InputStream stringStream = new ByteArrayInputStream(result.getBytes());
         streamReader = newInstance().createXMLStreamReader(stringStream);
-        return new SparqlAnswerResultsXmlParserImpl(streamReader);
+        return new SparqlAnswerResultsXmlParserImpl(streamReader, new TypeValueFactoryImpl());
     }
 }
