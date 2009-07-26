@@ -58,13 +58,15 @@
 
 package org.jrdf.query.answer.xml;
 
+import org.jrdf.query.answer.AnswerWriter;
+
 import javax.xml.stream.XMLStreamException;
 
 /**
  * @author Yuan-Fang Li
  * @version  $Id:$
  */
-public interface AnswerXmlWriter {
+public interface AnswerXmlWriter extends AnswerWriter {
 
     boolean hasMoreResults();
 
