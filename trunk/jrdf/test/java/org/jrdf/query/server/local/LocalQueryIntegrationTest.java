@@ -133,7 +133,6 @@ public class LocalQueryIntegrationTest {
         CallableGraphQueryClient queryClient = new QueryClientImpl(LOCAL_HOST);
         queryClient.getQuery(FOO, SELECT_QUERY_STRING, "all");
         Answer answer = queryClient.executeQuery();
-        System.err.println("got " + answer.getClass());
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 
