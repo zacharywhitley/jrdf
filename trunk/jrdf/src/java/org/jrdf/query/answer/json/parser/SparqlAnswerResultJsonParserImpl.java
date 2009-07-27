@@ -73,7 +73,7 @@ import org.jrdf.query.answer.xml.TypeValueImpl;
 import java.io.IOException;
 import java.util.Map;
 
-public class SparqlAnswerResultJsonParserImpl {
+public class SparqlAnswerResultJsonParserImpl implements SparqlAnswerResultJsonParser {
     private final JsonParser parser;
     private String type;
     private String value;

@@ -139,7 +139,7 @@ public class SparqlAnswerResultJsonParserImplUnitTest {
         throws IOException {
         final JsonFactory jsonFactory = new JsonFactory();
         final JsonParser parser = jsonFactory.createJsonParser(jsonBinding);
-        final SparqlAnswerResultJsonParserImpl jsonParser = new SparqlAnswerResultJsonParserImpl(parser);
+        final SparqlAnswerResultJsonParser jsonParser = new SparqlAnswerResultJsonParserImpl(parser);
         final HashMap<String, TypeValue> binding = new HashMap<String, TypeValue>();
         jsonParser.getOneBinding(binding);
         assertThat(binding.containsKey(variable), is(true));
