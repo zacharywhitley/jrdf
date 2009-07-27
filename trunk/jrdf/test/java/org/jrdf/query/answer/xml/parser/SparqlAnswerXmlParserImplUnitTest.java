@@ -69,6 +69,7 @@ import org.jrdf.query.answer.xml.TypeValueImpl;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -86,15 +87,17 @@ public class SparqlAnswerXmlParserImplUnitTest extends TestCase {
     private static final TypeValueImpl R2C5 = new TypeValueImpl(TYPED_LITERAL, "30", true,
         "http://www.w3.org/2001/XMLSchema#integer");
     private static final TypeValueImpl R1C6 = new TypeValueImpl(TYPED_LITERAL,
-        "&lt;p xmlns=\"http://www.w3.org/1999/xhtml\"&gt;My name is &lt;b&gt;alice&lt;/b&gt;&lt;/p&gt;", true,
+        "<p xmlns=\"http://www.w3.org/1999/xhtml\">My name is <b>alice</b></p>", true,
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral");
     private static final TypeValueImpl R2C6 = new TypeValueImpl();
     private static final TypeValueImpl R1C7 = new TypeValueImpl(BLANK_NODE, "r2");
     private static final TypeValueImpl R2C7 = new TypeValueImpl(BLANK_NODE, "r1");
     public static final LinkedHashSet<String> EXPECTED_VARIABLES = new LinkedHashSet<String>(asList("x", "hpage",
         "name", "mbox", "age", "blurb", "friend"));
-    public static final List<TypeValueImpl> ROW_1 = asList(R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7);
-    public static final List<TypeValueImpl> ROW_2 = asList(R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7);
+    public static final List<TypeValue> ROW_1 = new ArrayList<TypeValue>(asList(R1C1, R1C2, R1C3, R1C4, R1C5, R1C6,
+        R1C7));
+    public static final List<TypeValue> ROW_2 = new ArrayList<TypeValue>(asList(R2C1, R2C2, R2C3, R2C4, R2C5, R2C6,
+        R2C7));
     private SparqlAnswerXmlParser parser;
 
     public void testParse() throws Exception {
@@ -109,16 +112,16 @@ public class SparqlAnswerXmlParserImplUnitTest extends TestCase {
         assertFalse(parser.hasMoreResults());
     }
 
-    private void checkHasMoreAndGetResult(List<TypeValueImpl> row) {
+    private void checkHasMoreAndGetResult(List<TypeValue> row) {
         assertTrue(parser.hasMoreResults());
         assertTrue(parser.hasMoreResults());
         TypeValue[] results = parser.getResults();
         checkRow(results, row);
     }
 
-    public static void checkRow(TypeValue[] actualResults, List<TypeValueImpl> execptedResults) {
-        for (int i = 0; i < execptedResults.size(); i++) {
-            assertEquals(execptedResults.get(i), actualResults[i]);
+    public static void checkRow(TypeValue[] actualResults, List<TypeValue> expectedResults) {
+        for (int i = 0; i < expectedResults.size(); i++) {
+            assertEquals(expectedResults.get(i), actualResults[i]);
         }
     }
 }

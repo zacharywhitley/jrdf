@@ -137,9 +137,8 @@ public class TypeValueImpl implements TypeValue {
         }
     }
 
-    //TODO AN This is a bug - typeValue.getValue on both lhs and rhs.
     private boolean compareTypeAndValue(TypeValue typeValue) {
-        return typeValue.getType().equals(getType()) && typeValue.getValue().equals(typeValue.getValue());
+        return getType().equals(typeValue.getType()) && getValue().equals(typeValue.getValue());
     }
 
     private boolean compareSuffixAndSuffixType(TypeValue typeValue) {
