@@ -83,6 +83,7 @@ import java.util.LinkedHashSet;
 
 // TODO AN/YF Refactor out the tryGetVariables
 // TODO AN Missing link support for head tag.
+// TODO AN/YF - Turn into extension of closableiterator?
 public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader parser;
