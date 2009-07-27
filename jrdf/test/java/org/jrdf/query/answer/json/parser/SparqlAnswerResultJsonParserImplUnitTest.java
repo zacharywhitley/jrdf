@@ -95,14 +95,14 @@ public class SparqlAnswerResultJsonParserImplUnitTest {
             "\"value\": \"<p xmlns=\\\"http://www.w3.org/1999/xhtml\\\">My name is <b>alice</b></p>\"," +
             "\"datatype\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral\" }}", "name",
             new TypeValueImpl(TYPED_LITERAL,
-                "<p xmlns=\\\"http://www.w3.org/1999/xhtml\\\">My name is <b>alice</b></p>",
+                "<p xmlns=\"http://www.w3.org/1999/xhtml\">My name is <b>alice</b></p>",
                 true, RDF.XML_LITERAL.toString()));
     }
 
     @Test
     public void languageLiteralBinding() throws Exception {
         checkParser("{ \"name\" : {\"type\": \"literal\", \"value\": \"Bob\",\"xml:lang\": \"en\" }}", "name",
-            new TypeValueImpl(SparqlResultType.LITERAL, "bob", false, "en"));
+            new TypeValueImpl(SparqlResultType.LITERAL, "Bob", false, "en"));
     }
 
     @Test
