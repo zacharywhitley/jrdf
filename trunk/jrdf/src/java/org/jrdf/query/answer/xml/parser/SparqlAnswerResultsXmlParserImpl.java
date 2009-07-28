@@ -61,8 +61,9 @@ package org.jrdf.query.answer.xml.parser;
 
 import org.jrdf.query.answer.SparqlProtocol;
 import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueArrayFactory;
+import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
 import org.jrdf.query.answer.TypeValueFactory;
-import org.jrdf.query.answer.TypeValueImpl;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -75,6 +76,7 @@ import java.util.Map;
 public class SparqlAnswerResultsXmlParserImpl implements SparqlAnswerResultsXmlParser {
     private XMLStreamReader parser;
     private SparqlAnswerResultXmlParser resultParser;
+    private TypeValueArrayFactory arrayFactory = new TypeValueArrayFactoryImpl();
 
     public SparqlAnswerResultsXmlParserImpl(final XMLStreamReader newParser, final TypeValueFactory typeValueFactory) {
         this.parser = newParser;
@@ -88,7 +90,7 @@ public class SparqlAnswerResultsXmlParserImpl implements SparqlAnswerResultsXmlP
         } catch (XMLStreamException e) {
             variableToValue = new HashMap<String, TypeValue>();
         }
-        return mapToArray(variables, variableToValue);
+        return arrayFactory.mapToArray(variables, variableToValue);
     }
 
     private Map<String, TypeValue> parseAllResults() throws XMLStreamException {
@@ -109,25 +111,5 @@ public class SparqlAnswerResultsXmlParserImpl implements SparqlAnswerResultsXmlP
 
     private boolean endOfResult(int currentEvent) {
         return currentEvent == END_ELEMENT && SparqlProtocol.RESULT.equals(parser.getLocalName());
-    }
-
-    private TypeValue[] mapToArray(LinkedHashSet<String> variables, Map<String, TypeValue> variableToValue) {
-        TypeValue[] result = new TypeValue[variables.size()];
-        int index = 0;
-        for (String variable : variables) {
-            getValueOrUnbound(variableToValue, result, index, variable);
-            index++;
-        }
-        return result;
-    }
-
-    private void getValueOrUnbound(Map<String, TypeValue> variableToValue, TypeValue[] result, int index,
-        String variable) {
-        TypeValue value = variableToValue.get(variable);
-        if (value == null) {
-            result [index] = new TypeValueImpl();
-        } else {
-            result[index] = value;
-        }
     }
 }
