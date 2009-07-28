@@ -58,7 +58,6 @@
 
 package org.jrdf.query.answer.json;
 
-import org.jrdf.query.answer.SelectAnswer;
 import static org.jrdf.query.answer.SparqlProtocol.BINDINGS;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
 import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
@@ -76,28 +75,24 @@ import java.io.Writer;
 import java.util.Iterator;
 
 public class AnswerJsonWriterImpl implements AnswerJsonWriter {
-    private SelectAnswer answer;
     private Iterator<TypeValue[]> iterator;
     private JSONWriter jsonWriter;
     private long maxRows;
     private long count;
     private Writer writer;
+    private String[] variableNames;
 
     private AnswerJsonWriterImpl() {
     }
 
-    public AnswerJsonWriterImpl(Writer writer, SelectAnswer answer) {
-        checkNotNull(answer, writer);
-        this.answer = answer;
-        this.iterator = answer.columnValuesIterator();
-        this.maxRows = answer.numberOfTuples();
+    public AnswerJsonWriterImpl(Writer writer, final String[] variableNames, final Iterator<TypeValue[]> iterator,
+        final long maxRows) {
+        checkNotNull(writer, variableNames, iterator);
         this.writer = writer;
-        this.jsonWriter = new JSONWriter(this.writer);
-    }
-
-    public AnswerJsonWriterImpl(Writer writer, SelectAnswer answer, int maxRows) {
-        this(writer, answer);
+        this.variableNames = variableNames;
+        this.iterator = iterator;
         this.maxRows = maxRows;
+        this.jsonWriter = new JSONWriter(this.writer);
     }
 
     public boolean hasMoreResults() {
@@ -111,7 +106,7 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     public void writeHead() throws JSONException {
         jsonWriter.key(HEAD);
         jsonWriter.object().key(VARS).array();
-        for (final String variable : answer.getVariableNames()) {
+        for (final String variable : variableNames) {
             jsonWriter.value(variable);
         }
         jsonWriter.endArray();
@@ -137,7 +132,7 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     }
 
     public void writeResult() throws JSONException {
-        final String[] currentVariables = answer.getVariableNames();
+        final String[] currentVariables = variableNames;
         if (iterator.hasNext()) {
             writeResult(currentVariables, iterator.next());
         }
