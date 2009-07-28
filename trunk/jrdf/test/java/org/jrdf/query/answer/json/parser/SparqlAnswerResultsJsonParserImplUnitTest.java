@@ -112,8 +112,4 @@ public class SparqlAnswerResultsJsonParserImplUnitTest {
 
         mockFactory.verify();
     }
-
-    public void simpleBinding() {
-
-    }
 }

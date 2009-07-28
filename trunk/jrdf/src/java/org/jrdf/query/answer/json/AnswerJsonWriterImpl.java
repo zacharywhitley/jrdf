@@ -79,8 +79,8 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     private String[] variableNames;
     private Iterator<TypeValue[]> iterator;
     private long maxRows;
-    private JSONWriter jsonWriter;
     private long count;
+    private JSONWriter jsonWriter;
 
     private AnswerJsonWriterImpl() {
     }

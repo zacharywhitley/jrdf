@@ -64,10 +64,16 @@ import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
+import org.jrdf.query.answer.TypeValueArrayFactory;
+import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
 import org.jrdf.vocabulary.XSD;
+import org.json.JSONException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.StringWriter;
 
 public class JsonTestUtil {
     public static final String[] NO_VARIABLES = {};
@@ -95,4 +101,23 @@ public class JsonTestUtil {
             put("doh", new TypeValueImpl(LITERAL, "asdf"));
         }
     };
+
+    public static String getFullJsonDocument(final String[] variables, final Map<String, TypeValue>... bindings)
+        throws JSONException {
+        final List<TypeValue[]> values = convertToList(variables, bindings);
+        final StringWriter stringWriter = new StringWriter();
+        final AnswerJsonWriter answerJsonWriter = new AnswerJsonWriterImpl(stringWriter, variables, values.iterator(),
+            bindings.length);
+        answerJsonWriter.writeFullDocument();
+        return stringWriter.toString();
+    }
+
+    private static List<TypeValue[]> convertToList(String[] variables, Map<String, TypeValue>... bindings) {
+        final TypeValueArrayFactory arrayFactory = new TypeValueArrayFactoryImpl();
+        final List<TypeValue[]> values = new ArrayList<TypeValue[]>();
+        for (final Map<String, TypeValue> binding : bindings) {
+            values.add(arrayFactory.mapToArray(variables, binding));
+        }
+        return values;
+    }
 }

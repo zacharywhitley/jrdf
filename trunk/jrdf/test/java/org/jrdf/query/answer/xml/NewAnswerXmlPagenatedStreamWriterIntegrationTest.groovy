@@ -114,7 +114,8 @@ class NewAnswerXmlPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
         graph = FACTORY.newGraph
         TEST_UTIL.createTestGraph(graph)
         answer = urqlConnection.executeQuery(graph, QUERY)
-        xmlWriter = new AnswerXmlPagenatedStreamWriter(resultsWriter, (SelectAnswer) answer)
+        xmlWriter = new AnswerXmlPagenatedStreamWriter(resultsWriter, answer.getVariableNames(),
+                answer.columnValuesIterator(), answer.numberOfTuples())
     }
 
     @Override
