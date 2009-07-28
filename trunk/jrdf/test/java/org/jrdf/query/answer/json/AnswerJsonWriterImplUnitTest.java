@@ -64,13 +64,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.TypeValue;
-import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
-import static org.jrdf.query.answer.SparqlResultType.LITERAL;
-import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
-import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.TypeValueImpl;
+import static org.jrdf.query.answer.json.JsonTestUtil.NO_VARIABLES;
+import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
+import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
+import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_3;
+import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
 import org.jrdf.util.test.MockFactory;
-import org.jrdf.vocabulary.XSD;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,36 +81,10 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class AnswerJsonWriterImplUnitTest {
-    private static final String[] NO_VARIABLES = {};
-    private static final String[] TEST_VARIABLES = {"abc", "123", "doh", "ray", "me"};
-    private static final Map<String, TypeValue> TEST_BINDINGS_1 = new HashMap<String, TypeValue>() {
-        {
-            put("abc", new TypeValueImpl(BLANK_NODE, "r1"));
-            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/"));
-            put("ray", new TypeValueImpl(TYPED_LITERAL, "123", true, XSD.INT.toString()));
-            put("me", new TypeValueImpl(LITERAL, ""));
-        }
-    };
-    private static final Map<String, TypeValue> TEST_BINDINGS_2 = new HashMap<String, TypeValue>() {
-        {
-            put("abc", new TypeValueImpl(BLANK_NODE, "r2"));
-            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/bob/"));
-            put("ray", new TypeValueImpl(TYPED_LITERAL, "321", true, XSD.INT.toString()));
-            put("doh", new TypeValueImpl(LITERAL, "qwerty"));
-        }
-    };
-    private static final Map<String, TypeValue> TEST_BINDINGS_3 = new HashMap<String, TypeValue>() {
-        {
-            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/charles/"));
-            put("ray", new TypeValueImpl(TYPED_LITERAL, "231", true, XSD.INT.toString()));
-            put("doh", new TypeValueImpl(LITERAL, "asdf"));
-        }
-    };
     private final MockFactory mockFactory = new MockFactory();
     private SelectAnswer selectAnswer;
     private Iterator<TypeValue[]> mockIterator;
@@ -128,15 +102,13 @@ public class AnswerJsonWriterImplUnitTest {
 
     @Test
     public void creationAndClosing() throws Exception {
-        expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
-        expect(selectAnswer.numberOfTuples()).andReturn(0L);
         mockWriter.flush();
         expectLastCall();
         mockWriter.close();
         expectLastCall();
 
         mockFactory.replay();
-        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, selectAnswer);
+        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, NO_VARIABLES, mockIterator, 0L);
         writer.flush();
         writer.close();
 
@@ -151,7 +123,7 @@ public class AnswerJsonWriterImplUnitTest {
         expectLastCall().andThrow(new IOException());
 
         mockFactory.replay();
-        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, selectAnswer);
+        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, NO_VARIABLES, mockIterator, 0L);
         writer.flush();
 
         mockFactory.verify();
@@ -165,7 +137,7 @@ public class AnswerJsonWriterImplUnitTest {
         expectLastCall().andThrow(new IOException());
 
         mockFactory.replay();
-        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, selectAnswer);
+        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, NO_VARIABLES, mockIterator, 0L);
         writer.close();
 
         mockFactory.verify();
@@ -191,12 +163,13 @@ public class AnswerJsonWriterImplUnitTest {
         checkAnswer(TEST_VARIABLES, 1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
     }
 
-    private void checkAnswer(final String[] variables, final int numberOfResults,
+    public void checkAnswer(final String[] variables, final int numberOfResults,
         final Map<String, TypeValue>... bindings) throws JSONException {
         setupExpectationsForResults(variables, numberOfResults, bindings);
         mockFactory.replay();
 
-        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, selectAnswer, numberOfResults);
+        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, variables, mockIterator,
+            numberOfResults);
         writer.writeFullDocument();
         mockFactory.verify();
 
@@ -217,10 +190,6 @@ public class AnswerJsonWriterImplUnitTest {
         for (int i = 0; i < numberOfResults; i++) {
             expect(mockIterator.next()).andReturn(convertBindingMapToArray(results[i], variables));
         }
-        // Actual returned results from answer
-        expect(selectAnswer.columnValuesIterator()).andReturn(mockIterator);
-        expect(selectAnswer.numberOfTuples()).andReturn((long) numberOfResults);
-        expect(selectAnswer.getVariableNames()).andReturn(variables).anyTimes();
     }
 
 

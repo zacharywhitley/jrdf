@@ -56,64 +56,43 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.answer.json.parser;
+package org.jrdf.query.answer.json;
 
-import org.codehaus.jackson.JsonParser;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.hamcrest.CoreMatchers.is;
+import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
+import static org.jrdf.query.answer.SparqlResultType.LITERAL;
+import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
+import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.TypeValueFactory;
-import org.jrdf.util.test.MockFactory;
-import static org.junit.Assert.assertThat;
-import org.junit.Before;
-import org.junit.Test;
+import org.jrdf.query.answer.TypeValueImpl;
+import org.jrdf.vocabulary.XSD;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
+import java.util.Map;
 
-public class SparqlAnswerResultsJsonParserImplUnitTest {
-    private final MockFactory mockFactory = new MockFactory();
-    private Iterator<TypeValue[]> mockIterator;
-    private JsonParser mockJsonParser;
-    private TypeValueFactory mockTypeValueFactory;
-
-    @Before
-    @SuppressWarnings({ "unchecked" })
-    public void setUp() throws Exception {
-        mockJsonParser = mockFactory.createMock(JsonParser.class);
-        mockTypeValueFactory = mockFactory.createMock(TypeValueFactory.class);
-        mockIterator = mockFactory.createMock(Iterator.class);
-    }
-
-    @Test
-    public void closeClosesParser() throws Exception {
-        mockJsonParser.close();
-        expectLastCall();
-
-        mockFactory.replay();
-        final SparqlAnswerResultsJsonParser jsonParser =
-            new SparqlAnswerResultsJsonParserImpl(new LinkedHashSet<String>(), mockJsonParser, mockTypeValueFactory);
-        final boolean closedOkay = jsonParser.close();
-
-        mockFactory.verify();
-        assertThat(closedOkay, is(true));
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void closeWithException() throws Exception {
-        mockJsonParser.close();
-        expectLastCall().andThrow(new IOException());
-
-        mockFactory.replay();
-        final SparqlAnswerResultsJsonParser jsonParser =
-            new SparqlAnswerResultsJsonParserImpl(new LinkedHashSet<String>(), mockJsonParser, mockTypeValueFactory);
-        jsonParser.close();
-
-        mockFactory.verify();
-    }
-
-    public void simpleBinding() {
-
-    }
+public class JsonTestUtil {
+    public static final String[] NO_VARIABLES = {};
+    public static final String[] TEST_VARIABLES = {"abc", "123", "doh", "ray", "me"};
+    public static final Map<String, TypeValue> TEST_BINDINGS_1 = new HashMap<String, TypeValue>() {
+        {
+            put("abc", new TypeValueImpl(BLANK_NODE, "r1"));
+            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/"));
+            put("ray", new TypeValueImpl(TYPED_LITERAL, "123", true, XSD.INT.toString()));
+            put("me", new TypeValueImpl(LITERAL, ""));
+        }
+    };
+    public static final Map<String, TypeValue> TEST_BINDINGS_2 = new HashMap<String, TypeValue>() {
+        {
+            put("abc", new TypeValueImpl(BLANK_NODE, "r2"));
+            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/bob/"));
+            put("ray", new TypeValueImpl(TYPED_LITERAL, "321", true, XSD.INT.toString()));
+            put("doh", new TypeValueImpl(LITERAL, "qwerty"));
+        }
+    };
+    public static final Map<String, TypeValue> TEST_BINDINGS_3 = new HashMap<String, TypeValue>() {
+        {
+            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/charles/"));
+            put("ray", new TypeValueImpl(TYPED_LITERAL, "231", true, XSD.INT.toString()));
+            put("doh", new TypeValueImpl(LITERAL, "asdf"));
+        }
+    };
 }
