@@ -56,13 +56,25 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.answer;
+package org.jrdf.query.answer.json.parser;
 
-import java.util.LinkedHashSet;
-import java.util.Map;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonParser;
+import org.jrdf.query.answer.json.JsonTestUtil;
+import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
+import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
+import org.junit.Test;
 
-public interface TypeValueArrayFactory {
-    TypeValue[] mapToArray(LinkedHashSet<String> variables, Map<String, TypeValue> variableToValue);
+import java.io.ByteArrayInputStream;
 
-    TypeValue[] mapToArray(String[] variables, Map<String, TypeValue> variableToValue);
+public class SparqlAnswerJsonParserImplUnitTest {
+
+    @Test
+    public void simpleBinding() throws Exception {
+        String results = JsonTestUtil.getFullJsonDocument(TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_1);
+        final JsonFactory jsonFactory = new JsonFactory();
+        final JsonParser parser = jsonFactory.createJsonParser(results);
+        final byte[] bytes = results.getBytes();
+        final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(new ByteArrayInputStream(bytes));
+    }
 }

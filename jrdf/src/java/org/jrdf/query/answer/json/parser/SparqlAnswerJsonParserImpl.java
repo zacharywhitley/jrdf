@@ -60,8 +60,8 @@ package org.jrdf.query.answer.json.parser;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
-import org.jrdf.query.answer.AnswerType;
 import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueFactoryImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,40 +72,45 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     private InputStreamReader reader;
     private JsonParser parser;
     private boolean hasMoreResults;
+    private SparqlAnswerResultsJsonParser resultsParser;
+    private LinkedHashSet<String> variables;
 
     public SparqlAnswerJsonParserImpl(InputStream inputStream) throws IOException {
         this.reader = new InputStreamReader(inputStream);
         this.parser = new JsonFactory().createJsonParser(inputStream);
-    }
-
-    public boolean getAskResult() {
-        return false;
-    }
-
-    public AnswerType getAnswerType() {
-        return AnswerType.SELECT;
+        getVariables();
+        this.resultsParser = new SparqlAnswerResultsJsonParserImpl(variables, parser, new TypeValueFactoryImpl());
     }
 
     public LinkedHashSet<String> getVariables() {
-        return null;
-    }
-
-    public boolean hasMoreResults() throws IOException {
-        return hasMoreResults;
-    }
-
-    public TypeValue[] getResults() throws IOException {
-        if (parser.nextToken() == null) {
-            hasMoreResults = false;
+        if (variables == null) {
+            reallyGetVariables();
         }
-        return null;
+        return variables;
     }
 
-    public void close() {
+    public boolean hasNext() {
+        return resultsParser.hasNext();
+    }
+
+    public TypeValue[] next() {
+        return resultsParser.next();
+    }
+
+    public boolean close() {
         try {
             reader.close();
+            return true;
         } catch (IOException e) {
             throw new RuntimeException();
         }
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot remove from this iterator");
+    }
+
+    private void reallyGetVariables() {
+        variables = new LinkedHashSet<String>();
     }
 }

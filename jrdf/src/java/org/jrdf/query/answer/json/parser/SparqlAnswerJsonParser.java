@@ -58,22 +58,11 @@
 
 package org.jrdf.query.answer.json.parser;
 
-import org.jrdf.query.answer.AnswerType;
 import org.jrdf.query.answer.TypeValue;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.LinkedHashSet;
-import java.io.IOException;
 
-public interface SparqlAnswerJsonParser {
-    boolean getAskResult();
-
-    AnswerType getAnswerType();
-
+public interface SparqlAnswerJsonParser extends ClosableIterator<TypeValue[]> {
     LinkedHashSet<String> getVariables();
-
-    boolean hasMoreResults() throws IOException;
-
-    TypeValue[] getResults() throws IOException;
-
-    void close();
 }

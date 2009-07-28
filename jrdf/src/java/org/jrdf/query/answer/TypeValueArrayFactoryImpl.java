@@ -62,14 +62,18 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 
 public class TypeValueArrayFactoryImpl implements TypeValueArrayFactory {
-    public TypeValue[] mapToArray(LinkedHashSet<String> variables, Map<String, TypeValue> variableToValue) {
-        TypeValue[] result = new TypeValue[variables.size()];
+    public TypeValue[] mapToArray(String[] variables, Map<String, TypeValue> variableToValue) {
+        TypeValue[] result = new TypeValue[variables.length];
         int index = 0;
         for (String variable : variables) {
             getValueOrUnbound(variableToValue, result, index, variable);
             index++;
         }
         return result;
+    }
+
+    public TypeValue[] mapToArray(LinkedHashSet<String> variables, Map<String, TypeValue> variableToValue) {
+        return mapToArray(variables.toArray(new String[variables.size()]), variableToValue);
     }
 
     private void getValueOrUnbound(Map<String, TypeValue> variableToValue, TypeValue[] result, int index,
