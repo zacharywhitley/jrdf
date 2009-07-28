@@ -63,6 +63,8 @@ import static org.jrdf.query.answer.AnswerType.ASK;
 import static org.jrdf.query.answer.AnswerType.SELECT;
 import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
 import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
+import org.jrdf.query.answer.xml.SparqlStreamingAskAnswer;
+import org.jrdf.query.answer.xml.SparqlStreamingSelectAnswer;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;

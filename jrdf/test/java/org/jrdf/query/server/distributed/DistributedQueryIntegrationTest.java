@@ -67,7 +67,7 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.server.SpringDistributedServer;

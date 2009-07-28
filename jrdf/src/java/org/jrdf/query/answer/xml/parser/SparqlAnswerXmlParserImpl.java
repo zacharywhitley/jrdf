@@ -69,8 +69,8 @@ import static org.jrdf.query.answer.SparqlProtocol.NAME;
 import static org.jrdf.query.answer.SparqlProtocol.RESULT;
 import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
 import static org.jrdf.query.answer.SparqlProtocol.VARIABLE;
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueFactoryImpl;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueFactoryImpl;
 
 import javax.xml.stream.XMLInputFactory;
 import static javax.xml.stream.XMLStreamConstants.CHARACTERS;

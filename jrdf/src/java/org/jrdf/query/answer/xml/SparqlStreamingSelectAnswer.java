@@ -59,57 +59,68 @@
 
 package org.jrdf.query.answer.xml;
 
-public enum SparqlResultType {
-    /**
-     * Result is unbound.
-     */
-    UNBOUND("unbound"),
+import org.jrdf.query.answer.AnswerVisitor;
+import org.jrdf.query.answer.SelectAnswer;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueToString;
+import org.jrdf.query.answer.TypeValueToStringImpl;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
 
-    /**
-     * Result is a blank node.
-     */
-    BLANK_NODE("bnode"),
+import javax.xml.stream.XMLStreamException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 
-    /**
-     * Result is a URI reference.
-     */
-    URI_REFERENCE("uri"),
+// TODO AN/YF - Can we do time taken and number of tuples (maybe based on how much so far?)
+public class SparqlStreamingSelectAnswer implements SelectAnswer {
+    private SparqlAnswerStreamXmlParser answerStreamParser;
+    private TypeValueToString typeValueToString = new TypeValueToStringImpl();
 
-    /**
-     * Result is an untyped literal.
-     */
-    LITERAL("literal"),
-
-    /**
-     * Result is a boolean value (for ask queries).
-     */
-    BOOLEAN("boolean"),
-
-    /**
-     * Result is a typed literal.
-     */
-    TYPED_LITERAL("typed-literal", "literal");
-
-    private static final long serialVersionUID = 1L;
-    private String jsonRepresentation;
-    private String xmlRepresentation;
-
-    SparqlResultType(String newJsonRepresentation) {
-        this.jsonRepresentation = newJsonRepresentation;
-        this.xmlRepresentation = newJsonRepresentation;
+    public SparqlStreamingSelectAnswer(InputStream inputStream) throws XMLStreamException, InterruptedException {
+        this(new SparqlAnswerStreamXmlParserImpl(inputStream));
     }
 
-    SparqlResultType(String newJsonRepresentation, String newXmlRepresentation) {
-        this.jsonRepresentation = newJsonRepresentation;
-        this.xmlRepresentation = newXmlRepresentation;
+    public SparqlStreamingSelectAnswer(SparqlAnswerStreamXmlParser answerStreamParser) {
+        this.answerStreamParser = answerStreamParser;
     }
 
-    public String getXmlElementName() {
-        return xmlRepresentation;
+    public String[] getVariableNames() {
+        LinkedHashSet<String> existingVariables = answerStreamParser.getVariables();
+        String[] existingVariablesArray = existingVariables.toArray(new String[existingVariables.size()]);
+        String[] variables = new String[existingVariables.size()];
+        System.arraycopy(existingVariablesArray, 0, variables, 0, existingVariablesArray.length);
+        return variables;
     }
 
-    @Override
-    public String toString() {
-        return this.jsonRepresentation;
+    public Iterator<TypeValue[]> columnValuesIterator() {
+        return new StreamingAnswerIterator(answerStreamParser);
+    }
+
+    // TODO AN/YF Remove - complete cut-and-past of AnswerImpl.
+    public String[][] getColumnValues() {
+        final LinkedHashSet<String> hashSet = answerStreamParser.getVariables();
+        final int numberOfVariables = hashSet.size();
+        final int numberOfTuples = (int) numberOfTuples();
+        String table[][] = new String[numberOfTuples][numberOfVariables];
+        int index = 0;
+        Iterator<TypeValue[]> iterator = columnValuesIterator();
+        while (iterator.hasNext()) {
+            table[index] = typeValueToString.convert(iterator.next());
+            index++;
+        }
+        return table;
+    }
+
+    public long numberOfTuples() {
+        return -1;
+    }
+
+    public long getTimeTaken() {
+        return -1;
+    }
+
+    public <R> R accept(AnswerVisitor<R> visitor) {
+        return visitor.visitSelectAnswer(this);
     }
 }

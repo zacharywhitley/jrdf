@@ -58,7 +58,7 @@
 
 package org.jrdf.query.answer.json.parser;
 
-import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.TypeValue;
 
 import java.util.Map;
 import java.io.IOException;

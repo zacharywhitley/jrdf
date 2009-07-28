@@ -59,27 +59,57 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
-import org.jrdf.query.answer.xml.TypeValue;
+public enum SparqlResultType {
+    /**
+     * Result is unbound.
+     */
+    UNBOUND("unbound"),
 
-import java.util.Iterator;
+    /**
+     * Result is a blank node.
+     */
+    BLANK_NODE("bnode"),
 
-public class StreamingAnswerIterator implements Iterator<TypeValue[]> {
-    private SparqlAnswerStreamXmlParser answerStreamParser;
+    /**
+     * Result is a URI reference.
+     */
+    URI_REFERENCE("uri"),
 
-    public StreamingAnswerIterator(SparqlAnswerStreamXmlParser newAnswerStreamParser) {
-        this.answerStreamParser = newAnswerStreamParser;
+    /**
+     * Result is an untyped literal.
+     */
+    LITERAL("literal"),
+
+    /**
+     * Result is a boolean value (for ask queries).
+     */
+    BOOLEAN("boolean"),
+
+    /**
+     * Result is a typed literal.
+     */
+    TYPED_LITERAL("typed-literal", "literal");
+
+    private static final long serialVersionUID = 1L;
+    private String jsonRepresentation;
+    private String xmlRepresentation;
+
+    SparqlResultType(String newJsonRepresentation) {
+        this.jsonRepresentation = newJsonRepresentation;
+        this.xmlRepresentation = newJsonRepresentation;
     }
 
-    public boolean hasNext() {
-        return answerStreamParser.hasMoreResults();
+    SparqlResultType(String newJsonRepresentation, String newXmlRepresentation) {
+        this.jsonRepresentation = newJsonRepresentation;
+        this.xmlRepresentation = newXmlRepresentation;
     }
 
-    public TypeValue[] next() {
-        return answerStreamParser.getResults();
+    public String getXmlElementName() {
+        return xmlRepresentation;
     }
 
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove values from an answer iterator");
+    @Override
+    public String toString() {
+        return this.jsonRepresentation;
     }
 }

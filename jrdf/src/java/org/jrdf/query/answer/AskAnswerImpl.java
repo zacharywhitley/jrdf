@@ -59,9 +59,7 @@
 
 package org.jrdf.query.answer;
 
-import static org.jrdf.query.answer.xml.SparqlResultType.BOOLEAN;
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueImpl;
+import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
 
 import java.io.Serializable;
 import java.util.HashSet;

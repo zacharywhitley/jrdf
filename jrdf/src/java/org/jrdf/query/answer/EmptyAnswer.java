@@ -59,7 +59,6 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.util.EmptyClosableIterator;
 
 import java.io.Serializable;

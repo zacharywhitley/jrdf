@@ -59,12 +59,27 @@
 
 package org.jrdf.query.answer.xml;
 
-public interface TypeValue {
-    SparqlResultType getType();
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
+import org.jrdf.query.answer.TypeValue;
 
-    String getValue();
+import java.util.Iterator;
 
-    DatatypeType getSuffixType();
+public class StreamingAnswerIterator implements Iterator<TypeValue[]> {
+    private SparqlAnswerStreamXmlParser answerStreamParser;
 
-    String getSuffix();
+    public StreamingAnswerIterator(SparqlAnswerStreamXmlParser newAnswerStreamParser) {
+        this.answerStreamParser = newAnswerStreamParser;
+    }
+
+    public boolean hasNext() {
+        return answerStreamParser.hasMoreResults();
+    }
+
+    public TypeValue[] next() {
+        return answerStreamParser.getResults();
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot remove values from an answer iterator");
+    }
 }

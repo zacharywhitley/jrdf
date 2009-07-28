@@ -65,11 +65,9 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
-import static org.jrdf.query.answer.xml.SparqlResultType.LITERAL;
-import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueImpl;
+import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
+import static org.jrdf.query.answer.SparqlResultType.LITERAL;
+import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
 import static org.jrdf.query.relation.constants.NullaryNode.NULLARY_NODE;
 import org.jrdf.util.EscapeUtil;
 

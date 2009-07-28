@@ -57,12 +57,12 @@
  *
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer;
 
-import static org.jrdf.query.answer.xml.DatatypeType.DATATYPE;
-import static org.jrdf.query.answer.xml.DatatypeType.XML_LANG;
-import static org.jrdf.query.answer.xml.DatatypeType.*;
-import static org.jrdf.query.answer.xml.SparqlResultType.*;
+import static org.jrdf.query.answer.DatatypeType.DATATYPE;
+import static org.jrdf.query.answer.DatatypeType.NONE;
+import static org.jrdf.query.answer.DatatypeType.XML_LANG;
+import static org.jrdf.query.answer.SparqlResultType.UNBOUND;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 

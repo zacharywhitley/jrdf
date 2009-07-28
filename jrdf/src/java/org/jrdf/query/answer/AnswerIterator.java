@@ -60,7 +60,6 @@
 package org.jrdf.query.answer;
 
 import org.jrdf.graph.Node;
-import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.constants.NullaryNode;

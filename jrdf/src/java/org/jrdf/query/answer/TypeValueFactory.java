@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer;
 
 public interface TypeValueFactory {
     TypeValue createTypeValue(String type, String value, String datatype, String xmlLang);

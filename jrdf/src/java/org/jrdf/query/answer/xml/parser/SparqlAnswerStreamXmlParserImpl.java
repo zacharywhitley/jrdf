@@ -60,8 +60,8 @@
 package org.jrdf.query.answer.xml.parser;
 
 import org.jrdf.query.answer.AnswerType;
+import org.jrdf.query.answer.TypeValue;
 import static org.jrdf.query.answer.AnswerType.ASK;
-import org.jrdf.query.answer.xml.TypeValue;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;

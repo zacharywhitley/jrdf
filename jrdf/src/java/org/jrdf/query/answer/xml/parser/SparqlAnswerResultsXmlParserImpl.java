@@ -60,9 +60,9 @@
 package org.jrdf.query.answer.xml.parser;
 
 import org.jrdf.query.answer.SparqlProtocol;
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueFactory;
-import org.jrdf.query.answer.xml.TypeValueImpl;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueFactory;
+import org.jrdf.query.answer.TypeValueImpl;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
