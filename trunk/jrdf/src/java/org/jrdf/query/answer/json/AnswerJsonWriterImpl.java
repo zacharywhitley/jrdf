@@ -75,12 +75,12 @@ import java.io.Writer;
 import java.util.Iterator;
 
 public class AnswerJsonWriterImpl implements AnswerJsonWriter {
-    private Iterator<TypeValue[]> iterator;
-    private JSONWriter jsonWriter;
-    private long maxRows;
-    private long count;
     private Writer writer;
     private String[] variableNames;
+    private Iterator<TypeValue[]> iterator;
+    private long maxRows;
+    private JSONWriter jsonWriter;
+    private long count;
 
     private AnswerJsonWriterImpl() {
     }

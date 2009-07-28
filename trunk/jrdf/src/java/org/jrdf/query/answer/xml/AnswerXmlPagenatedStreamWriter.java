@@ -58,7 +58,6 @@
 
 package org.jrdf.query.answer.xml;
 
-import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.TypeValue;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -73,22 +72,18 @@ import java.util.Iterator;
 public class AnswerXmlPagenatedStreamWriter extends AbstractXmlStreamWriter implements AnswerXmlWriter {
     private long maxRows;
     private long count;
-    private SelectAnswer answer;
     private Iterator<TypeValue[]> iterator;
+    private String[] variableNames;
 
     private AnswerXmlPagenatedStreamWriter() {
     }
 
-    public AnswerXmlPagenatedStreamWriter(Writer writer, SelectAnswer answer) throws XMLStreamException {
-        checkNotNull(answer, writer);
+    public AnswerXmlPagenatedStreamWriter(Writer writer, final String[] variableNames,
+        final Iterator<TypeValue[]> iterator, final long maxRows) throws XMLStreamException {
+        checkNotNull(writer, variableNames, iterator);
         createXmlStreamWriter(writer);
-        this.answer = answer;
-        this.iterator = answer.columnValuesIterator();
-        this.maxRows = answer.numberOfTuples();
-    }
-
-    public AnswerXmlPagenatedStreamWriter(Writer writer, SelectAnswer answer, int maxRows) throws XMLStreamException {
-        this(writer, answer);
+        this.variableNames = variableNames;
+        this.iterator = iterator;
         this.maxRows = maxRows;
     }
 
@@ -97,11 +92,11 @@ public class AnswerXmlPagenatedStreamWriter extends AbstractXmlStreamWriter impl
     }
 
     public void writeHead() throws XMLStreamException {
-        writeHead(answer.getVariableNames());
+        writeHead(variableNames);
     }
 
     public void writeResult() throws XMLStreamException {
-        String[] currentVariables = answer.getVariableNames();
+        String[] currentVariables = variableNames;
         if (iterator.hasNext()) {
             writeResult(currentVariables, iterator.next());
         }

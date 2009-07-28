@@ -96,7 +96,7 @@ public class AskAnswerSparqlRepresentation extends WriterRepresentation {
 
     private AskAnswerXmlStreamWriter createAnswerWriter(Writer writer) throws XMLStreamException {
         if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
-            return new AskAnswerXmlStreamWriter(writer, answer);
+            return new AskAnswerXmlStreamWriter(writer, answer.getResult());
         } else {
             throw new RuntimeException("Unknown media type: " + getMediaType());
         }

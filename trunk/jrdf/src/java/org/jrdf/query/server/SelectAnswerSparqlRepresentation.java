@@ -62,6 +62,7 @@ import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON;
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import org.jrdf.query.answer.AnswerWriter;
 import org.jrdf.query.answer.SelectAnswer;
+import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.json.AnswerJsonWriterImpl;
 import org.jrdf.query.answer.xml.AnswerXmlPagenatedStreamWriter;
 import static org.restlet.data.CharacterSet.UTF_8;
@@ -71,6 +72,7 @@ import org.restlet.resource.WriterRepresentation;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 
 public class SelectAnswerSparqlRepresentation extends WriterRepresentation {
     private SelectAnswer answer;
@@ -96,11 +98,13 @@ public class SelectAnswerSparqlRepresentation extends WriterRepresentation {
     }
 
     private AnswerWriter createAnswerWriter(Writer writer) throws XMLStreamException {
+        final String[] variableNames = answer.getVariableNames();
+        final Iterator<TypeValue[]> typeValues = answer.columnValuesIterator();
+        final long maxRows = answer.numberOfTuples();
         if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
-            return new AnswerXmlPagenatedStreamWriter(writer, answer);
+            return new AnswerXmlPagenatedStreamWriter(writer, variableNames, typeValues, maxRows);
         } else if (APPLICATION_SPARQL_JSON.equals(getMediaType())) {
-            return new AnswerJsonWriterImpl(writer, answer.getVariableNames(), answer.columnValuesIterator(),
-                answer.numberOfTuples());
+            return new AnswerJsonWriterImpl(writer, variableNames, typeValues, maxRows);
         } else {
             throw new RuntimeException("Unknown media type: " + getMediaType());
         }

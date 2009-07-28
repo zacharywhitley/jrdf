@@ -58,7 +58,6 @@
 
 package org.jrdf.query.answer.xml;
 
-import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SparqlProtocol;
 
 import javax.xml.stream.XMLStreamException;
@@ -71,15 +70,15 @@ import java.io.Writer;
 
 public class AskAnswerXmlStreamWriter extends AbstractXmlStreamWriter {
     private static final String[] NO_VARIABLES = new String[]{};
-    private AskAnswer answer;
     private boolean hasMore;
+    private boolean result;
 
     private AskAnswerXmlStreamWriter() {
     }
 
-    public AskAnswerXmlStreamWriter(Writer writer, AskAnswer answer) throws XMLStreamException {
+    public AskAnswerXmlStreamWriter(Writer writer, final boolean result) throws XMLStreamException {
         createXmlStreamWriter(writer);
-        this.answer = answer;
+        this.result = result;
         this.hasMore = true;
     }
 
@@ -98,7 +97,7 @@ public class AskAnswerXmlStreamWriter extends AbstractXmlStreamWriter {
     public void writeResult() throws XMLStreamException {
         if (hasMoreResults()) {
             streamWriter.writeStartElement(SparqlProtocol.BOOLEAN);
-            streamWriter.writeCharacters(Boolean.toString(answer.getResult()));
+            streamWriter.writeCharacters(Boolean.toString(result));
             streamWriter.writeEndElement();
             flush();
             hasMore = false;

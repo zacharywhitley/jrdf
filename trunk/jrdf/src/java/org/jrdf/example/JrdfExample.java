@@ -249,7 +249,8 @@ public class JrdfExample {
         SelectAnswer answer = (SelectAnswer) connection.executeQuery(graph, query);
         System.out.println("Query Result:\n" + answer);
         StringWriter writer = new StringWriter();
-        AnswerXmlWriter answerXMLWriter = new AnswerXmlPagenatedStreamWriter(writer, answer);
+        AnswerXmlWriter answerXMLWriter = new AnswerXmlPagenatedStreamWriter(writer, answer.getVariableNames(),
+            answer.columnValuesIterator(), answer.numberOfTuples());
         answerXMLWriter.writeFullDocument();
         String xmlString = writer.toString();
         System.out.printf("Query result xml:\n" + xmlString);
