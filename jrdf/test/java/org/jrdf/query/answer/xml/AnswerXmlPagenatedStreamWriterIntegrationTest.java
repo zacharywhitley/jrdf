@@ -67,7 +67,6 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
@@ -118,7 +117,8 @@ public class AnswerXmlPagenatedStreamWriterIntegrationTest extends TestCase {
     public void testVariables() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = urqlConnection.executeQuery(graph, queryString);
-        xmlWriter = new AnswerXmlPagenatedStreamWriter(writer, (SelectAnswer) answer);
+        xmlWriter = new AnswerXmlPagenatedStreamWriter(writer, answer.getVariableNames(), answer.columnValuesIterator(),
+            answer.numberOfTuples());
         Set<String> vars = TEST_UTIL.getVariables(xmlWriter, writer);
         Set<String> set = new HashSet<String>();
         set.addAll(asList("s", "p", "o"));
@@ -128,7 +128,8 @@ public class AnswerXmlPagenatedStreamWriterIntegrationTest extends TestCase {
     public void testResult() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = urqlConnection.executeQuery(graph, queryString);
-        xmlWriter = new AnswerXmlPagenatedStreamWriter(writer, (SelectAnswer) answer);
+        xmlWriter = new AnswerXmlPagenatedStreamWriter(writer, answer.getVariableNames(), answer.columnValuesIterator(),
+            answer.numberOfTuples());
         xmlWriter.writeStartResults();
         int count = 0;
         while (xmlWriter.hasMoreResults()) {

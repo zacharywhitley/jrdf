@@ -150,14 +150,14 @@ public class AskAnswerXmlStreamWriterIntegrationTest extends TestCase {
         graph.add(b3, p3, l3);
         String queryString = "ASK WHERE {?s ?p ?o .}";
         final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new AskAnswerXmlStreamWriter(writer, answer);
+        xmlWriter = new AskAnswerXmlStreamWriter(writer, answer.getResult());
         checkResult(true);
     }
 
     public void testAskEmptyGraph() throws XMLStreamException, InvalidQuerySyntaxException, GraphException {
         String queryString = "ASK WHERE {?s ?p ?o .}";
         final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new AskAnswerXmlStreamWriter(writer, answer);
+        xmlWriter = new AskAnswerXmlStreamWriter(writer, answer.getResult());
         checkResult(false);
     }
 
@@ -165,7 +165,7 @@ public class AskAnswerXmlStreamWriterIntegrationTest extends TestCase {
         graph.add(b1, p1, l1);
         String queryString = "ASK WHERE {?s ?p ?o FILTER ( str(?o) = \"ab\" ) }";
         final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new AskAnswerXmlStreamWriter(writer, answer);
+        xmlWriter = new AskAnswerXmlStreamWriter(writer, answer.getResult());
         checkResult(false);
     }
 
