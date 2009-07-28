@@ -59,7 +59,7 @@
 package org.jrdf.query.answer.json.parser;
 
 import org.jrdf.query.answer.AnswerType;
-import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.TypeValue;
 
 import java.util.LinkedHashSet;
 import java.io.IOException;

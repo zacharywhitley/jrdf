@@ -59,6 +59,7 @@
 package org.jrdf.query.answer.xml;
 
 import org.jrdf.query.answer.SelectAnswer;
+import org.jrdf.query.answer.TypeValue;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;

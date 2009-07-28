@@ -59,8 +59,6 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.TypeValue;
-
 import java.util.Iterator;
 
 /**

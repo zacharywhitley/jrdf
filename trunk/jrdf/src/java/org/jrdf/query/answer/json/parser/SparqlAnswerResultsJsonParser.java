@@ -58,7 +58,7 @@
 
 package org.jrdf.query.answer.json.parser;
 
-import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.TypeValue;
 import org.jrdf.util.ClosableIterator;
 
 public interface SparqlAnswerResultsJsonParser extends ClosableIterator<TypeValue[]> {

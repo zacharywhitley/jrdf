@@ -69,8 +69,10 @@ import static org.jrdf.query.answer.SparqlProtocol.SPARQL;
 import static org.jrdf.query.answer.SparqlProtocol.SPARQL_NS;
 import static org.jrdf.query.answer.SparqlProtocol.VARIABLE;
 import static org.jrdf.query.answer.SparqlProtocol.XSLT_URL_STRING;
-import static org.jrdf.query.answer.xml.DatatypeType.NONE;
-import static org.jrdf.query.answer.xml.SparqlResultType.UNBOUND;
+import static org.jrdf.query.answer.DatatypeType.NONE;
+import static org.jrdf.query.answer.SparqlResultType.UNBOUND;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.DatatypeType;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;

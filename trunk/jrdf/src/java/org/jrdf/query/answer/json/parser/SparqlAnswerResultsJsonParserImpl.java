@@ -59,8 +59,8 @@
 package org.jrdf.query.answer.json.parser;
 
 import org.codehaus.jackson.JsonParser;
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueFactory;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueFactory;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;

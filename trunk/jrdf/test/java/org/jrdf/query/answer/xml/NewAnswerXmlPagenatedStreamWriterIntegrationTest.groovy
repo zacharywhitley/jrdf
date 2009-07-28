@@ -66,12 +66,13 @@ import org.jrdf.TestJRDFFactory
 import org.jrdf.graph.Graph
 import org.jrdf.query.answer.Answer
 import org.jrdf.query.answer.SelectAnswer
-import static org.jrdf.query.answer.xml.SparqlResultType.LITERAL
-import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE
+import static org.jrdf.query.answer.SparqlResultType.LITERAL
+import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE
 import org.jrdf.urql.UrqlConnection
 import org.jrdf.util.DirectoryHandler
 import org.jrdf.util.TempDirectoryHandler
 import static org.jrdf.util.test.SetUtil.asSet
+import org.jrdf.query.answer.TypeValueImpl
 
 class NewAnswerXmlPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
 

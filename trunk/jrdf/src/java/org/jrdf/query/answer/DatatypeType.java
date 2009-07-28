@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,69 +54,35 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
-import org.jrdf.query.answer.xml.TypeValue;
+public enum DatatypeType {
+    /**
+     *  Indicates that a literal has no type (language or literal).
+     */
+    NONE("none"),
 
-import javax.xml.stream.XMLStreamException;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
+    /**
+     * Indicates that a literal has a datatype.
+     */
+    DATATYPE("datatype"),
 
-// TODO AN/YF - Can we do time taken and number of tuples (maybe based on how much so far?)
-public class SparqlStreamingSelectAnswer implements SelectAnswer {
-    private SparqlAnswerStreamXmlParser answerStreamParser;
-    private TypeValueToString typeValueToString = new TypeValueToStringImpl();
+    /**
+     * Indicates that the literal has language.
+     */
+    XML_LANG("xml:lang");
 
-    public SparqlStreamingSelectAnswer(InputStream inputStream) throws XMLStreamException, InterruptedException {
-        this(new SparqlAnswerStreamXmlParserImpl(inputStream));
+    private static final long serialVersionUID = 1L;
+    private String representation;
+
+    DatatypeType(String representation) {
+        this.representation = representation;
     }
 
-    public SparqlStreamingSelectAnswer(SparqlAnswerStreamXmlParser answerStreamParser) {
-        this.answerStreamParser = answerStreamParser;
-    }
-
-    public String[] getVariableNames() {
-        LinkedHashSet<String> existingVariables = answerStreamParser.getVariables();
-        String[] existingVariablesArray = existingVariables.toArray(new String[existingVariables.size()]);
-        String[] variables = new String[existingVariables.size()];
-        System.arraycopy(existingVariablesArray, 0, variables, 0, existingVariablesArray.length);
-        return variables;
-    }
-
-    public Iterator<TypeValue[]> columnValuesIterator() {
-        return new StreamingAnswerIterator(answerStreamParser);
-    }
-
-    // TODO AN/YF Remove - complete cut-and-past of AnswerImpl.
-    public String[][] getColumnValues() {
-        final LinkedHashSet<String> hashSet = answerStreamParser.getVariables();
-        final int numberOfVariables = hashSet.size();
-        final int numberOfTuples = (int) numberOfTuples();
-        String table[][] = new String[numberOfTuples][numberOfVariables];
-        int index = 0;
-        Iterator<TypeValue[]> iterator = columnValuesIterator();
-        while (iterator.hasNext()) {
-            table[index] = typeValueToString.convert(iterator.next());
-            index++;
-        }
-        return table;
-    }
-
-    public long numberOfTuples() {
-        return -1;
-    }
-
-    public long getTimeTaken() {
-        return -1;
-    }
-
-    public <R> R accept(AnswerVisitor<R> visitor) {
-        return visitor.visitSelectAnswer(this);
+    @Override
+    public String toString() {
+        return representation;
     }
 }

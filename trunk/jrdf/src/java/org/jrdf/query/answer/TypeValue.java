@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- *  ====================================================================
+ * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,35 +54,17 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
+ *
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer;
 
-public enum DatatypeType {
-    /**
-     *  Indicates that a literal has no type (language or literal).
-     */
-    NONE("none"),
+public interface TypeValue {
+    SparqlResultType getType();
 
-    /**
-     * Indicates that a literal has a datatype.
-     */
-    DATATYPE("datatype"),
+    String getValue();
 
-    /**
-     * Indicates that the literal has language.
-     */
-    XML_LANG("xml:lang");
+    DatatypeType getSuffixType();
 
-    private static final long serialVersionUID = 1L;
-    private String representation;
-
-    DatatypeType(String representation) {
-        this.representation = representation;
-    }
-
-    @Override
-    public String toString() {
-        return representation;
-    }
+    String getSuffix();
 }

@@ -57,13 +57,15 @@
  *
  */
 
-package org.jrdf.query.answer;
+package org.jrdf.query.answer.xml;
 
-import static org.jrdf.query.answer.xml.SparqlResultType.BOOLEAN;
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueImpl;
+import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
 import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
 import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
+import org.jrdf.query.answer.AskAnswer;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueImpl;
+import org.jrdf.query.answer.AnswerVisitor;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;

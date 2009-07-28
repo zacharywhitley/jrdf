@@ -61,7 +61,7 @@ package org.jrdf.query.answer.json.parser;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.jrdf.query.answer.AnswerType;
-import org.jrdf.query.answer.xml.TypeValue;
+import org.jrdf.query.answer.TypeValue;
 
 import java.io.IOException;
 import java.io.InputStream;

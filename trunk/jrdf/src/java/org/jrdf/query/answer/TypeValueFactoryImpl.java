@@ -56,15 +56,14 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.SparqlProtocol;
 import static org.jrdf.query.answer.SparqlProtocol.BNODE;
 import static org.jrdf.query.answer.SparqlProtocol.LITERAL;
 import static org.jrdf.query.answer.SparqlProtocol.URI;
-import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
-import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
-import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
+import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
+import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
+import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
 
 public class TypeValueFactoryImpl implements TypeValueFactory {
     public TypeValue createTypeValue(final String type, final String value, final String datatype,

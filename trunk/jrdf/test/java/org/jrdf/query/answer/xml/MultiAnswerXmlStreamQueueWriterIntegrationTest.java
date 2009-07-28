@@ -66,6 +66,7 @@ import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest
 import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest.checkRow;
 import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsXmlParser;
 import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsXmlParserImpl;
+import org.jrdf.query.answer.TypeValueFactoryImpl;
 
 import static javax.xml.stream.XMLInputFactory.newInstance;
 import javax.xml.stream.XMLStreamException;

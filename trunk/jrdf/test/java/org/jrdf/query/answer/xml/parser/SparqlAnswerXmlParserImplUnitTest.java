@@ -60,12 +60,12 @@
 package org.jrdf.query.answer.xml.parser;
 
 import junit.framework.TestCase;
-import static org.jrdf.query.answer.xml.SparqlResultType.BLANK_NODE;
-import static org.jrdf.query.answer.xml.SparqlResultType.LITERAL;
-import static org.jrdf.query.answer.xml.SparqlResultType.TYPED_LITERAL;
-import static org.jrdf.query.answer.xml.SparqlResultType.URI_REFERENCE;
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueImpl;
+import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
+import static org.jrdf.query.answer.SparqlResultType.LITERAL;
+import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
+import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueImpl;
 
 import java.io.InputStream;
 import java.net.URL;

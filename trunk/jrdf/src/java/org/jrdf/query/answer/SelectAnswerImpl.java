@@ -60,7 +60,6 @@
 package org.jrdf.query.answer;
 
 import org.jrdf.query.QueryFactoryImpl;
-import org.jrdf.query.answer.xml.TypeValue;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;

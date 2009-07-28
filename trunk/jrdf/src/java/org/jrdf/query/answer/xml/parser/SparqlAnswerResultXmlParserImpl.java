@@ -62,8 +62,8 @@ package org.jrdf.query.answer.xml.parser;
 import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
 import static org.jrdf.query.answer.SparqlProtocol.NAME;
 import static org.jrdf.query.answer.SparqlProtocol.XML_LANG;
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueFactory;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueFactory;
 
 import static javax.xml.XMLConstants.XML_NS_URI;
 import javax.xml.stream.XMLStreamException;

@@ -66,9 +66,9 @@ import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
 import static org.jrdf.query.answer.SparqlProtocol.JSON_XML_LANG;
 import static org.jrdf.query.answer.SparqlProtocol.TYPE;
 import static org.jrdf.query.answer.SparqlProtocol.VALUE;
-import org.jrdf.query.answer.xml.TypeValue;
-import org.jrdf.query.answer.xml.TypeValueFactoryImpl;
-import org.jrdf.query.answer.xml.TypeValueImpl;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueFactoryImpl;
+import org.jrdf.query.answer.TypeValueImpl;
 
 import java.io.IOException;
 import java.util.Map;
