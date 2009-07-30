@@ -60,6 +60,11 @@ package org.jrdf.query.answer.json.parser;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.JsonToken;
+import static org.codehaus.jackson.JsonToken.FIELD_NAME;
+import static org.codehaus.jackson.JsonToken.START_OBJECT;
+import static org.jrdf.query.answer.SparqlProtocol.HEAD;
+import static org.jrdf.query.answer.SparqlProtocol.VARS;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueFactoryImpl;
 
@@ -82,7 +87,7 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
         this.resultsParser = new SparqlAnswerResultsJsonParserImpl(variables, parser, new TypeValueFactoryImpl());
     }
 
-    public LinkedHashSet<String> getVariables() {
+    public LinkedHashSet<String> getVariables() throws IOException {
         if (variables == null) {
             reallyGetVariables();
         }
@@ -110,7 +115,19 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
         throw new UnsupportedOperationException("Cannot remove from this iterator");
     }
 
-    private void reallyGetVariables() {
+    private void reallyGetVariables() throws IOException {
         variables = new LinkedHashSet<String>();
+        if (hasField(HEAD) && hasField(VARS)) {
+            if (parser.nextToken() == JsonToken.START_ARRAY) {
+                while (parser.nextToken() != JsonToken.END_ARRAY) {
+                    variables.add(parser.getText());
+                }
+            }
+        }
+    }
+
+    private boolean hasField(final String tokenName) throws IOException {
+        return parser.nextToken() == START_OBJECT && parser.nextToken() == FIELD_NAME &&
+            parser.getCurrentName().equals(tokenName);
     }
 }
