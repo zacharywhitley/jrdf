@@ -78,7 +78,6 @@ import java.util.LinkedHashSet;
 public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     private InputStreamReader reader;
     private JsonParser parser;
-    private boolean parsedHead;
     private SparqlAnswerResultsJsonParser resultsParser;
     private LinkedHashSet<String> variables;
     private LinkedHashSet<String> links;
@@ -86,21 +85,15 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     public SparqlAnswerJsonParserImpl(InputStream inputStream) throws IOException {
         this.reader = new InputStreamReader(inputStream);
         this.parser = new JsonFactory().createJsonParser(inputStream);
-        getVariables();
+        getHead();
         this.resultsParser = new SparqlAnswerResultsJsonParserImpl(variables, parser, new TypeValueFactoryImpl());
     }
 
     public LinkedHashSet<String> getVariables() throws IOException {
-        if (!parsedHead) {
-            reallyGetHead();
-        }
         return variables;
     }
 
     public LinkedHashSet<String> getLink() throws IOException {
-        if (!parsedHead) {
-            reallyGetHead();
-        }
         return links;
     }
 
@@ -125,7 +118,7 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
         throw new UnsupportedOperationException("Cannot remove from this iterator");
     }
 
-    private void reallyGetHead() throws IOException {
+    private void getHead() throws IOException {
         variables = new LinkedHashSet<String>();
         links = new LinkedHashSet<String>();
         if (parser.nextToken() == START_OBJECT && parser.nextToken() == FIELD_NAME &&
@@ -134,7 +127,6 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
                 getHeadValues();
             }
         }
-        parsedHead = true;
     }
 
     private void getHeadValues() throws IOException {
