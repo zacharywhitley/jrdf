@@ -60,10 +60,12 @@ package org.jrdf.query.answer.json.parser;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
+import static org.codehaus.jackson.JsonToken.END_OBJECT;
 import static org.codehaus.jackson.JsonToken.FIELD_NAME;
 import static org.codehaus.jackson.JsonToken.START_OBJECT;
+import static org.codehaus.jackson.JsonToken.*;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
+import static org.jrdf.query.answer.SparqlProtocol.LINK;
 import static org.jrdf.query.answer.SparqlProtocol.VARS;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueFactoryImpl;
@@ -76,9 +78,10 @@ import java.util.LinkedHashSet;
 public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     private InputStreamReader reader;
     private JsonParser parser;
-    private boolean hasMoreResults;
+    private boolean parsedHead;
     private SparqlAnswerResultsJsonParser resultsParser;
     private LinkedHashSet<String> variables;
+    private LinkedHashSet<String> links;
 
     public SparqlAnswerJsonParserImpl(InputStream inputStream) throws IOException {
         this.reader = new InputStreamReader(inputStream);
@@ -88,10 +91,17 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     }
 
     public LinkedHashSet<String> getVariables() throws IOException {
-        if (variables == null) {
-            reallyGetVariables();
+        if (!parsedHead) {
+            reallyGetHead();
         }
         return variables;
+    }
+
+    public LinkedHashSet<String> getLink() throws IOException {
+        if (!parsedHead) {
+            reallyGetHead();
+        }
+        return links;
     }
 
     public boolean hasNext() {
@@ -115,19 +125,34 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
         throw new UnsupportedOperationException("Cannot remove from this iterator");
     }
 
-    private void reallyGetVariables() throws IOException {
+    private void reallyGetHead() throws IOException {
         variables = new LinkedHashSet<String>();
-        if (hasField(HEAD) && hasField(VARS)) {
-            if (parser.nextToken() == JsonToken.START_ARRAY) {
-                while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    variables.add(parser.getText());
-                }
+        links = new LinkedHashSet<String>();
+        if (parser.nextToken() == START_OBJECT && parser.nextToken() == FIELD_NAME &&
+            parser.getCurrentName().equals(HEAD)) {
+            while (parser.nextToken() != END_OBJECT) {
+                getHeadValues();
             }
+        }
+        parsedHead = true;
+    }
+
+    private void getHeadValues() throws IOException {
+        if (parser.getCurrentToken() == FIELD_NAME) {
+            final String nextField = parser.getCurrentName();
+            parseStringArray(nextField, VARS, variables);
+            parseStringArray(nextField, LINK, links);
         }
     }
 
-    private boolean hasField(final String tokenName) throws IOException {
-        return parser.nextToken() == START_OBJECT && parser.nextToken() == FIELD_NAME &&
-            parser.getCurrentName().equals(tokenName);
+    private void parseStringArray(final String nextField, final String token, final LinkedHashSet<String> values)
+        throws IOException {
+        if (token.equals(nextField)) {
+            if (parser.nextToken() == START_ARRAY) {
+                while (parser.nextToken() != END_ARRAY) {
+                    values.add(parser.getText());
+                }
+            }
+        }
     }
 }

@@ -69,11 +69,13 @@ import static org.jrdf.query.answer.SparqlProtocol.VALUE;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueFactoryImpl;
 import org.jrdf.query.answer.TypeValueImpl;
+import org.jrdf.query.answer.TypeValueFactory;
 
 import java.io.IOException;
 import java.util.Map;
 
 public class SparqlAnswerResultJsonParserImpl implements SparqlAnswerResultJsonParser {
+    private final TypeValueFactory typeValueFactory = new TypeValueFactoryImpl();
     private final JsonParser parser;
     private String type;
     private String value;
@@ -89,10 +91,8 @@ public class SparqlAnswerResultJsonParserImpl implements SparqlAnswerResultJsonP
     }
 
     private String getVariable() throws IOException {
-        if (parser.nextToken() == START_OBJECT) {
-            if (parser.nextToken() == FIELD_NAME) {
-                return parser.getCurrentName();
-            }
+        if (parser.nextToken() == START_OBJECT && parser.nextToken() == FIELD_NAME) {
+            return parser.getCurrentName();
         }
         throw new IllegalStateException("Cannot parse: " + parser.getText());
     }
@@ -118,7 +118,7 @@ public class SparqlAnswerResultJsonParserImpl implements SparqlAnswerResultJsonP
                 parseXmlLang();
             }
         }
-        return new TypeValueFactoryImpl().createTypeValue(type, value, datatype, xmlLang);
+        return typeValueFactory.createTypeValue(type, value, datatype, xmlLang);
     }
 
     private void parseType() throws IOException {

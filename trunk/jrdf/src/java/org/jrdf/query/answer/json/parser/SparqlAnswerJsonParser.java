@@ -66,4 +66,6 @@ import java.io.IOException;
 
 public interface SparqlAnswerJsonParser extends ClosableIterator<TypeValue[]> {
     LinkedHashSet<String> getVariables() throws IOException;
+
+    LinkedHashSet<String> getLink() throws IOException;
 }
