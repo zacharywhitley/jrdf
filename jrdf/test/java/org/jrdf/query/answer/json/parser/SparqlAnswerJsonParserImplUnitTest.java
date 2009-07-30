@@ -59,10 +59,11 @@
 package org.jrdf.query.answer.json.parser;
 
 import org.hamcrest.CoreMatchers;
+import static org.hamcrest.CoreMatchers.*;
 import org.jrdf.query.answer.json.JsonTestUtil;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
-import org.junit.Assert;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -78,6 +79,39 @@ public class SparqlAnswerJsonParserImplUnitTest {
         final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(new ByteArrayInputStream(bytes));
         final LinkedHashSet<String> vars = new LinkedHashSet<String>();
         vars.addAll(asList("abc", "123", "doh", "ray", "me"));
-        Assert.assertThat(jsonParser.getVariables(), CoreMatchers.equalTo(vars));
+        assertThat(jsonParser.getVariables(), equalTo(vars));
+    }
+
+    @Test
+    public void withLink() throws Exception {
+        String results = "{\n" +
+            "   \"head\": {\n" +
+            "       \"link\": [\n" +
+            "           \"http://www.w3.org/TR/rdf-sparql-XMLres/example.rq\"\n" +
+            "           ],\n" +
+            "       \"vars\": [\n" +
+            "           \"x\",\n" +
+            "           \"hpage\",\n" +
+            "           \"name\",\n" +
+            "           \"mbox\",\n" +
+            "           \"age\",\n" +
+            "           \"blurb\",\n" +
+            "           \"friend\"\n" +
+            "           ]\n" +
+            "       },\n" +
+            "   \"results\": {\n" +
+            "       \"bindings\": [\n" +
+            "               {}\n" +
+            "                     ]\n" +
+            "                }\n" +
+            "}";
+        final byte[] bytes = results.getBytes();
+        final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(new ByteArrayInputStream(bytes));
+        final LinkedHashSet<String> vars = new LinkedHashSet<String>();
+        vars.addAll(asList("x", "hpage", "name", "mbox", "age", "blurb", "friend"));
+        final LinkedHashSet<String> links = new LinkedHashSet<String>();
+        links.addAll(asList("http://www.w3.org/TR/rdf-sparql-XMLres/example.rq"));
+        assertThat(jsonParser.getVariables(), equalTo(vars));
+        assertThat(jsonParser.getLink(), equalTo(links));
     }
 }
