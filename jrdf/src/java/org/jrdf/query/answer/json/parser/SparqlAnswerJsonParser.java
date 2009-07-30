@@ -62,7 +62,8 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.LinkedHashSet;
+import java.io.IOException;
 
 public interface SparqlAnswerJsonParser extends ClosableIterator<TypeValue[]> {
-    LinkedHashSet<String> getVariables();
+    LinkedHashSet<String> getVariables() throws IOException;
 }

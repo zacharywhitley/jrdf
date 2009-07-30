@@ -58,23 +58,26 @@
 
 package org.jrdf.query.answer.json.parser;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonParser;
+import org.hamcrest.CoreMatchers;
 import org.jrdf.query.answer.json.JsonTestUtil;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import static java.util.Arrays.asList;
+import java.util.LinkedHashSet;
 
 public class SparqlAnswerJsonParserImplUnitTest {
 
     @Test
     public void simpleBinding() throws Exception {
         String results = JsonTestUtil.getFullJsonDocument(TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_1);
-        final JsonFactory jsonFactory = new JsonFactory();
-        final JsonParser parser = jsonFactory.createJsonParser(results);
         final byte[] bytes = results.getBytes();
         final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(new ByteArrayInputStream(bytes));
+        final LinkedHashSet<String> vars = new LinkedHashSet<String>();
+        vars.addAll(asList("abc", "123", "doh", "ray", "me"));
+        Assert.assertThat(jsonParser.getVariables(), CoreMatchers.equalTo(vars));
     }
 }
