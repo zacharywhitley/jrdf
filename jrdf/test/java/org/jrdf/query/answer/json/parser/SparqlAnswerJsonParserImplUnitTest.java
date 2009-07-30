@@ -58,7 +58,6 @@
 
 package org.jrdf.query.answer.json.parser;
 
-import org.hamcrest.CoreMatchers;
 import static org.hamcrest.CoreMatchers.*;
 import org.jrdf.query.answer.json.JsonTestUtil;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
