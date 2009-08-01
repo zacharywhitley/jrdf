@@ -79,6 +79,7 @@ public class SparqlAnswerJsonParserImplUnitTest {
         final LinkedHashSet<String> vars = new LinkedHashSet<String>();
         vars.addAll(asList("abc", "123", "doh", "ray", "me"));
         assertThat(jsonParser.getVariables(), equalTo(vars));
+        assertThat(jsonParser.hasNext(), is(true));
     }
 
     @Test
@@ -94,6 +95,6 @@ public class SparqlAnswerJsonParserImplUnitTest {
         links.addAll(asList("http://www.w3.org/TR/rdf-sparql-XMLres/example.rq"));
         assertThat(jsonParser.getVariables(), equalTo(vars));
         assertThat(jsonParser.getLink(), equalTo(links));
-        assertThat(jsonParser.hasNext(), equalTo(false));
+        assertThat(jsonParser.hasNext(), is(false));
     }
 }
