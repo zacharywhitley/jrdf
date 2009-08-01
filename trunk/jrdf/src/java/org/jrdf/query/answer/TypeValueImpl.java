@@ -81,6 +81,7 @@ public class TypeValueImpl implements TypeValue {
         setValues(type, value, NONE, "");
     }
 
+    // TODO AN Make this a enum for isDatatype instead of a boolean.
     public TypeValueImpl(SparqlResultType type, String value, boolean isDatatype, String suffix) {
         if (isDatatype) {
             setValues(type, value, DATATYPE, suffix);
@@ -142,6 +143,7 @@ public class TypeValueImpl implements TypeValue {
     }
 
     private boolean compareSuffixAndSuffixType(TypeValue typeValue) {
+        // TODO AN Create null datatype.
         final DatatypeType suffixTypeToCompare = typeValue.getSuffixType();
         final String suffixToCompare = typeValue.getSuffix();
         return suffixTypeToCompare.equals(getSuffixType()) && suffixToCompare.equals(getSuffix());

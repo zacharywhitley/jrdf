@@ -98,7 +98,7 @@ public class JsonTestUtil {
         {
             put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/charles/"));
             put("ray", new TypeValueImpl(TYPED_LITERAL, "231", true, XSD.INT.toString()));
-            put("doh", new TypeValueImpl(LITERAL, "asdf"));
+            put("doh", new TypeValueImpl(LITERAL, "asdf", false, "en"));
         }
     };
 

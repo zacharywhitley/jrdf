@@ -83,7 +83,6 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     private SparqlAnswerResultsJsonParser resultsParser;
     private LinkedHashSet<String> variables;
     private LinkedHashSet<String> links;
-    private boolean hasResults;
 
     public SparqlAnswerJsonParserImpl(final InputStream inputStream) throws IOException {
         this.reader = new InputStreamReader(inputStream);
@@ -101,11 +100,11 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     }
 
     public boolean hasNext() {
-        return hasResults;
+        return resultsParser.hasNext();
     }
 
     public TypeValue[] next() {
-        return null;
+        return resultsParser.next();
     }
 
     public boolean close() {
@@ -113,7 +112,7 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
             reader.close();
             return true;
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
@@ -141,9 +140,7 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
 
     private void getStartOfBindings() throws IOException {
         if (hasResults() && hasBindings()) {
-            if (parser.nextToken() == START_OBJECT && parser.nextToken() == FIELD_NAME) {
-                hasResults = true;
-            }
+            resultsParser = new SparqlAnswerResultsJsonParserImpl(variables, parser);
         }
     }
 

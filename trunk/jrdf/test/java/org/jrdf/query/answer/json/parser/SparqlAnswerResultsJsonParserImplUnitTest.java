@@ -59,6 +59,8 @@
 package org.jrdf.query.answer.json.parser;
 
 import org.codehaus.jackson.JsonParser;
+import static org.codehaus.jackson.JsonToken.END_ARRAY;
+import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.hamcrest.CoreMatchers.is;
 import org.jrdf.query.answer.TypeValue;
@@ -88,12 +90,13 @@ public class SparqlAnswerResultsJsonParserImplUnitTest {
 
     @Test
     public void closeClosesParser() throws Exception {
+        expect(mockJsonParser.nextToken()).andReturn(END_ARRAY);
         mockJsonParser.close();
         expectLastCall();
 
         mockFactory.replay();
         final SparqlAnswerResultsJsonParser jsonParser =
-            new SparqlAnswerResultsJsonParserImpl(new LinkedHashSet<String>(), mockJsonParser, mockTypeValueFactory);
+            new SparqlAnswerResultsJsonParserImpl(new LinkedHashSet<String>(), mockJsonParser);
         final boolean closedOkay = jsonParser.close();
 
         mockFactory.verify();
@@ -102,14 +105,22 @@ public class SparqlAnswerResultsJsonParserImplUnitTest {
 
     @Test(expected = RuntimeException.class)
     public void closeWithException() throws Exception {
+        expect(mockJsonParser.nextToken()).andReturn(END_ARRAY);
         mockJsonParser.close();
         expectLastCall().andThrow(new IOException());
 
         mockFactory.replay();
         final SparqlAnswerResultsJsonParser jsonParser =
-            new SparqlAnswerResultsJsonParserImpl(new LinkedHashSet<String>(), mockJsonParser, mockTypeValueFactory);
+            new SparqlAnswerResultsJsonParserImpl(new LinkedHashSet<String>(), mockJsonParser);
         jsonParser.close();
 
         mockFactory.verify();
+    }
+
+    // TODO AN Finished this!
+    @Test
+    public void someBindings() throws Exception {
+        String results = "{\"friend\" : {\"type\": \"bnode\", \"value\": \"r2\"}}," +
+            "{\"friend\" : {\"type\": \"bnode\", \"value\": \"r3\"}}";
     }
 }
