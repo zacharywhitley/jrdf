@@ -83,27 +83,9 @@ public class SparqlAnswerJsonParserImplUnitTest {
 
     @Test
     public void withLink() throws Exception {
-        String results = "{\n" +
-            "   \"head\": {\n" +
-            "       \"link\": [\n" +
-            "           \"http://www.w3.org/TR/rdf-sparql-XMLres/example.rq\"\n" +
-            "           ],\n" +
-            "       \"vars\": [\n" +
-            "           \"x\",\n" +
-            "           \"hpage\",\n" +
-            "           \"name\",\n" +
-            "           \"mbox\",\n" +
-            "           \"age\",\n" +
-            "           \"blurb\",\n" +
-            "           \"friend\"\n" +
-            "           ]\n" +
-            "       },\n" +
-            "   \"results\": {\n" +
-            "       \"bindings\": [\n" +
-            "               {}\n" +
-            "                     ]\n" +
-            "                }\n" +
-            "}";
+        String results = "{\"head\": { \"link\": [ \"http://www.w3.org/TR/rdf-sparql-XMLres/example.rq\" ]," +
+            " \"vars\": [ \"x\", \"hpage\", \"name\", \"mbox\", \"age\", \"blurb\", \"friend\" ] },\n" +
+            " \"results\": { \"bindings\": [ {} ] }}";
         final byte[] bytes = results.getBytes();
         final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(new ByteArrayInputStream(bytes));
         final LinkedHashSet<String> vars = new LinkedHashSet<String>();
@@ -112,5 +94,6 @@ public class SparqlAnswerJsonParserImplUnitTest {
         links.addAll(asList("http://www.w3.org/TR/rdf-sparql-XMLres/example.rq"));
         assertThat(jsonParser.getVariables(), equalTo(vars));
         assertThat(jsonParser.getLink(), equalTo(links));
+        assertThat(jsonParser.hasNext(), equalTo(false));
     }
 }
