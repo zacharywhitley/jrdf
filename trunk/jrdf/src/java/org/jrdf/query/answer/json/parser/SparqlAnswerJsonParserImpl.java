@@ -60,10 +60,12 @@ package org.jrdf.query.answer.json.parser;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
+import static org.codehaus.jackson.JsonToken.END_ARRAY;
 import static org.codehaus.jackson.JsonToken.END_OBJECT;
 import static org.codehaus.jackson.JsonToken.FIELD_NAME;
+import static org.codehaus.jackson.JsonToken.START_ARRAY;
 import static org.codehaus.jackson.JsonToken.START_OBJECT;
-import static org.codehaus.jackson.JsonToken.*;
+import static org.jrdf.query.answer.SparqlProtocol.BINDINGS;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
 import static org.jrdf.query.answer.SparqlProtocol.LINK;
 import static org.jrdf.query.answer.SparqlProtocol.VARS;
@@ -74,6 +76,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 
 public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     private InputStreamReader reader;
@@ -82,11 +85,11 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     private LinkedHashSet<String> variables;
     private LinkedHashSet<String> links;
 
-    public SparqlAnswerJsonParserImpl(InputStream inputStream) throws IOException {
+    public SparqlAnswerJsonParserImpl(final InputStream inputStream) throws IOException {
         this.reader = new InputStreamReader(inputStream);
         this.parser = new JsonFactory().createJsonParser(inputStream);
         getHead();
-        this.resultsParser = new SparqlAnswerResultsJsonParserImpl(variables, parser, new TypeValueFactoryImpl());
+        getStartOfBindings();
     }
 
     public LinkedHashSet<String> getVariables() throws IOException {
@@ -98,11 +101,15 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     }
 
     public boolean hasNext() {
-        return resultsParser.hasNext();
+        return resultsParser != null && resultsParser.hasNext();
     }
 
     public TypeValue[] next() {
-        return resultsParser.next();
+        if (resultsParser != null) {
+            return resultsParser.next();
+        } else {
+            throw new NoSuchElementException();
+        }
     }
 
     public boolean close() {
@@ -121,12 +128,22 @@ public class SparqlAnswerJsonParserImpl implements SparqlAnswerJsonParser {
     private void getHead() throws IOException {
         variables = new LinkedHashSet<String>();
         links = new LinkedHashSet<String>();
-        if (parser.nextToken() == START_OBJECT && parser.nextToken() == FIELD_NAME &&
-            parser.getCurrentName().equals(HEAD)) {
+        if (hasToken(HEAD)) {
             while (parser.nextToken() != END_OBJECT) {
                 getHeadValues();
             }
         }
+    }
+
+    private void getStartOfBindings() throws IOException {
+        if (hasToken(BINDINGS) && (parser.nextToken() == START_ARRAY)) {
+            this.resultsParser = new SparqlAnswerResultsJsonParserImpl(variables, parser, new TypeValueFactoryImpl());
+        }
+    }
+
+    private boolean hasToken(final String name) throws IOException {
+        return parser.nextToken() == START_OBJECT && parser.nextToken() == FIELD_NAME &&
+            parser.getCurrentName().equals(name);
     }
 
     private void getHeadValues() throws IOException {

@@ -69,6 +69,7 @@ import java.util.Iterator;
  */
 public interface Answer extends AnswerVisitable {
 
+    // TODO AN Change this to a linkedhashset.
     /**
      * Returns the variable names (the value after the question mark in a SPARQL query).
      *
