@@ -91,7 +91,7 @@ public class SparqlAnswerResultJsonParserImpl implements SparqlAnswerResultJsonP
     }
 
     private String getVariable() throws IOException {
-        if (parser.nextToken() == START_OBJECT && parser.nextToken() == FIELD_NAME) {
+        if (parser.getCurrentToken() == FIELD_NAME) {
             return parser.getCurrentName();
         }
         throw new IllegalStateException("Cannot parse: " + parser.getText());

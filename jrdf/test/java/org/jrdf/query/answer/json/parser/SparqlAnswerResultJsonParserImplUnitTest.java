@@ -79,55 +79,60 @@ import java.util.HashMap;
 public class SparqlAnswerResultJsonParserImplUnitTest {
     @Test
     public void uriBinding() throws Exception {
-        checkParser("{ \"hpage\" : {\"type\": \"uri\", \"value\": \"http://example.org/alice\" }}", "hpage",
+        checkParser("\"hpage\" : {\"type\": \"uri\", \"value\": \"http://example.org/alice\" }", "hpage",
             new TypeValueImpl(URI_REFERENCE, "http://example.org/alice"));
     }
 
     @Test
     public void untypedLiteralBinding() throws Exception {
-        checkParser("{ \"name\" : {\"type\": \"literal\", \"value\": \"Alice\" }}", "name",
+        checkParser("\"name\" : {\"type\": \"literal\", \"value\": \"Alice\" }", "name",
             new TypeValueImpl(LITERAL, "Alice"));
     }
 
     @Test
     public void typedLiteralBinding() throws Exception {
-        checkParser("{ \"name\" : {\"type\": \"typed-literal\", " +
+        checkParser("\"name\" : {\"type\": \"typed-literal\", " +
             "\"value\": \"<p xmlns=\\\"http://www.w3.org/1999/xhtml\\\">My name is <b>alice</b></p>\"," +
-            "\"datatype\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral\" }}", "name",
+            "\"datatype\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral\" }", "name",
             new TypeValueImpl(TYPED_LITERAL,
                 "<p xmlns=\"http://www.w3.org/1999/xhtml\">My name is <b>alice</b></p>",
                 true, RDF.XML_LITERAL.toString()));
     }
 
     @Test
+    public void typedLiteralBinding2() throws Exception {
+        //checkParser("\"ray\" : {\"new TypeValueImpl(TYPED_LITERAL, "123", true, XSD.INT.toString());
+    }
+
+    @Test
     public void languageLiteralBinding() throws Exception {
-        checkParser("{ \"name\" : {\"type\": \"literal\", \"value\": \"Bob\",\"xml:lang\": \"en\" }}", "name",
+        checkParser("\"name\" : {\"type\": \"literal\", \"value\": \"Bob\",\"xml:lang\": \"en\" }", "name",
             new TypeValueImpl(SparqlResultType.LITERAL, "Bob", false, "en"));
     }
 
     @Test
     public void bnodeBinding() throws Exception {
-        checkParser("{ \"x\" : {\"type\": \"bnode\", \"value\": \"r1\" }}", "x", new TypeValueImpl(BLANK_NODE, "r1"));
+        checkParser("\"x\" : {\"type\": \"bnode\", \"value\": \"r1\" }", "x", new TypeValueImpl(BLANK_NODE, "r1"));
     }
 
     @Test
     public void valueTypeInsteadOfTypeValueBinding() throws Exception {
-        checkParser("{ \"x\" : {\"value\": \"r1\", \"type\": \"bnode\"  }}", "x", new TypeValueImpl(BLANK_NODE, "r1"));
+        checkParser("\"x\" : {\"value\": \"r1\", \"type\": \"bnode\"  }", "x", new TypeValueImpl(BLANK_NODE, "r1"));
     }
 
     @Test
     public void missingTypeMeansUnbound() throws Exception {
-        checkParser("{ \"name\" : {\"value\": \"Alice\" }}", "name", new TypeValueImpl());
+        checkParser("\"name\" : {\"value\": \"Alice\" }", "name", new TypeValueImpl());
     }
 
     @Test
     public void missingValueMeansUnbound() throws Exception {
-        checkParser("{ \"name\" : {\"type\": \"bnode\" }}", "name", new TypeValueImpl(BLANK_NODE, ""));
+        checkParser("\"name\" : {\"type\": \"bnode\" }", "name", new TypeValueImpl(BLANK_NODE, ""));
     }
 
     @Test
     public void missingdValueAndType() throws Exception {
-        checkParser("{ \"name\" : { }}", "name", new TypeValueImpl());
+        checkParser("\"name\" : { }", "name", new TypeValueImpl());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -138,9 +143,12 @@ public class SparqlAnswerResultJsonParserImplUnitTest {
     private void checkParser(final String jsonBinding, final String variable, final TypeValue expectedValue)
         throws IOException {
         final JsonFactory jsonFactory = new JsonFactory();
-        final JsonParser parser = jsonFactory.createJsonParser(jsonBinding);
+        // Create something that the parser will successfully parse.
+        final JsonParser parser = jsonFactory.createJsonParser("{" + jsonBinding + "}");
         final SparqlAnswerResultJsonParser jsonParser = new SparqlAnswerResultJsonParserImpl(parser);
         final HashMap<String, TypeValue> binding = new HashMap<String, TypeValue>();
+        parser.nextToken();
+        parser.nextToken();
         jsonParser.getOneBinding(binding);
         assertThat(binding.containsKey(variable), is(true));
         assertThat(binding.get(variable), equalTo(expectedValue));

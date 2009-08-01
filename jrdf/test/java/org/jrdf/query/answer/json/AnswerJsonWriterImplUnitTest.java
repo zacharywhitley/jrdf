@@ -62,6 +62,8 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.jrdf.query.answer.DatatypeType.DATATYPE;
+import static org.jrdf.query.answer.DatatypeType.XML_LANG;
 import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
@@ -226,14 +228,28 @@ public class AnswerJsonWriterImplUnitTest {
             assertThat(aBinding, notNullValue());
             for (final String variable : TEST_VARIABLES) {
                 if (aBinding.has(variable)) {
-                    final JSONObject aVariable = aBinding.getJSONObject(variable);
-                    assertThat(aVariable, notNullValue());
-                    final String expectedType = expectedBindings.get(variable).getType().toString();
-                    assertThat(aVariable.getString("type"), equalTo(expectedType));
-                    final String expectedValue = expectedBindings.get(variable).getValue();
-                    assertThat(aVariable.getString("value"), equalTo(expectedValue));
+                    checkVariable(variable, expectedBindings, aBinding);
                 }
             }
+        }
+    }
+
+    private void checkVariable(String variable, Map<String, TypeValue> expectedBindings, JSONObject aBinding)
+        throws JSONException {
+        final JSONObject aVariable = aBinding.getJSONObject(variable);
+        assertThat(aVariable, notNullValue());
+        final TypeValue typeValue = expectedBindings.get(variable);
+        final String expectedType = typeValue.getType().toString();
+        assertThat(aVariable.getString("type"), equalTo(expectedType));
+        final String expectedValue = typeValue.getValue();
+        assertThat(aVariable.getString("value"), equalTo(expectedValue));
+        if (DATATYPE.equals(typeValue.getSuffixType())) {
+            final String expectedDatatype = typeValue.getSuffix();
+            assertThat(aVariable.getString("datatype"), equalTo(expectedDatatype));
+        }
+        if (XML_LANG.equals(typeValue.getSuffixType())) {
+            final String expectedLanguage = typeValue.getSuffix();
+            assertThat(aVariable.getString("xml:lang"), equalTo(expectedLanguage));
         }
     }
 }

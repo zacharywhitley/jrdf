@@ -59,30 +59,39 @@
 package org.jrdf.query.answer.json.parser;
 
 import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.JsonToken;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.TypeValueFactory;
+import org.jrdf.query.answer.TypeValueArrayFactory;
+import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 public class SparqlAnswerResultsJsonParserImpl implements SparqlAnswerResultsJsonParser {
     private final LinkedHashSet<String> variables;
     private final JsonParser parser;
-    private final TypeValueFactory typeValueFactory;
+    private final SparqlAnswerResultJsonParser resultParser;
+    private Map<String, TypeValue> nextResult = new HashMap<String, TypeValue>();
+    private TypeValueArrayFactory arrayFactory = new TypeValueArrayFactoryImpl();
 
-    public SparqlAnswerResultsJsonParserImpl(final LinkedHashSet<String> variables, final JsonParser parser,
-        final TypeValueFactory typeValueFactory) {
+    public SparqlAnswerResultsJsonParserImpl(final LinkedHashSet<String> variables, final JsonParser parser)
+        throws IOException {
         this.variables = variables;
         this.parser = parser;
-        this.typeValueFactory = typeValueFactory;
+        this.resultParser = new SparqlAnswerResultJsonParserImpl(parser);
+        getNextValue();
     }
 
     public boolean hasNext() {
-        return false;
+        return !nextResult.isEmpty();
     }
 
     public TypeValue[] next() {
-        return null;
+        final TypeValue[] typeValues = arrayFactory.mapToArray(variables, nextResult);
+        getNextValue();
+        return typeValues;
     }
 
     public void remove() {
@@ -93,6 +102,19 @@ public class SparqlAnswerResultsJsonParserImpl implements SparqlAnswerResultsJso
         try {
             parser.close();
             return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void getNextValue() {
+        nextResult = new HashMap<String, TypeValue>();
+        try {
+            if (parser.nextToken() == JsonToken.START_OBJECT) {
+                while (parser.nextToken() == JsonToken.FIELD_NAME) {
+                    resultParser.getOneBinding(nextResult);
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

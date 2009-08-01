@@ -58,10 +58,15 @@
 
 package org.jrdf.query.answer.json.parser;
 
-import static org.hamcrest.CoreMatchers.*;
-import org.jrdf.query.answer.json.JsonTestUtil;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import org.jrdf.query.answer.TypeValueArrayFactory;
+import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
+import org.jrdf.query.answer.TypeValue;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
+import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
+import static org.jrdf.query.answer.json.JsonTestUtil.getFullJsonDocument;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
@@ -70,16 +75,19 @@ import static java.util.Arrays.asList;
 import java.util.LinkedHashSet;
 
 public class SparqlAnswerJsonParserImplUnitTest {
+    private TypeValueArrayFactory factory = new TypeValueArrayFactoryImpl();
 
     @Test
     public void simpleBinding() throws Exception {
-        String results = JsonTestUtil.getFullJsonDocument(TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_1);
+        String results = getFullJsonDocument(TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_2);
         final byte[] bytes = results.getBytes();
         final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(new ByteArrayInputStream(bytes));
         final LinkedHashSet<String> vars = new LinkedHashSet<String>();
         vars.addAll(asList("abc", "123", "doh", "ray", "me"));
         assertThat(jsonParser.getVariables(), equalTo(vars));
-        assertThat(jsonParser.hasNext(), is(true));
+        testABinding(jsonParser, factory.mapToArray(vars, TEST_BINDINGS_1));
+        testABinding(jsonParser, factory.mapToArray(vars, TEST_BINDINGS_2));
+        assertThat(jsonParser.hasNext(), is(false));
     }
 
     @Test
@@ -96,5 +104,10 @@ public class SparqlAnswerJsonParserImplUnitTest {
         assertThat(jsonParser.getVariables(), equalTo(vars));
         assertThat(jsonParser.getLink(), equalTo(links));
         assertThat(jsonParser.hasNext(), is(false));
+    }
+
+    private void testABinding(SparqlAnswerJsonParser jsonParser, final TypeValue[] expectedValues) {
+        assertThat(jsonParser.hasNext(), is(true));
+        assertThat(jsonParser.next(), equalTo(expectedValues));
     }
 }

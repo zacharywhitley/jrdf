@@ -58,8 +58,11 @@
 
 package org.jrdf.query.answer.json;
 
+import org.jrdf.query.answer.DatatypeType;
 import static org.jrdf.query.answer.SparqlProtocol.BINDINGS;
+import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
+import static org.jrdf.query.answer.SparqlProtocol.JSON_XML_LANG;
 import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
 import static org.jrdf.query.answer.SparqlProtocol.TYPE;
 import static org.jrdf.query.answer.SparqlProtocol.VALUE;
@@ -162,7 +165,20 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         jsonWriter.value(result.getValue());
         jsonWriter.key(TYPE);
         jsonWriter.value(result.getType().toString());
+        if (DatatypeType.NONE != result.getSuffixType()) {
+            writeDatatypes(result);
+        }
         jsonWriter.endObject();
+    }
+
+    private void writeDatatypes(TypeValue result) throws JSONException {
+        if (DatatypeType.DATATYPE == result.getSuffixType()) {
+            jsonWriter.key(DATATYPE);
+        }
+        if (DatatypeType.XML_LANG == result.getSuffixType()) {
+            jsonWriter.key(JSON_XML_LANG);
+        }
+        jsonWriter.value(result.getSuffix());
     }
 
     public void writeEndDocument() throws JSONException {
