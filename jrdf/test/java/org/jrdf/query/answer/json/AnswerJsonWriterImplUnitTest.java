@@ -157,7 +157,7 @@ public class AnswerJsonWriterImplUnitTest {
 
     @Test
     public void hasResults() throws Exception {
-        checkAnswer(TEST_VARIABLES, 3, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+        checkAnswer(TEST_VARIABLES, -1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
     }
 
     @Test
@@ -167,7 +167,7 @@ public class AnswerJsonWriterImplUnitTest {
 
     public void checkAnswer(final String[] variables, final int numberOfResults,
         final Map<String, TypeValue>... bindings) throws JSONException {
-        setupExpectationsForResults(variables, numberOfResults, bindings);
+        setupExpectationsForResults(variables, numberOfResults == -1 ? bindings.length : numberOfResults, bindings);
         mockFactory.replay();
 
         final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, variables, mockIterator,
@@ -185,7 +185,7 @@ public class AnswerJsonWriterImplUnitTest {
         final Map<String, TypeValue>... results) {
         // Number of loops around the iterator
         if (numberOfResults > 0) {
-            expect(mockIterator.hasNext()).andReturn(true).times(numberOfResults * 2);
+            expect(mockIterator.hasNext()).andReturn(true).times(numberOfResults);
         }
         expect(mockIterator.hasNext()).andReturn(false).once();
         // Number of results
@@ -193,7 +193,6 @@ public class AnswerJsonWriterImplUnitTest {
             expect(mockIterator.next()).andReturn(convertBindingMapToArray(results[i], variables));
         }
     }
-
 
     private TypeValue[] convertBindingMapToArray(final Map<String, TypeValue> binding, final String[] variables) {
         final TypeValue[] typeValues = new TypeValue[variables.length];

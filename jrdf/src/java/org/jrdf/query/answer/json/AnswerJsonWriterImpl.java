@@ -88,7 +88,7 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     private AnswerJsonWriterImpl() {
     }
 
-    public AnswerJsonWriterImpl(Writer writer, final String[] variableNames, final Iterator<TypeValue[]> iterator,
+    public AnswerJsonWriterImpl(final Writer writer, final String[] variableNames, final Iterator<TypeValue[]> iterator,
         final long maxRows) {
         checkNotNull(writer, variableNames, iterator);
         this.writer = writer;
@@ -96,6 +96,13 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         this.iterator = iterator;
         this.maxRows = maxRows;
         this.jsonWriter = new JSONWriter(this.writer);
+    }
+
+    public void writeFullDocument() throws JSONException {
+        writeStartDocument();
+        writeHead();
+        writeAllResults();
+        writeEndDocument();
     }
 
     public boolean hasMoreResults() {
@@ -121,11 +128,6 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         jsonWriter.object().key(BINDINGS).array();
     }
 
-    public void writeEndResults() throws JSONException {
-        jsonWriter.endArray();
-        jsonWriter.endObject();
-    }
-
     protected void writeAllResults() throws JSONException {
         writeStartResults();
         while (hasMoreResults()) {
@@ -136,16 +138,14 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
 
     public void writeResult() throws JSONException {
         final String[] currentVariables = variableNames;
-        if (iterator.hasNext()) {
-            writeResult(currentVariables, iterator.next());
-        }
+        writeResult(currentVariables, iterator.next());
         count++;
     }
 
     private void writeResult(String[] currentVariables, TypeValue[] results) throws JSONException {
         jsonWriter.object();
         int index = 0;
-        for (TypeValue result : results) {
+        for (final TypeValue result : results) {
             writeBinding(result, currentVariables[index]);
             index++;
         }
@@ -181,15 +181,13 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         jsonWriter.value(result.getSuffix());
     }
 
-    public void writeEndDocument() throws JSONException {
+    public void writeEndResults() throws JSONException {
+        jsonWriter.endArray();
         jsonWriter.endObject();
     }
 
-    public void writeFullDocument() throws JSONException {
-        writeStartDocument();
-        writeHead();
-        writeAllResults();
-        writeEndDocument();
+    public void writeEndDocument() throws JSONException {
+        jsonWriter.endObject();
     }
 
     public void flush() throws JSONException {

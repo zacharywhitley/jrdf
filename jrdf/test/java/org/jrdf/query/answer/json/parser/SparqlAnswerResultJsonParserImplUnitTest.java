@@ -70,6 +70,7 @@ import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.vocabulary.RDF;
+import org.jrdf.vocabulary.XSD;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
@@ -91,17 +92,19 @@ public class SparqlAnswerResultJsonParserImplUnitTest {
 
     @Test
     public void typedLiteralBinding() throws Exception {
+        checkParser("\"ray\" :{\"value\":\"123\",\"type\":\"typed-literal\"," +
+            "\"datatype\":\"http://www.w3.org/2001/XMLSchema#int\"}", "ray",
+            new TypeValueImpl(TYPED_LITERAL, "123", true, XSD.INT.toString()));
+    }
+
+    @Test
+    public void xmlTypedLiteralBinding() throws Exception {
         checkParser("\"name\" : {\"type\": \"typed-literal\", " +
             "\"value\": \"<p xmlns=\\\"http://www.w3.org/1999/xhtml\\\">My name is <b>alice</b></p>\"," +
             "\"datatype\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral\" }", "name",
             new TypeValueImpl(TYPED_LITERAL,
                 "<p xmlns=\"http://www.w3.org/1999/xhtml\">My name is <b>alice</b></p>",
                 true, RDF.XML_LITERAL.toString()));
-    }
-
-    @Test
-    public void typedLiteralBinding2() throws Exception {
-        //checkParser("\"ray\" : {\"new TypeValueImpl(TYPED_LITERAL, "123", true, XSD.INT.toString());
     }
 
     @Test
