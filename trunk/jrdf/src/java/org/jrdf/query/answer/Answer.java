@@ -85,6 +85,7 @@ public interface Answer extends AnswerVisitable {
      */
     Iterator<TypeValue[]> columnValuesIterator();
 
+    // TODO AN Remove this monster.
     /**
      * Creates a string array of results, where each value in the array is a value for the matching variable
      * from the {@link #getVariableNames()} call.

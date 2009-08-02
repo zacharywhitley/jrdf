@@ -86,6 +86,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     private Set<Attribute> heading;
     private long timeTaken;
     private boolean hasProjected;
+    private LinkedHashSet<String> vars = new LinkedHashSet<String>();
     private transient EvaluatedRelation results;
     private transient TypeValueToString valueToString = new TypeValueToStringImpl();
 
@@ -96,6 +97,9 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
         this.results = newResults;
         this.timeTaken = timeTaken;
         this.hasProjected = hasProjected;
+        for (final Attribute attribute : heading) {
+            vars.add(attribute.getAttributeName().getLiteral());
+        }
     }
 
     public String[] getVariableNames() {
@@ -106,6 +110,10 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
             index++;
         }
         return resultColumnNames;
+    }
+
+    public LinkedHashSet<String> getNewVariableNames() {
+        return vars;
     }
 
     public Iterator<TypeValue[]> columnValuesIterator() {
