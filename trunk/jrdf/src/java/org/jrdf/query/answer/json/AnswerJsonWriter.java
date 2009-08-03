@@ -65,6 +65,8 @@ import java.io.IOException;
 
 public interface AnswerJsonWriter extends AnswerWriter {
 
+    void writeFullDocument() throws JSONException;
+
     boolean hasMoreResults();
 
     void writeStartDocument() throws JSONException;
@@ -73,13 +75,11 @@ public interface AnswerJsonWriter extends AnswerWriter {
 
     void writeStartResults() throws JSONException;
 
-    void writeEndResults() throws JSONException;
-
     void writeResult() throws JSONException;
 
-    void writeEndDocument() throws JSONException;
+    void writeEndResults() throws JSONException;
 
-    void writeFullDocument() throws JSONException;
+    void writeEndDocument() throws JSONException;
 
     void flush() throws IOException, JSONException;
 

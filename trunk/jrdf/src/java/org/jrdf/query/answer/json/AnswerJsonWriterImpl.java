@@ -105,6 +105,14 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
         writeEndDocument();
     }
 
+    private void writeAllResults() throws JSONException {
+        writeStartResults();
+        while (hasMoreResults()) {
+            writeResult();
+        }
+        writeEndResults();
+    }
+
     public boolean hasMoreResults() {
         return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
     }
@@ -126,14 +134,6 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     public void writeStartResults() throws JSONException {
         jsonWriter.key(RESULTS);
         jsonWriter.object().key(BINDINGS).array();
-    }
-
-    protected void writeAllResults() throws JSONException {
-        writeStartResults();
-        while (hasMoreResults()) {
-            writeResult();
-        }
-        writeEndResults();
     }
 
     public void writeResult() throws JSONException {
