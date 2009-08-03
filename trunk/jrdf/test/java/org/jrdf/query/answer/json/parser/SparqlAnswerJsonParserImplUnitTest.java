@@ -58,11 +58,14 @@
 
 package org.jrdf.query.answer.json.parser;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import org.hamcrest.Matchers;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.contains;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueArrayFactory;
 import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
+import static org.jrdf.query.answer.json.JsonTestUtil.LINKS;
 import static org.jrdf.query.answer.json.JsonTestUtil.NO_LINKS;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
@@ -72,6 +75,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import static java.util.Arrays.asList;
 import java.util.LinkedHashSet;
 
@@ -80,12 +84,12 @@ public class SparqlAnswerJsonParserImplUnitTest {
 
     @Test
     public void simpleBinding() throws Exception {
-        String results = getFullJsonDocument(NO_LINKS, TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_2);
-        final byte[] bytes = results.getBytes();
-        final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(new ByteArrayInputStream(bytes));
-        final LinkedHashSet<String> vars = new LinkedHashSet<String>();
-        vars.addAll(asList("abc", "123", "doh", "ray", "me"));
-        assertThat(jsonParser.getVariables(), equalTo(vars));
+        final String results = getFullJsonDocument(NO_LINKS, TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_2);
+        final InputStream inputStream = new ByteArrayInputStream(results.getBytes());
+        final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(inputStream);
+        final LinkedHashSet<String> vars = new LinkedHashSet<String>(asList("abc", "123", "doh", "ray", "me"));
+        assertThat(jsonParser.getLink(), is(Matchers.<String>empty()));
+        assertThat(jsonParser.getVariables(), contains(TEST_VARIABLES));
         testABinding(jsonParser, factory.mapToArray(vars, TEST_BINDINGS_1));
         testABinding(jsonParser, factory.mapToArray(vars, TEST_BINDINGS_2));
         assertThat(jsonParser.hasNext(), is(false));
@@ -93,22 +97,16 @@ public class SparqlAnswerJsonParserImplUnitTest {
 
     @Test
     public void withLink() throws Exception {
-        String results = "{\"head\": { \"link\": [ \"http://www.w3.org/TR/rdf-sparql-XMLres/example.rq\" ]," +
-            " \"vars\": [ \"x\", \"hpage\", \"name\", \"mbox\", \"age\", \"blurb\", \"friend\" ] },\n" +
-            " \"results\": { \"bindings\": [ {} ] }}";
-        final byte[] bytes = results.getBytes();
-        final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(new ByteArrayInputStream(bytes));
-        final LinkedHashSet<String> vars = new LinkedHashSet<String>();
-        vars.addAll(asList("x", "hpage", "name", "mbox", "age", "blurb", "friend"));
-        final LinkedHashSet<String> links = new LinkedHashSet<String>();
-        links.addAll(asList("http://www.w3.org/TR/rdf-sparql-XMLres/example.rq"));
-        assertThat(jsonParser.getVariables(), equalTo(vars));
-        assertThat(jsonParser.getLink(), equalTo(links));
+        final String results = getFullJsonDocument(LINKS, TEST_VARIABLES);
+        final InputStream inputStream = new ByteArrayInputStream(results.getBytes());
+        final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(inputStream);
+        assertThat(jsonParser.getLink(), contains(LINKS));
+        assertThat(jsonParser.getVariables(), contains(TEST_VARIABLES));
         assertThat(jsonParser.hasNext(), is(false));
     }
 
     private void testABinding(SparqlAnswerJsonParser jsonParser, final TypeValue[] expectedValues) {
         assertThat(jsonParser.hasNext(), is(true));
-        assertThat(jsonParser.next(), equalTo(expectedValues));
+        assertThat(jsonParser.next(), arrayContaining(expectedValues));
     }
 }

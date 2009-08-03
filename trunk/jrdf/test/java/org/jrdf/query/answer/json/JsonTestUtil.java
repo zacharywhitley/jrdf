@@ -77,6 +77,7 @@ import java.io.StringWriter;
 
 public class JsonTestUtil {
     public static final String[] NO_LINKS = {};
+    public static final String[] LINKS = {"http://www.w3.org/TR/rdf-sparql-XMLres/example.rq"};
     public static final String[] NO_VARIABLES = {};
     public static final String[] TEST_VARIABLES = {"abc", "123", "doh", "ray", "me"};
     public static final Map<String, TypeValue> TEST_BINDINGS_1 = new HashMap<String, TypeValue>() {
