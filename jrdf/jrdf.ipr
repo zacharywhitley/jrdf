@@ -1134,8 +1134,10 @@
     </library>
     <library name="junit">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/junit/junit-4.6.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/cpsuite-1.2.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/junit-4.7.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

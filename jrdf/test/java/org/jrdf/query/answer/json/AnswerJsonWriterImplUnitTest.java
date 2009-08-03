@@ -66,13 +66,14 @@ import static org.jrdf.query.answer.DatatypeType.DATATYPE;
 import static org.jrdf.query.answer.DatatypeType.XML_LANG;
 import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.TypeValueImpl;
+import org.jrdf.query.answer.TypeValueArrayFactory;
+import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
+import static org.jrdf.query.answer.json.JsonTestUtil.NO_LINKS;
 import static org.jrdf.query.answer.json.JsonTestUtil.NO_VARIABLES;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_3;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
-import static org.jrdf.query.answer.json.JsonTestUtil.*;
 import org.jrdf.util.test.MockFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,6 +89,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class AnswerJsonWriterImplUnitTest {
+    private TypeValueArrayFactory factory = new TypeValueArrayFactoryImpl();
     private final MockFactory mockFactory = new MockFactory();
     private SelectAnswer selectAnswer;
     private Iterator<TypeValue[]> mockIterator;
@@ -194,22 +196,8 @@ public class AnswerJsonWriterImplUnitTest {
         expect(mockIterator.hasNext()).andReturn(false).once();
         // Number of results
         for (int i = 0; i < numberOfResults; i++) {
-            expect(mockIterator.next()).andReturn(convertBindingMapToArray(results[i], variables));
+            expect(mockIterator.next()).andReturn(factory.mapToArray(variables, results[i]));
         }
-    }
-
-    private TypeValue[] convertBindingMapToArray(final Map<String, TypeValue> binding, final String[] variables) {
-        final TypeValue[] typeValues = new TypeValue[variables.length];
-        for (int i = 0; i < variables.length; i++) {
-            final String variable = variables[i];
-            final TypeValue typeValue = binding.get(variable);
-            if (typeValue != null) {
-                typeValues[i] = typeValue;
-            } else {
-                typeValues[i] = new TypeValueImpl();
-            }
-        }
-        return typeValues;
     }
 
     private void checkJSONStringArrayValues(final JSONObject jsonObject, final String arrayName,

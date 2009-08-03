@@ -63,9 +63,9 @@ import org.codehaus.jackson.JsonParser;
 import static org.codehaus.jackson.JsonToken.END_ARRAY;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import org.jrdf.query.answer.SparqlResultType;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueFactory;
 import org.jrdf.query.answer.TypeValueImpl;
@@ -142,9 +142,9 @@ public class SparqlAnswerResultsJsonParserImplUnitTest {
         parser.nextToken();
         final SparqlAnswerResultsJsonParser jsonParser = new SparqlAnswerResultsJsonParserImpl(variables, parser);
         assertThat(jsonParser.hasNext(), is(true));
-        assertThat(jsonParser.next(), equalTo(new TypeValue[]{new TypeValueImpl(SparqlResultType.BLANK_NODE, "r2")}));
+        assertThat(jsonParser.next(), arrayContaining(new TypeValue[]{new TypeValueImpl(BLANK_NODE, "r2")}));
         assertThat(jsonParser.hasNext(), is(true));
-        assertThat(jsonParser.next(), equalTo(new TypeValue[]{new TypeValueImpl(SparqlResultType.BLANK_NODE, "r3")}));
+        assertThat(jsonParser.next(), arrayContaining(new TypeValue[]{new TypeValueImpl(BLANK_NODE, "r3")}));
     }
 
     @Test(expected = RuntimeException.class)
