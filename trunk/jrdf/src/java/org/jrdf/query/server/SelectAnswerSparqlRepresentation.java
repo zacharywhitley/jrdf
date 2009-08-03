@@ -104,7 +104,7 @@ public class SelectAnswerSparqlRepresentation extends WriterRepresentation {
         if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
             return new AnswerXmlPagenatedStreamWriter(writer, variableNames, typeValues, maxRows);
         } else if (APPLICATION_SPARQL_JSON.equals(getMediaType())) {
-            return new AnswerJsonWriterImpl(writer, variableNames, typeValues, maxRows);
+            return new AnswerJsonWriterImpl(writer, new String[0], variableNames, typeValues, maxRows);
         } else {
             throw new RuntimeException("Unknown media type: " + getMediaType());
         }

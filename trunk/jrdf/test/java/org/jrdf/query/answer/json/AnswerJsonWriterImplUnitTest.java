@@ -72,6 +72,7 @@ import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_3;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
+import static org.jrdf.query.answer.json.JsonTestUtil.*;
 import org.jrdf.util.test.MockFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -110,7 +111,8 @@ public class AnswerJsonWriterImplUnitTest {
         expectLastCall();
 
         mockFactory.replay();
-        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, NO_VARIABLES, mockIterator, 0L);
+        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
+            0L);
         writer.flush();
         writer.close();
 
@@ -125,7 +127,8 @@ public class AnswerJsonWriterImplUnitTest {
         expectLastCall().andThrow(new IOException());
 
         mockFactory.replay();
-        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, NO_VARIABLES, mockIterator, 0L);
+        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
+            0L);
         writer.flush();
 
         mockFactory.verify();
@@ -139,7 +142,8 @@ public class AnswerJsonWriterImplUnitTest {
         expectLastCall().andThrow(new IOException());
 
         mockFactory.replay();
-        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, NO_VARIABLES, mockIterator, 0L);
+        final AnswerJsonWriterImpl writer = new AnswerJsonWriterImpl(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
+            0L);
         writer.close();
 
         mockFactory.verify();
@@ -147,30 +151,30 @@ public class AnswerJsonWriterImplUnitTest {
 
     @Test
     public void emptyAnswer() throws Exception {
-        checkAnswer(NO_VARIABLES, 0);
+        checkAnswer(NO_LINKS, NO_VARIABLES, 0);
     }
 
     @Test
     public void noResults() throws Exception {
-        checkAnswer(TEST_VARIABLES, 0);
+        checkAnswer(NO_LINKS, TEST_VARIABLES, 0);
     }
 
     @Test
     public void hasResults() throws Exception {
-        checkAnswer(TEST_VARIABLES, -1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+        checkAnswer(NO_LINKS, TEST_VARIABLES, -1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
     }
 
     @Test
     public void maxRows() throws Exception {
-        checkAnswer(TEST_VARIABLES, 1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+        checkAnswer(NO_LINKS, TEST_VARIABLES, 1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
     }
 
-    public void checkAnswer(final String[] variables, final int numberOfResults,
+    public void checkAnswer(final String[] links, final String[] variables, final int numberOfResults,
         final Map<String, TypeValue>... bindings) throws JSONException {
         setupExpectationsForResults(variables, numberOfResults == -1 ? bindings.length : numberOfResults, bindings);
         mockFactory.replay();
 
-        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, variables, mockIterator,
+        final AnswerJsonWriter writer = new AnswerJsonWriterImpl(stringWriter, links, variables, mockIterator,
             numberOfResults);
         writer.writeFullDocument();
         mockFactory.verify();

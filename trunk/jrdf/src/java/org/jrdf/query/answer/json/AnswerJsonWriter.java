@@ -67,8 +67,6 @@ public interface AnswerJsonWriter extends AnswerWriter {
 
     void writeFullDocument() throws JSONException;
 
-    boolean hasMoreResults();
-
     void writeStartDocument() throws JSONException;
 
     void writeHead() throws JSONException;
