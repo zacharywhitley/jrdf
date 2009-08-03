@@ -63,6 +63,7 @@ import static org.jrdf.query.answer.SparqlProtocol.BINDINGS;
 import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
 import static org.jrdf.query.answer.SparqlProtocol.JSON_XML_LANG;
+import static org.jrdf.query.answer.SparqlProtocol.LINK;
 import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
 import static org.jrdf.query.answer.SparqlProtocol.TYPE;
 import static org.jrdf.query.answer.SparqlProtocol.VALUE;
@@ -80,6 +81,7 @@ import java.util.Iterator;
 public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     private Writer writer;
     private String[] variableNames;
+    private String[] links;
     private Iterator<TypeValue[]> iterator;
     private long maxRows;
     private long count;
@@ -88,10 +90,11 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
     private AnswerJsonWriterImpl() {
     }
 
-    public AnswerJsonWriterImpl(final Writer writer, final String[] variableNames, final Iterator<TypeValue[]> iterator,
-        final long maxRows) {
-        checkNotNull(writer, variableNames, iterator);
+    public AnswerJsonWriterImpl(final Writer writer, final String[] links, final String[] variableNames,
+        final Iterator<TypeValue[]> iterator, final long maxRows) {
+        checkNotNull(writer, links, variableNames, iterator);
         this.writer = writer;
+        this.links = links;
         this.variableNames = variableNames;
         this.iterator = iterator;
         this.maxRows = maxRows;
@@ -123,12 +126,18 @@ public class AnswerJsonWriterImpl implements AnswerJsonWriter {
 
     public void writeHead() throws JSONException {
         jsonWriter.key(HEAD);
-        jsonWriter.object().key(VARS).array();
-        for (final String variable : variableNames) {
+        jsonWriter.object();
+        writeArray(LINK, links);
+        writeArray(VARS, variableNames);
+        jsonWriter.endObject();
+    }
+
+    private void writeArray(final String key, final String[] values) throws JSONException {
+        jsonWriter.key(key).array();
+        for (final String variable : values) {
             jsonWriter.value(variable);
         }
         jsonWriter.endArray();
-        jsonWriter.endObject();
     }
 
     public void writeStartResults() throws JSONException {

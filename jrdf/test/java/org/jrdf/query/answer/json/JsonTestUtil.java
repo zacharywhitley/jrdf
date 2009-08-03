@@ -76,6 +76,7 @@ import java.util.ArrayList;
 import java.io.StringWriter;
 
 public class JsonTestUtil {
+    public static final String[] NO_LINKS = {};
     public static final String[] NO_VARIABLES = {};
     public static final String[] TEST_VARIABLES = {"abc", "123", "doh", "ray", "me"};
     public static final Map<String, TypeValue> TEST_BINDINGS_1 = new HashMap<String, TypeValue>() {
@@ -102,12 +103,12 @@ public class JsonTestUtil {
         }
     };
 
-    public static String getFullJsonDocument(final String[] variables, final Map<String, TypeValue>... bindings)
-        throws JSONException {
+    public static String getFullJsonDocument(final String[] links, final String[] variables,
+        final Map<String, TypeValue>... bindings) throws JSONException {
         final List<TypeValue[]> values = convertToList(variables, bindings);
         final StringWriter stringWriter = new StringWriter();
-        final AnswerJsonWriter answerJsonWriter = new AnswerJsonWriterImpl(stringWriter, variables, values.iterator(),
-            bindings.length);
+        final AnswerJsonWriter answerJsonWriter = new AnswerJsonWriterImpl(stringWriter, links, variables,
+            values.iterator(), bindings.length);
         answerJsonWriter.writeFullDocument();
         return stringWriter.toString();
     }

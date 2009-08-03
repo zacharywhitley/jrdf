@@ -60,9 +60,10 @@ package org.jrdf.query.answer.json.parser;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueArrayFactory;
 import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
-import org.jrdf.query.answer.TypeValue;
+import static org.jrdf.query.answer.json.JsonTestUtil.NO_LINKS;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
@@ -79,7 +80,7 @@ public class SparqlAnswerJsonParserImplUnitTest {
 
     @Test
     public void simpleBinding() throws Exception {
-        String results = getFullJsonDocument(TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_2);
+        String results = getFullJsonDocument(NO_LINKS, TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_2);
         final byte[] bytes = results.getBytes();
         final SparqlAnswerJsonParser jsonParser = new SparqlAnswerJsonParserImpl(new ByteArrayInputStream(bytes));
         final LinkedHashSet<String> vars = new LinkedHashSet<String>();
