@@ -139,7 +139,12 @@ public class SparqlAnswerResultJsonParserImplUnitTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void empty() throws Exception {
+    public void arrayInsteadOfObjectThrowsException() throws Exception {
+        checkParser("\"name\" : [{}] ", "name", new TypeValueImpl());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void emptyThrowsAnException() throws Exception {
         checkParser("", "", new TypeValueImpl());
     }
 

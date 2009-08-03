@@ -67,9 +67,8 @@ import static org.jrdf.query.answer.SparqlProtocol.JSON_XML_LANG;
 import static org.jrdf.query.answer.SparqlProtocol.TYPE;
 import static org.jrdf.query.answer.SparqlProtocol.VALUE;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.TypeValueFactoryImpl;
-import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.query.answer.TypeValueFactory;
+import org.jrdf.query.answer.TypeValueFactoryImpl;
 
 import java.io.IOException;
 import java.util.Map;
@@ -98,11 +97,10 @@ public class SparqlAnswerResultJsonParserImpl implements SparqlAnswerResultJsonP
     }
 
     private TypeValue getTypeValue() throws IOException {
-        TypeValue typeValue = new TypeValueImpl();
         if (parser.nextToken() == START_OBJECT) {
-            typeValue = parseObject();
+            return parseObject();
         }
-        return typeValue;
+        throw new IllegalStateException("Cannot parse: " + parser.getText());
     }
 
     private TypeValue parseObject() throws IOException {
