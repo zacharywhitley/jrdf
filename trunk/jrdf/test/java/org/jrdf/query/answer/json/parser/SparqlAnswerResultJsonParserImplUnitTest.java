@@ -150,8 +150,8 @@ public class SparqlAnswerResultJsonParserImplUnitTest {
 
     private void checkParser(final String jsonBinding, final String variable, final TypeValue expectedValue)
         throws IOException {
-        final JsonFactory jsonFactory = new JsonFactory();
         // Create something that the parser will successfully parse.
+        final JsonFactory jsonFactory = new JsonFactory();
         final JsonParser parser = jsonFactory.createJsonParser("{" + jsonBinding + "}");
         final SparqlAnswerResultJsonParser jsonParser = new SparqlAnswerResultJsonParserImpl(parser);
         final HashMap<String, TypeValue> binding = new HashMap<String, TypeValue>();
