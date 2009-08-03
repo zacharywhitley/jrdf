@@ -58,13 +58,17 @@
 
 package org.jrdf.query.answer.json.parser;
 
+import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import static org.codehaus.jackson.JsonToken.END_ARRAY;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import org.jrdf.query.answer.SparqlResultType;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueFactory;
+import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.util.test.MockFactory;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
@@ -79,6 +83,7 @@ public class SparqlAnswerResultsJsonParserImplUnitTest {
     private Iterator<TypeValue[]> mockIterator;
     private JsonParser mockJsonParser;
     private TypeValueFactory mockTypeValueFactory;
+    private LinkedHashSet<String> variables = new LinkedHashSet<String>();
 
     @Before
     @SuppressWarnings({ "unchecked" })
@@ -96,7 +101,7 @@ public class SparqlAnswerResultsJsonParserImplUnitTest {
 
         mockFactory.replay();
         final SparqlAnswerResultsJsonParser jsonParser =
-            new SparqlAnswerResultsJsonParserImpl(new LinkedHashSet<String>(), mockJsonParser);
+            new SparqlAnswerResultsJsonParserImpl(variables, mockJsonParser);
         final boolean closedOkay = jsonParser.close();
 
         mockFactory.verify();
@@ -111,16 +116,46 @@ public class SparqlAnswerResultsJsonParserImplUnitTest {
 
         mockFactory.replay();
         final SparqlAnswerResultsJsonParser jsonParser =
-            new SparqlAnswerResultsJsonParserImpl(new LinkedHashSet<String>(), mockJsonParser);
+            new SparqlAnswerResultsJsonParserImpl(variables, mockJsonParser);
         jsonParser.close();
 
         mockFactory.verify();
     }
 
-    // TODO AN Finished this!
+    @Test(expected = UnsupportedOperationException.class)
+    public void removeThrowsException() throws Exception {
+        final SparqlAnswerResultsJsonParser jsonParser =
+            new SparqlAnswerResultsJsonParserImpl(variables, mockJsonParser);
+        jsonParser.remove();
+    }
+
     @Test
-    public void someBindings() throws Exception {
-        String results = "{\"friend\" : {\"type\": \"bnode\", \"value\": \"r2\"}}," +
-            "{\"friend\" : {\"type\": \"bnode\", \"value\": \"r3\"}}";
+    public void someSimpleBindings() throws Exception {
+        String results = "[" +
+            "{\"friend\" : {\"type\": \"bnode\", \"value\": \"r2\"}}," +
+            "{\"friend\" : {\"type\": \"bnode\", \"value\": \"r3\"}}" +
+            "]";
+        final JsonFactory jsonFactory = new JsonFactory();
+        final JsonParser parser = jsonFactory.createJsonParser(results);
+        variables.add("friend");
+        // Skip start of array
+        parser.nextToken();
+        final SparqlAnswerResultsJsonParser jsonParser = new SparqlAnswerResultsJsonParserImpl(variables, parser);
+        assertThat(jsonParser.hasNext(), is(true));
+        assertThat(jsonParser.next(), equalTo(new TypeValue[]{new TypeValueImpl(SparqlResultType.BLANK_NODE, "r2")}));
+        assertThat(jsonParser.hasNext(), is(true));
+        assertThat(jsonParser.next(), equalTo(new TypeValue[]{new TypeValueImpl(SparqlResultType.BLANK_NODE, "r3")}));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void bindingWithParseErrorThrowsRuntime() throws Exception {
+        String results = "[{\"friend\" : {\"type\": \"bnode\", \"value\": \"r2\"},},]";
+        final JsonFactory jsonFactory = new JsonFactory();
+        final JsonParser parser = jsonFactory.createJsonParser(results);
+        variables.add("friend");
+        // Skip start of array
+        parser.nextToken();
+        final SparqlAnswerResultsJsonParser jsonParser = new SparqlAnswerResultsJsonParserImpl(variables, parser);
+        jsonParser.next();
     }
 }
