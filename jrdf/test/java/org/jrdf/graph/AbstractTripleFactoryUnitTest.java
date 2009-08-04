@@ -61,17 +61,18 @@ package org.jrdf.graph;
 
 // Java packages
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
+import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsMatchingTriples;
+import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsTriple;
+import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 import org.jrdf.vocabulary.RDF;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -118,8 +119,6 @@ public abstract class AbstractTripleFactoryUnitTest {
 
     private static final String TEST_STR1 = "A test string";
     private static final String TEST_STR2 = "Another test string";
-    private Literal l1;
-    private Literal l2;
     private PredicateNode reifySubject;
     private PredicateNode reifyPredicate;
     private PredicateNode reifyObject;
@@ -141,9 +140,6 @@ public abstract class AbstractTripleFactoryUnitTest {
         ref1 = elementFactory.createURIReference(uri1);
         ref2 = elementFactory.createURIReference(uri2);
         ref3 = elementFactory.createURIReference(uri3);
-
-        l1 = elementFactory.createLiteral(TEST_STR1);
-        l2 = elementFactory.createLiteral(TEST_STR2);
 
         reifySubject = getReifySubject();
         reifyPredicate = getReifyPredicate();
@@ -257,11 +253,11 @@ public abstract class AbstractTripleFactoryUnitTest {
 
     private void checkReification(final SubjectNode reificationNode, final long expectedNumberOfTriplesInGraph,
         final SubjectNode subjectNode, final PredicateNode predicateNode, final ObjectNode objectNode) {
-        assertThat(graph.getNumberOfTriples(), is(expectedNumberOfTriplesInGraph));
-        assertThat(graph.contains(reificationNode, rdfType, rdfStatement), is(true));
-        assertThat(graph.contains(reificationNode, reifySubject, (ObjectNode) subjectNode), is(true));
-        assertThat(graph.contains(reificationNode, reifyPredicate, (ObjectNode) predicateNode), is(true));
-        assertThat(graph.contains(reificationNode, reifyObject, objectNode), is(true));
+        assertThat(graph, hasNumberOfTriples(expectedNumberOfTriplesInGraph));
+        assertThat(graph, containsTriple(reificationNode, rdfType, rdfStatement));
+        assertThat(graph, containsTriple(reificationNode, reifySubject, (ObjectNode) subjectNode));
+        assertThat(graph, containsTriple(reificationNode, reifyPredicate, (ObjectNode) predicateNode));
+        assertThat(graph, containsTriple(reificationNode, reifyObject, objectNode));
     }
 
     @Test
@@ -269,51 +265,51 @@ public abstract class AbstractTripleFactoryUnitTest {
         // test for double insertion (allowed)
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri1));
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri1));
-        assertThat(graph.getNumberOfTriples(), is(4L));
+        assertThat(graph, hasNumberOfTriples(4));
 
         BlankNode node = elementFactory.createBlankNode();
         tripleFactory.reifyTriple(blank1, ref1, blank2, node);
         tripleFactory.reifyTriple(blank1, ref1, blank2, node);
-        assertThat(graph.getNumberOfTriples(), is(8L));
+        assertThat(graph, hasNumberOfTriples(8));
 
         // test for double insertion (allowed)
         Triple t = tripleFactory.createTriple(blank1, ref2, blank2);
         graph.add(t);
         tripleFactory.reifyTriple(t, elementFactory.createURIReference(uri2));
         tripleFactory.reifyTriple(t, elementFactory.createURIReference(uri2));
-        assertThat(graph.getNumberOfTriples(), is(13L));
+        assertThat(graph, hasNumberOfTriples(13));
 
         t = tripleFactory.createTriple(blank1, ref3, blank2);
         graph.add(t);
         node = elementFactory.createBlankNode();
         tripleFactory.reifyTriple(t, node);
         tripleFactory.reifyTriple(t, node);
-        assertThat(graph.getNumberOfTriples(), is(18L));
+        assertThat(graph, hasNumberOfTriples(18));
 
         // test for insertion with a different reference (allowed)
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri3));
-        assertThat(graph.getNumberOfTriples(), is(22L));
+        assertThat(graph, hasNumberOfTriples(22));
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createBlankNode());
-        assertThat(graph.getNumberOfTriples(), is(26L));
+        assertThat(graph, hasNumberOfTriples(26));
     }
 
     @Test
     public void disallowInsertionOfANewTripleWithExistingReference() throws Exception {
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri1));
-        testCantInsert(blank2, ref1, blank1, elementFactory.createURIReference(uri1));
-        assertThat(graph.getNumberOfTriples(), is(4L));
+        testCanReifyTriple(blank2, ref1, blank1, elementFactory.createURIReference(uri1));
+        assertThat(graph, hasNumberOfTriples(4));
 
         // test for insertion with a different reference (disallowed)
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri2));
-        testCantInsert(tripleFactory.createTriple(blank1, ref2, blank2), uri2);
-        assertThat(graph.getNumberOfTriples(), is(8L));
+        testTripleCannotBeReified(tripleFactory.createTriple(blank1, ref2, blank2), uri2);
+        assertThat(graph, hasNumberOfTriples(8));
     }
 
     @Test
     public void disallowInsertionOfANewTripleWithAnExistingReference() throws Exception {
         tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createURIReference(uri2));
-        testCantInsert(tripleFactory.createTriple(blank2, ref2, blank2), uri2);
-        assertThat(graph.getNumberOfTriples(), is(4L));
+        testTripleCannotBeReified(tripleFactory.createTriple(blank2, ref2, blank2), uri2);
+        assertThat(graph, hasNumberOfTriples(4));
     }
 
     @Test
@@ -346,39 +342,23 @@ public abstract class AbstractTripleFactoryUnitTest {
         tripleFactory.addCollection((SubjectNode) o, collection);
 
         // Check we've inserted it correctly.
-        assertThat("Should have seven statements", graph.getNumberOfTriples(), is(7L));
-        assertThat("Should have first statement", graph.contains(s, p, o), is(true));
-        assertThat("Should have first object and first collection object", graph.contains((SubjectNode) o, rdfFirst,
-            fruit.get(0)), is(true));
+        assertThat(graph, hasNumberOfTriples(7));
+        assertThat(graph, containsTriple(s, p, o));
+        assertThat(graph, containsTriple((SubjectNode) o, rdfFirst, fruit.get(0)));
 
         // Get all rdf:first statements
-        ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, rdfFirst, ANY_OBJECT_NODE);
-        int counter = 0;
-        for (Triple triple : triples) {
-            counter++;
-        }
-        assertThat("Should have three rdf:first statements, not " + counter, counter, is(3));
+        assertThat(graph, containsMatchingTriples(ANY_SUBJECT_NODE, rdfRest, ANY_OBJECT_NODE, 3));
 
         // Find all three parts of the collection.
         for (ObjectNode aFruit : fruit) {
-            assertThat("Should contain: " + aFruit, graph.contains(ANY_SUBJECT_NODE, rdfFirst, aFruit), is(true));
+            assertThat(graph, containsTriple(ANY_SUBJECT_NODE, rdfFirst, aFruit));
         }
 
         // Get all rdf:rest statements
-        triples = graph.find(ANY_SUBJECT_NODE, rdfRest, ANY_OBJECT_NODE);
-        counter = 0;
-        for (Triple triple : triples) {
-            counter++;
-        }
-        assertThat("Should have three rdf:rest statements", counter, is(3));
+        assertThat(graph, containsMatchingTriples(ANY_SUBJECT_NODE, rdfRest, ANY_OBJECT_NODE, 3));
 
         // Get all rdf:rest with rdf:nil statements
-        triples = graph.find(ANY_SUBJECT_NODE, rdfRest, rdfNil);
-        counter = 0;
-        for (Triple triple : triples) {
-            counter++;
-        }
-        assertThat("Should have one rdf:rest with rdf:nil statements", counter, is(1));
+        assertThat(graph, containsMatchingTriples(ANY_SUBJECT_NODE, rdfRest, rdfNil, 1));
     }
 
     @Test
@@ -406,26 +386,21 @@ public abstract class AbstractTripleFactoryUnitTest {
         tripleFactory.addAlternative(s, alt);
 
         // Check we've inserted it correctly (banana is in twice should be removed)
-        assertEquals("Should have five statements", 4, graph.getNumberOfTriples());
-        assertTrue("Should have statement", graph.contains(s, rdfType, rdfAlternative));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(0)));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(1)));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(2)));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(3)));
+        assertThat(graph, hasNumberOfTriples(4));
+        assertThat(graph, containsTriple(s, rdfType, rdfAlternative));
+        for (ObjectNode aFruit : fruit) {
+            assertThat(graph, containsTriple(s, ANY_PREDICATE_NODE, aFruit));
+        }
 
         // Check that it doesn't allow duplicates.
-        ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit.get(0));
-        int count = 0;
-        for (Triple triple : triples) {
-            count++;
-        }
-        assertTrue("Should have only the same statements: " + fruit.get(0), 1 == count);
+        assertThat(graph, containsMatchingTriples(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit.get(0), 1));
 
+        // Compare both alts
         Alternative alt2 = createAlternative(fruit);
-        assertEquals(alt, alt2);
+        assertThat(alt, equalTo(alt2));
         SubjectNode s2 = elementFactory.createURIReference(new URI("http://example.org/favourite-bananas2"));
         tripleFactory.addAlternative(s2, alt2);
-        assertEquals(alt, alt2);
+        assertThat(alt, equalTo(alt2));
     }
 
     @Test
@@ -454,27 +429,22 @@ public abstract class AbstractTripleFactoryUnitTest {
         tripleFactory.addBag(s, bag);
 
         // Check we've inserted it correctly
-        assertEquals("Should have six statements", 6, graph.getNumberOfTriples());
-        assertTrue("Should have statement", graph.contains(s, rdfType, rdfBag));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(0)));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(1)));
-        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit.get(2)));
+        assertThat(graph, hasNumberOfTriples(6));
+        assertThat(graph, containsTriple(s, rdfType, rdfBag));
+        for (ObjectNode aFruit : fruit) {
+            assertThat(graph, containsTriple(s, ANY_PREDICATE_NODE, aFruit));
+        }
 
         // Check that it allows duplicates.
-        ClosableIterable<Triple> triples = graph.find(s, ANY_PREDICATE_NODE, fruit.get(2));
-        int count = 0;
-        for (Triple triple : triples) {
-            count++;
-        }
-        assertTrue("Should have two of the same statements: " + fruit.get(2), 2 == count);
+        assertThat(graph, containsMatchingTriples(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit.get(2), 2));
 
-        Bag bag2 = createBag(fruit);
         // Equal before being added to graph.
-        assertEquals(bag, bag2);
+        Bag bag2 = createBag(fruit);
+        assertThat(bag, equalTo(bag2));
         SubjectNode s2 = elementFactory.createURIReference(new URI("http://example.org/favourite-fruit2"));
         tripleFactory.addBag(s2, bag2);
         // Equal after added - Bags are still equal even with different subjects (they don't know about their subjects).
-        assertEquals(bag, bag2);
+        assertThat(bag, equalTo(bag2));
     }
 
     @Test
@@ -506,28 +476,27 @@ public abstract class AbstractTripleFactoryUnitTest {
         tripleFactory.addSequence(s, sequence);
 
         // Check we've inserted it correctly.
-        assertEquals("Should have five statements", 5, graph.getNumberOfTriples());
-        assertTrue("Should have statement",
-            graph.contains(s, rdfType, rdfSequence));
-        assertTrue("Should have statement", graph.contains(s, rdfOne, fruit.get(0)));
-        assertTrue("Should have statement", graph.contains(s, rdfTwo, fruit.get(1)));
-        assertTrue("Should have statement", graph.contains(s, rdfThree, fruit.get(2)));
-        assertTrue("Should have statement", graph.contains(s, rdfFour, fruit.get(3)));
+        assertThat(graph, hasNumberOfTriples(5));
+        assertThat(graph, containsTriple(s, rdfType, rdfSequence));
+        assertThat(graph, containsTriple(s, rdfOne, fruit.get(0)));
+        assertThat(graph, containsTriple(s, rdfTwo, fruit.get(1)));
+        assertThat(graph, containsTriple(s, rdfThree, fruit.get(2)));
+        assertThat(graph, containsTriple(s, rdfFour, fruit.get(3)));
 
         Sequence sequence2 = createSequence(fruit);
-        assertEquals(sequence, sequence2);
+        assertThat(sequence, equalTo(sequence2));
         SubjectNode s2 = elementFactory.createURIReference(new URI("http://example.org/favourite-fruit2"));
         tripleFactory.addSequence(s2, sequence2);
-        assertEquals(sequence, sequence2);
+        assertThat(sequence, equalTo(sequence2));
     }
 
     @Test
     public void easyToUseMethods() throws Exception {
         tripleFactory.addTriple(uri1, uri1, uri1);
-        assertTrue("Should have statement", graph.contains(ref1, ref1, ref1));
+        assertThat(graph, containsTriple(ref1, ref1, ref1));
         Resource resource = elementFactory.createResource(uri2);
         tripleFactory.addTriple(uri1, uri1, resource);
-        assertTrue("Should have statement", graph.contains(ref1, ref1, ref2));
+        assertThat(graph, containsTriple(ref1, ref1, ref2));
     }
 
     @Test
@@ -536,20 +505,11 @@ public abstract class AbstractTripleFactoryUnitTest {
             tripleFactory.addTriple(create("http://subject/" + i), create("http://predicate/" + i),
                 create("http://object/" + i));
         }
-        assertEquals(NUMBER_OF_TRIPLES_TO_ADD, graph.getNumberOfTriples());
+        assertThat(graph, hasNumberOfTriples(NUMBER_OF_TRIPLES_TO_ADD));
     }
 
-    /**
-     * Utility method to check that a triple cannot be reified.
-     *
-     * @param subject   The subject for the triple.
-     * @param predicate The predicate for the triple.
-     * @param object    The object for the triple.
-     * @param r         The reification node for the triple.
-     * @throws Exception The triple could be reified.
-     */
-    private void testCantInsert(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object,
-        final SubjectNode r) throws Exception {
+    private void testCanReifyTriple(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object,
+        final SubjectNode r) {
         assertThrows(AlreadyReifiedException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 tripleFactory.reifyTriple(subject, predicate, object, r);
@@ -557,14 +517,7 @@ public abstract class AbstractTripleFactoryUnitTest {
         });
     }
 
-    /**
-     * Utility method to check that a triple cannot be reified.
-     *
-     * @param triple The triple to reify.
-     * @param r      The reification node for the triple.
-     * @throws Exception The triple could be reified.
-     */
-    private void testCantInsert(final Triple triple, final URI r) throws Exception {
+    private void testTripleCannotBeReified(final Triple triple, final URI r) {
         assertThrows(AlreadyReifiedException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 tripleFactory.reifyTriple(triple, elementFactory.createURIReference(r));
