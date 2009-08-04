@@ -1140,7 +1140,10 @@
         <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-library-1.2.jar!/" />
+      </SOURCES>
     </library>
     <library name="restlet">
       <CLASSES>
