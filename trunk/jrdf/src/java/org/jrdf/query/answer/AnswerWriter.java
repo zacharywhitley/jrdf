@@ -58,24 +58,78 @@
 
 package org.jrdf.query.answer;
 
+/**
+ * A model for writing SPARQL answers.  Simply call writeFullDocument or call the individual sections.
+ */
 public interface AnswerWriter {
+    /**
+     * Returns true if there are more results to write.
+     *
+     * @return true if there are more results to write.
+     */
     boolean hasMoreResults();
 
+    /**
+     * The start of the document - an XML header or initial JSON object.
+     *
+     * @throws Exception if there is an i/o or other exception.
+     */
     void writeStartDocument() throws Exception;
 
+    /**
+     * Writes the entire header - containing the link and all variables.
+     *
+     * @throws Exception if there is an i/o or other exception.
+     */
     void writeHead() throws Exception;
 
+    /**
+     * Contains the start of the results.
+     *
+     * @throws Exception if there is an i/o or other exception.
+     */
     void writeStartResults() throws Exception;
 
-    void writeEndResults() throws Exception;
-
+    /**
+     * Writes out a single binding of value to variable.
+     *
+     * @throws Exception if there is an i/o or other exception.
+     */
     void writeResult() throws Exception;
 
+    /**
+     * Contains the end of the results.
+     *
+     * @throws Exception if there is an i/o or other exception.
+     */
+    void writeEndResults() throws Exception;
+
+    /**
+     * The end of the document.
+     *
+     * @throws Exception if there is an i/o or other exception.
+     */
     void writeEndDocument() throws Exception;
 
+    /**
+     * Equivalent to calling writeStartDocument, writeHead, writeStartResults, for all results writeResult,
+     * writeEndResults and writeEndDocument.
+     *
+     * @throws Exception if there is an i/o or other exception.
+     */
     void writeFullDocument() throws Exception;
 
+    /**
+     * Flushes to the underlying stream/writer.
+     *
+     * @throws Exception if there is an i/o or other exception.
+     */
     void flush() throws Exception;
 
+    /**
+     * Closes the underlying resources (streams, writers, etc).
+     *
+     * @throws Exception if there is an i/o or other exception.
+     */
     void close() throws Exception;
 }
