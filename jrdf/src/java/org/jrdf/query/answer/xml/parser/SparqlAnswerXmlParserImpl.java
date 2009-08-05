@@ -105,6 +105,7 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
         if (answerType == SELECT) {
             return variables;
         } else {
+            // TODO Turn this into an empty set for non-SELECT queries.
             throw new UnsupportedOperationException("Cannot get variables for non-SLECT queries.");
         }
     }
@@ -122,6 +123,7 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
         return hasMore;
     }
 
+    // TODO AN Instead of this - return a result that is TypeValue of boolean and a value of true/false.
     public boolean getAskResult() throws XMLStreamException {
         if (answerType != ASK) {
             throw new UnsupportedOperationException("Cannot get boolean result for non-ASK queries.");
