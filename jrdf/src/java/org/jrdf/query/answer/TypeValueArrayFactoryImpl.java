@@ -73,6 +73,10 @@ public class TypeValueArrayFactoryImpl implements TypeValueArrayFactory {
     }
 
     public TypeValue[] mapToArray(LinkedHashSet<String> variables, Map<String, TypeValue> variableToValue) {
+        // For ask answers where there maybe one result with no binding to a variable.
+        if (variables.isEmpty()) {
+            variables.add("");
+        }
         return mapToArray(variables.toArray(new String[variables.size()]), variableToValue);
     }
 

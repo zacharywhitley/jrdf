@@ -59,9 +59,7 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import org.jrdf.query.answer.AnswerType;
 import org.jrdf.query.answer.TypeValue;
-import static org.jrdf.query.answer.AnswerType.ASK;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -77,14 +75,11 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
     private boolean gotVariables;
     private boolean hasMore;
     private TypeValue[] results;
-    private AnswerType answerType;
-    private boolean result;
 
     public SparqlAnswerStreamXmlParserImpl(InputStream... streams) throws XMLStreamException, InterruptedException {
         this.hasMore = false;
         this.variables = new LinkedHashSet<String>();
         this.streamQueue = new LinkedBlockingQueue<InputStream>();
-        result = false;
         for (InputStream stream : streams) {
             this.streamQueue.put(stream);
         }
@@ -95,20 +90,6 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
         streamQueue.put(stream);
         if (!hasMore) {
             setupNextParser();
-        }
-    }
-
-    public AnswerType getAnswerType() throws XMLStreamException {
-        return answerType;
-    }
-
-    public boolean getAskResult() throws XMLStreamException {
-        if (answerType == ASK) {
-            final boolean partialAnswer = parser.getAskResult();
-            result = result || partialAnswer;
-            return result;
-        } else {
-            throw new UnsupportedOperationException("Cannot answer boolean for non-ASK query: " + answerType);
         }
     }
 
@@ -142,7 +123,6 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
                 parser.close();
             }
             parser = new SparqlAnswerXmlParserImpl(currentStream);
-            answerType = parser.getAnswerType();
             parseVariables();
             if (!hasMore) {
                 hasMore = hasMore();
@@ -153,7 +133,7 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
     }
 
     private void parseVariables() {
-        if (!gotVariables && answerType == AnswerType.SELECT) {
+        if (!gotVariables) {
             variables = parser.getVariables();
             gotVariables = true;
         }

@@ -59,12 +59,10 @@
 
 package org.jrdf.query.answer;
 
-import static org.jrdf.query.answer.AnswerType.ASK;
-import static org.jrdf.query.answer.AnswerType.SELECT;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
 import org.jrdf.query.answer.xml.SparqlStreamingAskAnswer;
 import org.jrdf.query.answer.xml.SparqlStreamingSelectAnswer;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -73,7 +71,6 @@ import java.io.InputStream;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public class SparqlStreamingAnswerFactoryImpl implements SparqlStreamingAnswerFactory {
     public Answer createStreamingAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
         SparqlAnswerStreamXmlParser streamAnswerParser = new SparqlAnswerStreamXmlParserImpl(stream);
@@ -81,13 +78,10 @@ public class SparqlStreamingAnswerFactoryImpl implements SparqlStreamingAnswerFa
     }
 
     public Answer createStreamingAnswer(SparqlAnswerStreamXmlParser answerStreamParser) throws XMLStreamException {
-        final AnswerType answerType = answerStreamParser.getAnswerType();
-        if (answerType == SELECT) {
+        if (!answerStreamParser.getVariables().isEmpty()) {
             return new SparqlStreamingSelectAnswer(answerStreamParser);
-        } else if (answerType == ASK) {
-            return new SparqlStreamingAskAnswer(answerStreamParser);
         } else {
-            throw new RuntimeException("Invalid SPARQL answer stream: " + answerType);
+            return new SparqlStreamingAskAnswer(answerStreamParser);
         }
     }
 }

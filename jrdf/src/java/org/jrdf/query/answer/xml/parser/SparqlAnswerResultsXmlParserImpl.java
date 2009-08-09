@@ -60,10 +60,12 @@
 package org.jrdf.query.answer.xml.parser;
 
 import org.jrdf.query.answer.SparqlProtocol;
+import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueArrayFactory;
 import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
 import org.jrdf.query.answer.TypeValueFactory;
+import org.jrdf.query.answer.TypeValueImpl;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -99,10 +101,16 @@ public class SparqlAnswerResultsXmlParserImpl implements SparqlAnswerResultsXmlP
         while (parser.hasNext() && !endOfResult(currentEvent)) {
             if (startOfBinding(currentEvent)) {
                 resultParser.getOneBinding(variableToValue);
+            } else if (startOfBoolean(currentEvent)) {
+                variableToValue.put("", new TypeValueImpl(BOOLEAN, parser.getElementText()));
             }
             currentEvent = parser.next();
         }
         return variableToValue;
+    }
+
+    private boolean startOfBoolean(int currentEvent) {
+        return currentEvent == START_ELEMENT && SparqlProtocol.BOOLEAN.equals(parser.getLocalName());
     }
 
     private boolean startOfBinding(int currentEvent) {
