@@ -59,7 +59,9 @@
 
 package org.jrdf.query.answer;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.RelationFactory;
@@ -69,8 +71,10 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.RESOURCE_1;
 import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.SerializationTestUtil.copyBySerialization;
+import org.junit.Test;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -80,9 +84,10 @@ import java.util.Set;
  * @author Tom Adams
  * @version $Revision: 1510 $
  */
-public final class SelectAnswerImplIntegrationTest extends TestCase {
+public final class SelectAnswerImplIntegrationTest {
     private static final String FOO_SUBJECT_VARIABLE = "foo1";
 
+    @Test
     public void testSerialization() throws Exception {
         RelationFactory relationFactory = TestJRDFFactory.getFactory().getNewRelationFactory();
         LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
@@ -99,14 +104,15 @@ public final class SelectAnswerImplIntegrationTest extends TestCase {
     private void checkAnswer(SelectAnswer answer, String expectedVariable, String expectedValue,
         long expectedTimeTaken, boolean expectedProjected) {
         String[] variableNames = answer.getVariableNames();
-        assertTrue(variableNames.length == 1);
-        assertEquals(expectedVariable, variableNames[0]);
-        String[][] values = answer.getColumnValues();
-        assertEquals(1, values.length);
-        assertEquals(1, values[0].length);
-        assertEquals(expectedValue, values[0][0]);
-        assertEquals(expectedTimeTaken, answer.getTimeTaken());
+        assertThat(variableNames.length, is(1));
+        assertThat(variableNames[0], equalTo(expectedVariable));
+        final Iterator<TypeValue[]> iterator = answer.columnValuesIterator();
+        assertThat(iterator.hasNext(), is(true));
+        final TypeValue[] typeValues = iterator.next();
+        assertThat(typeValues.length, is(1));
+        assertThat(typeValues[0].getValue(), equalTo(expectedValue));
+        assertThat(answer.getTimeTaken(), is(expectedTimeTaken));
         Boolean actualProjected = (Boolean) ReflectTestUtil.getFieldValue(answer, "hasProjected");
-        assertEquals(expectedProjected, actualProjected.booleanValue());
+        assertThat(actualProjected, equalTo(expectedProjected));
     }
 }

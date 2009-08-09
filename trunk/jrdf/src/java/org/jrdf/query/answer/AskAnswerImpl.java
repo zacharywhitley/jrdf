@@ -70,7 +70,6 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public class AskAnswerImpl implements AskAnswer, Serializable {
     private static final String[] NO_VARIABLES = new String[]{};
     private static final long serialVersionUID = 432026021050798815L;
@@ -100,10 +99,6 @@ public class AskAnswerImpl implements AskAnswer, Serializable {
 
     public String[] getVariableNames() {
         return NO_VARIABLES;
-    }
-
-    public String[][] getColumnValues() {
-        return new String[][]{{Boolean.toString(result)}};
     }
 
     public Iterator<TypeValue[]> columnValuesIterator() {

@@ -61,7 +61,22 @@ package org.jrdf.query.answer;
 
 import static org.jrdf.query.answer.DatatypeType.NONE;
 
+import java.util.Iterator;
+
 public class TypeValueToStringImpl implements TypeValueToString {
+
+    public String[][] convert(Answer answer) {
+        String table[][] = new String[(int) answer.numberOfTuples()][answer.getVariableNames().length];
+        int index = 0;
+        final Iterator<TypeValue[]> iterator = answer.columnValuesIterator();
+        while (iterator.hasNext()) {
+            final TypeValue[] values = iterator.next();
+            table[index] = convert(values);
+            index++;
+        }
+        return table;
+    }
+
     public String[] convert(TypeValue[] results) {
         String[] stringResults = new String[results.length];
         for (int i = 0; i < results.length; i++) {

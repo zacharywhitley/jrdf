@@ -88,7 +88,6 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     private boolean hasProjected;
     private LinkedHashSet<String> vars = new LinkedHashSet<String>();
     private transient EvaluatedRelation results;
-    private transient TypeValueToString valueToString = new TypeValueToStringImpl();
 
     public SelectAnswerImpl(LinkedHashSet<Attribute> newHeading, EvaluatedRelation newResults,
         long timeTaken, boolean hasProjected) {
@@ -120,18 +119,6 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
         return new AnswerIterator(heading, results.iterator());
     }
 
-    public String[][] getColumnValues() {
-        String table[][] = new String[(int) numberOfTuples()][heading.size()];
-        int index = 0;
-        Iterator<TypeValue[]> iterator = columnValuesIterator();
-        while (iterator.hasNext()) {
-            TypeValue[] values = iterator.next();
-            table[index] = valueToString.convert(values);
-            index++;
-        }
-        return table;
-    }
-
     public long numberOfTuples() {
         return results.getTupleSize();
     }
@@ -144,7 +131,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         String[] columnNames = getVariableNames();
-        String[][] columnValues = getColumnValues();
+        String[][] columnValues = new TypeValueToStringImpl().convert(this);
         printColumns(builder, columnNames);
         printRows(builder, columnNames, columnValues);
         return builder.toString();
@@ -220,7 +207,6 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
 
     @SuppressWarnings({ "unchecked" })
     private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
-        valueToString = new TypeValueToStringImpl();
         RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
         Set<Attribute> newAttributes = new HashSet<Attribute>();
         Set<Tuple> newTuples = new HashSet<Tuple>();

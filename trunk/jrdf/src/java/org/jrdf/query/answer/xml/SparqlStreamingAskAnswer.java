@@ -110,14 +110,6 @@ public class SparqlStreamingAskAnswer implements AskAnswer {
         return NO_VARIABLES;
     }
 
-    public String[][] getColumnValues() {
-        try {
-            return new String[][]{{Boolean.toString(getResult())}};
-        } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public Iterator<TypeValue[]> columnValuesIterator() {
         try {
             TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(getResult()));

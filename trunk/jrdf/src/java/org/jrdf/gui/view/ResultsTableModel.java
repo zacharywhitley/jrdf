@@ -60,6 +60,7 @@
 package org.jrdf.gui.view;
 
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.TypeValueToStringImpl;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -100,6 +101,6 @@ public class ResultsTableModel extends AbstractTableModel {
     private void updateTableData(Answer answer) {
         columnNames = answer.getVariableNames();
         noResults = (int) answer.numberOfTuples();
-        data = answer.getColumnValues();
+        data = new TypeValueToStringImpl().convert(answer);
     }
 }

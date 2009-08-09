@@ -97,21 +97,6 @@ public class SparqlStreamingSelectAnswer implements SelectAnswer {
         return answerStreamParser;
     }
 
-    // TODO AN/YF Remove - complete cut-and-past of AnswerImpl.
-    public String[][] getColumnValues() {
-        final LinkedHashSet<String> hashSet = answerStreamParser.getVariables();
-        final int numberOfVariables = hashSet.size();
-        final int numberOfTuples = (int) numberOfTuples();
-        String table[][] = new String[numberOfTuples][numberOfVariables];
-        int index = 0;
-        Iterator<TypeValue[]> iterator = columnValuesIterator();
-        while (iterator.hasNext()) {
-            table[index] = typeValueToString.convert(iterator.next());
-            index++;
-        }
-        return table;
-    }
-
     public long numberOfTuples() {
         return -1;
     }
