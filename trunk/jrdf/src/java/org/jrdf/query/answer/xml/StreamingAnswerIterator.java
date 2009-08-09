@@ -72,11 +72,11 @@ public class StreamingAnswerIterator implements Iterator<TypeValue[]> {
     }
 
     public boolean hasNext() {
-        return answerStreamParser.hasMoreResults();
+        return answerStreamParser.hasNext();
     }
 
     public TypeValue[] next() {
-        return answerStreamParser.getResults();
+        return answerStreamParser.next();
     }
 
     public void remove() {

@@ -67,7 +67,6 @@ import java.util.LinkedHashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-// TODO AN/YF - Turn into extension of closableiterator?
 public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlParser {
     private SparqlAnswerXmlParser parser;
     private BlockingQueue<InputStream> streamQueue;
@@ -97,23 +96,28 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
         return variables;
     }
 
-    public boolean hasMoreResults() {
+    public boolean hasNext() {
         return hasMore;
     }
 
-    public TypeValue[] getResults() {
-        if (parser.hasMoreResults()) {
-            results = parser.getResults();
+    public TypeValue[] next() {
+        if (parser.hasNext()) {
+            results = parser.next();
         }
         hasMore = hasMore();
         return results;
     }
 
-    public void close() {
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean close() {
         if (parser != null) {
             parser.close();
         }
         streamQueue.clear();
+        return true;
     }
 
     private void setupNextParser() throws XMLStreamException {
@@ -150,7 +154,7 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
     private boolean getToNextStreamResult() throws XMLStreamException {
         boolean gotNext = false;
         while (parser != null && !gotNext) {
-            gotNext = parser.hasMoreResults();
+            gotNext = parser.hasNext();
             if (!gotNext) {
                 setupNextParser();
             }

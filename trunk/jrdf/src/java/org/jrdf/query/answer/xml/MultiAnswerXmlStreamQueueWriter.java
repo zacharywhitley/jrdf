@@ -85,7 +85,7 @@ public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter imp
     }
 
     public boolean hasMoreResults() {
-        return streamParser.hasMoreResults();
+        return streamParser.hasNext();
     }
 
     public void writeHead() throws XMLStreamException {
@@ -96,8 +96,8 @@ public class MultiAnswerXmlStreamQueueWriter extends AbstractXmlStreamWriter imp
     public void writeResult() throws XMLStreamException {
         final LinkedHashSet<String> variables = streamParser.getVariables();
         final String[] currentVariables = variables.toArray(new String[variables.size()]);
-        if (streamParser.hasMoreResults()) {
-            TypeValue[] results = streamParser.getResults();
+        if (streamParser.hasNext()) {
+            TypeValue[] results = streamParser.next();
             writeResult(currentVariables, results);
         }
         flush();
