@@ -61,6 +61,7 @@ package org.jrdf.query.answer.xml.parser;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
@@ -114,6 +115,7 @@ public class SparqlAnswerXmlParserImplUnitTest {
         checkHasMoreAndGetResult(parser, ROW_2);
         assertThat(parser.hasNext(), is(false));
         assertThat(parser.hasNext(), is(false));
+        assertThat(parser.getLink(), Matchers.<String>hasItem(equalTo("example.rq")));
     }
 
     @Test

@@ -88,9 +88,13 @@ public class SparqlProtocol {
      */
     public static final String VARS = "vars";
     /**
-     * The element "name".
+     * The attribute "name".
      */
     public static final String NAME = "name";
+    /**
+     * The attribute "href".
+     */
+    public static final String HREF = "href";
     /**
      * The element "results".
      */

@@ -61,6 +61,8 @@ package org.jrdf.query.answer.xml.parser;
 
 import static org.jrdf.query.answer.SparqlProtocol.BOOLEAN;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
+import static org.jrdf.query.answer.SparqlProtocol.HREF;
+import static org.jrdf.query.answer.SparqlProtocol.LINK;
 import static org.jrdf.query.answer.SparqlProtocol.NAME;
 import static org.jrdf.query.answer.SparqlProtocol.RESULT;
 import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
@@ -83,6 +85,7 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
     private final XMLStreamReader parser;
     private final SparqlAnswerResultsXmlParser resultsParser;
     private LinkedHashSet<String> variables = new LinkedHashSet<String>();
+    private LinkedHashSet<String> links = new LinkedHashSet<String>();
     private boolean hasMore;
     private boolean finishedVariableParsing;
 
@@ -96,6 +99,10 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
 
     public LinkedHashSet<String> getVariables() {
         return variables;
+    }
+
+    public LinkedHashSet<String> getLink() {
+        return links;
     }
 
     public boolean hasNext() {
@@ -138,16 +145,23 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
     private void tryGetVariables() throws XMLStreamException {
         if (!finishedVariableParsing) {
             int currentEvent = parser.getEventType();
-            while (parser.hasNext()) {
-                if (startOfElement(currentEvent, VARIABLE)) {
-                    final String variableName = parser.getAttributeValue(null, NAME);
-                    variables.add(variableName);
-                } else if (endOfElement(currentEvent, HEAD) || startOfElement(currentEvent, RESULTS)) {
-                    break;
-                }
+            while (parser.hasNext() && !(endOfElement(currentEvent, HEAD) || startOfElement(currentEvent, RESULTS))) {
+                checkElementType(currentEvent);
                 currentEvent = parser.next();
             }
             finishedVariableParsing = true;
+        }
+    }
+
+    private boolean endOfElement(final int currentEvent, final String tagName) {
+        return currentEvent == END_ELEMENT && tagName.equals(parser.getLocalName());
+    }
+
+    private void checkElementType(int currentEvent) {
+        if (startOfElement(currentEvent, VARIABLE)) {
+            addAttributeToSet(NAME, variables);
+        } else if (startOfElement(currentEvent, LINK)) {
+            addAttributeToSet(HREF, links);
         }
     }
 
@@ -155,7 +169,7 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
         return currentEvent == START_ELEMENT && tagName.equals(parser.getLocalName());
     }
 
-    private boolean endOfElement(final int currentEvent, final String tagName) {
-        return currentEvent == END_ELEMENT && tagName.equals(parser.getLocalName());
+    private void addAttributeToSet(final String attributeName, final LinkedHashSet<String> setToAddTo) {
+        setToAddTo.add(parser.getAttributeValue(null, attributeName));
     }
 }
