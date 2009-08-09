@@ -57,48 +57,15 @@
  *
  */
 
-package org.jrdf.query.server;
+package org.jrdf.query.answer.xml.parser;
 
-import org.jrdf.query.answer.SparqlWriter;
-import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.xml.SparqlAskXmlStreamWriter;
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
-import static org.restlet.data.CharacterSet.UTF_8;
-import org.restlet.data.MediaType;
-import org.restlet.resource.WriterRepresentation;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.util.ClosableIterator;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
+import java.util.LinkedHashSet;
 
-public class AskAnswerSparqlRepresentation extends WriterRepresentation {
-    private final AskAnswer answer;
+public interface SparqlXmlParser extends ClosableIterator<TypeValue[]> {
+    LinkedHashSet<String> getVariables();
 
-    public AskAnswerSparqlRepresentation(MediaType mediaType, AskAnswer newAnswer) {
-        super(mediaType);
-        this.answer = newAnswer;
-        setCharacterSet(UTF_8);
-    }
-
-    @Override
-    public void write(Writer writer) throws IOException {
-        try {
-            final SparqlWriter answerWriter = createAnswerWriter(writer);
-            try {
-                answerWriter.writeFullDocument();
-            } finally {
-                answerWriter.close();
-            }
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
-        }
-    }
-
-    private SparqlAskXmlStreamWriter createAnswerWriter(Writer writer) throws XMLStreamException {
-        if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
-            return new SparqlAskXmlStreamWriter(writer, answer.getResult());
-        } else {
-            throw new RuntimeException("Unknown media type: " + getMediaType());
-        }
-    }
+    LinkedHashSet<String> getLink();
 }
