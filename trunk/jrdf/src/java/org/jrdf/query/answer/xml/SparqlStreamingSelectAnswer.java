@@ -94,7 +94,7 @@ public class SparqlStreamingSelectAnswer implements SelectAnswer {
     }
 
     public Iterator<TypeValue[]> columnValuesIterator() {
-        return new StreamingAnswerIterator(answerStreamParser);
+        return answerStreamParser;
     }
 
     // TODO AN/YF Remove - complete cut-and-past of AnswerImpl.
