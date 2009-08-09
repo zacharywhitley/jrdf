@@ -109,12 +109,12 @@ public class SparqlAnswerXmlParserImplUnitTest {
         URL resource = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/select-output.xml");
         InputStream stream = resource.openStream();
         parser = new SparqlAnswerXmlParserImpl(stream);
-        assertThat(parser.hasMoreResults(), is(true));
+        assertThat(parser.hasNext(), is(true));
         assertThat(parser.getVariables(), equalTo(parser.getVariables()));
         checkHasMoreAndGetResult(parser, ROW_1);
         checkHasMoreAndGetResult(parser, ROW_2);
-        assertThat(parser.hasMoreResults(), is(false));
-        assertThat(parser.hasMoreResults(), is(false));
+        assertThat(parser.hasNext(), is(false));
+        assertThat(parser.hasNext(), is(false));
     }
 
     @Test
@@ -125,13 +125,13 @@ public class SparqlAnswerXmlParserImplUnitTest {
         assertThat(parser.getVariables().isEmpty(), is(true));
         assertThat(parser.getVariables(), equalTo(new LinkedHashSet<String>()));
         checkHasMoreAndGetResult(parser, EXPECTED_ASK_RESULTVALUE);
-        assertThat(parser.hasMoreResults(), is(false));
-        assertThat(parser.hasMoreResults(), is(false));
+        assertThat(parser.hasNext(), is(false));
+        assertThat(parser.hasNext(), is(false));
     }
 
     public static void checkHasMoreAndGetResult(final SparqlAnswerXmlParser parser, final TypeValue[] expectedRow) {
-        assertTrue(parser.hasMoreResults());
-        assertTrue(parser.hasMoreResults());
-        assertThat(parser.getResults(), arrayContaining(expectedRow));
+        assertTrue(parser.hasNext());
+        assertTrue(parser.hasNext());
+        assertThat(parser.next(), arrayContaining(expectedRow));
     }
 }

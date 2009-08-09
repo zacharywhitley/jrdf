@@ -99,7 +99,7 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
         return variables;
     }
 
-    public boolean hasMoreResults() {
+    public boolean hasNext() {
         try {
             hasMore = hasNextResult();
         } catch (XMLStreamException e) {
@@ -108,16 +108,21 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
         return hasMore;
     }
 
-    public TypeValue[] getResults() {
+    public TypeValue[] next() {
         return resultsParser.getResults(variables);
     }
 
-    public void close() {
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean close() {
         try {
             parser.close();
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
+        return true;
     }
 
     private boolean hasNextResult() throws XMLStreamException {

@@ -93,7 +93,7 @@ public class SparqlStreamingAskAnswer implements AskAnswer {
     }
 
     public boolean getResult() throws XMLStreamException {
-        final TypeValue[] typeValues = answerStreamParser.getResults();
+        final TypeValue[] typeValues = answerStreamParser.next();
         result = Boolean.parseBoolean(typeValues[0].getValue());
         return result;
     }

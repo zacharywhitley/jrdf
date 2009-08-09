@@ -60,15 +60,12 @@
 package org.jrdf.query.answer.xml.parser;
 
 import org.jrdf.query.answer.TypeValue;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.LinkedHashSet;
 
-public interface SparqlAnswerXmlParser {
+public interface SparqlAnswerXmlParser extends ClosableIterator<TypeValue[]> {
     LinkedHashSet<String> getVariables();
 
-    boolean hasMoreResults();
-
-    TypeValue[] getResults();
-
-    void close();
+    boolean close();
 }
