@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,51 +54,53 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.query.server;
+package org.jrdf.query.answer.xml;
 
-import org.jrdf.query.answer.SparqlWriter;
-import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.xml.SparqlAskXmlStreamWriter;
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
-import static org.restlet.data.CharacterSet.UTF_8;
-import org.restlet.data.MediaType;
-import org.restlet.resource.WriterRepresentation;
+import org.jrdf.query.answer.TypeValue;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 
-public class AskAnswerSparqlRepresentation extends WriterRepresentation {
-    private final AskAnswer answer;
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
+public class SparqlXmlPagenatedStreamWriter extends AbstractSparqlXmlStreamWriter implements SparqlXmlWriter {
+    private long maxRows;
+    private long count;
+    private Iterator<TypeValue[]> iterator;
+    private String[] variableNames;
 
-    public AskAnswerSparqlRepresentation(MediaType mediaType, AskAnswer newAnswer) {
-        super(mediaType);
-        this.answer = newAnswer;
-        setCharacterSet(UTF_8);
+    private SparqlXmlPagenatedStreamWriter() {
     }
 
-    @Override
-    public void write(Writer writer) throws IOException {
-        try {
-            final SparqlWriter answerWriter = createAnswerWriter(writer);
-            try {
-                answerWriter.writeFullDocument();
-            } finally {
-                answerWriter.close();
-            }
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
-        }
+    public SparqlXmlPagenatedStreamWriter(Writer writer, final String[] variableNames,
+        final Iterator<TypeValue[]> iterator, final long maxRows) throws XMLStreamException {
+        checkNotNull(writer, variableNames, iterator);
+        createXmlStreamWriter(writer);
+        this.variableNames = variableNames;
+        this.iterator = iterator;
+        this.maxRows = maxRows;
     }
 
-    private SparqlAskXmlStreamWriter createAnswerWriter(Writer writer) throws XMLStreamException {
-        if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
-            return new SparqlAskXmlStreamWriter(writer, answer.getResult());
-        } else {
-            throw new RuntimeException("Unknown media type: " + getMediaType());
+    public boolean hasMoreResults() {
+        return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
+    }
+
+    public void writeHead() throws XMLStreamException {
+        writeHead(variableNames);
+    }
+
+    public void writeResult() throws XMLStreamException {
+        String[] currentVariables = variableNames;
+        if (iterator.hasNext()) {
+            writeResult(currentVariables, iterator.next());
         }
+        count++;
+        streamWriter.flush();
     }
 }

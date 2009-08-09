@@ -56,70 +56,74 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.answer.json;
+package org.jrdf.query.answer.xml.parser;
 
+import org.apache.tools.ant.filters.StringInputStream;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.SparqlResultType.LITERAL;
-import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
+import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
 import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueFactory;
+import org.jrdf.query.answer.TypeValueFactoryImpl;
 import org.jrdf.query.answer.TypeValueImpl;
-import org.jrdf.query.answer.TypeValueArrayFactory;
-import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
-import org.jrdf.vocabulary.XSD;
-import org.json.JSONException;
+import org.jrdf.query.answer.SparqlResultType;
+import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.StringWriter;
 
-public class JsonTestUtil {
-    public static final String[] NO_LINKS = {};
-    public static final String[] LINKS = {"http://www.w3.org/TR/rdf-sparql-XMLres/example.rq"};
-    public static final String[] NO_VARIABLES = {};
-    public static final String[] TEST_VARIABLES = {"abc", "123", "doh", "ray", "me"};
-    public static final Map<String, TypeValue> TEST_BINDINGS_1 = new HashMap<String, TypeValue>() {
-        {
-            put("abc", new TypeValueImpl(BLANK_NODE, "r1"));
-            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/"));
-            put("ray", new TypeValueImpl(TYPED_LITERAL, "123", true, XSD.INT.toString()));
-            put("me", new TypeValueImpl(LITERAL, ""));
-        }
-    };
-    public static final Map<String, TypeValue> TEST_BINDINGS_2 = new HashMap<String, TypeValue>() {
-        {
-            put("abc", new TypeValueImpl(BLANK_NODE, "r2"));
-            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/bob/"));
-            put("ray", new TypeValueImpl(TYPED_LITERAL, "321", true, XSD.INT.toString()));
-            put("doh", new TypeValueImpl(LITERAL, "qwerty"));
-        }
-    };
-    public static final Map<String, TypeValue> TEST_BINDINGS_3 = new HashMap<String, TypeValue>() {
-        {
-            put("123", new TypeValueImpl(URI_REFERENCE, "http://work.example.org/charles/"));
-            put("ray", new TypeValueImpl(TYPED_LITERAL, "231", true, XSD.INT.toString()));
-            put("doh", new TypeValueImpl(LITERAL, "asdf", false, "en"));
-        }
-    };
+public class SparqlResultXmlParserUnitTest {
+    private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
 
-    public static String getFullJsonDocument(final String[] links, final String[] variables,
-        final Map<String, TypeValue>... bindings) throws JSONException {
-        final List<TypeValue[]> values = convertToList(variables, bindings);
-        final StringWriter stringWriter = new StringWriter();
-        final SparqlJsonWriter answerJsonWriter = new SparqlJsonWriterImpl(stringWriter, links, variables,
-            values.iterator(), bindings.length);
-        answerJsonWriter.writeFullDocument();
-        return stringWriter.toString();
+    @Test
+    public void bnodeBinding() throws Exception {
+        checkParser("<binding name=\"x\"><bnode>r1</bnode></binding>", "x", new TypeValueImpl(BLANK_NODE, "r1"));
     }
 
-    private static List<TypeValue[]> convertToList(String[] variables, Map<String, TypeValue>... bindings) {
-        final TypeValueArrayFactory arrayFactory = new TypeValueArrayFactoryImpl();
-        final List<TypeValue[]> values = new ArrayList<TypeValue[]>();
-        for (final Map<String, TypeValue> binding : bindings) {
-            values.add(arrayFactory.mapToArray(variables, binding));
-        }
-        return values;
+    @Test
+    public void uriBinding() throws Exception {
+        checkParser("<binding name=\"hpage\"><uri>http://work.example.org/alice/</uri></binding>", "hpage",
+            new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/"));
+    }
+
+    @Test
+    public void untypedLiteralBinding() throws Exception {
+        checkParser("<binding name=\"name\"><literal>Alice</literal></binding>", "name",
+            new TypeValueImpl(LITERAL, "Alice"));
+    }
+
+    @Test
+    public void typedLiteralBinding() throws Exception {
+        checkParser("<binding name=\"blurb\"><literal datatype=\"" +
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral\">&lt;p xmlns=\"http://www.w3.org/1999/xhtml\"&gt;" +
+            "My name is &lt;b&gt;alice&lt;/b&gt;&lt;/p&gt;</literal></binding>", "blurb",
+            new TypeValueImpl(TYPED_LITERAL,
+                "<p xmlns=\"http://www.w3.org/1999/xhtml\">My name is <b>alice</b></p>", true,
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral"));
+    }
+
+    @Test
+    public void langLiteralBinding() throws Exception {
+        checkParser("<binding name=\"name\"><literal xml:lang=\"en\">Bob</literal></binding>", "name",
+            new TypeValueImpl(SparqlResultType.LITERAL, "Bob", false, "en"));
+    }
+
+    private void checkParser(final String xmlBinding, final String variable, final TypeValue expectedValue)
+        throws Exception {
+        final InputStream stream = new StringInputStream(xmlBinding);
+        final XMLStreamReader streamReader = XML_INPUT_FACTORY.createXMLStreamReader(stream);
+        final TypeValueFactory typeFactory = new TypeValueFactoryImpl();
+        streamReader.next();
+        final SparqlResultXmlParser xmlParser = new SparqlResultXmlParserImpl(streamReader, typeFactory);
+        final HashMap<String, TypeValue> binding = new HashMap<String, TypeValue>();
+        xmlParser.getOneBinding(binding);
+        assertThat(binding.containsKey(variable), is(true));
+        assertThat(binding.get(variable), equalTo(expectedValue));
     }
 }

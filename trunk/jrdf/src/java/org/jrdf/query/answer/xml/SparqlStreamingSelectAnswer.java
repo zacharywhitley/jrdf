@@ -64,8 +64,8 @@ import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueToString;
 import org.jrdf.query.answer.TypeValueToStringImpl;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
+import org.jrdf.query.answer.xml.parser.SparqlResultStreamXmlParser;
+import org.jrdf.query.answer.xml.parser.SparqlResultStreamXmlParserImpl;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -74,14 +74,14 @@ import java.util.LinkedHashSet;
 
 // TODO AN/YF - Can we do time taken and number of tuples (maybe based on how much so far?)
 public class SparqlStreamingSelectAnswer implements SelectAnswer {
-    private SparqlAnswerStreamXmlParser answerStreamParser;
+    private SparqlResultStreamXmlParser answerStreamParser;
     private TypeValueToString typeValueToString = new TypeValueToStringImpl();
 
     public SparqlStreamingSelectAnswer(InputStream inputStream) throws XMLStreamException, InterruptedException {
-        this(new SparqlAnswerStreamXmlParserImpl(inputStream));
+        this(new SparqlResultStreamXmlParserImpl(inputStream));
     }
 
-    public SparqlStreamingSelectAnswer(SparqlAnswerStreamXmlParser answerStreamParser) {
+    public SparqlStreamingSelectAnswer(SparqlResultStreamXmlParser answerStreamParser) {
         this.answerStreamParser = answerStreamParser;
     }
 

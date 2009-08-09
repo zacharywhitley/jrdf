@@ -57,48 +57,67 @@
  *
  */
 
-package org.jrdf.query.server;
+package org.jrdf.query.answer.xml.parser;
 
-import org.jrdf.query.answer.SparqlWriter;
-import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.xml.SparqlAskXmlStreamWriter;
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
-import static org.restlet.data.CharacterSet.UTF_8;
-import org.restlet.data.MediaType;
-import org.restlet.resource.WriterRepresentation;
+import org.jrdf.query.answer.SparqlProtocol;
+import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueArrayFactory;
+import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
+import org.jrdf.query.answer.TypeValueFactory;
+import org.jrdf.query.answer.TypeValueImpl;
 
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
+import javax.xml.stream.XMLStreamReader;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 
-public class AskAnswerSparqlRepresentation extends WriterRepresentation {
-    private final AskAnswer answer;
+public class SparqlResultsXmlParserImpl implements SparqlResultsXmlParser {
+    private XMLStreamReader parser;
+    private SparqlResultXmlParser resultParser;
+    private TypeValueArrayFactory arrayFactory = new TypeValueArrayFactoryImpl();
 
-    public AskAnswerSparqlRepresentation(MediaType mediaType, AskAnswer newAnswer) {
-        super(mediaType);
-        this.answer = newAnswer;
-        setCharacterSet(UTF_8);
+    public SparqlResultsXmlParserImpl(final XMLStreamReader newParser, final TypeValueFactory typeValueFactory) {
+        this.parser = newParser;
+        this.resultParser = new SparqlResultXmlParserImpl(parser, typeValueFactory);
     }
 
-    @Override
-    public void write(Writer writer) throws IOException {
+    public TypeValue[] getResults(LinkedHashSet<String> variables) {
+        Map<String, TypeValue> variableToValue;
         try {
-            final SparqlWriter answerWriter = createAnswerWriter(writer);
-            try {
-                answerWriter.writeFullDocument();
-            } finally {
-                answerWriter.close();
-            }
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
+            variableToValue = parseAllResults();
+        } catch (XMLStreamException e) {
+            variableToValue = new HashMap<String, TypeValue>();
         }
+        return arrayFactory.mapToArray(variables, variableToValue);
     }
 
-    private SparqlAskXmlStreamWriter createAnswerWriter(Writer writer) throws XMLStreamException {
-        if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
-            return new SparqlAskXmlStreamWriter(writer, answer.getResult());
-        } else {
-            throw new RuntimeException("Unknown media type: " + getMediaType());
+    private Map<String, TypeValue> parseAllResults() throws XMLStreamException {
+        Map<String, TypeValue> variableToValue = new HashMap<String, TypeValue>();
+        int currentEvent = parser.getEventType();
+        while (parser.hasNext() && !endOfResult(currentEvent)) {
+            if (startOfBinding(currentEvent)) {
+                resultParser.getOneBinding(variableToValue);
+            } else if (startOfBoolean(currentEvent)) {
+                variableToValue.put("", new TypeValueImpl(BOOLEAN, parser.getElementText()));
+            }
+            currentEvent = parser.next();
         }
+        return variableToValue;
+    }
+
+    private boolean startOfBoolean(int currentEvent) {
+        return currentEvent == START_ELEMENT && SparqlProtocol.BOOLEAN.equals(parser.getLocalName());
+    }
+
+    private boolean startOfBinding(int currentEvent) {
+        return currentEvent == START_ELEMENT && SparqlProtocol.BINDING.equals(parser.getLocalName());
+    }
+
+    private boolean endOfResult(int currentEvent) {
+        return currentEvent == END_ELEMENT && SparqlProtocol.RESULT.equals(parser.getLocalName());
     }
 }

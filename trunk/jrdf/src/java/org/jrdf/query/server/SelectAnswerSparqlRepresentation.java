@@ -60,11 +60,11 @@ package org.jrdf.query.server;
 
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON;
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
-import org.jrdf.query.answer.AnswerWriter;
+import org.jrdf.query.answer.SparqlWriter;
 import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.json.AnswerJsonWriterImpl;
-import org.jrdf.query.answer.xml.AnswerXmlPagenatedStreamWriter;
+import org.jrdf.query.answer.json.SparqlJsonWriterImpl;
+import org.jrdf.query.answer.xml.SparqlXmlPagenatedStreamWriter;
 import static org.restlet.data.CharacterSet.UTF_8;
 import org.restlet.data.MediaType;
 import org.restlet.resource.WriterRepresentation;
@@ -86,7 +86,7 @@ public class SelectAnswerSparqlRepresentation extends WriterRepresentation {
     @Override
     public void write(Writer writer) throws IOException {
         try {
-            final AnswerWriter answerWriter = createAnswerWriter(writer);
+            final SparqlWriter answerWriter = createAnswerWriter(writer);
             try {
                 answerWriter.writeFullDocument();
             } finally {
@@ -97,14 +97,14 @@ public class SelectAnswerSparqlRepresentation extends WriterRepresentation {
         }
     }
 
-    private AnswerWriter createAnswerWriter(Writer writer) throws XMLStreamException {
+    private SparqlWriter createAnswerWriter(Writer writer) throws XMLStreamException {
         final String[] variableNames = answer.getVariableNames();
         final Iterator<TypeValue[]> typeValues = answer.columnValuesIterator();
         final long maxRows = answer.numberOfTuples();
         if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
-            return new AnswerXmlPagenatedStreamWriter(writer, variableNames, typeValues, maxRows);
+            return new SparqlXmlPagenatedStreamWriter(writer, variableNames, typeValues, maxRows);
         } else if (APPLICATION_SPARQL_JSON.equals(getMediaType())) {
-            return new AnswerJsonWriterImpl(writer, new String[0], variableNames, typeValues, maxRows);
+            return new SparqlJsonWriterImpl(writer, new String[0], variableNames, typeValues, maxRows);
         } else {
             throw new RuntimeException("Unknown media type: " + getMediaType());
         }

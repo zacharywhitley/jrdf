@@ -1,9 +1,9 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,51 +54,18 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.query.server;
-
-import org.jrdf.query.answer.SparqlWriter;
-import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.xml.SparqlAskXmlStreamWriter;
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
-import static org.restlet.data.CharacterSet.UTF_8;
-import org.restlet.data.MediaType;
-import org.restlet.resource.WriterRepresentation;
+package org.jrdf.query.answer.xml;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.InputStream;
 
-public class AskAnswerSparqlRepresentation extends WriterRepresentation {
-    private final AskAnswer answer;
+/**
+ * @author Yuan-Fang Li
+ * @version $Id$
+ */
 
-    public AskAnswerSparqlRepresentation(MediaType mediaType, AskAnswer newAnswer) {
-        super(mediaType);
-        this.answer = newAnswer;
-        setCharacterSet(UTF_8);
-    }
-
-    @Override
-    public void write(Writer writer) throws IOException {
-        try {
-            final SparqlWriter answerWriter = createAnswerWriter(writer);
-            try {
-                answerWriter.writeFullDocument();
-            } finally {
-                answerWriter.close();
-            }
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
-        }
-    }
-
-    private SparqlAskXmlStreamWriter createAnswerWriter(Writer writer) throws XMLStreamException {
-        if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
-            return new SparqlAskXmlStreamWriter(writer, answer.getResult());
-        } else {
-            throw new RuntimeException("Unknown media type: " + getMediaType());
-        }
-    }
+public interface SparqlMultiXmlStreamWriter extends SparqlXmlWriter {
+    void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
 }

@@ -60,8 +60,8 @@
 package org.jrdf.query.answer.xml;
 
 import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerStreamXmlParserImpl;
+import org.jrdf.query.answer.xml.parser.SparqlResultStreamXmlParser;
+import org.jrdf.query.answer.xml.parser.SparqlResultStreamXmlParserImpl;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
@@ -77,17 +77,16 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public class SparqlStreamingAskAnswer implements AskAnswer {
     private static final String[] NO_VARIABLES = new String[]{};
-    private SparqlAnswerStreamXmlParser answerStreamParser;
+    private SparqlResultStreamXmlParser answerStreamParser;
     private boolean result;
 
     public SparqlStreamingAskAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
-        this(new SparqlAnswerStreamXmlParserImpl(stream));
+        this(new SparqlResultStreamXmlParserImpl(stream));
     }
 
-    public SparqlStreamingAskAnswer(SparqlAnswerStreamXmlParser answerStreamParser) {
+    public SparqlStreamingAskAnswer(SparqlResultStreamXmlParser answerStreamParser) {
         this.answerStreamParser = answerStreamParser;
         this.result = false;
     }

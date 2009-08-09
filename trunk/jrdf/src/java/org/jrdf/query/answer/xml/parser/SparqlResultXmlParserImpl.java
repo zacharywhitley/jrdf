@@ -57,48 +57,40 @@
  *
  */
 
-package org.jrdf.query.server;
+package org.jrdf.query.answer.xml.parser;
 
-import org.jrdf.query.answer.SparqlWriter;
-import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.xml.SparqlAskXmlStreamWriter;
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
-import static org.restlet.data.CharacterSet.UTF_8;
-import org.restlet.data.MediaType;
-import org.restlet.resource.WriterRepresentation;
+import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
+import static org.jrdf.query.answer.SparqlProtocol.NAME;
+import static org.jrdf.query.answer.SparqlProtocol.XML_LANG;
+import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.TypeValueFactory;
 
+import static javax.xml.XMLConstants.XML_NS_URI;
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.Writer;
+import javax.xml.stream.XMLStreamReader;
+import java.util.Map;
 
-public class AskAnswerSparqlRepresentation extends WriterRepresentation {
-    private final AskAnswer answer;
+public class SparqlResultXmlParserImpl implements SparqlResultXmlParser {
+    private XMLStreamReader parser;
+    private TypeValueFactory typeValueFactory;
 
-    public AskAnswerSparqlRepresentation(MediaType mediaType, AskAnswer newAnswer) {
-        super(mediaType);
-        this.answer = newAnswer;
-        setCharacterSet(UTF_8);
+    public SparqlResultXmlParserImpl(final XMLStreamReader newParser, final TypeValueFactory typeValueFactory) {
+        this.parser = newParser;
+        this.typeValueFactory = typeValueFactory;
     }
 
-    @Override
-    public void write(Writer writer) throws IOException {
-        try {
-            final SparqlWriter answerWriter = createAnswerWriter(writer);
-            try {
-                answerWriter.writeFullDocument();
-            } finally {
-                answerWriter.close();
-            }
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
-        }
+    public void getOneBinding(Map<String, TypeValue> variableToValue) throws XMLStreamException {
+        String variableName = parser.getAttributeValue(null, NAME);
+        TypeValue binding = getTypeValue();
+        variableToValue.put(variableName, binding);
     }
 
-    private SparqlAskXmlStreamWriter createAnswerWriter(Writer writer) throws XMLStreamException {
-        if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
-            return new SparqlAskXmlStreamWriter(writer, answer.getResult());
-        } else {
-            throw new RuntimeException("Unknown media type: " + getMediaType());
-        }
+    private TypeValue getTypeValue() throws XMLStreamException {
+        parser.next();
+        String tagName = parser.getLocalName();
+        final String datatype = parser.getAttributeValue(null, DATATYPE);
+        final String xmlLang = parser.getAttributeValue(XML_NS_URI, XML_LANG);
+        final String value = parser.getElementText();
+        return typeValueFactory.createTypeValue(tagName, value, datatype, xmlLang);
     }
 }
