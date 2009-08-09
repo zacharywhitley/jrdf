@@ -116,7 +116,7 @@ public final class AnswerXmlStreamWriterTestUtil {
     }
 
     public URL getData() {
-        return getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml");
+        return getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/select-output.xml");
     }
 
     public void createTestGraph(Graph newGraph) throws Exception {

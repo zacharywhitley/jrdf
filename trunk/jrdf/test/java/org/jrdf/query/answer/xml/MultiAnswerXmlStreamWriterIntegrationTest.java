@@ -72,6 +72,7 @@ import java.io.Writer;
 import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
+import java.net.URL;
 
 public class MultiAnswerXmlStreamWriterIntegrationTest extends TestCase {
     private static final AnswerXmlStreamWriterTestUtil TEST_UTIL = new AnswerXmlStreamWriterTestUtil();
@@ -173,7 +174,8 @@ public class MultiAnswerXmlStreamWriterIntegrationTest extends TestCase {
         }
 
         void writeStream() throws IOException {
-            stream = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml").openStream();
+            URL resource = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/select-output.xml");
+            stream = resource.openStream();
             int read = stream.read();
             while (read != -1) {
                 outputStream.write(read);

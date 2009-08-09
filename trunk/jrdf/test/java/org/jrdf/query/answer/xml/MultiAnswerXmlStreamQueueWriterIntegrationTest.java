@@ -59,14 +59,21 @@
 
 package org.jrdf.query.answer.xml;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.arrayContaining;
+import org.jrdf.query.answer.TypeValueFactoryImpl;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsXmlParser;
+import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsXmlParserImpl;
 import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest.EXPECTED_VARIABLES;
 import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest.ROW_1;
 import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest.ROW_2;
-import static org.jrdf.query.answer.xml.parser.SparqlAnswerXmlParserImplUnitTest.checkRow;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsXmlParser;
-import org.jrdf.query.answer.xml.parser.SparqlAnswerResultsXmlParserImpl;
-import org.jrdf.query.answer.TypeValueFactoryImpl;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
 import static javax.xml.stream.XMLInputFactory.newInstance;
 import javax.xml.stream.XMLStreamException;
@@ -75,40 +82,42 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Set;
-import java.util.HashSet;
 import static java.util.Arrays.asList;
+import java.util.HashSet;
+import java.util.Set;
 
-public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
+public class MultiAnswerXmlStreamQueueWriterIntegrationTest {
     private static final AnswerXmlStreamWriterTestUtil TEST_UTIL = new AnswerXmlStreamWriterTestUtil();
     private InputStream stream1, stream2;
     private XMLStreamReader streamReader;
     private AnswerXmlWriter xmlWriter;
     private Writer writer = new StringWriter();
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         stream1 = TEST_UTIL.getData().openStream();
         stream2 = TEST_UTIL.getData().openStream();
         xmlWriter = new MultiAnswerXmlStreamQueueWriter(writer, stream1);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         stream1.close();
         stream2.close();
     }
 
+    @Test
     public void testVariables() throws Exception {
         final Set<String> set = new HashSet<String>(asList("x", "hpage", "name", "mbox", "age", "blurb", "friend"));
         TEST_UTIL.checkVariables(set, TEST_UTIL.getVariables(xmlWriter, writer));
     }
 
+    @Test
     public void testResults() throws Exception {
         TEST_UTIL.checkResult(TEST_UTIL.getData(), writer, xmlWriter);
     }
 
+    @Test
     public void testIncomingStreams() throws Exception {
         int count = 0;
         xmlWriter.writeStartResults();
@@ -116,7 +125,7 @@ public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
             count++;
             xmlWriter.writeResult();
         }
-        assertEquals(2, count);
+        assertThat(count, is(2));
         checkTwoResults(writer);
         assertFalse(xmlWriter.hasMoreResults());
         ((MultiAnswerXmlStreamWriter) xmlWriter).addStream(stream2);
@@ -130,6 +139,7 @@ public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
         checkFourResults(writer);
     }
 
+    @Test
     public void test2Streams() throws Exception {
         int count = 0;
         ((MultiAnswerXmlStreamWriter) xmlWriter).addStream(stream2);
@@ -143,6 +153,7 @@ public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
         checkFourResults(writer);
     }
 
+    @Test
     public void test2StreamsConstructor() throws Exception {
         stream1.close();
         stream1 = TEST_UTIL.getData().openStream();
@@ -162,20 +173,20 @@ public class MultiAnswerXmlStreamQueueWriterIntegrationTest extends TestCase {
 
     private void checkTwoResults(Writer writer) throws Exception {
         SparqlAnswerResultsXmlParser parser = getParser(writer);
-        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_1);
+        assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_1));
         streamReader.next();
-        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_2);
+        assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_2));
     }
 
     private void checkFourResults(Writer writer) throws Exception {
         SparqlAnswerResultsXmlParser parser = getParser(writer);
-        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_1);
+        assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_1));
         streamReader.next();
-        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_2);
+        assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_2));
         streamReader.next();
-        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_1);
+        assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_1));
         streamReader.next();
-        checkRow(parser.getResults(EXPECTED_VARIABLES), ROW_2);
+        assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_2));
     }
 
     private SparqlAnswerResultsXmlParser getParser(Writer writer) throws XMLStreamException {

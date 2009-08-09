@@ -59,10 +59,6 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import org.jrdf.query.answer.AnswerType;
-import static org.jrdf.query.answer.AnswerType.ASK;
-import static org.jrdf.query.answer.AnswerType.SELECT;
-import static org.jrdf.query.answer.AnswerType.UNKNOWN;
 import static org.jrdf.query.answer.SparqlProtocol.BOOLEAN;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
 import static org.jrdf.query.answer.SparqlProtocol.NAME;
@@ -73,7 +69,6 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueFactoryImpl;
 
 import javax.xml.stream.XMLInputFactory;
-import static javax.xml.stream.XMLStreamConstants.CHARACTERS;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
@@ -91,27 +86,17 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
     private LinkedHashSet<String> variables = new LinkedHashSet<String>();
     private boolean hasMore;
     private boolean finishedVariableParsing;
-    private AnswerType answerType = UNKNOWN;
 
     public SparqlAnswerXmlParserImpl(InputStream stream) throws XMLStreamException {
         this.parser = INPUT_FACTORY.createXMLStreamReader(stream);
         this.resultsParser = new SparqlAnswerResultsXmlParserImpl(parser, new TypeValueFactoryImpl());
         this.finishedVariableParsing = false;
         this.hasMore = false;
-        parseHeadElement();
+        tryGetVariables();
     }
 
     public LinkedHashSet<String> getVariables() {
-        if (answerType == SELECT) {
-            return variables;
-        } else {
-            // TODO Turn this into an empty set for non-SELECT queries.
-            throw new UnsupportedOperationException("Cannot get variables for non-SLECT queries.");
-        }
-    }
-
-    public AnswerType getAnswerType() throws XMLStreamException {
-        return answerType;
+        return variables;
     }
 
     public boolean hasMoreResults() {
@@ -121,25 +106,6 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
             hasMore = false;
         }
         return hasMore;
-    }
-
-    // TODO AN Instead of this - return a result that is TypeValue of boolean and a value of true/false.
-    public boolean getAskResult() throws XMLStreamException {
-        if (answerType != ASK) {
-            throw new UnsupportedOperationException("Cannot get boolean result for non-ASK queries.");
-        }
-        int eventType = parser.getEventType();
-        while (parser.hasNext()) {
-            if (startOfElement(eventType, BOOLEAN)) {
-                eventType = parser.next();
-                if (eventType == CHARACTERS) {
-                    hasMore = false;
-                    return Boolean.parseBoolean(parser.getText());
-                }
-            }
-            eventType = parser.next();
-        }
-        throw new XMLStreamException("Cannot find boolean result value.");
     }
 
     public TypeValue[] getResults() {
@@ -154,30 +120,13 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
         }
     }
 
-    private void parseHeadElement() throws XMLStreamException {
-        int eventType = parser.getEventType();
-        while (parser.hasNext()) {
-            if (startOfElement(eventType, BOOLEAN)) {
-                finishedVariableParsing = true;
-                hasMore = true;
-                answerType = ASK;
-                break;
-            } else if (startOfElement(eventType, VARIABLE) || startOfElement(eventType, RESULTS)) {
-                tryGetVariables();
-                answerType = SELECT;
-                break;
-            }
-            eventType = parser.next();
-        }
-    }
-
     private boolean hasNextResult() throws XMLStreamException {
         while (parser.hasNext()) {
-            int eventType = parser.getEventType();
+            final int eventType = parser.getEventType();
             if (startOfElement(eventType, RESULT) || startOfElement(eventType, BOOLEAN)) {
                 return true;
             }
-            eventType = parser.next();
+            parser.next();
         }
         return false;
     }
@@ -187,7 +136,7 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
             int currentEvent = parser.getEventType();
             while (parser.hasNext()) {
                 if (startOfElement(currentEvent, VARIABLE)) {
-                    String variableName = parser.getAttributeValue(null, NAME);
+                    final String variableName = parser.getAttributeValue(null, NAME);
                     variables.add(variableName);
                 } else if (endOfElement(currentEvent, HEAD) || startOfElement(currentEvent, RESULTS)) {
                     break;
@@ -198,11 +147,11 @@ public class SparqlAnswerXmlParserImpl implements SparqlAnswerXmlParser {
         }
     }
 
-    private boolean startOfElement(int currentEvent, String tagName) {
+    private boolean startOfElement(final int currentEvent, final String tagName) {
         return currentEvent == START_ELEMENT && tagName.equals(parser.getLocalName());
     }
 
-    private boolean endOfElement(int currentEvent, String tagName) {
+    private boolean endOfElement(final int currentEvent, final String tagName) {
         return currentEvent == END_ELEMENT && tagName.equals(parser.getLocalName());
     }
 }

@@ -59,23 +59,27 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.arrayContaining;
 import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
+import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
 import static org.jrdf.query.answer.SparqlResultType.LITERAL;
 import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 // TODO AN Add another file with an ASK example.
-public class SparqlAnswerXmlParserImplUnitTest extends TestCase {
+public class SparqlAnswerXmlParserImplUnitTest {
     private static final TypeValueImpl R1C1 = new TypeValueImpl(BLANK_NODE, "r1");
     private static final TypeValueImpl R2C1 = new TypeValueImpl(BLANK_NODE, "r2");
     private static final TypeValueImpl R1C2 = new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/");
@@ -95,34 +99,39 @@ public class SparqlAnswerXmlParserImplUnitTest extends TestCase {
     private static final TypeValueImpl R2C7 = new TypeValueImpl(BLANK_NODE, "r1");
     public static final LinkedHashSet<String> EXPECTED_VARIABLES = new LinkedHashSet<String>(asList("x", "hpage",
         "name", "mbox", "age", "blurb", "friend"));
-    public static final List<TypeValue> ROW_1 = new ArrayList<TypeValue>(asList(R1C1, R1C2, R1C3, R1C4, R1C5, R1C6,
-        R1C7));
-    public static final List<TypeValue> ROW_2 = new ArrayList<TypeValue>(asList(R2C1, R2C2, R2C3, R2C4, R2C5, R2C6,
-        R2C7));
+    public static final TypeValue[] ROW_1 = {R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7};
+    public static final TypeValue[] ROW_2 = {R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7};
+    private static final TypeValue[] EXPECTED_ASK_RESULTVALUE = {new TypeValueImpl(BOOLEAN, "true")};
     private SparqlAnswerXmlParser parser;
 
-    public void testParse() throws Exception {
-        URL resource = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/output.xml");
+    @Test
+    public void testParseSelect() throws Exception {
+        URL resource = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/select-output.xml");
         InputStream stream = resource.openStream();
         parser = new SparqlAnswerXmlParserImpl(stream);
-        assertTrue(parser.hasMoreResults());
-        assertEquals(EXPECTED_VARIABLES, parser.getVariables());
-        checkHasMoreAndGetResult(ROW_1);
-        checkHasMoreAndGetResult(ROW_2);
-        assertFalse(parser.hasMoreResults());
-        assertFalse(parser.hasMoreResults());
+        assertThat(parser.hasMoreResults(), is(true));
+        assertThat(parser.getVariables(), equalTo(parser.getVariables()));
+        checkHasMoreAndGetResult(parser, ROW_1);
+        checkHasMoreAndGetResult(parser, ROW_2);
+        assertThat(parser.hasMoreResults(), is(false));
+        assertThat(parser.hasMoreResults(), is(false));
     }
 
-    private void checkHasMoreAndGetResult(List<TypeValue> row) {
-        assertTrue(parser.hasMoreResults());
-        assertTrue(parser.hasMoreResults());
-        TypeValue[] results = parser.getResults();
-        checkRow(results, row);
+    @Test
+    public void testParseAsk() throws Exception {
+        URL resource = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/ask-output.xml");
+        InputStream stream = resource.openStream();
+        parser = new SparqlAnswerXmlParserImpl(stream);
+        assertThat(parser.getVariables().isEmpty(), is(true));
+        assertThat(parser.getVariables(), equalTo(new LinkedHashSet<String>()));
+        checkHasMoreAndGetResult(parser, EXPECTED_ASK_RESULTVALUE);
+        assertThat(parser.hasMoreResults(), is(false));
+        assertThat(parser.hasMoreResults(), is(false));
     }
 
-    public static void checkRow(TypeValue[] actualResults, List<TypeValue> expectedResults) {
-        for (int i = 0; i < expectedResults.size(); i++) {
-            assertEquals(expectedResults.get(i), actualResults[i]);
-        }
+    public static void checkHasMoreAndGetResult(final SparqlAnswerXmlParser parser, final TypeValue[] expectedRow) {
+        assertTrue(parser.hasMoreResults());
+        assertTrue(parser.hasMoreResults());
+        assertThat(parser.getResults(), arrayContaining(expectedRow));
     }
 }
