@@ -66,4 +66,6 @@ import java.util.LinkedHashSet;
 
 public interface SparqlAnswerXmlParser extends ClosableIterator<TypeValue[]> {
     LinkedHashSet<String> getVariables();
+
+    LinkedHashSet<String> getLink();
 }

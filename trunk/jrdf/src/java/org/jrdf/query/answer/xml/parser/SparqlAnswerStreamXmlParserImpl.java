@@ -71,6 +71,8 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
     private SparqlAnswerXmlParser parser;
     private BlockingQueue<InputStream> streamQueue;
     private LinkedHashSet<String> variables;
+    private LinkedHashSet<String> link;
+    private boolean gotLink;
     private boolean gotVariables;
     private boolean hasMore;
     private TypeValue[] results;
@@ -94,6 +96,10 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
 
     public LinkedHashSet<String> getVariables() {
         return variables;
+    }
+
+    public LinkedHashSet<String> getLink() {
+        return link;
     }
 
     public boolean hasNext() {
@@ -128,6 +134,7 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
             }
             parser = new SparqlAnswerXmlParserImpl(currentStream);
             parseVariables();
+            parseHead();
             if (!hasMore) {
                 hasMore = hasMore();
             }
@@ -140,6 +147,13 @@ public class SparqlAnswerStreamXmlParserImpl implements SparqlAnswerStreamXmlPar
         if (!gotVariables) {
             variables = parser.getVariables();
             gotVariables = true;
+        }
+    }
+
+    private void parseHead() {
+        if (!gotLink) {
+            link = parser.getLink();
+            gotLink = true;
         }
     }
 
