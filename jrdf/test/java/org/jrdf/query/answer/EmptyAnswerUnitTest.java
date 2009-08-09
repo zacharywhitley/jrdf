@@ -59,19 +59,25 @@
 
 package org.jrdf.query.answer;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.emptyArray;
+import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPublicConstant;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
+import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 
-public class EmptyAnswerUnitTest extends TestCase {
+public class EmptyAnswerUnitTest {
     private static final Class[] PARAM_TYPES = {};
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Answer.class, EmptyAnswer.class);
         checkImplementationOfInterfaceAndFinal(Serializable.class, EmptyAnswer.class);
@@ -80,13 +86,13 @@ public class EmptyAnswerUnitTest extends TestCase {
         checkSerialialVersionUid(EmptyAnswer.class, -7374613298128439580L);
     }
 
+    @Test
     public void testEmptyAnswerValues() {
-        Answer answer = EmptyAnswer.EMPTY_ANSWER;
-        assertNotNull(answer);
-        assertTrue(Arrays.equals(new String[]{}, answer.getVariableNames()));
-        assertTrue(Arrays.equals(new String[][]{}, answer.getColumnValues()));
-        assertEquals(0, answer.getTimeTaken());
-        assertEquals(0, answer.numberOfTuples());
-        assertEquals(EmptyAnswer.EMPTY_ANSWER, EmptyAnswer.EMPTY_ANSWER);
+        Answer answer = EMPTY_ANSWER;
+        assertThat(answer, notNullValue());
+        assertThat(answer.getVariableNames(), emptyArray());
+        assertThat(answer.getTimeTaken(), is(0L));
+        assertThat(answer.numberOfTuples(), is(0L));
+        assertThat(answer, equalTo(EMPTY_ANSWER));
     }
 }

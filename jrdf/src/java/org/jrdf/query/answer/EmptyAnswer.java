@@ -66,7 +66,6 @@ import java.util.Iterator;
 
 public final class EmptyAnswer implements SelectAnswer, Serializable {
     private static final long serialVersionUID = -7374613298128439580L;
-    private static final String[][] NO_COLUMN_VALUES = new String[0][];
     private static final String[] NO_VARIABLES = new String[]{};
     private static final EmptyClosableIterator<TypeValue[]> NO_COLUMN_VALUES_ITERATOR =
         new EmptyClosableIterator<TypeValue[]>();
@@ -85,10 +84,6 @@ public final class EmptyAnswer implements SelectAnswer, Serializable {
 
     public Iterator<TypeValue[]> columnValuesIterator() {
         return NO_COLUMN_VALUES_ITERATOR;
-    }
-
-    public String[][] getColumnValues() {
-        return NO_COLUMN_VALUES;
     }
 
     public long numberOfTuples() {
