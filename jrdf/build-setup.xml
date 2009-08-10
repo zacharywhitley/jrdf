@@ -127,11 +127,11 @@
     </patternset>
 
     <patternset id="gui.production.classpath.pattern">
-        <include name="${lib.dir}/spring-rcp/forms-1.0.7.jar"/>
-        <include name="${lib.dir}/spring-rcp/looks-2.0.4.jar"/>
-        <include name="${lib.dir}/spring-rcp/spring-binding-1.0.jar"/>
-        <include name="${lib.dir}/spring-rcp/spring-richclient-full-1.0.0.jar"/>
-        <include name="${lib.dir}/spring-rcp/swingx-0.9.1.jar"/>
+        <include name="${lib.dir}/spring-rcp/forms-1.2.1.jar"/>
+        <include name="${lib.dir}/spring-rcp/looks-2.2.0.jar"/>
+        <include name="${lib.dir}/spring-rcp/spring-binding-1.0.5.jar"/>
+        <include name="${lib.dir}/spring-rcp/spring-richclient-core-1.1.0.jar"/>
+        <include name="${lib.dir}/spring-rcp/swingx-0.9.3.jar"/>
     </patternset>
 
     <patternset id="server.production.classpath.pattern">
