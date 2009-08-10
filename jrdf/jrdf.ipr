@@ -1147,19 +1147,19 @@
     </library>
     <library name="restlet">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.spring_2.5-1.1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.json_2.0-1.1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet-1.1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet-1.1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.freemarker_2.3-1.1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5-1.1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework_3.1-1.1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.simple_3.1-1.1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/restlet/org.json_2.0-1.1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.freemarker_2.3-1.1.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.spring_2.5-1.1.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.simpleframework_3.1-1.1.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.simple_3.1-1.1.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet.ext.servlet_2.5-1.1.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet.ext.json_2.0-1.1.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/com.noelios.restlet-1.1.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.restlet-1.1.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/org.json_2.0-1.1.5.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1.2-src.zip!/org.restlet" />
+        <root url="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1.5-src.zip!/org.restlet" />
       </SOURCES>
     </library>
     <library name="freemarker">
