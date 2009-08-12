@@ -140,7 +140,7 @@ public abstract class AbstractSparqlXmlStreamWriter implements SparqlXmlWriter {
         }
     }
 
-    protected void realWriteBinding(TypeValue result, String currentVariable) throws XMLStreamException {
+    private void realWriteBinding(TypeValue result, String currentVariable) throws XMLStreamException {
         streamWriter.writeStartElement(BINDING);
         streamWriter.writeAttribute(NAME, currentVariable);
         streamWriter.writeStartElement(result.getType().getXmlElementName());

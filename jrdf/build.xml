@@ -102,6 +102,8 @@
         <attribute name="classpath.ref"/>
         <attribute name="code.path"/>
         <attribute name="code.pattern"/>
+        <!-- This is in here because the property doesn't seem to evaluate properly down below -->
+        <attribute name="java.src.version" default="${java.src.version}"/>
         <sequential>
             <mkdir dir="@{output.dir}"/>
             <groovyc srcdir="@{src.dir}" destdir="@{output.dir}" classpathref="@{classpath.ref}">
@@ -109,8 +111,7 @@
                     <path refid="@{code.path}"/>
                 </src>
                 <patternset refid="@{code.pattern}"/>
-                <javac source="${java.src.version}" target="${java.src.version}" debug="on" classpathref="@{classpath.ref}">
-                </javac>
+                <javac source="@{java.src.version}" target="@{java.src.version}" debug="on" classpathref="@{classpath.ref}"/>
             </groovyc>
         </sequential>
     </macrodef>

@@ -61,6 +61,7 @@ package org.jrdf.query.answer.xml.parser;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
@@ -70,8 +71,6 @@ import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -131,8 +130,8 @@ public class SparqlXmlParserImplUnitTest {
     }
 
     public static void checkHasMoreAndGetResult(final SparqlXmlParser parser, final TypeValue[] expectedRow) {
-        assertTrue(parser.hasNext());
-        assertTrue(parser.hasNext());
+        assertThat(parser.hasNext(), is(true));
+        assertThat(parser.hasNext(), is(true));
         assertThat(parser.next(), arrayContaining(expectedRow));
     }
 }

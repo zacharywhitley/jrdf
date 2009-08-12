@@ -76,7 +76,7 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 import java.net.URI;

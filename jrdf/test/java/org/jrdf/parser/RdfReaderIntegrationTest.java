@@ -62,7 +62,7 @@ package org.jrdf.parser;
 import static org.hamcrest.CoreMatchers.is;
 import org.jrdf.graph.Graph;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 import java.io.InputStream;

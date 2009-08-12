@@ -72,7 +72,7 @@ import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsMatchingTr
 import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsTriple;
 import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 import org.jrdf.vocabulary.RDF;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
