@@ -62,6 +62,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.query.answer.DatatypeType.DATATYPE;
 import static org.jrdf.query.answer.DatatypeType.XML_LANG;
 import org.jrdf.query.answer.SelectAnswer;
@@ -78,7 +79,6 @@ import org.jrdf.util.test.MockFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -70,7 +70,7 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueFactory;
 import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.util.test.MockFactory;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 

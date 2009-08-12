@@ -70,7 +70,7 @@ import org.jrdf.query.answer.TypeValueFactory;
 import org.jrdf.query.answer.TypeValueFactoryImpl;
 import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.query.answer.SparqlResultType;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 import javax.xml.stream.XMLInputFactory;

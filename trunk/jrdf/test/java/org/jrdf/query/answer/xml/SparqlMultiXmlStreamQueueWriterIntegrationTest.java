@@ -60,6 +60,7 @@
 package org.jrdf.query.answer.xml;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import org.jrdf.query.answer.TypeValueFactoryImpl;
 import org.jrdf.query.answer.xml.parser.SparqlResultsXmlParser;
@@ -68,10 +69,6 @@ import static org.jrdf.query.answer.xml.parser.SparqlXmlParserImplUnitTest.EXPEC
 import static org.jrdf.query.answer.xml.parser.SparqlXmlParserImplUnitTest.ROW_1;
 import static org.jrdf.query.answer.xml.parser.SparqlXmlParserImplUnitTest.ROW_2;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -127,15 +124,15 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
         }
         assertThat(count, is(2));
         checkTwoResults(writer);
-        assertFalse(xmlWriter.hasMoreResults());
+        assertThat(xmlWriter.hasMoreResults(), is(false));
         ((SparqlMultiXmlStreamWriter) xmlWriter).addStream(stream2);
-        assertTrue(xmlWriter.hasMoreResults());
+        assertThat(xmlWriter.hasMoreResults(), is(true));
         while (xmlWriter.hasMoreResults()) {
             count++;
             xmlWriter.writeResult();
         }
         xmlWriter.writeEndResults();
-        assertEquals(4, count);
+        assertThat(count, is(4));
         checkFourResults(writer);
     }
 
@@ -148,7 +145,7 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
             count++;
             xmlWriter.writeResult();
         }
-        assertEquals(4, count);
+        assertThat(count, is(4));
         xmlWriter.writeEndResults();
         checkFourResults(writer);
     }
@@ -166,7 +163,7 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
             count++;
             xmlWriter.writeResult();
         }
-        assertEquals(4, count);
+        assertThat(count, is(4));
         xmlWriter.writeEndResults();
         checkFourResults(writer);
     }

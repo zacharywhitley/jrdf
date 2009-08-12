@@ -71,7 +71,7 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.vocabulary.RDF;
 import org.jrdf.vocabulary.XSD;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 import java.io.IOException;

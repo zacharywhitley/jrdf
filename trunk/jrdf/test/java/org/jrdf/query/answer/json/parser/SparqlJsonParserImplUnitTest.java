@@ -71,7 +71,7 @@ import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
 import static org.jrdf.query.answer.json.JsonTestUtil.getFullJsonDocument;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
