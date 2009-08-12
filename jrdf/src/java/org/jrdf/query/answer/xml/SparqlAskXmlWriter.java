@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  *  ====================================================================
  *
@@ -58,49 +58,48 @@
 
 package org.jrdf.query.answer.xml;
 
-import org.jrdf.query.answer.TypeValue;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.query.answer.SparqlProtocol;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.Writer;
-import java.util.Iterator;
 
 /**
  * @author Yuan-Fang Li
- * @version :$
+ * @version $Id$
  */
-public class SparqlXmlPagenatedStreamWriter extends AbstractSparqlXmlStreamWriter implements SparqlXmlWriter {
-    private long maxRows;
-    private long count;
-    private Iterator<TypeValue[]> iterator;
-    private String[] variableNames;
+public class SparqlAskXmlWriter extends AbstractSparqlXmlWriter {
+    private static final String[] NO_VARIABLES = {};
+    private boolean hasMore;
+    private boolean result;
 
-    private SparqlXmlPagenatedStreamWriter() {
+    private SparqlAskXmlWriter() {
     }
 
-    public SparqlXmlPagenatedStreamWriter(Writer writer, final String[] variableNames,
-        final Iterator<TypeValue[]> iterator, final long maxRows) throws XMLStreamException {
-        checkNotNull(writer, variableNames, iterator);
+    public SparqlAskXmlWriter(final Writer writer, final boolean result) throws XMLStreamException {
         createXmlStreamWriter(writer);
-        this.variableNames = variableNames;
-        this.iterator = iterator;
-        this.maxRows = maxRows;
+        this.result = result;
+        this.hasMore = true;
     }
 
     public boolean hasMoreResults() {
-        return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
+        return hasMore;
     }
 
     public void writeHead() throws XMLStreamException {
-        writeHead(variableNames);
+        writeHead(NO_VARIABLES);
+    }
+
+    public void writeAllResults() throws XMLStreamException {
+        writeResult();
     }
 
     public void writeResult() throws XMLStreamException {
-        String[] currentVariables = variableNames;
-        if (iterator.hasNext()) {
-            writeResult(currentVariables, iterator.next());
+        if (hasMoreResults()) {
+            streamWriter.writeStartElement(SparqlProtocol.BOOLEAN);
+            streamWriter.writeCharacters(Boolean.toString(result));
+            streamWriter.writeEndElement();
+            flush();
+            hasMore = false;
         }
-        count++;
-        streamWriter.flush();
     }
 }

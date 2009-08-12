@@ -86,7 +86,7 @@ import java.io.Writer;
  * @author Yuan-Fang Li
  * @version :$
  */
-public abstract class AbstractSparqlXmlStreamWriter implements SparqlXmlWriter {
+public abstract class AbstractSparqlXmlWriter implements SparqlXmlWriter {
     private static final String ENCODING_DEFAULT = "UTF-8";
     private static final String VERSION_NUMBER = "1.0";
     private static final XMLOutputFactory OUTPUT_FACTORY = javax.xml.stream.XMLOutputFactory.newInstance();

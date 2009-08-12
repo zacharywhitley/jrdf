@@ -88,7 +88,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 
-public class SparqlJsonWriterImplUnitTest {
+public class SparqlSelectJsonWriterUnitTest {
     private TypeValueArrayFactory factory = new TypeValueArrayFactoryImpl();
     private final MockFactory mockFactory = new MockFactory();
     private SelectAnswer selectAnswer;
@@ -113,7 +113,7 @@ public class SparqlJsonWriterImplUnitTest {
         expectLastCall();
 
         mockFactory.replay();
-        final SparqlJsonWriterImpl writer = new SparqlJsonWriterImpl(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
+        final SparqlJsonWriter writer = new SparqlSelectJsonWriter(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
             0L);
         writer.flush();
         writer.close();
@@ -129,7 +129,7 @@ public class SparqlJsonWriterImplUnitTest {
         expectLastCall().andThrow(new IOException());
 
         mockFactory.replay();
-        final SparqlJsonWriterImpl writer = new SparqlJsonWriterImpl(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
+        final SparqlJsonWriter writer = new SparqlSelectJsonWriter(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
             0L);
         writer.flush();
 
@@ -144,7 +144,7 @@ public class SparqlJsonWriterImplUnitTest {
         expectLastCall().andThrow(new IOException());
 
         mockFactory.replay();
-        final SparqlJsonWriterImpl writer = new SparqlJsonWriterImpl(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
+        final SparqlJsonWriter writer = new SparqlSelectJsonWriter(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
             0L);
         writer.close();
 
@@ -176,7 +176,7 @@ public class SparqlJsonWriterImplUnitTest {
         setupExpectationsForResults(variables, numberOfResults == -1 ? bindings.length : numberOfResults, bindings);
         mockFactory.replay();
 
-        final SparqlJsonWriter writer = new SparqlJsonWriterImpl(stringWriter, links, variables, mockIterator,
+        final SparqlJsonWriter writer = new SparqlSelectJsonWriter(stringWriter, links, variables, mockIterator,
             numberOfResults);
         writer.writeFullDocument();
         mockFactory.verify();

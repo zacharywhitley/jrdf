@@ -74,7 +74,7 @@ import org.jrdf.util.TempDirectoryHandler
 import static org.jrdf.util.test.SetUtil.asSet
 import org.jrdf.query.answer.TypeValueImpl
 
-class SparqlNewXmlPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
+class SparqlSelectXmlWriterNewIntegrationTest extends GroovyTestCase {
 
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler()
     private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory()
@@ -114,7 +114,7 @@ class SparqlNewXmlPagenatedStreamWriterIntegrationTest extends GroovyTestCase {
         graph = FACTORY.newGraph
         TEST_UTIL.createTestGraph(graph)
         answer = urqlConnection.executeQuery(graph, QUERY)
-        xmlWriter = new SparqlXmlPagenatedStreamWriter(resultsWriter, answer.getVariableNames(),
+        xmlWriter = new SparqlSelectXmlWriter(resultsWriter, answer.getVariableNames(),
                 answer.columnValuesIterator(), answer.numberOfTuples())
     }
 

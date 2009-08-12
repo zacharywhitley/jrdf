@@ -108,7 +108,7 @@ public class JsonTestUtil {
         final Map<String, TypeValue>... bindings) throws JSONException {
         final List<TypeValue[]> values = convertToList(variables, bindings);
         final StringWriter stringWriter = new StringWriter();
-        final SparqlJsonWriter answerJsonWriter = new SparqlJsonWriterImpl(stringWriter, links, variables,
+        final SparqlJsonWriter answerJsonWriter = new SparqlSelectJsonWriter(stringWriter, links, variables,
             values.iterator(), bindings.length);
         answerJsonWriter.writeFullDocument();
         return stringWriter.toString();

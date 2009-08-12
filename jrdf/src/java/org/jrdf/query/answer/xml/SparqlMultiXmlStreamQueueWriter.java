@@ -71,7 +71,7 @@ import java.util.LinkedHashSet;
  * @author Yuan-Fang Li
  * @version :$
  */
-public class SparqlMultiXmlStreamQueueWriter extends AbstractSparqlXmlStreamWriter
+public class SparqlMultiXmlStreamQueueWriter extends AbstractSparqlXmlWriter
     implements SparqlMultiXmlStreamWriter {
     private SparqlResultStreamXmlParser streamParser;
 

@@ -76,7 +76,7 @@ import java.util.List;
  * @author Yuan-Fang Li
  * @version :Id: $
  */
-public class SparqlMultiXmlStreamWriterImpl extends AbstractSparqlXmlStreamWriter
+public class SparqlMultiXmlStreamWriterImpl extends AbstractSparqlXmlWriter
     implements SparqlMultiXmlStreamWriter, Runnable {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     {
