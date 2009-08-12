@@ -75,7 +75,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.SelectAnswer;
-import org.jrdf.query.answer.xml.SparqlXmlPagenatedStreamWriter;
+import org.jrdf.query.answer.xml.SparqlSelectXmlWriter;
 import org.jrdf.query.answer.xml.SparqlXmlWriter;
 import org.jrdf.urql.UrqlConnection;
 import org.jrdf.util.ClosableIterable;
@@ -249,7 +249,7 @@ public class JrdfExample {
         SelectAnswer answer = (SelectAnswer) connection.executeQuery(graph, query);
         System.out.println("Query Result:\n" + answer);
         StringWriter writer = new StringWriter();
-        SparqlXmlWriter answerXMLWriter = new SparqlXmlPagenatedStreamWriter(writer, answer.getVariableNames(),
+        SparqlXmlWriter answerXMLWriter = new SparqlSelectXmlWriter(writer, answer.getVariableNames(),
             answer.columnValuesIterator(), answer.numberOfTuples());
         answerXMLWriter.writeFullDocument();
         String xmlString = writer.toString();

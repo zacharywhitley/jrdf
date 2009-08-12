@@ -61,7 +61,7 @@ package org.jrdf.query.server;
 
 import org.jrdf.query.answer.SparqlWriter;
 import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.xml.SparqlAskXmlStreamWriter;
+import org.jrdf.query.answer.xml.SparqlAskXmlWriter;
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import static org.restlet.data.CharacterSet.UTF_8;
 import org.restlet.data.MediaType;
@@ -94,9 +94,9 @@ public class AskAnswerSparqlRepresentation extends WriterRepresentation {
         }
     }
 
-    private SparqlAskXmlStreamWriter createAnswerWriter(Writer writer) throws XMLStreamException {
+    private SparqlAskXmlWriter createAnswerWriter(Writer writer) throws XMLStreamException {
         if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
-            return new SparqlAskXmlStreamWriter(writer, answer.getResult());
+            return new SparqlAskXmlWriter(writer, answer.getResult());
         } else {
             throw new RuntimeException("Unknown media type: " + getMediaType());
         }

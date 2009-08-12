@@ -91,7 +91,7 @@ import java.net.URI;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public class SparqlAskXmlStreamWriterIntegrationTest extends TestCase {
+public class SparqlAskXmlWriterIntegrationTest extends TestCase {
     private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
     {
         XML_INPUT_FACTORY.setProperty(WstxInputProperties.P_INPUT_PARSING_MODE,
@@ -150,14 +150,14 @@ public class SparqlAskXmlStreamWriterIntegrationTest extends TestCase {
         graph.add(b3, p3, l3);
         String queryString = "ASK WHERE {?s ?p ?o .}";
         final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new SparqlAskXmlStreamWriter(writer, answer.getResult());
+        xmlWriter = new SparqlAskXmlWriter(writer, answer.getResult());
         checkResult(true);
     }
 
     public void testAskEmptyGraph() throws XMLStreamException, InvalidQuerySyntaxException, GraphException {
         String queryString = "ASK WHERE {?s ?p ?o .}";
         final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new SparqlAskXmlStreamWriter(writer, answer.getResult());
+        xmlWriter = new SparqlAskXmlWriter(writer, answer.getResult());
         checkResult(false);
     }
 
@@ -165,7 +165,7 @@ public class SparqlAskXmlStreamWriterIntegrationTest extends TestCase {
         graph.add(b1, p1, l1);
         String queryString = "ASK WHERE {?s ?p ?o FILTER ( str(?o) = \"ab\" ) }";
         final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
-        xmlWriter = new SparqlAskXmlStreamWriter(writer, answer.getResult());
+        xmlWriter = new SparqlAskXmlWriter(writer, answer.getResult());
         checkResult(false);
     }
 

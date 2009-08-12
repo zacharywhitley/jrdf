@@ -78,7 +78,7 @@ import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SparqlXmlPagenatedStreamWriterIntegrationTest extends TestCase {
+public class SparqlSelectXmlWriterIntegrationTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
@@ -117,7 +117,7 @@ public class SparqlXmlPagenatedStreamWriterIntegrationTest extends TestCase {
     public void testVariables() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = urqlConnection.executeQuery(graph, queryString);
-        xmlWriter = new SparqlXmlPagenatedStreamWriter(writer, answer.getVariableNames(), answer.columnValuesIterator(),
+        xmlWriter = new SparqlSelectXmlWriter(writer, answer.getVariableNames(), answer.columnValuesIterator(),
             answer.numberOfTuples());
         Set<String> vars = TEST_UTIL.getVariables(xmlWriter, writer);
         Set<String> set = new HashSet<String>();
@@ -128,7 +128,7 @@ public class SparqlXmlPagenatedStreamWriterIntegrationTest extends TestCase {
     public void testResult() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
         final Answer answer = urqlConnection.executeQuery(graph, queryString);
-        xmlWriter = new SparqlXmlPagenatedStreamWriter(writer, answer.getVariableNames(), answer.columnValuesIterator(),
+        xmlWriter = new SparqlSelectXmlWriter(writer, answer.getVariableNames(), answer.columnValuesIterator(),
             answer.numberOfTuples());
         xmlWriter.writeStartResults();
         int count = 0;
