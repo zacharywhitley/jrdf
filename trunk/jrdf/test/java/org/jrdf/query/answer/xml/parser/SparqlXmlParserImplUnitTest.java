@@ -71,12 +71,15 @@ import static org.jrdf.query.answer.SparqlResultType.TYPED_LITERAL;
 import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.net.URL;
 import static java.util.Arrays.asList;
 import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 
 public class SparqlXmlParserImplUnitTest {
     private static final TypeValueImpl R1C1 = new TypeValueImpl(BLANK_NODE, "r1");
@@ -115,6 +118,7 @@ public class SparqlXmlParserImplUnitTest {
         assertThat(parser.hasNext(), is(false));
         assertThat(parser.hasNext(), is(false));
         assertThat(parser.getLink(), Matchers.<String>hasItem(equalTo("example.rq")));
+        checkThrowsExceptionBeyondResults(parser);
     }
 
     @Test
@@ -127,11 +131,20 @@ public class SparqlXmlParserImplUnitTest {
         checkHasMoreAndGetResult(parser, EXPECTED_ASK_RESULTVALUE);
         assertThat(parser.hasNext(), is(false));
         assertThat(parser.hasNext(), is(false));
+        checkThrowsExceptionBeyondResults(parser);
     }
 
     public static void checkHasMoreAndGetResult(final SparqlXmlParser parser, final TypeValue[] expectedRow) {
         assertThat(parser.hasNext(), is(true));
         assertThat(parser.hasNext(), is(true));
         assertThat(parser.next(), arrayContaining(expectedRow));
+    }
+
+    private void checkThrowsExceptionBeyondResults(final SparqlXmlParser jsonParser) {
+        assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                jsonParser.next();
+            }
+        });
     }
 }

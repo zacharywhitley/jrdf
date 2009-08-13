@@ -77,6 +77,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
 import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 
 public class SparqlXmlParserImpl implements SparqlXmlParser {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
@@ -113,6 +114,9 @@ public class SparqlXmlParserImpl implements SparqlXmlParser {
     }
 
     public TypeValue[] next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException("No more results available");
+        }
         return resultsParser.getResults(variables);
     }
 
