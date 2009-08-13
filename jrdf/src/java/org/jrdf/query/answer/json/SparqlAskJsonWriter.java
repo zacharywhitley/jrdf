@@ -58,51 +58,45 @@
 
 package org.jrdf.query.answer.json;
 
-import org.jrdf.query.answer.TypeValue;
-import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
-import static org.jrdf.query.answer.SparqlProtocol.BINDINGS;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.query.answer.SparqlProtocol;
 import org.json.JSONException;
 
 import java.io.Writer;
-import java.util.Iterator;
 
-public class SparqlSelectJsonWriter extends AbstractSparqlJsonWriter {
-    private String[] variableNames;
-    private Iterator<TypeValue[]> iterator;
-    private long maxRows;
-    private long count;
+public class SparqlAskJsonWriter extends AbstractSparqlJsonWriter {
+    private static final String[] NO_VARIABLES = {};
+    private boolean hasMore;
+    private boolean result;
 
-    public SparqlSelectJsonWriter(final Writer writer, final String[] links, final String[] variableNames,
-        final Iterator<TypeValue[]> iterator, final long maxRows) {
+    public SparqlAskJsonWriter(final Writer writer, final String[] links, final boolean result) {
         super(writer, links);
-        checkNotNull(variableNames, iterator);
-        this.variableNames = variableNames;
-        this.iterator = iterator;
-        this.maxRows = maxRows;
+        this.result = result;
+        this.hasMore = true;
     }
 
     public boolean hasMoreResults() {
-        return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
+        return hasMore;
     }
 
     public void writeHead() throws JSONException {
-        writeHead(variableNames);
+        writeHead(NO_VARIABLES);
     }
 
     public void writeStartResults() throws JSONException {
-        jsonWriter.key(RESULTS);
-        jsonWriter.object().key(BINDINGS).array();
+    }
+
+    public void writeAllResults() throws JSONException {
+        writeResult();
     }
 
     public void writeResult() throws JSONException {
-        final String[] currentVariables = variableNames;
-        writeResult(currentVariables, iterator.next());
-        count++;
+        if (hasMoreResults()) {
+            jsonWriter.key(SparqlProtocol.BOOLEAN);
+            jsonWriter.value(result);
+            hasMore = false;
+        }
     }
 
     public void writeEndResults() throws JSONException {
-        jsonWriter.endArray();
-        jsonWriter.endObject();
     }
 }

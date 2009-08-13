@@ -60,11 +60,6 @@ package org.jrdf.query.answer.json;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.jrdf.query.answer.DatatypeType.DATATYPE;
-import static org.jrdf.query.answer.DatatypeType.XML_LANG;
 import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueArrayFactory;
@@ -75,8 +70,8 @@ import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_3;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
+import static org.jrdf.query.answer.json.JsonTestUtil.*;
 import org.jrdf.util.test.MockFactory;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -197,50 +192,6 @@ public class SparqlSelectJsonWriterUnitTest {
         // Number of results
         for (int i = 0; i < numberOfResults; i++) {
             expect(mockIterator.next()).andReturn(factory.mapToArray(variables, results[i]));
-        }
-    }
-
-    private void checkJSONStringArrayValues(final JSONObject jsonObject, final String arrayName,
-        final String[] expectedValues) throws JSONException {
-        final JSONArray vars = jsonObject.getJSONArray(arrayName);
-        assertThat(vars, notNullValue());
-        assertThat(vars.length(), equalTo(expectedValues.length));
-        int counter = 0;
-        for (final String value : expectedValues) {
-            assertThat(vars.getString(counter++), equalTo(value));
-        }
-    }
-
-    private void checkBindings(final JSONArray bindings, int numberOfResults, Map<String, TypeValue>... allResults)
-        throws JSONException {
-        for (int i = 0; i < numberOfResults; i++) {
-            final JSONObject aBinding = bindings.getJSONObject(i);
-            final Map<String, TypeValue> expectedBindings = allResults[i];
-            assertThat(aBinding, notNullValue());
-            for (final String variable : TEST_VARIABLES) {
-                if (aBinding.has(variable)) {
-                    checkVariable(variable, expectedBindings, aBinding);
-                }
-            }
-        }
-    }
-
-    private void checkVariable(String variable, Map<String, TypeValue> expectedBindings, JSONObject aBinding)
-        throws JSONException {
-        final JSONObject aVariable = aBinding.getJSONObject(variable);
-        assertThat(aVariable, notNullValue());
-        final TypeValue typeValue = expectedBindings.get(variable);
-        final String expectedType = typeValue.getType().toString();
-        assertThat(aVariable.getString("type"), equalTo(expectedType));
-        final String expectedValue = typeValue.getValue();
-        assertThat(aVariable.getString("value"), equalTo(expectedValue));
-        if (DATATYPE.equals(typeValue.getSuffixType())) {
-            final String expectedDatatype = typeValue.getSuffix();
-            assertThat(aVariable.getString("datatype"), equalTo(expectedDatatype));
-        }
-        if (XML_LANG.equals(typeValue.getSuffixType())) {
-            final String expectedLanguage = typeValue.getSuffix();
-            assertThat(aVariable.getString("xml:lang"), equalTo(expectedLanguage));
         }
     }
 }

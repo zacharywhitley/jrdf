@@ -58,51 +58,25 @@
 
 package org.jrdf.query.answer.json;
 
-import org.jrdf.query.answer.TypeValue;
-import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
-import static org.jrdf.query.answer.SparqlProtocol.BINDINGS;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.Test;
+import static org.jrdf.query.answer.json.JsonTestUtil.*;
 
-import java.io.Writer;
-import java.util.Iterator;
+import java.io.StringWriter;
 
-public class SparqlSelectJsonWriter extends AbstractSparqlJsonWriter {
-    private String[] variableNames;
-    private Iterator<TypeValue[]> iterator;
-    private long maxRows;
-    private long count;
+public class SparqlAskJsonWriterUnitTest {
+    @Test
+    public void testSimpleOutput() throws JSONException {
+        final StringWriter stringWriter = new StringWriter();
+        final SparqlAskJsonWriter writer = new SparqlAskJsonWriter(stringWriter, new String[]{}, true);
+        writer.writeFullDocument();
 
-    public SparqlSelectJsonWriter(final Writer writer, final String[] links, final String[] variableNames,
-        final Iterator<TypeValue[]> iterator, final long maxRows) {
-        super(writer, links);
-        checkNotNull(variableNames, iterator);
-        this.variableNames = variableNames;
-        this.iterator = iterator;
-        this.maxRows = maxRows;
-    }
-
-    public boolean hasMoreResults() {
-        return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
-    }
-
-    public void writeHead() throws JSONException {
-        writeHead(variableNames);
-    }
-
-    public void writeStartResults() throws JSONException {
-        jsonWriter.key(RESULTS);
-        jsonWriter.object().key(BINDINGS).array();
-    }
-
-    public void writeResult() throws JSONException {
-        final String[] currentVariables = variableNames;
-        writeResult(currentVariables, iterator.next());
-        count++;
-    }
-
-    public void writeEndResults() throws JSONException {
-        jsonWriter.endArray();
-        jsonWriter.endObject();
+        final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
+        checkJSONStringArrayValues(head, "vars", new String[]{});
+        final boolean result = new JSONObject(stringWriter.toString()).getBoolean("boolean");
+        assertThat(result, is(true));
     }
 }

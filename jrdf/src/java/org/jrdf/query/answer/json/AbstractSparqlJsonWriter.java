@@ -59,12 +59,10 @@
 package org.jrdf.query.answer.json;
 
 import org.jrdf.query.answer.DatatypeType;
-import static org.jrdf.query.answer.SparqlProtocol.BINDINGS;
 import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
 import static org.jrdf.query.answer.SparqlProtocol.JSON_XML_LANG;
 import static org.jrdf.query.answer.SparqlProtocol.LINK;
-import static org.jrdf.query.answer.SparqlProtocol.RESULTS;
 import static org.jrdf.query.answer.SparqlProtocol.TYPE;
 import static org.jrdf.query.answer.SparqlProtocol.VALUE;
 import static org.jrdf.query.answer.SparqlProtocol.VARS;
@@ -127,11 +125,6 @@ public abstract class AbstractSparqlJsonWriter implements SparqlJsonWriter {
         jsonWriter.endArray();
     }
 
-    public void writeStartResults() throws JSONException {
-        jsonWriter.key(RESULTS);
-        jsonWriter.object().key(BINDINGS).array();
-    }
-
     protected void writeResult(String[] currentVariables, TypeValue[] results) throws JSONException {
         jsonWriter.object();
         int index = 0;
@@ -169,11 +162,6 @@ public abstract class AbstractSparqlJsonWriter implements SparqlJsonWriter {
             jsonWriter.key(JSON_XML_LANG);
         }
         jsonWriter.value(result.getSuffix());
-    }
-
-    public void writeEndResults() throws JSONException {
-        jsonWriter.endArray();
-        jsonWriter.endObject();
     }
 
     public void writeEndDocument() throws JSONException {
