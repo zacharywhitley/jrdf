@@ -59,10 +59,12 @@
 
 package org.jrdf.query.server;
 
-import org.jrdf.query.answer.SparqlWriter;
-import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.xml.SparqlAskXmlWriter;
+import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON;
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
+import org.jrdf.query.answer.AskAnswer;
+import org.jrdf.query.answer.SparqlWriter;
+import org.jrdf.query.answer.json.SparqlAskJsonWriter;
+import org.jrdf.query.answer.xml.SparqlAskXmlWriter;
 import static org.restlet.data.CharacterSet.UTF_8;
 import org.restlet.data.MediaType;
 import org.restlet.resource.WriterRepresentation;
@@ -94,9 +96,11 @@ public class AskAnswerSparqlRepresentation extends WriterRepresentation {
         }
     }
 
-    private SparqlAskXmlWriter createAnswerWriter(Writer writer) throws XMLStreamException {
+    private SparqlWriter createAnswerWriter(Writer writer) throws XMLStreamException {
         if (APPLICATION_SPARQL_XML.equals(getMediaType())) {
             return new SparqlAskXmlWriter(writer, answer.getResult());
+        } else if (APPLICATION_SPARQL_JSON.equals(getMediaType())) {
+            return new SparqlAskJsonWriter(writer, new String[]{}, answer.getResult());
         } else {
             throw new RuntimeException("Unknown media type: " + getMediaType());
         }
