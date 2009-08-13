@@ -76,6 +76,7 @@ import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
 import static org.jrdf.query.answer.json.JsonTestUtil.getFullJsonSelect;
 import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.*;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -157,7 +158,7 @@ public class SparqlJsonParserImplUnitTest {
     }
 
     private void checkThrowsExceptionBeyondResults(final SparqlJsonParser jsonParser) {
-        AssertThrows.assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
+        assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 jsonParser.next();
             }

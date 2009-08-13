@@ -74,7 +74,6 @@ public class SparqlAskJsonWriterUnitTest {
         final SparqlAskJsonWriter writer = new SparqlAskJsonWriter(stringWriter, new String[]{}, true);
         writer.writeFullDocument();
 
-        System.err.println("Got: " + stringWriter);
         final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
         checkJSONStringArrayValues(head, "vars", new String[]{});
         checkJSONStringArrayValues(head, "link", new String[]{});
