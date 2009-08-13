@@ -111,7 +111,7 @@ public class JsonTestUtil {
         }
     };
 
-    public static String getFullJsonDocument(final String[] links, final String[] variables,
+    public static String getFullJsonSelect(final String[] links, final String[] variables,
         final Map<String, TypeValue>... bindings) throws JSONException {
         final List<TypeValue[]> values = convertToList(variables, bindings);
         final StringWriter stringWriter = new StringWriter();

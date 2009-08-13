@@ -68,15 +68,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
-public class SparqlResultsJsonParserImpl implements SparqlResultsJsonParser {
+public class SparqlSelectResultsJsonParserImpl implements SparqlResultsJsonParser {
     private final LinkedHashSet<String> variables;
     private final JsonParser parser;
     private final SparqlResultJsonParser resultParser;
     private Map<String, TypeValue> nextResult = new HashMap<String, TypeValue>();
     private TypeValueArrayFactory arrayFactory = new TypeValueArrayFactoryImpl();
 
-    public SparqlResultsJsonParserImpl(final LinkedHashSet<String> variables, final JsonParser parser)
+    public SparqlSelectResultsJsonParserImpl(final LinkedHashSet<String> variables, final JsonParser parser)
         throws IOException {
         this.variables = variables;
         this.parser = parser;
@@ -89,6 +90,9 @@ public class SparqlResultsJsonParserImpl implements SparqlResultsJsonParser {
     }
 
     public TypeValue[] next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException("No more results available");
+        }
         final TypeValue[] typeValues = arrayFactory.mapToArray(variables, nextResult);
         getNextValue();
         return typeValues;
