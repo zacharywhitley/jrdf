@@ -58,55 +58,109 @@
 
 package org.jrdf.query.answer.json.parser;
 
+import org.codehaus.jackson.JsonParseException;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.contains;
+import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueArrayFactory;
 import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
+import org.jrdf.query.answer.TypeValueImpl;
 import static org.jrdf.query.answer.json.JsonTestUtil.LINKS;
 import static org.jrdf.query.answer.json.JsonTestUtil.NO_LINKS;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
-import static org.jrdf.query.answer.json.JsonTestUtil.getFullJsonDocument;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.query.answer.json.JsonTestUtil.getFullJsonSelect;
+import org.jrdf.util.test.AssertThrows;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import static java.util.Arrays.asList;
 import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 
 public class SparqlJsonParserImplUnitTest {
     private TypeValueArrayFactory factory = new TypeValueArrayFactoryImpl();
 
     @Test
     public void simpleBinding() throws Exception {
-        final String results = getFullJsonDocument(NO_LINKS, TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_2);
+        final String results = getFullJsonSelect(NO_LINKS, TEST_VARIABLES, TEST_BINDINGS_1, TEST_BINDINGS_2);
         final InputStream inputStream = new ByteArrayInputStream(results.getBytes());
         final SparqlJsonParser jsonParser = new SparqlJsonParserImpl(inputStream);
         final LinkedHashSet<String> vars = new LinkedHashSet<String>(asList("abc", "123", "doh", "ray", "me"));
         assertThat(jsonParser.getLink(), is(Matchers.<String>empty()));
         assertThat(jsonParser.getVariables(), contains(TEST_VARIABLES));
-        testABinding(jsonParser, factory.mapToArray(vars, TEST_BINDINGS_1));
-        testABinding(jsonParser, factory.mapToArray(vars, TEST_BINDINGS_2));
+        checkBinding(jsonParser, factory.mapToArray(vars, TEST_BINDINGS_1));
+        checkBinding(jsonParser, factory.mapToArray(vars, TEST_BINDINGS_2));
         assertThat(jsonParser.hasNext(), is(false));
+        checkThrowsExceptionBeyondResults(jsonParser);
     }
 
     @Test
     public void withLink() throws Exception {
-        final String results = getFullJsonDocument(LINKS, TEST_VARIABLES);
+        final String results = getFullJsonSelect(LINKS, TEST_VARIABLES);
         final InputStream inputStream = new ByteArrayInputStream(results.getBytes());
         final SparqlJsonParser jsonParser = new SparqlJsonParserImpl(inputStream);
         assertThat(jsonParser.getLink(), contains(LINKS));
         assertThat(jsonParser.getVariables(), contains(TEST_VARIABLES));
         assertThat(jsonParser.hasNext(), is(false));
+        checkThrowsExceptionBeyondResults(jsonParser);
     }
 
-    private void testABinding(SparqlJsonParser jsonParser, final TypeValue[] expectedValues) {
+    @Test
+    public void simpleAsk() throws Exception {
+        final String emptyHeadAndTrue = "{\"head\": {}, \"boolean\" : true}";
+        final TypeValue expectedFalseResult = new TypeValueImpl(BOOLEAN, "true");
+        final SparqlJsonParser parser = checkAsk(emptyHeadAndTrue, expectedFalseResult);
+        checkThrowsExceptionBeyondResults(parser);
+    }
+
+    @Test
+    public void askWithVariables() throws Exception {
+        final String resultWithLinkVarsAndFalse = "{\"head\":{\"link\":[],\"vars\":[]},\"boolean\":false}";
+        final TypeValue expectedFalseResult = new TypeValueImpl(BOOLEAN, "false");
+        final SparqlJsonParser parser = checkAsk(resultWithLinkVarsAndFalse, expectedFalseResult);
+        checkThrowsExceptionBeyondResults(parser);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void parseableButBadBooleanValueThrowsIllegalState() throws Exception {
+        final String resultWithFred = "{\"head\":{\"link\":[],\"vars\":[]},\"boolean\":null}";
+        checkAsk(resultWithFred);
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void unparseableBooleanValueThrowsIllegalState() throws Exception {
+        final String resultWithFred = "{\"head\":{\"link\":[],\"vars\":[]},\"boolean\":fred}";
+        checkAsk(resultWithFred);
+    }
+
+    private SparqlJsonParser checkAsk(final String results, final TypeValue... expectedValues) throws IOException {
+        final InputStream inputStream = new ByteArrayInputStream(results.getBytes());
+        final SparqlJsonParser jsonParser = new SparqlJsonParserImpl(inputStream);
+        assertThat(jsonParser.getLink(), is(Matchers.<String>empty()));
+        assertThat(jsonParser.getVariables(), is(Matchers.<String>empty()));
+        checkBinding(jsonParser, expectedValues);
+        return jsonParser;
+    }
+
+    private void checkBinding(final SparqlJsonParser jsonParser, final TypeValue... expectedValues) {
+        assertThat(jsonParser.hasNext(), is(true));
         assertThat(jsonParser.hasNext(), is(true));
         assertThat(jsonParser.next(), arrayContaining(expectedValues));
+    }
+
+    private void checkThrowsExceptionBeyondResults(final SparqlJsonParser jsonParser) {
+        AssertThrows.assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                jsonParser.next();
+            }
+        });
     }
 }

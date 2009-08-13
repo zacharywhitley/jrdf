@@ -140,7 +140,9 @@ public class SparqlJsonParserImpl implements SparqlJsonParser {
 
     private void getStartOfBindings() throws IOException {
         if (hasResults() && hasBindings()) {
-            resultsParser = new SparqlResultsJsonParserImpl(variables, parser);
+            resultsParser = new SparqlSelectResultsJsonParserImpl(variables, parser);
+        } else {
+            resultsParser = new SparqlAskResultsJsonParserImpl(parser);
         }
     }
 
