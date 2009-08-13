@@ -66,8 +66,15 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.query.answer.TypeValueArrayFactory;
 import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
+import static org.jrdf.query.answer.DatatypeType.DATATYPE;
+import static org.jrdf.query.answer.DatatypeType.XML_LANG;
 import org.jrdf.vocabulary.XSD;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONArray;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -121,5 +128,49 @@ public class JsonTestUtil {
             values.add(arrayFactory.mapToArray(variables, binding));
         }
         return values;
+    }
+
+    public static void checkJSONStringArrayValues(final JSONObject jsonObject, final String arrayName,
+        final String[] expectedValues) throws JSONException {
+        final JSONArray vars = jsonObject.getJSONArray(arrayName);
+        assertThat(vars, notNullValue());
+        assertThat(vars.length(), equalTo(expectedValues.length));
+        int counter = 0;
+        for (final String value : expectedValues) {
+            assertThat(vars.getString(counter++), equalTo(value));
+        }
+    }
+
+    public static void checkBindings(final JSONArray bindings, int numberOfResults, Map<String, 
+        TypeValue>... allResults) throws JSONException {
+        for (int i = 0; i < numberOfResults; i++) {
+            final JSONObject aBinding = bindings.getJSONObject(i);
+            final Map<String, TypeValue> expectedBindings = allResults[i];
+            assertThat(aBinding, notNullValue());
+            for (final String variable : TEST_VARIABLES) {
+                if (aBinding.has(variable)) {
+                    checkVariable(variable, expectedBindings, aBinding);
+                }
+            }
+        }
+    }
+
+    private static void checkVariable(String variable, Map<String, TypeValue> expectedBindings, JSONObject aBinding)
+        throws JSONException {
+        final JSONObject aVariable = aBinding.getJSONObject(variable);
+        assertThat(aVariable, notNullValue());
+        final TypeValue typeValue = expectedBindings.get(variable);
+        final String expectedType = typeValue.getType().toString();
+        assertThat(aVariable.getString("type"), equalTo(expectedType));
+        final String expectedValue = typeValue.getValue();
+        assertThat(aVariable.getString("value"), equalTo(expectedValue));
+        if (DATATYPE.equals(typeValue.getSuffixType())) {
+            final String expectedDatatype = typeValue.getSuffix();
+            assertThat(aVariable.getString("datatype"), equalTo(expectedDatatype));
+        }
+        if (XML_LANG.equals(typeValue.getSuffixType())) {
+            final String expectedLanguage = typeValue.getSuffix();
+            assertThat(aVariable.getString("xml:lang"), equalTo(expectedLanguage));
+        }
     }
 }
