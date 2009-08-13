@@ -65,7 +65,6 @@ import java.io.InputStream;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public interface SparqlMultiXmlStreamWriter extends SparqlXmlWriter {
     void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
 }
