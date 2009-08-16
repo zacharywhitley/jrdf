@@ -91,11 +91,11 @@ public class SparqlJsonParserImpl implements SparqlJsonParser {
         getStartOfBindings();
     }
 
-    public LinkedHashSet<String> getVariables() throws IOException {
+    public LinkedHashSet<String> getVariables() {
         return variables;
     }
 
-    public LinkedHashSet<String> getLink() throws IOException {
+    public LinkedHashSet<String> getLink() {
         return links;
     }
 
