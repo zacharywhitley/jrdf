@@ -57,9 +57,11 @@
  *
  */
 
-package org.jrdf.query.answer.xml.parser;
+package org.jrdf.query.answer.xml;
 
 import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.xml.parser.SparqlXmlParser;
+import org.jrdf.query.answer.xml.parser.SparqlXmlParserImpl;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -67,6 +69,7 @@ import java.util.LinkedHashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+// TODO This can be made to use either a SparqlXmlParser or a SparqlJson Parser.
 public class SparqlResultStreamXmlParserImpl implements SparqlResultStreamXmlParser {
     private SparqlXmlParser parser;
     private BlockingQueue<InputStream> streamQueue;
