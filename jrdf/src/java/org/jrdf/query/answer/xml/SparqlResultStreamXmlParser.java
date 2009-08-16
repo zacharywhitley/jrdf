@@ -57,7 +57,9 @@
  *
  */
 
-package org.jrdf.query.answer.xml.parser;
+package org.jrdf.query.answer.xml;
+
+import org.jrdf.query.answer.xml.parser.SparqlXmlParser;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;

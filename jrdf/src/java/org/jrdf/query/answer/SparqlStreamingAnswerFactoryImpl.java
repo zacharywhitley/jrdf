@@ -61,8 +61,8 @@ package org.jrdf.query.answer;
 
 import org.jrdf.query.answer.xml.SparqlStreamingAskAnswer;
 import org.jrdf.query.answer.xml.SparqlStreamingSelectAnswer;
-import org.jrdf.query.answer.xml.parser.SparqlResultStreamXmlParser;
-import org.jrdf.query.answer.xml.parser.SparqlResultStreamXmlParserImpl;
+import org.jrdf.query.answer.xml.SparqlResultStreamXmlParser;
+import org.jrdf.query.answer.xml.SparqlResultStreamXmlParserImpl;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;

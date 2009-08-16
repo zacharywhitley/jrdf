@@ -59,7 +59,7 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.parser.SparqlResultStreamXmlParser;
+import org.jrdf.query.answer.xml.SparqlResultStreamXmlParser;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
