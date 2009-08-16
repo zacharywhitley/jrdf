@@ -77,7 +77,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class SparqlResultJsonParserImplUnitTest {
+public class SparqlJsonResultParserImplUnitTest {
     @Test
     public void uriBinding() throws Exception {
         checkParser("\"hpage\" : {\"type\": \"uri\", \"value\": \"http://example.org/alice\" }", "hpage",
@@ -153,7 +153,7 @@ public class SparqlResultJsonParserImplUnitTest {
         // Create something that the parser will successfully parse.
         final JsonFactory jsonFactory = new JsonFactory();
         final JsonParser parser = jsonFactory.createJsonParser("{" + jsonBinding + "}");
-        final SparqlResultJsonParser jsonParser = new SparqlResultJsonParserImpl(parser);
+        final SparqlJsonResultParser jsonParser = new SparqlJsonResultParserImpl(parser);
         final HashMap<String, TypeValue> binding = new HashMap<String, TypeValue>();
         parser.nextToken();
         parser.nextToken();

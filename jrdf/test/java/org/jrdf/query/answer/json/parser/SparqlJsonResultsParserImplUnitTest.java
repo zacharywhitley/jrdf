@@ -78,7 +78,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-public class SparqlResultsJsonParserImplUnitTest {
+public class SparqlJsonResultsParserImplUnitTest {
     private final MockFactory mockFactory = new MockFactory();
     private Iterator<TypeValue[]> mockIterator;
     private JsonParser mockJsonParser;
@@ -100,8 +100,8 @@ public class SparqlResultsJsonParserImplUnitTest {
         expectLastCall();
 
         mockFactory.replay();
-        final SparqlResultsJsonParser jsonParser =
-            new SparqlSelectResultsJsonParserImpl(variables, mockJsonParser);
+        final SparqlJsonResultsParser jsonParser =
+            new SparqlSelectJsonResultsParserImpl(variables, mockJsonParser);
         final boolean closedOkay = jsonParser.close();
 
         mockFactory.verify();
@@ -115,8 +115,8 @@ public class SparqlResultsJsonParserImplUnitTest {
         expectLastCall().andThrow(new IOException());
 
         mockFactory.replay();
-        final SparqlResultsJsonParser jsonParser =
-            new SparqlSelectResultsJsonParserImpl(variables, mockJsonParser);
+        final SparqlJsonResultsParser jsonParser =
+            new SparqlSelectJsonResultsParserImpl(variables, mockJsonParser);
         jsonParser.close();
 
         mockFactory.verify();
@@ -124,8 +124,8 @@ public class SparqlResultsJsonParserImplUnitTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void removeThrowsException() throws Exception {
-        final SparqlResultsJsonParser jsonParser =
-            new SparqlSelectResultsJsonParserImpl(variables, mockJsonParser);
+        final SparqlJsonResultsParser jsonParser =
+            new SparqlSelectJsonResultsParserImpl(variables, mockJsonParser);
         jsonParser.remove();
     }
 
@@ -140,7 +140,7 @@ public class SparqlResultsJsonParserImplUnitTest {
         variables.add("friend");
         // Skip start of array
         parser.nextToken();
-        final SparqlResultsJsonParser jsonParser = new SparqlSelectResultsJsonParserImpl(variables, parser);
+        final SparqlJsonResultsParser jsonParser = new SparqlSelectJsonResultsParserImpl(variables, parser);
         assertThat(jsonParser.hasNext(), is(true));
         assertThat(jsonParser.next(), arrayContaining(new TypeValue[]{new TypeValueImpl(BLANK_NODE, "r2")}));
         assertThat(jsonParser.hasNext(), is(true));
@@ -155,7 +155,7 @@ public class SparqlResultsJsonParserImplUnitTest {
         variables.add("friend");
         // Skip start of array
         parser.nextToken();
-        final SparqlResultsJsonParser jsonParser = new SparqlSelectResultsJsonParserImpl(variables, parser);
+        final SparqlJsonResultsParser jsonParser = new SparqlSelectJsonResultsParserImpl(variables, parser);
         jsonParser.next();
     }
 }
