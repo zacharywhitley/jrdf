@@ -59,38 +59,10 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import static org.jrdf.query.answer.SparqlProtocol.DATATYPE;
-import static org.jrdf.query.answer.SparqlProtocol.NAME;
-import static org.jrdf.query.answer.SparqlProtocol.XML_LANG;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.TypeValueFactory;
 
-import static javax.xml.XMLConstants.XML_NS_URI;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.util.Map;
+import java.util.LinkedHashSet;
 
-public class SparqlResultXmlParserImpl implements SparqlResultXmlParser {
-    private XMLStreamReader parser;
-    private TypeValueFactory typeValueFactory;
-
-    public SparqlResultXmlParserImpl(final XMLStreamReader newParser, final TypeValueFactory typeValueFactory) {
-        this.parser = newParser;
-        this.typeValueFactory = typeValueFactory;
-    }
-
-    public void getOneBinding(Map<String, TypeValue> variableToValue) throws XMLStreamException {
-        String variableName = parser.getAttributeValue(null, NAME);
-        TypeValue binding = getTypeValue();
-        variableToValue.put(variableName, binding);
-    }
-
-    private TypeValue getTypeValue() throws XMLStreamException {
-        parser.next();
-        String tagName = parser.getLocalName();
-        final String datatype = parser.getAttributeValue(null, DATATYPE);
-        final String xmlLang = parser.getAttributeValue(XML_NS_URI, XML_LANG);
-        final String value = parser.getElementText();
-        return typeValueFactory.createTypeValue(tagName, value, datatype, xmlLang);
-    }
+public interface SparqlXmlResultsParser {
+    TypeValue[] getResults(LinkedHashSet<String> variables);
 }

@@ -59,65 +59,11 @@
 
 package org.jrdf.query.answer.xml.parser;
 
-import org.jrdf.query.answer.SparqlProtocol;
-import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.TypeValueArrayFactory;
-import org.jrdf.query.answer.TypeValueArrayFactoryImpl;
-import org.jrdf.query.answer.TypeValueFactory;
-import org.jrdf.query.answer.TypeValueImpl;
 
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 
-public class SparqlResultsXmlParserImpl implements SparqlResultsXmlParser {
-    private XMLStreamReader parser;
-    private SparqlResultXmlParser resultParser;
-    private TypeValueArrayFactory arrayFactory = new TypeValueArrayFactoryImpl();
-
-    public SparqlResultsXmlParserImpl(final XMLStreamReader newParser, final TypeValueFactory typeValueFactory) {
-        this.parser = newParser;
-        this.resultParser = new SparqlResultXmlParserImpl(parser, typeValueFactory);
-    }
-
-    public TypeValue[] getResults(LinkedHashSet<String> variables) {
-        Map<String, TypeValue> variableToValue;
-        try {
-            variableToValue = parseAllResults();
-        } catch (XMLStreamException e) {
-            variableToValue = new HashMap<String, TypeValue>();
-        }
-        return arrayFactory.mapToArray(variables, variableToValue);
-    }
-
-    private Map<String, TypeValue> parseAllResults() throws XMLStreamException {
-        Map<String, TypeValue> variableToValue = new HashMap<String, TypeValue>();
-        int currentEvent = parser.getEventType();
-        while (parser.hasNext() && !endOfResult(currentEvent)) {
-            if (startOfBinding(currentEvent)) {
-                resultParser.getOneBinding(variableToValue);
-            } else if (startOfBoolean(currentEvent)) {
-                variableToValue.put("", new TypeValueImpl(BOOLEAN, parser.getElementText()));
-            }
-            currentEvent = parser.next();
-        }
-        return variableToValue;
-    }
-
-    private boolean startOfBoolean(int currentEvent) {
-        return currentEvent == START_ELEMENT && SparqlProtocol.BOOLEAN.equals(parser.getLocalName());
-    }
-
-    private boolean startOfBinding(int currentEvent) {
-        return currentEvent == START_ELEMENT && SparqlProtocol.BINDING.equals(parser.getLocalName());
-    }
-
-    private boolean endOfResult(int currentEvent) {
-        return currentEvent == END_ELEMENT && SparqlProtocol.RESULT.equals(parser.getLocalName());
-    }
+public interface SparqlXmlResultParser {
+    void getOneBinding(Map<String, TypeValue> variableToValue) throws XMLStreamException;
 }

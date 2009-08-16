@@ -82,7 +82,7 @@ import java.util.NoSuchElementException;
 public class SparqlXmlParserImpl implements SparqlXmlParser {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader parser;
-    private final SparqlResultsXmlParser resultsParser;
+    private final SparqlXmlResultsParser resultsParser;
     private LinkedHashSet<String> variables = new LinkedHashSet<String>();
     private LinkedHashSet<String> links = new LinkedHashSet<String>();
     private boolean hasMore;
@@ -90,7 +90,7 @@ public class SparqlXmlParserImpl implements SparqlXmlParser {
 
     public SparqlXmlParserImpl(InputStream stream) throws XMLStreamException {
         this.parser = INPUT_FACTORY.createXMLStreamReader(stream);
-        this.resultsParser = new SparqlResultsXmlParserImpl(parser, new TypeValueFactoryImpl());
+        this.resultsParser = new SparqlXmlResultsParserImpl(parser, new TypeValueFactoryImpl());
         this.finishedVariableParsing = false;
         this.hasMore = false;
         tryGetVariables();
