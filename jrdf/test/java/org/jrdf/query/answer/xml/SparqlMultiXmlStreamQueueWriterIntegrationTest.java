@@ -63,8 +63,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import org.jrdf.query.answer.TypeValueFactoryImpl;
-import org.jrdf.query.answer.xml.parser.SparqlResultsXmlParser;
-import org.jrdf.query.answer.xml.parser.SparqlResultsXmlParserImpl;
+import org.jrdf.query.answer.xml.parser.SparqlXmlResultsParser;
+import org.jrdf.query.answer.xml.parser.SparqlXmlResultsParserImpl;
 import static org.jrdf.query.answer.xml.parser.SparqlXmlParserImplUnitTest.EXPECTED_VARIABLES;
 import static org.jrdf.query.answer.xml.parser.SparqlXmlParserImplUnitTest.ROW_1;
 import static org.jrdf.query.answer.xml.parser.SparqlXmlParserImplUnitTest.ROW_2;
@@ -169,14 +169,14 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
     }
 
     private void checkTwoResults(Writer writer) throws Exception {
-        SparqlResultsXmlParser parser = getParser(writer);
+        SparqlXmlResultsParser parser = getParser(writer);
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_1));
         streamReader.next();
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_2));
     }
 
     private void checkFourResults(Writer writer) throws Exception {
-        SparqlResultsXmlParser parser = getParser(writer);
+        SparqlXmlResultsParser parser = getParser(writer);
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_1));
         streamReader.next();
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_2));
@@ -186,10 +186,10 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_2));
     }
 
-    private SparqlResultsXmlParser getParser(Writer writer) throws XMLStreamException {
+    private SparqlXmlResultsParser getParser(Writer writer) throws XMLStreamException {
         String result = writer.toString();
         InputStream stringStream = new ByteArrayInputStream(result.getBytes());
         streamReader = newInstance().createXMLStreamReader(stringStream);
-        return new SparqlResultsXmlParserImpl(streamReader, new TypeValueFactoryImpl());
+        return new SparqlXmlResultsParserImpl(streamReader, new TypeValueFactoryImpl());
     }
 }

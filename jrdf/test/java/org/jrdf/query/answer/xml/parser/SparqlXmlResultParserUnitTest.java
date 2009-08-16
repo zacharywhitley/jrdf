@@ -78,7 +78,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
 import java.util.HashMap;
 
-public class SparqlResultXmlParserUnitTest {
+public class SparqlXmlResultParserUnitTest {
     private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
 
     @Test
@@ -120,7 +120,7 @@ public class SparqlResultXmlParserUnitTest {
         final XMLStreamReader streamReader = XML_INPUT_FACTORY.createXMLStreamReader(stream);
         final TypeValueFactory typeFactory = new TypeValueFactoryImpl();
         streamReader.next();
-        final SparqlResultXmlParser xmlParser = new SparqlResultXmlParserImpl(streamReader, typeFactory);
+        final SparqlXmlResultParser xmlParser = new SparqlXmlResultParserImpl(streamReader, typeFactory);
         final HashMap<String, TypeValue> binding = new HashMap<String, TypeValue>();
         xmlParser.getOneBinding(binding);
         assertThat(binding.containsKey(variable), is(true));
