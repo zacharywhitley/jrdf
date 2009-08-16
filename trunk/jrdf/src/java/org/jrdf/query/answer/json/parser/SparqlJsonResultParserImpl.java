@@ -73,7 +73,7 @@ import org.jrdf.query.answer.TypeValueFactoryImpl;
 import java.io.IOException;
 import java.util.Map;
 
-public class SparqlResultJsonParserImpl implements SparqlResultJsonParser {
+public class SparqlJsonResultParserImpl implements SparqlJsonResultParser {
     private final TypeValueFactory typeValueFactory = new TypeValueFactoryImpl();
     private final JsonParser parser;
     private String type;
@@ -81,7 +81,7 @@ public class SparqlResultJsonParserImpl implements SparqlResultJsonParser {
     private String datatype;
     private String xmlLang;
 
-    public SparqlResultJsonParserImpl(JsonParser parser) {
+    public SparqlJsonResultParserImpl(JsonParser parser) {
         this.parser = parser;
     }
 

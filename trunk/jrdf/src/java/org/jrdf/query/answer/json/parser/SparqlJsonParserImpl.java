@@ -80,7 +80,7 @@ import java.util.LinkedHashSet;
 public class SparqlJsonParserImpl implements SparqlJsonParser {
     private InputStreamReader reader;
     private JsonParser parser;
-    private SparqlResultsJsonParser resultsParser;
+    private SparqlJsonResultsParser resultsParser;
     private LinkedHashSet<String> variables;
     private LinkedHashSet<String> links;
 
@@ -140,9 +140,9 @@ public class SparqlJsonParserImpl implements SparqlJsonParser {
 
     private void getStartOfBindings() throws IOException {
         if (hasResults() && hasBindings()) {
-            resultsParser = new SparqlSelectResultsJsonParserImpl(variables, parser);
+            resultsParser = new SparqlSelectJsonResultsParserImpl(variables, parser);
         } else {
-            resultsParser = new SparqlAskResultsJsonParserImpl(parser);
+            resultsParser = new SparqlAskJsonResultsParserImpl(parser);
         }
     }
 

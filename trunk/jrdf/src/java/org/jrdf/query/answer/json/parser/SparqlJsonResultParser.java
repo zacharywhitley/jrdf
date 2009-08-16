@@ -58,58 +58,11 @@
 
 package org.jrdf.query.answer.json.parser;
 
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
-import org.jrdf.query.answer.SparqlProtocol;
-import org.jrdf.query.answer.SparqlResultType;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.TypeValueImpl;
 
+import java.util.Map;
 import java.io.IOException;
-import java.util.NoSuchElementException;
 
-public class SparqlAskResultsJsonParserImpl implements SparqlResultsJsonParser {
-    private boolean hasNext = true;
-    private boolean value;
-
-    public SparqlAskResultsJsonParserImpl(JsonParser parser) {
-        tryGetValue(parser);
-    }
-
-    private void tryGetValue(JsonParser parser) {
-        try {
-            if (SparqlProtocol.BOOLEAN.equals(parser.getCurrentName())) {
-                final JsonToken jsonToken = parser.nextValue();
-                if (JsonToken.VALUE_TRUE == jsonToken) {
-                    value = true;
-                } else if (JsonToken.VALUE_FALSE == jsonToken) {
-                    value = false;
-                } else {
-                    throw new IllegalStateException("Cannot parse: " + jsonToken);
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean hasNext() {
-        return hasNext;
-    }
-
-    public TypeValue[] next() {
-        if (!hasNext) {
-            throw new NoSuchElementException("No more results available");
-        }
-        hasNext = false;
-        return new TypeValue[] {new TypeValueImpl(SparqlResultType.BOOLEAN, Boolean.toString(value))};
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot remove on this iterator");
-    }
-
-    public boolean close() {
-        return true;
-    }
+public interface SparqlJsonResultParser {
+    void getOneBinding(Map<String, TypeValue> variableToValue) throws IOException;
 }
