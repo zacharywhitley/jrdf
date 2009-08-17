@@ -64,6 +64,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.arrayContaining;
+import org.jrdf.query.answer.SparqlParser;
 import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
 import static org.jrdf.query.answer.SparqlResultType.LITERAL;
@@ -104,7 +105,7 @@ public class SparqlXmlParserImplUnitTest {
     public static final TypeValue[] ROW_1 = {R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7};
     public static final TypeValue[] ROW_2 = {R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7};
     private static final TypeValue[] EXPECTED_ASK_RESULTVALUE = {new TypeValueImpl(BOOLEAN, "true")};
-    private SparqlXmlParser parser;
+    private SparqlParser parser;
 
     @Test
     public void testParseSelect() throws Exception {
@@ -134,13 +135,13 @@ public class SparqlXmlParserImplUnitTest {
         checkThrowsExceptionBeyondResults(parser);
     }
 
-    public static void checkHasMoreAndGetResult(final SparqlXmlParser parser, final TypeValue[] expectedRow) {
+    public static void checkHasMoreAndGetResult(final SparqlParser parser, final TypeValue[] expectedRow) {
         assertThat(parser.hasNext(), is(true));
         assertThat(parser.hasNext(), is(true));
         assertThat(parser.next(), arrayContaining(expectedRow));
     }
 
-    private void checkThrowsExceptionBeyondResults(final SparqlXmlParser jsonParser) {
+    private void checkThrowsExceptionBeyondResults(final SparqlParser jsonParser) {
         assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 jsonParser.next();

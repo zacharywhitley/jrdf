@@ -65,6 +65,7 @@ import static org.codehaus.jackson.JsonToken.END_OBJECT;
 import static org.codehaus.jackson.JsonToken.FIELD_NAME;
 import static org.codehaus.jackson.JsonToken.START_ARRAY;
 import static org.codehaus.jackson.JsonToken.START_OBJECT;
+import org.jrdf.query.answer.SparqlParser;
 import static org.jrdf.query.answer.SparqlProtocol.BINDINGS;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
 import static org.jrdf.query.answer.SparqlProtocol.LINK;
@@ -77,7 +78,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedHashSet;
 
-public class SparqlJsonParserImpl implements SparqlJsonParser {
+public class SparqlJsonParserImpl implements SparqlParser {
     private InputStreamReader reader;
     private JsonParser parser;
     private SparqlJsonResultsParser resultsParser;

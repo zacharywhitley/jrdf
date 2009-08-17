@@ -5,7 +5,7 @@
     <import file="build-urql.xml"/>
 
     <target name="clean">
-        <delete dir="${buildrcp.dir}"/>
+        <delete dir="${build.dir}"/>
     </target>
 
     <target name="gen-src" depends="gen-urql-parser"/>

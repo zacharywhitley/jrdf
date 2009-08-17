@@ -59,6 +59,7 @@
 
 package org.jrdf.query.answer.xml.parser;
 
+import org.jrdf.query.answer.SparqlParser;
 import static org.jrdf.query.answer.SparqlProtocol.BOOLEAN;
 import static org.jrdf.query.answer.SparqlProtocol.HEAD;
 import static org.jrdf.query.answer.SparqlProtocol.HREF;
@@ -79,7 +80,7 @@ import java.io.InputStream;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 
-public class SparqlXmlParserImpl implements SparqlXmlParser {
+public class SparqlXmlParserImpl implements SparqlParser {
     private static final XMLInputFactory INPUT_FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader parser;
     private final SparqlXmlResultsParser resultsParser;

@@ -71,12 +71,12 @@ import java.util.LinkedHashSet;
  */
 public class SparqlMultiXmlStreamQueueWriter extends AbstractSparqlXmlWriter
     implements SparqlMultiXmlStreamWriter {
-    private SparqlResultStreamXmlParser streamParser;
+    private StreamingSparqlParser streamParser;
 
     public SparqlMultiXmlStreamQueueWriter(Writer writer, InputStream... streams)
         throws XMLStreamException, InterruptedException {
         createXmlStreamWriter(writer);
-        this.streamParser = new SparqlResultStreamXmlParserImpl(streams);
+        this.streamParser = new StreamingSparqlParserImpl(streams);
     }
 
     public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {

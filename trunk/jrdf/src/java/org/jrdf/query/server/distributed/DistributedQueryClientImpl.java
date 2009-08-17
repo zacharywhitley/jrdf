@@ -62,8 +62,8 @@ package org.jrdf.query.server.distributed;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
-import org.jrdf.query.answer.xml.SparqlResultStreamXmlParser;
-import org.jrdf.query.answer.xml.SparqlResultStreamXmlParserImpl;
+import org.jrdf.query.answer.xml.StreamingSparqlParser;
+import org.jrdf.query.answer.xml.StreamingSparqlParserImpl;
 import org.jrdf.query.client.CallableGraphQueryClient;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
@@ -92,16 +92,17 @@ public class DistributedQueryClientImpl implements QueryClient {
     private Collection<CallableGraphQueryClient> queryClients;
     private Collection<String> serverAddresses;
     private Set<Future<InputStream>> set;
-    private SparqlResultStreamXmlParser multiStreamAnswerParser;
+    private StreamingSparqlParser multiStreamAnswerParser;
 
-    public DistributedQueryClientImpl(Collection<String> servers) throws XMLStreamException, InterruptedException {
+    public DistributedQueryClientImpl(Collection<String> servers) throws XMLStreamException,
+        InterruptedException {
         this.serverAddresses = servers;
         this.queryClients = new LinkedList<CallableGraphQueryClient>();
         for (String server : serverAddresses) {
             this.queryClients.add(new QueryClientImpl(server));
         }
         this.executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
-        this.multiStreamAnswerParser = new SparqlResultStreamXmlParserImpl();
+        this.multiStreamAnswerParser = new StreamingSparqlParserImpl();
     }
 
     public void getQuery(String graphName, String queryString, String noRows) {

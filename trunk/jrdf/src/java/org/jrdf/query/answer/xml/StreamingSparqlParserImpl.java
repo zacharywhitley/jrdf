@@ -59,8 +59,8 @@
 
 package org.jrdf.query.answer.xml;
 
+import org.jrdf.query.answer.SparqlParser;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.xml.parser.SparqlXmlParser;
 import org.jrdf.query.answer.xml.parser.SparqlXmlParserImpl;
 
 import javax.xml.stream.XMLStreamException;
@@ -69,9 +69,8 @@ import java.util.LinkedHashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-// TODO This can be made to use either a SparqlXmlParser or a SparqlJson Parser.
-public class SparqlResultStreamXmlParserImpl implements SparqlResultStreamXmlParser {
-    private SparqlXmlParser parser;
+public class StreamingSparqlParserImpl implements StreamingSparqlParser {
+    private SparqlParser parser;
     private BlockingQueue<InputStream> streamQueue;
     private LinkedHashSet<String> variables;
     private LinkedHashSet<String> link;
@@ -80,7 +79,7 @@ public class SparqlResultStreamXmlParserImpl implements SparqlResultStreamXmlPar
     private boolean hasMore;
     private TypeValue[] results;
 
-    public SparqlResultStreamXmlParserImpl(InputStream... streams) throws XMLStreamException, InterruptedException {
+    public StreamingSparqlParserImpl(InputStream... streams) throws XMLStreamException, InterruptedException {
         this.hasMore = false;
         this.variables = new LinkedHashSet<String>();
         this.streamQueue = new LinkedBlockingQueue<InputStream>();
