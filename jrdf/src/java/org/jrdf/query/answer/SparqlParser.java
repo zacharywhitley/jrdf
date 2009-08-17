@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,24 +54,16 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.urql;
+package org.jrdf.query.answer;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.answer.Answer;
+import org.jrdf.util.ClosableIterator;
 
-/**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
- */
-public interface UrqlConnection {
+import java.util.LinkedHashSet;
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+public interface SparqlParser extends ClosableIterator<TypeValue[]> {
+    LinkedHashSet<String> getVariables();
+
+    LinkedHashSet<String> getLink();
 }

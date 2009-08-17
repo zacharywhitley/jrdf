@@ -77,14 +77,14 @@ import java.util.Set;
  */
 public class SparqlStreamingAskAnswer implements AskAnswer {
     private static final String[] NO_VARIABLES = new String[]{};
-    private SparqlResultStreamXmlParser answerStreamParser;
+    private StreamingSparqlParser answerStreamParser;
     private boolean result;
 
     public SparqlStreamingAskAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
-        this(new SparqlResultStreamXmlParserImpl(stream));
+        this(new StreamingSparqlParserImpl(stream));
     }
 
-    public SparqlStreamingAskAnswer(SparqlResultStreamXmlParser answerStreamParser) {
+    public SparqlStreamingAskAnswer(StreamingSparqlParser answerStreamParser) {
         this.answerStreamParser = answerStreamParser;
         this.result = false;
     }

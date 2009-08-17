@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- *  ====================================================================
+ * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,17 +54,16 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
+ *
  */
 
-package org.jrdf.query.answer.json.parser;
+package org.jrdf.query.answer.xml;
 
-import org.jrdf.query.answer.TypeValue;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.query.answer.SparqlParser;
 
-import java.util.LinkedHashSet;
+import javax.xml.stream.XMLStreamException;
+import java.io.InputStream;
 
-public interface SparqlJsonParser extends ClosableIterator<TypeValue[]> {
-    LinkedHashSet<String> getVariables();
-
-    LinkedHashSet<String> getLink();
+public interface StreamingSparqlParser extends SparqlParser {
+    void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
 }
