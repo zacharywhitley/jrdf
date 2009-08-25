@@ -71,6 +71,8 @@ import org.jrdf.query.client.CallableGraphQueryClient;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.client.ServerPort;
+import org.jrdf.query.client.SparqlAnswerHandler;
+import org.jrdf.query.client.XmlSparqlAnswerHandler;
 import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
@@ -93,6 +95,7 @@ public class LocalQueryIntegrationTest {
     private static final String SELECT_QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
     private static final String ASK_QUERY_STRING = "ASK WHERE { ?s ?p ?o. }";
     private static final ServerPort SERVER_PORT = createServerPort(LOCAL_HOST, 8182);
+    private static final SparqlAnswerHandler ANSWER_HANDLER = new XmlSparqlAnswerHandler();
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
@@ -118,7 +121,7 @@ public class LocalQueryIntegrationTest {
     @Test
     public void falseAnswerUsingAnAskQueryOnEmptyGraph() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
-        QueryClient client = new QueryClientImpl(SERVER_PORT);
+        QueryClient client = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
         final Answer answer1 = client.executeQuery(FOO, ASK_QUERY_STRING, -1);
         AskAnswer answer = (AskAnswer) answer1;
         assertEquals(false, answer.getResult());
@@ -132,7 +135,7 @@ public class LocalQueryIntegrationTest {
         graph.add(b1, p, b1);
         graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
-        CallableGraphQueryClient queryClient = new QueryClientImpl(SERVER_PORT);
+        CallableGraphQueryClient queryClient = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
         Answer answer = queryClient.executeQuery(FOO, SELECT_QUERY_STRING, -1);
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }

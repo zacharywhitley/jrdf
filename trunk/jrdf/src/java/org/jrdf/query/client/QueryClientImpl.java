@@ -59,16 +59,10 @@
 
 package org.jrdf.query.client;
 
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
-import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
-import org.restlet.data.ClientInfo;
-import org.restlet.data.MediaType;
 import static org.restlet.data.Method.GET;
-import org.restlet.data.Preference;
 import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
@@ -77,33 +71,31 @@ import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 public final class QueryClientImpl implements CallableGraphQueryClient {
-    private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
-        new SparqlStreamingAnswerFactoryImpl();
     private final Client client;
     private final ServerPort serverPort;
+    private final SparqlAnswerHandler answerHandler;
     private Request request;
 
-    public QueryClientImpl(final ServerPort serverPort) {
+    public QueryClientImpl(final ServerPort serverPort, final SparqlAnswerHandler answerHandler) {
         this.serverPort = serverPort;
+        this.answerHandler = answerHandler;
         this.client = new Client(HTTP);
     }
 
     public void setQuery(String graphName, String queryString, long noRows) {
         String requestURL = makeRequestString(graphName, queryString, noRows);
         request = new Request(GET, requestURL);
-        setAcceptedMediaTypes();
+        answerHandler.setAcceptedMediaTypes(request);
     }
 
     public Answer executeQuery() {
-        return tryGetAnswer(getRepresentation());
+        return answerHandler.getAnswer(getRepresentation());
     }
 
     public Answer executeQuery(String graphName, String queryString, long noRows) {
@@ -121,7 +113,7 @@ public final class QueryClientImpl implements CallableGraphQueryClient {
 
     private Representation getRepresentation() {
         checkNotNull(client, request);
-        setAcceptedMediaTypes();
+        answerHandler.setAcceptedMediaTypes(request);
         Response response = client.handle(request);
         final Status status = response.getStatus();
         if (status.isSuccess()) {
@@ -130,21 +122,6 @@ public final class QueryClientImpl implements CallableGraphQueryClient {
             status.getThrowable().printStackTrace();
             throw new RuntimeException(status.getThrowable());
         }
-    }
-
-    private Answer tryGetAnswer(Representation output) {
-        try {
-            return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingAnswer(output.getStream());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void setAcceptedMediaTypes() {
-        ClientInfo clientInfo = request.getClientInfo();
-        List<Preference<MediaType>> preferenceList = new ArrayList<Preference<MediaType>>();
-        preferenceList.add(new Preference<MediaType>(APPLICATION_SPARQL_XML));
-        clientInfo.setAcceptedMediaTypes(preferenceList);
     }
 
     private String makeRequestString(String graphName, String queryString, long noRows) {

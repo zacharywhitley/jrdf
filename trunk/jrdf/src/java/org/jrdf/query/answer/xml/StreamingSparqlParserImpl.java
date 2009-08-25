@@ -134,6 +134,7 @@ public class StreamingSparqlParserImpl implements StreamingSparqlParser {
             if (parser != null) {
                 parser.close();
             }
+            // TODO AN Use a parser handler here instead of hard coding
             parser = new SparqlXmlParserImpl(currentStream);
             parseVariables();
             parseHead();
