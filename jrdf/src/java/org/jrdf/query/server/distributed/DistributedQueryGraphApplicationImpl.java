@@ -62,6 +62,9 @@ package org.jrdf.query.server.distributed;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.client.ServerPort;
+import org.jrdf.query.client.SparqlAnswerHandler;
+import org.jrdf.query.client.XmlSparqlAnswerHandler;
+import org.jrdf.query.client.QueryClient;
 import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
@@ -77,6 +80,8 @@ import java.util.Set;
 public class DistributedQueryGraphApplicationImpl implements DistributedQueryGraphApplication {
     private static final int DEFAULT_PORT = 8182;
     private static final int INVALID_TIME_TAKEN = -1;
+    // TODO AN Wire this in an support having different handlers.
+    private static final SparqlAnswerHandler ANSWER_HANDLER = new XmlSparqlAnswerHandler();
     private Set<ServerPort> servers;
     private GraphApplication application;
 
@@ -108,7 +113,8 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
 
     public Answer answerQuery(String graphName, String queryString, long maxRows) throws ResourceException {
         try {
-            return new DistributedQueryClientImpl(servers).executeQuery(graphName, queryString, maxRows);
+            final QueryClient queryClient = new DistributedQueryClientImpl(servers, ANSWER_HANDLER);
+            return queryClient.executeQuery(graphName, queryString, maxRows);
         } catch (Exception e) {
             throw new ResourceException(e);
         }
