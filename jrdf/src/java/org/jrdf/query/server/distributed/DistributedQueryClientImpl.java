@@ -67,7 +67,7 @@ import org.jrdf.query.answer.xml.StreamingSparqlParserImpl;
 import org.jrdf.query.client.CallableGraphQueryClient;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
-import static org.jrdf.query.client.ServerPort.createServerPort;
+import org.jrdf.query.client.ServerPort;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;
@@ -91,16 +91,16 @@ public class DistributedQueryClientImpl implements QueryClient {
         new SparqlStreamingAnswerFactoryImpl();
     private ExecutorService executor;
     private Collection<CallableGraphQueryClient> queryClients;
-    private Collection<String> serverAddresses;
+    private Collection<ServerPort> serverAddresses;
     private Set<Future<InputStream>> set;
     private StreamingSparqlParser multiStreamAnswerParser;
 
-    public DistributedQueryClientImpl(Collection<String> servers) throws XMLStreamException,
+    public DistributedQueryClientImpl(Collection<ServerPort> servers) throws XMLStreamException,
         InterruptedException {
         this.serverAddresses = servers;
         this.queryClients = new LinkedList<CallableGraphQueryClient>();
-        for (String server : serverAddresses) {
-            this.queryClients.add(new QueryClientImpl(createServerPort(server, DEFAULT_PORT)));
+        for (final ServerPort server : serverAddresses) {
+            this.queryClients.add(new QueryClientImpl(server));
         }
         this.executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
         this.multiStreamAnswerParser = new StreamingSparqlParserImpl();
@@ -129,6 +129,12 @@ public class DistributedQueryClientImpl implements QueryClient {
         return executeQuery();
     }
 
+    public void cancelExecution() {
+        for (Future<InputStream> future : set) {
+            cancelExecution(future);
+        }
+    }
+
     private void aggregateResults() {
         long start = System.currentTimeMillis();
         for (Future<InputStream> future : set) {
@@ -146,12 +152,6 @@ public class DistributedQueryClientImpl implements QueryClient {
         for (CallableGraphQueryClient queryClient : queryClients) {
             Future<InputStream> future = executor.submit(queryClient);
             set.add(future);
-        }
-    }
-
-    public void cancelExecution() {
-        for (Future<InputStream> future : set) {
-            cancelExecution(future);
         }
     }
 
