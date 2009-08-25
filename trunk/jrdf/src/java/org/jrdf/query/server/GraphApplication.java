@@ -65,7 +65,7 @@ import org.restlet.resource.ResourceException;
 
 public interface GraphApplication {
 
-    Answer answerQuery(String graphName, String queryString) throws ResourceException;
+    Answer answerQuery(String graphName, String queryString, long maxRows) throws ResourceException;
 
     String getGraphsDir();
 
@@ -73,9 +73,9 @@ public interface GraphApplication {
 
     void setFormat(String format);
 
-    String getMaxRows();
+    long getMaxRows();
 
-    void setMaxRows(String rows);
+    void setMaxRows(long rows);
 
     void close();
 

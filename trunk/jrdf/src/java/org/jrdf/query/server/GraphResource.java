@@ -62,7 +62,6 @@ package org.jrdf.query.server;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
-import static org.jrdf.query.server.local.GraphApplicationImpl.DEFAULT_MAX_ROWS;
 import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
@@ -79,10 +78,13 @@ import java.util.Map;
  */
 
 public class GraphResource extends ConfigurableRestletResource {
+    private static final long DEFAULT_MAX_ROWS = 1000;
     private static final String GRAPH_VALUE = "graph";
+    private static final String MAX_ROWS = "maxRows";
     private static final String GRAPH_NAME = "graphName";
     private String graphName;
     private String queryString;
+    private long maxRows;
     private GraphApplication graphApplication;
 
     public void setGraphApplication(GraphApplication graphApplication) {
@@ -93,10 +95,9 @@ public class GraphResource extends ConfigurableRestletResource {
     public Representation represent(Variant variant) {
         Representation rep = null;
         try {
-            graphName = (String) getRequest().getAttributes().get(GRAPH_VALUE);
-            if (getRequest().getResourceRef().hasQuery()) {
-                queryString = getRequest().getResourceRef().getQueryAsForm().getFirst("query").getValue();
-            }
+            graphName = getGraph();
+            maxRows = getMaxRows();
+            queryString = getQueryString();
             if (queryString == null) {
                 rep = queryPageRepresentation(variant);
             } else {
@@ -110,6 +111,27 @@ public class GraphResource extends ConfigurableRestletResource {
         return rep;
     }
 
+    private String getGraph() {
+        return (String) getRequest().getAttributes().get(GRAPH_VALUE);
+    }
+
+    private Long getMaxRows() {
+        final Long tmpMaxRows = (Long) getRequest().getAttributes().get(MAX_ROWS);
+        if (tmpMaxRows == null) {
+            return DEFAULT_MAX_ROWS;
+        } else {
+            return tmpMaxRows;
+        }
+    }
+
+    private String getQueryString() {
+        if (getRequest().getResourceRef().hasQuery()) {
+            return getRequest().getResourceRef().getQueryAsForm().getFirst("query").getValue();
+        } else {
+            return null;
+        }
+    }
+
     protected Representation queryPageRepresentation(Variant variant) throws IOException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         dataModel.put(GRAPH_NAME, graphName);
@@ -118,12 +140,12 @@ public class GraphResource extends ConfigurableRestletResource {
 
     private Representation queryResultRepresentation(Variant variant) throws ResourceException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
-        Answer answer = graphApplication.answerQuery(graphName, queryString);
+        Answer answer = graphApplication.answerQuery(graphName, queryString, maxRows);
         dataModel.put("query", queryString);
         dataModel.put(GRAPH_NAME, graphName);
         dataModel.put("timeTaken", graphApplication.getTimeTaken());
         dataModel.put("tooManyRows", graphApplication.isTooManyRows());
-        dataModel.put("maxRows", DEFAULT_MAX_ROWS);
+        dataModel.put("maxRows", graphApplication.getMaxRows());
         dataModel.put("answer", answer);
         if (answer instanceof SelectAnswer) {
             dataModel.put("answerType", "select");

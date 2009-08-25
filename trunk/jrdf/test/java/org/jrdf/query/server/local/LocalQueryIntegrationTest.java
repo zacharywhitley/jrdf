@@ -70,6 +70,8 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.client.CallableGraphQueryClient;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
+import org.jrdf.query.client.ServerPort;
+import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
@@ -90,6 +92,7 @@ public class LocalQueryIntegrationTest {
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final String SELECT_QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
     private static final String ASK_QUERY_STRING = "ASK WHERE { ?s ?p ?o. }";
+    private static final ServerPort SERVER_PORT = createServerPort(LOCAL_HOST, 8182);
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
@@ -115,9 +118,8 @@ public class LocalQueryIntegrationTest {
     @Test
     public void falseAnswerUsingAnAskQueryOnEmptyGraph() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
-        QueryClient client = new QueryClientImpl(LOCAL_HOST);
-        client.getQuery(FOO, ASK_QUERY_STRING, "all");
-        final Answer answer1 = client.executeQuery();
+        QueryClient client = new QueryClientImpl(SERVER_PORT);
+        final Answer answer1 = client.executeQuery(FOO, ASK_QUERY_STRING, -1);
         AskAnswer answer = (AskAnswer) answer1;
         assertEquals(false, answer.getResult());
     }
@@ -130,9 +132,8 @@ public class LocalQueryIntegrationTest {
         graph.add(b1, p, b1);
         graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
-        CallableGraphQueryClient queryClient = new QueryClientImpl(LOCAL_HOST);
-        queryClient.getQuery(FOO, SELECT_QUERY_STRING, "all");
-        Answer answer = queryClient.executeQuery();
+        CallableGraphQueryClient queryClient = new QueryClientImpl(SERVER_PORT);
+        Answer answer = queryClient.executeQuery(FOO, SELECT_QUERY_STRING, -1);
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 

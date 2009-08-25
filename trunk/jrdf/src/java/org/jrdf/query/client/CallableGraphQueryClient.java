@@ -66,6 +66,5 @@ import java.util.concurrent.Callable;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public interface CallableGraphQueryClient extends QueryClient, Callable<InputStream> {
 }
