@@ -59,7 +59,11 @@
 
 package org.jrdf.query.client;
 
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
+
 public final class ServerPort {
+    private static final int PRIME = 31;
     private int port;
     private String hostname;
 
@@ -86,5 +90,37 @@ public final class ServerPort {
 
     public String getHostname() {
         return hostname;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = port;
+        result = PRIME * result + (hostname != null ? hostname.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        try {
+            ServerPort serverPort = (ServerPort) obj;
+            return comparePort(serverPort) && compareHost(serverPort);
+        } catch (ClassCastException cce) {
+            return false;
+        }
+    }
+
+    private boolean comparePort(ServerPort serverPort) {
+        return port == serverPort.getPort();
+    }
+
+    private boolean compareHost(ServerPort serverPort) {
+        return ((hostname != null && hostname.equals(serverPort.getHostname()) ||
+            (hostname == null && serverPort.getHostname() == null)));
     }
 }

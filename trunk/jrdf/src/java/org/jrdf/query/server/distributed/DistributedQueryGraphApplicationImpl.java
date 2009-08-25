@@ -61,10 +61,11 @@ package org.jrdf.query.server.distributed;
 
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.client.ServerPort;
+import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 
-import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -74,25 +75,35 @@ import java.util.Set;
  */
 
 public class DistributedQueryGraphApplicationImpl implements DistributedQueryGraphApplication {
+    private static final int DEFAULT_PORT = 8182;
     private static final int INVALID_TIME_TAKEN = -1;
-    private Set<String> servers;
+    private Set<ServerPort> servers;
     private GraphApplication application;
 
     public DistributedQueryGraphApplicationImpl(GraphApplication newApplication) {
         this.application = newApplication;
-        this.servers = new HashSet<String>();
+        this.servers = new HashSet<ServerPort>();
     }
 
     public void addServers(String... servers) {
-        this.servers.addAll(asList(servers));
+        for (String server : servers) {
+            this.servers.add(createServerPort(server, DEFAULT_PORT));
+        }
     }
 
     public void removeServers(String... servers) {
-        this.servers.removeAll(asList(servers));
+        for (String server : servers) {
+            this.servers.remove(createServerPort(server, DEFAULT_PORT));
+        }
     }
 
     public String[] getServers() {
-        return servers.toArray(new String[servers.size()]);
+        final String[] serverNames = new String[servers.size()];
+        int i = 0;
+        for (final ServerPort host : servers) {
+            serverNames[i++] = host.getHostname();
+        }
+        return serverNames;
     }
 
     public Answer answerQuery(String graphName, String queryString, long maxRows) throws ResourceException {
