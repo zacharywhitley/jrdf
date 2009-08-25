@@ -106,9 +106,10 @@ public class DistributedQueryIntegrationTest {
     private static final String SELECT_QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
     private static final String ASK_QUERY_STRING = "ASK WHERE { ?s ?p ?o. }";
     private static final int DISTRIBUTED_PORT = 8183;
+    private static final int LOCAL_PORT = 8182;
     private static final String LOCAL_HOST = "127.0.0.1";
     private static final String BASE_URI = "/graphs";
-    private static final ServerPort SERVER_PORT = createServerPort(LOCAL_HOST, 8182);
+    private static final ServerPort SERVER_PORT = createServerPort(LOCAL_HOST, LOCAL_PORT);
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;

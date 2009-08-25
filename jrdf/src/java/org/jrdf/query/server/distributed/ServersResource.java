@@ -79,7 +79,7 @@ import java.util.Map;
  */
 
 public class ServersResource extends ConfigurableRestletResource {
-    private static final int PORT_NUMBER = 8182;
+    private static final int LOCAL_PORT_NUMBER = 8182;
     private static final String DEFAULT_PORT_STRING = "defaultPort";
     private DistributedQueryGraphApplication application;
     private FreemarkerRepresentationFactory factory;
@@ -119,7 +119,7 @@ public class ServersResource extends ConfigurableRestletResource {
         Representation rep = null;
         try {
             Map<String, Object> dataModel = new HashMap<String, Object>();
-            dataModel.put(DEFAULT_PORT_STRING, Integer.toString(PORT_NUMBER));
+            dataModel.put(DEFAULT_PORT_STRING, Integer.toString(LOCAL_PORT_NUMBER));
             dataModel.put(ACTION, ACTION);
             final String[] servers = application.getServers();
             dataModel.put(SERVER_LIST, servers);
