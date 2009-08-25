@@ -67,10 +67,10 @@ import org.jrdf.query.answer.xml.StreamingSparqlParserImpl;
 import org.jrdf.query.client.CallableGraphQueryClient;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
+import static org.jrdf.query.client.ServerPort.createServerPort;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
@@ -86,6 +86,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  */
 
 public class DistributedQueryClientImpl implements QueryClient {
+    private static final int DEFAULT_PORT = 8182;
     private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
         new SparqlStreamingAnswerFactoryImpl();
     private ExecutorService executor;
@@ -99,19 +100,19 @@ public class DistributedQueryClientImpl implements QueryClient {
         this.serverAddresses = servers;
         this.queryClients = new LinkedList<CallableGraphQueryClient>();
         for (String server : serverAddresses) {
-            this.queryClients.add(new QueryClientImpl(server));
+            this.queryClients.add(new QueryClientImpl(createServerPort(server, DEFAULT_PORT)));
         }
         this.executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
         this.multiStreamAnswerParser = new StreamingSparqlParserImpl();
     }
 
-    public void getQuery(String graphName, String queryString, String noRows) {
+    public void setQuery(String graphName, String queryString, long noRows) {
         for (QueryClient queryClient : queryClients) {
-            queryClient.getQuery(graphName, queryString, noRows);
+            queryClient.setQuery(graphName, queryString, noRows);
         }
     }
 
-    public Answer executeQuery() throws IOException {
+    public Answer executeQuery() {
         checkNotNull(queryClients);
         try {
             this.set = new HashSet<Future<InputStream>>();
@@ -119,8 +120,13 @@ public class DistributedQueryClientImpl implements QueryClient {
             aggregateResults();
             return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingAnswer(multiStreamAnswerParser);
         } catch (XMLStreamException e) {
-            throw new IOException(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public Answer executeQuery(String graphName, String queryString, long noRows) {
+        setQuery(graphName, queryString, noRows);
+        return executeQuery();
     }
 
     private void aggregateResults() {

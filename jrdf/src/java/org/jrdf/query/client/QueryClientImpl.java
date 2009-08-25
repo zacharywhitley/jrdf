@@ -63,7 +63,6 @@ import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
-import static org.jrdf.query.client.ServerPort.createServerPort;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
@@ -77,7 +76,6 @@ import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,34 +84,44 @@ import java.util.List;
  * @author Yuan-Fang Li
  * @version :$
  */
-public class QueryClientImpl implements CallableGraphQueryClient {
-    private static final int DEFAULT_PORT = 8182;
+public final class QueryClientImpl implements CallableGraphQueryClient {
     private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
         new SparqlStreamingAnswerFactoryImpl();
-    private Client client;
+    private final Client client;
+    private final ServerPort serverPort;
     private Request request;
-    private ServerPort serverPort;
 
-    public QueryClientImpl(String server) {
-        this.serverPort = createServerPort(server, DEFAULT_PORT);
+    public QueryClientImpl(final ServerPort serverPort) {
+        this.serverPort = serverPort;
         this.client = new Client(HTTP);
+    }
+
+    public void setQuery(String graphName, String queryString, long noRows) {
+        String requestURL = makeRequestString(graphName, queryString, noRows);
+        request = new Request(GET, requestURL);
+        setAcceptedMediaTypes();
+    }
+
+    public Answer executeQuery() {
+        return tryGetAnswer(getRepresentation());
+    }
+
+    public Answer executeQuery(String graphName, String queryString, long noRows) {
+        setQuery(graphName, queryString, noRows);
+        return executeQuery();
     }
 
     public InputStream call() throws Exception {
         return getRepresentation().getStream();
     }
 
-    public void getQuery(String graphName, String queryString, String noRows) {
-        request = prepareGetRequest(graphName, queryString);
-    }
-
-    public Answer executeQuery() throws IOException {
-        return tryGetAnswer(getRepresentation());
+    public String toString() {
+        return serverPort.getHostname() + ":" + serverPort.getPort();
     }
 
     private Representation getRepresentation() {
         checkNotNull(client, request);
-        setAcceptedMediaTypes(request);
+        setAcceptedMediaTypes();
         Response response = client.handle(request);
         final Status status = response.getStatus();
         if (status.isSuccess()) {
@@ -124,13 +132,6 @@ public class QueryClientImpl implements CallableGraphQueryClient {
         }
     }
 
-    protected Request prepareGetRequest(String graphName, String queryString) {
-        String requestURL = makeRequestString(graphName, queryString);
-        Request request = new Request(GET, requestURL);
-        setAcceptedMediaTypes(request);
-        return request;
-    }
-
     private Answer tryGetAnswer(Representation output) {
         try {
             return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingAnswer(output.getStream());
@@ -139,21 +140,18 @@ public class QueryClientImpl implements CallableGraphQueryClient {
         }
     }
 
-    private void setAcceptedMediaTypes(Request theRequest) {
-        ClientInfo clientInfo = theRequest.getClientInfo();
+    private void setAcceptedMediaTypes() {
+        ClientInfo clientInfo = request.getClientInfo();
         List<Preference<MediaType>> preferenceList = new ArrayList<Preference<MediaType>>();
         preferenceList.add(new Preference<MediaType>(APPLICATION_SPARQL_XML));
         clientInfo.setAcceptedMediaTypes(preferenceList);
     }
 
-    private String makeRequestString(String graphName, String queryString) {
+    private String makeRequestString(String graphName, String queryString, long noRows) {
         Reference ref = new Reference(HTTP.getSchemeName(), serverPort.getHostname(), serverPort.getPort(),
             "/graphs/" + graphName, null, null);
         ref.addQueryParameter("query", queryString);
+        ref.addQueryParameter("maxRows", Long.toString(noRows));
         return ref.toString();
-    }
-
-    public String toString() {
-        return serverPort.getHostname() + ":" + serverPort.getPort();
     }
 }

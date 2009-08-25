@@ -61,15 +61,14 @@ package org.jrdf.query.client;
 
 import org.jrdf.query.answer.Answer;
 
-import java.io.IOException;
-
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public interface QueryClient {
-    void getQuery(String graphName, String queryString, String noRows);
+    void setQuery(String graphName, String queryString, long noRows);
 
-    Answer executeQuery() throws IOException;
+    Answer executeQuery();
+
+    Answer executeQuery(String graphName, String queryString, long noRows);
 }

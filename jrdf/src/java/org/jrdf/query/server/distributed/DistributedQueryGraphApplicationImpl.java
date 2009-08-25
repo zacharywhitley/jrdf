@@ -61,7 +61,6 @@ package org.jrdf.query.server.distributed;
 
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 
@@ -96,11 +95,9 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         return servers.toArray(new String[servers.size()]);
     }
 
-    public Answer answerQuery(String graphName, String queryString) throws ResourceException {
+    public Answer answerQuery(String graphName, String queryString, long maxRows) throws ResourceException {
         try {
-            QueryClient client = new DistributedQueryClientImpl(servers);
-            client.getQuery(graphName, queryString, null);
-            return client.executeQuery();
+            return new DistributedQueryClientImpl(servers).executeQuery(graphName, queryString, maxRows);
         } catch (Exception e) {
             throw new ResourceException(e);
         }
@@ -118,11 +115,11 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         application.setFormat(format);
     }
 
-    public String getMaxRows() {
+    public long getMaxRows() {
         return application.getMaxRows();
     }
 
-    public void setMaxRows(String rows) {
+    public void setMaxRows(long rows) {
         application.setMaxRows(rows);
     }
 

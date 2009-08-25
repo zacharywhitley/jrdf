@@ -70,6 +70,8 @@ import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
+import org.jrdf.query.client.ServerPort;
+import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.server.SpringDistributedServer;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
@@ -103,13 +105,14 @@ public class DistributedQueryIntegrationTest {
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final String SELECT_QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
     private static final String ASK_QUERY_STRING = "ASK WHERE { ?s ?p ?o. }";
+    private static final int DISTRIBUTED_PORT = 8183;
+    private static final String LOCAL_HOST = "127.0.0.1";
+    private static final String BASE_URI = "/graphs";
+    private static final ServerPort SERVER_PORT = createServerPort(LOCAL_HOST, 8182);
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
     private SpringDistributedServer distributedServer;
-    private static final int DISTRIBUTED_PORT = 8183;
-    private static final String LOCAL_HOST = "127.0.0.1";
-    private static final String BASE_URI = "/graphs";
 
     @Before
     public void setUp() throws Exception {
@@ -152,9 +155,8 @@ public class DistributedQueryIntegrationTest {
         assertEquals(2, graph.getNumberOfTriples());
         DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
         serverClient.postDistributedServer("add", LOCAL_HOST);
-        QueryClient client = new QueryClientImpl(LOCAL_HOST);
-        client.getQuery(FOO, SELECT_QUERY_STRING, "all");
-        Answer answer = client.executeQuery();
+        QueryClient client = new QueryClientImpl(SERVER_PORT);
+        Answer answer = client.executeQuery(FOO, SELECT_QUERY_STRING, -1);
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 
@@ -163,9 +165,8 @@ public class DistributedQueryIntegrationTest {
         assertEquals(0, graph.getNumberOfTriples());
         DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
         serverClient.postDistributedServer("add", LOCAL_HOST);
-        QueryClient client = new QueryClientImpl(LOCAL_HOST);
-        client.getQuery(FOO, ASK_QUERY_STRING, "all");
-        AskAnswer answer = (AskAnswer) client.executeQuery();
+        QueryClient client = new QueryClientImpl(SERVER_PORT);
+        AskAnswer answer = (AskAnswer) client.executeQuery(FOO, ASK_QUERY_STRING, -1);
         assertEquals(false, answer.getResult());
     }
 
@@ -179,9 +180,8 @@ public class DistributedQueryIntegrationTest {
         assertEquals(2, graph.getNumberOfTriples());
         DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
         serverClient.postDistributedServer("add", LOCAL_HOST);
-        QueryClient client = new QueryClientImpl(LOCAL_HOST);
-        client.getQuery(FOO, ASK_QUERY_STRING, "all");
-        AskAnswer answer = (AskAnswer) client.executeQuery();
+        QueryClient client = new QueryClientImpl(SERVER_PORT);
+        AskAnswer answer = (AskAnswer) client.executeQuery(FOO, ASK_QUERY_STRING, -1);
         assertEquals(true, answer.getResult());
     }
 

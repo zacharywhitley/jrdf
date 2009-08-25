@@ -70,16 +70,12 @@ import org.restlet.Application;
 import org.restlet.resource.ResourceException;
 
 public class GraphApplicationImpl extends Application implements GraphApplication {
-    /**
-     * The max no. of rows of answers that will be transfomred into xml.
-     */
-    public static final int DEFAULT_MAX_ROWS = 1000;
     private final DirectoryHandler handler;
     private final PersistentGlobalJRDFFactory factory;
     private final UrqlConnection urqlConnection;
     private Answer answer;
     private boolean tooManyRows;
-    private String maxRows;
+    private long maxRows;
     private String format;
 
     public GraphApplicationImpl(DirectoryHandler newHandler, UrqlConnection newConnection) {
@@ -100,11 +96,12 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
         return factory.getNewGraph();
     }
 
-    public Answer answerQuery(String graphName, String queryString) throws ResourceException {
+    public Answer answerQuery(String graphName, String queryString, long maxRows) throws ResourceException {
         try {
             final MoleculeGraph graph = getGraph(graphName);
             answer = urqlConnection.executeQuery(graph, queryString);
-            tooManyRows = answer.numberOfTuples() > DEFAULT_MAX_ROWS;
+            this.maxRows = maxRows;
+            tooManyRows = answer.numberOfTuples() > maxRows;
             return answer;
         } catch (Exception e) {
             throw new ResourceException(e);
@@ -123,11 +120,11 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
         return handler;
     }
 
-    public void setMaxRows(String maxRows) {
+    public void setMaxRows(long maxRows) {
         this.maxRows = maxRows;
     }
 
-    public String getMaxRows() {
+    public long getMaxRows() {
         return maxRows;
     }
 
