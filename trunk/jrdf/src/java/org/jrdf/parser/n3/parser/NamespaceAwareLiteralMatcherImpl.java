@@ -117,8 +117,6 @@ public final class NamespaceAwareLiteralMatcherImpl implements LiteralMatcher, S
             values[0] = nTripleUtil.unescapeLiteral(ntriplesLiteral);
             values[1] = matcher.group(LANGUAGE_INDEX);
             values[2] = getDatatypeString(matcher);
-        } else {
-            System.err.println("not matching: " + s);
         }
         return values;
     }

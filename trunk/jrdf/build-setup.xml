@@ -60,7 +60,7 @@
     <property name="freemarker.version" value="2.3.15"/>
     <property name="bdbje.version" value="3.3.82"/>
     <property name="groovy.version" value="1.6.3"/>
-    <property name="cobertura.version" value="1.9.1"/>
+    <property name="cobertura.version" value="1.9.3"/>
 
     <!-- Code coverage data output directory: -->
     <property name="coverage.dir" value="${build.dir}/coverage"/>

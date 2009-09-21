@@ -148,14 +148,13 @@ public class SPARQLPerformanceTest extends TestCase {
         for (Map.Entry<String, Integer> entry : FILE_RESULT_MAP.entrySet()) {
             String fileName = entry.getKey();
             String sparql = getFileContent(fileName);
-            System.err.println("Executing: " + fileName);
+            System.out.println("Executing: " + fileName);
             Answer answer = connection.executeQuery(graph, sparql);
             if (answer instanceof SelectAnswer) {
-                System.err.println("Answer # = " + answer.numberOfTuples() +
-                    ", time = " + answer.getTimeTaken() + "\n");
+                System.out.println("Answer # = " + answer.numberOfTuples() + ", time = " + answer.getTimeTaken() +
+                    "\n");
             } else if (answer instanceof AskAnswer) {
-                System.err.println("Answer = " + answer.toString() +
-                    ", time = " + answer.getTimeTaken() + "\n");
+                System.out.println("Answer = " + answer.toString() + ", time = " + answer.getTimeTaken() + "\n");
             }
             assertEquals(entry.getValue().intValue(), answer.numberOfTuples());
         }

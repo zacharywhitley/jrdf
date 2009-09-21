@@ -60,24 +60,58 @@ package org.jrdf.query.answer.json;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.json.JSONException;
+import static org.jrdf.query.answer.json.JsonTestUtil.checkJSONStringArrayValues;
 import org.json.JSONObject;
+import org.json.JSONException;
 import org.junit.Test;
-import static org.jrdf.query.answer.json.JsonTestUtil.*;
 
 import java.io.StringWriter;
 
 public class SparqlAskJsonWriterUnitTest {
     @Test
-    public void testSimpleOutput() throws JSONException {
+    public void writeFullDocumentProducesResults() throws Exception {
         final StringWriter stringWriter = new StringWriter();
         final SparqlAskJsonWriter writer = new SparqlAskJsonWriter(stringWriter, new String[]{}, true);
         writer.writeFullDocument();
+        checkResult(stringWriter, true);
+    }
 
+    private void checkResult(StringWriter stringWriter, final boolean expectedResult) throws JSONException {
         final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
         checkJSONStringArrayValues(head, "vars", new String[]{});
         checkJSONStringArrayValues(head, "link", new String[]{});
         final boolean result = new JSONObject(stringWriter.toString()).getBoolean("boolean");
-        assertThat(result, is(true));
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void writeWithApiCallsToProduceResult() throws Exception {
+        final StringWriter stringWriter = new StringWriter();
+        final SparqlAskJsonWriter writer = new SparqlAskJsonWriter(stringWriter, new String[]{}, false);
+
+        writer.writeStartDocument();
+        writer.writeHead();
+        writer.writeStartResults();
+        writer.writeAllResults();
+        writer.writeEndResults();
+        writer.writeEndDocument();
+
+        checkResult(stringWriter, false);
+    }
+
+    @Test
+    public void writeWithTooManyApiCallsHasResults() throws Exception {
+        final StringWriter stringWriter = new StringWriter();
+        final SparqlAskJsonWriter writer = new SparqlAskJsonWriter(stringWriter, new String[]{}, false);
+
+        writer.writeStartDocument();
+        writer.writeHead();
+        writer.writeStartResults();
+        writer.writeResult();
+        writer.writeResult();
+        writer.writeEndResults();
+        writer.writeEndDocument();
+
+        checkResult(stringWriter, false);
     }
 }
