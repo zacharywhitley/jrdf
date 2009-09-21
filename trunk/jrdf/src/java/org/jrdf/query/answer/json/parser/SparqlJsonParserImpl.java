@@ -128,6 +128,8 @@ public class SparqlJsonParserImpl implements SparqlParser {
             while (parser.nextToken() != END_OBJECT) {
                 getHeadValues();
             }
+        } else {
+            throw new IllegalStateException("Cannot parse token: " + parser.getCurrentName());
         }
     }
 
@@ -140,7 +142,8 @@ public class SparqlJsonParserImpl implements SparqlParser {
     }
 
     private void getStartOfBindings() throws IOException {
-        if (hasResults() && hasBindings()) {
+        if (hasResults()) {
+            hasBindings();
             resultsParser = new SparqlSelectJsonResultsParserImpl(variables, parser);
         } else {
             resultsParser = new SparqlAskJsonResultsParserImpl(parser);

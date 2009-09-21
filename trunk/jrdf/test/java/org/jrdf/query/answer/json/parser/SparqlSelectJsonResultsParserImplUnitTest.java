@@ -64,33 +64,26 @@ import static org.codehaus.jackson.JsonToken.END_ARRAY;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.TypeValueFactory;
 import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.util.test.MockFactory;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-public class SparqlJsonResultsParserImplUnitTest {
+public class SparqlSelectJsonResultsParserImplUnitTest {
     private final MockFactory mockFactory = new MockFactory();
-    private Iterator<TypeValue[]> mockIterator;
     private JsonParser mockJsonParser;
-    private TypeValueFactory mockTypeValueFactory;
     private LinkedHashSet<String> variables = new LinkedHashSet<String>();
 
     @Before
-    @SuppressWarnings({ "unchecked" })
     public void setUp() throws Exception {
         mockJsonParser = mockFactory.createMock(JsonParser.class);
-        mockTypeValueFactory = mockFactory.createMock(TypeValueFactory.class);
-        mockIterator = mockFactory.createMock(Iterator.class);
     }
 
     @Test
@@ -100,8 +93,7 @@ public class SparqlJsonResultsParserImplUnitTest {
         expectLastCall();
 
         mockFactory.replay();
-        final SparqlJsonResultsParser jsonParser =
-            new SparqlSelectJsonResultsParserImpl(variables, mockJsonParser);
+        final SparqlJsonResultsParser jsonParser = new SparqlSelectJsonResultsParserImpl(variables, mockJsonParser);
         final boolean closedOkay = jsonParser.close();
 
         mockFactory.verify();
@@ -124,8 +116,7 @@ public class SparqlJsonResultsParserImplUnitTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void removeThrowsException() throws Exception {
-        final SparqlJsonResultsParser jsonParser =
-            new SparqlSelectJsonResultsParserImpl(variables, mockJsonParser);
+        final SparqlJsonResultsParser jsonParser = new SparqlSelectJsonResultsParserImpl(variables, mockJsonParser);
         jsonParser.remove();
     }
 
