@@ -80,9 +80,6 @@ public abstract class AbstractSparqlJsonWriter implements SparqlJsonWriter {
     protected String[] links;
     protected JSONWriter jsonWriter;
 
-    private AbstractSparqlJsonWriter() {
-    }
-
     protected AbstractSparqlJsonWriter(final Writer writer, final String[] links) {
         checkNotNull(writer, links);
         this.writer = writer;

@@ -148,7 +148,7 @@ public class DistributedQueryClientImpl implements QueryClient {
                 cancelExecution(future);
             }
         }
-        System.err.println("Distributed querying time: " + (System.currentTimeMillis() - start));
+        System.out.println("Distributed querying time: " + (System.currentTimeMillis() - start));
     }
 
     private void executeQuries() {

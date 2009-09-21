@@ -112,7 +112,7 @@ public class DecomposerPerformance {
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
             addChain("urn:foo");
         }
-        System.err.println("Graph size = " + graph.getNumberOfTriples());
+        System.out.println("Graph size = " + graph.getNumberOfTriples());
         MoleculeHeadTripleComparatorImpl tripleComparator = new MoleculeHeadTripleComparatorImpl(
             new GroundedTripleComparatorFactoryImpl().newComparator());
         Set<Molecule> results = new TreeSet<Molecule>(tripleComparator);
@@ -121,7 +121,7 @@ public class DecomposerPerformance {
         Molecule[] molecules = moleculeSet.toArray(new Molecule[]{});
         results.add(molecules[0]);
         int count = mergeMolecules(results, moleculeSet);
-        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + ", comparisons: " + count +
+        System.out.println("Time taken " + (System.currentTimeMillis() - startTime) + ", comparisons: " + count +
             ", no: of triples = " + results.iterator().next().size());
     }
 
@@ -129,8 +129,7 @@ public class DecomposerPerformance {
         int count = 0;
         int length = molecules.size();
         Vector<Molecule> moleculeArray = new Vector<Molecule>(molecules);
-        System.err.println("vec size = " + length);
-        System.err.println("");
+        System.out.println("vec size = " + length + "\n");
         boolean skip = false;
         int i1 = 0, i2;
         while (i1 < length && length > 1) {
