@@ -116,7 +116,22 @@ public class SparqlJsonParserImplUnitTest {
     }
 
     @Test
-    public void simpleAsk() throws Exception {
+    public void resultsButNotBindingsIsStillASelectAnswer() throws Exception {
+        final String headVarsNoResults = "{\"head\": { \"vars\": [ \"book\" , \"title\" ] } , " +
+            "\"results\": { \"foo\" : \"bar\" }";
+        final InputStream stream = new ByteArrayInputStream(headVarsNoResults.getBytes());
+        final SparqlParser jsonParser = new SparqlJsonParserImpl(stream);
+        assertThat(jsonParser.getVariables(), contains("book", "title"));
+        assertThat(jsonParser.hasNext(), is(false));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void invalidResultIsNoHead() throws Exception {
+        new SparqlJsonParserImpl(new ByteArrayInputStream("{\"foo\": {}, \"boolean\" : true}".getBytes()));
+    }
+
+    @Test
+    public void validAskResultIsAnEmptyHeadAndBooleanValue() throws Exception {
         final String emptyHeadAndTrue = "{\"head\": {}, \"boolean\" : true}";
         final TypeValue expectedFalseResult = new TypeValueImpl(BOOLEAN, "true");
         final SparqlParser parser = checkAsk(emptyHeadAndTrue, expectedFalseResult);
@@ -124,7 +139,7 @@ public class SparqlJsonParserImplUnitTest {
     }
 
     @Test
-    public void askWithVariables() throws Exception {
+    public void validAskResultIsAHeadWithEmptyLinkAndEmptyVarsAndBooleanValue() throws Exception {
         final String resultWithLinkVarsAndFalse = "{\"head\":{\"link\":[],\"vars\":[]},\"boolean\":false}";
         final TypeValue expectedFalseResult = new TypeValueImpl(BOOLEAN, "false");
         final SparqlParser parser = checkAsk(resultWithLinkVarsAndFalse, expectedFalseResult);
@@ -141,6 +156,22 @@ public class SparqlJsonParserImplUnitTest {
     public void unparseableBooleanValueThrowsIllegalState() throws Exception {
         final String resultWithFred = "{\"head\":{\"link\":[],\"vars\":[]},\"boolean\":fred}";
         checkAsk(resultWithFred);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void removeIsNotSupport() throws Exception {
+        new SparqlJsonParserImpl(new ByteArrayInputStream("{\"head\": {}, \"boolean\" : true}".getBytes())).remove();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void closeWrapsException() throws Exception {
+        final InputStream in = new ByteArrayInputStream("{\"head\": {}, \"boolean\" : true}".getBytes()) {
+            @Override
+            public void close() throws IOException {
+                throw new IOException();
+            }
+        };
+        new SparqlJsonParserImpl(in).close();
     }
 
     private SparqlParser checkAsk(final String results, final TypeValue... expectedValues) throws IOException {
@@ -164,5 +195,6 @@ public class SparqlJsonParserImplUnitTest {
                 jsonParser.next();
             }
         });
+        jsonParser.close();
     }
 }

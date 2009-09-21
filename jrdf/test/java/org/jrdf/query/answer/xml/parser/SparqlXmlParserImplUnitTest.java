@@ -135,6 +135,18 @@ public class SparqlXmlParserImplUnitTest {
         checkThrowsExceptionBeyondResults(parser);
     }
 
+//    @Test(expected = RuntimeException.class)
+//    public void closeWrapsException() throws Exception {
+//        URL resource = getClass().getClassLoader().getResource("org/jrdf/query/answer/xml/data/ask-output.xml");
+//        final InputStream in = new BufferedInputStream(resource.openStream()) {
+//            @Override
+//            public void close() throws IOException {
+//                throw new IOException();
+//            }
+//        };
+//        new SparqlXmlParserImpl(in).close();
+//    }
+
     public static void checkHasMoreAndGetResult(final SparqlParser parser, final TypeValue[] expectedRow) {
         assertThat(parser.hasNext(), is(true));
         assertThat(parser.hasNext(), is(true));
