@@ -129,7 +129,7 @@ public class SparqlJsonParserImpl implements SparqlParser {
                 getHeadValues();
             }
         } else {
-            throw new IllegalStateException("Cannot parse token: " + parser.getCurrentName());
+            throwIllegalStateException();
         }
     }
 
@@ -143,10 +143,16 @@ public class SparqlJsonParserImpl implements SparqlParser {
 
     private void getStartOfBindings() throws IOException {
         if (hasResults()) {
-            hasBindings();
+            checkForValidBindings();
             resultsParser = new SparqlSelectJsonResultsParserImpl(variables, parser);
         } else {
             resultsParser = new SparqlAskJsonResultsParserImpl(parser);
+        }
+    }
+
+    private void checkForValidBindings() throws IOException {
+        if (!hasBindings()) {
+            throwIllegalStateException();
         }
     }
 
@@ -173,5 +179,9 @@ public class SparqlJsonParserImpl implements SparqlParser {
                 }
             }
         }
+    }
+
+    private void throwIllegalStateException() throws IOException {
+        throw new IllegalStateException("Cannot parse token: " + parser.getCurrentName());
     }
 }
