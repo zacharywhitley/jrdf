@@ -80,12 +80,11 @@ public class SparqlAskJsonResultsParserImplUnitTest {
     private JsonParser mockJsonParser;
 
     @Before
-    @SuppressWarnings({ "unchecked" })
     public void setUp() throws Exception {
         mockJsonParser = mockFactory.createMock(JsonParser.class);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testCreateWithoutBoolean() throws Exception {
         expect(mockJsonParser.getCurrentName()).andReturn("fred");
         mockFactory.replay();
@@ -140,12 +139,19 @@ public class SparqlAskJsonResultsParserImplUnitTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testRemove() throws Exception {
+        createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.VALUE_FALSE);
+        mockFactory.replay();
         new SparqlAskJsonResultsParserImpl(mockJsonParser).remove();
+        mockFactory.verify();
     }
 
     @Test
     public void testAlwaysReturnTrue() throws Exception {
-        assertThat(new SparqlAskJsonResultsParserImpl(mockJsonParser).close(), is(true));
+        createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.VALUE_FALSE);
+        mockFactory.replay();
+        final boolean closeResult = new SparqlAskJsonResultsParserImpl(mockJsonParser).close();
+        mockFactory.verify();
+        assertThat(closeResult, is(true));
     }
 
     private void createConstructorExpectations(final String nameToReturn, final JsonToken tokenToReturn)

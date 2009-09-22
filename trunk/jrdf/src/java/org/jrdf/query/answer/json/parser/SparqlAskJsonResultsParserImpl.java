@@ -79,17 +79,23 @@ public class SparqlAskJsonResultsParserImpl implements SparqlJsonResultsParser {
     private void tryGetValue(JsonParser parser) {
         try {
             if (SparqlProtocol.BOOLEAN.equals(parser.getCurrentName())) {
-                final JsonToken jsonToken = parser.nextValue();
-                if (JsonToken.VALUE_TRUE == jsonToken) {
-                    value = true;
-                } else if (JsonToken.VALUE_FALSE == jsonToken) {
-                    value = false;
-                } else {
-                    throw new IllegalStateException("Cannot parse: " + jsonToken);
-                }
+                parseBooleanValue(parser);
+            } else {
+                throwIllegalState(parser.getCurrentToken());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void parseBooleanValue(JsonParser parser) throws IOException {
+        final JsonToken jsonToken = parser.nextValue();
+        if (JsonToken.VALUE_TRUE == jsonToken) {
+            value = true;
+        } else if (JsonToken.VALUE_FALSE == jsonToken) {
+            value = false;
+        } else {
+            throwIllegalState(jsonToken);
         }
     }
 
@@ -111,5 +117,9 @@ public class SparqlAskJsonResultsParserImpl implements SparqlJsonResultsParser {
 
     public boolean close() {
         return true;
+    }
+
+    private void throwIllegalState(final JsonToken jsonToken) {
+        throw new IllegalStateException("Cannot parse: " + jsonToken);
     }
 }
