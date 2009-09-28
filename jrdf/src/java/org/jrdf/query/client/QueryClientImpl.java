@@ -76,7 +76,7 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version :$
  */
-public final class QueryClientImpl implements CallableQueryClient {
+public final class QueryClientImpl implements QueryClient {
     private final Client client;
     private final ServerPort serverPort;
     private final SparqlAnswerHandler answerHandler;
@@ -94,10 +94,6 @@ public final class QueryClientImpl implements CallableQueryClient {
         final String requestURL = makeRequestString(endPoint, map);
         request = new Request(GET, requestURL);
         answerHandler.setAcceptedMediaTypes(request);
-    }
-
-    public Answer call() throws Exception {
-        return executeQuery();
     }
 
     public Answer executeQuery() {

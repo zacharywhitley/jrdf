@@ -86,7 +86,7 @@ public final class CallableQueryClientImpl implements CallableQueryClient {
     }
 
     public Answer executeQuery(final String graphName, final String queryString, final Map<String, String> ext) {
-        return queryClient.executeQuery();
+        return queryClient.executeQuery(graphName, queryString, ext);
     }
 
     public String toString() {
