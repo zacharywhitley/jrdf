@@ -89,8 +89,8 @@ public class SparqlXmlParserImpl implements SparqlParser {
     private boolean hasMore;
     private boolean finishedVariableParsing;
 
-    public SparqlXmlParserImpl(final InputStream stream) throws XMLStreamException {
-        this.parser = INPUT_FACTORY.createXMLStreamReader(stream);
+    public SparqlXmlParserImpl(final InputStream stream) {
+        this.parser = tryGetXmlParser(stream);
         this.resultsParser = new SparqlXmlResultsParserImpl(parser, new TypeValueFactoryImpl());
         this.finishedVariableParsing = false;
         this.hasMore = false;
@@ -108,7 +108,7 @@ public class SparqlXmlParserImpl implements SparqlParser {
     public boolean hasNext() {
         try {
             hasMore = hasNextResult();
-        } catch (XMLStreamException e) {
+        } catch (RuntimeException e) {
             hasMore = false;
         }
         return hasMore;
@@ -134,25 +134,49 @@ public class SparqlXmlParserImpl implements SparqlParser {
         return true;
     }
 
-    private boolean hasNextResult() throws XMLStreamException {
-        while (parser.hasNext()) {
+    private XMLStreamReader tryGetXmlParser(final InputStream stream) {
+        try {
+            return INPUT_FACTORY.createXMLStreamReader(stream);
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean hasNextResult() {
+        while (tryHasNext()) {
             final int eventType = parser.getEventType();
             if (startOfElement(eventType, RESULT) || startOfElement(eventType, BOOLEAN)) {
                 return true;
             }
-            parser.next();
+            tryNext();
         }
         return false;
     }
 
-    private void tryGetVariables() throws XMLStreamException {
+    private void tryGetVariables() {
         if (!finishedVariableParsing) {
             int currentEvent = parser.getEventType();
-            while (parser.hasNext() && !(endOfElement(currentEvent, HEAD) || startOfElement(currentEvent, RESULTS))) {
+            while (tryHasNext() && !(endOfElement(currentEvent, HEAD) || startOfElement(currentEvent, RESULTS))) {
                 checkElementType(currentEvent);
-                currentEvent = parser.next();
+                currentEvent = tryNext();
             }
             finishedVariableParsing = true;
+        }
+    }
+
+    private int tryNext() {
+        try {
+            return parser.next();
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean tryHasNext() {
+        try {
+            return parser.hasNext();
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -160,7 +184,7 @@ public class SparqlXmlParserImpl implements SparqlParser {
         return currentEvent == END_ELEMENT && tagName.equals(parser.getLocalName());
     }
 
-    private void checkElementType(int currentEvent) {
+    private void checkElementType(final int currentEvent) {
         if (startOfElement(currentEvent, VARIABLE)) {
             addAttributeToSet(NAME, variables);
         } else if (startOfElement(currentEvent, LINK)) {
