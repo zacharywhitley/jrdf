@@ -72,12 +72,12 @@ import java.io.InputStream;
  * @version $Id$
  */
 public class SparqlStreamingAnswerFactoryImpl implements SparqlStreamingAnswerFactory {
-    public Answer createStreamingAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
+    public Answer createStreamingXmlAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
         StreamingSparqlParser streamAnswerParser = new StreamingSparqlParserImpl(stream);
         return createStreamingAnswer(streamAnswerParser);
     }
 
-    public Answer createStreamingAnswer(StreamingSparqlParser answerStreamParser) throws XMLStreamException {
+    private Answer createStreamingAnswer(StreamingSparqlParser answerStreamParser) throws XMLStreamException {
         if (!answerStreamParser.getVariables().isEmpty()) {
             return new SparqlStreamingSelectAnswer(answerStreamParser);
         } else {

@@ -77,7 +77,7 @@ public class XmlSparqlAnswerHandler implements SparqlAnswerHandler {
 
     public Answer getAnswer(Representation output) {
         try {
-            return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingAnswer(output.getStream());
+            return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingXmlAnswer(output.getStream());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

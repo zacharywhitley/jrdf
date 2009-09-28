@@ -67,6 +67,7 @@ import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamConstants;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -149,6 +150,9 @@ public class SparqlMultiXmlStreamWriterImpl extends AbstractSparqlXmlWriter
         String variableName = parser.getAttributeValue(null, SparqlProtocol.NAME);
         streamWriter.writeAttribute(SparqlProtocol.NAME, variableName);
         currentEvent = parser.next();
+        while (currentEvent != XMLStreamConstants.START_ELEMENT) {
+            currentEvent = parser.next();
+        }
         writeOneNode();
         streamWriter.writeEndElement();
     }
