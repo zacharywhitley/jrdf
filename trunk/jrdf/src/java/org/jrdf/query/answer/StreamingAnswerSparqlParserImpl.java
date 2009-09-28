@@ -73,16 +73,16 @@ public class StreamingAnswerSparqlParserImpl implements StreamingAnswerSparqlPar
     private boolean hasMore;
     private TypeValue[] results;
 
-    public StreamingAnswerSparqlParserImpl(Answer... streams) {
+    public StreamingAnswerSparqlParserImpl(final Answer... answers) {
         this.hasMore = false;
         this.variables = new LinkedHashSet<String>();
         this.answerQueue = new LinkedBlockingQueue<Answer>();
-        tryAddStreams(streams);
+        tryAddAnswers(answers);
         setupNextParser();
     }
 
-    public void addAnswer(Answer answer) throws InterruptedException {
-        answerQueue.put(answer);
+    public void addAnswer(final Answer answer) {
+        tryAddAnswers(answer);
         if (!hasMore) {
             setupNextParser();
         }
@@ -120,9 +120,9 @@ public class StreamingAnswerSparqlParserImpl implements StreamingAnswerSparqlPar
         return true;
     }
 
-    private void tryAddStreams(Answer... streams) {
+    private void tryAddAnswers(final Answer... answers) {
         try {
-            for (final Answer stream : streams) {
+            for (final Answer stream : answers) {
                 this.answerQueue.put(stream);
             }
         } catch (InterruptedException e) {

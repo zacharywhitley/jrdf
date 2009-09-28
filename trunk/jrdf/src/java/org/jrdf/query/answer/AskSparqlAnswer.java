@@ -3,7 +3,7 @@
  * $Revision$
  * $Date$
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,39 +54,63 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.client.XmlSparqlAnswerHandler;
+import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
+import org.jrdf.query.client.SparqlAnswerHandler;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-/**
- * @author Yuan-Fang Li
- * @version $Id$
- */
-public class SparqlStreamingAnswerFactoryImpl implements SparqlStreamingAnswerFactory {
-    public Answer createStreamingXmlAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
-        StreamingSparqlParser streamAnswerParser = new StreamingSparqlParserImpl(new XmlSparqlAnswerHandler(), stream);
-        return createStreamingAnswer(streamAnswerParser);
+public class AskSparqlAnswer implements AskAnswer {
+    private static final String[] NO_VARIABLES = new String[]{};
+    private StreamingSparqlParser answerStreamParser;
+    private boolean result;
+
+    public AskSparqlAnswer(final SparqlAnswerHandler handler, InputStream stream) {
+        this(new StreamingSparqlParserImpl(handler, stream));
     }
 
-    private Answer createStreamingAnswer(StreamingSparqlParser answerStreamParser) throws XMLStreamException {
-        if (!answerStreamParser.getVariables().isEmpty()) {
-            return new SparqlStreamingSelectAnswer(answerStreamParser);
-        } else {
-            return new SparqlStreamingAskAnswer(answerStreamParser);
+    public AskSparqlAnswer(StreamingSparqlParser answerStreamParser) {
+        this.answerStreamParser = answerStreamParser;
+        this.result = false;
+    }
+
+    public boolean getResult() throws XMLStreamException {
+        final TypeValue[] typeValues = answerStreamParser.next();
+        result = Boolean.parseBoolean(typeValues[0].getValue());
+        return result;
+    }
+
+    public long getTimeTaken() {
+        return 0;
+    }
+
+    public long numberOfTuples() {
+        return 0;
+    }
+
+    public String[] getVariableNames() {
+        return NO_VARIABLES;
+    }
+
+    public Iterator<TypeValue[]> columnValuesIterator() {
+        try {
+            TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(getResult()));
+            Set<TypeValue[]> set = new HashSet<TypeValue[]>();
+            set.add(new TypeValue[]{typeValue});
+            return set.iterator();
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public Answer createStreamingAnswer(StreamingAnswerSparqlParser multiAnswerParser) {
-        if (!multiAnswerParser.getVariables().isEmpty()) {
-            return new StreamingAnswerSparqlParserSelectAnswer(multiAnswerParser);
-        } else {
-            return new StreamingAnswerSparqlParserAskAnswer(multiAnswerParser);
-        }
+    public <R> R accept(AnswerVisitor<R> visitor) {
+        return visitor.visitAskAnswer(this);
     }
 }

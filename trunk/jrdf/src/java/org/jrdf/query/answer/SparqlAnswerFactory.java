@@ -59,59 +59,12 @@
 
 package org.jrdf.query.answer;
 
-import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
-import org.jrdf.query.client.SparqlAnswerHandler;
-
-import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
-public class SparqlStreamingAskAnswer implements AskAnswer {
-    private static final String[] NO_VARIABLES = new String[]{};
-    private StreamingSparqlParser answerStreamParser;
-    private boolean result;
-
-    public SparqlStreamingAskAnswer(final SparqlAnswerHandler handler, InputStream stream) {
-        this(new StreamingSparqlParserImpl(handler, stream));
-    }
-
-    public SparqlStreamingAskAnswer(StreamingSparqlParser answerStreamParser) {
-        this.answerStreamParser = answerStreamParser;
-        this.result = false;
-    }
-
-    public boolean getResult() throws XMLStreamException {
-        final TypeValue[] typeValues = answerStreamParser.next();
-        result = Boolean.parseBoolean(typeValues[0].getValue());
-        return result;
-    }
-
-    public long getTimeTaken() {
-        return 0;
-    }
-
-    public long numberOfTuples() {
-        return 0;
-    }
-
-    public String[] getVariableNames() {
-        return NO_VARIABLES;
-    }
-
-    public Iterator<TypeValue[]> columnValuesIterator() {
-        try {
-            TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(getResult()));
-            Set<TypeValue[]> set = new HashSet<TypeValue[]>();
-            set.add(new TypeValue[]{typeValue});
-            return set.iterator();
-        } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <R> R accept(AnswerVisitor<R> visitor) {
-        return visitor.visitAskAnswer(this);
-    }
+/**
+ * @author Yuan-Fang Li
+ * @version $Id$
+ */
+public interface SparqlAnswerFactory {
+    Answer createStreamingXmlAnswer(InputStream stream);
 }

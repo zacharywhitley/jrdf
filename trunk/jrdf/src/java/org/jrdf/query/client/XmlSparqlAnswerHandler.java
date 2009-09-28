@@ -61,8 +61,8 @@ package org.jrdf.query.client;
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlParser;
-import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
-import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
+import org.jrdf.query.answer.SparqlAnswerFactory;
+import org.jrdf.query.answer.SparqlAnswerFactoryImpl;
 import org.jrdf.query.answer.xml.parser.SparqlXmlParserImpl;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
@@ -75,8 +75,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XmlSparqlAnswerHandler implements SparqlAnswerHandler {
-    private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
-        new SparqlStreamingAnswerFactoryImpl();
+    private static final SparqlAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
+        new SparqlAnswerFactoryImpl();
 
     public SparqlParser getParser(final InputStream inputStream) {
         return new SparqlXmlParserImpl(inputStream);
