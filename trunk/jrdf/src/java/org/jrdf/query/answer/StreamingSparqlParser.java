@@ -57,13 +57,10 @@
  *
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.SparqlParser;
-
-import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 
 public interface StreamingSparqlParser extends SparqlParser {
-    void addStream(InputStream stream) throws InterruptedException, XMLStreamException;
+    void addStream(InputStream stream);
 }

@@ -73,13 +73,11 @@ public class StreamingAnswerSparqlParserImpl implements StreamingAnswerSparqlPar
     private boolean hasMore;
     private TypeValue[] results;
 
-    public StreamingAnswerSparqlParserImpl(Answer... streams) throws XMLStreamException, InterruptedException {
+    public StreamingAnswerSparqlParserImpl(Answer... streams) {
         this.hasMore = false;
         this.variables = new LinkedHashSet<String>();
         this.answerQueue = new LinkedBlockingQueue<Answer>();
-        for (Answer stream : streams) {
-            this.answerQueue.put(stream);
-        }
+        tryAddStreams(streams);
         setupNextParser();
     }
 
@@ -120,6 +118,16 @@ public class StreamingAnswerSparqlParserImpl implements StreamingAnswerSparqlPar
         }
         answerQueue.clear();
         return true;
+    }
+
+    private void tryAddStreams(Answer... streams) {
+        try {
+            for (final Answer stream : streams) {
+                this.answerQueue.put(stream);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }
     }
 
     private void setupNextParser() {

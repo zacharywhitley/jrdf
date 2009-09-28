@@ -59,11 +59,16 @@
 package org.jrdf.query.client;
 
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SparqlParser;
 import org.restlet.resource.Representation;
 import org.restlet.data.Request;
+
+import java.io.InputStream;
 
 public interface SparqlAnswerHandler {
     Answer getAnswer(Representation output);
 
     void setAcceptedMediaTypes(Request request);
+
+    SparqlParser getParser(InputStream inputStream);
 }

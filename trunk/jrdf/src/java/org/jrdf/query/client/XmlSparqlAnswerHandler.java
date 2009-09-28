@@ -58,22 +58,29 @@
 
 package org.jrdf.query.client;
 
+import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SparqlParser;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
-import org.restlet.resource.Representation;
+import org.jrdf.query.answer.xml.parser.SparqlXmlParserImpl;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
 import org.restlet.data.Preference;
 import org.restlet.data.Request;
+import org.restlet.resource.Representation;
 
-import java.util.List;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class XmlSparqlAnswerHandler implements SparqlAnswerHandler {
     private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
         new SparqlStreamingAnswerFactoryImpl();
+
+    public SparqlParser getParser(final InputStream inputStream) {
+        return new SparqlXmlParserImpl(inputStream);
+    }
 
     public Answer getAnswer(Representation output) {
         try {

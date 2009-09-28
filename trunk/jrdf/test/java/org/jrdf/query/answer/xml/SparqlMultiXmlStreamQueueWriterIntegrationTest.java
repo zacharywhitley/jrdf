@@ -63,11 +63,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import org.jrdf.query.answer.TypeValueFactoryImpl;
-import org.jrdf.query.answer.xml.parser.SparqlXmlResultsParser;
-import org.jrdf.query.answer.xml.parser.SparqlXmlResultsParserImpl;
 import static org.jrdf.query.answer.xml.parser.SparqlXmlParserImplUnitTest.EXPECTED_VARIABLES;
 import static org.jrdf.query.answer.xml.parser.SparqlXmlParserImplUnitTest.ROW_1;
 import static org.jrdf.query.answer.xml.parser.SparqlXmlParserImplUnitTest.ROW_2;
+import org.jrdf.query.answer.xml.parser.SparqlXmlResultsParser;
+import org.jrdf.query.answer.xml.parser.SparqlXmlResultsParserImpl;
+import org.jrdf.query.client.XmlSparqlAnswerHandler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,7 +95,7 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
     public void setUp() throws Exception {
         stream1 = TEST_UTIL.getData().openStream();
         stream2 = TEST_UTIL.getData().openStream();
-        xmlWriter = new SparqlMultiXmlStreamQueueWriter(writer, stream1);
+        xmlWriter = new SparqlMultiXmlStreamQueueWriter(new XmlSparqlAnswerHandler(), writer, stream1);
     }
 
     @After
@@ -156,7 +157,7 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
         stream1 = TEST_UTIL.getData().openStream();
         xmlWriter.close();
         writer = new StringWriter();
-        xmlWriter = new SparqlMultiXmlStreamQueueWriter(writer, stream1, stream2);
+        xmlWriter = new SparqlMultiXmlStreamQueueWriter(new XmlSparqlAnswerHandler(), writer, stream1, stream2);
         int count = 0;
         xmlWriter.writeStartResults();
         while (xmlWriter.hasMoreResults()) {

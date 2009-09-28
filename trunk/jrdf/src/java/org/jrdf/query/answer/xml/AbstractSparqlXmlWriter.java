@@ -92,8 +92,12 @@ public abstract class AbstractSparqlXmlWriter implements SparqlXmlWriter {
     private static final XMLOutputFactory OUTPUT_FACTORY = javax.xml.stream.XMLOutputFactory.newInstance();
     protected XMLStreamWriter streamWriter;
 
-    protected void createXmlStreamWriter(Writer writer) throws XMLStreamException {
-        this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
+    protected void createXmlStreamWriter(Writer writer) {
+        try {
+            this.streamWriter = OUTPUT_FACTORY.createXMLStreamWriter(writer);
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void writeFullDocument() throws XMLStreamException {

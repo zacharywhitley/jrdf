@@ -59,10 +59,7 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.xml.SparqlStreamingAskAnswer;
-import org.jrdf.query.answer.xml.SparqlStreamingSelectAnswer;
-import org.jrdf.query.answer.xml.StreamingSparqlParser;
-import org.jrdf.query.answer.xml.StreamingSparqlParserImpl;
+import org.jrdf.query.client.XmlSparqlAnswerHandler;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -73,7 +70,7 @@ import java.io.InputStream;
  */
 public class SparqlStreamingAnswerFactoryImpl implements SparqlStreamingAnswerFactory {
     public Answer createStreamingXmlAnswer(InputStream stream) throws XMLStreamException, InterruptedException {
-        StreamingSparqlParser streamAnswerParser = new StreamingSparqlParserImpl(stream);
+        StreamingSparqlParser streamAnswerParser = new StreamingSparqlParserImpl(new XmlSparqlAnswerHandler(), stream);
         return createStreamingAnswer(streamAnswerParser);
     }
 

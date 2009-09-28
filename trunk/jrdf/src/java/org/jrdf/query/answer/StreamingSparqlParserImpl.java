@@ -57,11 +57,9 @@
  *
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.SparqlParser;
-import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.answer.xml.parser.SparqlXmlParserImpl;
+import org.jrdf.query.client.SparqlAnswerHandler;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -70,6 +68,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class StreamingSparqlParserImpl implements StreamingSparqlParser {
+    private final SparqlAnswerHandler handler;
     private SparqlParser parser;
     private BlockingQueue<InputStream> streamQueue;
     private LinkedHashSet<String> variables;
@@ -79,18 +78,17 @@ public class StreamingSparqlParserImpl implements StreamingSparqlParser {
     private boolean hasMore;
     private TypeValue[] results;
 
-    public StreamingSparqlParserImpl(InputStream... streams) throws XMLStreamException, InterruptedException {
+    public StreamingSparqlParserImpl(final SparqlAnswerHandler handler, final InputStream... streams) {
+        this.handler = handler;
         this.hasMore = false;
         this.variables = new LinkedHashSet<String>();
         this.streamQueue = new LinkedBlockingQueue<InputStream>();
-        for (InputStream stream : streams) {
-            this.streamQueue.put(stream);
-        }
+        tryAddStreams(streams);
         setupNextParser();
     }
 
-    public void addStream(InputStream stream) throws InterruptedException, XMLStreamException {
-        streamQueue.put(stream);
+    public void addStream(final InputStream stream) {
+        tryAddStreams(stream);
         if (!hasMore) {
             setupNextParser();
         }
@@ -128,21 +126,13 @@ public class StreamingSparqlParserImpl implements StreamingSparqlParser {
         return true;
     }
 
-    private void setupNextParser() throws XMLStreamException {
-        InputStream currentStream = streamQueue.poll();
-        if (currentStream != null) {
-            if (parser != null) {
-                parser.close();
+    private void tryAddStreams(final InputStream... streams) {
+        try {
+            for (final InputStream stream : streams) {
+                this.streamQueue.put(stream);
             }
-            // TODO AN Use a parser handler here instead of hard coding
-            parser = new SparqlXmlParserImpl(currentStream);
-            parseVariables();
-            parseHead();
-            if (!hasMore) {
-                hasMore = hasMore();
-            }
-        } else {
-            parser = null;
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
         }
     }
 
@@ -150,6 +140,23 @@ public class StreamingSparqlParserImpl implements StreamingSparqlParser {
         if (!gotVariables) {
             variables = parser.getVariables();
             gotVariables = true;
+        }
+    }
+
+    private void setupNextParser() {
+        final InputStream currentStream = streamQueue.poll();
+        if (currentStream != null) {
+            if (parser != null) {
+                parser.close();
+            }
+            parser = handler.getParser(currentStream);
+            parseVariables();
+            parseHead();
+            if (!hasMore) {
+                hasMore = hasMore();
+            }
+        } else {
+            parser = null;
         }
     }
 

@@ -72,10 +72,6 @@ import org.restlet.resource.Representation;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
 public final class QueryClientImpl implements QueryClient {
     private final Client client;
     private final ServerPort serverPort;
@@ -122,8 +118,9 @@ public final class QueryClientImpl implements QueryClient {
     }
 
     private Representation handleFail(Status status) {
-        if (status.getThrowable() != null) {
-            throw new RuntimeException(status.getThrowable());
+        final Throwable throwable = status.getThrowable();
+        if (throwable != null) {
+            throw new RuntimeException(throwable);
         } else {
             throw new RuntimeException(status.getDescription() + " (" + status.getCode() + ") from: " +
                 request.getResourceRef());

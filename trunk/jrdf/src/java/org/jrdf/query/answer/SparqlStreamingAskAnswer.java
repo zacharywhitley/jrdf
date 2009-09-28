@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -57,50 +57,61 @@
  *
  */
 
-package org.jrdf.query.answer.xml;
+package org.jrdf.query.answer;
 
-import org.jrdf.query.answer.AnswerVisitor;
-import org.jrdf.query.answer.SelectAnswer;
-import org.jrdf.query.answer.TypeValue;
+import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
+import org.jrdf.query.client.SparqlAnswerHandler;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.Set;
 
-// TODO AN/YF - Can we do time taken and number of tuples (maybe based on how much so far?)
-public class SparqlStreamingSelectAnswer implements SelectAnswer {
+public class SparqlStreamingAskAnswer implements AskAnswer {
+    private static final String[] NO_VARIABLES = new String[]{};
     private StreamingSparqlParser answerStreamParser;
+    private boolean result;
 
-    public SparqlStreamingSelectAnswer(InputStream inputStream) throws XMLStreamException, InterruptedException {
-        this(new StreamingSparqlParserImpl(inputStream));
+    public SparqlStreamingAskAnswer(final SparqlAnswerHandler handler, InputStream stream) {
+        this(new StreamingSparqlParserImpl(handler, stream));
     }
 
-    public SparqlStreamingSelectAnswer(StreamingSparqlParser answerStreamParser) {
+    public SparqlStreamingAskAnswer(StreamingSparqlParser answerStreamParser) {
         this.answerStreamParser = answerStreamParser;
+        this.result = false;
     }
 
-    public String[] getVariableNames() {
-        LinkedHashSet<String> existingVariables = answerStreamParser.getVariables();
-        String[] existingVariablesArray = existingVariables.toArray(new String[existingVariables.size()]);
-        String[] variables = new String[existingVariables.size()];
-        System.arraycopy(existingVariablesArray, 0, variables, 0, existingVariablesArray.length);
-        return variables;
-    }
-
-    public Iterator<TypeValue[]> columnValuesIterator() {
-        return answerStreamParser;
-    }
-
-    public long numberOfTuples() {
-        return -1;
+    public boolean getResult() throws XMLStreamException {
+        final TypeValue[] typeValues = answerStreamParser.next();
+        result = Boolean.parseBoolean(typeValues[0].getValue());
+        return result;
     }
 
     public long getTimeTaken() {
-        return -1;
+        return 0;
+    }
+
+    public long numberOfTuples() {
+        return 0;
+    }
+
+    public String[] getVariableNames() {
+        return NO_VARIABLES;
+    }
+
+    public Iterator<TypeValue[]> columnValuesIterator() {
+        try {
+            TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(getResult()));
+            Set<TypeValue[]> set = new HashSet<TypeValue[]>();
+            set.add(new TypeValue[]{typeValue});
+            return set.iterator();
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public <R> R accept(AnswerVisitor<R> visitor) {
-        return visitor.visitSelectAnswer(this);
+        return visitor.visitAskAnswer(this);
     }
 }
