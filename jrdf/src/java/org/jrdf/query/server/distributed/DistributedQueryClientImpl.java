@@ -60,10 +60,9 @@
 package org.jrdf.query.server.distributed;
 
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
-import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
-import org.jrdf.query.answer.StreamingAnswerSparqlParserImpl;
 import org.jrdf.query.answer.StreamingAnswerSparqlParser;
+import org.jrdf.query.answer.StreamingAnswerSparqlParserSelectAnswer;
+import org.jrdf.query.answer.StreamingAnswerSparqlParserImpl;
 import org.jrdf.query.client.CallableQueryClient;
 import org.jrdf.query.client.CallableQueryClientImpl;
 import org.jrdf.query.client.QueryClient;
@@ -71,7 +70,6 @@ import org.jrdf.query.client.ServerPort;
 import org.jrdf.query.client.SparqlAnswerHandler;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import javax.xml.stream.XMLStreamException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -86,15 +84,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * @version :$
  */
 public class DistributedQueryClientImpl implements QueryClient {
-    private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
-        new SparqlStreamingAnswerFactoryImpl();
     private ExecutorService executor;
     private Collection<CallableQueryClient> queryClients;
     private Set<Future<Answer>> answers;
     private StreamingAnswerSparqlParser multiAnswerParser;
 
-    public DistributedQueryClientImpl(final Collection<ServerPort> servers, final SparqlAnswerHandler answerHandler)
-        throws XMLStreamException, InterruptedException {
+    public DistributedQueryClientImpl(final Collection<ServerPort> servers, final SparqlAnswerHandler answerHandler) {
         this.queryClients = new LinkedList<CallableQueryClient>();
         for (final ServerPort server : servers) {
             final CallableQueryClient client = new CallableQueryClientImpl(server, answerHandler);
@@ -115,7 +110,7 @@ public class DistributedQueryClientImpl implements QueryClient {
         this.answers = new HashSet<Future<Answer>>();
         executeQuries();
         aggregateResults();
-        return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingAnswer(multiAnswerParser);
+        return new StreamingAnswerSparqlParserSelectAnswer(multiAnswerParser);
     }
 
     public Answer executeQuery(final String endPoint, final String queryString, final Map<String, String> ext) {

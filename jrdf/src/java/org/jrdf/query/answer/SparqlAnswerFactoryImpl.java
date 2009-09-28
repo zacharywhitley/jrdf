@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -59,45 +59,21 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.client.SparqlAnswerHandler;
+import org.jrdf.query.client.XmlSparqlAnswerHandler;
 
 import java.io.InputStream;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 
-// TODO AN/YF - Can we do time taken and number of tuples (maybe based on how much so far?)
-public class SparqlStreamingSelectAnswer implements SelectAnswer {
-    private StreamingSparqlParser answerStreamParser;
-
-    public SparqlStreamingSelectAnswer(final SparqlAnswerHandler handler, InputStream inputStream) {
-        this(new StreamingSparqlParserImpl(handler, inputStream));
-    }
-
-    public SparqlStreamingSelectAnswer(StreamingSparqlParser answerStreamParser) {
-        this.answerStreamParser = answerStreamParser;
-    }
-
-    public String[] getVariableNames() {
-        final LinkedHashSet<String> existingVariables = answerStreamParser.getVariables();
-        final String[] existingVariablesArray = existingVariables.toArray(new String[existingVariables.size()]);
-        final String[] variables = new String[existingVariables.size()];
-        System.arraycopy(existingVariablesArray, 0, variables, 0, existingVariablesArray.length);
-        return variables;
-    }
-
-    public Iterator<TypeValue[]> columnValuesIterator() {
-        return answerStreamParser;
-    }
-
-    public long numberOfTuples() {
-        return -1;
-    }
-
-    public long getTimeTaken() {
-        return -1;
-    }
-
-    public <R> R accept(AnswerVisitor<R> visitor) {
-        return visitor.visitSelectAnswer(this);
+/**
+ * @author Yuan-Fang Li
+ * @version $Id$
+ */
+public class SparqlAnswerFactoryImpl implements SparqlAnswerFactory {
+    public Answer createStreamingXmlAnswer(InputStream stream) {
+        StreamingSparqlParser streamAnswerParser = new StreamingSparqlParserImpl(new XmlSparqlAnswerHandler(), stream);
+        if (!streamAnswerParser.getVariables().isEmpty()) {
+            return new SelectSparqlAnswer(streamAnswerParser);
+        } else {
+            return new AskSparqlAnswer(streamAnswerParser);
+        }
     }
 }

@@ -89,8 +89,8 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     private LinkedHashSet<String> vars = new LinkedHashSet<String>();
     private transient EvaluatedRelation results;
 
-    public SelectAnswerImpl(LinkedHashSet<Attribute> newHeading, EvaluatedRelation newResults,
-        long timeTaken, boolean hasProjected) {
+    public SelectAnswerImpl(LinkedHashSet<Attribute> newHeading, EvaluatedRelation newResults, long timeTaken,
+        boolean hasProjected) {
         checkNotNull(newHeading, newResults);
         this.heading = newHeading;
         this.results = newResults;
