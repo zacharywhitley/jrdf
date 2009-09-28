@@ -68,9 +68,10 @@ import java.io.InputStream;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public interface SparqlStreamingAnswerFactory {
     Answer createStreamingAnswer(InputStream stream) throws XMLStreamException, InterruptedException;
 
     Answer createStreamingAnswer(StreamingSparqlParser answerStreamParser) throws XMLStreamException;
+
+    Answer createStreamingAnswer(StreamingAnswerSparqlParser multiAnswerParser);
 }

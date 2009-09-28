@@ -61,32 +61,11 @@ package org.jrdf.query.client;
 
 import org.jrdf.query.answer.Answer;
 
-import java.util.Map;
+import java.util.concurrent.Callable;
 
-public interface QueryClient {
-    /**
-     * Sets the query to execute.  Expected to call either executeQuery or getInputStream.
-     *
-     * @param endPoint the sparql end point name to append - typically /graph/graphName or /sparql
-     * @param queryString the unencoded SPARQL query to submit.
-     * @param ext query extension - simply name/value pairs that are append to the end of the query string.
-     */
-    void setQuery(final String endPoint, final String queryString, final Map<String, String> ext);
-
-    /**
-     * Returns a streaming answer of the results.
-     *
-     * @return a streaming answer of the results.
-     */
-    Answer executeQuery();
-
-    /**
-     * The equivalent of calling setQuery and executeQuery together.
-     *
-     * @param endPoint the sparql end point name to append - typically /graph/graphName or /sparql
-     * @param queryString the unencoded SPARQL query to submit.
-     * @param ext query extension - simply name/value pairs that are append to the end of the query string.
-     * @return a streaming answer of the results.
-     */
-    Answer executeQuery(final String endPoint, final String queryString, final Map<String, String> ext);
+/**
+ * @author Yuan-Fang Li
+ * @version :$
+ */
+public interface CallableQueryClient extends QueryClient, Callable<Answer> {
 }

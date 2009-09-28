@@ -72,8 +72,8 @@ import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.client.ServerPort;
 import static org.jrdf.query.client.ServerPort.createServerPort;
-import org.jrdf.query.client.XmlSparqlAnswerHandler;
 import org.jrdf.query.client.SparqlAnswerHandler;
+import org.jrdf.query.client.XmlSparqlAnswerHandler;
 import org.jrdf.query.server.SpringDistributedServer;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
@@ -96,12 +96,14 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
+import static java.util.Collections.EMPTY_MAP;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 public class DistributedQueryIntegrationTest {
+    private static final String BASE_URI = "/graphs/";
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
@@ -110,7 +112,6 @@ public class DistributedQueryIntegrationTest {
     private static final int DISTRIBUTED_PORT = 8183;
     private static final int LOCAL_PORT = 8182;
     private static final String LOCAL_HOST = "127.0.0.1";
-    private static final String BASE_URI = "/graphs";
     private static final ServerPort SERVER_PORT = createServerPort(LOCAL_HOST, LOCAL_PORT);
     private static final SparqlAnswerHandler ANSWER_HANDLER = new XmlSparqlAnswerHandler();
     private MoleculeGraph graph;
@@ -160,7 +161,7 @@ public class DistributedQueryIntegrationTest {
         DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
         serverClient.postDistributedServer("add", LOCAL_HOST);
         QueryClient client = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
-        Answer answer = client.executeQuery(FOO, SELECT_QUERY_STRING, -1);
+        Answer answer = client.executeQuery(BASE_URI + FOO, SELECT_QUERY_STRING, EMPTY_MAP);
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 
@@ -170,7 +171,7 @@ public class DistributedQueryIntegrationTest {
         DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
         serverClient.postDistributedServer("add", LOCAL_HOST);
         QueryClient client = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
-        AskAnswer answer = (AskAnswer) client.executeQuery(FOO, ASK_QUERY_STRING, -1);
+        AskAnswer answer = (AskAnswer) client.executeQuery(BASE_URI + FOO, ASK_QUERY_STRING, EMPTY_MAP);
         assertEquals(false, answer.getResult());
     }
 
@@ -185,7 +186,7 @@ public class DistributedQueryIntegrationTest {
         DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
         serverClient.postDistributedServer("add", LOCAL_HOST);
         QueryClient client = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
-        AskAnswer answer = (AskAnswer) client.executeQuery(FOO, ASK_QUERY_STRING, -1);
+        AskAnswer answer = (AskAnswer) client.executeQuery(BASE_URI + FOO, ASK_QUERY_STRING, EMPTY_MAP);
         assertEquals(true, answer.getResult());
     }
 

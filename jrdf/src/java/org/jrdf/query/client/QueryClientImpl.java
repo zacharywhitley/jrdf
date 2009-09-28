@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,7 +54,6 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.client;
@@ -70,13 +69,14 @@ import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 
-import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
-public final class QueryClientImpl implements CallableGraphQueryClient {
+public final class QueryClientImpl implements CallableQueryClient {
     private final Client client;
     private final ServerPort serverPort;
     private final SparqlAnswerHandler answerHandler;
@@ -88,47 +88,58 @@ public final class QueryClientImpl implements CallableGraphQueryClient {
         this.client = new Client(HTTP);
     }
 
-    public void setQuery(String graphName, String queryString, long noRows) {
-        String requestURL = makeRequestString(graphName, queryString, noRows);
+    public void setQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
+        final HashMap<String, String> map = new HashMap<String, String>(ext);
+        map.put("query", queryString);
+        final String requestURL = makeRequestString(endPoint, map);
         request = new Request(GET, requestURL);
         answerHandler.setAcceptedMediaTypes(request);
+    }
+
+    public Answer call() throws Exception {
+        return executeQuery();
     }
 
     public Answer executeQuery() {
         return answerHandler.getAnswer(getRepresentation());
     }
 
-    public Answer executeQuery(String graphName, String queryString, long noRows) {
-        setQuery(graphName, queryString, noRows);
+    public Answer executeQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
+        setQuery(endPoint, queryString, ext);
         return executeQuery();
     }
 
-    public InputStream call() throws Exception {
-        return getRepresentation().getStream();
-    }
-
     public String toString() {
-        return serverPort.getHostname() + ":" + serverPort.getPort();
+        return request.toString();
     }
 
     private Representation getRepresentation() {
         checkNotNull(client, request);
         answerHandler.setAcceptedMediaTypes(request);
-        Response response = client.handle(request);
+        final Response response = client.handle(request);
         final Status status = response.getStatus();
         if (status.isSuccess()) {
             return response.getEntity();
         } else {
-            status.getThrowable().printStackTrace();
-            throw new RuntimeException(status.getThrowable());
+            return handleFail(status);
         }
     }
 
-    private String makeRequestString(String graphName, String queryString, long noRows) {
-        Reference ref = new Reference(HTTP.getSchemeName(), serverPort.getHostname(), serverPort.getPort(),
-            "/graphs/" + graphName, null, null);
-        ref.addQueryParameter("query", queryString);
-        ref.addQueryParameter("maxRows", Long.toString(noRows));
+    private Representation handleFail(Status status) {
+        if (status.getThrowable() != null) {
+            throw new RuntimeException(status.getThrowable());
+        } else {
+            throw new RuntimeException(status.getDescription() + " (" + status.getCode() + ") from: " +
+                request.getResourceRef());
+        }
+    }
+
+    private String makeRequestString(final String graphName, final Map<String, String> queryParameters) {
+        final Reference ref = new Reference(HTTP.getSchemeName(), serverPort.getHostname(), serverPort.getPort(),
+            graphName, null, null);
+        for (final String key : queryParameters.keySet()) {
+            ref.addQueryParameter(key, queryParameters.get(key));
+        }
         return ref.toString();
     }
 }

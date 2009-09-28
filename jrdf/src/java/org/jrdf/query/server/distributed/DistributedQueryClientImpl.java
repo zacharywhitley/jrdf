@@ -62,20 +62,20 @@ package org.jrdf.query.server.distributed;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactory;
 import org.jrdf.query.answer.SparqlStreamingAnswerFactoryImpl;
-import org.jrdf.query.answer.xml.StreamingSparqlParser;
-import org.jrdf.query.answer.xml.StreamingSparqlParserImpl;
-import org.jrdf.query.client.CallableGraphQueryClient;
+import org.jrdf.query.answer.StreamingAnswerSparqlParserImpl;
+import org.jrdf.query.answer.StreamingAnswerSparqlParser;
+import org.jrdf.query.client.CallableQueryClient;
+import org.jrdf.query.client.CallableQueryClientImpl;
 import org.jrdf.query.client.QueryClient;
-import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.client.ServerPort;
 import org.jrdf.query.client.SparqlAnswerHandler;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -85,65 +85,56 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class DistributedQueryClientImpl implements QueryClient {
     private static final SparqlStreamingAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
         new SparqlStreamingAnswerFactoryImpl();
     private ExecutorService executor;
-    private Collection<CallableGraphQueryClient> queryClients;
-    private Collection<ServerPort> serverAddresses;
-    private final SparqlAnswerHandler answerHandler;
-    private Set<Future<InputStream>> set;
-    private StreamingSparqlParser multiStreamAnswerParser;
+    private Collection<CallableQueryClient> queryClients;
+    private Set<Future<Answer>> answers;
+    private StreamingAnswerSparqlParser multiAnswerParser;
 
-    public DistributedQueryClientImpl(Collection<ServerPort> servers, final SparqlAnswerHandler answerHandler)
+    public DistributedQueryClientImpl(final Collection<ServerPort> servers, final SparqlAnswerHandler answerHandler)
         throws XMLStreamException, InterruptedException {
-        this.serverAddresses = servers;
-        this.answerHandler = answerHandler;
-        this.queryClients = new LinkedList<CallableGraphQueryClient>();
-        for (final ServerPort server : serverAddresses) {
-            final CallableGraphQueryClient client = new QueryClientImpl(server, answerHandler);
+        this.queryClients = new LinkedList<CallableQueryClient>();
+        for (final ServerPort server : servers) {
+            final CallableQueryClient client = new CallableQueryClientImpl(server, answerHandler);
             this.queryClients.add(client);
         }
-        this.executor = new ScheduledThreadPoolExecutor(serverAddresses.size());
-        this.multiStreamAnswerParser = new StreamingSparqlParserImpl();
+        this.executor = new ScheduledThreadPoolExecutor(servers.size());
+        this.multiAnswerParser = new StreamingAnswerSparqlParserImpl();
     }
 
-    public void setQuery(String graphName, String queryString, long noRows) {
-        for (QueryClient queryClient : queryClients) {
-            queryClient.setQuery(graphName, queryString, noRows);
+    public void setQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
+        for (final QueryClient queryClient : queryClients) {
+            queryClient.setQuery(endPoint, queryString, ext);
         }
     }
 
     public Answer executeQuery() {
         checkNotNull(queryClients);
-        try {
-            this.set = new HashSet<Future<InputStream>>();
-            executeQuries();
-            aggregateResults();
-            return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingAnswer(multiStreamAnswerParser);
-        } catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        this.answers = new HashSet<Future<Answer>>();
+        executeQuries();
+        aggregateResults();
+        return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingAnswer(multiAnswerParser);
     }
 
-    public Answer executeQuery(String graphName, String queryString, long noRows) {
-        setQuery(graphName, queryString, noRows);
+    public Answer executeQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
+        setQuery(endPoint, queryString, ext);
         return executeQuery();
     }
 
     public void cancelExecution() {
-        for (Future<InputStream> future : set) {
+        for (final Future<Answer> future : answers) {
             cancelExecution(future);
         }
     }
 
     private void aggregateResults() {
-        long start = System.currentTimeMillis();
-        for (Future<InputStream> future : set) {
+        final long start = System.currentTimeMillis();
+        for (final Future<Answer> future : answers) {
             try {
-                final InputStream stream = future.get();
-                multiStreamAnswerParser.addStream(stream);
+                final Answer answer = future.get();
+                multiAnswerParser.addAnswer(answer);
             } catch (Exception e) {
                 cancelExecution(future);
             }
@@ -152,13 +143,13 @@ public class DistributedQueryClientImpl implements QueryClient {
     }
 
     private void executeQuries() {
-        for (CallableGraphQueryClient queryClient : queryClients) {
-            Future<InputStream> future = executor.submit(queryClient);
-            set.add(future);
+        for (final CallableQueryClient queryClient : queryClients) {
+            final Future<Answer> future = executor.submit(queryClient);
+            answers.add(future);
         }
     }
 
-    private void cancelExecution(Future<InputStream> future) {
+    private void cancelExecution(final Future<Answer> future) {
         future.cancel(true);
     }
 }

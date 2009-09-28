@@ -89,7 +89,7 @@ public class SparqlXmlParserImpl implements SparqlParser {
     private boolean hasMore;
     private boolean finishedVariableParsing;
 
-    public SparqlXmlParserImpl(InputStream stream) throws XMLStreamException {
+    public SparqlXmlParserImpl(final InputStream stream) throws XMLStreamException {
         this.parser = INPUT_FACTORY.createXMLStreamReader(stream);
         this.resultsParser = new SparqlXmlResultsParserImpl(parser, new TypeValueFactoryImpl());
         this.finishedVariableParsing = false;

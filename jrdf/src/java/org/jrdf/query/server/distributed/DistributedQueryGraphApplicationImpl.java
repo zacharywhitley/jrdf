@@ -61,22 +61,23 @@ package org.jrdf.query.server.distributed;
 
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
+import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.ServerPort;
+import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.client.SparqlAnswerHandler;
 import org.jrdf.query.client.XmlSparqlAnswerHandler;
-import org.jrdf.query.client.QueryClient;
-import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class DistributedQueryGraphApplicationImpl implements DistributedQueryGraphApplication {
     private static final int DEFAULT_PORT = 8182;
     private static final int INVALID_TIME_TAKEN = -1;
@@ -114,7 +115,9 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
     public Answer answerQuery(String graphName, String queryString, long maxRows) throws ResourceException {
         try {
             final QueryClient queryClient = new DistributedQueryClientImpl(servers, ANSWER_HANDLER);
-            return queryClient.executeQuery(graphName, queryString, maxRows);
+            final Map<String, String> ext = new HashMap<String, String>();
+            ext.put("maxRows", Long.toString(maxRows));
+            return queryClient.executeQuery(graphName, queryString, ext);
         } catch (Exception e) {
             throw new ResourceException(e);
         }

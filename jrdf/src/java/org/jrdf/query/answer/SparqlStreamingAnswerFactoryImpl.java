@@ -84,4 +84,12 @@ public class SparqlStreamingAnswerFactoryImpl implements SparqlStreamingAnswerFa
             return new SparqlStreamingAskAnswer(answerStreamParser);
         }
     }
+
+    public Answer createStreamingAnswer(StreamingAnswerSparqlParser multiAnswerParser) {
+        if (!multiAnswerParser.getVariables().isEmpty()) {
+            return new StreamingAnswerSparqlParserSelectAnswer(multiAnswerParser);
+        } else {
+            return new StreamingAnswerSparqlParserAskAnswer(multiAnswerParser);
+        }
+    }
 }
