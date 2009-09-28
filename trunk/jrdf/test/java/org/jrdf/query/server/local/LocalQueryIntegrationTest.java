@@ -67,13 +67,13 @@ import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.TypeValue;
-import org.jrdf.query.client.CallableGraphQueryClient;
+import org.jrdf.query.client.CallableQueryClient;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.client.ServerPort;
+import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.client.SparqlAnswerHandler;
 import org.jrdf.query.client.XmlSparqlAnswerHandler;
-import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
@@ -84,11 +84,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URI;
+import static java.util.Collections.EMPTY_MAP;
 import java.util.Iterator;
 import java.util.Set;
 
 public class LocalQueryIntegrationTest {
     private static final String LOCAL_HOST = "127.0.0.1";
+    private static final String BASE_URI = "/graphs/";
     private static final String FOO = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
@@ -122,7 +124,7 @@ public class LocalQueryIntegrationTest {
     public void falseAnswerUsingAnAskQueryOnEmptyGraph() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
         QueryClient client = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
-        final Answer answer1 = client.executeQuery(FOO, ASK_QUERY_STRING, -1);
+        final Answer answer1 = client.executeQuery(BASE_URI + FOO, ASK_QUERY_STRING, EMPTY_MAP);
         AskAnswer answer = (AskAnswer) answer1;
         assertEquals(false, answer.getResult());
     }
@@ -135,8 +137,8 @@ public class LocalQueryIntegrationTest {
         graph.add(b1, p, b1);
         graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
-        CallableGraphQueryClient queryClient = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
-        Answer answer = queryClient.executeQuery(FOO, SELECT_QUERY_STRING, -1);
+        CallableQueryClient queryClient = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
+        Answer answer = queryClient.executeQuery(BASE_URI + FOO, SELECT_QUERY_STRING, EMPTY_MAP);
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 

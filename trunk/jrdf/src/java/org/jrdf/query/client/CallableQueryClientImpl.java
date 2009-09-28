@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,17 +54,42 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.client;
 
-import java.io.InputStream;
-import java.util.concurrent.Callable;
+import org.jrdf.query.answer.Answer;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-public interface CallableGraphQueryClient extends QueryClient, Callable<InputStream> {
+import java.util.Map;
+
+public final class CallableQueryClientImpl implements CallableQueryClient {
+    private final QueryClient queryClient;
+
+    public CallableQueryClientImpl(final QueryClient queryClient) {
+        this.queryClient = queryClient;
+    }
+
+    public CallableQueryClientImpl(final ServerPort serverPort, final SparqlAnswerHandler answerHandler) {
+        this.queryClient = new QueryClientImpl(serverPort, answerHandler);
+    }
+
+    public void setQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
+        queryClient.setQuery(endPoint, queryString, ext);
+    }
+
+    public Answer call() throws Exception {
+        return queryClient.executeQuery();
+    }
+
+    public Answer executeQuery() {
+        return queryClient.executeQuery();
+    }
+
+    public Answer executeQuery(final String graphName, final String queryString, final Map<String, String> ext) {
+        return queryClient.executeQuery();
+    }
+
+    public String toString() {
+        return queryClient.toString();
+    }
 }

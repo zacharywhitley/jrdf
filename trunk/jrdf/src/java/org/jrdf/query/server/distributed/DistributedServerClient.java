@@ -77,7 +77,6 @@ import java.net.URL;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class DistributedServerClient {
     private static final int DEFAULT_PORT = 8183;
     private Client client;
