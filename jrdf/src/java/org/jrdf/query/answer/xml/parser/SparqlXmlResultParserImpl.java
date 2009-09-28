@@ -66,6 +66,7 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueFactory;
 
 import static javax.xml.XMLConstants.XML_NS_URI;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Map;
@@ -86,11 +87,16 @@ public class SparqlXmlResultParserImpl implements SparqlXmlResultParser {
     }
 
     private TypeValue getTypeValue() throws XMLStreamException {
-        parser.next();
-        String tagName = parser.getLocalName();
-        final String datatype = parser.getAttributeValue(null, DATATYPE);
-        final String xmlLang = parser.getAttributeValue(XML_NS_URI, XML_LANG);
-        final String value = parser.getElementText();
-        return typeValueFactory.createTypeValue(tagName, value, datatype, xmlLang);
+        while (parser.hasNext()) {
+            parser.next();
+            if (parser.getEventType() == XMLStreamConstants.START_ELEMENT) {
+                String tagName = parser.getLocalName();
+                final String datatype = parser.getAttributeValue(null, DATATYPE);
+                final String xmlLang = parser.getAttributeValue(XML_NS_URI, XML_LANG);
+                final String value = parser.getElementText();
+                return typeValueFactory.createTypeValue(tagName, value, datatype, xmlLang);
+            }
+        }
+        throw new XMLStreamException("Failed to find next result.");
     }
 }

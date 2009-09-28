@@ -143,6 +143,18 @@ public class LocalQueryIntegrationTest {
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 
+//    @Test
+//    public void foo() throws Exception {
+//        final QueryClient client = new QueryClientImpl(createServerPort("api.talis.com", 80), ANSWER_HANDLER);
+//        final Answer answer = client.executeQuery("/stores/space/services/sparql",
+// "SELECT * WHERE { ?s ?p <http://nasa.dataincubator.org/spacecraft/1957-001B>. }", EMPTY_MAP);
+//        System.err.println("Answer: " + Arrays.asList(answer.getVariableNames()));
+//        final Iterator<TypeValue[]> iterator = answer.columnValuesIterator();
+//        while (iterator.hasNext()) {
+//            System.err.println("Row: " + Arrays.asList(iterator.next()));
+//        }
+//    }
+
     private void checkAnswer(Answer answer, int noResults, Set<String> expectedVariableNames) throws Exception {
         Set<String> actualVariableNames = asSet(answer.getVariableNames());
         assertEquals(expectedVariableNames, actualVariableNames);

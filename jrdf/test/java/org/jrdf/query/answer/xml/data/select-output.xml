@@ -77,8 +77,12 @@
   <results>
 
     <result>
-      <binding name="x"><bnode>r1</bnode></binding>
-      <binding name="hpage"><uri>http://work.example.org/alice/</uri></binding>
+      <binding name="x">
+          <bnode>r1</bnode>
+      </binding>
+      <binding name="hpage">
+          <uri>http://work.example.org/alice/</uri>
+      </binding>
       <binding name="name"><literal>Alice</literal></binding>
       <binding name="mbox"><literal></literal></binding>
       <binding name="friend"><bnode>r2</bnode></binding>

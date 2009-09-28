@@ -87,6 +87,12 @@ public class SparqlXmlResultParserUnitTest {
     }
 
     @Test
+    public void bnodeBindingWithSpacesAndComments() throws Exception {
+        checkParser("<binding name=\"x\">  \n  \n <!-- Hello -->   <bnode>r1</bnode>  \n  </binding>", "x",
+            new TypeValueImpl(BLANK_NODE, "r1"));
+    }
+
+    @Test
     public void uriBinding() throws Exception {
         checkParser("<binding name=\"hpage\"><uri>http://work.example.org/alice/</uri></binding>", "hpage",
             new TypeValueImpl(URI_REFERENCE, "http://work.example.org/alice/"));
