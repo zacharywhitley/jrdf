@@ -68,6 +68,7 @@ import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.client.CallableQueryClient;
+import org.jrdf.query.client.CallableQueryClientImpl;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.client.ServerPort;
@@ -137,7 +138,7 @@ public class LocalQueryIntegrationTest {
         graph.add(b1, p, b1);
         graph.add(b2, p, b2);
         assertEquals(2, graph.getNumberOfTriples());
-        CallableQueryClient queryClient = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
+        CallableQueryClient queryClient = new CallableQueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
         Answer answer = queryClient.executeQuery(BASE_URI + FOO, SELECT_QUERY_STRING, EMPTY_MAP);
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
