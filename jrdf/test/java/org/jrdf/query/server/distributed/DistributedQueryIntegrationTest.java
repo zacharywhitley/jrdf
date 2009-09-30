@@ -70,8 +70,6 @@ import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
-import org.jrdf.query.client.ServerPort;
-import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.client.SparqlAnswerHandler;
 import org.jrdf.query.client.XmlSparqlAnswerHandler;
 import org.jrdf.query.server.SpringDistributedServer;
@@ -94,17 +92,18 @@ import org.restlet.resource.StringRepresentation;
 
 import java.net.URI;
 import java.net.URL;
+import static java.net.URI.*;
+import static java.util.Collections.EMPTY_MAP;
 import java.util.Iterator;
 import java.util.Set;
-import static java.util.Collections.EMPTY_MAP;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 public class DistributedQueryIntegrationTest {
-    private static final String BASE_URI = "/graphs/";
-    private static final String FOO = "foo";
+    private static final String GRAPH_PATH = "/graphs/";
+    private static final String GRAPH_NAME = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final String SELECT_QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
@@ -112,7 +111,9 @@ public class DistributedQueryIntegrationTest {
     private static final int DISTRIBUTED_PORT = 8183;
     private static final int LOCAL_PORT = 8182;
     private static final String LOCAL_HOST = "127.0.0.1";
-    private static final ServerPort SERVER_PORT = createServerPort(LOCAL_HOST, LOCAL_PORT);
+    private static final URI SERVER_END_POINT = create("http://" + LOCAL_HOST + ":" + LOCAL_PORT + GRAPH_PATH +
+        GRAPH_NAME);
+    private static final URI DISTRIBUTED_SERVER_END_POINT = create("http://" + LOCAL_HOST + ":" + DISTRIBUTED_PORT);
     private static final SparqlAnswerHandler ANSWER_HANDLER = new XmlSparqlAnswerHandler();
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
@@ -123,7 +124,7 @@ public class DistributedQueryIntegrationTest {
     public void setUp() throws Exception {
         HANDLER.removeDir();
         HANDLER.makeDir();
-        graph = FACTORY.getGraph(FOO);
+        graph = FACTORY.getGraph(GRAPH_NAME);
         graph.clear();
         elementFactory = graph.getElementFactory();
         localQueryServer = new SpringLocalServer();
@@ -142,7 +143,7 @@ public class DistributedQueryIntegrationTest {
 
     @Test
     public void testDistributedServerGraphsResource() throws Exception {
-        URL url = new URL(HTTP.getSchemeName(), LOCAL_HOST, DISTRIBUTED_PORT, BASE_URI);
+        URL url = new URL(HTTP.getSchemeName(), LOCAL_HOST, DISTRIBUTED_PORT, GRAPH_PATH);
         Request request = new Request(Method.GET, url.toString(), new StringRepresentation(""));
         Client client = new Client(HTTP);
         final Response response = client.handle(request);
@@ -152,41 +153,41 @@ public class DistributedQueryIntegrationTest {
 
     @Test
     public void testDistributedClient() throws Exception {
-        final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
+        final URIReference p = elementFactory.createURIReference(create("urn:p"));
         final BlankNode b1 = elementFactory.createBlankNode();
         final BlankNode b2 = elementFactory.createBlankNode();
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
+        DistributedServerClient serverClient = new DistributedServerClient(DISTRIBUTED_SERVER_END_POINT);
         serverClient.postDistributedServer("add", LOCAL_HOST);
-        QueryClient client = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
-        Answer answer = client.executeQuery(BASE_URI + FOO, SELECT_QUERY_STRING, EMPTY_MAP);
+        QueryClient client = new QueryClientImpl(SERVER_END_POINT, ANSWER_HANDLER);
+        Answer answer = client.executeQuery(SELECT_QUERY_STRING, EMPTY_MAP);
         checkAnswer(answer, 2, asSet("s", "p", "o"));
     }
 
     @Test
     public void testDistributedClientEmptyAskQuery() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
-        DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
+        DistributedServerClient serverClient = new DistributedServerClient(DISTRIBUTED_SERVER_END_POINT);
         serverClient.postDistributedServer("add", LOCAL_HOST);
-        QueryClient client = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
-        AskAnswer answer = (AskAnswer) client.executeQuery(BASE_URI + FOO, ASK_QUERY_STRING, EMPTY_MAP);
+        QueryClient client = new QueryClientImpl(SERVER_END_POINT, ANSWER_HANDLER);
+        AskAnswer answer = (AskAnswer) client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);
         assertEquals(false, answer.getResult());
     }
 
     @Test
     public void testDistributedClientAskQuery() throws Exception {
-        final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
+        final URIReference p = elementFactory.createURIReference(create("urn:p"));
         final BlankNode b1 = elementFactory.createBlankNode();
         final BlankNode b2 = elementFactory.createBlankNode();
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        DistributedServerClient serverClient = new DistributedServerClient(LOCAL_HOST);
+        DistributedServerClient serverClient = new DistributedServerClient(DISTRIBUTED_SERVER_END_POINT);
         serverClient.postDistributedServer("add", LOCAL_HOST);
-        QueryClient client = new QueryClientImpl(SERVER_PORT, ANSWER_HANDLER);
-        AskAnswer answer = (AskAnswer) client.executeQuery(BASE_URI + FOO, ASK_QUERY_STRING, EMPTY_MAP);
+        QueryClient client = new QueryClientImpl(SERVER_END_POINT, ANSWER_HANDLER);
+        AskAnswer answer = (AskAnswer) client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);
         assertEquals(true, answer.getResult());
     }
 

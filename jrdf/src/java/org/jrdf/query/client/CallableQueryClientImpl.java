@@ -60,6 +60,7 @@ package org.jrdf.query.client;
 
 import org.jrdf.query.answer.Answer;
 
+import java.net.URI;
 import java.util.Map;
 
 public final class CallableQueryClientImpl implements CallableQueryClient {
@@ -69,12 +70,12 @@ public final class CallableQueryClientImpl implements CallableQueryClient {
         this.queryClient = queryClient;
     }
 
-    public CallableQueryClientImpl(final ServerPort serverPort, final SparqlAnswerHandler answerHandler) {
+    public CallableQueryClientImpl(final URI serverPort, final SparqlAnswerHandler answerHandler) {
         this.queryClient = new QueryClientImpl(serverPort, answerHandler);
     }
 
-    public void setQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
-        queryClient.setQuery(endPoint, queryString, ext);
+    public void setQuery(final String queryString, final Map<String, String> queryExtensions) {
+        queryClient.setQuery(queryString, queryExtensions);
     }
 
     public Answer call() throws Exception {
@@ -85,8 +86,8 @@ public final class CallableQueryClientImpl implements CallableQueryClient {
         return queryClient.executeQuery();
     }
 
-    public Answer executeQuery(final String graphName, final String queryString, final Map<String, String> ext) {
-        return queryClient.executeQuery(graphName, queryString, ext);
+    public Answer executeQuery(final String queryString, final Map<String, String> ext) {
+        return queryClient.executeQuery(queryString, ext);
     }
 
     public String toString() {
