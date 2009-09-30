@@ -67,11 +67,10 @@ public interface QueryClient {
     /**
      * Sets the query to execute.  Expected to call either executeQuery or getInputStream.
      *
-     * @param endPoint the sparql end point name to append - typically /graph/graphName or /sparql
      * @param queryString the unencoded SPARQL query to submit.
-     * @param ext query extension - simply name/value pairs that are append to the end of the query string.
+     * @param queryExtensions name/value pairs that are append to the end of the query string.
      */
-    void setQuery(final String endPoint, final String queryString, final Map<String, String> ext);
+    void setQuery(final String queryString, final Map<String, String> queryExtensions);
 
     /**
      * Returns a streaming answer of the results.
@@ -83,10 +82,9 @@ public interface QueryClient {
     /**
      * The equivalent of calling setQuery and executeQuery together.
      *
-     * @param endPoint the sparql end point name to append - typically /graph/graphName or /sparql
      * @param queryString the unencoded SPARQL query to submit.
-     * @param ext query extension - simply name/value pairs that are append to the end of the query string.
+     * @param queryExtensions name/value pairs that are append to the end of the query string.
      * @return a streaming answer of the results.
      */
-    Answer executeQuery(final String endPoint, final String queryString, final Map<String, String> ext);
+    Answer executeQuery(final String queryString, final Map<String, String> queryExtensions);
 }

@@ -62,33 +62,34 @@ import org.jrdf.query.answer.Answer;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.Client;
 import static org.restlet.data.Method.GET;
-import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class QueryClientImpl implements QueryClient {
+    private final URI endPointUri;
     private final Client client;
-    private final ServerPort serverPort;
     private final SparqlAnswerHandler answerHandler;
     private Request request;
 
-    public QueryClientImpl(final ServerPort serverPort, final SparqlAnswerHandler answerHandler) {
-        this.serverPort = serverPort;
+    public QueryClientImpl(final URI endPointUri, final SparqlAnswerHandler answerHandler) {
+        checkNotNull(endPointUri, answerHandler);
+        this.endPointUri = endPointUri;
+        this.client = new Client(endPointUri.getScheme());
         this.answerHandler = answerHandler;
-        this.client = new Client(HTTP);
     }
 
-    public void setQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
-        final HashMap<String, String> map = new HashMap<String, String>(ext);
-        map.put("query", queryString);
-        final String requestURL = makeRequestString(endPoint, map);
-        request = new Request(GET, requestURL);
+    public void setQuery(final String sparqlQuery, final Map<String, String> queryExtensions) {
+        checkNotNull(sparqlQuery, queryExtensions);
+        final HashMap<String, String> map = new HashMap<String, String>(queryExtensions);
+        map.put("query", sparqlQuery);
+        request = new Request(GET, createReferenceFromQuery(map));
         answerHandler.setAcceptedMediaTypes(request);
     }
 
@@ -96,13 +97,23 @@ public final class QueryClientImpl implements QueryClient {
         return answerHandler.getAnswer(getRepresentation());
     }
 
-    public Answer executeQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
-        setQuery(endPoint, queryString, ext);
+    public Answer executeQuery(final String queryString, final Map<String, String> ext) {
+        checkNotNull(queryString, ext);
+        setQuery(queryString, ext);
         return executeQuery();
     }
 
     public String toString() {
         return request.toString();
+    }
+
+    private Reference createReferenceFromQuery(final Map<String, String> queryParameters) {
+        final Reference ref = new Reference(endPointUri.getScheme(), endPointUri.getHost(), endPointUri.getPort(),
+            endPointUri.getPath(), null, null);
+        for (final String key : queryParameters.keySet()) {
+            ref.addQueryParameter(key, queryParameters.get(key));
+        }
+        return ref;
     }
 
     private Representation getRepresentation() {
@@ -117,7 +128,7 @@ public final class QueryClientImpl implements QueryClient {
         }
     }
 
-    private Representation handleFail(Status status) {
+    private Representation handleFail(final Status status) {
         final Throwable throwable = status.getThrowable();
         if (throwable != null) {
             throw new RuntimeException(throwable);
@@ -125,14 +136,5 @@ public final class QueryClientImpl implements QueryClient {
             throw new RuntimeException(status.getDescription() + " (" + status.getCode() + ") from: " +
                 request.getResourceRef());
         }
-    }
-
-    private String makeRequestString(final String graphName, final Map<String, String> queryParameters) {
-        final Reference ref = new Reference(HTTP.getSchemeName(), serverPort.getHostname(), serverPort.getPort(),
-            graphName, null, null);
-        for (final String key : queryParameters.keySet()) {
-            ref.addQueryParameter(key, queryParameters.get(key));
-        }
-        return ref.toString();
     }
 }

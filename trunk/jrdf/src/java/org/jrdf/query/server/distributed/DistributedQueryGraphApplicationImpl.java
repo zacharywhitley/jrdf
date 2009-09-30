@@ -62,17 +62,17 @@ package org.jrdf.query.server.distributed;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.client.QueryClient;
-import org.jrdf.query.client.ServerPort;
-import static org.jrdf.query.client.ServerPort.createServerPort;
 import org.jrdf.query.client.SparqlAnswerHandler;
 import org.jrdf.query.client.XmlSparqlAnswerHandler;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 
+import java.net.URI;
+import static java.net.URI.*;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Yuan-Fang Li
@@ -83,31 +83,31 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
     private static final int INVALID_TIME_TAKEN = -1;
     // TODO AN Wire this in an support having different handlers.
     private static final SparqlAnswerHandler ANSWER_HANDLER = new XmlSparqlAnswerHandler();
-    private Set<ServerPort> servers;
+    private Set<URI> servers;
     private GraphApplication application;
 
     public DistributedQueryGraphApplicationImpl(GraphApplication newApplication) {
         this.application = newApplication;
-        this.servers = new HashSet<ServerPort>();
+        this.servers = new HashSet<URI>();
     }
 
     public void addServers(String... servers) {
         for (String server : servers) {
-            this.servers.add(createServerPort(server, DEFAULT_PORT));
+            this.servers.add(create("http://" + server + ":" + DEFAULT_PORT));
         }
     }
 
     public void removeServers(String... servers) {
         for (String server : servers) {
-            this.servers.remove(createServerPort(server, DEFAULT_PORT));
+            this.servers.remove(create("http://" + server + ":" + DEFAULT_PORT));
         }
     }
 
     public String[] getServers() {
         final String[] serverNames = new String[servers.size()];
         int i = 0;
-        for (final ServerPort host : servers) {
-            serverNames[i++] = host.getHostname();
+        for (final URI host : servers) {
+            serverNames[i++] = host.getHost();
         }
         return serverNames;
     }
@@ -117,7 +117,7 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
             final QueryClient queryClient = new DistributedQueryClientImpl(servers, ANSWER_HANDLER);
             final Map<String, String> ext = new HashMap<String, String>();
             ext.put("maxRows", Long.toString(maxRows));
-            return queryClient.executeQuery(graphName, queryString, ext);
+            return queryClient.executeQuery(queryString, ext);
         } catch (Exception e) {
             throw new ResourceException(e);
         }

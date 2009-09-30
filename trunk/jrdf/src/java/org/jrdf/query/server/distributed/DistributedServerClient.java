@@ -60,8 +60,6 @@
 package org.jrdf.query.server.distributed;
 
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-import static org.jrdf.query.client.ServerPort.createServerPort;
-import org.jrdf.query.client.ServerPort;
 import org.restlet.Client;
 import org.restlet.data.Form;
 import org.restlet.data.Method;
@@ -71,6 +69,7 @@ import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -78,12 +77,11 @@ import java.net.URL;
  * @version :$
  */
 public class DistributedServerClient {
-    private static final int DEFAULT_PORT = 8183;
+    private final URI localServerEndPoint;
     private Client client;
-    private ServerPort serverPort;
 
-    public DistributedServerClient(String server) {
-        this.serverPort = createServerPort(server, DEFAULT_PORT);
+    public DistributedServerClient(final URI localServerEndPoint) {
+        this.localServerEndPoint = localServerEndPoint;
         this.client = new Client(HTTP);
     }
 
@@ -93,7 +91,7 @@ public class DistributedServerClient {
         form.add("action", action);
         form.add("serversString", servers);
         Representation representation = form.getWebRepresentation();
-        URL url = new URL(HTTP.getSchemeName(), serverPort.getHostname(), serverPort.getPort(), "/");
+        URL url = localServerEndPoint.toURL();
         String requestURL = url.toString();
         Request request = new Request(Method.POST, requestURL, representation);
         Response response = client.handle(request);

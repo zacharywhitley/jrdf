@@ -61,15 +61,15 @@ package org.jrdf.query.server.distributed;
 
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.StreamingAnswerSparqlParser;
-import org.jrdf.query.answer.StreamingAnswerSparqlParserSelectAnswer;
 import org.jrdf.query.answer.StreamingAnswerSparqlParserImpl;
+import org.jrdf.query.answer.StreamingAnswerSparqlParserSelectAnswer;
 import org.jrdf.query.client.CallableQueryClient;
 import org.jrdf.query.client.CallableQueryClientImpl;
 import org.jrdf.query.client.QueryClient;
-import org.jrdf.query.client.ServerPort;
 import org.jrdf.query.client.SparqlAnswerHandler;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -89,9 +89,9 @@ public class DistributedQueryClientImpl implements QueryClient {
     private Set<Future<Answer>> answers;
     private StreamingAnswerSparqlParser multiAnswerParser;
 
-    public DistributedQueryClientImpl(final Collection<ServerPort> servers, final SparqlAnswerHandler answerHandler) {
+    public DistributedQueryClientImpl(final Collection<URI> servers, final SparqlAnswerHandler answerHandler) {
         this.queryClients = new LinkedList<CallableQueryClient>();
-        for (final ServerPort server : servers) {
+        for (final URI server : servers) {
             final CallableQueryClient client = new CallableQueryClientImpl(server, answerHandler);
             this.queryClients.add(client);
         }
@@ -99,9 +99,9 @@ public class DistributedQueryClientImpl implements QueryClient {
         this.multiAnswerParser = new StreamingAnswerSparqlParserImpl();
     }
 
-    public void setQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
+    public void setQuery(final String queryString, final Map<String, String> queryExtensions) {
         for (final QueryClient queryClient : queryClients) {
-            queryClient.setQuery(endPoint, queryString, ext);
+            queryClient.setQuery(queryString, queryExtensions);
         }
     }
 
@@ -110,11 +110,12 @@ public class DistributedQueryClientImpl implements QueryClient {
         this.answers = new HashSet<Future<Answer>>();
         executeQuries();
         aggregateResults();
+        // TODO AN This should use the AnswerHandler.
         return new StreamingAnswerSparqlParserSelectAnswer(multiAnswerParser);
     }
 
-    public Answer executeQuery(final String endPoint, final String queryString, final Map<String, String> ext) {
-        setQuery(endPoint, queryString, ext);
+    public Answer executeQuery(final String queryString, final Map<String, String> ext) {
+        setQuery(queryString, ext);
         return executeQuery();
     }
 
