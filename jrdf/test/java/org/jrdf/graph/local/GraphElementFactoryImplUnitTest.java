@@ -128,7 +128,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
         insertFieldValue(elementFactory, "localizer", mockLocalizer);
         // Expectations
         mockLocalizer.createLocalBlankNode();
-        expectLastCall().andThrow(new IllegalArgumentException("Failed to create blank node"));
+        expectLastCall().andThrow(new IllegalArgumentException("Doesn't matter"));
         replay(mockLocalizer);
         // Do
         elementFactory.createBlankNode();
@@ -144,7 +144,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
         insertFieldValue(elementFactory1, "resourceFactory", mockResourceFactory);
         // Expectations
         mockResourceFactory.createResource(node);
-        expectLastCall().andThrow(new IllegalArgumentException("Failed to create resource"));
+        expectLastCall().andThrow(new IllegalArgumentException("Doesn't matter"));
         replay(mockResourceFactory);
         // Do
         elementFactory1.createResource(node);
@@ -160,7 +160,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
         insertFieldValue(elementFactory1, "resourceFactory", mockResourceFactory);
         // Expectations
         mockResourceFactory.createResource(node);
-        expectLastCall().andThrow(new IllegalArgumentException("Failed to create resource"));
+        expectLastCall().andThrow(new IllegalArgumentException("Doesn't matter"));
         replay(mockResourceFactory);
         // Do
         elementFactory1.createResource(node);
