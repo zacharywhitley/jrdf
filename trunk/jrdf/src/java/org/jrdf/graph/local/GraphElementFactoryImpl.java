@@ -62,14 +62,13 @@ package org.jrdf.graph.local;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.GraphValueFactory;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
 
@@ -136,7 +135,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     public BlankNode createBlankNode() throws GraphElementFactoryException {
         try {
             return localizer.createLocalBlankNode();
-        } catch (GraphException e) {
+        } catch (IllegalArgumentException e) {
             throw new GraphElementFactoryException(e);
         }
     }
