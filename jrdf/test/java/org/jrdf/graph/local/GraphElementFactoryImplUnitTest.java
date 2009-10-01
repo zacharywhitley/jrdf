@@ -80,9 +80,7 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.net.URI;
 
@@ -95,9 +93,6 @@ import java.net.URI;
  * @version $Revision$
  */
 public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactoryUnitTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     /**
      * Create a new graph of the appropriate type.
      *
@@ -125,11 +120,8 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
         return "";
     }
 
-    @Test
-    public void failToCreateBlankNodeCreatesGraphElementFactoryException() throws GraphElementFactoryException {
-        thrown.expect(GraphElementFactoryException.class);
-        thrown.expectMessage("Failed to create blank node");
-
+    @Test(expected = GraphElementFactoryException.class)
+    public void failToCreateBlankNodeCreatesGraphElementFactoryException() {
         // Setup
         final GraphElementFactory elementFactory = newGraph().getElementFactory();
         Localizer mockLocalizer = createMock(Localizer.class);
@@ -145,14 +137,14 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
 
     @Test(expected = GraphElementFactoryException.class)
     public void failToCreateResourceBlankNodeGraphElementFactoryException() {
-        BlankNode node = createMock(BlankNode.class);
         // Setup
+        BlankNode node = createMock(BlankNode.class);
         final GraphElementFactory elementFactory1 = newGraph().getElementFactory();
         ResourceFactory mockResourceFactory = createMock(ResourceFactory.class);
         insertFieldValue(elementFactory1, "resourceFactory", mockResourceFactory);
         // Expectations
         mockResourceFactory.createResource(node);
-        expectLastCall().andThrow(new IllegalArgumentException("hello"));
+        expectLastCall().andThrow(new IllegalArgumentException("Failed to create resource"));
         replay(mockResourceFactory);
         // Do
         elementFactory1.createResource(node);
@@ -161,14 +153,14 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
 
     @Test(expected = GraphElementFactoryException.class)
     public void failToCreateURIReferenceResourceGraphElementFactoryException() {
-        URIReference node = createMock(URIReference.class);
         // Setup
+        URIReference node = createMock(URIReference.class);
         final GraphElementFactory elementFactory1 = newGraph().getElementFactory();
         ResourceFactory mockResourceFactory = createMock(ResourceFactory.class);
         insertFieldValue(elementFactory1, "resourceFactory", mockResourceFactory);
         // Expectations
         mockResourceFactory.createResource(node);
-        expectLastCall().andThrow(new IllegalArgumentException("hello"));
+        expectLastCall().andThrow(new IllegalArgumentException("Failed to create resource"));
         replay(mockResourceFactory);
         // Do
         elementFactory1.createResource(node);
