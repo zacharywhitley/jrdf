@@ -59,8 +59,12 @@
 
 package org.jrdf.graph.local;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.BlankNode;
@@ -76,8 +80,9 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.net.URI;
 
@@ -90,6 +95,8 @@ import java.net.URI;
  * @version $Revision$
  */
 public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactoryUnitTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     /**
      * Create a new graph of the appropriate type.
@@ -118,15 +125,18 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
         return "";
     }
 
-    @Test(expected = GraphElementFactoryException.class)
-    public void failToCreateBlankNodeCreatesGraphElementFactoryException() {
+    @Test
+    public void failToCreateBlankNodeCreatesGraphElementFactoryException() throws GraphElementFactoryException {
+        thrown.expect(GraphElementFactoryException.class);
+        thrown.expectMessage("Failed to create blank node");
+
         // Setup
         final GraphElementFactory elementFactory = newGraph().getElementFactory();
         Localizer mockLocalizer = createMock(Localizer.class);
         insertFieldValue(elementFactory, "localizer", mockLocalizer);
         // Expectations
         mockLocalizer.createLocalBlankNode();
-        expectLastCall().andThrow(new GraphException("hello"));
+        expectLastCall().andThrow(new IllegalArgumentException("Failed to create blank node"));
         replay(mockLocalizer);
         // Do
         elementFactory.createBlankNode();

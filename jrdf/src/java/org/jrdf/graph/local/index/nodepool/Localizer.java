@@ -94,9 +94,9 @@ public interface Localizer extends TypedNodeVisitor {
      */
     Long localize(Node node) throws GraphException;
 
-    BlankNode createLocalBlankNode() throws GraphException;
+    BlankNode createLocalBlankNode() throws IllegalArgumentException;
 
-    URIReference createLocalURIReference(URI uri, boolean validate);
+    URIReference createLocalURIReference(URI uri, boolean validate) throws IllegalArgumentException;
 
-    Literal createLocalLiteral(String escapedForm);
+    Literal createLocalLiteral(String escapedForm) throws IllegalArgumentException;
 }

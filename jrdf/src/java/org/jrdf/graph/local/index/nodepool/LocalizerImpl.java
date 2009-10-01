@@ -108,7 +108,7 @@ public class LocalizerImpl implements Localizer {
         }
     }
 
-    public BlankNode createLocalBlankNode() throws GraphException {
+    public BlankNode createLocalBlankNode() {
         String uid = UUID.randomUUID().toString();
         currentId = nodePool.getNewNodeId();
         BlankNode node = new BlankNodeImpl(uid, currentId);
