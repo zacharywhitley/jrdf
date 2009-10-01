@@ -70,22 +70,30 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.util.test.MockFactory;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
 public class SparqlAskJsonResultsParserImplUnitTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     private final MockFactory mockFactory = new MockFactory();
     private JsonParser mockJsonParser;
+    private static final JsonToken BOGUS_TOKEN = JsonToken.NOT_AVAILABLE;
 
     @Before
     public void setUp() throws Exception {
         mockJsonParser = mockFactory.createMock(JsonParser.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testCreateWithoutBoolean() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Cannot parse: null");
         expect(mockJsonParser.getCurrentName()).andReturn("fred");
         mockFactory.replay();
         new SparqlAskJsonResultsParserImpl(mockJsonParser);
@@ -110,8 +118,11 @@ public class SparqlAskJsonResultsParserImplUnitTest {
         checkResult(parser, "false");
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void tryingToReturnTwoResultsThrowsException() throws Exception {
+        thrown.expect(NoSuchElementException.class);
+        thrown.expectMessage("No more results available");
+
         createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.VALUE_FALSE);
         mockFactory.replay();
         final SparqlAskJsonResultsParserImpl parser = new SparqlAskJsonResultsParserImpl(mockJsonParser);
@@ -120,9 +131,12 @@ public class SparqlAskJsonResultsParserImplUnitTest {
         parser.next();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testCreateWithIllegalValueThrowsIllegalStateException() throws Exception {
-        createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.NOT_AVAILABLE);
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Cannot parse: " + BOGUS_TOKEN);
+
+        createConstructorExpectations(SparqlProtocol.BOOLEAN, BOGUS_TOKEN);
         mockFactory.replay();
         new SparqlAskJsonResultsParserImpl(mockJsonParser);
         mockFactory.verify();
@@ -137,8 +151,11 @@ public class SparqlAskJsonResultsParserImplUnitTest {
         mockFactory.verify();
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testRemove() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage("Cannot remove on this iterator");
+
         createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.VALUE_FALSE);
         mockFactory.replay();
         new SparqlAskJsonResultsParserImpl(mockJsonParser).remove();
