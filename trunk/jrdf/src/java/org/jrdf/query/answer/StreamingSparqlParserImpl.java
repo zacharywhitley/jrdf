@@ -78,8 +78,8 @@ public class StreamingSparqlParserImpl implements StreamingSparqlParser {
     private boolean hasMore;
     private TypeValue[] results;
 
-    public StreamingSparqlParserImpl(final SparqlAnswerHandler handler, final InputStream... streams) {
-        this.handler = handler;
+    public StreamingSparqlParserImpl(final SparqlAnswerHandler newHandler, final InputStream... streams) {
+        this.handler = newHandler;
         this.hasMore = false;
         this.variables = new LinkedHashSet<String>();
         this.streamQueue = new LinkedBlockingQueue<InputStream>();

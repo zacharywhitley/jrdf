@@ -74,8 +74,8 @@ import java.util.List;
 public class BiOperandExpressionSimplifierImpl implements BiOperandExpressionSimplifier {
     private ExpressionComparator<Integer> comparator;
 
-    public BiOperandExpressionSimplifierImpl(ExpressionComparator<Integer> comparator) {
-        this.comparator = comparator;
+    public BiOperandExpressionSimplifierImpl(ExpressionComparator<Integer> newComparator) {
+        this.comparator = newComparator;
     }
 
     public List<Expression> flattenAndSortConjunction(BiOperandExpression conjunction, Class<?> expClass) {

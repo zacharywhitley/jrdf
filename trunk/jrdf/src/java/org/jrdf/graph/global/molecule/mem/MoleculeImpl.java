@@ -286,8 +286,8 @@ public class MoleculeImpl implements Molecule {
     public Iterator<Triple> iterator() {
         HashSet<Triple> set = new HashSet<Triple>();
         MoleculeToTripleIterator mtti = new MoleculeToTripleIterator(set);
-        MoleculeTraverser traverser = new MoleculeTraverserImpl();
-        traverser.traverse(this, mtti);
+        MoleculeTraverser tmpTraverser = new MoleculeTraverserImpl();
+        tmpTraverser.traverse(this, mtti);
         return set.iterator();
     }
 

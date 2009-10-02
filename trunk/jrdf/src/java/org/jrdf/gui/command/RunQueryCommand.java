@@ -82,12 +82,12 @@ public class RunQueryCommand extends ApplicationWindowAwareCommand {
         super("runQueryCommand");
     }
 
-    public void setJRDFModel(QueryModel jrdfModel) {
-        this.jrdfModel = jrdfModel;
+    public void setJRDFModel(QueryModel newJrdfModel) {
+        this.jrdfModel = newJrdfModel;
     }
 
-    public void setQueryPanelView(QueryPanelView queryPanelView) {
-        this.queryPanelView = queryPanelView;
+    public void setQueryPanelView(QueryPanelView newQueryPanelView) {
+        this.queryPanelView = newQueryPanelView;
     }
 
     protected void doExecuteCommand() {

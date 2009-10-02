@@ -73,13 +73,13 @@ public class SparqlSelectJsonWriter extends AbstractSparqlJsonWriter {
     private long maxRows;
     private long count;
 
-    public SparqlSelectJsonWriter(final Writer writer, final String[] links, final String[] variableNames,
-        final Iterator<TypeValue[]> iterator, final long maxRows) {
-        super(writer, links);
-        checkNotNull(variableNames, iterator);
-        this.variableNames = variableNames;
-        this.iterator = iterator;
-        this.maxRows = maxRows;
+    public SparqlSelectJsonWriter(final Writer newWriter, final String[] newLinks, final String[] newVariableNames,
+        final Iterator<TypeValue[]> newIterator, final long newMaxRows) {
+        super(newWriter, newLinks);
+        checkNotNull(newVariableNames, newIterator);
+        this.variableNames = newVariableNames;
+        this.iterator = newIterator;
+        this.maxRows = newMaxRows;
     }
 
     public boolean hasMoreResults() {

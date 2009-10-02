@@ -77,11 +77,11 @@ public class SparqlSelectJsonResultsParserImpl implements SparqlJsonResultsParse
     private Map<String, TypeValue> nextResult = new HashMap<String, TypeValue>();
     private TypeValueArrayFactory arrayFactory = new TypeValueArrayFactoryImpl();
 
-    public SparqlSelectJsonResultsParserImpl(final LinkedHashSet<String> variables, final JsonParser parser)
+    public SparqlSelectJsonResultsParserImpl(final LinkedHashSet<String> newVariables, final JsonParser newParser)
         throws IOException {
-        this.variables = variables;
-        this.parser = parser;
-        this.resultParser = new SparqlJsonResultParserImpl(parser);
+        this.variables = newVariables;
+        this.parser = newParser;
+        this.resultParser = new SparqlJsonResultParserImpl(newParser);
         getNextValue();
     }
 

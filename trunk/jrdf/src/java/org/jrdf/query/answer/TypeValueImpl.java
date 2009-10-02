@@ -67,34 +67,36 @@ import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
 public class TypeValueImpl implements TypeValue {
+    private static final int PRIME = 31;
     private SparqlResultType type;
     private String value;
     private String suffix;
     private DatatypeType suffixType;
-    private static final int PRIME = 31;
 
     public TypeValueImpl() {
         setValues(UNBOUND, "", NONE, "");
     }
 
-    public TypeValueImpl(SparqlResultType type, String value) {
-        setValues(type, value, NONE, "");
+    public TypeValueImpl(SparqlResultType newType, String newValue) {
+        setValues(newType, newValue, NONE, "");
     }
 
     // TODO AN Make this a enum for isDatatype instead of a boolean.
-    public TypeValueImpl(SparqlResultType type, String value, boolean isDatatype, String suffix) {
-        if (isDatatype) {
-            setValues(type, value, DATATYPE, suffix);
+    public TypeValueImpl(final SparqlResultType newType, final String newValue, final boolean newIsDataType,
+        final String newSuffix) {
+        if (newIsDataType) {
+            setValues(newType, newValue, DATATYPE, newSuffix);
         } else {
-            setValues(type, value, XML_LANG, suffix);
+            setValues(newType, newValue, XML_LANG, newSuffix);
         }
     }
 
-    private void setValues(SparqlResultType type, String value, DatatypeType suffixType, String suffix) {
-        this.type = type;
-        this.value = value;
-        this.suffixType = suffixType;
-        this.suffix = suffix;
+    private void setValues(final SparqlResultType newType, final String newValue, final DatatypeType newSuffixType,
+        final String newSuffix) {
+        this.type = newType;
+        this.value = newValue;
+        this.suffixType = newSuffixType;
+        this.suffix = newSuffix;
     }
 
     public SparqlResultType getType() {

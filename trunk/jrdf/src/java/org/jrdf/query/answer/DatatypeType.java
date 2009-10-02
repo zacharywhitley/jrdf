@@ -75,10 +75,10 @@ public enum DatatypeType {
     XML_LANG("xml:lang");
 
     private static final long serialVersionUID = 1L;
-    private String representation;
+    private final String representation;
 
-    DatatypeType(String representation) {
-        this.representation = representation;
+    DatatypeType(final String newRepresentation) {
+        this.representation = newRepresentation;
     }
 
     @Override

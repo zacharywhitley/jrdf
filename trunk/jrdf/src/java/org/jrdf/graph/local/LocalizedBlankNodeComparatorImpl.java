@@ -74,8 +74,8 @@ public class LocalizedBlankNodeComparatorImpl implements BlankNodeComparator, Se
     private LocalizedBlankNodeComparatorImpl() {
     }
 
-    public LocalizedBlankNodeComparatorImpl(LocalizedNodeComparator localizedNodeComparator) {
-        this.localizedNodeComparator = localizedNodeComparator;
+    public LocalizedBlankNodeComparatorImpl(LocalizedNodeComparator newLocalizedNodeComparator) {
+        this.localizedNodeComparator = newLocalizedNodeComparator;
     }
 
     public int compare(BlankNode blankNode1, BlankNode blankNode2) {

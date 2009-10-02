@@ -69,12 +69,12 @@ import java.util.LinkedHashSet;
 public class SelectSparqlAnswer implements SelectAnswer {
     private StreamingSparqlParser answerStreamParser;
 
-    public SelectSparqlAnswer(final SparqlAnswerHandler handler, final InputStream inputStream) {
-        this(new StreamingSparqlParserImpl(handler, inputStream));
+    public SelectSparqlAnswer(final SparqlAnswerHandler newHandler, final InputStream newInputStream) {
+        this(new StreamingSparqlParserImpl(newHandler, newInputStream));
     }
 
-    public SelectSparqlAnswer(final StreamingSparqlParser answerStreamParser) {
-        this.answerStreamParser = answerStreamParser;
+    public SelectSparqlAnswer(final StreamingSparqlParser newAnswerStreamParser) {
+        this.answerStreamParser = newAnswerStreamParser;
     }
 
     public String[] getVariableNames() {

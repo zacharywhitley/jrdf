@@ -80,12 +80,12 @@ public class NewQueryCommand extends ApplicationWindowAwareCommand {
         super("newQueryCommand");
     }
 
-    public void setQueryPanelView(QueryPanelView queryPanelView) {
-        this.queryPanelView = queryPanelView;
+    public void setQueryPanelView(QueryPanelView newQueryPanelView) {
+        this.queryPanelView = newQueryPanelView;
     }
 
-    public void setResultsPanelView(ResultsPanelView resultsPanelView) {
-        this.resultsPanelView = resultsPanelView;
+    public void setResultsPanelView(ResultsPanelView newResultsPanelView) {
+        this.resultsPanelView = newResultsPanelView;
     }
 
     protected void doExecuteCommand() {

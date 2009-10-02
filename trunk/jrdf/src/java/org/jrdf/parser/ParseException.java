@@ -70,9 +70,9 @@ public class ParseException extends Exception {
 
     private static final long serialVersionUID = -1049335626292093759L;
 
-    private int lineNo;
+    private int lineNumber;
 
-    private int columnNo;
+    private int columnNumber;
 
     private Exception source;
 
@@ -82,40 +82,40 @@ public class ParseException extends Exception {
     /**
      * Creates a new ParseException.
      *
-     * @param msg      An error message.
-     * @param columnNo A column number associated with the message.
+     * @param newMessage      An error message.
+     * @param newColumnNumber A column number associated with the message.
      */
-    public ParseException(String msg, int columnNo) {
-        super(msg);
-        this.columnNo = columnNo;
+    public ParseException(String newMessage, int newColumnNumber) {
+        super(newMessage);
+        this.columnNumber = newColumnNumber;
     }
 
     /**
      * Creates a new ParseException.
      *
-     * @param msg      An error message.
-     * @param lineNo   A line number associated with the message.
-     * @param columnNo A column number associated with the message.
+     * @param newMessage      An error message.
+     * @param newLineNumber   A line number associated with the message.
+     * @param newColumnNumber A column number associated with the message.
      */
-    public ParseException(String msg, int lineNo, int columnNo) {
-        super(msg);
-        this.lineNo = lineNo;
-        this.columnNo = columnNo;
+    public ParseException(String newMessage, int newLineNumber, int newColumnNumber) {
+        super(newMessage);
+        this.lineNumber = newLineNumber;
+        this.columnNumber = newColumnNumber;
     }
 
     /**
      * Creates a new ParseException wrapping another exception.
      *
-     * @param msg      An error message.
-     * @param source   The source exception.
-     * @param lineNo   A line number associated with the message.
-     * @param columnNo A column number associated with the message.
+     * @param newMessage      An error message.
+     * @param newSource   The source exception.
+     * @param newLineNumber   A line number associated with the message.
+     * @param newColumnNumber A column number associated with the message.
      */
-    public ParseException(String msg, Exception source, int lineNo, int columnNo) {
-        super(msg);
-        this.source = source;
-        this.lineNo = lineNo;
-        this.columnNo = columnNo;
+    public ParseException(String newMessage, Exception newSource, int newLineNumber, int newColumnNumber) {
+        super(newMessage);
+        this.source = newSource;
+        this.lineNumber = newLineNumber;
+        this.columnNumber = newColumnNumber;
     }
 
     /**
@@ -123,15 +123,15 @@ public class ParseException extends Exception {
      * ParseException will inherit its message from the supplied
      * source exception.
      *
-     * @param source   The source exception.
-     * @param lineNo   A line number associated with the message.
-     * @param columnNo A column number associated with the message.
+     * @param newSource   The source exception.
+     * @param newLineNumber   A line number associated with the message.
+     * @param newColumnNumber A column number associated with the message.
      */
-    public ParseException(Exception source, int lineNo, int columnNo) {
-        super(source.getMessage());
-        this.source = source;
-        this.lineNo = lineNo;
-        this.columnNo = columnNo;
+    public ParseException(Exception newSource, int newLineNumber, int newColumnNumber) {
+        super(newSource.getMessage());
+        this.source = newSource;
+        this.lineNumber = newLineNumber;
+        this.columnNumber = newColumnNumber;
     }
 
     public void printStackTrace() {
@@ -163,7 +163,7 @@ public class ParseException extends Exception {
      *         or applicable.
      */
     public int getLineNumber() {
-        return lineNo;
+        return lineNumber;
     }
 
     /**
@@ -173,6 +173,6 @@ public class ParseException extends Exception {
      *         or applicable.
      */
     public int getColumnNumber() {
-        return columnNo;
+        return columnNumber;
     }
 }

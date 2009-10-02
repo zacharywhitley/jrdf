@@ -85,10 +85,10 @@ public enum AnswerType {
      */
     UNKNOWN("UNKNOWN");
 
-    private String representation;
+    private final String representation;
 
-    AnswerType(String representation) {
-        this.representation = representation;
+    AnswerType(final String newRepresentation) {
+        this.representation = newRepresentation;
     }
 
     @Override

@@ -250,12 +250,12 @@ public final class RdfXmlParser implements ConfigurableParser {
      * Creates a new RdfXmlParser that will use the supplied GraphElementFactory
      * to create objects for resources, bNodes and literals.
      *
-     * @param valueFactory           A GraphElementFactory.
-     * @param parserBlankNodeFactory A ParserBlankNodeFactory.
+     * @param newValueFactory           A GraphElementFactory.
+     * @param newBNodeFactory A ParserBlankNodeFactory.
      */
-    public RdfXmlParser(GraphElementFactory valueFactory, ParserBlankNodeFactory parserBlankNodeFactory) {
+    public RdfXmlParser(GraphElementFactory newValueFactory, ParserBlankNodeFactory newBNodeFactory) {
         try {
-            init(valueFactory, parserBlankNodeFactory);
+            init(newValueFactory, newBNodeFactory);
 
             // Initialize the statement handler to empty.
             setStatementHandler(new StatementHandler() {
@@ -269,10 +269,10 @@ public final class RdfXmlParser implements ConfigurableParser {
         }
     }
 
-    private void init(GraphElementFactory valueFactory, ParserBlankNodeFactory parserBlankNodeFactory)
+    private void init(GraphElementFactory newValueFactory, ParserBlankNodeFactory newBNodeFactory)
         throws TransformerConfigurationException, GraphElementFactoryException {
-        this.valueFactory = valueFactory;
-        bNodeFactory = parserBlankNodeFactory;
+        this.valueFactory = newValueFactory;
+        this.bNodeFactory = newBNodeFactory;
         datatypeHandling = DT_VERIFY;
 
         RDF_TYPE = this.valueFactory.createURIReference(RDF.TYPE);
@@ -310,23 +310,23 @@ public final class RdfXmlParser implements ConfigurableParser {
     }
 
     // implements Parser.setVerifyData(boolean)
-    public synchronized void setVerifyData(boolean verifyData) {
-        this.verifyData = verifyData;
+    public synchronized void setVerifyData(boolean newVerifyData) {
+        this.verifyData = newVerifyData;
     }
 
     // implements Parser.setPreserveBNodeIds(boolean)
-    public synchronized void setPreserveBNodeIds(boolean preserveBNodeIds) {
-        this.preserveBNodeIds = preserveBNodeIds;
+    public synchronized void setPreserveBNodeIds(boolean newPreserveBNodeIds) {
+        this.preserveBNodeIds = newPreserveBNodeIds;
     }
 
     // implements Parser.setStopAtFirstError(boolean)
-    public synchronized void setStopAtFirstError(boolean stopAtFirstError) {
-        this.stopAtFirstError = stopAtFirstError;
+    public synchronized void setStopAtFirstError(boolean newStopAtFirstError) {
+        this.stopAtFirstError = newStopAtFirstError;
     }
 
     // implements Parser.setDatatypeHandling(int)
-    public void setDatatypeHandling(int datatypeHandling) {
-        this.datatypeHandling = datatypeHandling;
+    public void setDatatypeHandling(int newDatatypeHandling) {
+        this.datatypeHandling = newDatatypeHandling;
     }
 
     public void setParseStandAloneDocuments(boolean standAloneDocs) {
@@ -347,8 +347,8 @@ public final class RdfXmlParser implements ConfigurableParser {
      * Parses the data from the supplied InputStream, using the supplied
      * BASE_URI to resolve any relative URI references.
      *
-     * @param in      The InputStream from which to read the data.
-     * @param baseURI The URI associated with the data in the InputStream.
+     * @param newInputStream      The InputStream from which to read the data.
+     * @param newBaseURI The URI associated with the data in the InputStream.
      * @throws IOException               If an I/O error occurred while data was read
      *                                   from the InputStream.
      * @throws ParseException            If the parser has found an unrecoverable
@@ -358,17 +358,17 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @throws IllegalArgumentException  If the supplied input stream or
      *                                   base URI is <tt>null</tt>.
      */
-    public synchronized void parse(InputStream in, String baseURI) throws IOException, ParseException,
+    public synchronized void parse(InputStream newInputStream, String newBaseURI) throws IOException, ParseException,
         StatementHandlerException {
-        if (null == in) {
+        if (null == newInputStream) {
             throw new IllegalArgumentException("Input stream cannot be 'null'");
         }
-        if (null == baseURI) {
+        if (null == newBaseURI) {
             throw new IllegalArgumentException("Base URI cannot be 'null'");
         }
 
-        InputSource inputSource = new InputSource(in);
-        inputSource.setSystemId(baseURI);
+        InputSource inputSource = new InputSource(newInputStream);
+        inputSource.setSystemId(newBaseURI);
 
         parse(inputSource);
     }
@@ -377,8 +377,8 @@ public final class RdfXmlParser implements ConfigurableParser {
      * Parses the data from the supplied Reader, using the supplied BASE_URI
      * to resolve any relative URI references.
      *
-     * @param reader  The Reader from which to read the data.
-     * @param baseURI The URI associated with the data in the InputStream.
+     * @param newReader  The Reader from which to read the data.
+     * @param newBaseURI The URI associated with the data in the InputStream.
      * @throws IOException               If an I/O error occurred while data was read
      *                                   from the InputStream.
      * @throws ParseException            If the parser has found an unrecoverable
@@ -388,17 +388,17 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @throws IllegalArgumentException  If the supplied reader or base URI
      *                                   is <tt>null</tt>.
      */
-    public synchronized void parse(Reader reader, String baseURI) throws IOException, ParseException,
+    public synchronized void parse(Reader newReader, String newBaseURI) throws IOException, ParseException,
         StatementHandlerException {
-        if (null == reader) {
+        if (null == newReader) {
             throw new IllegalArgumentException("Reader cannot be 'null'");
         }
-        if (null == baseURI) {
+        if (null == newBaseURI) {
             throw new IllegalArgumentException("Base URI cannot be 'null'");
         }
 
-        InputSource inputSource = new InputSource(reader);
-        inputSource.setSystemId(baseURI);
+        InputSource inputSource = new InputSource(newReader);
+        inputSource.setSystemId(newBaseURI);
 
         parse(inputSource);
     }
@@ -443,15 +443,15 @@ public final class RdfXmlParser implements ConfigurableParser {
         }
     }
 
-    void setBaseURI(URI baseURI) {
-        this.baseURI = baseURI;
+    void setBaseURI(URI newBaseURI) {
+        this.baseURI = newBaseURI;
     }
 
-    void setXmlLang(String xmlLang) {
-        if ("".equals(xmlLang)) {
+    void setXmlLang(String newXmlLang) {
+        if ("".equals(newXmlLang)) {
             this.xmlLang = null;
         } else {
-            this.xmlLang = xmlLang;
+            this.xmlLang = newXmlLang;
         }
     }
 
@@ -1231,16 +1231,16 @@ public final class RdfXmlParser implements ConfigurableParser {
         private boolean isVolatile;
         private int liCounter = 1;
 
-        NodeElement(SubjectNode resource) {
-            this.resource = resource;
+        NodeElement(SubjectNode newResource) {
+            this.resource = newResource;
         }
 
         public SubjectNode getResource() {
             return resource;
         }
 
-        public void setIsVolatile(boolean isVolatile) {
-            this.isVolatile = isVolatile;
+        public void setIsVolatile(boolean newIsVolatile) {
+            this.isVolatile = newIsVolatile;
         }
 
         public boolean isVolatile() {
@@ -1284,8 +1284,8 @@ public final class RdfXmlParser implements ConfigurableParser {
          */
         private SubjectNode lastListResource;
 
-        PropertyElement(URIReference uri) {
-            this.uri = uri;
+        PropertyElement(URIReference newUri) {
+            this.uri = newUri;
         }
 
         public URIReference getURI() {
@@ -1296,16 +1296,16 @@ public final class RdfXmlParser implements ConfigurableParser {
             return null != reificationURI;
         }
 
-        public void setReificationURI(URIReference reifURI) {
-            reificationURI = reifURI;
+        public void setReificationURI(URIReference newReificationURI) {
+            this.reificationURI = newReificationURI;
         }
 
         public URIReference getReificationURI() {
             return reificationURI;
         }
 
-        public void setDatatype(String datatype) {
-            this.datatype = datatype;
+        public void setDatatype(String newDatatype) {
+            this.datatype = newDatatype;
         }
 
         public String getDatatype() {
@@ -1316,16 +1316,16 @@ public final class RdfXmlParser implements ConfigurableParser {
             return parseCollection;
         }
 
-        public void setParseCollection(boolean parseCollection) {
-            this.parseCollection = parseCollection;
+        public void setParseCollection(boolean newParseCollection) {
+            this.parseCollection = newParseCollection;
         }
 
         public SubjectNode getLastListResource() {
             return lastListResource;
         }
 
-        public void setLastListResource(SubjectNode resource) {
-            lastListResource = resource;
+        public void setLastListResource(SubjectNode newLastListResource) {
+            this.lastListResource = newLastListResource;
         }
 
         public String toString() {

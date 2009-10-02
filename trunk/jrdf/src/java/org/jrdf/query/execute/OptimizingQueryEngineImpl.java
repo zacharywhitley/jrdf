@@ -92,22 +92,22 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     private QueryExecutionPlanner planner;
     private ConstraintTupleCacheHandler cacheHandler;
 
-    public OptimizingQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
-        Union union, DyadicJoin leftOuterJoin) {
-        super(project, naturalJoin, restrict, union, leftOuterJoin);
-        cacheHandler = new ConstraintTupleCacheHandlerImpl();
-        shortCircuit = false;
-        planner = getPlanner();
+    public OptimizingQueryEngineImpl(Project newProject, NadicJoin newNaturalJoin, Restrict newRestrict,
+        Union newUnion, DyadicJoin newLeftOuterJoin) {
+        super(newProject, newNaturalJoin, newRestrict, newUnion, newLeftOuterJoin);
+        this.cacheHandler = new ConstraintTupleCacheHandlerImpl();
+        this.shortCircuit = false;
+        this.planner = getPlanner();
     }
 
     @Override
     public EvaluatedRelation visitAsk(Ask ask) {
         clearCacheHandler();
-        cacheHandler = new ConstraintTupleCacheHandlerImpl();
+        this.cacheHandler = new ConstraintTupleCacheHandlerImpl();
         System.gc();
-        shortCircuit = true;
-        allVariables = ask.getAllVariables();
-        result = getExpression(ask.getNextExpression(), shortCircuit);
+        this.shortCircuit = true;
+        this.allVariables = ask.getAllVariables();
+        this.result = getExpression(ask.getNextExpression(), shortCircuit);
         return result;
     }
 
@@ -189,10 +189,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         return RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
     }
 
-    private void setShortCircuit(boolean shortCircuit) {
-        this.shortCircuit = shortCircuit;
-    }
-
     private void setCacheHandler(ConstraintTupleCacheHandler handler) {
         this.cacheHandler = handler;
     }
@@ -206,11 +202,15 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         return expression.accept(queryEngine);
     }
 
-    protected EvaluatedRelation getExpression(Expression expression, boolean shortCircuit) {
+    protected EvaluatedRelation getExpression(Expression expression, boolean newShortCircuit) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
-        ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(shortCircuit);
+        ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(newShortCircuit);
         return expression.accept(queryEngine);
+    }
+
+    private void setShortCircuit(boolean newShortCircuit) {
+        this.shortCircuit = newShortCircuit;
     }
 }

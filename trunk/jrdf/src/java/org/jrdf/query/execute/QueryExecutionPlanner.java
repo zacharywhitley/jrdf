@@ -82,6 +82,7 @@ import java.util.Set;
  * @author Yuan-Fang Li
  * @version $Id$
  */
+// TODO AN Cleanup this code - create an interface for the OptimizingQueryEngine?
 public final class QueryExecutionPlanner extends ExpressionVisitorAdapter<Set<EvaluatedRelation>>
     implements ExpressionVisitor<Set<EvaluatedRelation>> {
     private static final QueryExecutionPlanner PLANNER = new QueryExecutionPlanner();
@@ -103,8 +104,8 @@ public final class QueryExecutionPlanner extends ExpressionVisitorAdapter<Set<Ev
     }
 
     public Set<EvaluatedRelation> processAndRearrangeExpressions(BiOperandExpression expression,
-        List<Expression> operands, OptimizingQueryEngineImpl engine) {
-        this.engine = engine;
+        List<Expression> operands, OptimizingQueryEngineImpl newEngine) {
+        this.engine = newEngine;
         this.constraintList = operands;
         return expression.accept(this);
     }

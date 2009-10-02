@@ -75,9 +75,9 @@ public class SparqlXmlResultParserImpl implements SparqlXmlResultParser {
     private XMLStreamReader parser;
     private TypeValueFactory typeValueFactory;
 
-    public SparqlXmlResultParserImpl(final XMLStreamReader newParser, final TypeValueFactory typeValueFactory) {
+    public SparqlXmlResultParserImpl(final XMLStreamReader newParser, final TypeValueFactory newTypeValueFactory) {
         this.parser = newParser;
-        this.typeValueFactory = typeValueFactory;
+        this.typeValueFactory = newTypeValueFactory;
     }
 
     public void getOneBinding(Map<String, TypeValue> variableToValue) throws XMLStreamException {

@@ -32,12 +32,12 @@ class Att {
     private String value;
     private URI uri;
 
-    Att(String namespace, String localName, String qName, String value) {
-        this.namespace = namespace;
-        this.localName = localName;
-        this.qName = qName;
-        this.value = value;
-        this.uri = URI.create(namespace + localName);
+    Att(String newNamespace, String newLocalName, String newQName, String newValue) {
+        this.namespace = newNamespace;
+        this.localName = newLocalName;
+        this.qName = newQName;
+        this.value = newValue;
+        this.uri = URI.create(newNamespace + newLocalName);
     }
 
     public String getNamespace() {

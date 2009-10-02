@@ -86,11 +86,11 @@ public final class NodeComparatorImpl implements NodeComparator, TypedNodeVisito
     private NodeComparatorImpl() {
     }
 
-    public NodeComparatorImpl(NodeTypeComparator nodeTypeComparator, SemanticLiteralComparator literalComparator,
-        BlankNodeComparator blankNodeComparator) {
-        this.nodeTypeComparator = nodeTypeComparator;
-        this.literalComparator = literalComparator;
-        this.blankNodeComparator = blankNodeComparator;
+    public NodeComparatorImpl(NodeTypeComparator newNodeTypeComparator, SemanticLiteralComparator newLiteralComparator,
+        BlankNodeComparator newBlankNodeComparator) {
+        this.nodeTypeComparator = newNodeTypeComparator;
+        this.literalComparator = newLiteralComparator;
+        this.blankNodeComparator = newBlankNodeComparator;
     }
 
     public int compare(Node o1, Node o2) {

@@ -73,13 +73,13 @@ public class QueryRanCommand extends ApplicationWindowAwareCommand {
     private final QueryView queryView;
     private Answer answer;
 
-    public QueryRanCommand(QueryView queryView) {
+    public QueryRanCommand(QueryView newQueryView) {
         super("runQueryCommand");
-        this.queryView = queryView;
+        this.queryView = newQueryView;
     }
 
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
+    public void setAnswer(Answer newAnswer) {
+        this.answer = newAnswer;
     }
 
     protected void doExecuteCommand() {

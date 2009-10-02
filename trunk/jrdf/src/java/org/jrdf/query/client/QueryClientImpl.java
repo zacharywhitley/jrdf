@@ -78,11 +78,11 @@ public final class QueryClientImpl implements QueryClient {
     private final SparqlAnswerHandler answerHandler;
     private Request request;
 
-    public QueryClientImpl(final URI endPointUri, final SparqlAnswerHandler answerHandler) {
-        checkNotNull(endPointUri, answerHandler);
-        this.endPointUri = endPointUri;
-        this.client = new Client(endPointUri.getScheme());
-        this.answerHandler = answerHandler;
+    public QueryClientImpl(final URI newEndPointUri, final SparqlAnswerHandler newAnswerHandler) {
+        checkNotNull(newEndPointUri, newAnswerHandler);
+        this.endPointUri = newEndPointUri;
+        this.client = new Client(newEndPointUri.getScheme());
+        this.answerHandler = newAnswerHandler;
     }
 
     public void setQuery(final String sparqlQuery, final Map<String, String> queryExtensions) {

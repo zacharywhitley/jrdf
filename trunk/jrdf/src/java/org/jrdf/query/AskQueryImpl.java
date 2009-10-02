@@ -79,10 +79,10 @@ public class AskQueryImpl implements Query {
     private Expression expression;
     private final GraphRelationFactory graphRelationFactory;
 
-    public AskQueryImpl(Expression expression, GraphRelationFactory graphRelationFactory) {
-        checkNotNull(expression, graphRelationFactory);
-        this.expression = expression;
-        this.graphRelationFactory = graphRelationFactory;
+    public AskQueryImpl(Expression newExpression, GraphRelationFactory newGraphRelationFactory) {
+        checkNotNull(newExpression, newGraphRelationFactory);
+        this.expression = newExpression;
+        this.graphRelationFactory = newGraphRelationFactory;
     }
 
     public Expression getNext() {

@@ -66,8 +66,8 @@ import java.util.Map;
 public final class CallableQueryClientImpl implements CallableQueryClient {
     private final QueryClient queryClient;
 
-    public CallableQueryClientImpl(final QueryClient queryClient) {
-        this.queryClient = queryClient;
+    public CallableQueryClientImpl(final QueryClient newQueryClient) {
+        this.queryClient = newQueryClient;
     }
 
     public CallableQueryClientImpl(final URI serverPort, final SparqlAnswerHandler answerHandler) {

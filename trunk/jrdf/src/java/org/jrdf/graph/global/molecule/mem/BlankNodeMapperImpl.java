@@ -79,16 +79,19 @@ import java.util.Set;
  */
 public class BlankNodeMapperImpl implements BlankNodeMapper {
     private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private Map<BlankNode, BlankNode> map;
+    private Map<BlankNode, BlankNode> result;
 
     public Map<BlankNode, BlankNode> getMap() {
-        return map;
+        return result;
     }
 
     public Map<BlankNode, BlankNode> createMap(Molecule m1, Molecule m2) {
-        map = new HashMap<BlankNode, BlankNode>();
-        map = populateMap(m1, m2, map);
-        return map;
+        result = startPopulateMap(m1, m2);
+        return result;
+    }
+
+    private Map<BlankNode, BlankNode> startPopulateMap(Molecule sm1, Molecule sm2) {
+        return populateMap(sm1, sm2, new HashMap<BlankNode, BlankNode>());
     }
 
     private Map<BlankNode, BlankNode> populateMap(Molecule m1, Molecule m2, Map<BlankNode, BlankNode> map) {
@@ -98,9 +101,8 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
             return new HashMap<BlankNode, BlankNode>();
         }
         Iterator<Triple> m1Roots = m1RootTriples.iterator();
-        Iterator<Triple> m2Roots = m2RootTriples.iterator();
-        while (m2Roots.hasNext()) {
-            Triple m2RootTriple = m2Roots.next();
+        for (Triple m2RootTriple1 : m2RootTriples) {
+            Triple m2RootTriple = m2RootTriple1;
             if (!m1.contains(m2RootTriple)) {
                 return new HashMap<BlankNode, BlankNode>();
             }
@@ -111,7 +113,7 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
                 if (sm1s.size() == 1 && sm2s.size() == 1) {
                     Molecule sm1 = sm1s.iterator().next();
                     Molecule sm2 = sm2s.iterator().next();
-                    Map<BlankNode, BlankNode> curMap = populateMap(sm1, sm2, new HashMap<BlankNode, BlankNode>());
+                    Map<BlankNode, BlankNode> curMap = startPopulateMap(sm1, sm2);
                     if (curMap.size() == 0) {
                         return curMap;
                     } else {
@@ -121,7 +123,7 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
                     }
                 } else {
                     throw new UnsupportedOperationException("Cannot handle more than one level of " +
-                            "submolecules at this time");
+                        "submolecules at this time");
                 }
             } else if (sm1s.size() < sm2s.size()) {
                 return new HashMap<BlankNode, BlankNode>();

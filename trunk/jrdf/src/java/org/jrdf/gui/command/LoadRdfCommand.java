@@ -85,8 +85,8 @@ public class LoadRdfCommand extends ApplicationWindowAwareCommand {
         super("rdfCommand");
     }
 
-    public void setJRDFModel(QueryModel jrdfModel) {
-        this.jrdfModel = jrdfModel;
+    public void setJRDFModel(QueryModel newJrdfModel) {
+        this.jrdfModel = newJrdfModel;
     }
 
     protected void doExecuteCommand() {

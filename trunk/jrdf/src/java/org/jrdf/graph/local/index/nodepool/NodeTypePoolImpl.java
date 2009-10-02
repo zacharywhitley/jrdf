@@ -77,19 +77,19 @@ public class NodeTypePoolImpl implements NodeTypePool {
     private Map<Long, String> uriNodePool;
     private Map<Long, String> literalNodePool;
     private StringNodeMapper mapper;
-    private Long nodeId;
-    private String nodeValue;
+    private Long nodeIdForVisitor;
+    private String nodeValueForVisitor;
 
-    public NodeTypePoolImpl(StringNodeMapper newMapper, Map<Long, String> blankNodePool,
-        Map<Long, String> uriNodePool, Map<Long, String> literalNodePool) {
-        this.blankNodePool = blankNodePool;
-        this.uriNodePool = uriNodePool;
-        this.literalNodePool = literalNodePool;
+    public NodeTypePoolImpl(StringNodeMapper newMapper, Map<Long, String> newBlankNodePool,
+        Map<Long, String> newUriNodePool, Map<Long, String> newLiteralNodePool) {
         this.mapper = newMapper;
+        this.blankNodePool = newBlankNodePool;
+        this.uriNodePool = newUriNodePool;
+        this.literalNodePool = newLiteralNodePool;
     }
 
-    public boolean nodeExists(Long nodeId) {
-        return (getNodeIfExists(nodeId) != null);
+    public boolean nodeExists(Long nodeToTest) {
+        return (getNodeIfExists(nodeToTest) != null);
     }
 
     public Node get(Long nodeId) {
@@ -114,8 +114,8 @@ public class NodeTypePoolImpl implements NodeTypePool {
     }
 
     public void put(Long id, LocalizedNode node) {
-        nodeId = id;
-        nodeValue = mapper.convertToString(node);
+        nodeIdForVisitor = id;
+        nodeValueForVisitor = mapper.convertToString(node);
         node.accept(this);
     }
 
@@ -163,19 +163,19 @@ public class NodeTypePoolImpl implements NodeTypePool {
     }
 
     public void visitBlankNode(BlankNode blankNode) {
-        blankNodePool.put(nodeId, nodeValue);
+        blankNodePool.put(nodeIdForVisitor, nodeValueForVisitor);
     }
 
     public void visitURIReference(URIReference uriReference) {
-        uriNodePool.put(nodeId, nodeValue);
+        uriNodePool.put(nodeIdForVisitor, nodeValueForVisitor);
     }
 
     public void visitLiteral(Literal literal) {
-        literalNodePool.put(nodeId, nodeValue);
+        literalNodePool.put(nodeIdForVisitor, nodeValueForVisitor);
     }
 
     public void visitNode(Node node) {
-        throw new IllegalArgumentException("Failed to add node with id: " + nodeId + " Node: " + node);
+        throw new IllegalArgumentException("Failed to add node with id: " + nodeIdForVisitor + " Node: " + node);
     }
 
     public void visitResource(Resource resource) {

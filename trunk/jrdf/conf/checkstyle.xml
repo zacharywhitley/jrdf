@@ -34,6 +34,7 @@
             <property name="ignoreNumbers" value="-1, 0, 1, 2, 3"/>
         </module>
         <!-- End Production specific checks -->
+        <module name="FileContentsHolder"/>
         <property name="tabWidth" value="4"/>
         <module name="AvoidStarImport"/>
         <module name="ClassTypeParameterName"/>
