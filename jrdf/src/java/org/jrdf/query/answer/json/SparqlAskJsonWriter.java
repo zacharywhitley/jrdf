@@ -68,9 +68,9 @@ public class SparqlAskJsonWriter extends AbstractSparqlJsonWriter {
     private boolean hasMore;
     private boolean result;
 
-    public SparqlAskJsonWriter(final Writer writer, final String[] links, final boolean result) {
-        super(writer, links);
-        this.result = result;
+    public SparqlAskJsonWriter(final Writer newWriter, final String[] newLinks, final boolean newResult) {
+        super(newWriter, newLinks);
+        this.result = newResult;
         this.hasMore = true;
     }
 

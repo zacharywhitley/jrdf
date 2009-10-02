@@ -158,8 +158,8 @@ class SAXFilter implements ContentHandler {
      */
     private Set<String> unknownPrefixesInXmlLiteral = new HashSet<String>();
 
-    SAXFilter(RdfXmlParser rdfParser) throws TransformerConfigurationException {
-        this.rdfParser = rdfParser;
+    SAXFilter(RdfXmlParser newRdfParser) throws TransformerConfigurationException {
+        this.rdfParser = newRdfParser;
         th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()).newTransformerHandler();
         th.setResult(new StreamResult(escapedWriter));
     }
@@ -207,23 +207,23 @@ class SAXFilter implements ContentHandler {
         unknownPrefixesInXmlLiteral.clear();
     }
 
-    public void setDocumentURI(String documentURI) {
-        this.documentURI = createBaseURI(documentURI);
+    public void setDocumentURI(String newDocumentURI) {
+        this.documentURI = createBaseURI(newDocumentURI);
     }
 
-    public void setParseStandAloneDocuments(boolean standAloneDocs) {
-        parseStandAloneDocuments = standAloneDocs;
+    public void setParseStandAloneDocuments(boolean newStandAloneDocuments) {
+        parseStandAloneDocuments = newStandAloneDocuments;
     }
 
     public boolean getParseStandAloneDocuments() {
         return parseStandAloneDocuments;
     }
 
-    public void setDocumentLocator(Locator locator) {
-        this.locator = locator;
+    public void setDocumentLocator(Locator newLocator) {
+        this.locator = newLocator;
         if (null != locListener) {
-            locListener.parseLocationUpdate(locator.getLineNumber(),
-                locator.getColumnNumber());
+            locListener.parseLocationUpdate(newLocator.getLineNumber(),
+                newLocator.getColumnNumber());
         }
     }
 
@@ -690,64 +690,64 @@ class SAXFilter implements ContentHandler {
             return xmlLang;
         }
 
-        public void setXmlLang(String xmlLang) {
-            this.xmlLang = xmlLang;
+        public void setXmlLang(String newXmlLang) {
+            this.xmlLang = newXmlLang;
         }
 
         public String getqName() {
             return qName;
         }
 
-        public void setqName(String qName) {
-            this.qName = qName;
+        public void setqName(String newQName) {
+            this.qName = newQName;
         }
 
         public String getNamespaceURI() {
             return namespaceURI;
         }
 
-        public void setNamespaceURI(String namespaceURI) {
-            this.namespaceURI = namespaceURI;
+        public void setNamespaceURI(String newNamespaceURI) {
+            this.namespaceURI = newNamespaceURI;
         }
 
         public String getLocalName() {
             return localName;
         }
 
-        public void setLocalName(String localName) {
-            this.localName = localName;
+        public void setLocalName(String newLocalName) {
+            this.localName = newLocalName;
         }
 
         public Atts getAtts() {
             return atts;
         }
 
-        public void setAtts(Atts atts) {
-            this.atts = atts;
+        public void setAtts(Atts newAtts) {
+            this.atts = newAtts;
         }
 
         public ElementInfo getParent() {
             return parent;
         }
 
-        public void setParent(ElementInfo parent) {
-            this.parent = parent;
+        public void setParent(ElementInfo newParent) {
+            this.parent = newParent;
         }
 
         public Map<String, String> getNamespaceMap() {
             return namespaceMap;
         }
 
-        public void setNamespaceMap(Map<String, String> namespaceMap) {
-            this.namespaceMap = namespaceMap;
+        public void setNamespaceMap(Map<String, String> newNamespaceMap) {
+            this.namespaceMap = newNamespaceMap;
         }
 
         public URI getBaseURI() {
             return baseURI;
         }
 
-        public void setBaseURI(String uriString) {
-            this.baseURI = baseURI.resolve(createBaseURI(uriString));
+        public void setBaseURI(String newBaseUri) {
+            this.baseURI = baseURI.resolve(createBaseURI(newBaseUri));
         }
     }
 }

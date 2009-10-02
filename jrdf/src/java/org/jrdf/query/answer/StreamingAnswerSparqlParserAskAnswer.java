@@ -66,8 +66,8 @@ public class StreamingAnswerSparqlParserAskAnswer implements AskAnswer {
     private final StreamingAnswerSparqlParser multiAnswerParser;
     private boolean result;
 
-    public StreamingAnswerSparqlParserAskAnswer(final StreamingAnswerSparqlParser multiAnswerParser) {
-        this.multiAnswerParser = multiAnswerParser;
+    public StreamingAnswerSparqlParserAskAnswer(final StreamingAnswerSparqlParser newMultiAnswerParser) {
+        this.multiAnswerParser = newMultiAnswerParser;
     }
 
     public String[] getVariableNames() {

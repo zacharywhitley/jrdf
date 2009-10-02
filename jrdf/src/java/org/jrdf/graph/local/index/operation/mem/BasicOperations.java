@@ -75,7 +75,6 @@ import java.util.Set;
 public class BasicOperations {
 
     // TODO AN Finish making things small and common - then test drive.
-
     public static void copyEntriesToIndex(LongIndex existingIndex, LongIndex newIndex) throws GraphException {
         DoTripleStuff doCopyTripleStuff = new DoCopyTripleStuff(newIndex);
         goOverIndex(existingIndex, doCopyTripleStuff);
@@ -133,37 +132,37 @@ public class BasicOperations {
     }
 
     public static class DoCopyTripleStuff implements DoTripleStuff {
-        private LongIndex newIndex;
+        private LongIndex index;
 
         public DoCopyTripleStuff(LongIndex newIndex) {
-            this.newIndex = newIndex;
+            this.index = newIndex;
         }
 
         public void doStuff(Long first, Long second, Long third) throws GraphException {
-            newIndex.add(first, second, third);
+            index.add(first, second, third);
         }
     }
 
     public static class DoReconstructTripleStuff implements DoTripleStuff {
-        private LongIndex newIndex1;
-        private LongIndex newIndex2;
+        private LongIndex index1;
+        private LongIndex index2;
 
         public DoReconstructTripleStuff(LongIndex newIndex1, LongIndex newIndex2) {
-            this.newIndex1 = newIndex1;
-            this.newIndex2 = newIndex2;
+            this.index1 = newIndex1;
+            this.index2 = newIndex2;
         }
 
         public void doStuff(Long first, Long second, Long third) throws GraphException {
-            newIndex1.add(second, third, first);
-            newIndex2.add(third, first, second);
+            index1.add(second, third, first);
+            index2.add(third, first, second);
         }
     }
 
     public static class DoRemoveTripleStuff implements DoTripleStuff {
         private Set<Long> longSet;
 
-        public DoRemoveTripleStuff(Set<Long> longSet) {
-            this.longSet = longSet;
+        public DoRemoveTripleStuff(Set<Long> newLongSet) {
+            this.longSet = newLongSet;
         }
 
         public void doStuff(Long first, Long second, Long third) throws GraphException {
@@ -172,17 +171,17 @@ public class BasicOperations {
     }
 
     public static class DoIntersectionTripleStuff implements DoTripleStuff {
-        private LongIndex newIndex;
+        private LongIndex index;
         private Set<Long> longSet;
 
-        public DoIntersectionTripleStuff(LongIndex newIndex, Set<Long> longSet) {
-            this.newIndex = newIndex;
-            this.longSet = longSet;
+        public DoIntersectionTripleStuff(LongIndex newIndex, Set<Long> newLongSet) {
+            this.index = newIndex;
+            this.longSet = newLongSet;
         }
 
         public void doStuff(Long first, Long second, Long third) throws GraphException {
             if (longSet.contains(third)) {
-                newIndex.add(first, second, third);
+                index.add(first, second, third);
             }
         }
     }

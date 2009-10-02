@@ -85,10 +85,10 @@ public final class SelectQueryImpl implements Query {
     private Expression expression;
     private final GraphRelationFactory graphRelationFactory;
 
-    public SelectQueryImpl(Expression expression, GraphRelationFactory graphRelationFactory) {
-        checkNotNull(expression, graphRelationFactory);
-        this.expression = expression;
-        this.graphRelationFactory = graphRelationFactory;
+    public SelectQueryImpl(Expression newExpression, GraphRelationFactory newGraphRelationFactory) {
+        checkNotNull(newExpression, newGraphRelationFactory);
+        this.expression = newExpression;
+        this.graphRelationFactory = newGraphRelationFactory;
     }
 
     public Expression getNext() {

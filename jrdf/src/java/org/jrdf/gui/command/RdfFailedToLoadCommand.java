@@ -72,13 +72,13 @@ public class RdfFailedToLoadCommand extends ApplicationWindowAwareCommand {
     private String fileName;
     private QueryView queryView;
 
-    public RdfFailedToLoadCommand(QueryView queryView) {
+    public RdfFailedToLoadCommand(QueryView newQueryView) {
         super("rdfCommand");
-        this.queryView = queryView;
+        this.queryView = newQueryView;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFileName(String newFilename) {
+        this.fileName = newFilename;
     }
 
     protected void doExecuteCommand() {

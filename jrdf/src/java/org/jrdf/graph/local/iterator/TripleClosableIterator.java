@@ -81,13 +81,13 @@ public class TripleClosableIterator implements ClosableLocalIterator<Triple> {
     private Triple triple;
     private boolean closed;
 
-    public TripleClosableIterator(IteratorTrackingCollectionFactory collectionFactory, Iterator<Triple> newIter,
-                                  Localizer newLocalizer, GraphHandler newHandler) {
-        this.collectionFactory = collectionFactory;
+    public TripleClosableIterator(IteratorTrackingCollectionFactory newCollectionFactory, Iterator<Triple> newIter,
+            Localizer newLocalizer, GraphHandler newHandler) {
+        this.collectionFactory = newCollectionFactory;
         this.iter = newIter;
         this.localizer = newLocalizer;
         this.handler = newHandler;
-        collectionFactory.trackCurrentIteratorResource(iter);
+        newCollectionFactory.trackCurrentIteratorResource(iter);
     }
 
     public boolean close() {

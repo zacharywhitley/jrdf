@@ -110,19 +110,19 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Void>
     private Expression expression;
     private Set<Attribute> declaredVariables;
     private Map<Attribute, Attribute> variableMap;
-    private Map<Attribute, Node> newAttributeValues;
-
-    public ExpressionSimplifierImpl(Map<Attribute, Node> newAttributeValues,
-        Map<Attribute, Attribute> variableMap, Set<Attribute> declaredVariables) {
-        this.newAttributeValues = newAttributeValues;
-        this.variableMap = variableMap;
-        this.declaredVariables = declaredVariables;
-    }
+    private Map<Attribute, Node> attributeValues;
 
     public ExpressionSimplifierImpl() {
-        this.newAttributeValues = new HashMap<Attribute, Node>();
+        this.attributeValues = new HashMap<Attribute, Node>();
         this.variableMap = new HashMap<Attribute, Attribute>();
         this.declaredVariables = new LinkedHashSet<Attribute>();
+    }
+
+    public ExpressionSimplifierImpl(Map<Attribute, Node> newAttributeValues,
+        Map<Attribute, Attribute> newVariableMap, Set<Attribute> newDeclaredVariables) {
+        this.attributeValues = newAttributeValues;
+        this.variableMap = newVariableMap;
+        this.declaredVariables = newDeclaredVariables;
     }
 
     public Expression getExpression() {
@@ -153,35 +153,35 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Void>
     }
 
     private Expression constructNewConjunction(Expression lhs, Expression rhs) {
-        Expression expression = constructFilteredConjunction(lhs, rhs);
-        if (expression == null) {
-            expression = constructUnionedConjunction(lhs, rhs);
-            if (expression == null) {
+        Expression tmpExpression = constructFilteredConjunction(lhs, rhs);
+        if (tmpExpression == null) {
+            tmpExpression = constructUnionedConjunction(lhs, rhs);
+            if (tmpExpression == null) {
                 if (EXPRESSION_COMPARATOR.compare(lhs, rhs) <= 0) {
-                    expression = new Conjunction(lhs, rhs);
+                    tmpExpression = new Conjunction(lhs, rhs);
                 } else {
-                    expression = new Conjunction(rhs, lhs);
+                    tmpExpression = new Conjunction(rhs, lhs);
                 }
             }
         }
-        return expression;
+        return tmpExpression;
     }
 
     private Expression constructFilteredConjunction(Expression lhs, Expression rhs) {
-        Expression expression = null;
+        Expression tmpExpression = null;
         if (lhs instanceof Filter && rhs instanceof Filter) {
             Expression llhs = ((Filter) lhs).getLhs();
             Expression lrhs = ((Filter) rhs).getLhs();
-            expression = new Conjunction(llhs, lrhs);
+            tmpExpression = new Conjunction(llhs, lrhs);
             LogicExpression andExp = new LogicAndExpression(((Filter) lhs).getRhs(),
                 ((Filter) rhs).getRhs());
-            expression = new Filter(expression, andExp);
+            tmpExpression = new Filter(tmpExpression, andExp);
         } else if (lhs instanceof Filter) {
-            expression = constructConjFilter((Filter) lhs, rhs);
+            tmpExpression = constructConjFilter((Filter) lhs, rhs);
         } else if (rhs instanceof Filter) {
-            expression = constructConjFilter((Filter) rhs, lhs);
+            tmpExpression = constructConjFilter((Filter) rhs, lhs);
         }
-        return getNext(expression);
+        return getNext(tmpExpression);
     }
 
     private Expression constructConjFilter(Filter lhs, Expression rhs) {
@@ -193,13 +193,13 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Void>
     }
 
     private Expression constructUnionedConjunction(Expression lhs, Expression rhs) {
-        Expression expression = null;
+        Expression tmpExpression = null;
         if (lhs instanceof Union) {
-            expression = distributeConjunctionWithUnion((Union) lhs, rhs);
+            tmpExpression = distributeConjunctionWithUnion((Union) lhs, rhs);
         } else if (rhs instanceof Union) {
-            expression = distributeConjunctionWithUnion((Union) rhs, lhs);
+            tmpExpression = distributeConjunctionWithUnion((Union) rhs, lhs);
         }
-        return getNext(expression);
+        return getNext(tmpExpression);
     }
 
     private Expression distributeConjunctionWithUnion(Union lhs, Expression rhs) {
@@ -365,9 +365,9 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Void>
 
     private void updateAttributeValue(Attribute attribute, Node lvo, Node rvo) {
         final Attribute value = variableMap.get(attribute);
-        newAttributeValues.put(attribute, rvo);
+        attributeValues.put(attribute, rvo);
         if (value != null) {
-            newAttributeValues.put(value, rvo);
+            attributeValues.put(value, rvo);
         }
     }
 
@@ -452,8 +452,8 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Void>
     private LinkedHashMap<Attribute, Node> updateAVO(Map<Attribute, Node> oldAvo) {
         LinkedHashMap<Attribute, Node> avo = updateAVPVariables(oldAvo);
         for (Attribute attribute : avo.keySet()) {
-            if (newAttributeValues.get(attribute) != null) {
-                avo.put(attribute, newAttributeValues.get(attribute));
+            if (attributeValues.get(attribute) != null) {
+                avo.put(attribute, attributeValues.get(attribute));
             }
         }
         return avo;
@@ -484,11 +484,11 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Void>
         return !variableMap.isEmpty();
     }
 
-    private Expression getNext(Expression expression) {
-        if (expression == null) {
+    private Expression getNext(Expression tmpExpression) {
+        if (tmpExpression == null) {
             return null;
         }
-        expression.accept(this);
+        tmpExpression.accept(this);
         return getExpression();
     }
 }

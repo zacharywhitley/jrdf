@@ -72,12 +72,12 @@ public class AskSparqlAnswer implements AskAnswer {
     private StreamingSparqlParser answerStreamParser;
     private boolean result;
 
-    public AskSparqlAnswer(final SparqlAnswerHandler handler, InputStream stream) {
-        this(new StreamingSparqlParserImpl(handler, stream));
+    public AskSparqlAnswer(final SparqlAnswerHandler handler, final InputStream newInputStream) {
+        this(new StreamingSparqlParserImpl(handler, newInputStream));
     }
 
-    public AskSparqlAnswer(StreamingSparqlParser answerStreamParser) {
-        this.answerStreamParser = answerStreamParser;
+    public AskSparqlAnswer(final StreamingSparqlParser newAnswerStreamParser) {
+        this.answerStreamParser = newAnswerStreamParser;
         this.result = false;
     }
 

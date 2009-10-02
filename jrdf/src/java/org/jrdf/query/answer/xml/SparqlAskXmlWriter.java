@@ -75,9 +75,9 @@ public class SparqlAskXmlWriter extends AbstractSparqlXmlWriter {
     private SparqlAskXmlWriter() {
     }
 
-    public SparqlAskXmlWriter(final Writer writer, final boolean result) throws XMLStreamException {
-        createXmlStreamWriter(writer);
-        this.result = result;
+    public SparqlAskXmlWriter(final Writer newWriter, final boolean newResult) throws XMLStreamException {
+        createXmlStreamWriter(newWriter);
+        this.result = newResult;
         this.hasMore = true;
     }
 

@@ -73,17 +73,17 @@ public class RdfLoadedCommand extends ApplicationWindowAwareCommand {
     private long timeTaken;
     private QueryView queryView;
 
-    public RdfLoadedCommand(QueryView queryView) {
+    public RdfLoadedCommand(QueryView newQueryView) {
         super("rdfCommand");
-        this.queryView = queryView;
+        this.queryView = newQueryView;
     }
 
-    public void setTriplesLoaded(long numberOfTriples) {
-        this.numberOfTriples = numberOfTriples;
+    public void setTriplesLoaded(long newNumberOfTriples) {
+        this.numberOfTriples = newNumberOfTriples;
     }
 
-    public void setTimeTaken(long timeTaken) {
-        this.timeTaken = timeTaken;
+    public void setTimeTaken(long newTimeTaken) {
+        this.timeTaken = newTimeTaken;
     }
 
     protected void doExecuteCommand() {

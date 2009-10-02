@@ -92,9 +92,9 @@ public final class NTripleUtilImpl implements NTripleUtil, Serializable {
     private NTripleUtilImpl() {
     }
 
-    public NTripleUtilImpl(RegexMatcherFactory regexMatcherFactory) {
-        checkNotNull(regexMatcherFactory);
-        this.regexMatcherFactory = regexMatcherFactory;
+    public NTripleUtilImpl(RegexMatcherFactory newRegexMatcherFactory) {
+        checkNotNull(newRegexMatcherFactory);
+        this.regexMatcherFactory = newRegexMatcherFactory;
     }
 
     public String unescapeLiteral(String literal) {

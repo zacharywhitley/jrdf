@@ -82,8 +82,8 @@ public class SparqlJsonResultParserImpl implements SparqlJsonResultParser {
     private String datatype;
     private String xmlLang;
 
-    public SparqlJsonResultParserImpl(JsonParser parser) {
-        this.parser = parser;
+    public SparqlJsonResultParserImpl(JsonParser newParser) {
+        this.parser = newParser;
     }
 
     public void getOneBinding(Map<String, TypeValue> variableToValue) throws IOException {

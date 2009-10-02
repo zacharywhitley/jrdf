@@ -99,21 +99,21 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<EvaluatedRela
     protected DyadicJoin leftOuterJoin;
     protected Map<AttributeName, PositionalNodeType> allVariables;
 
-    public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
-        org.jrdf.query.relation.operation.Union union, DyadicJoin leftOuterJoin) {
-        this.project = project;
-        this.naturalJoin = naturalJoin;
-        this.restrict = restrict;
-        this.union = union;
-        this.leftOuterJoin = leftOuterJoin;
+    public NaiveQueryEngineImpl(Project newProject, NadicJoin newNaturalJoin, Restrict newRestrict,
+        org.jrdf.query.relation.operation.Union newUnion, DyadicJoin newLeftOuterJoin) {
+        this.project = newProject;
+        this.naturalJoin = newNaturalJoin;
+        this.restrict = newRestrict;
+        this.union = newUnion;
+        this.leftOuterJoin = newLeftOuterJoin;
     }
 
     public void initialiseBaseRelation(EvaluatedRelation initialRelation) {
         result = initialRelation;
     }
 
-    public void setAllVariables(Map<AttributeName, PositionalNodeType> allVariables) {
-        this.allVariables = allVariables;
+    public void setAllVariables(Map<AttributeName, PositionalNodeType> newAllVariables) {
+        this.allVariables = newAllVariables;
     }
 
     @Override

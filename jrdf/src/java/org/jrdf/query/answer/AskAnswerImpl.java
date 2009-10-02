@@ -80,9 +80,9 @@ public class AskAnswerImpl implements AskAnswer, Serializable {
     private AskAnswerImpl() {
     }
 
-    public AskAnswerImpl(long timeTaken, boolean result) {
-        this.timeTaken = timeTaken;
-        this.result = result;
+    public AskAnswerImpl(long newTimeTaken, boolean newResult) {
+        this.timeTaken = newTimeTaken;
+        this.result = newResult;
     }
 
     public long getTimeTaken() {

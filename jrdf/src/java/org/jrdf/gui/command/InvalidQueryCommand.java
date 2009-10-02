@@ -73,13 +73,13 @@ public class InvalidQueryCommand extends ApplicationWindowAwareCommand {
     private final QueryView queryView;
     private InvalidQuerySyntaxException exception;
 
-    public InvalidQueryCommand(QueryView queryView) {
+    public InvalidQueryCommand(QueryView newQueryView) {
         super("invalidQueryCommand");
-        this.queryView = queryView;
+        this.queryView = newQueryView;
     }
 
-    public void setException(InvalidQuerySyntaxException exception) {
-        this.exception = exception;
+    public void setException(InvalidQuerySyntaxException newException) {
+        this.exception = newException;
     }
 
     protected void doExecuteCommand() {

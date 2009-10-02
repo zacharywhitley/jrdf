@@ -78,13 +78,13 @@ public class SparqlSelectXmlWriter extends AbstractSparqlXmlWriter {
     private SparqlSelectXmlWriter() {
     }
 
-    public SparqlSelectXmlWriter(Writer writer, final String[] variableNames,
-        final Iterator<TypeValue[]> iterator, final long maxRows) throws XMLStreamException {
-        checkNotNull(writer, variableNames, iterator);
-        createXmlStreamWriter(writer);
-        this.variableNames = variableNames;
-        this.iterator = iterator;
-        this.maxRows = maxRows;
+    public SparqlSelectXmlWriter(final Writer newWriter, final String[] newVariableNames,
+        final Iterator<TypeValue[]> newIterator, final long newMaxRows) throws XMLStreamException {
+        checkNotNull(newWriter, newVariableNames, newIterator);
+        createXmlStreamWriter(newWriter);
+        this.variableNames = newVariableNames;
+        this.iterator = newIterator;
+        this.maxRows = newMaxRows;
     }
 
     public boolean hasMoreResults() {

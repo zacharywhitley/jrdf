@@ -69,9 +69,9 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 public final class BlankNodeParserImpl implements BlankNodeParser {
     private final ParserBlankNodeFactory parserBlankNodeFactory;
 
-    public BlankNodeParserImpl(ParserBlankNodeFactory parserBlankNodeFactory) {
-        checkNotNull(parserBlankNodeFactory);
-        this.parserBlankNodeFactory = parserBlankNodeFactory;
+    public BlankNodeParserImpl(ParserBlankNodeFactory newParserBlankNodeFactory) {
+        checkNotNull(newParserBlankNodeFactory);
+        this.parserBlankNodeFactory = newParserBlankNodeFactory;
     }
 
     public BlankNode parseBlankNode(String s) throws ParseException {

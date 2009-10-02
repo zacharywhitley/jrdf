@@ -90,9 +90,9 @@ public class SparqlMultiXmlStreamWriterImpl extends AbstractSparqlXmlWriter
     private List<String> variables;
     private int currentEvent;
 
-    public SparqlMultiXmlStreamWriterImpl(Writer writer, InputStream inputStream) throws XMLStreamException {
-        createXmlStreamWriter(writer);
-        this.inputStream = inputStream;
+    public SparqlMultiXmlStreamWriterImpl(Writer newWriter, InputStream newInputStream) throws XMLStreamException {
+        createXmlStreamWriter(newWriter);
+        this.inputStream = newInputStream;
         createParser();
     }
 

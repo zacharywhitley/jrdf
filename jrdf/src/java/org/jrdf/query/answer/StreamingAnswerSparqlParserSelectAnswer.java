@@ -64,8 +64,8 @@ import java.util.LinkedHashSet;
 public class StreamingAnswerSparqlParserSelectAnswer implements SelectAnswer {
     private final StreamingAnswerSparqlParser multiAnswerParser;
 
-    public StreamingAnswerSparqlParserSelectAnswer(final StreamingAnswerSparqlParser multiAnswerParser) {
-        this.multiAnswerParser = multiAnswerParser;
+    public StreamingAnswerSparqlParserSelectAnswer(final StreamingAnswerSparqlParser newMultiAnswerParser) {
+        this.multiAnswerParser = newMultiAnswerParser;
     }
 
     public String[] getVariableNames() {

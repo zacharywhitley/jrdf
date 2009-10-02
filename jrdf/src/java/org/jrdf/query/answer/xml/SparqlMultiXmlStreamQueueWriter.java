@@ -75,10 +75,10 @@ import java.util.LinkedHashSet;
 public class SparqlMultiXmlStreamQueueWriter extends AbstractSparqlXmlWriter implements SparqlMultiXmlStreamWriter {
     private StreamingSparqlParser streamParser;
 
-    public SparqlMultiXmlStreamQueueWriter(final SparqlAnswerHandler handler, final Writer writer,
+    public SparqlMultiXmlStreamQueueWriter(final SparqlAnswerHandler newHandler, final Writer newWriter,
         final InputStream... streams) {
-        createXmlStreamWriter(writer);
-        this.streamParser = new StreamingSparqlParserImpl(handler, streams);
+        createXmlStreamWriter(newWriter);
+        this.streamParser = new StreamingSparqlParserImpl(newHandler, streams);
     }
 
     public void addStream(InputStream stream) {

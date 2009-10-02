@@ -79,14 +79,14 @@ public class LocalMergeSubmoleculesImpl implements LocalMergeSubmolecules {
     private final MoleculeFactory moleculeFactory;
     private Map<BlankNode, BlankNode> map;
 
-    public LocalMergeSubmoleculesImpl(MergeSubmolecules merger, MoleculeFactory moleculeFactory) {
-        this.merger = merger;
-        this.moleculeFactory = moleculeFactory;
+    public LocalMergeSubmoleculesImpl(MergeSubmolecules newMerger, MoleculeFactory newMoleculeFactory) {
+        this.merger = newMerger;
+        this.moleculeFactory = newMoleculeFactory;
     }
 
-    public Molecule merge(Molecule molecule1, Molecule molecule2, Map<BlankNode, BlankNode> map) {
-        if (!map.isEmpty()) {
-            this.map = map;
+    public Molecule merge(Molecule molecule1, Molecule molecule2, Map<BlankNode, BlankNode> newMap) {
+        if (!newMap.isEmpty()) {
+            this.map = newMap;
             return merger.merge(convertMolecule(molecule1), convertMolecule(molecule2));
         } else {
             return null;
