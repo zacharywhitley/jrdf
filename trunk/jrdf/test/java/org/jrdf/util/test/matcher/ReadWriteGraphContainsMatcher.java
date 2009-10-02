@@ -72,10 +72,11 @@ public class ReadWriteGraphContainsMatcher extends TypeSafeMatcher<ReadWriteGrap
     private final PredicateNode predicate;
     private final ObjectNode object;
 
-    public ReadWriteGraphContainsMatcher(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        this.subject = subject;
-        this.predicate = predicate;
-        this.object = object;
+    public ReadWriteGraphContainsMatcher(final SubjectNode newSubject, final PredicateNode newPredicate,
+        final ObjectNode newObject) {
+        this.subject = newSubject;
+        this.predicate = newPredicate;
+        this.object = newObject;
     }
 
     @Override

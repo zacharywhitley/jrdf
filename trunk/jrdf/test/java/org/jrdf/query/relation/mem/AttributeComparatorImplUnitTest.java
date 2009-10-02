@@ -165,8 +165,8 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         private TestAttribute() {
         }
 
-        public TestAttribute(Attribute expectedObject) {
-            this.expectedObject = expectedObject;
+        public TestAttribute(Attribute newExpectedObject) {
+            this.expectedObject = newExpectedObject;
         }
 
         public AttributeName getAttributeName() {

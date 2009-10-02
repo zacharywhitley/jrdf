@@ -90,8 +90,8 @@ public abstract class AbstractGraphPerformance implements GraphPerformance {
         new AddPerformanceImpl(NUMBER_OF_PREDICATES, SUBJECT_PREFIX, PREDICATE_PREFIX, OBJECT_PREFIX).addPerformance(
             numberToAdd == 0 ? NUMBER_OF_NODES_TO_ADD : numberToAdd, graph, this);
         new WritePerformanceImpl().writePerformance(graph, this, getBlankNodeRegistry());
-        new FindPerformanceImpl(numberToFind == 0 ? NUMBER_OF_NODES_TO_FIND : numberToFind, SUBJECT_PREFIX,
-            PREDICATE_PREFIX, OBJECT_PREFIX).findPerformance(graph, this);
+        new FindPerformanceImpl(numberToFind == 0 ? NUMBER_OF_NODES_TO_FIND : numberToFind, SUBJECT_PREFIX
+        ).findPerformance(graph, this);
         new UpdatePerformanceImpl(numberToUpdate == 0 ? NUMBER_OF_NODES_TO_UPDATE : numberToUpdate, SUBJECT_PREFIX).
             updatePerformance(graph, this);
     }

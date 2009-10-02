@@ -64,30 +64,26 @@ import org.jrdf.graph.Triple;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Jul 3, 2008
- * Time: 9:14:10 PM
- * To change this template use File | Settings | File Templates.
+ * @author Yuan-Fang Li
+ * @version :$
  */
 public class MoleculeToTripleIterator implements MoleculeHandler {
     private Set<Triple> set;
 
-    public MoleculeToTripleIterator(Set<Triple> set) {
-        this.set = set;
+    public MoleculeToTripleIterator(final Set<Triple> newSet) {
+        this.set = newSet;
     }
 
-    public void handleTriple(Triple triple) {
+    public void handleTriple(final Triple triple) {
         set.add(triple);
     }
 
     public void handleEmptyMolecules() {
     }
 
-    public void handleStartContainsMolecules(Set<Molecule> newMolecules) {
-
+    public void handleStartContainsMolecules(final Set<Molecule> newMolecules) {
     }
 
-    public void handleEndContainsMolecules(Set<Molecule> newMolecules) {
+    public void handleEndContainsMolecules(final Set<Molecule> newMolecules) {
     }
 }

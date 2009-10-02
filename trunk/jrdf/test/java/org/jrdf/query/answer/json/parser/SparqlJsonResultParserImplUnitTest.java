@@ -62,6 +62,7 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.query.answer.SparqlResultType;
 import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
 import static org.jrdf.query.answer.SparqlResultType.LITERAL;
@@ -71,13 +72,18 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
 import org.jrdf.vocabulary.RDF;
 import org.jrdf.vocabulary.XSD;
-import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 public class SparqlJsonResultParserImplUnitTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+    private static final String CANNOT_PARSE = "Cannot parse token: ";
+
     @Test
     public void uriBinding() throws Exception {
         checkParser("\"hpage\" : {\"type\": \"uri\", \"value\": \"http://example.org/alice\" }", "hpage",
@@ -138,13 +144,17 @@ public class SparqlJsonResultParserImplUnitTest {
         checkParser("\"name\" : { }", "name", new TypeValueImpl());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void arrayInsteadOfObjectThrowsException() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + "[");
         checkParser("\"name\" : [{}] ", "name", new TypeValueImpl());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void emptyThrowsAnException() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + "}");
         checkParser("", "", new TypeValueImpl());
     }
 

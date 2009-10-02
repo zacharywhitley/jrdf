@@ -84,20 +84,19 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class MoleculeGraphHandlerImpl implements MoleculeGraphHandler {
     private NodePool nodePool;
     private ReadableIndex<Long> readableIndex;
     private MoleculeComparator moleculeComparator;
 
-    public MoleculeGraphHandlerImpl(NodePool nodePool, ReadableIndex<Long> readableIndex,
-        MoleculeComparator moleculeComparator) {
-        this.nodePool = nodePool;
-        this.readableIndex = readableIndex;
-        this.moleculeComparator = moleculeComparator;
+    public MoleculeGraphHandlerImpl(final NodePool newNodePool, final ReadableIndex<Long> newReadableIndex,
+        final MoleculeComparator newMoleculeComparator) {
+        this.nodePool = newNodePool;
+        this.readableIndex = newReadableIndex;
+        this.moleculeComparator = newMoleculeComparator;
     }
 
-    public Molecule createMolecule(Long pid, Long mid) throws GraphException {
+    public Molecule createMolecule(final Long pid, final Long mid) throws GraphException {
         return reconstructMolecule(null, pid, mid);
     }
 

@@ -100,12 +100,12 @@ public class AnyURIValue implements DatatypeValue {
         return false;
     }
 
-    public int compareTo(DatatypeValue val) {
+    public int compareTo(final DatatypeValue val) {
         return value.compareTo(((AnyURIValue) val).value);
     }
 
-    public int equivCompareTo(DatatypeValue value) {
-        return compareTo(value);
+    public int equivCompareTo(final DatatypeValue val) {
+        return compareTo(val);
     }
 
     @Override

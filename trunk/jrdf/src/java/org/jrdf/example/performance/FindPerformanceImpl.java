@@ -74,16 +74,11 @@ import java.net.URI;
 public class FindPerformanceImpl implements FindPerformance {
     private final int nodesToFind;
     private final String subjectPrefix;
-    private final String predicatePrefix;
-    private final String objectPrefix;
     private int noFinds;
 
-    public FindPerformanceImpl(int nodesToFind, String subjectPrefix, String predicatePrefix,
-        String objectPrefix) {
-        this.nodesToFind = nodesToFind;
-        this.subjectPrefix = subjectPrefix;
-        this.predicatePrefix = predicatePrefix;
-        this.objectPrefix = objectPrefix;
+    public FindPerformanceImpl(int newNodesToFind, String newSubjectPrefix) {
+        this.nodesToFind = newNodesToFind;
+        this.subjectPrefix = newSubjectPrefix;
     }
 
     public void findPerformance(Graph graph, GraphPerformance performance) throws Exception {

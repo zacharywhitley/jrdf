@@ -67,8 +67,8 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 public class GraphNumberOfTriplesMatcher extends TypeSafeMatcher<Graph> {
     private final long expectedSize;
 
-    public GraphNumberOfTriplesMatcher(final long expectedSize) {
-        this.expectedSize = expectedSize;
+    public GraphNumberOfTriplesMatcher(final long newExpectedSize) {
+        this.expectedSize = newExpectedSize;
     }
 
     @Override

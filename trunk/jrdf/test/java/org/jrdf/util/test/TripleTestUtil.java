@@ -241,8 +241,8 @@ public class TripleTestUtil {
     private static class SimpleClosableIterator<E> implements ClosableIterator<E> {
         private Iterator<E> iter;
 
-        private SimpleClosableIterator(Iterator<E> iter) {
-            this.iter = iter;
+        private SimpleClosableIterator(Iterator<E> newIter) {
+            this.iter = newIter;
         }
 
         public boolean close() {

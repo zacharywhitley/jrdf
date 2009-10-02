@@ -59,6 +59,8 @@
 package org.jrdf.query.answer.json.parser;
 
 import org.codehaus.jackson.JsonParseException;
+import static org.codehaus.jackson.JsonToken.END_OBJECT;
+import static org.codehaus.jackson.JsonToken.VALUE_NULL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.hamcrest.Matchers;
@@ -78,7 +80,9 @@ import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
 import static org.jrdf.query.answer.json.JsonTestUtil.getFullJsonSelect;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -88,6 +92,9 @@ import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 
 public class SparqlJsonParserImplUnitTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+    private static final String CANNOT_PARSE = "Cannot parse token: ";
     private TypeValueArrayFactory factory = new TypeValueArrayFactoryImpl();
 
     @Test
@@ -141,52 +148,70 @@ public class SparqlJsonParserImplUnitTest {
         checkThrowsExceptionBeyondResults(parser);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void invalidResultIsStartArray() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + "null");
         new SparqlJsonParserImpl(new ByteArrayInputStream("[]".getBytes()));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void invalidResultIsNoField() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + "null");
         new SparqlJsonParserImpl(new ByteArrayInputStream("{}{}".getBytes()));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void invalidResultIsNoHead() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + "foo");
         new SparqlJsonParserImpl(new ByteArrayInputStream("{\"foo\": {}, \"boolean\" : true}".getBytes()));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void parseableHeadNoResultsOrBindings() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + END_OBJECT);
         new SparqlJsonParserImpl(new ByteArrayInputStream("{\"head\":{\"link\":[],\"vars\":[]}}".getBytes()));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void parseableHeadNoResults() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + "results");
         new SparqlJsonParserImpl(new ByteArrayInputStream(("{\"head\":{\"link\":[],\"vars\":[]}," +
             "\"results\" : null }").getBytes()));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void parseableHeadWithoutFieldFollowResults() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + "results");
         new SparqlJsonParserImpl(new ByteArrayInputStream(("{\"head\":{\"link\":[],\"vars\":[]}," +
             "\"results\" : { }}").getBytes()));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void parseableHeadWithoutBindingsName() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + "george");
         new SparqlJsonParserImpl(new ByteArrayInputStream(("{\"head\":{\"link\":[],\"vars\":[]}," +
             "\"results\" : { \"george\" : \"fred\" }}").getBytes()));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void parseableHeadWithStartObjectForBindings() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + "null");
         new SparqlJsonParserImpl(new ByteArrayInputStream(("{\"head\":{\"link\":[],\"vars\":[]}," +
             "\"results\" : { \"bindings\" : {} }}").getBytes()));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void parseableButBadBooleanValueThrowsIllegalState() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(CANNOT_PARSE + VALUE_NULL);
         final String resultWithFred = "{\"head\":{\"link\":[],\"vars\":[]},\"boolean\":null}";
         checkAsk(resultWithFred);
     }

@@ -286,18 +286,18 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         it.close();
 
         if (pNode1.hashCode() == t1.getPredicate().hashCode()) {
-            Node node1 = t1.getObject();
-            Node node2 = t2.getSubject();
-            assertTrue("BNode", AbstractBlankNode.isBlankNode(node1));
-            assertTrue("BNode", AbstractBlankNode.isBlankNode(node2));
-            assertTrue("Hash values equal", node1.hashCode() == node2.hashCode());
-            assertTrue("Hahs values different", node2.hashCode() != t2.getObject().hashCode());
+            Node tmpNode1 = t1.getObject();
+            Node tmpNode2 = t2.getSubject();
+            assertTrue("BNode", AbstractBlankNode.isBlankNode(tmpNode1));
+            assertTrue("BNode", AbstractBlankNode.isBlankNode(tmpNode2));
+            assertTrue("Hash values equal", tmpNode1.hashCode() == tmpNode2.hashCode());
+            assertTrue("Hahs values different", tmpNode2.hashCode() != t2.getObject().hashCode());
         } else if (pNode2.hashCode() == t1.getPredicate().hashCode()) {
-            Node node1 = t1.getSubject();
-            Node node2 = t2.getObject();
-            assertTrue("BNode", AbstractBlankNode.isBlankNode(node1));
-            assertTrue("BNode", AbstractBlankNode.isBlankNode(node2));
-            assertTrue("Hash values equal", node1.hashCode() == node2.hashCode());
+            Node tmpNode1 = t1.getSubject();
+            Node tmpNode2 = t2.getObject();
+            assertTrue("BNode", AbstractBlankNode.isBlankNode(tmpNode1));
+            assertTrue("BNode", AbstractBlankNode.isBlankNode(tmpNode2));
+            assertTrue("Hash values equal", tmpNode1.hashCode() == tmpNode2.hashCode());
         }
     }
 

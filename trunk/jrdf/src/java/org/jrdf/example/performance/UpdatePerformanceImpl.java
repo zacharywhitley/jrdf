@@ -77,9 +77,9 @@ public class UpdatePerformanceImpl implements UpdatePerformance {
     private final String subjectPrefix;
     private int noUpdates;
 
-    public UpdatePerformanceImpl(int nodesToUpdate, String subjectPrefix) {
-        this.nodesToUpdate = nodesToUpdate;
-        this.subjectPrefix = subjectPrefix;
+    public UpdatePerformanceImpl(int newNodesToUpdate, String newSubjectPrefix) {
+        this.nodesToUpdate = newNodesToUpdate;
+        this.subjectPrefix = newSubjectPrefix;
     }
 
     public void updatePerformance(Graph graph, GraphPerformance performance) throws Exception {

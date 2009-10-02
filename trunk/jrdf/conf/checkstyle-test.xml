@@ -21,11 +21,13 @@
         <module name="AvoidStarImport"/>
         <module name="ClassTypeParameterName"/>
         <module name="ConstantName"/>
+        <module name="CovariantEquals"/>
         <module name="EmptyBlock"/>
         <module name="EmptyForIteratorPad"/>
         <module name="EqualsHashCode"/>
         <module name="EqualsAvoidNull"/>
         <module name="ExplicitInitialization"/>
+        <module name="HiddenField"/>
         <module name="IllegalImport"/>
         <module name="IllegalInstantiation"/>
         <module name="Indentation"/>
@@ -88,6 +90,7 @@
         <module name="VisibilityModifier">
             <property name="packageAllowed" value="true"/>
             <property name="protectedAllowed" value="true"/>
+            <property name="publicMemberPattern" value="thrown"/>
         </module>
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround">

@@ -92,11 +92,11 @@ public class DateTimeValue implements DatatypeValue {
     /**
      * Creates a XML Gregorian calendar based on the current locale and time zone.
      *
-     * @param value the Date to convert.
+     * @param newValue the Date to convert.
      */
-    private DateTimeValue(final Date value) {
+    private DateTimeValue(final Date newValue) {
         final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
+        calendar.setTime(newValue);
         this.value = FACTORY.newXMLGregorianCalendar(calendar);
     }
 
@@ -124,11 +124,11 @@ public class DateTimeValue implements DatatypeValue {
         return false;
     }
 
-    public int compareTo(DatatypeValue val) {
+    public int compareTo(final DatatypeValue val) {
         return value.compare(((DateTimeValue) val).value);
     }
 
-    public int equivCompareTo(DatatypeValue val) {
+    public int equivCompareTo(final DatatypeValue val) {
         return compareTo(val);
     }
 

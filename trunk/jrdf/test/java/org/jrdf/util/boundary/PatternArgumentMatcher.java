@@ -67,8 +67,8 @@ import java.util.regex.Pattern;
 public class PatternArgumentMatcher implements IArgumentMatcher {
     private final Pattern expectedPattern;
 
-    public PatternArgumentMatcher(Pattern expectedPattern) {
-        this.expectedPattern = expectedPattern;
+    public PatternArgumentMatcher(Pattern newExpectedPattern) {
+        this.expectedPattern = newExpectedPattern;
     }
 
     public boolean matches(Object object) {

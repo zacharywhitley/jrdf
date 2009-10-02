@@ -79,16 +79,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class VariableResourceTripleSpec implements TripleSpec {
-
     private String subjectVariable;
     private String predicateVariable;
     private URI objectUri;
 
 
-    public VariableResourceTripleSpec(String subjectVariable, String predicateVariable, URI objectUri) {
-        this.subjectVariable = subjectVariable;
-        this.predicateVariable = predicateVariable;
-        this.objectUri = objectUri;
+    public VariableResourceTripleSpec(String newSubjectVariable, String newPredicateVariable, URI newObjectUri) {
+        this.subjectVariable = newSubjectVariable;
+        this.predicateVariable = newPredicateVariable;
+        this.objectUri = newObjectUri;
     }
 
     public Attribute[] asAttributes() {

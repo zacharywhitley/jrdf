@@ -95,11 +95,11 @@ public class NonNegativeIntegerValue implements XSDDecimal {
         }
     }
 
-    public DatatypeValue create(Object object) {
+    public DatatypeValue create(final Object object) {
         return new NonNegativeIntegerValue((BigInteger) object);
     }
 
-    public DatatypeValue create(String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new NonNegativeIntegerValue(lexicalForm);
     }
 
@@ -125,12 +125,12 @@ public class NonNegativeIntegerValue implements XSDDecimal {
         return new BigDecimal(value);
     }
 
-    public int compareTo(DatatypeValue val) {
+    public int compareTo(final DatatypeValue val) {
         return value.compareTo(((NonNegativeIntegerValue) val).value);
     }
 
-    public int equivCompareTo(DatatypeValue value) {
-        return getAsBigDecimal().compareTo(((XSDDecimal) value).getAsBigDecimal());
+    public int equivCompareTo(final DatatypeValue val) {
+        return getAsBigDecimal().compareTo(((XSDDecimal) val).getAsBigDecimal());
     }
 
     @Override

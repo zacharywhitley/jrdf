@@ -73,7 +73,6 @@ public class NodePatternImpl implements NodePattern {
     private final Node node;
     private static final String NP_PREFIX = "NodePattern#";
 
-
     public NodePatternImpl() {
         string = NP_PREFIX + UUID.randomUUID().toString();
         id = string.hashCode();
@@ -111,10 +110,11 @@ public class NodePatternImpl implements NodePattern {
         return isAnyNode(node);
     }
 
-    public boolean isAnyNode(Node node) {
+    public boolean isAnyNode(Node existingNode) {
         boolean result = false;
-        if (node != null) {
-            if (node == ANY_SUBJECT_NODE || node == ANY_PREDICATE_NODE || node == ANY_OBJECT_NODE) {
+        if (existingNode != null) {
+            if (existingNode == ANY_SUBJECT_NODE || existingNode == ANY_PREDICATE_NODE ||
+                existingNode == ANY_OBJECT_NODE) {
                 result = true;
             }
         }

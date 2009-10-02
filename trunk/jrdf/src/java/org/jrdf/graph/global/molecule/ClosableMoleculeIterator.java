@@ -66,19 +66,16 @@ import org.jrdf.util.ClosableIterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Jul 25, 2008
- * Time: 11:24:00 PM
- * To change this template use File | Settings | File Templates.
+ * @author Yuan-Fang Li
+ * @version :$
  */
 public class ClosableMoleculeIterator implements ClosableIterator<Molecule> {
     private ClosableIterator<Long> iterator;
     private MoleculeGraphHandler handler;
 
-    public ClosableMoleculeIterator(ClosableIterator<Long> iterator, MoleculeGraphHandler handler) {
-        this.iterator = iterator;
-        this.handler = handler;
+    public ClosableMoleculeIterator(final ClosableIterator<Long> newIterator, final MoleculeGraphHandler newHandler) {
+        this.iterator = newIterator;
+        this.handler = newHandler;
     }
 
     public boolean hasNext() {
@@ -89,7 +86,7 @@ public class ClosableMoleculeIterator implements ClosableIterator<Molecule> {
         if (!iterator.hasNext()) {
             throw new NoSuchElementException();
         }
-        Long mid = iterator.next();
+        final Long mid = iterator.next();
         try {
             return handler.createMolecule(1L, mid);
         } catch (GraphException e) {

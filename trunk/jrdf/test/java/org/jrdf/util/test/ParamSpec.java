@@ -67,21 +67,20 @@ package org.jrdf.util.test;
  * @version $Revision$
  */
 public final class ParamSpec {
-
     private Object[] params;
-    private Class[] types;
+    private Class<?>[] types;
 
-    public ParamSpec(Object... params) {
-        this.params = params;
-        setTypes(this.params);
+    public ParamSpec(final Object... newParams) {
+        this.params = newParams;
+        setTypes();
     }
 
-    public ParamSpec(Class[] types, Object[] params) {
-        if (params.length != types.length) {
+    public ParamSpec(final Class<?>[] newTypes, final Object[] newParams) {
+        if (newParams.length != newTypes.length) {
             throw new IllegalArgumentException("params and types arrays must be of same length");
         }
-        this.params = params;
-        this.types = types;
+        this.params = newParams;
+        this.types = newTypes;
     }
 
     public Object[] getParams() {
@@ -92,15 +91,10 @@ public final class ParamSpec {
         return types;
     }
 
-    private void setTypes(Object... params) {
-        types = guessParameterTypes(params);
-    }
-
-    private static Class<?>[] guessParameterTypes(Object... params) {
-        Class<?>[] types = new Class<?>[params.length];
+    private void setTypes() {
+        types = new Class<?>[params.length];
         for (int i = 0; i < params.length; i++) {
             types[i] = params[i].getClass();
         }
-        return types;
     }
 }

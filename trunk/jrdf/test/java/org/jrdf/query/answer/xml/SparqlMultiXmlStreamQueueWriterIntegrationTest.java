@@ -124,7 +124,7 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
             xmlWriter.writeResult();
         }
         assertThat(count, is(2));
-        checkTwoResults(writer);
+        checkTwoResults();
         assertThat(xmlWriter.hasMoreResults(), is(false));
         ((SparqlMultiXmlStreamWriter) xmlWriter).addStream(stream2);
         assertThat(xmlWriter.hasMoreResults(), is(true));
@@ -134,7 +134,7 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
         }
         xmlWriter.writeEndResults();
         assertThat(count, is(4));
-        checkFourResults(writer);
+        checkFourResults();
     }
 
     @Test
@@ -148,7 +148,7 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
         }
         assertThat(count, is(4));
         xmlWriter.writeEndResults();
-        checkFourResults(writer);
+        checkFourResults();
     }
 
     @Test
@@ -166,18 +166,18 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
         }
         assertThat(count, is(4));
         xmlWriter.writeEndResults();
-        checkFourResults(writer);
+        checkFourResults();
     }
 
-    private void checkTwoResults(Writer writer) throws Exception {
-        SparqlXmlResultsParser parser = getParser(writer);
+    private void checkTwoResults() throws Exception {
+        SparqlXmlResultsParser parser = getParser();
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_1));
         streamReader.next();
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_2));
     }
 
-    private void checkFourResults(Writer writer) throws Exception {
-        SparqlXmlResultsParser parser = getParser(writer);
+    private void checkFourResults() throws Exception {
+        SparqlXmlResultsParser parser = getParser();
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_1));
         streamReader.next();
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_2));
@@ -187,7 +187,7 @@ public class SparqlMultiXmlStreamQueueWriterIntegrationTest {
         assertThat(parser.getResults(EXPECTED_VARIABLES), arrayContaining(ROW_2));
     }
 
-    private SparqlXmlResultsParser getParser(Writer writer) throws XMLStreamException {
+    private SparqlXmlResultsParser getParser() throws XMLStreamException {
         String result = writer.toString();
         InputStream stringStream = new ByteArrayInputStream(result.getBytes());
         streamReader = newInstance().createXMLStreamReader(stringStream);

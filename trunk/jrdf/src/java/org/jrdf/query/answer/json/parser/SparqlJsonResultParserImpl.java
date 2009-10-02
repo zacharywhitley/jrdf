@@ -74,6 +74,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public class SparqlJsonResultParserImpl implements SparqlJsonResultParser {
+    private static final String CANNOT_PARSE = "Cannot parse token: ";
     private final TypeValueFactory typeValueFactory = new TypeValueFactoryImpl();
     private final JsonParser parser;
     private String type;
@@ -93,14 +94,14 @@ public class SparqlJsonResultParserImpl implements SparqlJsonResultParser {
         if (parser.getCurrentToken() == FIELD_NAME) {
             return parser.getCurrentName();
         }
-        throw new IllegalStateException("Cannot parse: " + parser.getText());
+        throw new IllegalStateException(CANNOT_PARSE + parser.getText());
     }
 
     private TypeValue getTypeValue() throws IOException {
         if (parser.nextToken() == START_OBJECT) {
             return parseObject();
         }
-        throw new IllegalStateException("Cannot parse: " + parser.getText());
+        throw new IllegalStateException(CANNOT_PARSE + parser.getText());
     }
 
     private TypeValue parseObject() throws IOException {

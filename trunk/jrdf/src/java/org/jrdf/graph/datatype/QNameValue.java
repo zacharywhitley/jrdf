@@ -83,16 +83,16 @@ public class QNameValue implements DatatypeValue {
         this.value = QName.valueOf(newValue);
     }
 
-    public DatatypeValue create(Object object) {
+    public DatatypeValue create(final Object object) {
         return new QNameValue((QName) object);
     }
 
-    public DatatypeValue create(String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new QNameValue(lexicalForm);
     }
 
     public String getLexicalForm() {
-        StringBuilder builder = new StringBuilder(value.getLocalPart());
+        final StringBuilder builder = new StringBuilder(value.getLocalPart());
         if (value.getPrefix().length() > 0) {
             builder.insert(0, value.getPrefix() + ":");
         }
@@ -107,12 +107,12 @@ public class QNameValue implements DatatypeValue {
         return false;
     }
 
-    public int compareTo(DatatypeValue value) {
-        return getLexicalForm().compareTo(value.getLexicalForm());
+    public int compareTo(final DatatypeValue val) {
+        return getLexicalForm().compareTo(val.getLexicalForm());
     }
 
-    public int equivCompareTo(DatatypeValue value) {
-        return compareTo(value);
+    public int equivCompareTo(final DatatypeValue val) {
+        return compareTo(val);
     }
 
     @Override

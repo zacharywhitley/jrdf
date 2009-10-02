@@ -71,12 +71,12 @@ public class AddPerformanceImpl implements AddPerformance {
     private final String predicatePrefix;
     private final String objectPrefix;
 
-    public AddPerformanceImpl(int numberOfPredicates, String subjectPrefix, String predicatePrefix,
-        String objectPrefix) {
-        this.numberOfPredicates = numberOfPredicates;
-        this.subjectPrefix = subjectPrefix;
-        this.predicatePrefix = predicatePrefix;
-        this.objectPrefix = objectPrefix;
+    public AddPerformanceImpl(int newNumberOfPredicates, String newSubjectPrefix, String newPredicatePrefix,
+        String newObjectPrefix) {
+        this.numberOfPredicates = newNumberOfPredicates;
+        this.subjectPrefix = newSubjectPrefix;
+        this.predicatePrefix = newPredicatePrefix;
+        this.objectPrefix = newObjectPrefix;
     }
 
     public void addPerformance(int numberOfNodes, Graph graph, GraphPerformance performance) throws GraphException {
