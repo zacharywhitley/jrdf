@@ -90,10 +90,10 @@ public final class LiteralTripleSpec implements TripleSpec {
     private String literal;
 
 
-    public LiteralTripleSpec(URI subjectUri, URI predicateUri, String literal) {
-        this.subjectUri = subjectUri;
-        this.predicateUri = predicateUri;
-        this.literal = literal;
+    public LiteralTripleSpec(URI newSubjectUri, URI newPredicateUri, String newLiteral) {
+        this.subjectUri = newSubjectUri;
+        this.predicateUri = newPredicateUri;
+        this.literal = newLiteral;
     }
 
     public Attribute[] asAttributes() {

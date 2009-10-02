@@ -75,18 +75,19 @@ public class GraphContainsMatcher extends TypeSafeMatcher<Graph> {
     private long numberOfTriples = 1;
     private long counter;
 
-    public GraphContainsMatcher(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        this.subject = subject;
-        this.predicate = predicate;
-        this.object = object;
+    public GraphContainsMatcher(final SubjectNode newSubject, final PredicateNode newPredicate,
+        final ObjectNode newObject) {
+        this.subject = newSubject;
+        this.predicate = newPredicate;
+        this.object = newObject;
     }
 
-    public GraphContainsMatcher(SubjectNode subject, PredicateNode predicate, ObjectNode object,
-        final long numberOfTriples) {
-        this.subject = subject;
-        this.predicate = predicate;
-        this.object = object;
-        this.numberOfTriples = numberOfTriples;
+    public GraphContainsMatcher(final SubjectNode newSubject, final PredicateNode newPredicate,
+        final ObjectNode newObject, final long newNumberOfTriples) {
+        this.subject = newSubject;
+        this.predicate = newPredicate;
+        this.object = newObject;
+        this.numberOfTriples = newNumberOfTriples;
     }
 
     @Override

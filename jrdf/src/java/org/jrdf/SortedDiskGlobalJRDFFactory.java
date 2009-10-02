@@ -135,7 +135,7 @@ public final class SortedDiskGlobalJRDFFactory implements GlobalJRDFFactory {
         graphNumber++;
         MapFactory factory = new BdbMapFactory(BDB_HANDLER, "database" + graphNumber);
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);
-        MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes(graphNumber);
+        MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);
         NodePool nodePool = nodePoolFactory.createNewNodePool();
@@ -170,7 +170,7 @@ public final class SortedDiskGlobalJRDFFactory implements GlobalJRDFFactory {
         openMapFactories.clear();
     }
 
-    private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes(long graphNumber) {
+    private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes() {
         MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesameSync[] {
             new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(HANDLER, "spomd" + graphNumber)),
             new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(HANDLER, "posmd" + graphNumber)),

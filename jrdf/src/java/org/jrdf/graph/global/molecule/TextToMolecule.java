@@ -97,10 +97,10 @@ public class TextToMolecule {
     private Stack<Triple> parentTriples;
 
     public TextToMolecule(final RegexMatcherFactory newRegexFactory, final TripleParser newTripleParser,
-        final MoleculeFactory moleculeFactory) {
+        final MoleculeFactory newMoleculeFactory) {
         this.regexMatcherFactory = newRegexFactory;
         this.tripleParser = newTripleParser;
-        this.moleculeFactory = moleculeFactory;
+        this.moleculeFactory = newMoleculeFactory;
     }
 
     public Molecule parse(InputStream in) {

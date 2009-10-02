@@ -69,8 +69,8 @@ import java.util.Set;
 public class EntrySetMap implements Set<Map.Entry<Long, Set<Long>>> {
     private final ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap;
 
-    public EntrySetMap(ClosableMap<Long, ClosableMap<Long, Set<Long>>> mapClosableMap) {
-        this.mapClosableMap = mapClosableMap;
+    public EntrySetMap(ClosableMap<Long, ClosableMap<Long, Set<Long>>> newMapClosableMap) {
+        this.mapClosableMap = newMapClosableMap;
     }
 
     public Iterator<Map.Entry<Long, Set<Long>>> iterator() {

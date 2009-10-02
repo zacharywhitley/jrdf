@@ -149,8 +149,7 @@ public class ComparisonImplUnitTest extends TestCase {
     private void checkEmptyGroundedGraphs(boolean graph1Empty, boolean graph2Empty, boolean areEqual) throws Exception {
         mockFactory.reset();
         setUpEmptyCalls(graph1Empty, graph2Empty);
-        replayAssertAndVerify("Graph 1 empty: " + graph1Empty + " Graph 2 empty: " + graph2Empty, areEqual, mockGraph1,
-            mockGraph2);
+        replayAssertAndVerify("Graph 1 empty: " + graph1Empty + " Graph 2 empty: " + graph2Empty, areEqual);
     }
 
     private void checkDifferentSizeGraphsAreNotIsomorphic(long graph1Size, long graph2Size, boolean areEqual)
@@ -158,8 +157,7 @@ public class ComparisonImplUnitTest extends TestCase {
         mockFactory.reset();
         setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
         setUpNumberOfTripleCalls(graph1Size, graph2Size);
-        replayAssertAndVerify("Graph 1 size: " + graph1Size + " Graph 2 size: " + graph2Size, areEqual, mockGraph1,
-            mockGraph2);
+        replayAssertAndVerify("Graph 1 size: " + graph1Size + " Graph 2 size: " + graph2Size, areEqual);
     }
 
     private void checkGraphContent(Triple[] triples1, Triple[] triples2, boolean areEqual) throws Exception {
@@ -167,8 +165,7 @@ public class ComparisonImplUnitTest extends TestCase {
         setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
         setUpNumberOfTripleCalls(triples1.length, triples2.length);
         setUpFindAndIteratorCalls(triples1, triples2);
-        replayAssertAndVerify("Graph 1 size: " + triples1.length + " Graph 2 size: " + triples2.length, areEqual,
-            mockGraph1, mockGraph2);
+        replayAssertAndVerify("Graph 1 size: " + triples1.length + " Graph 2 size: " + triples2.length, areEqual);
     }
 
     private void setUpEmptyCalls(boolean graph1Empty, boolean graph2Empty) throws Exception {
@@ -202,7 +199,7 @@ public class ComparisonImplUnitTest extends TestCase {
         }
     }
 
-    private void replayAssertAndVerify(String message, boolean areEqual, Graph mockGraph1, Graph mockGraph2)
+    private void replayAssertAndVerify(String message, boolean areEqual)
         throws GraphException {
         mockFactory.replay();
         assertEquals(message, areEqual, comparison.groundedGraphsAreEqual(mockGraph1, mockGraph2));

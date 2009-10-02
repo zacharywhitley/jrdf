@@ -71,6 +71,7 @@ import java.util.NoSuchElementException;
 public class SparqlAskJsonResultsParserImpl implements SparqlJsonResultsParser {
     private boolean hasNext = true;
     private boolean value;
+    private static final String CANNOT_PARSE = "Cannot parse token: ";
 
     public SparqlAskJsonResultsParserImpl(JsonParser parser) {
         tryGetValue(parser);
@@ -120,6 +121,6 @@ public class SparqlAskJsonResultsParserImpl implements SparqlJsonResultsParser {
     }
 
     private void throwIllegalState(final JsonToken jsonToken) {
-        throw new IllegalStateException("Cannot parse: " + jsonToken);
+        throw new IllegalStateException(CANNOT_PARSE + jsonToken);
     }
 }

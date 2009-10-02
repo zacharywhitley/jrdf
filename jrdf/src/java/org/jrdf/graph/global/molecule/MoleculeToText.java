@@ -94,13 +94,13 @@ public class MoleculeToText implements MoleculeHandler, TypedNodeVisitor {
     private int level;
     private Localizer localizer;
 
-    public MoleculeToText(StringBuilder newBuilder) {
+    public MoleculeToText(final StringBuilder newBuilder) {
         this.builder = newBuilder;
     }
 
-    public MoleculeToText(StringBuilder newBuilder, Localizer localizer) {
+    public MoleculeToText(final StringBuilder newBuilder, final Localizer newLocalizer) {
         this(newBuilder);
-        this.localizer = localizer;
+        this.localizer = newLocalizer;
     }
 
     public void handleTriple(Triple triple) {

@@ -69,9 +69,9 @@ public class ParameterDefinition {
     private String[] parameterNames;
     private Class[] parameterTypes;
 
-    public ParameterDefinition(String[] parameterNames, Class[] parameterTypes) {
-        this.parameterNames = parameterNames;
-        this.parameterTypes = parameterTypes;
+    public ParameterDefinition(String[] newParameterNames, Class[] newParameterTypes) {
+        this.parameterNames = newParameterNames;
+        this.parameterTypes = newParameterTypes;
     }
 
     public String[] getParameterNames() {

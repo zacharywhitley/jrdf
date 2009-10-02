@@ -217,9 +217,9 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkSameTripleIsEqual(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        Triple triple1 = createTriple(subject, predicate, object);
-        Triple triple2 = createTriple(subject, predicate, object);
-        checkEqual(triple1, triple2);
+        Triple tmpTriple1 = createTriple(subject, predicate, object);
+        Triple tmpTriple2 = createTriple(subject, predicate, object);
+        checkEqual(tmpTriple1, tmpTriple2);
     }
 
     private void checkNullComparisonObject() {

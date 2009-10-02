@@ -83,10 +83,10 @@ public final class VariableTripleSpec implements TripleSpec {
     private URI predicateUri;
     private String variableName;
 
-    public VariableTripleSpec(URI subjectUri, URI predicateUri, String variableName) {
-        this.subjectUri = subjectUri;
-        this.predicateUri = predicateUri;
-        this.variableName = variableName;
+    public VariableTripleSpec(URI newSubjectUri, URI newPredicateUri, String newVariableName) {
+        this.subjectUri = newSubjectUri;
+        this.predicateUri = newPredicateUri;
+        this.variableName = newVariableName;
     }
 
     public Attribute[] asAttributes() {

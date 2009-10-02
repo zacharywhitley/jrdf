@@ -376,7 +376,6 @@ public abstract class AbstractTripleFactoryUnitTest {
             }
         };
 
-        PredicateNode rdfType = elementFactory.createURIReference(RDF.TYPE);
         ObjectNode rdfAlternative = elementFactory.createURIReference(RDF.ALT);
 
         // Create collection and add
@@ -419,7 +418,6 @@ public abstract class AbstractTripleFactoryUnitTest {
             }
         };
 
-        PredicateNode rdfType = elementFactory.createURIReference(RDF.TYPE);
         ObjectNode rdfBag = elementFactory.createURIReference(RDF.BAG);
 
         // Create collection and add
@@ -462,7 +460,6 @@ public abstract class AbstractTripleFactoryUnitTest {
             }
         };
 
-        PredicateNode rdfType = elementFactory.createURIReference(RDF.TYPE);
         PredicateNode rdfOne = elementFactory.createURIReference(new URI(RDF.BASE_URI + "_1"));
         PredicateNode rdfTwo = elementFactory.createURIReference(new URI(RDF.BASE_URI + "_2"));
         PredicateNode rdfThree = elementFactory.createURIReference(new URI(RDF.BASE_URI + "_3"));

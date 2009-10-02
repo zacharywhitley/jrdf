@@ -67,12 +67,12 @@ public class MoleculeLocalizerImpl implements MoleculeLocalizer {
     private long moleculeId = 2;
     private final Localizer localizer;
 
-    public MoleculeLocalizerImpl(Localizer localizer) {
-        this.localizer = localizer;
+    public MoleculeLocalizerImpl(final Localizer newLocalizer) {
+        this.localizer = newLocalizer;
     }
 
-    public MoleculeLocalizerImpl(Localizer localizer, long currentId) {
-        this.localizer = localizer;
+    public MoleculeLocalizerImpl(final Localizer newLocalizer, final long currentId) {
+        this.localizer = newLocalizer;
         this.moleculeId = currentId + 1;
     }
 
@@ -80,7 +80,7 @@ public class MoleculeLocalizerImpl implements MoleculeLocalizer {
         return moleculeId++;
     }
 
-    public Long[] localizeTriple(Triple triple) throws GraphException {
+    public Long[] localizeTriple(final Triple triple) throws GraphException {
         return localizer.localize(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 

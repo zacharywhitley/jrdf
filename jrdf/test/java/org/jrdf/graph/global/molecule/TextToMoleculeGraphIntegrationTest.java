@@ -77,8 +77,6 @@ import java.util.Set;
 
 public class TextToMoleculeGraphIntegrationTest extends AbstractMoleculeGraphIntegrationTest {
     private MoleculeGraph destGraph;
-    private TextToMolecule textToMolecule;
-    private TripleParserImpl tripleParser;
     private TextToMoleculeGraph graphBuilder;
 
     public void setUp() throws Exception {
@@ -92,7 +90,7 @@ public class TextToMoleculeGraphIntegrationTest extends AbstractMoleculeGraphInt
             nodeMaps);
         final TripleParser tripleParser = new TripleParserImpl(matcherFactory, parsersFactory.getBlankNodeParser(),
             parser);
-        textToMolecule = new TextToMolecule(matcherFactory, tripleParser, moleculeFactory);
+        final TextToMolecule textToMolecule = new TextToMolecule(matcherFactory, tripleParser, moleculeFactory);
         graphBuilder = new TextToMoleculeGraph(textToMolecule);
     }
 

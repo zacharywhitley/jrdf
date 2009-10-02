@@ -72,8 +72,8 @@ public final class SemanticLiteralComparatorImpl implements SemanticLiteralCompa
     private SemanticLiteralComparatorImpl() {
     }
 
-    public SemanticLiteralComparatorImpl(final LexicalComparator comparator) {
-        this.comparator = comparator;
+    public SemanticLiteralComparatorImpl(final LexicalComparator newComparator) {
+        this.comparator = newComparator;
     }
 
     public int compare(final Literal o1, final Literal o2) {
@@ -111,7 +111,7 @@ public final class SemanticLiteralComparatorImpl implements SemanticLiteralCompa
         return o1.getDatatypeValue().equivCompareTo(o2.getDatatypeValue());
     }
 
-    public int compare(Literal literal1, Node node) {
+    public int compare(final Literal literal1, final Node node) {
         if (BlankNodeImpl.isBlankNode(node)) {
             return 0;
         } else if (URIReference.class.isAssignableFrom(node.getClass())) {

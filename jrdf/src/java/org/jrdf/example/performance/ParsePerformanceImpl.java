@@ -73,8 +73,8 @@ public class ParsePerformanceImpl implements ParsePerformance {
     private static final String PATH = "/org/jrdf/example/performance/pizza.rdf";
     private final MapFactory mapFactory;
 
-    public ParsePerformanceImpl(MapFactory mapFactory) {
-        this.mapFactory = mapFactory;
+    public ParsePerformanceImpl(MapFactory newMapFactory) {
+        this.mapFactory = newMapFactory;
     }
 
     public void parse(Graph graph, GraphPerformance performance) throws GraphException {

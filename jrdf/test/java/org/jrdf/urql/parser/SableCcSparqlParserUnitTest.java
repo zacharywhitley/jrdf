@@ -93,14 +93,13 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     private static final String[] PARAM_NAMES = {"graph", "queryText"};
     private static final Class[] PARAM_TYPES = {Graph.class, String.class};
     private static final ParameterDefinition BUILD_PARAM_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
-    private MockFactory mockFactory;
+    private MockFactory mockFactory = new MockFactory();
     private Graph graph;
     private ParserFactory parserFactory;
     private GraphRelationFactory graphRelationFactory;
     private SortedAttributeFactory attributeFactory;
 
     public void setUp() {
-        mockFactory = new MockFactory();
         graph = mockFactory.createMock(Graph.class);
         parserFactory = mockFactory.createMock(ParserFactory.class);
         graphRelationFactory = mockFactory.createMock(GraphRelationFactory.class);
@@ -114,15 +113,15 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     public void testParseQueryFailsWithBadInput() {
-        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(parserFactory);
+        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser();
         checkMethodNullAndEmptyAssertions(sableCcSparqlParser, "parseQuery", BUILD_PARAM_DEFINITION);
     }
 
     public void testParseQuery() throws Exception {
-        Start start = createStart();
-        Parser parser = createParser(start);
-        ParserFactory parserFactory = createParserFactory(parser);
-        SableCcSparqllParser ccSparqlParser = createSableCcSparqlParser(parserFactory);
+        final Start start = createStart();
+        final Parser parser = createParserReturnStart(start);
+        addGetParserExpectationsToParserFactory(parser);
+        final SableCcSparqllParser ccSparqlParser = createSableCcSparqlParser();
         mockFactory.replay();
         ccSparqlParser.parseQuery(graph, QUERY_BOOK_1_DC_TITLE);
         mockFactory.verify();
@@ -149,39 +148,14 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         return start;
     }
 
-    private Parser createParser(Start start) throws Exception {
-        Parser parser = mockFactory.createMock(Parser.class);
-        parser.parse();
-        expectLastCall().andReturn(start);
-        return parser;
-    }
-
-    private Parser createParser(Exception exception) throws Exception {
-        Parser parser = mockFactory.createMock(Parser.class);
-        parser.parse();
-        expectLastCall().andThrow(exception);
-        return parser;
-    }
-
-
-    private ParserFactory createParserFactory(Parser parser) {
-        ParserFactory parserFactory = mockFactory.createMock(ParserFactory.class);
-        parserFactory.getParser(QUERY_BOOK_1_DC_TITLE);
-        expectLastCall().andReturn(parser);
-        parserFactory.close();
-        expectLastCall();
-        return parserFactory;
-    }
-
-    private SableCcSparqllParser createSableCcSparqlParser(ParserFactory parserFactory) {
+    private SableCcSparqllParser createSableCcSparqlParser() {
         return new SableCcSparqllParser(parserFactory, graphRelationFactory, attributeFactory);
     }
 
-    private void checkThrowsException(Exception exception, String errorMsg)
-        throws Exception {
-        Parser parser = createParser(exception);
-        ParserFactory parserFactory = createParserFactory(parser);
-        final SableCcSparqllParser ccSparqlParser = createSableCcSparqlParser(parserFactory);
+    private void checkThrowsException(Exception exception, String errorMsg) throws Exception {
+        Parser parser = createParserWithException(exception);
+        addGetParserExpectationsToParserFactory(parser);
+        final SableCcSparqllParser ccSparqlParser = createSableCcSparqlParser();
         mockFactory.replay();
         AssertThrows.assertThrows(InvalidQuerySyntaxException.class, errorMsg, new AssertThrows.Block() {
             public void execute() throws Throwable {
@@ -189,5 +163,27 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
             }
         });
         mockFactory.verify();
+    }
+
+
+    private Parser createParserReturnStart(final Start start) throws Exception {
+        final Parser mockParser = mockFactory.createMock(Parser.class);
+        mockParser.parse();
+        expectLastCall().andReturn(start);
+        return mockParser;
+    }
+
+    private Parser createParserWithException(final Exception exception) throws Exception {
+        final Parser mockParser = mockFactory.createMock(Parser.class);
+        mockParser.parse();
+        expectLastCall().andThrow(exception);
+        return mockParser;
+    }
+
+    private void addGetParserExpectationsToParserFactory(final Parser parser) {
+        parserFactory.getParser(QUERY_BOOK_1_DC_TITLE);
+        expectLastCall().andReturn(parser);
+        parserFactory.close();
+        expectLastCall();
     }
 }

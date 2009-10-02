@@ -79,6 +79,7 @@ import java.io.InputStreamReader;
 import java.util.LinkedHashSet;
 
 public class SparqlJsonParserImpl implements SparqlParser {
+    private static final String CANNOT_PARSE_TOKEN = "Cannot parse token: ";
     private InputStreamReader reader;
     private JsonParser parser;
     private SparqlJsonResultsParser resultsParser;
@@ -182,6 +183,6 @@ public class SparqlJsonParserImpl implements SparqlParser {
     }
 
     private void throwIllegalStateException() throws IOException {
-        throw new IllegalStateException("Cannot parse token: " + parser.getCurrentName());
+        throw new IllegalStateException(CANNOT_PARSE_TOKEN + parser.getCurrentName());
     }
 }

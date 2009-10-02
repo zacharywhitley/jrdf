@@ -368,10 +368,10 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         try {
             ClosableIterator<Molecule> iterator = iterator();
             try {
-                MoleculeHandler handler = new MoleculeToText(builder, localizer.getLocalizer());
+                MoleculeHandler tmpHandler = new MoleculeToText(builder, localizer.getLocalizer());
                 while (iterator.hasNext()) {
                     Molecule molecule = iterator.next();
-                    traverser.traverse(molecule, handler);
+                    traverser.traverse(molecule, tmpHandler);
                 }
                 return builder.toString();
             } finally {
