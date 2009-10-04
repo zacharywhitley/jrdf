@@ -83,11 +83,11 @@ public final class SableCcSparqllParser implements SparqlParser {
     private ParserFactory parserFactory;
     private GraphRelationFactory graphRelationFactory;
 
-    public SableCcSparqllParser(ParserFactory parserFactory, GraphRelationFactory graphRelationFactory,
-        SortedAttributeFactory sortedAttributeFactory) {
-        this.parserFactory = parserFactory;
-        this.graphRelationFactory = graphRelationFactory;
-        this.sortedAttributeFactory = sortedAttributeFactory;
+    public SableCcSparqllParser(ParserFactory newParserFactory, GraphRelationFactory newGraphRelationFactory,
+        SortedAttributeFactory newSortedAttributeFactory) {
+        this.parserFactory =  newParserFactory;
+        this.graphRelationFactory = newGraphRelationFactory;
+        this.sortedAttributeFactory = newSortedAttributeFactory;
     }
 
     /**

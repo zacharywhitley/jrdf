@@ -89,7 +89,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 // TODO (AN) Too much coupling still!!
-
 public final class ElementBuilderImpl extends DepthFirstAdapter implements ElementBuilder {
     private final NodeType nodeType;
     private final Node graphNode;
@@ -100,14 +99,14 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     private ParserException exception;
     private LiteralBuilder literalBuilder;
 
-    public ElementBuilderImpl(NodeType nodeType, Node graphNode, Attribute attribute, Graph currentGraph,
-            Map<String, String> prefixMap) {
-        this.nodeType = nodeType;
-        this.graphNode = graphNode;
-        this.attribute = attribute;
-        this.currentGraph = currentGraph;
-        this.prefixMap = prefixMap;
-        literalBuilder = new LiteralBuilderImpl(currentGraph.getElementFactory(), prefixMap);
+    public ElementBuilderImpl(NodeType newNodeType, Node newGraphNode, Attribute newAttribute, Graph newCurrentGraph,
+            Map<String, String> newPrefixMap) {
+        this.nodeType = newNodeType;
+        this.graphNode = newGraphNode;
+        this.attribute = newAttribute;
+        this.currentGraph = newCurrentGraph;
+        this.prefixMap = newPrefixMap;
+        literalBuilder = new LiteralBuilderImpl(newCurrentGraph.getElementFactory(), newPrefixMap);
     }
 
     public Map<Attribute, Node> getElement() throws ParserException {

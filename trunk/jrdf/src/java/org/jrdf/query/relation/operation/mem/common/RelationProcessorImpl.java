@@ -81,10 +81,10 @@ public final class RelationProcessorImpl implements RelationProcessor {
     private RelationFactory relationFactory;
     private TupleComparator tupleComparator;
 
-    public RelationProcessorImpl(RelationFactory relationFactory, TupleComparator tupleComparator) {
-        checkNotNull(relationFactory, tupleComparator);
-        this.relationFactory = relationFactory;
-        this.tupleComparator = tupleComparator;
+    public RelationProcessorImpl(RelationFactory newRelationFactory, TupleComparator newTupleComparator) {
+        checkNotNull(newRelationFactory, newTupleComparator);
+        this.relationFactory = newRelationFactory;
+        this.tupleComparator = newTupleComparator;
     }
 
     public EvaluatedRelation processRelations(Set<EvaluatedRelation> relations, TupleEngine tupleEngine) {

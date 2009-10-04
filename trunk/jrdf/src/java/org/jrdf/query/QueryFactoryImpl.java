@@ -156,7 +156,7 @@ public class QueryFactoryImpl implements QueryFactory {
         TupleEngine unionTupleEngine = new OuterUnionEngine(RELATION_HELPER);
         NadicJoin join = new NadicJoinImpl(RELATION_PROCESSOR, joinTupleEngine);
         BooleanEvaluator evaluator = new BooleanEvaluatorImpl(NODE_COMPARATOR);
-        Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_FACTORY, TUPLE_COMPARATOR, evaluator);
+        Restrict restrict = new RestrictImpl(RELATION_FACTORY, TUPLE_COMPARATOR, evaluator);
         Union union = new OuterUnionImpl(RELATION_PROCESSOR, unionTupleEngine);
         DyadicJoin leftOuterJoin = getLeftOuterJoin(unionTupleEngine, join);
         return new OptimizingQueryEngineImpl(project, join, restrict, union, leftOuterJoin);

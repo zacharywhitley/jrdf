@@ -74,31 +74,31 @@ public final class ResourcePropertyHolder {
         return modifiable;
     }
 
-    public void setModifiable(final boolean modifiable) {
-        this.modifiable = modifiable;
+    public void setModifiable(final boolean newModifiable) {
+        this.modifiable = newModifiable;
     }
 
     public boolean isAvailable() {
         return available;
     }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
+    public void setAvailable(boolean newAvailable) {
+        this.available = newAvailable;
     }
 
     public boolean isNegotiateContent() {
         return negotiateContent;
     }
 
-    public void setNegotiateContent(boolean negotiateContent) {
-        this.negotiateContent = negotiateContent;
+    public void setNegotiateContent(boolean newNegotiateContent) {
+        this.negotiateContent = newNegotiateContent;
     }
 
     public boolean isReadable() {
         return readable;
     }
 
-    public void setReadable(boolean readable) {
-        this.readable = readable;
+    public void setReadable(boolean newReadable) {
+        this.readable = newReadable;
     }
 }

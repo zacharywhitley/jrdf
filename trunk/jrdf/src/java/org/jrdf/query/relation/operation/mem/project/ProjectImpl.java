@@ -82,9 +82,9 @@ public class ProjectImpl implements Project {
     private final TupleFactory tupleFactory;
     private final RelationFactory relationFactory;
 
-    public ProjectImpl(TupleFactory tupleFactory, RelationFactory relationFactory) {
-        this.tupleFactory = tupleFactory;
-        this.relationFactory = relationFactory;
+    public ProjectImpl(TupleFactory newTupleFactory, RelationFactory newRelationFactory) {
+        this.tupleFactory =  newTupleFactory;
+        this.relationFactory = newRelationFactory;
     }
 
     public EvaluatedRelation include(EvaluatedRelation relation, Set<Attribute> attributes) {

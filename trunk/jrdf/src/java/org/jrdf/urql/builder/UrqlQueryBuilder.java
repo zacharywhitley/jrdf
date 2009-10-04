@@ -73,12 +73,11 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  * @version $Id: SparqlQueryBuilder.java 598 2006-06-20 01:47:56Z newmana $
  */
 public final class UrqlQueryBuilder implements QueryBuilder {
-
     private final SparqlParser parser;
 
-    public UrqlQueryBuilder(SparqlParser parser) {
-        checkNotNull(parser);
-        this.parser = parser;
+    public UrqlQueryBuilder(SparqlParser newParser) {
+        checkNotNull(newParser);
+        this.parser = newParser;
     }
 
     /**

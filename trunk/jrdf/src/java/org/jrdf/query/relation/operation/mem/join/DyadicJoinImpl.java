@@ -76,9 +76,9 @@ public final class DyadicJoinImpl implements DyadicJoin {
     private final TupleEngine tupleEngine;
     private final RelationProcessor relationProcessor;
 
-    public DyadicJoinImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
-        this.tupleEngine = tupleEngine;
-        this.relationProcessor = relationProcessor;
+    public DyadicJoinImpl(RelationProcessor newRelationProcessor, TupleEngine newTupleEngine) {
+        this.relationProcessor = newRelationProcessor;
+        this.tupleEngine = newTupleEngine;
     }
 
     public EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2) {

@@ -87,9 +87,9 @@ public class SortedAttributeFactoryImpl implements SortedAttributeFactory {
     private AttributeComparator attributeComparator;
     private long nameCounter;
 
-    public SortedAttributeFactoryImpl(AttributeComparator attributeComparator, long nameCounter) {
-        this.attributeComparator = attributeComparator;
-        this.nameCounter = nameCounter;
+    public SortedAttributeFactoryImpl(AttributeComparator newAttributeComparator, long newNameCounter) {
+        this.attributeComparator = newAttributeComparator;
+        this.nameCounter = newNameCounter;
     }
 
     public SortedSet<Attribute> createHeading() {

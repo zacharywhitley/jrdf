@@ -72,7 +72,7 @@ import org.jrdf.urql.builder.TripleBuilder;
 import org.jrdf.urql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.urql.parser.node.Start;
 import org.jrdf.urql.parser.parser.ParserException;
-import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * Default implementation of {@link SparqlAnalyser}.
@@ -88,11 +88,12 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     private Expression expression;
     private ParserException exception;
 
-    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, GraphRelationFactory graphRelationFactory) {
-        ParameterUtil.checkNotNull(tripleBuilder, graph, graphRelationFactory);
-        this.tripleBuilder = tripleBuilder;
-        this.graph = graph;
-        this.graphRelationFactory = graphRelationFactory;
+    public SparqlAnalyserImpl(TripleBuilder newTripleBuilder, Graph newGraph,
+        GraphRelationFactory newGraphRelationFactory) {
+        checkNotNull(newTripleBuilder, newGraph, newGraphRelationFactory);
+        this.tripleBuilder = newTripleBuilder;
+        this.graph = newGraph;
+        this.graphRelationFactory = newGraphRelationFactory;
     }
 
     /**

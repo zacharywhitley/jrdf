@@ -81,49 +81,49 @@ public class NodeBinding extends TupleBinding<Node> implements TypedNodeVisitor,
     private static final byte LITERAL = 2;
     private StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
     private TupleOutput tupleOutput;
-    private Object object;
+    private Object node;
 
     public Node entryToObject(TupleInput tupleInput) {
-        Node node;
+        Node tmpNode;
         byte b = tupleInput.readByte();
         String str = tupleInput.readString();
         if (b == BLANK_NODE) {
-            node = mapper.convertToBlankNode(str);
+            tmpNode = mapper.convertToBlankNode(str);
         } else if (b == URI_REFERENCE) {
-            node = mapper.convertToURIReference(str, tupleInput.readLong());
+            tmpNode = mapper.convertToURIReference(str, tupleInput.readLong());
         } else if (b == LITERAL) {
-            node = mapper.convertToLiteral(str, tupleInput.readLong());
+            tmpNode = mapper.convertToLiteral(str, tupleInput.readLong());
         } else {
             throw new IllegalArgumentException("Cannot read class type: " + b);
         }
-        return node;
+        return tmpNode;
     }
 
-    public void objectToEntry(Node node, TupleOutput tupleOutput) {
-        this.object = node;
-        this.tupleOutput = tupleOutput;
-        node.accept(this);
+    public void objectToEntry(Node newNode, TupleOutput newTupleOutput) {
+        this.node = newNode;
+        this.tupleOutput = newTupleOutput;
+        newNode.accept(this);
     }
 
     public void visitBlankNode(BlankNode blankNode) {
         tupleOutput.writeByte(BLANK_NODE);
-        tupleOutput.writeString(mapper.convertToString((Node) object));
+        tupleOutput.writeString(mapper.convertToString((Node) node));
     }
 
     public void visitURIReference(URIReference uriReference) {
         tupleOutput.writeByte(URI_REFERENCE);
-        tupleOutput.writeString(mapper.convertToString((Node) object));
-        tupleOutput.writeLong(((LocalizedNode) object).getId());
+        tupleOutput.writeString(mapper.convertToString((Node) node));
+        tupleOutput.writeLong(((LocalizedNode) node).getId());
     }
 
     public void visitLiteral(Literal literal) {
         tupleOutput.writeByte(LITERAL);
-        tupleOutput.writeString(mapper.convertToString((Node) object));
-        tupleOutput.writeLong(((LocalizedNode) object).getId());
+        tupleOutput.writeString(mapper.convertToString((Node) node));
+        tupleOutput.writeLong(((LocalizedNode) node).getId());
     }
 
-    public void visitNode(Node node) {
-        badNodeType(node.getClass());
+    public void visitNode(Node newNode) {
+        badNodeType(newNode.getClass());
     }
 
     public void visitResource(Resource resource) {

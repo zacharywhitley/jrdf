@@ -73,15 +73,14 @@ import java.util.Map;
 public class LogicNotExpression implements LogicExpression {
     private static final long serialVersionUID = 7468439147872226467L;
     private static final int DUMMY_HASHCODE = 47;
-
+    private static final String BANG = "!";
     private LogicExpression expression;
-    protected static final String BANG = "!";
 
     private LogicNotExpression() {
     }
 
-    public LogicNotExpression(LogicExpression exp) {
-        expression = exp;
+    public LogicNotExpression(LogicExpression newExp) {
+        expression = newExp;
     }
 
     public <R> R accept(ExpressionVisitor<R> v) {

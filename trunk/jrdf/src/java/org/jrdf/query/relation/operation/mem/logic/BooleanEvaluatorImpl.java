@@ -88,12 +88,12 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
     private final NodeComparator nodeComparator;
     private Tuple tuple;
 
-    public BooleanEvaluatorImpl(NodeComparator nodeComparator) {
-        this.nodeComparator = nodeComparator;
+    public BooleanEvaluatorImpl(NodeComparator newNodeComparator) {
+        this.nodeComparator = newNodeComparator;
     }
 
-    public void setTuple(Tuple tuple) {
-        this.tuple = tuple;
+    public void setTuple(Tuple newTuple) {
+        this.tuple = newTuple;
     }
 
     @Override
@@ -170,8 +170,8 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
         return tuple.getValue(attribute);
     }
 
-    public boolean evaluate(Tuple tuple, LogicExpression expression) {
-        setTuple(tuple);
+    public boolean evaluate(Tuple newTuple, LogicExpression expression) {
+        setTuple(newTuple);
         return expression.accept(this);
     }
 }

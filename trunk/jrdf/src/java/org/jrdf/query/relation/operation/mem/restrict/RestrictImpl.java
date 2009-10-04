@@ -66,7 +66,6 @@ import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
 import org.jrdf.query.relation.operation.Restrict;
@@ -83,16 +82,14 @@ import java.util.TreeSet;
  */
 public class RestrictImpl implements Restrict {
     private final RelationFactory relationFactory;
-    private final TupleFactory tupleFactory;
     private final TupleComparator tupleComparator;
     private final BooleanEvaluator evaluator;
 
-    public RestrictImpl(RelationFactory relationFactory, TupleFactory tupleFactory, TupleComparator tupleComparator,
-        BooleanEvaluator evaluator) {
-        this.relationFactory = relationFactory;
-        this.tupleFactory = tupleFactory;
-        this.tupleComparator = tupleComparator;
-        this.evaluator = evaluator;
+    public RestrictImpl(RelationFactory newRelationFactory, TupleComparator newTupleComparator,
+        BooleanEvaluator newEvaluator) {
+        this.relationFactory = newRelationFactory;
+        this.tupleComparator = newTupleComparator;
+        this.evaluator = newEvaluator;
     }
 
     public EvaluatedRelation restrict(EvaluatedRelation relation, LinkedHashMap<Attribute, Node> avo) {

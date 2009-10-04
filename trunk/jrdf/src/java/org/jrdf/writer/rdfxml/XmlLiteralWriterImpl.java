@@ -75,8 +75,8 @@ import java.io.StringReader;
 public class XmlLiteralWriterImpl implements XmlLiteralWriter {
     private final XMLStreamWriter xmlStreamWriter;
 
-    public XmlLiteralWriterImpl(final XMLStreamWriter xmlStreamWriter) {
-        this.xmlStreamWriter = xmlStreamWriter;
+    public XmlLiteralWriterImpl(final XMLStreamWriter newXmlStreamWriter) {
+        this.xmlStreamWriter = newXmlStreamWriter;
     }
 
     public void write(Literal literal) throws XMLStreamException {

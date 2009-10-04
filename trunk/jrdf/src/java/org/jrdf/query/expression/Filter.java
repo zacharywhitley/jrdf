@@ -81,9 +81,9 @@ public class Filter implements BiOperandExpression, Serializable {
     private Filter() {
     }
 
-    public Filter(Expression lhs, LogicExpression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    public Filter(Expression newLhs, LogicExpression newRhs) {
+        this.lhs = newLhs;
+        this.rhs = newRhs;
     }
 
     public Map<Attribute, Node> getValue() {
@@ -100,14 +100,6 @@ public class Filter implements BiOperandExpression, Serializable {
 
     public LogicExpression getRhs() {
         return rhs;
-    }
-
-    public void setLhs(Expression lhs) {
-        this.lhs = lhs;
-    }
-
-    public void setRhs(LogicExpression rhs) {
-        this.rhs = rhs;
     }
 
     public int size() {

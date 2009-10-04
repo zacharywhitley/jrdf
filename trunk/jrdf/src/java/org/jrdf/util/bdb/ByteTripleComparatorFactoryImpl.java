@@ -66,8 +66,8 @@ import java.util.Comparator;
 public class ByteTripleComparatorFactoryImpl implements ByteTripleComparatorFactory {
     private final GroundedTripleComparatorFactory factory;
 
-    public ByteTripleComparatorFactoryImpl(GroundedTripleComparatorFactory factory) {
-        this.factory = factory;
+    public ByteTripleComparatorFactoryImpl(GroundedTripleComparatorFactory newFactory) {
+        this.factory = newFactory;
     }
 
     public Comparator<byte[]> newComparator() {

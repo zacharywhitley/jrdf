@@ -72,10 +72,8 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public class Ask implements Expression {
     private static final long serialVersionUID = 7831085111074741271L;
-
     private static final int DUMMY_HASHCODE = 47;
     private Expression nextExpression;
     private Map<AttributeName, PositionalNodeType> allVariables;
@@ -83,9 +81,9 @@ public class Ask implements Expression {
     private Ask() {
     }
 
-    public Ask(Expression nextExpression, VariableCollector variableCollector) {
-        this.nextExpression = nextExpression;
-        allVariables = variableCollector.getAttributes();
+    public Ask(Expression newNextExpression, VariableCollector newVariableCollector) {
+        this.nextExpression = newNextExpression;
+        this.allVariables = newVariableCollector.getAttributes();
     }
 
     public Map<Attribute, Node> getValue() {

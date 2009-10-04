@@ -74,12 +74,12 @@ public class AttributeTupleComparatorImpl implements AttributeTupleComparator {
     private AttributeTupleComparatorImpl() {
     }
 
-    public AttributeTupleComparatorImpl(NodeComparator nodeComparator) {
-        this.nodeComparator = nodeComparator;
+    public AttributeTupleComparatorImpl(NodeComparator newNodeComparator) {
+        this.nodeComparator = newNodeComparator;
     }
 
-    public void setAttribute(Attribute attribute) {
-        this.attribute = attribute;
+    public void setAttribute(Attribute newAttribute) {
+        this.attribute = newAttribute;
     }
 
     public int compare(Tuple tuple, Tuple tuple1) {

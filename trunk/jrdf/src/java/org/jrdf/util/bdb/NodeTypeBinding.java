@@ -81,7 +81,7 @@ import java.io.Serializable;
 
 public class NodeTypeBinding extends TupleBinding<NodeType> implements NodeTypeVisitor, Serializable {
     private static final long serialVersionUID = 331268501059754264L;
-    private NodeType object;
+    private NodeType nodeType;
     private TupleOutput tupleOutput;
     private static final int BLANK_NODE_TYPE = 0;
     private static final int LITERAL_NODE_TYPE = 1;
@@ -92,40 +92,40 @@ public class NodeTypeBinding extends TupleBinding<NodeType> implements NodeTypeV
     private static final int RESOURCE_NODE_TYPE = 6;
 
     public NodeType entryToObject(TupleInput tupleInput) {
-        NodeType nodeType;
+        NodeType tmpNodeType;
         byte b = tupleInput.readByte();
         switch (b) {
             case BLANK_NODE_TYPE:
-                nodeType = new BlankNodeType();
+                tmpNodeType = new BlankNodeType();
                 break;
             case LITERAL_NODE_TYPE:
-                nodeType = new LiteralNodeType();
+                tmpNodeType = new LiteralNodeType();
                 break;
             case URI_NODE_TYPE:
-                nodeType = new URIReferenceNodeType();
+                tmpNodeType = new URIReferenceNodeType();
                 break;
             case SUBJECT_NODE_TYPE:
-                nodeType = new SubjectNodeType();
+                tmpNodeType = new SubjectNodeType();
                 break;
             case PREDICATE_NODE_TYPE:
-                nodeType = new PredicateNodeType();
+                tmpNodeType = new PredicateNodeType();
                 break;
             case OBJECT_NODE_TYPE:
-                nodeType = new ObjectNodeType();
+                tmpNodeType = new ObjectNodeType();
                 break;
             case RESOURCE_NODE_TYPE:
-                nodeType = new ResourceNodeType();
+                tmpNodeType = new ResourceNodeType();
                 break;
             default:
                 throw new IllegalArgumentException("Cannot read class type: " + b);
         }
-        return nodeType;
+        return tmpNodeType;
     }
 
-    public void objectToEntry(NodeType o, TupleOutput tupleOutput) {
-        this.object = o;
-        this.tupleOutput = tupleOutput;
-        object.accept(this);
+    public void objectToEntry(NodeType newNodeType, TupleOutput newTupleOutput) {
+        this.nodeType = newNodeType;
+        this.tupleOutput = newTupleOutput;
+        this.nodeType.accept(this);
     }
 
     public void visitBlankNodeType(BlankNodeType node) {

@@ -75,17 +75,16 @@ import java.util.Map;
 public class LogicAndExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = -1701496085083842700L;
     private static final int DUMMY_HASHCODE = 47;
-
+    private static final String AND_STRING = "&&";
     private LogicExpression lhs;
     private LogicExpression rhs;
-    protected static final String AND_STRING = "&&";
 
     private LogicAndExpression() {
     }
 
-    public LogicAndExpression(LogicExpression lhs, LogicExpression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    public LogicAndExpression(LogicExpression newLhs, LogicExpression newRhs) {
+        this.lhs = newLhs;
+        this.rhs = newRhs;
     }
 
     public Map<Attribute, Node> getValue() {
@@ -101,14 +100,6 @@ public class LogicAndExpression implements LogicExpression, BiOperandExpression 
 
     public LogicExpression getRhs() {
         return rhs;
-    }
-
-    public void setLhs(LogicExpression lhs) {
-        this.lhs = lhs;
-    }
-
-    public void setRhs(LogicExpression rhs) {
-        this.rhs = rhs;
     }
 
     public int size() {

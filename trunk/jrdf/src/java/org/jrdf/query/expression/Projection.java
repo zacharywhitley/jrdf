@@ -83,7 +83,7 @@ import java.util.Map;
 public final class Projection implements Expression {
     private static final long serialVersionUID = -202508451953503285L;
     private static final int DUMMY_HASHCODE = 47;
-    private VariableCollector variableCollector;
+    private VariableCollector varCollector;
     private LinkedHashSet<Attribute> attributes;
     private LinkedHashSet<AttributeName> declaredVariables;
     private Expression nextExpression;
@@ -92,14 +92,14 @@ public final class Projection implements Expression {
     private Projection() {
     }
 
-    public Projection(VariableCollector collector, LinkedHashSet<AttributeName> declaredVariables,
-        Expression nextExpression) throws ParserException {
-        checkNotNull(collector, declaredVariables, nextExpression);
-        this.variableCollector = collector;
-        this.declaredVariables = declaredVariables;
-        this.nextExpression = nextExpression;
+    public Projection(VariableCollector newCollector, LinkedHashSet<AttributeName> newDeclaredVariables,
+        Expression newNextExpression) throws ParserException {
+        checkNotNull(newCollector, newDeclaredVariables, newNextExpression);
+        this.varCollector = newCollector;
+        this.declaredVariables = newDeclaredVariables;
+        this.nextExpression = newNextExpression;
         this.attributes = extractAttributes();
-        this.allVariables = collector.getAttributes();
+        this.allVariables = newCollector.getAttributes();
     }
 
     public Map<Attribute, Node> getValue() {
@@ -148,7 +148,7 @@ public final class Projection implements Expression {
      * Delegates to <code>getAvp().toString()</code>.
      */
     public String toString() {
-        return "SELECT { " + variableCollector + " } \n" + nextExpression;
+        return "SELECT { " + varCollector + " } \n" + nextExpression;
     }
 
     public <R> R accept(ExpressionVisitor<R> v) {
@@ -157,7 +157,7 @@ public final class Projection implements Expression {
 
     private LinkedHashSet<Attribute> extractAttributes() throws ParserException {
         LinkedHashSet<Attribute> newAttributes = new LinkedHashSet<Attribute>();
-        Map<AttributeName, PositionalNodeType> variables = variableCollector.getAttributes();
+        Map<AttributeName, PositionalNodeType> variables = varCollector.getAttributes();
         for (AttributeName variable : declaredVariables) {
             NodeType type = variables.get(variable);
             if (type == null) {

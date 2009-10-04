@@ -156,36 +156,36 @@ public class BTree {
      * Creates a new BTree that uses an instance of
      * <tt>DefaultRecordComparator</tt> to compare values.
      *
-     * @param dataFile
+     * @param newDataFile
      *        The file for the B-Tree.
-     * @param blockSize
+     * @param newBlockSize
      *        The size (in bytes) of a file block for a single node. Ideally, the
      *        size specified is the size of a block in the used file system.
-     * @param valueSize
+     * @param newValueSize
      *        The size (in bytes) of the fixed-length values that are or will be
      *        stored in the B-Tree.
      * @throws IOException
      *         In case the initialization of the B-Tree file failed.
      * @see DefaultRecordComparator
      */
-    public BTree(File dataFile, int blockSize, int valueSize)
+    public BTree(File newDataFile, int newBlockSize, int newValueSize)
         throws IOException {
-        this(dataFile, blockSize, valueSize, false);
+        this(newDataFile, newBlockSize, newValueSize, false);
     }
 
     /**
      * Creates a new BTree that uses an instance of
      * <tt>DefaultRecordComparator</tt> to compare values.
      *
-     * @param dataFile
+     * @param newDataFile
      *        The file for the B-Tree.
-     * @param blockSize
+     * @param newBlockSize
      *        The size (in bytes) of a file block for a single node. Ideally, the
      *        size specified is the size of a block in the used file system.
-     * @param valueSize
+     * @param newValueSize
      *        The size (in bytes) of the fixed-length values that are or will be
      *        stored in the B-Tree.
-     * @param forceSync
+     * @param newForceSync
      *        Flag indicating whether updates should be synced to disk forcefully
      *        by calling {@link FileChannel#force(boolean)}. This may have a
      *        severe impact on write performance.
@@ -193,78 +193,78 @@ public class BTree {
      *         In case the initialization of the B-Tree file failed.
      * @see DefaultRecordComparator
      */
-    public BTree(File dataFile, int blockSize, int valueSize, boolean forceSync)
+    public BTree(File newDataFile, int newBlockSize, int newValueSize, boolean newForceSync)
         throws IOException {
-        this(dataFile, blockSize, valueSize, new DefaultRecordComparator(), forceSync);
+        this(newDataFile, newBlockSize, newValueSize, new DefaultRecordComparator(), newForceSync);
     }
 
     /**
      * Creates a new BTree that uses the supplied <tt>RecordComparator</tt> to
      * compare the values that are or will be stored in the B-Tree.
      *
-     * @param dataFile
+     * @param newDataFile
      *        The file for the B-Tree.
-     * @param blockSize
+     * @param newBlockSize
      *        The size (in bytes) of a file block for a single node. Ideally, the
      *        size specified is the size of a block in the used file system.
-     * @param valueSize
+     * @param newValueSize
      *        The size (in bytes) of the fixed-length values that are or will be
      *        stored in the B-Tree.
-     * @param comparator
+     * @param newComparator
      *        The <tt>RecordComparator</tt> to use for determining whether one
      *        value is smaller, larger or equal to another.
      * @throws IOException
      *         In case the initialization of the B-Tree file failed.
      */
-    public BTree(File dataFile, int blockSize, int valueSize, RecordComparator comparator)
+    public BTree(File newDataFile, int newBlockSize, int newValueSize, RecordComparator newComparator)
         throws IOException {
-        this(dataFile, blockSize, valueSize, comparator, false);
+        this(newDataFile, newBlockSize, newValueSize, newComparator, false);
     }
 
     /**
      * Creates a new BTree that uses the supplied <tt>RecordComparator</tt> to
      * compare the values that are or will be stored in the B-Tree.
      *
-     * @param dataFile
+     * @param newDataFile
      *        The file for the B-Tree.
-     * @param blockSize
+     * @param newBlockSize
      *        The size (in bytes) of a file block for a single node. Ideally, the
      *        size specified is the size of a block in the used file system.
-     * @param valueSize
+     * @param newValueSize
      *        The size (in bytes) of the fixed-length values that are or will be
      *        stored in the B-Tree.
-     * @param comparator
+     * @param newComparator
      *        The <tt>RecordComparator</tt> to use for determining whether one
      *        value is smaller, larger or equal to another.
-     * @param forceSync
+     * @param newForceSync
      *        Flag indicating whether updates should be synced to disk forcefully
      *        by calling {@link FileChannel#force(boolean)}. This may have a
      *        severe impact on write performance.
      * @throws IOException
      *         In case the initialization of the B-Tree file failed.
      */
-    public BTree(File dataFile, int blockSize, int valueSize, RecordComparator comparator, boolean forceSync)
-        throws IOException {
-        if (dataFile == null) {
+    public BTree(File newDataFile, int newBlockSize, int newValueSize, RecordComparator newComparator,
+        boolean newForceSync) throws IOException {
+        if (newDataFile == null) {
             throw new IllegalArgumentException("dataFile must not be null");
         }
-        if (blockSize < HEADER_LENGTH) {
+        if (newBlockSize < HEADER_LENGTH) {
             throw new IllegalArgumentException("block size must be at least " + HEADER_LENGTH + " bytes");
         }
-        if (valueSize <= 0) {
+        if (newValueSize <= 0) {
             throw new IllegalArgumentException("value size must be larger than 0");
         }
-        if (blockSize < 3 * valueSize + 20) {
+        if (newBlockSize < 3 * newValueSize + 20) {
             throw new IllegalArgumentException(
                 "block size to small; must at least be able to store three values");
         }
-        if (comparator == null) {
+        if (newComparator == null) {
             throw new IllegalArgumentException("comparator muts not be null");
         }
 
-        this.file = dataFile;
-        this.comparator = comparator;
-        this.forceSync = forceSync;
+        this.file = newDataFile;
+        this.comparator = newComparator;
+        this.forceSync = newForceSync;
 
         if (!file.exists()) {
             boolean created = file.createNewFile();
@@ -279,8 +279,8 @@ public class BTree {
 
         if (fileChannel.size() == 0L) {
             // Empty file, initialize it with the specified parameters
-            this.blockSize = blockSize;
-            this.valueSize = valueSize;
+            this.blockSize = newBlockSize;
+            this.valueSize = newValueSize;
             this.rootNodeID = 0;
             this.maxNodeID = 0;
 
@@ -301,9 +301,9 @@ public class BTree {
             this.rootNodeID = buf.getInt();
 
             // Verify that the value sizes match
-            if (this.valueSize != valueSize) {
-                throw new IOException("Specified value size (" + valueSize + ") is different from what is stored on " +
-                    "disk (" + this.valueSize + ")");
+            if (this.valueSize != newValueSize) {
+                throw new IOException("Specified value size (" + newValueSize + ") is different from what is stored " +
+                    "on disk (" + this.valueSize + ")");
             }
         }
 
@@ -968,18 +968,18 @@ public class BTree {
         /**
          * Creates a new Node object with the specified ID.
          *
-         * @param id
+         * @param newId
          *        The node's ID, must be larger than <tt>0</tt>.
          * @throws IllegalArgumentException
          *         If the specified <tt>id</tt> is &lt;= <tt>0</tt>.
          */
-        public Node(int id) {
-            if (id <= 0) {
-                throw new IllegalArgumentException("id must be larger than 0, is: " + id);
+        public Node(int newId) {
+            if (newId <= 0) {
+                throw new IllegalArgumentException("id must be larger than 0, is: " + newId);
             }
 
-            this.id = id;
-            this.offset = nodeID2offset(id);
+            this.id = newId;
+            this.offset = nodeID2offset(newId);
             this.valueCount = 0;
             this.usageCount = 0;
 
@@ -1161,16 +1161,16 @@ public class BTree {
         }
 
         public void insertValueNodeIDPair(int valueIdx, byte[] value, int nodeID) {
-            int offset = valueIdx2offset(valueIdx);
+            int tmpOffset = valueIdx2offset(valueIdx);
 
             if (valueIdx < valueCount) {
                 // Shift values right of <offset> to the right
-                shiftData(offset, valueIdx2offset(valueCount), slotSize);
+                shiftData(tmpOffset, valueIdx2offset(valueCount), slotSize);
             }
 
             // Insert the new value-nodeID pair
-            ByteArrayUtil.put(value, data, offset);
-            ByteArrayUtil.putInt(nodeID, data, offset + valueSize);
+            ByteArrayUtil.put(value, data, tmpOffset);
+            ByteArrayUtil.putInt(nodeID, data, tmpOffset + valueSize);
 
             // Raise the value count
             setValueCount(++valueCount);
@@ -1181,14 +1181,14 @@ public class BTree {
         }
 
         public void insertNodeIDValuePair(int nodeIdx, int nodeID, byte[] value) {
-            int offset = nodeIdx2offset(nodeIdx);
+            int tmpOffset = nodeIdx2offset(nodeIdx);
 
             // Shift values right of <offset> to the right
-            shiftData(offset, valueIdx2offset(valueCount), slotSize);
+            shiftData(tmpOffset, valueIdx2offset(valueCount), slotSize);
 
             // Insert the new slot
-            ByteArrayUtil.putInt(nodeID, data, offset);
-            ByteArrayUtil.put(value, data, offset + 4);
+            ByteArrayUtil.putInt(nodeID, data, tmpOffset);
+            ByteArrayUtil.put(value, data, tmpOffset + 4);
 
             // Raise the value count
             setValueCount(++valueCount);
@@ -1379,17 +1379,17 @@ public class BTree {
             Arrays.fill(data, startOffset, endOffset, (byte) 0);
         }
 
-        private void setValueCount(int valueCount) {
-            this.valueCount = valueCount;
-            ByteArrayUtil.putInt(valueCount, data, 0);
+        private void setValueCount(int newValueCount) {
+            this.valueCount = newValueCount;
+            ByteArrayUtil.putInt(newValueCount, data, 0);
         }
 
-        private int valueIdx2offset(int id) {
-            return 8 + id * slotSize;
+        private int valueIdx2offset(int newId) {
+            return 8 + newId * slotSize;
         }
 
-        private int nodeIdx2offset(int id) {
-            return 4 + id * slotSize;
+        private int nodeIdx2offset(int newId) {
+            return 4 + newId * slotSize;
         }
     }
 
@@ -1574,11 +1574,11 @@ public class BTree {
 
         private int currentIdx;
 
-        public RangeIterator(byte[] searchKey, byte[] searchMask, byte[] minValue, byte[] maxValue) {
-            this.searchKey = searchKey;
-            this.searchMask = searchMask;
-            this.minValue = minValue;
-            this.maxValue = maxValue;
+        public RangeIterator(byte[] newSearchKey, byte[] newSearchMask, byte[] newMinValue, byte[] newMaxValue) {
+            this.searchKey = newSearchKey;
+            this.searchMask = newSearchMask;
+            this.minValue = newMinValue;
+            this.maxValue = newMaxValue;
             this.started = false;
         }
 

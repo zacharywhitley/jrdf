@@ -96,12 +96,12 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
         return factory.getNewGraph();
     }
 
-    public Answer answerQuery(String graphName, String queryString, long maxRows) throws ResourceException {
+    public Answer answerQuery(String graphName, String queryString, long newMaxRows) throws ResourceException {
         try {
             final MoleculeGraph graph = getGraph(graphName);
-            answer = urqlConnection.executeQuery(graph, queryString);
-            this.maxRows = maxRows;
-            tooManyRows = answer.numberOfTuples() > maxRows;
+            this.answer = urqlConnection.executeQuery(graph, queryString);
+            this.maxRows = newMaxRows;
+            this.tooManyRows = answer.numberOfTuples() > newMaxRows;
             return answer;
         } catch (Exception e) {
             throw new ResourceException(e);
@@ -120,16 +120,16 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
         return handler;
     }
 
-    public void setMaxRows(long maxRows) {
-        this.maxRows = maxRows;
+    public void setMaxRows(long newMaxRows) {
+        this.maxRows = newMaxRows;
     }
 
     public long getMaxRows() {
         return maxRows;
     }
 
-    public void setFormat(String format) {
-        this.format = format;
+    public void setFormat(String newFormat) {
+        this.format = newFormat;
     }
 
     public String getFormat() {

@@ -70,12 +70,12 @@ public final class AttributeComparatorImpl implements AttributeComparator {
     private AttributeNameComparator attributeNameComparator;
 
     private AttributeComparatorImpl() {
-
     }
 
-    public AttributeComparatorImpl(TypeComparator typeComparator, AttributeNameComparator attributeNameComparator) {
-        this.typeComparator = typeComparator;
-        this.attributeNameComparator = attributeNameComparator;
+    public AttributeComparatorImpl(TypeComparator newTypeComparator,
+        AttributeNameComparator newAttributeNameComparator) {
+        this.typeComparator = newTypeComparator;
+        this.attributeNameComparator = newAttributeNameComparator;
     }
 
     public int compare(Attribute attribute1, Attribute attribute2) {

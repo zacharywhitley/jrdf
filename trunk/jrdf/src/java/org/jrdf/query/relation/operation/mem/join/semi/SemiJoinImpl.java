@@ -72,9 +72,9 @@ public final class SemiJoinImpl implements DyadicJoin {
     private final TupleEngine tupleEngine;
     private final RelationProcessor relationProcessor;
 
-    public SemiJoinImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
-        this.tupleEngine = tupleEngine;
-        this.relationProcessor = relationProcessor;
+    public SemiJoinImpl(RelationProcessor newRelationProcessor, TupleEngine newTupleEngine) {
+        this.tupleEngine = newTupleEngine;
+        this.relationProcessor = newRelationProcessor;
     }
 
     public EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2) {

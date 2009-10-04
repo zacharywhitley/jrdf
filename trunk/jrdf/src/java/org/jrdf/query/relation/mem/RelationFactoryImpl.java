@@ -73,10 +73,10 @@ public final class RelationFactoryImpl implements RelationFactory {
     private final AttributeComparator attributeComparator;
     private final TupleComparator tupleComparator;
 
-    public RelationFactoryImpl(AttributeComparator attributeComparator, TupleComparator tupleComparator) {
-        checkNotNull(attributeComparator, tupleComparator);
-        this.attributeComparator = attributeComparator;
-        this.tupleComparator = tupleComparator;
+    public RelationFactoryImpl(AttributeComparator newAttributeComparator, TupleComparator newTupleComparator) {
+        checkNotNull(newAttributeComparator, newTupleComparator);
+        this.attributeComparator = newAttributeComparator;
+        this.tupleComparator = newTupleComparator;
     }
 
     public EvaluatedRelation getRelation(Set<Tuple> tuples) {

@@ -76,16 +76,16 @@ public class FreemarkerRepresentationFactory implements RepresentationFactory {
         return mediaType;
     }
 
-    public void setMediaType(final MediaType mediaType) {
-        this.mediaType = mediaType;
+    public void setMediaType(final MediaType newMediaType) {
+        this.mediaType = newMediaType;
     }
 
-    public void setTemplateName(final String templateName) {
-        this.templateName = templateName;
+    public void setTemplateName(final String newTemplateName) {
+        this.templateName = newTemplateName;
     }
 
-    public void setFreemarkerConfig(final Configuration freemarkerConfig) {
-        this.freemarkerConfig = freemarkerConfig;
+    public void setFreemarkerConfig(final Configuration newFreemarkerConfig) {
+        this.freemarkerConfig = newFreemarkerConfig;
     }
 
     public Representation createRepresentation(final MediaType defaultMediaType, final Map<String, Object> dataModel) {

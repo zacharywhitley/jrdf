@@ -103,8 +103,8 @@ public class ServersResource extends ConfigurableRestletResource {
         this.application = newApplication;
     }
 
-    public void setResultRepresentation(FreemarkerRepresentationFactory factory) {
-        this.factory = factory;
+    public void setResultRepresentation(FreemarkerRepresentationFactory newFactory) {
+        this.factory = newFactory;
     }
 
     public boolean allowGet() {

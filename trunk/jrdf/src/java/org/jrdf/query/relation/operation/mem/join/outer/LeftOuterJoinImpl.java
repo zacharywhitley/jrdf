@@ -73,10 +73,10 @@ public class LeftOuterJoinImpl implements DyadicJoin {
     private final NadicJoin naturalJoin;
     private final Union union;
 
-    public LeftOuterJoinImpl(AntiJoin antiJoin, NadicJoin naturalJoin, Union union) {
-        this.antiJoin = antiJoin;
-        this.naturalJoin = naturalJoin;
-        this.union = union;
+    public LeftOuterJoinImpl(AntiJoin newAntiJoin, NadicJoin newNaturalJoin, Union newUnion) {
+        this.antiJoin = newAntiJoin;
+        this.naturalJoin = newNaturalJoin;
+        this.union = newUnion;
     }
 
     public EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2) {

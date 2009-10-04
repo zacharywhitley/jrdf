@@ -103,11 +103,11 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
     private URIReferenceBuilder uriBuilder;
     private Expression expression;
 
-    public NumericExpressionAnalyserImpl(LiteralBuilder newLiteralBuilder, VariableCollector collector,
-        URIReferenceBuilder uriBuilder) {
+    public NumericExpressionAnalyserImpl(LiteralBuilder newLiteralBuilder, VariableCollector newCollector,
+        URIReferenceBuilder newUriBuilder) {
         this.literalBuilder = newLiteralBuilder;
-        this.collector = collector;
-        this.uriBuilder = uriBuilder;
+        this.collector = newCollector;
+        this.uriBuilder = newUriBuilder;
     }
 
     public Expression getExpression() throws ParserException {

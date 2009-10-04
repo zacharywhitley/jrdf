@@ -91,14 +91,14 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         this.servers = new HashSet<URI>();
     }
 
-    public void addServers(String... servers) {
-        for (String server : servers) {
+    public void addServers(String... newServers) {
+        for (String server : newServers) {
             this.servers.add(create("http://" + server + ":" + DEFAULT_PORT));
         }
     }
 
-    public void removeServers(String... servers) {
-        for (String server : servers) {
+    public void removeServers(String... newServers) {
+        for (String server : newServers) {
             this.servers.remove(create("http://" + server + ":" + DEFAULT_PORT));
         }
     }

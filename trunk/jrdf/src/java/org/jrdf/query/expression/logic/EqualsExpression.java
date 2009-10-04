@@ -76,17 +76,16 @@ import java.util.Map;
 public class EqualsExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = 1297973700912646394L;
     private static final int DUMMY_HASHCODE = 47;
-
+    private static final String EQUALS = "=";
     private Expression lhs;
     private Expression rhs;
-    protected static final String EQUALS = "=";
 
     private EqualsExpression() {
     }
 
-    public EqualsExpression(Expression lhs, Expression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    public EqualsExpression(Expression newLhs, Expression newRhs) {
+        this.lhs = newLhs;
+        this.rhs = newRhs;
     }
 
     public Map<Attribute, Node> getValue() {

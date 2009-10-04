@@ -76,13 +76,13 @@ public final class Optional implements BiOperandExpression, Serializable {
     private Optional() {
     }
 
-    public Optional(Expression lhs, Expression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    public Optional(Expression newLhs, Expression newRhs) {
+        this.lhs = newLhs;
+        this.rhs = newRhs;
     }
 
-    public Optional(Expression rhs) {
-        this.rhs = rhs;
+    public Optional(Expression newRhs) {
+        this.rhs = newRhs;
     }
 
     public Map<Attribute, Node> getValue() {
@@ -92,8 +92,8 @@ public final class Optional implements BiOperandExpression, Serializable {
         return map;
     }
 
-    public void setLhs(Expression lhs) {
-        this.lhs = lhs;
+    public void setLhs(Expression newLhs) {
+        this.lhs = newLhs;
     }
 
     public Expression getLhs() {

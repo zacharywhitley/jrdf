@@ -70,9 +70,9 @@ public class OuterUnionImpl implements Union {
     private final TupleEngine tupleEngine;
     private final RelationProcessor relationProcessor;
 
-    public OuterUnionImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
-        this.tupleEngine = tupleEngine;
-        this.relationProcessor = relationProcessor;
+    public OuterUnionImpl(RelationProcessor newRelationProcessor, TupleEngine newTupleEngine) {
+        this.relationProcessor = newRelationProcessor;
+        this.tupleEngine = newTupleEngine;
     }
 
     public EvaluatedRelation union(EvaluatedRelation relation1, EvaluatedRelation relation2) {

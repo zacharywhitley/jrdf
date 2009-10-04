@@ -67,20 +67,19 @@ import java.util.Stack;
  * @author TurnerRX
  */
 public class IteratorStack<T> implements Iterator<T> {
-
     private Iterator<T> iter;
     private Stack<T> stack = new Stack<T>();
 
     /**
      * Creates a new stack that wraps the Iterator.
      *
-     * @param iter Iterator
+     * @param newIter Iterator
      */
-    public IteratorStack(Iterator<T> iter) {
-        if (iter == null) {
+    public IteratorStack(Iterator<T> newIter) {
+        if (newIter == null) {
             throw new IllegalArgumentException("Iterator is null.");
         }
-        this.iter = iter;
+        this.iter = newIter;
         pushNextItemOntoStack();
     }
 

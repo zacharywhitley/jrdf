@@ -100,13 +100,14 @@ public final class GraphRelationImpl implements GraphRelation {
     private final SortedAttributeFactory attributeFactory;
     private final AttributeValuePairHelper avpHelper;
 
-    public GraphRelationImpl(Graph graph, SortedAttributeFactory attributeFactory, AttributeValuePairHelper avpHelper,
-        AttributeTupleComparator tupleComparator, TupleFactory tupleFactory) {
-        this.graph = graph;
-        this.attributeFactory = attributeFactory;
-        this.avpHelper = avpHelper;
-        this.tupleComparator = tupleComparator;
-        this.tupleFactory = tupleFactory;
+    public GraphRelationImpl(Graph newGraph, SortedAttributeFactory newAttributeFactory,
+        AttributeValuePairHelper newAvpHelper, AttributeTupleComparator newTupleComparator,
+        TupleFactory newTupleFactory) {
+        this.graph = newGraph;
+        this.attributeFactory = newAttributeFactory;
+        this.avpHelper = newAvpHelper;
+        this.tupleComparator = newTupleComparator;
+        this.tupleFactory = newTupleFactory;
     }
 
     public Set<Attribute> getHeading() {
