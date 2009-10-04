@@ -59,10 +59,12 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
@@ -73,14 +75,15 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.regex.Pattern;
 
-public class NTripleUtilImplUnitTest extends TestCase {
+public class NTripleUtilImplUnitTest {
     private static final Class<?> TARGET_INTERFACE = NTripleUtil.class;
     private static final Class<?> TEST_CLASS = NTripleUtilImpl.class;
     private static final Class[] PARAM_TYPES = {RegexMatcherFactory.class};
-    private static final String[] PARAMETER_NAMES = {"regexMatcherFactory"};
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
         "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
     private MockFactory factory = new MockFactory();
@@ -89,12 +92,14 @@ public class NTripleUtilImplUnitTest extends TestCase {
     private NTripleUtil util;
     private static final String LINE = "string" + Math.random();
 
+    @Before
     public void setUp() {
         regexMatcherFactory = factory.createMock(RegexMatcherFactory.class);
         matcher = factory.createMock(RegexMatcher.class);
         util = new NTripleUtilImpl(regexMatcherFactory);
     }
 
+    @Test
     public void testClassProperties() {
         checkClassFinal(TEST_CLASS);
         checkClassPublic(TEST_CLASS);
@@ -102,21 +107,23 @@ public class NTripleUtilImplUnitTest extends TestCase {
         checkConstructNullAssertion(TEST_CLASS, PARAM_TYPES);
     }
 
+    @Test
     public void testMethodProperties() {
         checkMethodNullAssertions(util, "unescapeLiteral", new ParameterDefinition(
             new String[]{"literal"}, new Class[]{String.class}));
     }
 
+    @Test
     public void testUnescapeLiteral() {
-        final String line = "string" + Math.random();
-        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(line))).andReturn(matcher);
+        final String expectedLine = "string" + Math.random();
+        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(expectedLine))).andReturn(matcher);
         expect(matcher.find()).andReturn(false);
         factory.replay();
-        String s = util.unescapeLiteral(line);
-        assertTrue(s == line);
+        assertThat(expectedLine, is(util.unescapeLiteral(expectedLine)));
         factory.verify();
     }
 
+    @Test
     public void testEscapeLiteralLookup() {
         checkCharacterEscape("\\\\", "\\\\");
         checkCharacterEscape("\\\"", "\\\"");
@@ -125,10 +132,12 @@ public class NTripleUtilImplUnitTest extends TestCase {
         checkCharacterEscape("\\t", "\t");
     }
 
+    @Test
     public void testEscapeLiteral4DigitUnicode() {
         checkUnicode("\\u000f", 9);
     }
 
+    @Test
     public void testEscapeLiteral8DigitUnicode() {
         checkUnicode("\\U00000000f", 11);
     }
@@ -142,7 +151,7 @@ public class NTripleUtilImplUnitTest extends TestCase {
         matcher.appendTail((StringBuffer) anyObject());
         factory.replay();
         String s = util.unescapeLiteral(LINE);
-        assertEquals("", s);
+        assertThat(s, equalTo(""));
         factory.verify();
         factory.reset();
     }
@@ -157,7 +166,7 @@ public class NTripleUtilImplUnitTest extends TestCase {
         matcher.appendTail((StringBuffer) anyObject());
         factory.replay();
         String s = util.unescapeLiteral(LINE);
-        assertEquals("", s);
+        assertThat(s, equalTo(""));
         factory.verify();
     }
 }
