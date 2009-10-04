@@ -99,16 +99,13 @@ public class LiteralMatcherImplUnitTest {
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;
     private static final String LINE = "line" + Math.random();
-    @Mock
-    private RegexMatcherFactory regexMatcherFactory;
-    @Mock
-    private RegexMatcher matcher;
-    @Mock
-    private NTripleUtil nTripleUtil;
     private LiteralMatcher parser;
+    @Mock private RegexMatcherFactory regexMatcherFactory;
+    @Mock private RegexMatcher matcher;
+    @Mock private NTripleUtil nTripleUtil;
 
     @Before
-    public void setUp() {
+    public void create() {
         parser = new LiteralMatcherImpl(regexMatcherFactory, nTripleUtil);
     }
 

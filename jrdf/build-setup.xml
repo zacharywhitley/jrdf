@@ -118,7 +118,7 @@
         <include name="${lib.dir}/spring/spring-beans-${spring.version}.jar"/>
         <include name="${lib.dir}/spring/spring-context-${spring.version}.jar"/>
         <include name="${lib.dir}/spring/spring-core-${spring.version}.jar"/>
-        <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
+        <include name="${lib.dir}/jakarta-commons/commons-logging-1.1.jar"/>
         <include name="${lib.dir}/je/je-${bdbje.version}.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/stax2-api-3.0.1.jar"/>

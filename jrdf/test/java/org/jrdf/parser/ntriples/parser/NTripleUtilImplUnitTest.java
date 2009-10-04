@@ -95,33 +95,27 @@ public class NTripleUtilImplUnitTest {
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
         "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
     private static final String LINE = "string" + Math.random();
-    @Mock
-    private RegexMatcherFactory regexMatcherFactory;
-    @Mock
-    private RegexMatcher matcher;
+    @Mock private RegexMatcherFactory regexMatcherFactory;
+    @Mock private RegexMatcher matcher;
     private NTripleUtil util;
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() {
         util = new NTripleUtilImpl(regexMatcherFactory);
     }
 
-    @Test
-    public void testClassProperties() {
+    @Test public void classProperties() {
         checkClassFinal(TEST_CLASS);
         checkClassPublic(TEST_CLASS);
         checkImplementationOfInterface(TARGET_INTERFACE, TEST_CLASS);
         checkConstructNullAssertion(TEST_CLASS, PARAM_TYPES);
     }
 
-    @Test
-    public void testMethodProperties() {
+    @Test public void methodProperties() {
         checkMethodNullAssertions(util, "unescapeLiteral", new ParameterDefinition(
             new String[]{"literal"}, new Class[]{String.class}));
     }
 
-    @Test
-    public void testUnescapeLiteral() {
+    @Test public void unescapeLiteralCallsCreateMatcherAndFailsToFind() {
         final String expectedLine = "string" + Math.random();
         expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(expectedLine))).andReturn(matcher);
         expect(matcher.find()).andReturn(false);
@@ -130,38 +124,31 @@ public class NTripleUtilImplUnitTest {
         verifyAll();
     }
 
-    @Test
-    public void backslashEscaping() {
+    @Test public void backslashEscaping() {
         checkCharacterEscape("\\\\", "\\\\");
     }
 
-    @Test
-    public void quoteEscaping() {
+    @Test public void quoteEscaping() {
         checkCharacterEscape("\\\"", "\\\"");
     }
 
-    @Test
-    public void newLineEscaping() {
+    @Test public void newLineEscaping() {
         checkCharacterEscape("\\n", "\n");
     }
 
-    @Test
-    public void carriageReturnEscaping() {
+    @Test public void carriageReturnEscaping() {
         checkCharacterEscape("\\r", "\r");
     }
 
-    @Test
-    public void tabEscaping() {
+    @Test public void tabEscaping() {
         checkCharacterEscape("\\t", "\t");
     }
 
-    @Test
-    public void testEscapeLiteral4DigitUnicode() {
+    @Test public void testEscapeLiteral4DigitUnicode() {
         checkUnicode("\\u000f", 9);
     }
 
-    @Test
-    public void testEscapeLiteral8DigitUnicode() {
+    @Test public void testEscapeLiteral8DigitUnicode() {
         checkUnicode("\\U00000000f", 11);
     }
 

@@ -59,67 +59,76 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
-import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
+import org.powermock.core.classloader.annotations.Mock;
+import org.powermock.core.classloader.annotations.PowerMockListener;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-public class BlankNodeParserImplUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+@PowerMockListener(AnnotationEnabler.class)
+public class BlankNodeParserImplUnitTest {
     private static final Class<BlankNodeParser> TARGET_INTERFACE = BlankNodeParser.class;
     private static final Class<BlankNodeParserImpl> TEST_CLASS = BlankNodeParserImpl.class;
     private static final Class[] PARAM_TYPES = new Class[]{ParserBlankNodeFactory.class};
     private static final String[] PARAMETER_NAMES = new String[]{"parserBlankNodeFactory"};
     private static final String NODE_ID = "string" + Math.random();
-    private final MockFactory mockFactory = new MockFactory();
-    private ParserBlankNodeFactory nodeFactory;
-    private BlankNode blankNode;
     private BlankNodeParser parser;
+    @Mock private ParserBlankNodeFactory nodeFactory;
+    @Mock private BlankNode blankNode;
 
-    public void setUp() {
-        nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
-        blankNode = mockFactory.createMock(BlankNode.class);
+    @Before public void create() {
         parser = new BlankNodeParserImpl(nodeFactory);
     }
 
-    public void testClassProperties() {
+    @Test public void classProperties() {
         hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
     }
 
-    public void testMethodProperties() {
+    @Test public void methodProperties() {
         checkMethodNullAndEmptyAssertions(parser, "parseBlankNode", new ParameterDefinition(
             new String[]{"s"}, new Class[]{String.class}));
     }
 
-    public void testCreateBlankNode() throws Exception {
+    @Test public void createBlankNode() throws Exception {
         expect(nodeFactory.createBlankNode(NODE_ID)).andReturn(blankNode);
-        mockFactory.replay();
+        replayAll();
         BlankNode actualBlankNode = parser.parseBlankNode(NODE_ID);
-        assertTrue(blankNode == actualBlankNode);
-        mockFactory.verify();
+        assertThat(actualBlankNode, is(blankNode));
+        verifyAll();
     }
 
-    public void testCreateBlankNodeWithException() throws Exception {
+    @Test public void createBlankNodeWithException() throws Exception {
         expect(nodeFactory.createBlankNode(NODE_ID)).andThrow(new GraphElementFactoryException(""));
-        mockFactory.replay();
-        checkThrowsException();
-        mockFactory.verify();
+        replayAll();
+        checkException();
+        verifyAll();
     }
 
-    private void checkThrowsException() {
+    private void checkException() {
         try {
             parser.parseBlankNode(NODE_ID);
-            fail("Didn't throw parse exception");
+            assertThat("Didn't throw parse exception", true);
         } catch (ParseException p) {
-            assertEquals("Failed to create blank node: " + NODE_ID, p.getMessage());
-            assertEquals(1, p.getColumnNumber());
+            assertThat(p.getMessage(), equalTo("Failed to create blank node: " + NODE_ID));
+            assertThat(p.getColumnNumber(), is(1));
         } catch (Throwable t) {
-            fail("Should not throw exception: " + t.getClass() + " msg: " + t.getMessage());
+            assertThat("Should not throw exception: " + t.getClass() + " msg: " + t.getMessage(), true);
         }
     }
 }
