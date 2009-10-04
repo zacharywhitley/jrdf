@@ -71,13 +71,17 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAsserti
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.unitils.easymock.EasyMockUnitils.replay;
+import org.unitils.easymock.annotation.Mock;
+import org.unitils.UnitilsJUnit4TestClassRunner;
 
 import java.util.regex.Pattern;
 
+@RunWith(UnitilsJUnit4TestClassRunner.class)
 public class LiteralMatcherImplUnitTest {
     private static final Class<LiteralMatcher> TARGET_INTERFACE = LiteralMatcher.class;
     private static final Class<LiteralMatcherImpl> TEST_CLASS = LiteralMatcherImpl.class;
@@ -91,17 +95,16 @@ public class LiteralMatcherImplUnitTest {
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;
     private static final String LINE = "line" + Math.random();
-    private final MockFactory mockFactory = new MockFactory();
+    @Mock
     private RegexMatcherFactory regexMatcherFactory;
+    @Mock
     private RegexMatcher matcher;
-    private LiteralMatcher parser;
+    @Mock
     private NTripleUtil nTripleUtil;
+    private LiteralMatcher parser;
 
     @Before
     public void setUp() {
-        regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
-        matcher = mockFactory.createMock(RegexMatcher.class);
-        nTripleUtil = mockFactory.createMock(NTripleUtil.class);
         parser = new LiteralMatcherImpl(regexMatcherFactory, nTripleUtil);
     }
 
@@ -125,9 +128,8 @@ public class LiteralMatcherImplUnitTest {
     public void matchesCallsRegexFactory() {
         expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(LINE))).andReturn(matcher);
         expect(matcher.matches()).andReturn(true);
-        mockFactory.replay();
+        replay();
         parser.matches(LINE);
-        mockFactory.verify();
     }
 
     @Test
@@ -139,8 +141,7 @@ public class LiteralMatcherImplUnitTest {
         expect(nTripleUtil.unescapeLiteral(literal)).andReturn("foo");
         expect(matcher.group(LANGUAGE_INDEX)).andReturn("bar");
         expect(matcher.group(DATATYPE_INDEX)).andReturn("baz");
-        mockFactory.replay();
+        replay();
         assertThat(parser.parse(LINE), arrayContaining("foo", "bar", "baz"));
-        mockFactory.verify();
     }
 }

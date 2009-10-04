@@ -1137,6 +1137,7 @@
         <root url="jar://$PROJECT_DIR$/lib/junit/junit-4.7.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-library-1.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/powermock-1.2.5-full.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
