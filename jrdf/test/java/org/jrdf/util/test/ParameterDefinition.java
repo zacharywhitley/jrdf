@@ -67,9 +67,9 @@ package org.jrdf.util.test;
  */
 public class ParameterDefinition {
     private String[] parameterNames;
-    private Class[] parameterTypes;
+    private Class<?>[] parameterTypes;
 
-    public ParameterDefinition(String[] newParameterNames, Class[] newParameterTypes) {
+    public ParameterDefinition(String[] newParameterNames, Class<?>[] newParameterTypes) {
         this.parameterNames = newParameterNames;
         this.parameterTypes = newParameterTypes;
     }
@@ -78,7 +78,7 @@ public class ParameterDefinition {
         return parameterNames;
     }
 
-    public Class[] getParameterTypes() {
+    public Class<?>[] getParameterTypes() {
         return parameterTypes;
     }
 }

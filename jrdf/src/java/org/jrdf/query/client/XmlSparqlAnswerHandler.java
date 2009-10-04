@@ -60,10 +60,11 @@ package org.jrdf.query.client;
 
 import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.SparqlParser;
 import org.jrdf.query.answer.SparqlAnswerFactory;
 import org.jrdf.query.answer.SparqlAnswerFactoryImpl;
+import org.jrdf.query.answer.SparqlParser;
 import org.jrdf.query.answer.xml.parser.SparqlXmlParserImpl;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
 import org.restlet.data.Preference;
@@ -74,15 +75,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XmlSparqlAnswerHandler implements SparqlAnswerHandler {
-    private static final SparqlAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY =
-        new SparqlAnswerFactoryImpl();
+public final class XmlSparqlAnswerHandler implements SparqlAnswerHandler {
+    private static final SparqlAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY = new SparqlAnswerFactoryImpl();
 
     public SparqlParser getParser(final InputStream inputStream) {
+        checkNotNull(inputStream);
         return new SparqlXmlParserImpl(inputStream);
     }
 
     public Answer getAnswer(Representation output) {
+        checkNotNull(output);
         try {
             return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingXmlAnswer(output.getStream());
         } catch (Exception e) {
@@ -91,6 +93,7 @@ public class XmlSparqlAnswerHandler implements SparqlAnswerHandler {
     }
 
     public void setAcceptedMediaTypes(Request request) {
+        checkNotNull(request);
         ClientInfo clientInfo = request.getClientInfo();
         List<Preference<MediaType>> preferenceList = new ArrayList<Preference<MediaType>>();
         preferenceList.add(new Preference<MediaType>(APPLICATION_SPARQL_XML));
