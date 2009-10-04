@@ -1138,6 +1138,8 @@
         <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-library-1.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-core-1.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/powermock-1.2.5-full.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/objenesis-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/javassist-3.9.0.GA.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -1202,17 +1204,7 @@
     </library>
     <library name="jakarta-commons">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-lang-2.3.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-logging-1.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-collections-3.2.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="unitils">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/unitils/unitils-2.4.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/unitils/ognl-2.6.9.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

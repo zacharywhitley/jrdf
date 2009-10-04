@@ -153,15 +153,13 @@
         <include name="${lib.dir}/junit/hamcrest-library-1.2.jar"/>
         <include name="${lib.dir}/junit/junit-4.7.jar"/>
         <include name="${lib.dir}/junit/cpsuite-1.2.4.jar"/>
+        <include name="${lib.dir}/junit/objenesis-1.1.jar"/>
+        <include name="${lib.dir}/junit/javassist-3.9.0.GA.jar"/>
+        <include name="${lib.dir}/junit/powermock-1.2.5-full.jar"/>
         <include name="${lib.dir}/easymock/easymock-2.4.0.jar"/>
         <include name="${lib.dir}/easymock/easymockclassextension-2.4.0.jar"/>
         <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
         <include name="${lib.dir}/groovy/groovy-${groovy.version}/embeddable/groovy-all-${groovy.version}.jar"/>
-        <include name="${lib.dir}/jakarta-commons/commons-collections-3.2.jar"/>
-        <include name="${lib.dir}/jakarta-commons/commons-lang-2.3.jar"/>
-        <include name="${lib.dir}/jakarta-commons/commons-logging-1.1.jar"/>
-        <include name="${lib.dir}/unitils/ognl-2.6.9.jar"/>
-        <include name="${lib.dir}/unitils/unitils-2.4.jar"/>
     </patternset>
 
     <fileset id="production.code.fileset" dir="${prod.src.dir}">
