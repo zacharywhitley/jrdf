@@ -90,9 +90,9 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     private Exception exception;
 
     public PredicateObjectWriterImpl(final RdfNamespaceMap newNames, final BlankNodeRegistry newBlankNodeRegistry,
-        final XMLStreamWriter newXmlStreamWriter, final XmlLiteralWriter xmlLiteralWriter) {
-        checkNotNull(newNames, newBlankNodeRegistry, newXmlStreamWriter, xmlLiteralWriter);
-        this.xmlLiteralWriter = xmlLiteralWriter;
+        final XMLStreamWriter newXmlStreamWriter, final XmlLiteralWriter newXmlLiteralWriter) {
+        checkNotNull(newNames, newBlankNodeRegistry, newXmlStreamWriter, newXmlLiteralWriter);
+        this.xmlLiteralWriter = newXmlLiteralWriter;
         this.names = newNames;
         this.registry = newBlankNodeRegistry;
         this.xmlStreamWriter = newXmlStreamWriter;

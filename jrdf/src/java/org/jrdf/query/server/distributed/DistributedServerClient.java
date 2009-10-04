@@ -80,8 +80,8 @@ public class DistributedServerClient {
     private final URI localServerEndPoint;
     private Client client;
 
-    public DistributedServerClient(final URI localServerEndPoint) {
-        this.localServerEndPoint = localServerEndPoint;
+    public DistributedServerClient(final URI newLocalServerEndPoint) {
+        this.localServerEndPoint = newLocalServerEndPoint;
         this.client = new Client(HTTP);
     }
 

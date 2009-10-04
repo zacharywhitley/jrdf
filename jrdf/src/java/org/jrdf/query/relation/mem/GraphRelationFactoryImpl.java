@@ -76,12 +76,12 @@ public class GraphRelationFactoryImpl implements GraphRelationFactory {
     private AttributeTupleComparator tupleComparator;
     private TupleFactory tupleFactory;
 
-    public GraphRelationFactoryImpl(SortedAttributeFactory attributeFactory, AttributeValuePairHelper avpHelper,
-        AttributeTupleComparator tupleComparator, TupleFactory tupleFactory) {
-        this.attributeFactory = attributeFactory;
-        this.tupleComparator = tupleComparator;
-        this.avpHelper = avpHelper;
-        this.tupleFactory = tupleFactory;
+    public GraphRelationFactoryImpl(SortedAttributeFactory newAttributeFactory, AttributeValuePairHelper newAvpHelper,
+        AttributeTupleComparator newTupleComparator, TupleFactory newTupleFactory) {
+        this.attributeFactory = newAttributeFactory;
+        this.avpHelper = newAvpHelper;
+        this.tupleComparator = newTupleComparator;
+        this.tupleFactory = newTupleFactory;
     }
 
     public GraphRelation createRelation(Graph graph) {

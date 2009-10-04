@@ -92,10 +92,10 @@ public class SortMergeNaturalJoinEngine extends NaturalJoinEngine implements Tup
     private int pos2;
 
     public SortMergeNaturalJoinEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper,
-        NodeComparator nodeComparator) {
+        NodeComparator newNodeComparator) {
         super(newTupleFactory, newRelationHelper);
-        this.nodeComparator = nodeComparator;
-        this.tupleAVComparator = new AttributeTupleComparatorImpl(nodeComparator);
+        this.nodeComparator = newNodeComparator;
+        this.tupleAVComparator = new AttributeTupleComparatorImpl(newNodeComparator);
     }
 
     public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,

@@ -68,9 +68,9 @@ public class AntiJoinImpl implements AntiJoin {
     private final DyadicJoin semiJoin;
     private final SemiDifference semiDifference;
 
-    public AntiJoinImpl(DyadicJoin semiJoin, SemiDifference semiDifference) {
-        this.semiJoin = semiJoin;
-        this.semiDifference = semiDifference;
+    public AntiJoinImpl(DyadicJoin newSemiJoin, SemiDifference newSemiDifference) {
+        this.semiJoin = newSemiJoin;
+        this.semiDifference = newSemiDifference;
     }
 
     public EvaluatedRelation join(EvaluatedRelation relation1, EvaluatedRelation relation2) {

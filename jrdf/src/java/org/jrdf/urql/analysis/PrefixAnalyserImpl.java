@@ -80,9 +80,9 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
     private Expression expression;
     private ParserException exception;
 
-    public PrefixAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
-        this.tripleBuilder = tripleBuilder;
-        this.graph = graph;
+    public PrefixAnalyserImpl(TripleBuilder newTripleBuilder, Graph newGraph) {
+        this.tripleBuilder = newTripleBuilder;
+        this.graph = newGraph;
     }
 
     public Expression getExpression() throws ParserException {

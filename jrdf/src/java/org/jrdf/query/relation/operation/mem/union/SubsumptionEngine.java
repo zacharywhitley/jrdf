@@ -74,9 +74,9 @@ public class SubsumptionEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
     private final RelationHelper relationHelper;
 
-    public SubsumptionEngine(TupleFactory tupleFactory, RelationHelper relationHelper) {
-        this.tupleFactory = tupleFactory;
-        this.relationHelper = relationHelper;
+    public SubsumptionEngine(TupleFactory newTupleFactory, RelationHelper newRelationHelper) {
+        this.tupleFactory = newTupleFactory;
+        this.relationHelper = newRelationHelper;
     }
 
     public SortedSet<Attribute> getHeading(EvaluatedRelation relation1, EvaluatedRelation relation2) {

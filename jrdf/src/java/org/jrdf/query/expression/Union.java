@@ -76,9 +76,9 @@ public final class Union implements BiOperandExpression, Serializable {
     private Union() {
     }
 
-    public Union(Expression lhs, Expression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    public Union(Expression newLhs, Expression newRhs) {
+        this.lhs = newLhs;
+        this.rhs = newRhs;
     }
 
     public Map<Attribute, Node> getValue() {

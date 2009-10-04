@@ -78,9 +78,9 @@ public final class NadicJoinImpl implements NadicJoin {
     private final TupleEngine tupleEngine;
     private final RelationProcessor relationProcessor;
 
-    public NadicJoinImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
-        this.tupleEngine = tupleEngine;
-        this.relationProcessor = relationProcessor;
+    public NadicJoinImpl(RelationProcessor newRelationProcessor, TupleEngine newTupleEngine) {
+        this.tupleEngine = newTupleEngine;
+        this.relationProcessor = newRelationProcessor;
     }
 
     public EvaluatedRelation join(Set<EvaluatedRelation> relations) {

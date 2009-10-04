@@ -106,10 +106,10 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     private Expression expression;
     private ParserException exception;
 
-    public WhereAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, VariableCollector collector) {
-        this.tripleBuilder = tripleBuilder;
-        this.graph = graph;
-        this.collector = collector;
+    public WhereAnalyserImpl(TripleBuilder newTripleBuilder, Graph newGraph, VariableCollector newCollector) {
+        this.tripleBuilder = newTripleBuilder;
+        this.graph = newGraph;
+        this.collector = newCollector;
     }
 
     public Expression getExpression() throws ParserException {

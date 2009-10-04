@@ -96,9 +96,9 @@ public final class SingleConstraint implements Constraint {
     private SingleConstraint() {
     }
 
-    public SingleConstraint(LinkedHashMap<Attribute, Node> singleAvp) {
-        checkNotNull(singleAvp);
-        this.singleAvp = singleAvp;
+    public SingleConstraint(LinkedHashMap<Attribute, Node> newSingleAvp) {
+        checkNotNull(newSingleAvp);
+        this.singleAvp = newSingleAvp;
     }
 
     public void setAttributeValue(Attribute existingAttribute, Node newValue) {

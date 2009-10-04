@@ -81,17 +81,17 @@ public final class TupleImpl implements Tuple {
     private TupleImpl() {
     }
 
-    TupleImpl(Map<Attribute, Node> attributeValues) {
-        checkNotNull(attributeValues);
-        this.attributeValues = attributeValues;
+    TupleImpl(Map<Attribute, Node> newAttributeValues) {
+        checkNotNull(newAttributeValues);
+        this.attributeValues =  newAttributeValues;
     }
 
     public Map<Attribute, Node> getAttributeValues() {
         return attributeValues;
     }
 
-    public Node getValue(Attribute attribute) {
-        return attributeValues.get(attribute);
+    public Node getValue(Attribute newAttribute) {
+        return attributeValues.get(newAttribute);
     }
 
     @Override

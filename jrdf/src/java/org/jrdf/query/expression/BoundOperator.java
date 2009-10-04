@@ -79,8 +79,8 @@ public final class BoundOperator implements Operator, LogicExpression {
     private BoundOperator() {
     }
 
-    public BoundOperator(Map<Attribute, Node> singleAvp) {
-        this.singleAvp = singleAvp;
+    public BoundOperator(Map<Attribute, Node> newSingleAvp) {
+        this.singleAvp = newSingleAvp;
     }
 
     public Map<Attribute, Node> getValue() {

@@ -71,21 +71,21 @@ import java.util.NoSuchElementException;
  */
 
 public class LongIndexToMoleculeIterator implements ClosableIterator<Molecule> {
-    private ClosableIterator<Long> midIterator;
+    private ClosableIterator<Long> iterator;
     private MoleculeGraphHandler handler;
 
-    public LongIndexToMoleculeIterator(ClosableIterator<Long> iterator, MoleculeGraphHandler handler) {
-        this.midIterator = iterator;
-        this.handler = handler;
+    public LongIndexToMoleculeIterator(ClosableIterator<Long> newIterator, MoleculeGraphHandler newHandler) {
+        this.iterator = newIterator;
+        this.handler = newHandler;
     }
 
     public boolean hasNext() {
-        return midIterator.hasNext();
+        return iterator.hasNext();
     }
 
     public Molecule next() {
         try {
-            Long mid = midIterator.next();
+            Long mid = iterator.next();
             return handler.createMolecule(1L, mid);
         } catch (GraphException e) {
             throw new NoSuchElementException("Cannot find molecule in the graph");
@@ -97,6 +97,6 @@ public class LongIndexToMoleculeIterator implements ClosableIterator<Molecule> {
     }
 
     public boolean close() {
-        return midIterator.close();
+        return iterator.close();
     }
 }

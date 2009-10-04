@@ -86,13 +86,13 @@ public final class UrqlConnectionImpl implements UrqlConnection {
     /**
      * Creates a new SPARQL connection.
      *
-     * @param builder     the query builder that builds queries.
-     * @param queryEngine the engine that executed the query.
+     * @param newBuilder     the query builder that builds queries.
+     * @param newQueryEngine the engine that executed the query.
      */
-    public UrqlConnectionImpl(QueryBuilder builder, QueryEngine queryEngine) {
-        checkNotNull(builder, queryEngine);
-        this.queryEngine = queryEngine;
-        this.builder = builder;
+    public UrqlConnectionImpl(QueryBuilder newBuilder, QueryEngine newQueryEngine) {
+        checkNotNull(newBuilder, newQueryEngine);
+        this.queryEngine = newQueryEngine;
+        this.builder = newBuilder;
     }
 
     public Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException {

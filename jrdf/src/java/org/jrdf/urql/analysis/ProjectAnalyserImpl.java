@@ -88,9 +88,9 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
     private Expression expression;
     private ParserException exception;
 
-    public ProjectAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
-        this.tripleBuilder = tripleBuilder;
-        this.graph = graph;
+    public ProjectAnalyserImpl(TripleBuilder newTripleBuilder, Graph newGraph) {
+        this.tripleBuilder =  newTripleBuilder;
+        this.graph = newGraph;
         this.variableCollector = new AttributeCollectorImpl();
         this.declaredVariables = new LinkedHashSet<AttributeName>();
     }

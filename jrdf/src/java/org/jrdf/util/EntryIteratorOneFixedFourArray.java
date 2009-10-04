@@ -63,14 +63,11 @@ package org.jrdf.util;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class EntryIteratorOneFixedFourArray implements ClosableIterator<Long[]> {
     private ClosableIterator<Long[]> subIndex;
-    private static final int QUAD = 4;
-    private static final int TREE = 3;
 
-    public EntryIteratorOneFixedFourArray(ClosableIterator<Long[]> subIndex) {
-        this.subIndex = subIndex;
+    public EntryIteratorOneFixedFourArray(ClosableIterator<Long[]> newSubIndex) {
+        this.subIndex = newSubIndex;
     }
 
     public boolean hasNext() {

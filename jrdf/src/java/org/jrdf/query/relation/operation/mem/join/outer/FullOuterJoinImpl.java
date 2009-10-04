@@ -69,10 +69,10 @@ public class FullOuterJoinImpl implements DyadicJoin {
     private final AntiJoin antiJoin;
     private final Union union;
 
-    public FullOuterJoinImpl(DyadicJoin leftOuterJoin, Union union, AntiJoin antiJoin) {
-        this.leftOuterJoin = leftOuterJoin;
-        this.union = union;
-        this.antiJoin = antiJoin;
+    public FullOuterJoinImpl(DyadicJoin newLeftOuterJoin, Union newUnion, AntiJoin newAntiJoin) {
+        this.leftOuterJoin = newLeftOuterJoin;
+        this.union = newUnion;
+        this.antiJoin = newAntiJoin;
     }
 
     // TODO (AN) Add tuple subsumption i.e. go through the results and remove the results for a given attribute binding

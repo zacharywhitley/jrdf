@@ -83,9 +83,9 @@ public class URIReferenceBuilderImpl implements URIReferenceBuilder {
     private ParserException exception;
     private URIReference uriRef;
 
-    public URIReferenceBuilderImpl(GraphElementFactory factory, Map<String, String> prefixMap) {
-        this.factory = factory;
-        this.prefixMap = prefixMap;
+    public URIReferenceBuilderImpl(GraphElementFactory newFactory, Map<String, String> newPrefixMap) {
+        this.factory = newFactory;
+        this.prefixMap = newPrefixMap;
     }
 
     public Node createURIReference(AIriRefIriRefOrPrefixedName node) throws ParserException {

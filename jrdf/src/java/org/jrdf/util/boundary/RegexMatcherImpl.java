@@ -64,8 +64,8 @@ import java.util.regex.Matcher;
 public class RegexMatcherImpl implements RegexMatcher {
     private final Matcher matcher;
 
-    RegexMatcherImpl(Matcher matcher) {
-        this.matcher = matcher;
+    RegexMatcherImpl(Matcher newMatcher) {
+        this.matcher = newMatcher;
     }
 
     public boolean find() {

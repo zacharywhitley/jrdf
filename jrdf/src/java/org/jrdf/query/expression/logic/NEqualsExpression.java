@@ -77,17 +77,16 @@ import java.util.Map;
 public class NEqualsExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = -5583172009536428369L;
     private static final int DUMMY_HASHCODE = 47;
-
+    private static final String NEQUALS = "!=";
     private Expression lhs;
     private Expression rhs;
-    protected static final String NEQUALS = "!=";
 
     private NEqualsExpression() {
     }
 
-    public NEqualsExpression(Expression lhs, Expression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    public NEqualsExpression(Expression newLhs, Expression newRhs) {
+        this.lhs = newLhs;
+        this.rhs = newRhs;
     }
 
     public Map<Attribute, Node> getValue() {

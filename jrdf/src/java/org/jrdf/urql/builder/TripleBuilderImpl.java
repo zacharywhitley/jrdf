@@ -93,10 +93,10 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
     private Map<String, String> prefixMap = new HashMap<String, String>();
     private ParserException exception;
 
-    public TripleBuilderImpl(Graph graph, SortedAttributeFactory sortedAttributeFactory) {
-        checkNotNull(graph, sortedAttributeFactory);
-        this.graph = graph;
-        this.sortedAttributeFactory = sortedAttributeFactory;
+    public TripleBuilderImpl(Graph newGraph, SortedAttributeFactory newSortedAttributeFactory) {
+        checkNotNull(newGraph, newSortedAttributeFactory);
+        this.graph = newGraph;
+        this.sortedAttributeFactory = newSortedAttributeFactory;
     }
 
     /**

@@ -71,16 +71,15 @@ import java.util.Map;
  */
 public final class LangOperator implements Operator {
     private static final long serialVersionUID = -6423244147349910918L;
-
     private static final int DUMMY_HASHCODE = 47;
     private Map<Attribute, Node> singleAvp;
-    protected static final String LANG = "lang";
+    private static final String LANG = "lang";
 
     private LangOperator() {
     }
 
-    public LangOperator(Map<Attribute, Node> singleAvp) {
-        this.singleAvp = singleAvp;
+    public LangOperator(Map<Attribute, Node> newSingleAvp) {
+        this.singleAvp = newSingleAvp;
     }
 
     public Map<Attribute, Node> getValue() {

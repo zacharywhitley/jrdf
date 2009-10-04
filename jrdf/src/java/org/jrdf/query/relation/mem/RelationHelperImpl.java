@@ -80,10 +80,10 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
     private RelationHelperImpl() {
     }
 
-    public RelationHelperImpl(AttributeComparator attributeComparator, NodeComparator nodeComparator) {
-        checkNotNull(attributeComparator, nodeComparator);
-        this.attributeComparator = attributeComparator;
-        this.nodeComparator = nodeComparator;
+    public RelationHelperImpl(AttributeComparator newAttributeComparator, NodeComparator newNodeComparator) {
+        checkNotNull(newAttributeComparator, newNodeComparator);
+        this.attributeComparator = newAttributeComparator;
+        this.nodeComparator = newNodeComparator;
     }
 
     public SortedSet<Attribute> getHeadingUnions(EvaluatedRelation... relations) {

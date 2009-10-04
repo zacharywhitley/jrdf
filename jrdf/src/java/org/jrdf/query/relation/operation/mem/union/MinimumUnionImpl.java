@@ -77,11 +77,11 @@ public class MinimumUnionImpl implements Union {
     private TupleEngine unionTupleEngine;
     private TupleEngine subsumptionTupleEngine;
 
-    public MinimumUnionImpl(RelationProcessor relationProcessor, TupleEngine unionTupleEngine,
-        TupleEngine subsumptionTupleEngine) {
-        this.relationProcessor = relationProcessor;
-        this.unionTupleEngine = unionTupleEngine;
-        this.subsumptionTupleEngine = subsumptionTupleEngine;
+    public MinimumUnionImpl(RelationProcessor newRelationProcessor, TupleEngine newUnionTupleEngine,
+        TupleEngine newSubsumptionTupleEngine) {
+        this.relationProcessor = newRelationProcessor;
+        this.unionTupleEngine = newUnionTupleEngine;
+        this.subsumptionTupleEngine = newSubsumptionTupleEngine;
     }
 
     public EvaluatedRelation union(EvaluatedRelation relation1, EvaluatedRelation relation2) {

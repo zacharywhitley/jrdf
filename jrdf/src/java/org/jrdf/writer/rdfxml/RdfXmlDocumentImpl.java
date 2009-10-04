@@ -98,16 +98,16 @@ public class RdfXmlDocumentImpl implements RdfXmlDocument {
     /**
      * Constructor. Specifies the character encoding to be used.
      *
-     * @param encoding charset
-     * @param names the namespace maps (from prefix to full name and back).
-     * @param xmlStreamWriter the writer to add new elements to.
+     * @param newEncoding charset
+     * @param newNames the namespace maps (from prefix to full name and back).
+     * @param newXmlStreamWriter the writer to add new elements to.
      */
-    public RdfXmlDocumentImpl(final String encoding, final RdfNamespaceMap names,
-        final XMLStreamWriter xmlStreamWriter) {
-        checkNotNull(encoding, names, xmlStreamWriter);
-        this.encoding = encoding;
-        this.names = names;
-        this.xmlStreamWriter = xmlStreamWriter;
+    public RdfXmlDocumentImpl(final String newEncoding, final RdfNamespaceMap newNames,
+        final XMLStreamWriter newXmlStreamWriter) {
+        checkNotNull(newEncoding, newNames, newXmlStreamWriter);
+        this.encoding = newEncoding;
+        this.names = newNames;
+        this.xmlStreamWriter = newXmlStreamWriter;
     }
 
     public void writeHeader() throws WriteException {

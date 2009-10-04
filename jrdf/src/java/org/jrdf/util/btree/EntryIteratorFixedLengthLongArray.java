@@ -77,8 +77,8 @@ public class EntryIteratorFixedLengthLongArray implements ClosableIterator<Long[
     private int length;
     private int fixed;
 
-    public EntryIteratorFixedLengthLongArray(int length, BTree newBTree, Long... nodes) {
-        this.length = length;
+    public EntryIteratorFixedLengthLongArray(int newLength, BTree newBTree, Long... nodes) {
+        this.length =  newLength;
         Long[] longs = getLongs(nodes);
         this.iterator = getIterator(newBTree, longs);
         getNextValues();

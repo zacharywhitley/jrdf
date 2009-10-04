@@ -87,8 +87,8 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
     private Map<Class<?>, TupleBinding<?>> binding = new HashMap<Class<?>, TupleBinding<?>>();
     private final DirectoryHandler handler;
 
-    public BdbEnvironmentHandlerImpl(DirectoryHandler handler) {
-        this.handler = handler;
+    public BdbEnvironmentHandlerImpl(DirectoryHandler newHandler) {
+        this.handler = newHandler;
         binding.put(String.class, new StringBinding());
         binding.put(Long.class, new LongBinding());
         binding.put(LinkedList.class, new org.jrdf.util.bdb.LongListBinding());
@@ -120,8 +120,8 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
     }
 
     public <T> SortedSet<T> createSet(Database database, Class<T> clazz) {
-        TupleBinding<T> binding = getBinding(clazz);
-        return new StoredSortedKeySet<T>(database, binding, true);
+        TupleBinding<T> tmpBinding = getBinding(clazz);
+        return new StoredSortedKeySet<T>(database, tmpBinding, true);
     }
 
     public <T, A, U extends A> Map<T, U> createMap(Database database, Class<T> clazz1, Class<A> clazz2) {

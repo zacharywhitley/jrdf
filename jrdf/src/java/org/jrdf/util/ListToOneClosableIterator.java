@@ -63,23 +63,19 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Jul 27, 2008
- * Time: 12:27:29 PM
- * To change this template use File | Settings | File Templates.
+ * @author Yuan-Fang Li
+ * @version :$
  */
 public class ListToOneClosableIterator implements ClosableIterator<Long> {
-
     private Iterator<Long[]> itemIterator;
     private Long second;
     private Long third;
     private Long currentValue;
 
-    public ListToOneClosableIterator(Long second, Long third, Iterator<Long[]> list) {
-        this.second = second;
-        this.third = third;
-        this.itemIterator = list;
+    public ListToOneClosableIterator(Long newSecond, Long newThird, Iterator<Long[]> newList) {
+        this.second = newSecond;
+        this.third = newThird;
+        this.itemIterator = newList;
         updatePosition();
     }
 

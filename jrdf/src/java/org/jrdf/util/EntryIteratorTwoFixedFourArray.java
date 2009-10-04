@@ -63,16 +63,15 @@ package org.jrdf.util;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class EntryIteratorTwoFixedFourArray implements ClosableIterator<Long[]> {
     private ClosableIterator<Long[]> subSubIndex;
     private Long mid;
     private static final int QUAD = 4;
     private static final int THREE = 3;
 
-    public EntryIteratorTwoFixedFourArray(ClosableIterator<Long[]> index, Long mid) {
+    public EntryIteratorTwoFixedFourArray(ClosableIterator<Long[]> index, Long newMid) {
         this.subSubIndex = index;
-        this.mid = mid;
+        this.mid = newMid;
     }
 
     public boolean hasNext() {

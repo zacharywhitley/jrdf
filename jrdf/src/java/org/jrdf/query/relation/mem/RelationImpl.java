@@ -92,24 +92,24 @@ public final class RelationImpl implements EvaluatedRelation {
 
     // TODO (AN) This only gets the heading from the first tuple - must iterate through all tuples to ensure that we
     // get the maximum heading values.
-    RelationImpl(Set<Tuple> tuples, AttributeComparator attributeComparator, TupleComparator tupleComparator) {
-        checkNotNull(tuples, attributeComparator, tupleComparator);
-        Set<Attribute> fromTuples = createHeadingFromTuples(tuples);
-        create(fromTuples, tuples, attributeComparator, tupleComparator);
+    RelationImpl(Set<Tuple> newTuples, AttributeComparator newAttributeComparator, TupleComparator newTupleComparator) {
+        checkNotNull(newTuples, newAttributeComparator, newTupleComparator);
+        Set<Attribute> fromTuples = createHeadingFromTuples(newTuples);
+        create(fromTuples, newTuples, newAttributeComparator, newTupleComparator);
     }
 
-    RelationImpl(Set<Attribute> heading, Set<Tuple> tuples, AttributeComparator attributeComparator,
-        TupleComparator tupleComparator) {
-        checkNotNull(heading, tuples, attributeComparator, tupleComparator);
-        create(heading, tuples, attributeComparator, tupleComparator);
+    RelationImpl(Set<Attribute> newHeading, Set<Tuple> newTuples, AttributeComparator newAttributeComparator,
+        TupleComparator newTupleComparator) {
+        checkNotNull(newHeading, newTuples, newAttributeComparator, newTupleComparator);
+        create(newHeading, newTuples, newAttributeComparator, newTupleComparator);
     }
 
-    private void create(Set<Attribute> heading, Set<Tuple> tuples, AttributeComparator attributeComparator,
-        TupleComparator tupleComparator) {
-        this.heading = heading;
-        this.tuples = tuples;
-        this.attributeComparator = attributeComparator;
-        this.tupleComparator = tupleComparator;
+    private void create(Set<Attribute> newHeading, Set<Tuple> newTuples, AttributeComparator newAttributeComparator,
+        TupleComparator newTupleComparator) {
+        this.heading = newHeading;
+        this.tuples = newTuples;
+        this.attributeComparator = newAttributeComparator;
+        this.tupleComparator = newTupleComparator;
     }
 
     public Set<Attribute> getHeading() {
@@ -214,10 +214,10 @@ public final class RelationImpl implements EvaluatedRelation {
     }
 
     private Set<Attribute> createHeadingFromTuples(Set<Tuple> newTuples) {
-        Set<Attribute> heading = new HashSet<Attribute>();
+        Set<Attribute> tmpHeading = new HashSet<Attribute>();
         for (Tuple tuple : newTuples) {
-            heading.addAll(tuple.getAttributeValues().keySet());
+            tmpHeading.addAll(tuple.getAttributeValues().keySet());
         }
-        return heading;
+        return tmpHeading;
     }
 }

@@ -84,8 +84,8 @@ import java.util.Map;
 public class ValueEvaluatorImpl extends ExpressionVisitorAdapter<Node> implements ValueEvaluator<Node> {
     private Tuple tuple;
 
-    public void setTuple(Tuple tuple) {
-        this.tuple = tuple;
+    public void setTuple(Tuple newTuple) {
+        this.tuple = newTuple;
     }
 
     @Override
@@ -144,9 +144,9 @@ public class ValueEvaluatorImpl extends ExpressionVisitorAdapter<Node> implement
         return tuple.getValue(attribute);
     }
 
-    public Node getValue(Tuple tuple, Expression expression) {
+    public Node getValue(Tuple newTuple, Expression expression) {
         ValueEvaluator<Node> evaluator = new ValueEvaluatorImpl();
-        evaluator.setTuple(tuple);
+        evaluator.setTuple(newTuple);
         return expression.accept(evaluator);
     }
 }

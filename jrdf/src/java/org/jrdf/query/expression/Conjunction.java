@@ -83,9 +83,9 @@ public final class Conjunction implements BiOperandExpression {
     private Conjunction() {
     }
 
-    public Conjunction(Expression lhs, Expression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    public Conjunction(Expression newLhs, Expression newRhs) {
+        this.lhs = newLhs;
+        this.rhs = newRhs;
     }
 
     public Map<Attribute, Node> getValue() {
@@ -103,8 +103,8 @@ public final class Conjunction implements BiOperandExpression {
         return rhs;
     }
 
-    public void setLhs(Expression lhs) {
-        this.lhs = lhs;
+    public void setLhs(Expression newLhs) {
+        this.lhs = newLhs;
     }
 
     public int size() {

@@ -87,8 +87,8 @@ public class GraphResource extends ConfigurableRestletResource {
     private long maxRows;
     private GraphApplication graphApplication;
 
-    public void setGraphApplication(GraphApplication graphApplication) {
-        this.graphApplication = graphApplication;
+    public void setGraphApplication(GraphApplication newGraphApplication) {
+        this.graphApplication = newGraphApplication;
     }
 
     @Override

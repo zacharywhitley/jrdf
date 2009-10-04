@@ -76,17 +76,16 @@ import java.util.Map;
 public class LessThanExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = -8314509866292119440L;
     private static final int DUMMY_HASHCODE = 47;
-
+    private static final String LESS_THAN = "<";
     private Expression lhs;
     private Expression rhs;
-    protected static final String LESS_THAN = "<";
 
     private LessThanExpression() {
     }
 
-    public LessThanExpression(Expression lhs, Expression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    public LessThanExpression(Expression newLhs, Expression newRhs) {
+        this.lhs = newLhs;
+        this.rhs = newRhs;
     }
 
     public Map<Attribute, Node> getValue() {

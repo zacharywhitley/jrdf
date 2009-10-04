@@ -78,11 +78,11 @@ public class SemiDifferenceImpl implements SemiDifference {
     private TupleComparator tupleComparator;
     private RelationProcessor relationProcessor;
 
-    public SemiDifferenceImpl(RelationProcessor relationProcessor, RelationFactory relationFactory,
-        TupleComparator tupleComparator) {
-        this.relationFactory = relationFactory;
-        this.tupleComparator = tupleComparator;
-        this.relationProcessor = relationProcessor;
+    public SemiDifferenceImpl(RelationProcessor newRelationProcessor, RelationFactory newRelationFactory,
+        TupleComparator newTupleComparator) {
+        this.relationProcessor = newRelationProcessor;
+        this.relationFactory = newRelationFactory;
+        this.tupleComparator = newTupleComparator;
     }
 
     public EvaluatedRelation minus(EvaluatedRelation relation1, EvaluatedRelation relation2) {

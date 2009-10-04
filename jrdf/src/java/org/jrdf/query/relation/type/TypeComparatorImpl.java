@@ -78,8 +78,8 @@ public final class TypeComparatorImpl implements TypeComparator {
     private TypeComparatorImpl() {
     }
 
-    public TypeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
-        this.nodeTypeComparator = nodeTypeComparator;
+    public TypeComparatorImpl(NodeTypeComparator newNodeTypeComparator) {
+        this.nodeTypeComparator = newNodeTypeComparator;
     }
 
     public int compare(NodeType type1, NodeType type2) {
