@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,56 +54,28 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.query.client;
 
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContaining;
-import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
-import org.junit.Before;
 import org.junit.Test;
+import org.restlet.data.Request;
+import org.restlet.resource.Representation;
 
-import java.util.regex.Pattern;
+import java.io.InputStream;
 
-public class LiteralMatcherImplUnitTest {
-    private static final Class<LiteralMatcher> TARGET_INTERFACE = LiteralMatcher.class;
-    private static final Class<LiteralMatcherImpl> TEST_CLASS = LiteralMatcherImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[]{RegexMatcherFactory.class, NTripleUtil.class};
-    private static final String PATTERN = "\\\"([\\t\\r\\n\\x20-\\x7E]*)\\\"" +
-        "(" +
-        "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-        ").*";
-    private static final Pattern LANGUAGE_REGEX = Pattern.compile(PATTERN);
-    private static final int LITERAL_INDEX = 1;
-    private static final int LANGUAGE_INDEX = 5;
-    private static final int DATATYPE_INDEX = 8;
-    private static final String LINE = "line" + Math.random();
-    private final MockFactory mockFactory = new MockFactory();
-    private RegexMatcherFactory regexMatcherFactory;
-    private RegexMatcher matcher;
-    private LiteralMatcher parser;
-    private NTripleUtil nTripleUtil;
-
-    @Before
-    public void setUp() {
-        regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
-        matcher = mockFactory.createMock(RegexMatcher.class);
-        nTripleUtil = mockFactory.createMock(NTripleUtil.class);
-        parser = new LiteralMatcherImpl(regexMatcherFactory, nTripleUtil);
-    }
+public class XmlSparqlAnswerHandlerUnitTest {
+    private Class<?> TEST_CLASS = XmlSparqlAnswerHandler.class;
+    private Class<?> TARGET_INTERFACE = SparqlAnswerHandler.class;
+    private Class[] PARAM_TYPES = {};
+    private SparqlAnswerHandler handler = new XmlSparqlAnswerHandler();
 
     @Test
     public void classProperties() {
@@ -115,32 +87,11 @@ public class LiteralMatcherImplUnitTest {
 
     @Test
     public void methodProperties() {
-        checkMethodNullAndEmptyAssertions(parser, "matches", new ParameterDefinition(
-            new String[]{"s"}, new Class[]{String.class}));
-        checkMethodNullAndEmptyAssertions(parser, "parse", new ParameterDefinition(
-            new String[]{"s"}, new Class[]{String.class}));
-    }
-
-    @Test
-    public void matchesCallsRegexFactory() {
-        expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(LINE))).andReturn(matcher);
-        expect(matcher.matches()).andReturn(true);
-        mockFactory.replay();
-        parser.matches(LINE);
-        mockFactory.verify();
-    }
-
-    @Test
-    public void parserCallsMatcher() {
-        expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(LINE))).andReturn(matcher);
-        expect(matcher.matches()).andReturn(true);
-        final String literal = "string" + Math.random();
-        expect(matcher.group(LITERAL_INDEX)).andReturn(literal);
-        expect(nTripleUtil.unescapeLiteral(literal)).andReturn("foo");
-        expect(matcher.group(LANGUAGE_INDEX)).andReturn("bar");
-        expect(matcher.group(DATATYPE_INDEX)).andReturn("baz");
-        mockFactory.replay();
-        assertThat(parser.parse(LINE), arrayContaining("foo", "bar", "baz"));
-        mockFactory.verify();
+        checkMethodNullAssertions(handler, "getParser", new ParameterDefinition(
+            new String[]{"inputStream"}, new Class[]{InputStream.class}));
+        checkMethodNullAndEmptyAssertions(handler, "getAnswer", new ParameterDefinition(
+            new String[]{"output"}, new Class[]{Representation.class}));
+        checkMethodNullAndEmptyAssertions(handler, "setAcceptedMediaTypes",
+            new ParameterDefinition(new String[]{"request"}, new Class[]{Request.class}));
     }
 }

@@ -144,8 +144,8 @@ public class ArgumentTestUtil {
         for (int index = 0; index < parameterTypes.length; index++) {
             if (checkParameter[index]) {
                 final Object[] args = FACTORY.createArgs(parameterTypes, index);
-                String message = "Parameter " + (index + 1) + CANNOT_BE_NULL;
-                checkThrowsIllegalArgumentException(message, obj, methodName, parameterTypes, args);
+                checkThrowsIllegalArgumentException("Parameter " + (index + 1) + CANNOT_BE_NULL, obj, methodName,
+                    parameterTypes, args);
             }
         }
     }
@@ -154,14 +154,19 @@ public class ArgumentTestUtil {
         ParameterDefinition paramDefinition, boolean[] checkParameter) {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
         for (int index = 0; index < parameterTypes.length; index++) {
-            if (checkParameter[index] && parameterTypes[index].equals(String.class)) {
+            if (checkParameter[index]) {
                 final Object[] args = FACTORY.createArgs(parameterTypes, index);
-                String message = "Parameter " + (paramDefinition.getParameterNames()[index]);
-                checkThrowsIllegalArgumentException(message + CANNOT_BE_NULL, obj, methodName, parameterTypes, args);
-                args[index] = "";
-                checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
-                args[index] = " ";
-                checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
+                if (parameterTypes[index].equals(String.class)) {
+                    String message = "Parameter " + (paramDefinition.getParameterNames()[index]);
+                    checkThrowsIllegalArgumentException(message + CANNOT_BE_NULL, obj, methodName, parameterTypes, args);
+                    args[index] = "";
+                    checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
+                    args[index] = " ";
+                    checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
+                } else {
+                    checkThrowsIllegalArgumentException("Parameter " + (index + 1) + CANNOT_BE_NULL, obj, methodName,
+                        parameterTypes, args);
+                }
             }
         }
     }

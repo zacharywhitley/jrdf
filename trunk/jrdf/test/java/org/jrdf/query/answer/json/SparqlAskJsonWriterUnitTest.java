@@ -76,14 +76,6 @@ public class SparqlAskJsonWriterUnitTest {
         checkResult(stringWriter, true);
     }
 
-    private void checkResult(StringWriter stringWriter, final boolean expectedResult) throws JSONException {
-        final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
-        checkJSONStringArrayValues(head, "vars", new String[]{});
-        checkJSONStringArrayValues(head, "link", new String[]{});
-        final boolean result = new JSONObject(stringWriter.toString()).getBoolean("boolean");
-        assertThat(result, is(expectedResult));
-    }
-
     @Test
     public void writeWithApiCallsToProduceResult() throws Exception {
         final StringWriter stringWriter = new StringWriter();
@@ -113,5 +105,13 @@ public class SparqlAskJsonWriterUnitTest {
         writer.writeEndDocument();
 
         checkResult(stringWriter, false);
+    }
+
+    private void checkResult(StringWriter stringWriter, final boolean expectedResult) throws JSONException {
+        final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
+        checkJSONStringArrayValues(head, "vars", new String[]{});
+        checkJSONStringArrayValues(head, "link", new String[]{});
+        final boolean result = new JSONObject(stringWriter.toString()).getBoolean("boolean");
+        assertThat(result, is(expectedResult));
     }
 }
