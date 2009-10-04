@@ -157,18 +157,24 @@ public class ArgumentTestUtil {
             if (checkParameter[index]) {
                 final Object[] args = FACTORY.createArgs(parameterTypes, index);
                 if (parameterTypes[index].equals(String.class)) {
-                    String message = "Parameter " + (paramDefinition.getParameterNames()[index]);
-                    checkThrowsIllegalArgumentException(message + CANNOT_BE_NULL, obj, methodName, parameterTypes, args);
-                    args[index] = "";
-                    checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
-                    args[index] = " ";
-                    checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
+                    checkStringIllegalArgumentException(obj, methodName, paramDefinition, index, args);
                 } else {
                     checkThrowsIllegalArgumentException("Parameter " + (index + 1) + CANNOT_BE_NULL, obj, methodName,
                         parameterTypes, args);
                 }
             }
         }
+    }
+
+    private static void checkStringIllegalArgumentException(Object obj, String methodName,
+        ParameterDefinition paramDefinition, int index, Object[] args) {
+        final Class<?>[] parameterTypes = paramDefinition.getParameterTypes();
+        String message = "Parameter " + (paramDefinition.getParameterNames()[index]);
+        checkThrowsIllegalArgumentException(message + CANNOT_BE_NULL, obj, methodName, parameterTypes, args);
+        args[index] = "";
+        checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
+        args[index] = " ";
+        checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
     }
 
     private static void checkThrowsIllegalArgumentException(String message, final Object obj, final String methodName,
