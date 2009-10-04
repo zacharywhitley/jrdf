@@ -262,21 +262,4 @@
             <fail if="@{type}.test.failed" message="@{type} tests failed."/>
         </sequential>
     </macrodef>
-
-    <target name="jester" depends="dist">
-        <delete dir="${modified.src.dir}"/>
-        <copy todir="${modified.src.dir}">
-            <fileset dir="${src.dir}">
-                <exclude name="**/*Test.java"/>
-                <exclude name="**/AllTests.java"/>
-            </fileset>
-        </copy>
-        <java classpathref="test.class.path" classname="jester.TestTester" fork="true">
-            <!-- FIXME TJA: Use the value of a property to collection the classpath here -->
-            <arg value="-cp=lib/junit/junit-3.8.1.jar:lib/jester-1.3.7.jar:build/dist/jrdf-0.4.jar:build/test-classes"/>
-            <arg value="-Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel"/>
-            <arg value="org.jrdf.graph.local.mem.GraphImplUnitTest"/>
-            <arg value="${modified.src.dir}/java"/>
-        </java>
-    </target>
 </project>

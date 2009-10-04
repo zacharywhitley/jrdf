@@ -54,6 +54,8 @@
     <orderEntry type="library" name="saj" level="project" />
     <orderEntry type="library" name="jackson" level="project" />
     <orderEntry type="library" name="mycilatesting" level="project" />
+    <orderEntry type="library" name="jakarta-commons" level="project" />
+    <orderEntry type="library" name="unitils" level="project" />
   </component>
   <component name="RSpecModuleSettingsStorage">
     <RSPEC_MODULE_SETTINGS_STORAGE_ID NAME="RSPEC_SUPPORT_TYPE" VALUE="NONE" />

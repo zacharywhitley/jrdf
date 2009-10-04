@@ -72,9 +72,9 @@ import org.restlet.resource.Representation;
 import java.io.InputStream;
 
 public class XmlSparqlAnswerHandlerUnitTest {
-    private Class<?> TEST_CLASS = XmlSparqlAnswerHandler.class;
-    private Class<?> TARGET_INTERFACE = SparqlAnswerHandler.class;
-    private Class[] PARAM_TYPES = {};
+    private static final Class<?> TEST_CLASS = XmlSparqlAnswerHandler.class;
+    private static final Class<?> TARGET_INTERFACE = SparqlAnswerHandler.class;
+    private static final Class[] PARAM_TYPES = {};
     private SparqlAnswerHandler handler = new XmlSparqlAnswerHandler();
 
     @Test

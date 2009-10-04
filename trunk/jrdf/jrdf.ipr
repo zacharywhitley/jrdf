@@ -1086,7 +1086,6 @@
   <component name="libraryTable">
     <library name="spring">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-logging-1.0.4.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/spring/spring-tx-2.5.6.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/spring/spring-context-2.5.6.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/spring/spring-aop-2.5.6.jar!/" />
@@ -1196,6 +1195,23 @@
     <library name="jackson">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/jackson/jackson-core-asl-1.1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="jakarta-commons">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-lang-2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-logging-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-collections-3.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="unitils">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/unitils/unitils-2.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/unitils/ognl-2.6.9.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

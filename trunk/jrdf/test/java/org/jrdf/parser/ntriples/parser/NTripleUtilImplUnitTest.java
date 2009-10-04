@@ -73,29 +73,33 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.unitils.UnitilsJUnit4TestClassRunner;
+import static org.unitils.easymock.EasyMockUnitils.replay;
+import static org.unitils.easymock.EasyMockUnitils.verify;
+import org.unitils.easymock.annotation.Mock;
 
 import java.util.regex.Pattern;
 
+@RunWith(UnitilsJUnit4TestClassRunner.class)
 public class NTripleUtilImplUnitTest {
     private static final Class<?> TARGET_INTERFACE = NTripleUtil.class;
     private static final Class<?> TEST_CLASS = NTripleUtilImpl.class;
     private static final Class[] PARAM_TYPES = {RegexMatcherFactory.class};
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
         "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
-    private MockFactory factory = new MockFactory();
+    private static final String LINE = "string" + Math.random();
+    @Mock
     private RegexMatcherFactory regexMatcherFactory;
+    @Mock
     private RegexMatcher matcher;
     private NTripleUtil util;
-    private static final String LINE = "string" + Math.random();
 
     @Before
     public void setUp() {
-        regexMatcherFactory = factory.createMock(RegexMatcherFactory.class);
-        matcher = factory.createMock(RegexMatcher.class);
         util = new NTripleUtilImpl(regexMatcherFactory);
     }
 
@@ -118,17 +122,32 @@ public class NTripleUtilImplUnitTest {
         final String expectedLine = "string" + Math.random();
         expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(expectedLine))).andReturn(matcher);
         expect(matcher.find()).andReturn(false);
-        factory.replay();
+        replay();
         assertThat(expectedLine, is(util.unescapeLiteral(expectedLine)));
-        factory.verify();
     }
 
     @Test
-    public void testEscapeLiteralLookup() {
+    public void backslashEscaping() {
         checkCharacterEscape("\\\\", "\\\\");
+    }
+
+    @Test
+    public void quoteEscaping() {
         checkCharacterEscape("\\\"", "\\\"");
+    }
+
+    @Test
+    public void newLineEscaping() {
         checkCharacterEscape("\\n", "\n");
+    }
+
+    @Test
+    public void carriageReturnEscaping() {
         checkCharacterEscape("\\r", "\r");
+    }
+
+    @Test
+    public void tabEscaping() {
         checkCharacterEscape("\\t", "\t");
     }
 
@@ -149,11 +168,10 @@ public class NTripleUtilImplUnitTest {
         matcher.appendReplacement((StringBuffer) anyObject(), eq(value));
         expect(matcher.find()).andReturn(false);
         matcher.appendTail((StringBuffer) anyObject());
-        factory.replay();
+        replay();
         String s = util.unescapeLiteral(LINE);
         assertThat(s, equalTo(""));
-        factory.verify();
-        factory.reset();
+        verify();
     }
 
     private void checkUnicode(String string, int group) {
@@ -164,9 +182,9 @@ public class NTripleUtilImplUnitTest {
         matcher.appendReplacement((StringBuffer) anyObject(), eq(new String(Character.toChars(15))));
         expect(matcher.find()).andReturn(false);
         matcher.appendTail((StringBuffer) anyObject());
-        factory.replay();
+        replay();
         String s = util.unescapeLiteral(LINE);
         assertThat(s, equalTo(""));
-        factory.verify();
+        verify();
     }
 }
