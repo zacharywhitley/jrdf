@@ -101,7 +101,6 @@ import java.util.Map;
  */
 public class BooleanEvaluatorImplUnitTest extends TestCase {
     private static final NodeComparator NODE_COMPARATOR = new ComparatorFactoryImpl().createNodeComparator();
-
     private static final Literal LITERAL_L1_LANG = createLiteral("fr");
     private static final Literal LITERAL_L1_LANG1 = createLiteral("hello", "en");
     private static final Literal LITERAL_L1_LANG2 = createLiteral("hello", "fr");
@@ -111,7 +110,6 @@ public class BooleanEvaluatorImplUnitTest extends TestCase {
     private static final Tuple TEST_VARFOO_LITERAL_TUPLE_1 = createTuple(VAR_FOO1_LITERAL_L1);
     private static final Tuple TEST_VARFOO_LITERAL_TUPLE_2 = createTuple(VAR_FOO1_LITERAL_L2);
     private static final Tuple TEST_TUPLE_1_2 = createTuple(VAR_BAR1_LITERAL_L1, VAR_FOO1_LITERAL_L1);
-
     private BooleanEvaluator<Boolean> evaluator;
     private LogicExpression expression;
 
