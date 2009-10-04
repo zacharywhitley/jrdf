@@ -77,14 +77,17 @@ import org.jrdf.util.test.ParameterDefinition;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.unitils.UnitilsJUnit4TestClassRunner;
-import static org.unitils.easymock.EasyMockUnitils.replay;
-import static org.unitils.easymock.EasyMockUnitils.verify;
-import org.unitils.easymock.annotation.Mock;
+import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.core.classloader.annotations.Mock;
+import org.powermock.core.classloader.annotations.PowerMockListener;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.regex.Pattern;
 
-@RunWith(UnitilsJUnit4TestClassRunner.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockListener(AnnotationEnabler.class)
 public class NTripleUtilImplUnitTest {
     private static final Class<?> TARGET_INTERFACE = NTripleUtil.class;
     private static final Class<?> TEST_CLASS = NTripleUtilImpl.class;
@@ -122,8 +125,9 @@ public class NTripleUtilImplUnitTest {
         final String expectedLine = "string" + Math.random();
         expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(expectedLine))).andReturn(matcher);
         expect(matcher.find()).andReturn(false);
-        replay();
+        replayAll();
         assertThat(expectedLine, is(util.unescapeLiteral(expectedLine)));
+        verifyAll();
     }
 
     @Test
@@ -168,10 +172,10 @@ public class NTripleUtilImplUnitTest {
         matcher.appendReplacement((StringBuffer) anyObject(), eq(value));
         expect(matcher.find()).andReturn(false);
         matcher.appendTail((StringBuffer) anyObject());
-        replay();
+        replayAll();
         String s = util.unescapeLiteral(LINE);
         assertThat(s, equalTo(""));
-        verify();
+        verifyAll();
     }
 
     private void checkUnicode(String string, int group) {
@@ -182,9 +186,9 @@ public class NTripleUtilImplUnitTest {
         matcher.appendReplacement((StringBuffer) anyObject(), eq(new String(Character.toChars(15))));
         expect(matcher.find()).andReturn(false);
         matcher.appendTail((StringBuffer) anyObject());
-        replay();
+        replayAll();
         String s = util.unescapeLiteral(LINE);
         assertThat(s, equalTo(""));
-        verify();
+        verifyAll();
     }
 }
