@@ -148,6 +148,11 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
         return false;
     }
 
+    public boolean evaluate(Tuple newTuple, LogicExpression expression) {
+        setTuple(newTuple);
+        return expression.accept(this);
+    }
+
     // TODO Fixme AN Handling nulls!!  Maybe the getValue should return an EmptyNode or NullaryNode or some node rather
     // than null.
     private int compareNodes(Node lNode, Node rNode) {
@@ -168,10 +173,5 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
         final Map<Attribute, Node> avp = operator.getValue();
         Attribute attribute = avp.keySet().iterator().next();
         return tuple.getValue(attribute);
-    }
-
-    public boolean evaluate(Tuple newTuple, LogicExpression expression) {
-        setTuple(newTuple);
-        return expression.accept(this);
     }
 }

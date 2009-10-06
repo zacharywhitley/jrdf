@@ -146,70 +146,70 @@ public class RelationIntegrationTestUtil {
     public static final BlankNode BNODE_1 = new BlankNodeImpl(UUID.randomUUID().toString(), 0L);
     public static final BlankNode BNODE_2 = new BlankNodeImpl(UUID.randomUUID().toString(), 1L);
 
-    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_R1 = createAvo(POS_FOO1_SUBJECT, RESOURCE_1);
-    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_R3 = createAvo(POS_FOO1_SUBJECT, RESOURCE_3);
-    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_R4 = createAvo(POS_FOO1_SUBJECT, RESOURCE_4);
-    public static final Map<Attribute, Node> POS_BAR1_SUBJECT_R1 = createAvo(POS_BAR1_SUBJECT, RESOURCE_1);
-    public static final Map<Attribute, Node> POS_BAR1_SUBJECT_R3 = createAvo(POS_BAR1_SUBJECT, RESOURCE_3);
-    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_B1 = createAvo(POS_FOO1_SUBJECT, BNODE_1);
-    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_B2 = createAvo(POS_FOO1_SUBJECT, BNODE_2);
+    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_R1 = createAttValue(POS_FOO1_SUBJECT, RESOURCE_1);
+    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_R3 = createAttValue(POS_FOO1_SUBJECT, RESOURCE_3);
+    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_R4 = createAttValue(POS_FOO1_SUBJECT, RESOURCE_4);
+    public static final Map<Attribute, Node> POS_BAR1_SUBJECT_R1 = createAttValue(POS_BAR1_SUBJECT, RESOURCE_1);
+    public static final Map<Attribute, Node> POS_BAR1_SUBJECT_R3 = createAttValue(POS_BAR1_SUBJECT, RESOURCE_3);
+    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_B1 = createAttValue(POS_FOO1_SUBJECT, BNODE_1);
+    public static final Map<Attribute, Node> POS_FOO1_SUBJECT_B2 = createAttValue(POS_FOO1_SUBJECT, BNODE_2);
 
-    public static final Map<Attribute, Node> POS_FOO2_PREDICATE_R2 = createAvo(POS_FOO2_PREDICATE,
+    public static final Map<Attribute, Node> POS_FOO2_PREDICATE_R2 = createAttValue(POS_FOO2_PREDICATE,
         RESOURCE_1);
-    public static final Map<Attribute, Node> POS_FOO2_PREDICATE_R4 = createAvo(POS_FOO2_PREDICATE,
+    public static final Map<Attribute, Node> POS_FOO2_PREDICATE_R4 = createAttValue(POS_FOO2_PREDICATE,
         RESOURCE_3);
-    public static final Map<Attribute, Node> POS_FOO2_PREDICATE_R6 = createAvo(POS_FOO2_PREDICATE,
+    public static final Map<Attribute, Node> POS_FOO2_PREDICATE_R6 = createAttValue(POS_FOO2_PREDICATE,
         RESOURCE_4);
-    public static final Map<Attribute, Node> POS_FOO4_PREDICATE_R2 = createAvo(POS_FOO4_PREDICATE,
+    public static final Map<Attribute, Node> POS_FOO4_PREDICATE_R2 = createAttValue(POS_FOO4_PREDICATE,
         RESOURCE_1);
-    public static final Map<Attribute, Node> POS_FOO4_PREDICATE_R3 = createAvo(POS_FOO4_PREDICATE,
+    public static final Map<Attribute, Node> POS_FOO4_PREDICATE_R3 = createAttValue(POS_FOO4_PREDICATE,
         RESOURCE_3);
-    public static final Map<Attribute, Node> POS_FOO4_PREDICATE_R5 = createAvo(POS_FOO4_PREDICATE,
+    public static final Map<Attribute, Node> POS_FOO4_PREDICATE_R5 = createAttValue(POS_FOO4_PREDICATE,
         RESOURCE_4);
-    public static final Map<Attribute, Node> POS_FOO5_OBJECT_R6 = createAvo(POS_FOO5_OBJECT, RESOURCE_6);
+    public static final Map<Attribute, Node> POS_FOO5_OBJECT_R6 = createAttValue(POS_FOO5_OBJECT, RESOURCE_6);
 
-    public static final Map<Attribute, Node> POS_FOO3_OBJECT_R3 = createAvo(POS_FOO3_OBJECT, RESOURCE_3);
-    public static final Map<Attribute, Node> POS_FOO3_OBJECT_R4 = createAvo(POS_FOO3_OBJECT, RESOURCE_4);
-    public static final Map<Attribute, Node> POS_FOO3_OBJECT_R5 = createAvo(POS_FOO3_OBJECT, RESOURCE_5);
-    public static final Map<Attribute, Node> POS_FOO3_OBJECT_R6 = createAvo(POS_FOO3_OBJECT, RESOURCE_6);
-    public static final Map<Attribute, Node> POS_FOO5_OBJECT_R4 = createAvo(POS_FOO5_OBJECT, RESOURCE_4);
-    public static final Map<Attribute, Node> POS_BAR3_OBJECT_R1 = createAvo(POS_BAR3_OBJECT, RESOURCE_1);
+    public static final Map<Attribute, Node> POS_FOO3_OBJECT_R3 = createAttValue(POS_FOO3_OBJECT, RESOURCE_3);
+    public static final Map<Attribute, Node> POS_FOO3_OBJECT_R4 = createAttValue(POS_FOO3_OBJECT, RESOURCE_4);
+    public static final Map<Attribute, Node> POS_FOO3_OBJECT_R5 = createAttValue(POS_FOO3_OBJECT, RESOURCE_5);
+    public static final Map<Attribute, Node> POS_FOO3_OBJECT_R6 = createAttValue(POS_FOO3_OBJECT, RESOURCE_6);
+    public static final Map<Attribute, Node> POS_FOO5_OBJECT_R4 = createAttValue(POS_FOO5_OBJECT, RESOURCE_4);
+    public static final Map<Attribute, Node> POS_BAR3_OBJECT_R1 = createAttValue(POS_BAR3_OBJECT, RESOURCE_1);
 
-    public static final Map<Attribute, Node> VAR_BAR1_SUBJECT_R3 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_3);
-    public static final Map<Attribute, Node> VAR_BAR1_SUBJECT_R4 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_4);
-    public static final Map<Attribute, Node> VAR_BAR1_SUBJECT_R5 = createAvo(VAR_BAR1_SUBJECT, RESOURCE_5);
-    public static final Map<Attribute, Node> VAR_BAR1_PREDICATE_R1 = createAvo(VAR_BAR1_PREDICATE,
+    public static final Map<Attribute, Node> VAR_BAR1_SUBJECT_R3 = createAttValue(VAR_BAR1_SUBJECT, RESOURCE_3);
+    public static final Map<Attribute, Node> VAR_BAR1_SUBJECT_R4 = createAttValue(VAR_BAR1_SUBJECT, RESOURCE_4);
+    public static final Map<Attribute, Node> VAR_BAR1_SUBJECT_R5 = createAttValue(VAR_BAR1_SUBJECT, RESOURCE_5);
+    public static final Map<Attribute, Node> VAR_BAR1_PREDICATE_R1 = createAttValue(VAR_BAR1_PREDICATE,
         RESOURCE_1);
-    public static final Map<Attribute, Node> VAR_BAR1_PREDICATE_R2 = createAvo(VAR_BAR1_PREDICATE,
+    public static final Map<Attribute, Node> VAR_BAR1_PREDICATE_R2 = createAttValue(VAR_BAR1_PREDICATE,
         RESOURCE_2);
-    public static final Map<Attribute, Node> VAR_BAR1_PREDICATE_R3 = createAvo(VAR_BAR1_PREDICATE,
+    public static final Map<Attribute, Node> VAR_BAR1_PREDICATE_R3 = createAttValue(VAR_BAR1_PREDICATE,
         RESOURCE_3);
-    public static final Map<Attribute, Node> VAR_BAR1_PREDICATE_R4 = createAvo(VAR_BAR1_PREDICATE,
+    public static final Map<Attribute, Node> VAR_BAR1_PREDICATE_R4 = createAttValue(VAR_BAR1_PREDICATE,
         RESOURCE_4);
-    public static final Map<Attribute, Node> VAR_BAR2_PREDICATE_R4 = createAvo(VAR_BAR2_PREDICATE,
+    public static final Map<Attribute, Node> VAR_BAR2_PREDICATE_R4 = createAttValue(VAR_BAR2_PREDICATE,
         RESOURCE_4);
-    public static final Map<Attribute, Node> VAR_BAR1_OBJECT_R3 = createAvo(VAR_BAR1_OBJECT, RESOURCE_3);
-    public static final Map<Attribute, Node> VAR_BAR1_OBJECT_R4 = createAvo(VAR_BAR1_OBJECT, RESOURCE_4);
-    public static final Map<Attribute, Node> VAR_BAR1_LITERAL_L1 = createAvo(VAR_BAR1_LITERAL, LITERAL_1);
-    public static final Map<Attribute, Node> VAR_BAR1_LITERAL_L3 = createAvo(VAR_BAR1_LITERAL, LITERAL_3);
-    public static final Map<Attribute, Node> VAR_FOO1_LITERAL_L1 = createAvo(VAR_FOO1_LITERAL, LITERAL_1);
-    public static final Map<Attribute, Node> VAR_BAR1_LITERAL_L2 = createAvo(VAR_BAR1_LITERAL, LITERAL_2);
-    public static final Map<Attribute, Node> VAR_FOO1_LITERAL_L2 = createAvo(VAR_FOO1_LITERAL, LITERAL_2);
+    public static final Map<Attribute, Node> VAR_BAR1_OBJECT_R3 = createAttValue(VAR_BAR1_OBJECT, RESOURCE_3);
+    public static final Map<Attribute, Node> VAR_BAR1_OBJECT_R4 = createAttValue(VAR_BAR1_OBJECT, RESOURCE_4);
+    public static final Map<Attribute, Node> VAR_BAR1_LITERAL_L1 = createAttValue(VAR_BAR1_LITERAL, LITERAL_1);
+    public static final Map<Attribute, Node> VAR_BAR1_LITERAL_L3 = createAttValue(VAR_BAR1_LITERAL, LITERAL_3);
+    public static final Map<Attribute, Node> VAR_FOO1_LITERAL_L1 = createAttValue(VAR_FOO1_LITERAL, LITERAL_1);
+    public static final Map<Attribute, Node> VAR_BAR1_LITERAL_L2 = createAttValue(VAR_BAR1_LITERAL, LITERAL_2);
+    public static final Map<Attribute, Node> VAR_FOO1_LITERAL_L2 = createAttValue(VAR_FOO1_LITERAL, LITERAL_2);
 
-    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTPREDICATE_R3 = createAvo(
+    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTPREDICATE_R3 = createAttValue(
         VAR_BAR1_SUBJECTPREDICATE, RESOURCE_3);
-    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTPREDICATE_R4 = createAvo(
+    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTPREDICATE_R4 = createAttValue(
         VAR_BAR1_SUBJECTPREDICATE, RESOURCE_4);
-    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTPREDICATEOBJECT_R3 = createAvo(
+    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTPREDICATEOBJECT_R3 = createAttValue(
         VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_3);
-    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTPREDICATEOBJECT_R4 = createAvo(
+    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTPREDICATEOBJECT_R4 = createAttValue(
         VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_4);
-    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTOBJECT_R3 = createAvo(VAR_BAR1_SUBJECTOBJECT,
+    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTOBJECT_R3 = createAttValue(VAR_BAR1_SUBJECTOBJECT,
         RESOURCE_3);
-    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTOBJECT_R4 = createAvo(VAR_BAR1_SUBJECTOBJECT,
+    public static final Map<Attribute, Node> VAR_BAR1_SUBJECTOBJECT_R4 = createAttValue(VAR_BAR1_SUBJECTOBJECT,
         RESOURCE_4);
 
-    private static Map<Attribute, Node> createAvo(final Attribute attribute, final org.jrdf.graph.Node node) {
+    public static Map<Attribute, Node> createAttValue(final Attribute attribute, final org.jrdf.graph.Node node) {
         return new HashMap<Attribute, Node>() {
             {
                 put(attribute, node);

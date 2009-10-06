@@ -59,7 +59,8 @@
 
 package org.jrdf.query.relation.operation.mem.logic;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
@@ -78,7 +79,6 @@ import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
-import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
 import org.jrdf.query.relation.operation.BooleanEvaluator;
@@ -89,160 +89,176 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_FOO1_LITERAL;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_FOO1_LITERAL_L1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_FOO1_LITERAL_L2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createAttValue;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createTuple;
 import static org.jrdf.util.test.NodeTestUtil.createLiteral;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * @author Yuan-Fang Li
- * @version $Id$
- */
-public class BooleanEvaluatorImplUnitTest extends TestCase {
+public class BooleanEvaluatorImplUnitTest {
     private static final NodeComparator NODE_COMPARATOR = new ComparatorFactoryImpl().createNodeComparator();
     private static final Literal LITERAL_L1_LANG = createLiteral("fr");
     private static final Literal LITERAL_L1_LANG1 = createLiteral("hello", "en");
     private static final Literal LITERAL_L1_LANG2 = createLiteral("hello", "fr");
-    private static final Tuple TEST_VARBAR_LITERAL_TUPLE_1 = createTuple(VAR_BAR1_LITERAL_L1);
-    private static final Tuple TEST_VARBAR_LITERAL_TUPLE_2 = createTuple(VAR_BAR1_LITERAL_L2);
-    private static final Tuple TEST_VARBAR_LITERAL_TUPLE_3 = createTuple(VAR_BAR1_LITERAL_L3);
-    private static final Tuple TEST_VARFOO_LITERAL_TUPLE_1 = createTuple(VAR_FOO1_LITERAL_L1);
-    private static final Tuple TEST_VARFOO_LITERAL_TUPLE_2 = createTuple(VAR_FOO1_LITERAL_L2);
+    private static final Tuple VAR_BAR1_LITERAL_HELLO_TUPLE = createTuple(VAR_BAR1_LITERAL_L1);
+    private static final Tuple VAR_BAR1_LITERAL_THERE_TUPLE = createTuple(VAR_BAR1_LITERAL_L2);
+    private static final Tuple VAR_BAR1_LITERAL_WORLD_TUPLE = createTuple(VAR_BAR1_LITERAL_L3);
+    private static final Tuple VAR_FOO1_LITERAL_HELLO_TUPLE = createTuple(VAR_FOO1_LITERAL_L1);
+    private static final Tuple VAR_FOO1_LITERAL_THERE_TUPLE = createTuple(VAR_FOO1_LITERAL_L2);
     private static final Tuple TEST_TUPLE_1_2 = createTuple(VAR_BAR1_LITERAL_L1, VAR_FOO1_LITERAL_L1);
+    private static final SingleValue VAR_BAR1_ANY = new SingleValue(createAttValue(VAR_BAR1_LITERAL, ANY_NODE));
+    private static final SingleValue VAR_BAR1_THERE = new SingleValue(VAR_BAR1_LITERAL_L2);
     private BooleanEvaluator<Boolean> evaluator;
     private LogicExpression expression;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void createEvaluator() {
         evaluator = new BooleanEvaluatorImpl(NODE_COMPARATOR);
     }
 
-    public void testLessThanExpression() {
-        SingleValue valueExp = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE));
-        SingleValue valueExp1 = new SingleValue(VAR_BAR1_LITERAL_L2);
-        expression = new LessThanExpression(valueExp, valueExp1);
-        boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
-        assertTrue(result);
-        result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_3, expression);
-        assertFalse(result);
-    }
-
-    public void testBoundExpression() {
-        Node vo = ANY_NODE;
-        expression = new BoundOperator(createAVO(VAR_BAR1_LITERAL, vo));
-        boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
-        assertTrue(result);
-        result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
-        assertFalse(result);
-    }
-
-    public void testNEqualsExpression() {
-        SingleValue valueExp = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE));
-        SingleValue valueExp1 = new SingleValue(VAR_BAR1_LITERAL_L2);
-        expression = new NEqualsExpression(valueExp, valueExp1);
-        boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
-        assertTrue(result);
-        result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_2, expression);
-        assertFalse(result);
-    }
-
-    public void testEqualsExpression() {
-        Expression valueExp = new StrOperator(createAVO(VAR_FOO1_LITERAL, ANY_NODE));
+    @Test
+    public void equalsExpression() {
+        // str(?bar1:literal=ANY)
+        Expression valueExp = new StrOperator(createAttValue(VAR_FOO1_LITERAL, ANY_NODE));
+        // ?foo1:literal=hello
         SingleValue valueExp1 = new SingleValue(VAR_FOO1_LITERAL_L1);
         expression = new EqualsExpression(valueExp, valueExp1);
-        boolean result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
-        assertTrue(result);
-        result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_2, expression);
-        assertFalse(result);
-        result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, expression);
-        assertFalse(result);
+        boolean result = evaluator.evaluate(VAR_FOO1_LITERAL_HELLO_TUPLE, expression);
+        assertThat(result, is(true));
+        result = evaluator.evaluate(VAR_FOO1_LITERAL_THERE_TUPLE, expression);
+        assertThat(result, is(false));
+        result = evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, expression);
+        assertThat(result, is(false));
         result = evaluator.evaluate(TEST_TUPLE_1_2, expression);
-        assertTrue(result);
+        assertThat(result, is(true));
     }
 
-    public void testLangOperator() {
-        Expression valueExp = new LangOperator(createAVO(VAR_FOO1_LITERAL, ANY_NODE));
-        Node vo1 = createLiteral("en");
-        Expression valueExp1 = new SingleValue(createAVO(VAR_FOO1_LITERAL, vo1));
-        expression = new EqualsExpression(valueExp, valueExp1);
-        boolean result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
-        assertFalse(result);
-
-        valueExp1 = new SingleValue(createAVO(VAR_BAR1_LITERAL, ANY_NODE));
-        expression = new EqualsExpression(valueExp, valueExp1);
-        result = evaluator.evaluate(TEST_VARFOO_LITERAL_TUPLE_1, expression);
-        assertFalse(result);
+    @Test
+    public void helloIsLessThanThereReturnsTrue() {
+        // ?bar1:literal=ANY < ?bar1:literal=there
+        expression = new LessThanExpression(VAR_BAR1_ANY, VAR_BAR1_THERE);
+        // tuple={?bar1:literal=hello} => ?bar1:literal=hello < ?bar1:literal=there
+        assertThat(evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, expression), is(true));
     }
 
-    public void testLangTags() {
-        Expression langExp = new LangOperator(createAVO(VAR_BAR1_LITERAL, ANY_NODE));
+    @Test
+    public void worldIsLessThanThereReturnsFalse() {
+        // ?bar1:literal=ANY < ?bar1:literal=there
+        expression = new LessThanExpression(VAR_BAR1_ANY, VAR_BAR1_THERE);
+        // tuple={?bar1:literal=world} => ?bar1:literal=world < ?bar1:literal=there
+        assertThat(evaluator.evaluate(VAR_BAR1_LITERAL_WORLD_TUPLE, expression), is(false));
+    }
+
+    @Test
+    public void helloIsNotEqualToThereReturnsTrue() {
+        // ?bar1:literal=ANY != ?bar1:literal=there
+        expression = new NEqualsExpression(VAR_BAR1_ANY, VAR_BAR1_THERE);
+        // tuple{?bar1:literal=hello} => ?bar1:literal=hello != ?bar1:literal=there
+        assertThat(evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, expression), is(true));
+    }
+
+    @Test
+    public void helloIsNotEqualToHelloReturnsFalse() {
+        // ?bar1:literal=ANY != ?bar1:literal=there
+        expression = new NEqualsExpression(VAR_BAR1_ANY, VAR_BAR1_THERE);
+        // tuple{?bar1:literal=there} => ?bar1:literal=there != ?bar1:literal=there
+        assertThat(evaluator.evaluate(VAR_BAR1_LITERAL_THERE_TUPLE, expression), is(false));
+    }
+
+    @Test
+    public void boundLiteralReturnsTrue() {
+        // bound(?bar1:literal=ANY)
+        expression = new BoundOperator(createAttValue(VAR_BAR1_LITERAL, ANY_NODE));
+        // tuple{?bar1:literal=hello} => bound(?bar1:literal=hello)
+        assertThat(evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, expression), is(true));
+    }
+
+    @Test
+    public void unboundLiteralReturnsFalse() {
+        // bound(?bar1:literal=ANY)
+        expression = new BoundOperator(createAttValue(VAR_BAR1_LITERAL, ANY_NODE));
+        // tuple{?foo1:literal=hello} => bound(?bar1:literal=hello)
+        assertThat(evaluator.evaluate(VAR_FOO1_LITERAL_HELLO_TUPLE, expression), is(false));
+    }
+
+    @Test
+    public void langOperator() {
+        Expression valueExp = new LangOperator(createAttValue(VAR_FOO1_LITERAL, ANY_NODE));
+        Expression valueExp1 = new SingleValue(createAttValue(VAR_FOO1_LITERAL, createLiteral("en")));
+        expression = new EqualsExpression(valueExp, valueExp1);
+        boolean result = evaluator.evaluate(VAR_FOO1_LITERAL_HELLO_TUPLE, expression);
+        assertThat(result, is(false));
+
+        expression = new EqualsExpression(valueExp, VAR_BAR1_ANY);
+        result = evaluator.evaluate(VAR_FOO1_LITERAL_HELLO_TUPLE, expression);
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void langTags() {
+        Expression langExp = new LangOperator(createAttValue(VAR_BAR1_LITERAL, ANY_NODE));
         Node vo1 = LITERAL_L1_LANG;
-        SingleValue valueExp1 = new SingleValue(createAVO(VAR_BAR1_LITERAL, vo1));
+        SingleValue valueExp1 = new SingleValue(createAttValue(VAR_BAR1_LITERAL, vo1));
         expression = new NEqualsExpression(langExp, valueExp1);
 
         Tuple tuple = createTuple(VAR_BAR1_LITERAL_L1);
         boolean result = evaluator.evaluate(tuple, expression);
-        assertTrue(result);
+        assertThat(result, is(true));
 
         Node vo2 = LITERAL_L1_LANG2;
-        tuple = createTuple(createAVO(VAR_BAR1_LITERAL, vo2));
+        tuple = createTuple(createAttValue(VAR_BAR1_LITERAL, vo2));
         result = evaluator.evaluate(tuple, expression);
-        assertFalse(result);
+        assertThat(result, is(false));
 
         vo2 = LITERAL_L1_LANG1;
-        tuple = createTuple(createAVO(VAR_BAR1_LITERAL, vo2));
+        tuple = createTuple(createAttValue(VAR_BAR1_LITERAL, vo2));
         result = evaluator.evaluate(tuple, expression);
-        assertTrue(result);
+        assertThat(result, is(true));
 
         expression = new EqualsExpression(langExp, valueExp1);
         result = evaluator.evaluate(tuple, expression);
-        assertFalse(result);
+        assertThat(result, is(false));
     }
 
-    public void testTrueFalse() {
-        boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, TRUE_EXPRESSION);
-        assertTrue(result);
+    @Test
+    public void trueFalse() {
+        boolean result = evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, TRUE_EXPRESSION);
+        assertThat(result, is(true));
 
-        result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, FALSE_EXPRESSION);
-        assertFalse(result);
+        result = evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, FALSE_EXPRESSION);
+        assertThat(result, is(false));
     }
 
-    public void testAndExp() {
-        LogicExpression andExp =
-            new LogicAndExpression(TRUE_EXPRESSION, FALSE_EXPRESSION);
-        boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
-        assertFalse(result);
+    @Test
+    public void andExp() {
+        LogicExpression andExp = new LogicAndExpression(TRUE_EXPRESSION, FALSE_EXPRESSION);
+        boolean result = evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, andExp);
+        assertThat(result, is(false));
 
         andExp = new LogicAndExpression(FALSE_EXPRESSION, TRUE_EXPRESSION);
-        result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
-        assertFalse(result);
+        result = evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, andExp);
+        assertThat(result, is(false));
     }
 
-    public void testOrExp() {
-        LogicExpression andExp =
-            new LogicOrExpression(TRUE_EXPRESSION, FALSE_EXPRESSION);
-        boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
-        assertTrue(result);
+    @Test
+    public void orExp() {
+        LogicExpression andExp = new LogicOrExpression(TRUE_EXPRESSION, FALSE_EXPRESSION);
+        boolean result = evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, andExp);
+        assertThat(result, is(true));
 
         andExp = new LogicOrExpression(FALSE_EXPRESSION, TRUE_EXPRESSION);
-        result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, andExp);
-        assertTrue(result);
+        result = evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, andExp);
+        assertThat(result, is(true));
     }
 
-    public void testNotExp() {
+    @Test
+    public void notExp() {
         LogicExpression notExp = new LogicNotExpression(TRUE_EXPRESSION);
-        boolean result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, notExp);
-        assertFalse(result);
+        boolean result = evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, notExp);
+        assertThat(result, is(false));
 
         notExp = new LogicNotExpression(FALSE_EXPRESSION);
-        result = evaluator.evaluate(TEST_VARBAR_LITERAL_TUPLE_1, notExp);
-        assertTrue(result);
-    }
-
-    private static Map<Attribute, Node> createAVO(Attribute key, Node value) {
-        Map<Attribute, Node> avo = new HashMap<Attribute, Node>();
-        avo.put(key, value);
-        return avo;
+        result = evaluator.evaluate(VAR_BAR1_LITERAL_HELLO_TUPLE, notExp);
+        assertThat(result, is(true));
     }
 }
