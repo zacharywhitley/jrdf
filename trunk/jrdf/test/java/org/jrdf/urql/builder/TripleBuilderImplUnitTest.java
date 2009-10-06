@@ -59,7 +59,8 @@
 
 package org.jrdf.urql.builder;
 
-import junit.framework.TestCase;
+import org.hamcrest.CoreMatchers;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Node;
@@ -86,11 +87,14 @@ import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_2;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_SUBJECT;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
-public final class TripleBuilderImplUnitTest extends TestCase {
+
+public final class TripleBuilderImplUnitTest {
     // FIXME TJA: Add test for subject and predicate being non-resources (literal & variable). Should fail in defined
     // way.
     private static final TripleSpec BOOK_1_DC_TITLE_VARIABLE =
@@ -109,37 +113,42 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
     private TripleBuilder tripleBuilder;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
         tripleBuilder = new TripleBuilderImpl(FACTORY.getNewGraph(), newSortedAttributeFactory);
     }
 
-    public void testClassProperties() {
+    @Test
+    public void classProperties() {
         checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilderImpl.class);
         checkConstructor(TripleBuilderImpl.class, Modifier.PUBLIC, PARAM_TYPES);
         checkConstructNullAssertion(TripleBuilderImpl.class, PARAM_TYPES);
         checkConstructorSetsFieldsAndFieldsPrivateFinal(TripleBuilderImpl.class, PARAM_TYPES, PARAMETER_NAMES);
     }
 
+    @Test
     public void testBuildTripleFromParserNode() throws Exception {
         checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_TITLE_VARIABLE, BOOK_1_DC_TITLE_VARIABLE);
     }
 
+    @Test
     public void testBuildTripleForParserNode2() throws Exception {
         checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, BOOK_2_DC_TITLE_VARIABLE);
     }
 
+    @Test
     public void testBuildTripleForParserNode3() throws Exception {
         checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, BOOK_1_DC_SUBJECT_VARIABLE);
     }
 
+    @Test
     public void testBuildTripleForParserNode4() throws Exception {
         checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, BOOK_1_DC_SUBJECT_BOOK_TITLE);
     }
 
+    @Test
     public void testBuildTripleForParserNode5() throws Exception {
         checkBuiltTripleWithLiteral(TRIPLE_VARIABLE_VARIABLE_SUBJECT, VARIABLE_VARIABLE_BOOK_TITLE);
     }
@@ -157,6 +166,6 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     private void checkBuildTriple(Map<Attribute, Node> expectedAvp, ATriple triple) throws Exception {
         triple.apply(tripleBuilder);
         Map<Attribute, Node> actualAvp = tripleBuilder.getTriples();
-        assertEquals(expectedAvp, actualAvp);
+        assertThat(actualAvp, CoreMatchers.equalTo(expectedAvp));
     }
 }

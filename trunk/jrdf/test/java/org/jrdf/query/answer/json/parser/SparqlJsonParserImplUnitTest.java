@@ -92,8 +92,7 @@ import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 
 public class SparqlJsonParserImplUnitTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    @Rule public ExpectedException thrown = ExpectedException.none();
     private static final String CANNOT_PARSE = "Cannot parse token: ";
     private TypeValueArrayFactory factory = new TypeValueArrayFactoryImpl();
 

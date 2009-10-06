@@ -1137,15 +1137,9 @@
         <root url="jar://$PROJECT_DIR$/lib/junit/junit-4.7.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-library-1.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-core-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/junit/powermock-1.2.5-full.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/junit/objenesis-1.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/junit/javassist-3.9.0.GA.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-core-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-library-1.2.jar!/" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="restlet">
       <CLASSES>
@@ -1205,6 +1199,20 @@
     <library name="jakarta-commons">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/jakarta-commons/commons-logging-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="powermock">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/junit/powermock-1.2.5-full.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="objenesis">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/junit/objenesis-1.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
