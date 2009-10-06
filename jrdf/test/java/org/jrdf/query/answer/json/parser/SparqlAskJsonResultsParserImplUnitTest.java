@@ -78,8 +78,7 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 
 public class SparqlAskJsonResultsParserImplUnitTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    @Rule public ExpectedException thrown = ExpectedException.none();
     private static final String CANNOT_PARSE = "Cannot parse token: ";
     private static final JsonToken BOGUS_TOKEN = JsonToken.NOT_AVAILABLE;
     private final MockFactory mockFactory = new MockFactory();
@@ -94,6 +93,7 @@ public class SparqlAskJsonResultsParserImplUnitTest {
     public void testCreateWithoutBoolean() throws Exception {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage(CANNOT_PARSE + "null");
+
         expect(mockJsonParser.getCurrentName()).andReturn("fred");
         mockFactory.replay();
         new SparqlAskJsonResultsParserImpl(mockJsonParser);

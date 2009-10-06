@@ -38,24 +38,13 @@
     <orderEntry type="library" name="wstx-asl" level="project" />
     <orderEntry type="library" name="je" level="project" />
     <orderEntry type="library" name="spring-rcp" level="project" />
-    <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.5.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="json-simple" level="project" />
-    <orderEntry type="library" name="saj" level="project" />
     <orderEntry type="library" name="jackson" level="project" />
-    <orderEntry type="library" name="mycilatesting" level="project" />
     <orderEntry type="library" name="jakarta-commons" level="project" />
-    <orderEntry type="library" name="unitils" level="project" />
+    <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="library" name="powermock" level="project" />
+    <orderEntry type="library" name="objenesis" level="project" />
   </component>
   <component name="RSpecModuleSettingsStorage">
     <RSPEC_MODULE_SETTINGS_STORAGE_ID NAME="RSPEC_SUPPORT_TYPE" VALUE="NONE" />
