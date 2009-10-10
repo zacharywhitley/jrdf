@@ -183,13 +183,17 @@ public class BooleanEvaluatorImplUnitTest {
 
     @Test
     public void langOperator() {
-        Expression valueExp = new LangOperator(createAttValue(VAR_FOO1_LITERAL, ANY_NODE));
-        Expression valueExp1 = new SingleValue(createAttValue(VAR_FOO1_LITERAL, createLiteral("en")));
-        expression = new EqualsExpression(valueExp, valueExp1);
+        // lang(?foo1:literal=ANY)
+        Expression lhs = new LangOperator(createAttValue(VAR_FOO1_LITERAL, ANY_NODE));
+        // ?foo1:literal=en
+        Expression rhs = new SingleValue(createAttValue(VAR_FOO1_LITERAL, createLiteral("en")));
+        // lang(?foo) = (?foo=en)
+        expression = new EqualsExpression(lhs, rhs);
+        // tuple{?foo1:literal=hello} = lang(?foo) = (?foo=en)
         boolean result = evaluator.evaluate(VAR_FOO1_LITERAL_HELLO_TUPLE, expression);
         assertThat(result, is(false));
 
-        expression = new EqualsExpression(valueExp, VAR_BAR1_ANY);
+        expression = new EqualsExpression(lhs, VAR_BAR1_ANY);
         result = evaluator.evaluate(VAR_FOO1_LITERAL_HELLO_TUPLE, expression);
         assertThat(result, is(false));
     }

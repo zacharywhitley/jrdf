@@ -62,19 +62,18 @@ package org.jrdf.query.execute;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.Node;
 import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 import org.jrdf.query.expression.BiOperandExpression;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.expression.Union;
-import org.jrdf.query.relation.Attribute;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createAttValue;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createAttValueMap;
 
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Yuan-Fang Li
@@ -82,45 +81,23 @@ import java.util.Map;
  */
 public class BiOperandExpressionSimplifierImplIntegrationTest extends ExpressionSimplifierImplIntegrationTest {
     private BiOperandExpressionSimplifier simplifier;
-    private Map<Attribute, Node> subj;
-    private Map<Attribute, Node> pred;
-    private Map<Attribute, Node> obj;
-    private LinkedHashMap<Attribute, Node> avp1;
     private SingleConstraint constraint1;
-    private Map<Attribute, Node> subj1;
-    private Map<Attribute, Node> obj1;
-    private LinkedHashMap<Attribute, Node> avp2;
     private SingleConstraint constraint2;
-    private Map<Attribute, Node> subj2;
-    private Map<Attribute, Node> obj2;
-    private LinkedHashMap<Attribute, Node> avp3;
     private SingleConstraint constraint3;
-    private Map<Attribute, Node> subj3;
-    private Map<Attribute, Node> obj3;
-    private LinkedHashMap<Attribute, Node> avp4;
     private SingleConstraint constraint4;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         simplifier = new BiOperandExpressionSimplifierImpl(EXPRESSION_COMPARATOR);
-        subj = createSingleAVP(ATTR_S, ANY_SUBJECT_NODE);
-        pred = createSingleAVP(ATTR_P, ANY_PREDICATE_NODE);
-        obj = createSingleAVP(ATTR_O, ANY_OBJECT_NODE);
-        avp1 = createSingleAVP(subj, pred, obj);
-        constraint1 = new SingleConstraint(avp1);
-        subj1 = createSingleAVP(ATTR_S1, ANY_SUBJECT_NODE);
-        obj1 = createSingleAVP(ATTR_O1, ANY_OBJECT_NODE);
-        avp2 = createSingleAVP(subj1, pred, obj1);
-        constraint2 = new SingleConstraint(avp2);
-        subj2 = createSingleAVP(ATTR_S2, ANY_SUBJECT_NODE);
-        obj2 = createSingleAVP(ATTR_O2, ANY_OBJECT_NODE);
-        avp3 = createSingleAVP(subj2, pred, obj2);
-        constraint3 = new SingleConstraint(avp3);
-        subj3 = createSingleAVP(ATTR_S3, ANY_SUBJECT_NODE);
-        obj3 = createSingleAVP(ATTR_O3, ANY_OBJECT_NODE);
-        avp4 = createSingleAVP(subj3, pred, obj3);
-        constraint4 = new SingleConstraint(avp4);
+        constraint1 = new SingleConstraint(createAttValueMap(createAttValue(ATTR_S, ANY_SUBJECT_NODE),
+            createAttValue(ATTR_P, ANY_PREDICATE_NODE), createAttValue(ATTR_O, ANY_OBJECT_NODE)));
+        constraint2 = new SingleConstraint(createAttValueMap(createAttValue(ATTR_S1, ANY_SUBJECT_NODE),
+            createAttValue(ATTR_P, ANY_PREDICATE_NODE), createAttValue(ATTR_O1, ANY_OBJECT_NODE)));
+        constraint3 = new SingleConstraint(createAttValueMap(createAttValue(ATTR_S2, ANY_SUBJECT_NODE),
+            createAttValue(ATTR_P, ANY_PREDICATE_NODE), createAttValue(ATTR_O2, ANY_OBJECT_NODE)));
+        constraint4 = new SingleConstraint(createAttValueMap(createAttValue(ATTR_S3, ANY_SUBJECT_NODE),
+            createAttValue(ATTR_P, ANY_PREDICATE_NODE), createAttValue(ATTR_O3, ANY_OBJECT_NODE)));
     }
 
     @Override
@@ -132,8 +109,7 @@ public class BiOperandExpressionSimplifierImplIntegrationTest extends Expression
         Conjunction conj1 = new Conjunction(constraint1, constraint2);
         Conjunction conj2 = new Conjunction(conj1, constraint3);
         Conjunction conj3 = new Conjunction(conj2, constraint4);
-        List<Expression> expected =
-            createExpected(constraint1, constraint2, constraint3, constraint4);
+        List<Expression> expected = createExpected(constraint1, constraint2, constraint3, constraint4);
         checkResult(conj3, expected);
 
         conj1 = new Conjunction(constraint4, constraint3);
@@ -153,8 +129,7 @@ public class BiOperandExpressionSimplifierImplIntegrationTest extends Expression
         Union union1 = new Union(constraint1, constraint2);
         Union union2 = new Union(union1, constraint3);
         Union union3 = new Union(union2, constraint4);
-        List<Expression> expected =
-            createExpected(constraint1, constraint2, constraint3, constraint4);
+        List<Expression> expected = createExpected(constraint1, constraint2, constraint3, constraint4);
         checkResult(union3, expected);
 
         union1 = new Union(constraint4, constraint3);
@@ -172,16 +147,12 @@ public class BiOperandExpressionSimplifierImplIntegrationTest extends Expression
 
     private List<Expression> createExpected(Expression... expressions) {
         List<Expression> expected = new LinkedList<Expression>();
-        for (Expression exp : expressions) {
-            expected.add(exp);
-        }
+        expected.addAll(Arrays.asList(expressions));
         return expected;
     }
 
-    private void checkResult(BiOperandExpression expression,
-                             List<Expression> expected) {
-        List<Expression> actual =
-            simplifier.flattenAndSortConjunction(expression, expression.getClass());
+    private void checkResult(BiOperandExpression expression, List<Expression> expected) {
+        List<Expression> actual = simplifier.flattenAndSortConjunction(expression, expression.getClass());
         assertEquals(expected, actual);
     }
 }

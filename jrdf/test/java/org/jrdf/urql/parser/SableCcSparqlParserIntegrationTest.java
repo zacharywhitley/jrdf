@@ -64,7 +64,6 @@ import org.jrdf.TestJRDFFactory;
 import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
-import org.jrdf.graph.Node;
 import org.jrdf.query.AskQueryImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
@@ -72,6 +71,7 @@ import org.jrdf.query.SelectQueryImpl;
 import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Conjunction;
+import org.jrdf.query.expression.Constraint;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.Filter;
@@ -91,7 +91,6 @@ import org.jrdf.query.expression.logic.NEqualsExpression;
 import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
@@ -101,7 +100,6 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
-import org.jrdf.util.test.NodeTestUtil;
 import static org.jrdf.util.test.NodeTestUtil.createLiteral;
 import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.ANY_SPO;
@@ -134,8 +132,6 @@ import static org.jrdf.vocabulary.XSD.BOOLEAN;
 
 import java.lang.reflect.Field;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
@@ -146,6 +142,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     // Projection.ALL_VARIABLES is the empty list.
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
+    private static final URI PURL_DATE = URI.create("http://purl.org/dc/elements/1.1/date");
     private static final Literal LITERAL = createLiteral("The Pragmatic Programmer");
     private static final Expression BOOK1_AND_2_CONJUNCTION
         = new Conjunction(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
@@ -159,33 +156,21 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         = new Union(BOOK1_AND_2_UNION, EMPTY_CONSTRAINT);
     private static final Expression EMPTY_AND_BOOK1_AND_2_UNION = new Union(
         new Union(EMPTY_CONSTRAINT, BOOK_1_DC_TITLE_ID_1), BOOK_2_DC_TITLE_ID_2);
-    private static final Expression ALL_AND_EMPTY = new Conjunction(ANY_SPO,
-        EMPTY_CONSTRAINT);
-    private static final Expression FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
-        "name", 1);
-    private static final Expression FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK,
-        "nick", 2);
-    private static final Expression FOAF_ALIAS_EXP_2 = createConstraintExpression("x", FOAF_NICK,
-        "alias", 2);
-    private static final Expression FOAF_MBOX_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
-        "mbox", 3);
-    private static final Expression FOAF_ALIAS_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
-        "alias", 3);
-    private static final Expression FOAF_NAME_EXP_3 = createConstraintExpression("x", FOAF_NAME,
-        "name", 3);
-    private static final Expression FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX,
-        "mbox", 4);
-    private static final Expression DC_DATE_EXP_2 = createConstraintExpression("x",
-        URI.create("http://purl.org/dc/elements/1.1/date"), "date", 2);
-
+    private static final Expression ALL_AND_EMPTY = new Conjunction(ANY_SPO, EMPTY_CONSTRAINT);
+    private static final Expression FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME, "name", 1);
+    private static final Expression FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK, "nick", 2);
+    private static final Expression FOAF_ALIAS_EXP_2 = createConstraintExpression("x", FOAF_NICK, "alias", 2);
+    private static final Expression FOAF_MBOX_EXP_3 = createConstraintExpression("x", FOAF_MBOX, "mbox", 3);
+    private static final Expression FOAF_ALIAS_EXP_3 = createConstraintExpression("x", FOAF_MBOX, "alias", 3);
+    private static final Expression FOAF_NAME_EXP_3 = createConstraintExpression("x", FOAF_NAME, "name", 3);
+    private static final Expression FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX, "mbox", 4);
+    private static final Expression DC_DATE_EXP_2 = createConstraintExpression("x", PURL_DATE, "date", 2);
     private static final String SELECT_WHERE_S_P_O_AND_EMPTY = "SELECT * WHERE { ?s ?p ?o . {} } ";
-    private QueryParser parser;
-    private static final AttributeName NAME_VAR = new VariableName("name");
-    private static final Attribute NAME_OBJECT_ATTR = new AttributeImpl(NAME_VAR, new ObjectNodeType());
-    private static final AttributeName X_VAR = new VariableName("x");
-    private static final Attribute X_SUBJ_VAR = new AttributeImpl(X_VAR, new SubjectNodeType());
+    private static final Attribute NAME_OBJECT_ATTR = new AttributeImpl(new VariableName("name"), new ObjectNodeType());
+    private static final Attribute X_SUBJ_VAR = new AttributeImpl(new VariableName("x"), new SubjectNodeType());
     private static final Literal ABC_LITERAL = createLiteral("abc");
     private static final Literal EN_LITERAL = createLiteral("en");
+    private QueryParser parser;
 
     public void setUp() throws Exception {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
@@ -345,232 +330,177 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void testBooleanLiteral() throws Exception {
         Literal trueLiteral = createLiteral("true", BOOLEAN);
-        Literal falseLiteral = createLiteral("false", BOOLEAN);
         Expression spTrue = createConstraintExpression("s", "p", trueLiteral, 1);
-        Expression spFalse = createConstraintExpression("s", "p", falseLiteral, 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p true }", spTrue);
+    }
+
+    public void testBooleanLiteralFalse() throws Exception {
+        Literal falseLiteral = createLiteral("false", BOOLEAN);
+        Expression spFalse = createConstraintExpression("s", "p", falseLiteral, 1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p false }", spFalse);
     }
 
-    public void testFilter() throws Exception {
-        String queryString = "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
-                "SELECT * WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }";
-        AttributeName oVar = new VariableName("o");
-        Expression spoExpression = createConstraintExpression("s", "p", "o");
-        Map<Attribute, Node> avo = new HashMap<Attribute, Node>();
-        Attribute attribute = new AttributeImpl(oVar, new ObjectNodeType());
-        Node value = createLiteral("unknown");
-        avo.put(attribute, value);
-        Map<Attribute, Node> strAvo = new HashMap<Attribute, Node>();
-        Node strValue = ANY_NODE;
-        strAvo.put(attribute, strValue);
-        Expression strOpr = new StrOperator(strAvo);
-        SingleValue valueExp = new SingleValue(avo);
-        LogicExpression eqnExpression = new EqualsExpression(strOpr, valueExp);
-        Expression filterExpression = new Filter(spoExpression, eqnExpression);
-        checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER( str(?o) = \"unknown\" ) }", filterExpression);
+    public void testFilterUntypedLiteral() throws Exception {
+        final Attribute oVariable = new AttributeImpl(new VariableName("o"), new ObjectNodeType());
+        final Expression strOpr = new StrOperator(createAttValue(oVariable, ANY_NODE));
+        final Constraint unknownLiteral = new SingleValue(createAttValue(oVariable, createLiteral("unknown")));
+        final LogicExpression strVarOEqUnknown = new EqualsExpression(strOpr, unknownLiteral);
+        final Expression matchSpoAndFilter = new Filter(createConstraintExpression("s", "p", "o"), strVarOEqUnknown);
+        checkConstraintExpression("SELECT * \n" +
+            "WHERE { ?s ?p ?o . \n" +
+            "FILTER( str(?o) = \"unknown\" ) }", matchSpoAndFilter);
+    }
 
-        value = createLiteral("unknown", XSD.STRING);
-        avo.put(attribute, value);
-        valueExp = new SingleValue(avo);
-        eqnExpression = new EqualsExpression(strOpr, valueExp);
-        filterExpression = new Filter(spoExpression, eqnExpression);
-        checkConstraintExpression(queryString, filterExpression);
+    public void testFilterWithTypeLiteral() throws Exception {
+        final Attribute oVariable = new AttributeImpl(new VariableName("o"), new ObjectNodeType());
+        final Expression strOpr = new StrOperator(createAttValue(oVariable, ANY_NODE));
+        final Constraint unknownStringLiteral = new SingleValue(createAttValue(oVariable,
+            createLiteral("unknown", XSD.STRING)));
+        final LogicExpression strVarOEqUnknown = new EqualsExpression(strOpr, unknownStringLiteral);
+        final Expression matchSpoAndFilter = new Filter(createConstraintExpression("s", "p", "o"), strVarOEqUnknown);
+        checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
+            "SELECT *\n" +
+            "WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", matchSpoAndFilter);
+    }
+
+    public void testBooleanNotStrOperators() throws Exception {
+        final Expression strOpr = new StrOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        final Expression abcLiteral = new SingleValue(createAttValue(NAME_OBJECT_ATTR, ABC_LITERAL));
+        final LogicExpression strVarNameEqAbc = new EqualsExpression(strOpr, abcLiteral);
+        final LogicExpression neStrVarNameEqAbc = new LogicNotExpression(strVarNameEqAbc);
+        final Expression matchNameAndFilter = new Filter(FOAF_NAME_EXP_1, neStrVarNameEqAbc);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+            "SELECT ?name\n" +
+            "WHERE { ?x foaf:name ?name . FILTER ( !(str(?name) = \"abc\")) }", matchNameAndFilter);
     }
 
     public void testThreePartOptional() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        final Expression optional = new Optional(FOAF_NAME_EXP_1, DC_DATE_EXP_2);
+        final Attribute date = new AttributeImpl(new VariableName("date"), new ObjectNodeType());
+        final LogicExpression boundVar = new BoundOperator(createAttValue(date, ANY_NODE));
+        final Expression optionalAndFilter = new Filter(optional, boundVar);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "OPTIONAL { ?x dc:date ?date } .\n" +
-            "FILTER ( bound(?date) ) }";
-        Expression optionalExpression = new Optional(FOAF_NAME_EXP_1,
-            DC_DATE_EXP_2);
-        AttributeName dateVar = new VariableName("date");
-        Map<Attribute, Node> avo = new HashMap<Attribute, Node>();
-        Attribute attribute = new AttributeImpl(dateVar, new ObjectNodeType());
-        Node value = ANY_NODE;
-        avo.put(attribute, value);
-        LogicExpression boundExpression = new BoundOperator(avo);
-        Expression filterExpression =
-            new Filter(optionalExpression, boundExpression);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( bound(?date) ) }", optionalAndFilter);
     }
 
     public void testBooleanNotOperator() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        final LogicExpression boundVar = new BoundOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        final LogicExpression notBound = new LogicNotExpression(boundVar);
+        final Expression matchNameAndFilter = new Filter(FOAF_NAME_EXP_1, notBound);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
-            "FILTER ( !bound(?name) ) }";
-        Map<Attribute, Node> avo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-        LogicExpression boundExpression = new BoundOperator(avo);
-        LogicExpression notExpression = new LogicNotExpression(boundExpression);
-        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, notExpression);
-        checkConstraintExpression(queryString, filterExpression);
-    }
-
-    public void testBooleanNotStrOperators() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-            "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-            "SELECT ?name\n" +
-            "WHERE { ?x foaf:name ?name .\n" +
-            "FILTER ( !(str(?name) = \"abc\")) }";
-        Map<Attribute, Node> avo = createAttValue(NAME_OBJECT_ATTR, ABC_LITERAL);
-        Map<Attribute, Node> nameAvo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-
-        Expression strOpr = new StrOperator(nameAvo);
-        Expression valueExp = new SingleValue(avo);
-        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
-        LogicExpression notExp = new LogicNotExpression(equalsExpression);
-        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, notExp);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( !bound(?name) ) }", matchNameAndFilter);
     }
 
     public void testNeqExpression() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        final Expression strOpr = new StrOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        final Expression abcLiteral = new SingleValue(createAttValue(NAME_OBJECT_ATTR, ABC_LITERAL));
+        final LogicExpression neqExpression = new NEqualsExpression(strOpr, abcLiteral);
+        final Expression matchNameAndFilter = new Filter(FOAF_NAME_EXP_1, neqExpression);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
-            "FILTER ( str(?name) != \"abc\") }";
-        Map<Attribute, Node> avo = createAttValue(NAME_OBJECT_ATTR, ABC_LITERAL);
-        Map<Attribute, Node> nameAvo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-
-        Expression strOpr = new StrOperator(nameAvo);
-        Expression valueExp = new SingleValue(avo);
-        LogicExpression neqExpression = new NEqualsExpression(strOpr, valueExp);
-        Expression filterExpression =
-            new Filter(FOAF_NAME_EXP_1, neqExpression);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( str(?name) != \"abc\") }", matchNameAndFilter);
     }
 
     public void testEqLangOperator() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        final Expression langOpr = new LangOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        final Expression enLiteral = new SingleValue(createAttValue(NAME_OBJECT_ATTR, EN_LITERAL));
+        final LogicExpression eqnExp = new EqualsExpression(langOpr, enLiteral);
+        final Expression matchNameAndFilter = new Filter(FOAF_NAME_EXP_1, eqnExp);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
-            "FILTER ( lang(?name) = \"en\") }";
-        Map<Attribute, Node> avo = createAttValue(NAME_OBJECT_ATTR, EN_LITERAL);
-        Map<Attribute, Node> nameAvo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-
-        Expression valueExp = new SingleValue(avo);
-        Expression langOpr = new LangOperator(nameAvo);
-        LogicExpression eqnExp = new EqualsExpression(langOpr, valueExp);
-        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( lang(?name) = \"en\") }", matchNameAndFilter);
     }
 
     public void testOppositeEqLangOperator() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        final Expression valueExp = new SingleValue(createAttValue(NAME_OBJECT_ATTR, EN_LITERAL));
+        final Expression langOpr = new LangOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        final LogicExpression eqnExp = new EqualsExpression(valueExp, langOpr);
+        final Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
-            "FILTER ( \"en\" = lang(?name)) }";
-        Map<Attribute, Node> avo = createAttValue(NAME_OBJECT_ATTR, EN_LITERAL);
-        Map<Attribute, Node> nameAvo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-
-        Expression valueExp = new SingleValue(avo);
-        Expression langOpr = new LangOperator(nameAvo);
-        LogicExpression eqnExp = new EqualsExpression(valueExp, langOpr);
-        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( \"en\" = lang(?name)) }", filterExpression);
     }
 
     public void testRareBooleanFilter() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        LogicExpression bound1 = new BoundOperator(createAttValue(X_SUBJ_VAR, ANY_NODE));
+        LogicExpression bound2 = new BoundOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        LogicExpression andExp = new LogicAndExpression(bound1, bound2);
+        LogicExpression equalsExp = new EqualsExpression(andExp, TRUE_EXPRESSION);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, equalsExp);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
-            "FILTER ( (bound(?x) && bound(?name)) = true) }";
-        Map<Attribute, Node> avo = createAttValue(X_SUBJ_VAR, ANY_NODE);
-        Map<Attribute, Node> nameAvo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-
-        LogicExpression bound1 = new BoundOperator(avo);
-        LogicExpression bound2 = new BoundOperator(nameAvo);
-        LogicExpression andExp = new LogicAndExpression(bound1, bound2);
-
-        LogicExpression equalsExp = new EqualsExpression(andExp, TRUE_EXPRESSION);
-        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, equalsExp);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( (bound(?x) && bound(?name)) = true) }", filterExpression);
     }
 
     public void testEqLangOperatorDiffVariables() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        Attribute attribute1 = new AttributeImpl(new VariableName("nick"), new ObjectNodeType());
+        Expression langOpr = new LangOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        Expression langOpr1 = new LangOperator(createAttValue(attribute1, ANY_NODE));
+        LogicExpression eqnExp = new EqualsExpression(langOpr, langOpr1);
+        Expression conj = new Conjunction(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
+        Expression filterExpression = new Filter(conj, eqnExp);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
             "        ?x foaf:nick ?nick " +
-            "FILTER ( lang(?name) = lang(?nick) ) }";
-        Map<Attribute, Node> nameAvo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-
-        Attribute attribute1 = new AttributeImpl(new VariableName("nick"), new ObjectNodeType());
-        Map<Attribute, Node> nickAvo = createAttValue(attribute1, ANY_NODE);
-
-        Expression langOpr = new LangOperator(nameAvo);
-        Expression langOpr1 = new LangOperator(nickAvo);
-
-        LogicExpression eqnExp = new EqualsExpression(langOpr, langOpr1);
-        Expression conj = new Conjunction(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
-        Expression filterExpression = new Filter(conj, eqnExp);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( lang(?name) = lang(?nick) ) }", filterExpression);
     }
 
     public void testActualLangTag() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        Expression langOpr = new LangOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        Expression valueExp = new SingleValue(createAttValue(NAME_OBJECT_ATTR, createLiteral("en")));
+        LogicExpression eqnExp = new EqualsExpression(langOpr, valueExp);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name \n" +
-            "FILTER ( lang(?name) = \"en\" ) }";
-        Map<Attribute, Node> nameAvo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-        Literal literal = NodeTestUtil.createLiteral("en");
-        Map<Attribute, Node> nameAvo1 = createAttValue(NAME_OBJECT_ATTR, literal);
-
-        Expression langOpr = new LangOperator(nameAvo);
-        Expression valueExp = new SingleValue(nameAvo1);
-        LogicExpression eqnExp = new EqualsExpression(langOpr, valueExp);
-        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( lang(?name) = \"en\" ) }", filterExpression);
     }
 
     public void testLogicAndExpression() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        Expression strOpr = new StrOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        Expression valueExp = new SingleValue(createAttValue(NAME_OBJECT_ATTR, ABC_LITERAL));
+        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
+        LogicExpression boundExpression = new BoundOperator(createAttValue(X_SUBJ_VAR, ANY_NODE));
+        LogicExpression andExpression = new LogicAndExpression(equalsExpression, boundExpression);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, andExpression);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
-            "FILTER ( str(?name) = \"abc\" && bound(?x) ) }";
-        Map<Attribute, Node> nameAvo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-        Map<Attribute, Node> avo = createAttValue(NAME_OBJECT_ATTR, ABC_LITERAL);
-        Map<Attribute, Node> xAvo = createAttValue(X_SUBJ_VAR, ANY_NODE);
-
-        Expression strOpr = new StrOperator(nameAvo);
-        Expression valueExp = new SingleValue(avo);
-        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
-        LogicExpression boundExpression = new BoundOperator(xAvo);
-        LogicExpression andExpression =
-            new LogicAndExpression(equalsExpression, boundExpression);
-        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, andExpression);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( str(?name) = \"abc\" && bound(?x) ) }", filterExpression);
     }
 
     public void testLogicOrExpression() throws Exception {
-        String queryString = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        Expression strOpr = new StrOperator(createAttValue(NAME_OBJECT_ATTR, ANY_NODE));
+        Expression valueExp = new SingleValue(createAttValue(NAME_OBJECT_ATTR, ABC_LITERAL));
+        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
+        LogicExpression boundExpression = new BoundOperator(createAttValue(X_SUBJ_VAR, ANY_NODE));
+        LogicExpression orExpression = new LogicOrExpression(equalsExpression, boundExpression);
+        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, orExpression);
+        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name .\n" +
-            "FILTER ( str(?name) = \"abc\" || bound(?x) ) }";
-        Map<Attribute, Node> nameAvo = createAttValue(NAME_OBJECT_ATTR, ANY_NODE);
-        Map<Attribute, Node> avo = createAttValue(NAME_OBJECT_ATTR, ABC_LITERAL);
-        Map<Attribute, Node> xAvo = createAttValue(X_SUBJ_VAR, ANY_NODE);
-
-        Expression strOpr = new StrOperator(nameAvo);
-        Expression valueExp = new SingleValue(avo);
-        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
-        LogicExpression boundExpression = new BoundOperator(xAvo);
-        LogicExpression orExpression =
-            new LogicOrExpression(equalsExpression, boundExpression);
-        Expression filterExpression = new Filter(FOAF_NAME_EXP_1, orExpression);
-        checkConstraintExpression(queryString, filterExpression);
+            "FILTER ( str(?name) = \"abc\" || bound(?x) ) }", filterExpression);
     }
 
     public void testSimpleAskQuery() throws Exception {
@@ -591,14 +521,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testPrefixInFilteredAsk() throws Exception {
-        Attribute attribute = new AttributeImpl(new VariableName("o"), new ObjectNodeType());
-        Map<Attribute, Node> avo = createAttValue(attribute, createLiteral("unknown", XSD.STRING));
-        Map<Attribute, Node> strAvo = createAttValue(attribute, ANY_NODE);
-        Expression spoExpression = createConstraintExpression("s", "p", "o");
-        Expression strOpr = new StrOperator(strAvo);
-        Expression valueExp = new SingleValue(avo);
-        LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
-        Expression filterExpression = new Filter(spoExpression, equalsExpression);
+        final Attribute oVar = new AttributeImpl(new VariableName("o"), new ObjectNodeType());
+        final Expression strOpr = new StrOperator(createAttValue(oVar, ANY_NODE));
+        final Expression valueExp = new SingleValue(createAttValue(oVar, createLiteral("unknown", XSD.STRING)));
+        final LogicExpression equalsExpression = new EqualsExpression(strOpr, valueExp);
+        final Expression filterExpression = new Filter(createConstraintExpression("s", "p", "o"), equalsExpression);
         checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
             "ASK WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", filterExpression);
     }
@@ -627,8 +554,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     @SuppressWarnings({ "unchecked" })
-    private Expression getExpressionField(Object obj, Class<?> cls, String fieldName)
-        throws IllegalAccessException {
+    private Expression getExpressionField(Object obj, Class<?> cls, String fieldName) throws IllegalAccessException {
         Field field = ReflectTestUtil.getField(cls, fieldName);
         field.setAccessible(true);
         return (Expression) field.get(obj);

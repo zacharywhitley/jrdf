@@ -93,8 +93,7 @@ import org.jrdf.urql.parser.parser.ParserException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
-    implements NumericExpressionAnalyser {
+public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements NumericExpressionAnalyser {
     private ParserException exception;
     private AttributeName attributeName;
     private org.jrdf.graph.Node value;
@@ -117,25 +116,12 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
         return expression;
     }
 
-    private Map<Attribute, Node> getSingleAvp() throws ParserException {
-        if (exception != null) {
-            throw exception;
-        }
-        Map<Attribute, Node> returnValue = new HashMap<Attribute, Node>();
-        final Map<AttributeName, PositionalNodeType> namePosMap = collector.getAttributes();
-        NodeType type = namePosMap.get(attributeName);
-        type = (type != null) ? type : new ObjectNodeType();
-        Attribute attribute = attributeName == null ? NULLARY_ATTRIBUTE : new AttributeImpl(attributeName, type);
-        returnValue.put(attribute, value);
-        collector.addConstraints(returnValue);
-        return returnValue;
-    }
-
     @Override
     public void caseABoundBuiltincall(ABoundBuiltincall node) {
         node.getBracketedVar().apply(this);
         try {
             this.expression = new BoundOperator(getSingleAvp());
+            this.attributeName = null;
         } catch (ParserException e) {
             this.exception = e;
         }
@@ -146,6 +132,17 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
         node.getBracketedExpression().apply(this);
         try {
             this.expression = new LangOperator(getSingleAvp());
+            this.attributeName = null;
+        } catch (ParserException e) {
+            this.exception = e;
+        }
+    }
+
+    @Override
+    public void caseAStrBuiltincall(AStrBuiltincall node) {
+        try {
+            node.getBracketedExpression().apply(this);
+            this.expression = new StrOperator(getSingleAvp());
         } catch (ParserException e) {
             this.exception = e;
         }
@@ -158,16 +155,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
             this.expression = new SingleValue(getSingleAvp());
         } catch (ParserException e) {
             exception = e;
-        }
-    }
-
-    @Override
-    public void caseAStrBuiltincall(AStrBuiltincall node) {
-        try {
-            node.getBracketedExpression().apply(this);
-            this.expression = new StrOperator(getSingleAvp());
-        } catch (ParserException e) {
-            this.exception = e;
         }
     }
 
@@ -226,5 +213,23 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter
         } catch (ParserException e) {
             exception = e;
         }
+    }
+
+    private Map<Attribute, Node> getSingleAvp() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        }
+        Map<Attribute, Node> returnValue = new HashMap<Attribute, Node>();
+        final Map<AttributeName, PositionalNodeType> namePosMap = collector.getAttributes();
+        if (attributeName == null) {
+            returnValue.put(NULLARY_ATTRIBUTE, value);
+        } else {
+            NodeType type = namePosMap.get(attributeName);
+            type = (type != null) ? type : new ObjectNodeType();
+            Attribute attribute = attributeName == null ? NULLARY_ATTRIBUTE : new AttributeImpl(attributeName, type);
+            returnValue.put(attribute, value);
+            collector.addConstraints(returnValue);
+        }
+        return returnValue;
     }
 }
