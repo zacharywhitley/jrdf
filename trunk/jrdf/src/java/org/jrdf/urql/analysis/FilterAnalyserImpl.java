@@ -109,7 +109,7 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
     private NumericExpressionAnalyser numericExpressionAnalyser;
 
     public FilterAnalyserImpl(LiteralBuilder newLiteralBuilder, VariableCollector newCollector,
-                              URIReferenceBuilder newUriBuilder) {
+        URIReferenceBuilder newUriBuilder) {
         this.literalBuilder = newLiteralBuilder;
         this.collector = newCollector;
         this.uriBuilder = newUriBuilder;

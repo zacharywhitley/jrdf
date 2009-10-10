@@ -98,6 +98,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.LinkedHashMap;
 
 public class RelationIntegrationTestUtil {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
@@ -210,11 +211,17 @@ public class RelationIntegrationTestUtil {
         RESOURCE_4);
 
     public static Map<Attribute, Node> createAttValue(final Attribute attribute, final org.jrdf.graph.Node node) {
-        return new HashMap<Attribute, Node>() {
-            {
-                put(attribute, node);
-            }
-        };
+        Map<Attribute, Node> map = new LinkedHashMap<Attribute, Node>();
+        map.put(attribute, node);
+        return map;
+    }
+
+    public static LinkedHashMap<Attribute, Node> createAttValueMap(Map<Attribute, Node>... avps) {
+        LinkedHashMap<Attribute, Node> map = new LinkedHashMap<Attribute, Node>();
+        for (Map<Attribute, Node> avp : avps) {
+            map.putAll(avp);
+        }
+        return map;
     }
 
     public static Tuple createTuple(Map<Attribute, Node>... avos) {
