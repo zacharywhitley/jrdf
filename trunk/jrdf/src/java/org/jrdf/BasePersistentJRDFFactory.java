@@ -61,10 +61,10 @@ package org.jrdf;
 
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 
 public interface BasePersistentJRDFFactory {
-    UrqlConnection createUrqlConnection();
+    SparqlConnection createSparqlConnection();
 
     NodePool createNodePool(long graphNumber);
 

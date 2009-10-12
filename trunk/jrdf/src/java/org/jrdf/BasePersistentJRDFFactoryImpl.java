@@ -69,9 +69,9 @@ import org.jrdf.parser.RdfReader;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.urql.UrqlConnection;
-import org.jrdf.urql.UrqlConnectionImpl;
-import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.sparql.SparqlConnectionImpl;
+import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
 import org.jrdf.util.ModelsImpl;
@@ -99,8 +99,8 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
         file = new File(newHandler.getDir(), "graphs.nt");
     }
 
-    public UrqlConnection createUrqlConnection() {
-        return new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
+    public SparqlConnection createSparqlConnection() {
+        return new SparqlConnectionImpl(BUILDER, QUERY_ENGINE);
     }
 
     public NodePool createNodePool(long graphNumber) {

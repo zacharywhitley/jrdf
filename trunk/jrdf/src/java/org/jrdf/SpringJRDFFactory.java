@@ -61,7 +61,7 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -95,8 +95,8 @@ public final class SpringJRDFFactory implements JRDFFactory {
         return graphFactory.getGraph();
     }
 
-    public UrqlConnection getNewUrqlConnection() {
-        return (UrqlConnection) BEAN_FACTORY.getBean("sparqlConnection");
+    public SparqlConnection getNewSparqlConnection() {
+        return (SparqlConnection) BEAN_FACTORY.getBean("sparqlConnection");
     }
 
     public void close() {

@@ -77,7 +77,7 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.xml.SparqlSelectXmlWriter;
 import org.jrdf.query.answer.xml.SparqlXmlWriter;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.vocabulary.XSD;
 
@@ -239,7 +239,7 @@ public class JrdfExample {
             new URI("http://example.org/statement#address1"));
         graph.add(triple);
         print("Graph now contains: ", graph);
-        UrqlConnection connection = JRDF_FACTORY.getNewUrqlConnection();
+        SparqlConnection connection = JRDF_FACTORY.getNewSparqlConnection();
         String query =
                 "SELECT ?s ?add \n" +
                 "WHERE { \n" +

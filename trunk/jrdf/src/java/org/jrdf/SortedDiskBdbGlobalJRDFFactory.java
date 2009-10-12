@@ -87,9 +87,9 @@ import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.urql.UrqlConnection;
-import org.jrdf.urql.UrqlConnectionImpl;
-import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.sparql.SparqlConnectionImpl;
+import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
 import org.jrdf.util.DirectoryHandler;
@@ -150,8 +150,8 @@ public final class SortedDiskBdbGlobalJRDFFactory implements GlobalJRDFFactory {
         return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph, nodePool);
     }
 
-    public UrqlConnection getNewUrqlConnection() {
-        return new UrqlConnectionImpl(BUILDER, QUERY_ENGINE);
+    public SparqlConnection getNewSparqlConnection() {
+        return new SparqlConnectionImpl(BUILDER, QUERY_ENGINE);
     }
 
     public void close() {

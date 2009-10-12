@@ -72,7 +72,7 @@ public class JrdfFactoryImplIntegrationTest extends TestCase {
         TestJRDFFactory jrdfFactory = TestJRDFFactory.getFactory();
         jrdfFactory.getNewGraph();
         jrdfFactory.getNewTupleComparator();
-        jrdfFactory.getNewUrqlConnection();
+        jrdfFactory.getNewSparqlConnection();
         jrdfFactory.getNewNaturalJoin();
         jrdfFactory.getNewSemiJoin();
         jrdfFactory.getNewFullOuterJoin();

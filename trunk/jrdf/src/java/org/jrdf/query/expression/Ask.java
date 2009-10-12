@@ -63,7 +63,7 @@ import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.PositionalNodeType;
-import org.jrdf.urql.analysis.VariableCollector;
+import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.Map;

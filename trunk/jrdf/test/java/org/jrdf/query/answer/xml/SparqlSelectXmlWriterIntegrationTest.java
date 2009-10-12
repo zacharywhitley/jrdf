@@ -67,7 +67,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 
@@ -83,7 +83,7 @@ public class SparqlSelectXmlWriterIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final SparqlXmlStreamWriterTestUtil TEST_UTIL = new SparqlXmlStreamWriterTestUtil();
-    private UrqlConnection urqlConnection;
+    private SparqlConnection sparqlConnection;
     private MoleculeGraph graph;
     private SparqlXmlWriter xmlWriter;
     private Writer writer = new StringWriter();
@@ -94,7 +94,7 @@ public class SparqlSelectXmlWriterIntegrationTest extends TestCase {
         HANDLER.makeDir();
         FACTORY.refresh();
         TEST_FACTORY.refresh();
-        urqlConnection = TEST_FACTORY.getNewUrqlConnection();
+        sparqlConnection = TEST_FACTORY.getNewSparqlConnection();
         graph = FACTORY.getNewGraph("foo");
         final GraphElementFactory elementFactory = graph.getElementFactory();
         Resource b1 = elementFactory.createResource();
@@ -116,7 +116,7 @@ public class SparqlSelectXmlWriterIntegrationTest extends TestCase {
 
     public void testVariables() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
-        final Answer answer = urqlConnection.executeQuery(graph, queryString);
+        final Answer answer = sparqlConnection.executeQuery(graph, queryString);
         xmlWriter = new SparqlSelectXmlWriter(writer, answer.getVariableNames(), answer.columnValuesIterator(),
             answer.numberOfTuples());
         Set<String> vars = TEST_UTIL.getVariables(xmlWriter, writer);
@@ -127,7 +127,7 @@ public class SparqlSelectXmlWriterIntegrationTest extends TestCase {
 
     public void testResult() throws Exception {
         String queryString = "SELECT * WHERE {?s ?p ?o .}";
-        final Answer answer = urqlConnection.executeQuery(graph, queryString);
+        final Answer answer = sparqlConnection.executeQuery(graph, queryString);
         xmlWriter = new SparqlSelectXmlWriter(writer, answer.getVariableNames(), answer.columnValuesIterator(),
             answer.numberOfTuples());
         xmlWriter.writeStartResults();

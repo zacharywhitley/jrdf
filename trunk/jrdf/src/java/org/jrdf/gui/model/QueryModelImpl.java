@@ -66,18 +66,18 @@ import org.jrdf.graph.GraphFactory;
 import org.jrdf.parser.RdfReader;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.Answer;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 
 import java.net.URL;
 
 public class QueryModelImpl implements QueryModel {
     private final GraphFactory graphFactory;
-    private final UrqlConnection connection;
+    private final SparqlConnection connection;
     private final MapFactory mapFactory;
     private Graph graph;
     private RdfReader rdfReader;
 
-    public QueryModelImpl(final GraphFactory newGraphFactory, final UrqlConnection newConnection,
+    public QueryModelImpl(final GraphFactory newGraphFactory, final SparqlConnection newConnection,
         final MapFactory newMapFactory) {
         graphFactory = newGraphFactory;
         connection = newConnection;

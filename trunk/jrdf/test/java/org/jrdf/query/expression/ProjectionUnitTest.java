@@ -60,7 +60,7 @@
 package org.jrdf.query.expression;
 
 import junit.framework.TestCase;
-import org.jrdf.urql.analysis.VariableCollector;
+import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 

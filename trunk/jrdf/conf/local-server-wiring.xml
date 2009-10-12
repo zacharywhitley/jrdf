@@ -103,14 +103,14 @@
     <bean id="queryBuilder" factory-bean="queryFactory" factory-method="createQueryBuilder" scope="prototype"/>
     <bean id="queryEngine" factory-bean="queryFactory" factory-method="createQueryEngine" scope="prototype"/>
 
-    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl" scope="prototype">
+    <bean id="sparqlConnection" class="org.jrdf.sparql.SparqlConnectionImpl" scope="prototype">
         <constructor-arg ref="queryBuilder"/>
         <constructor-arg ref="queryEngine"/>
     </bean>
 
     <bean id="graphApplication" class="org.jrdf.query.server.local.GraphApplicationImpl" scope="prototype">
         <constructor-arg ref="directoryHandler"/>
-        <constructor-arg ref="urqlConnection"/>
+        <constructor-arg ref="sparqlConnection"/>
     </bean>
 
     <!-- List the graphs -->
