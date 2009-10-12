@@ -79,7 +79,7 @@ import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTreeFactory;
@@ -112,8 +112,8 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         return new PersistentGlobalJRDFFactoryImpl(handler);
     }
 
-    public UrqlConnection getNewUrqlConnection() {
-        return base.createUrqlConnection();
+    public SparqlConnection getNewSparqlConnection() {
+        return base.createSparqlConnection();
     }
 
     public boolean hasGraph(String name) {

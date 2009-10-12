@@ -65,9 +65,9 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.PositionalNodeType;
-import org.jrdf.urql.analysis.VariableCollector;
-import org.jrdf.urql.parser.node.TIdentifier;
-import org.jrdf.urql.parser.parser.ParserException;
+import org.jrdf.sparql.analysis.VariableCollector;
+import org.jrdf.sparql.parser.node.TIdentifier;
+import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 

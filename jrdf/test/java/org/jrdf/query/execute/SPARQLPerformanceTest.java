@@ -76,7 +76,7 @@ import org.jrdf.parser.n3.N3ParserFactory;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 
@@ -121,7 +121,7 @@ public class SPARQLPerformanceTest extends TestCase {
         }
     };
 
-    private UrqlConnection connection;
+    private SparqlConnection connection;
     private MoleculeGraph graph;
 
     @Override
@@ -131,7 +131,7 @@ public class SPARQLPerformanceTest extends TestCase {
         HANDLER.makeDir();
         factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
         graph = factory.getGraph("sparql_test");
-        connection = factory.getNewUrqlConnection();
+        connection = factory.getNewSparqlConnection();
         parseGraph("rdf-tests/sparql/sp2b.n3");
     }
 

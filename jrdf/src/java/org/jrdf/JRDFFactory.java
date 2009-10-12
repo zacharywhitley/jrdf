@@ -60,7 +60,7 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 
 /**
  * A simple wrapper around Spring wiring to return types objects.
@@ -87,7 +87,7 @@ public interface JRDFFactory {
      *
      * @return a new instance of a SPARQL connection.
      */
-    UrqlConnection getNewUrqlConnection();
+    SparqlConnection getNewSparqlConnection();
 
     /**
      * Closes any open resource created by the factory.

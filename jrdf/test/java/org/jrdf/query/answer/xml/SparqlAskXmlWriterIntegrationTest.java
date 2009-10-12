@@ -73,7 +73,7 @@ import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SparqlProtocol;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 
@@ -99,7 +99,7 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
     }
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-    private static final UrqlConnection URQL_CONNECTION = TestJRDFFactory.getFactory().getNewUrqlConnection();
+    private static final SparqlConnection SPARQL_CONNECTION = TestJRDFFactory.getFactory().getNewSparqlConnection();
 
     private Writer writer;
     private XMLStreamReader reader;
@@ -149,14 +149,14 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
         graph.add(b2, p2, l2);
         graph.add(b3, p3, l3);
         String queryString = "ASK WHERE {?s ?p ?o .}";
-        final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
+        final AskAnswer answer = (AskAnswer) SPARQL_CONNECTION.executeQuery(graph, queryString);
         xmlWriter = new SparqlAskXmlWriter(writer, answer.getResult());
         checkResult(true);
     }
 
     public void testAskEmptyGraph() throws XMLStreamException, InvalidQuerySyntaxException, GraphException {
         String queryString = "ASK WHERE {?s ?p ?o .}";
-        final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
+        final AskAnswer answer = (AskAnswer) SPARQL_CONNECTION.executeQuery(graph, queryString);
         xmlWriter = new SparqlAskXmlWriter(writer, answer.getResult());
         checkResult(false);
     }
@@ -164,7 +164,7 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
     public void testAskNonMatchingGraph() throws GraphException, XMLStreamException, InvalidQuerySyntaxException {
         graph.add(b1, p1, l1);
         String queryString = "ASK WHERE {?s ?p ?o FILTER ( str(?o) = \"ab\" ) }";
-        final AskAnswer answer = (AskAnswer) URQL_CONNECTION.executeQuery(graph, queryString);
+        final AskAnswer answer = (AskAnswer) SPARQL_CONNECTION.executeQuery(graph, queryString);
         xmlWriter = new SparqlAskXmlWriter(writer, answer.getResult());
         checkResult(false);
     }

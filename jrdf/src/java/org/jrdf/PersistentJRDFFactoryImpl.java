@@ -65,7 +65,7 @@ import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesameSync;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTree;
@@ -98,8 +98,8 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         return new PersistentJRDFFactoryImpl(handler);
     }
 
-    public UrqlConnection getNewUrqlConnection() {
-        return base.createUrqlConnection();
+    public SparqlConnection getNewSparqlConnection() {
+        return base.createSparqlConnection();
     }
 
     public boolean hasGraph(String name) {

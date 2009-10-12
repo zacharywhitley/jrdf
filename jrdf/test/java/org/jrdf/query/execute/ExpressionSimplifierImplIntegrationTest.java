@@ -91,7 +91,7 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.urql.builder.QueryBuilder;
+import org.jrdf.sparql.builder.QueryBuilder;
 import static org.jrdf.util.test.NodeTestUtil.createLiteral;
 import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;

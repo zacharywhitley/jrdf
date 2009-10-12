@@ -80,22 +80,22 @@
     </bean>
 
     <!-- Query Classes -->
-    <bean id="urqlConnection" class="org.jrdf.urql.UrqlConnectionImpl">
+    <bean id="sparqlConnection" class="org.jrdf.sparql.SparqlConnectionImpl">
         <constructor-arg ref="queryBuilder"/>
         <constructor-arg ref="optimizingQueryEngine"/>
     </bean>
 
-    <bean id="queryBuilder" class="org.jrdf.urql.builder.UrqlQueryBuilder">
+    <bean id="queryBuilder" class="org.jrdf.sparql.builder.SparqlQueryBuilder">
         <constructor-arg ref="sparqlParser"/>
     </bean>
 
-    <bean id="sparqlParser" class="org.jrdf.urql.parser.SableCcSparqllParser">
+    <bean id="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqllParser">
         <constructor-arg ref="parserFactory"/>
         <constructor-arg ref="graphRelationFactory"/>
         <constructor-arg ref="sortedAttributeFactory"/>
     </bean>
 
-    <bean id="parserFactory" class="org.jrdf.urql.parser.ParserFactoryImpl"/>
+    <bean id="parserFactory" class="org.jrdf.sparql.parser.ParserFactoryImpl"/>
 
     <bean id="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
         <constructor-arg ref="project"/>

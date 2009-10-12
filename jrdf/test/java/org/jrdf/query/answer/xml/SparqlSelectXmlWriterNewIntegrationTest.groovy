@@ -68,15 +68,16 @@ import org.jrdf.query.answer.Answer
 import org.jrdf.query.answer.SelectAnswer
 import static org.jrdf.query.answer.SparqlResultType.LITERAL
 import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE
-import org.jrdf.urql.UrqlConnection
+import org.jrdf.sparql.SparqlConnection
 import org.jrdf.util.DirectoryHandler
 import org.jrdf.util.TempDirectoryHandler
 import static org.jrdf.util.test.SetUtil.asSet
 import org.jrdf.query.answer.TypeValueImpl
+import org.jrdf.sparql.SparqlConnection
 
 class SparqlSelectXmlWriterNewIntegrationTest extends GroovyTestCase {
 
-    private static final DirectoryHandler HANDLER = new TempDirectoryHandler()
+  private static final DirectoryHandler HANDLER = new TempDirectoryHandler()
     private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory()
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER)
     private static final String QUERY = "SELECT ?s ?p ?o WHERE {?s ?p ?o .}"
@@ -97,7 +98,7 @@ class SparqlSelectXmlWriterNewIntegrationTest extends GroovyTestCase {
         "p", new TypeValueImpl(URI_REFERENCE, "urn:p3"),
         "o", new TypeValueImpl(LITERAL, "\"l3\""),
     ];
-    private UrqlConnection urqlConnection
+    private SparqlConnection sparqlConnection
     private Graph graph
     private SparqlXmlWriter xmlWriter
     private Writer resultsWriter
@@ -110,10 +111,10 @@ class SparqlSelectXmlWriterNewIntegrationTest extends GroovyTestCase {
         FACTORY.refresh()
         TEST_FACTORY.refresh()
         resultsWriter = new StringWriter()
-        urqlConnection = TEST_FACTORY.newUrqlConnection
+        sparqlConnection = TEST_FACTORY.newSparqlConnection
         graph = FACTORY.newGraph
         TEST_UTIL.createTestGraph(graph)
-        answer = urqlConnection.executeQuery(graph, QUERY)
+        answer = sparqlConnection.executeQuery(graph, QUERY)
         xmlWriter = new SparqlSelectXmlWriter(resultsWriter, answer.getVariableNames(),
                 answer.columnValuesIterator(), answer.numberOfTuples())
     }

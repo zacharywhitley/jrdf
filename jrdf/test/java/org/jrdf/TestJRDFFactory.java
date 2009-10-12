@@ -80,12 +80,12 @@ import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import org.jrdf.query.relation.type.TypeComparator;
-import org.jrdf.urql.UrqlConnection;
-import org.jrdf.urql.analysis.VariableCollector;
-import org.jrdf.urql.builder.QueryBuilder;
-import org.jrdf.urql.builder.TripleBuilder;
-import org.jrdf.urql.parser.ParserFactory;
-import org.jrdf.urql.parser.SparqlParser;
+import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.sparql.analysis.VariableCollector;
+import org.jrdf.sparql.builder.QueryBuilder;
+import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.sparql.parser.ParserFactory;
+import org.jrdf.sparql.parser.SparqlParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -128,8 +128,8 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (TupleComparator) BEAN_FACTORY.getBean("tupleComparator");
     }
 
-    public UrqlConnection getNewUrqlConnection() {
-        return (UrqlConnection) BEAN_FACTORY.getBean("urqlConnection");
+    public SparqlConnection getNewSparqlConnection() {
+        return (SparqlConnection) BEAN_FACTORY.getBean("sparqlConnection");
     }
 
     public void close() {

@@ -64,7 +64,7 @@ import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.server.GraphApplication;
-import org.jrdf.urql.UrqlConnection;
+import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.restlet.Application;
 import org.restlet.resource.ResourceException;
@@ -72,16 +72,16 @@ import org.restlet.resource.ResourceException;
 public class GraphApplicationImpl extends Application implements GraphApplication {
     private final DirectoryHandler handler;
     private final PersistentGlobalJRDFFactory factory;
-    private final UrqlConnection urqlConnection;
+    private final SparqlConnection sparqlConnection;
     private Answer answer;
     private boolean tooManyRows;
     private long maxRows;
     private String format;
 
-    public GraphApplicationImpl(DirectoryHandler newHandler, UrqlConnection newConnection) {
+    public GraphApplicationImpl(DirectoryHandler newHandler, SparqlConnection newConnection) {
         this.handler = newHandler;
         this.factory = PersistentGlobalJRDFFactoryImpl.getFactory(handler);
-        this.urqlConnection = newConnection;
+        this.sparqlConnection = newConnection;
     }
 
     public void close() {
@@ -99,7 +99,7 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
     public Answer answerQuery(String graphName, String queryString, long newMaxRows) throws ResourceException {
         try {
             final MoleculeGraph graph = getGraph(graphName);
-            this.answer = urqlConnection.executeQuery(graph, queryString);
+            this.answer = sparqlConnection.executeQuery(graph, queryString);
             this.maxRows = newMaxRows;
             this.tooManyRows = answer.numberOfTuples() > newMaxRows;
             return answer;

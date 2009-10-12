@@ -116,7 +116,7 @@
             <ref bean="graphFactory"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="urqlConnection"/>
+            <ref bean="sparqlConnection"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="mapFactory"/>
