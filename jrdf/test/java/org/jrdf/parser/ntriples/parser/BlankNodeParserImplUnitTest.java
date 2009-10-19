@@ -75,13 +75,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
-import org.powermock.core.classloader.annotations.PowerMockListener;
+import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class BlankNodeParserImplUnitTest {
     private static final Class<BlankNodeParser> TARGET_INTERFACE = BlankNodeParser.class;
     private static final Class<BlankNodeParserImpl> TEST_CLASS = BlankNodeParserImpl.class;
@@ -92,20 +89,24 @@ public class BlankNodeParserImplUnitTest {
     @Mock private ParserBlankNodeFactory nodeFactory;
     @Mock private BlankNode blankNode;
 
-    @Before public void create() {
+    @Before
+    public void create() {
         parser = new BlankNodeParserImpl(nodeFactory);
     }
 
-    @Test public void classProperties() {
+    @Test
+    public void classProperties() {
         hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
     }
 
-    @Test public void methodProperties() {
+    @Test
+    public void methodProperties() {
         checkMethodNullAndEmptyAssertions(parser, "parseBlankNode", new ParameterDefinition(
             new String[]{"s"}, new Class[]{String.class}));
     }
 
-    @Test public void createBlankNode() throws Exception {
+    @Test
+    public void createBlankNode() throws Exception {
         expect(nodeFactory.createBlankNode(NODE_ID)).andReturn(blankNode);
         replayAll();
         BlankNode actualBlankNode = parser.parseBlankNode(NODE_ID);
@@ -113,7 +114,8 @@ public class BlankNodeParserImplUnitTest {
         verifyAll();
     }
 
-    @Test public void createBlankNodeWithException() throws Exception {
+    @Test
+    public void createBlankNodeWithException() throws Exception {
         expect(nodeFactory.createBlankNode(NODE_ID)).andThrow(new GraphElementFactoryException(""));
         replayAll();
         checkException();

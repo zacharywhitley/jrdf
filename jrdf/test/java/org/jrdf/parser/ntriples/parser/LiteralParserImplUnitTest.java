@@ -60,8 +60,8 @@
 package org.jrdf.parser.ntriples.parser;
 
 import static org.easymock.EasyMock.expect;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -75,15 +75,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
-import org.powermock.core.classloader.annotations.PowerMockListener;
+import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.net.URI;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class LiteralParserImplUnitTest {
     private static final Class<LiteralParser> TARGET_INTERFACE = LiteralParser.class;
     private static final Class<LiteralParserImpl> TEST_CLASS = LiteralParserImpl.class;
@@ -98,27 +95,32 @@ public class LiteralParserImplUnitTest {
     @Mock private Literal expectedLiteral;
     @Mock private LiteralMatcher literalMatcher;
 
-    @Before public void create() {
+    @Before
+    public void create() {
         parser = new LiteralParserImpl(elementFactory, literalMatcher);
     }
 
-    @Test public void classProperties() {
+    @Test
+    public void classProperties() {
         hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
     }
 
-    @Test public void methodProperties() {
+    @Test
+    public void methodProperties() {
         checkMethodNullAndEmptyAssertions(parser, "parseLiteral", new ParameterDefinition(
             new String[]{"s"}, new Class[]{String.class}));
     }
 
-    @Test public void parseLiteralWithException() throws Exception {
+    @Test
+    public void parseLiteralWithException() throws Exception {
         expect(literalMatcher.parse(LINE)).andReturn(new String[3]);
         replayAll();
         checkException(LINE, "Didn't find a matching literal: [" + LINE + "]");
         verifyAll();
     }
 
-    @Test public void parsePlainLiteral() throws Exception {
+    @Test
+    public void parsePlainLiteral() throws Exception {
         final String line = parserExpectations(LITERAL, null, null);
         expect(elementFactory.createLiteral(LITERAL)).andReturn(expectedLiteral);
         replayAll();
@@ -127,7 +129,8 @@ public class LiteralParserImplUnitTest {
         verifyAll();
     }
 
-    @Test public void parseLanguagesLiteral() throws Exception {
+    @Test
+    public void parseLanguagesLiteral() throws Exception {
         final String line = parserExpectations(LITERAL, LANGUAGE, null);
         expect(elementFactory.createLiteral(LITERAL, LANGUAGE)).andReturn(expectedLiteral);
         replayAll();
@@ -136,7 +139,8 @@ public class LiteralParserImplUnitTest {
         verifyAll();
     }
 
-    @Test public void testParseDatatypeLiteral() throws Exception {
+    @Test
+    public void testParseDatatypeLiteral() throws Exception {
         final String line = parserExpectations(LITERAL, null, DATATYPE.toString());
         expect(elementFactory.createLiteral(LITERAL, DATATYPE)).andReturn(expectedLiteral);
         replayAll();
@@ -145,14 +149,16 @@ public class LiteralParserImplUnitTest {
         verifyAll();
     }
 
-    @Test public void parseThrowsExceptionWithBothLanguageAndDatatypeLiteral() throws Exception {
+    @Test
+    public void parseThrowsExceptionWithBothLanguageAndDatatypeLiteral() throws Exception {
         final String line = parserExpectations(LITERAL, LANGUAGE, DATATYPE.toString());
         replayAll();
         checkException(line, "Cannot create a literal with both language and data type from line: " + line);
         verifyAll();
     }
 
-    @Test public void handlesGraphElementFactoryExceptionWhenCreatingPlainLiteal() throws Exception {
+    @Test
+    public void handlesGraphElementFactoryExceptionWhenCreatingPlainLiteal() throws Exception {
         final String line = parserExpectations(LITERAL, null, null);
         expect(elementFactory.createLiteral(LITERAL)).andThrow(new GraphElementFactoryException("foo"));
         replayAll();
@@ -160,7 +166,8 @@ public class LiteralParserImplUnitTest {
         verifyAll();
     }
 
-    @Test public void handlesGraphElementFactoryExceptionWhenCreatingLanguageLiteal() throws Exception {
+    @Test
+    public void handlesGraphElementFactoryExceptionWhenCreatingLanguageLiteal() throws Exception {
         final String line = parserExpectations(LITERAL, LANGUAGE, null);
         expect(elementFactory.createLiteral(LITERAL, LANGUAGE)).andThrow(new GraphElementFactoryException("foo"));
         replayAll();
@@ -168,7 +175,8 @@ public class LiteralParserImplUnitTest {
         verifyAll();
     }
 
-    @Test public void handlesGraphElementFactoryExceptionWhenCreatingDatatypeLiteal() throws Exception {
+    @Test
+    public void handlesGraphElementFactoryExceptionWhenCreatingDatatypeLiteal() throws Exception {
         final String line = parserExpectations(LITERAL, null, DATATYPE.toString());
         expect(elementFactory.createLiteral(LITERAL, DATATYPE)).andThrow(new GraphElementFactoryException("foo"));
         replayAll();
