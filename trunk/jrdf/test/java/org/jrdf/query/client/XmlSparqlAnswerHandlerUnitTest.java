@@ -58,8 +58,13 @@
 
 package org.jrdf.query.client;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.easymock.EasyMock.expect;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
+import org.jrdf.query.answer.Answer;
+import org.jrdf.query.answer.SparqlAnswerFactory;
 import org.jrdf.query.answer.SparqlParser;
 import org.jrdf.query.answer.xml.parser.SparqlXmlParserImpl;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
@@ -68,6 +73,7 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import org.jrdf.util.test.ParameterDefinition;
+import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.powermock.api.easymock.PowerMock.createMock;
@@ -76,10 +82,14 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.restlet.data.MediaType;
+import org.restlet.data.Preference;
 import org.restlet.data.Request;
 import org.restlet.resource.Representation;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(XmlSparqlAnswerHandler.class)
@@ -109,18 +119,48 @@ public class XmlSparqlAnswerHandlerUnitTest {
 
     @Test
     public void getParserCreatesNewParser() throws Exception {
-        final SparqlXmlParserImpl mockParser = createMock(SparqlXmlParserImpl.class);
-        final InputStream inputStream = createMock(InputStream.class);
-        expectNew(SparqlXmlParserImpl.class, inputStream).andReturn(mockParser);
+        final SparqlParser mockParser = createMock(SparqlXmlParserImpl.class);
+        final InputStream mockInput = createMock(InputStream.class);
+        expectNew(SparqlXmlParserImpl.class, mockInput).andReturn((SparqlXmlParserImpl) mockParser);
         final SparqlAnswerHandler tested = new XmlSparqlAnswerHandler();
         replayAll();
-        final SparqlParser sparqlParser = tested.getParser(inputStream);
+        assertThat(tested.getParser(mockInput), is(mockParser));
         verifyAll();
-        assertThat(sparqlParser, notNullValue());
     }
 
     @Test
     public void getAnswerReturnsAnswer() throws Exception {
+        final SparqlAnswerHandler tested = new XmlSparqlAnswerHandler();
+        final SparqlAnswerFactory mockFactory = createMock(SparqlAnswerFactory.class);
+        insertFieldValue(tested, "SPARQL_ANSWER_STREAMING_FACTORY", mockFactory);
+        final Representation mockRepresentation = createMock(Representation.class);
+        final InputStream mockInput = createMock(InputStream.class);
+        expect(mockRepresentation.getStream()).andReturn(mockInput);
+        final Answer mockAnswer = createMock(Answer.class);
+        expect(mockFactory.createStreamingXmlAnswer(mockInput)).andReturn(mockAnswer);
+        replayAll();
+        assertThat(tested.getAnswer(mockRepresentation), is(mockAnswer));
+        verifyAll();
+    }
 
+    @Test(expected = RuntimeException.class)
+    public void getAnswerThrowsException() throws Exception {
+        final SparqlAnswerHandler tested = new XmlSparqlAnswerHandler();
+        final SparqlAnswerFactory mockFactory = createMock(SparqlAnswerFactory.class);
+        final Representation mockRepresentation = createMock(Representation.class);
+        expect(mockRepresentation.getStream()).andThrow(new IOException());
+        insertFieldValue(tested, "SPARQL_ANSWER_STREAMING_FACTORY", mockFactory);
+        replayAll();
+        tested.getAnswer(mockRepresentation);
+        verifyAll();
+    }
+
+    @Test
+    public void setAcceptedMediaTypesSetsSparqlXml() throws Exception {
+        final Request request = new Request();
+        final SparqlAnswerHandler tested = new XmlSparqlAnswerHandler();
+        tested.setAcceptedMediaTypes(request);
+        final List<Preference<MediaType>> preferenceList = request.getClientInfo().getAcceptedMediaTypes();
+        assertThat(preferenceList.get(0).getMetadata(), equalTo(APPLICATION_SPARQL_XML));
     }
 }

@@ -77,15 +77,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
-import org.powermock.core.classloader.annotations.PowerMockListener;
+import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.regex.Pattern;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class LiteralMatcherImplUnitTest {
     private static final Class<LiteralMatcher> TARGET_INTERFACE = LiteralMatcher.class;
     private static final Class<LiteralMatcherImpl> TEST_CLASS = LiteralMatcherImpl.class;

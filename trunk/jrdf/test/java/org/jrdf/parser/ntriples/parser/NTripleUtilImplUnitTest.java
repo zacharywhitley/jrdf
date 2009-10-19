@@ -77,17 +77,14 @@ import org.jrdf.util.test.ParameterDefinition;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import org.powermock.core.classloader.annotations.Mock;
-import org.powermock.core.classloader.annotations.PowerMockListener;
+import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.regex.Pattern;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class NTripleUtilImplUnitTest {
     private static final Class<?> TARGET_INTERFACE = NTripleUtil.class;
     private static final Class<?> TEST_CLASS = NTripleUtilImpl.class;
@@ -99,23 +96,28 @@ public class NTripleUtilImplUnitTest {
     @Mock private RegexMatcher matcher;
     private NTripleUtil util;
 
-    @Before public void setUp() {
+    @Before
+
+    public void setUp() {
         util = new NTripleUtilImpl(regexMatcherFactory);
     }
 
-    @Test public void classProperties() {
+    @Test
+    public void classProperties() {
         checkClassFinal(TEST_CLASS);
         checkClassPublic(TEST_CLASS);
         checkImplementationOfInterface(TARGET_INTERFACE, TEST_CLASS);
         checkConstructNullAssertion(TEST_CLASS, PARAM_TYPES);
     }
 
-    @Test public void methodProperties() {
+    @Test
+    public void methodProperties() {
         checkMethodNullAssertions(util, "unescapeLiteral", new ParameterDefinition(
             new String[]{"literal"}, new Class[]{String.class}));
     }
 
-    @Test public void unescapeLiteralCallsCreateMatcherAndFailsToFind() {
+    @Test
+    public void unescapeLiteralCallsCreateMatcherAndFailsToFind() {
         final String expectedLine = "string" + Math.random();
         expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(expectedLine))).andReturn(matcher);
         expect(matcher.find()).andReturn(false);
@@ -124,31 +126,38 @@ public class NTripleUtilImplUnitTest {
         verifyAll();
     }
 
-    @Test public void backslashEscaping() {
+    @Test
+    public void backslashEscaping() {
         checkCharacterEscape("\\\\", "\\\\");
     }
 
-    @Test public void quoteEscaping() {
+    @Test
+    public void quoteEscaping() {
         checkCharacterEscape("\\\"", "\\\"");
     }
 
-    @Test public void newLineEscaping() {
+    @Test
+    public void newLineEscaping() {
         checkCharacterEscape("\\n", "\n");
     }
 
-    @Test public void carriageReturnEscaping() {
+    @Test
+    public void carriageReturnEscaping() {
         checkCharacterEscape("\\r", "\r");
     }
 
-    @Test public void tabEscaping() {
+    @Test
+    public void tabEscaping() {
         checkCharacterEscape("\\t", "\t");
     }
 
-    @Test public void testEscapeLiteral4DigitUnicode() {
+    @Test
+    public void testEscapeLiteral4DigitUnicode() {
         checkUnicode("\\u000f", 9);
     }
 
-    @Test public void testEscapeLiteral8DigitUnicode() {
+    @Test
+    public void testEscapeLiteral8DigitUnicode() {
         checkUnicode("\\U00000000f", 11);
     }
 

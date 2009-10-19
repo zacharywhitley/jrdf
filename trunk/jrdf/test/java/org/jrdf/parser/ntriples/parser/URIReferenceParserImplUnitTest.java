@@ -76,15 +76,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
-import org.powermock.core.classloader.annotations.PowerMockListener;
+import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.net.URI;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class URIReferenceParserImplUnitTest {
     private static final Class<URIReferenceParser> TARGET_INTERFACE = URIReferenceParser.class;
     private static final Class<URIReferenceParserImpl> TEST_CLASS = URIReferenceParserImpl.class;
@@ -97,20 +94,24 @@ public class URIReferenceParserImplUnitTest {
     @Mock private NTripleUtil nTripleUtil;
     private URIReferenceParser uriReferenceParser;
 
-    @Before public void create() {
+    @Before
+    public void create() {
         uriReferenceParser = new URIReferenceParserImpl(graphElementFactory, nTripleUtil);
     }
 
-    @Test public void classProperties() {
+    @Test
+    public void classProperties() {
         hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
     }
 
-    @Test public void methodProperties() {
+    @Test
+    public void methodProperties() {
         checkMethodNullAndEmptyAssertions(uriReferenceParser, "parseURIReference", new ParameterDefinition(
             new String[]{"s"}, new Class[]{String.class}));
     }
 
-    @Test public void createURIReference() throws Exception {
+    @Test
+    public void createURIReference() throws Exception {
         expect(nTripleUtil.unescapeLiteral(LINE)).andReturn(ESCAPED_LINE);
         expect(graphElementFactory.createURIReference(URI.create(ESCAPED_LINE))).andReturn(uriReference);
         replayAll();
@@ -119,7 +120,8 @@ public class URIReferenceParserImplUnitTest {
         verifyAll();
     }
 
-    @Test public void createURIReferenceWithException() throws Exception {
+    @Test
+    public void createURIReferenceWithException() throws Exception {
         expect(nTripleUtil.unescapeLiteral(LINE)).andReturn(ESCAPED_LINE);
         expect(graphElementFactory.createURIReference(URI.create(ESCAPED_LINE))).andThrow(
             new GraphElementFactoryException(""));
@@ -128,7 +130,8 @@ public class URIReferenceParserImplUnitTest {
         verifyAll();
     }
 
-    @Test public void baseURIThrowsException() throws Exception {
+    @Test
+    public void baseURIThrowsException() throws Exception {
         expect(nTripleUtil.unescapeLiteral((String) anyObject())).andReturn("asd$#@:%!@#!");
         replayAll();
         checkException("asd$#@:%!@#!");
