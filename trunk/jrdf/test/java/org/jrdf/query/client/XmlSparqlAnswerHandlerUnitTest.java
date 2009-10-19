@@ -58,19 +58,31 @@
 
 package org.jrdf.query.client;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.jrdf.query.answer.SparqlParser;
+import org.jrdf.query.answer.xml.parser.SparqlXmlParserImpl;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import org.jrdf.util.test.ParameterDefinition;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.expectNew;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.restlet.data.Request;
 import org.restlet.resource.Representation;
 
 import java.io.InputStream;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(XmlSparqlAnswerHandler.class)
 public class XmlSparqlAnswerHandlerUnitTest {
     private static final Class<?> TEST_CLASS = XmlSparqlAnswerHandler.class;
     private static final Class<?> TARGET_INTERFACE = SparqlAnswerHandler.class;
@@ -79,7 +91,7 @@ public class XmlSparqlAnswerHandlerUnitTest {
 
     @Test
     public void classProperties() {
-        checkClassFinal(TEST_CLASS);
+        //checkClassFinal(TEST_CLASS);
         checkClassPublic(TEST_CLASS);
         checkImplementationOfInterface(TARGET_INTERFACE, TEST_CLASS);
         checkConstructNullAssertion(TEST_CLASS, PARAM_TYPES);
@@ -93,5 +105,22 @@ public class XmlSparqlAnswerHandlerUnitTest {
             new String[]{"output"}, new Class[]{Representation.class}));
         checkMethodNullAndEmptyAssertions(handler, "setAcceptedMediaTypes",
             new ParameterDefinition(new String[]{"request"}, new Class[]{Request.class}));
+    }
+
+    @Test
+    public void getParserCreatesNewParser() throws Exception {
+        final SparqlXmlParserImpl mockParser = createMock(SparqlXmlParserImpl.class);
+        final InputStream inputStream = createMock(InputStream.class);
+        expectNew(SparqlXmlParserImpl.class, inputStream).andReturn(mockParser);
+        final SparqlAnswerHandler tested = new XmlSparqlAnswerHandler();
+        replayAll();
+        final SparqlParser sparqlParser = tested.getParser(inputStream);
+        verifyAll();
+        assertThat(sparqlParser, notNullValue());
+    }
+
+    @Test
+    public void getAnswerReturnsAnswer() throws Exception {
+
     }
 }
