@@ -59,7 +59,6 @@
 
 package org.jrdf.query.relation.operation.mem.union;
 
-import junit.framework.TestCase;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
@@ -86,6 +85,9 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+import org.junit.Test;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.util.Collections;
 import java.util.Set;
@@ -97,9 +99,10 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 729 $
  */
-public abstract class AbstractUnionIntegrationTest extends TestCase {
-    private static final Set<Tuple> EMPTY_SET = Collections.emptySet();
+public abstract class AbstractUnionIntegrationTest {
+    protected static final Set<Tuple> EMPTY_SET = Collections.emptySet();
 
+    @Test
     public void testTruthTableDEEandDUM() {
         // The union of DEE and DUM together (basically the truth table for OR).
         checkUnion(RELATION_DUM, RELATION_DUM, RELATION_DUM);
@@ -108,6 +111,7 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
         checkUnion(RELATION_DEE, RELATION_DEE, RELATION_DEE);
     }
 
+    @Test
     public void testRelationDEEandDumWithRelation() {
         EvaluatedRelation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         // The union of DEE and R1 is DEE (everything matches the 0-tuple).
@@ -118,6 +122,7 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
         checkUnion(relation, RELATION_DUM, relation);
     }
 
+    @Test
     public void testWithNoRowsRelation() {
         EvaluatedRelation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE);
@@ -126,6 +131,15 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
         checkUnion(relation, emptyRelation, relation);
     }
 
+    @Test
+    public void testWithBothNoRowsRelation() {
+        EvaluatedRelation relation = createRelation(createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE), EMPTY_SET);
+        EvaluatedRelation emptyRelation1 = createRelation(createHeading(POS_FOO2_PREDICATE), EMPTY_SET);
+        EvaluatedRelation emptyRelation2 = createRelation(createHeading(POS_FOO1_SUBJECT), EMPTY_SET);
+        checkUnion(relation, emptyRelation1, emptyRelation2);
+    }
+
+    @Test
     public void testUnionCompatibleSameTuple() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
@@ -134,6 +148,7 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
         checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
+    @Test
     public void testUnionCompatibleDifferenceTuples() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
@@ -146,6 +161,7 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
 
     }
 
+    @Test
     public void testUnionCompatibleDifferentTuplesButWithSameRows() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
@@ -159,6 +175,7 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
         checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
+    @Test
     public void testNonUnionCompatibleOneSharedAttribute() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR2_PREDICATE_R4);
         Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
@@ -171,6 +188,7 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
 
     }
 
+    @Test
     public void testNonUnionCompatibleNoSharedAttribute() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4, VAR_BAR1_OBJECT_R3);
@@ -199,6 +217,6 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
 // relation.getSortedTuples()));
 //        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(
 // expected.getSortedTuples()));
-        assertEquals(expectedResult, relation);
+        assertThat(relation, equalTo(expectedResult));
     }
 }
