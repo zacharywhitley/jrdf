@@ -73,6 +73,7 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECTPREDICATE_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+import org.junit.Test;
 
 import java.util.Set;
 
@@ -84,6 +85,7 @@ public class MinimumUnionIntegrationTest extends AbstractUnionIntegrationTest {
         return TestJRDFFactory.getFactory().getNewMinimumUnion();
     }
 
+    @Test
     public void testIsNotLeftOuterJoinOrOuterUnion() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2);
         tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3));
@@ -101,5 +103,6 @@ public class MinimumUnionIntegrationTest extends AbstractUnionIntegrationTest {
         resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R2));
 
         checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+        checkUnion(createRelation(resultTuple), createRelation(tuple2), createRelation(tuple1));
     }
 }

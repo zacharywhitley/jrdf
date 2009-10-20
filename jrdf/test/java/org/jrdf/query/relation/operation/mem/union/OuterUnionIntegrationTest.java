@@ -102,5 +102,6 @@ public class OuterUnionIntegrationTest extends AbstractUnionIntegrationTest {
         resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R2));
 
         checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+        checkUnion(createRelation(resultTuple), createRelation(tuple2), createRelation(tuple1));
     }
 }

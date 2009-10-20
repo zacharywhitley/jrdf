@@ -127,6 +127,7 @@ public abstract class AbstractUnionIntegrationTest {
         EvaluatedRelation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE);
         EvaluatedRelation emptyRelation = createRelation(heading, EMPTY_SET);
+
         checkUnion(relation, relation, emptyRelation);
         checkUnion(relation, emptyRelation, relation);
     }
@@ -136,7 +137,9 @@ public abstract class AbstractUnionIntegrationTest {
         EvaluatedRelation relation = createRelation(createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE), EMPTY_SET);
         EvaluatedRelation emptyRelation1 = createRelation(createHeading(POS_FOO2_PREDICATE), EMPTY_SET);
         EvaluatedRelation emptyRelation2 = createRelation(createHeading(POS_FOO1_SUBJECT), EMPTY_SET);
+
         checkUnion(relation, emptyRelation1, emptyRelation2);
+        checkUnion(relation, emptyRelation2, emptyRelation1);
     }
 
     @Test
@@ -146,6 +149,7 @@ public abstract class AbstractUnionIntegrationTest {
         Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
 
         checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+        checkUnion(createRelation(resultTuple), createRelation(tuple2), createRelation(tuple1));
     }
 
     @Test
@@ -158,6 +162,7 @@ public abstract class AbstractUnionIntegrationTest {
         resultTuple.addAll(tmpTuple);
 
         checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+        checkUnion(createRelation(resultTuple), createRelation(tuple2), createRelation(tuple1));
 
     }
 
@@ -173,6 +178,7 @@ public abstract class AbstractUnionIntegrationTest {
         resultTuple.addAll(tmpTuple);
 
         checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+        checkUnion(createRelation(resultTuple), createRelation(tuple2), createRelation(tuple1));
     }
 
     @Test
@@ -184,7 +190,9 @@ public abstract class AbstractUnionIntegrationTest {
         resultTuple.addAll(tmpTuple);
         Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE, VAR_BAR2_PREDICATE,
             POS_FOO3_OBJECT, POS_BAR3_OBJECT);
+
         checkUnion(createRelation(heading, resultTuple), createRelation(tuple1), createRelation(tuple2));
+        checkUnion(createRelation(heading, resultTuple), createRelation(tuple2), createRelation(tuple1));
 
     }
 
@@ -197,7 +205,9 @@ public abstract class AbstractUnionIntegrationTest {
         resultTuple.addAll(tmpTuple);
         Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE, POS_FOO3_OBJECT,
             VAR_BAR1_SUBJECT, VAR_BAR2_PREDICATE, VAR_BAR1_OBJECT);
+
         checkUnion(createRelation(heading, resultTuple), createRelation(tuple1), createRelation(tuple2));
+        checkUnion(createRelation(heading, resultTuple), createRelation(tuple2), createRelation(tuple1));
     }
 
     public abstract Union getUnion();
