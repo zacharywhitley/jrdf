@@ -59,55 +59,62 @@
 
 package org.jrdf.collection;
 
-import junit.framework.TestCase;
-import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import org.jrdf.util.bdb.ByteTripleComparatorFactoryImpl;
-import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.TempDirectoryHandler;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Graph;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SpringJRDFFactory;
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.ReverseGroundedTripleComparatorFactoryImpl;
-import org.jrdf.SpringJRDFFactory;
-import org.jrdf.JRDFFactory;
+import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.bdb.ByteTripleComparatorFactoryImpl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 
-import java.util.SortedSet;
-import java.util.Iterator;
-import java.util.Comparator;
 import java.net.URI;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.SortedSet;
 
-public class BdbSortedSetFactoryIntegrationTest extends TestCase {
+public class BdbSortedSetFactoryIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final JRDFFactory FACTORY = SpringJRDFFactory.getFactory();
-    private Comparator<byte[]> tc1;
-    private Comparator<byte[]> tc2;
-    private TripleImpl triple1;
-    private TripleImpl triple2;
+    private Triple triple1;
+    private Triple triple2;
     private SortedSet<Triple> triples1;
     private SortedSet<Triple> triples2;
     private BdbCollectionFactory factory;
 
+    @Before
     public void setUp() throws Exception {
         HANDLER.removeDir();
         HANDLER.makeDir();
         BdbEnvironmentHandler handler = new BdbEnvironmentHandlerImpl(HANDLER);
         factory = new BdbCollectionFactory(handler, "bdbsortedset");
-        tc1 = new ByteTripleComparatorFactoryImpl(new GroundedTripleComparatorFactoryImpl()).newComparator();
-        tc2 = new ByteTripleComparatorFactoryImpl(new ReverseGroundedTripleComparatorFactoryImpl()).newComparator();
+        Comparator<byte[]> tc1 =
+            new ByteTripleComparatorFactoryImpl(new GroundedTripleComparatorFactoryImpl()).newComparator();
+        Comparator<byte[]> tc2 =
+            new ByteTripleComparatorFactoryImpl(new ReverseGroundedTripleComparatorFactoryImpl()).newComparator();
         triples1 = factory.createSet(Triple.class, tc1);
         triples2 = factory.createSet(Triple.class, tc2);
         createTriples();
     }
 
+    @After
     public void tearDown() {
         factory.close();
     }
 
+    @Test
     public void testBasicConstruction() throws Exception {
         triples1.add(triple1);
         triples1.add(triple2);
@@ -115,10 +122,10 @@ public class BdbSortedSetFactoryIntegrationTest extends TestCase {
         triples2.add(triple2);
         Iterator<Triple> iterator1 = triples1.iterator();
         Iterator<Triple> iterator2 = triples2.iterator();
-        assertEquals(triple1, iterator2.next());
-        assertEquals(triple2, iterator2.next());
-        assertEquals(triple2, iterator1.next());
-        assertEquals(triple1, iterator1.next());
+        assertThat(iterator2.next(), equalTo(triple1));
+        assertThat(iterator2.next(), equalTo(triple2));
+        assertThat(iterator1.next(), equalTo(triple2));
+        assertThat(iterator1.next(), equalTo(triple1));
     }
 
     private void createTriples() throws Exception {

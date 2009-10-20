@@ -59,13 +59,9 @@
 
 package org.jrdf;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.local.GraphImpl;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.query.answer.AnswerType;
 import org.jrdf.query.answer.DatatypeType;
 import org.jrdf.query.answer.SparqlResultType;
-import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.NodeTypeEnum;
@@ -75,6 +71,7 @@ import org.jrdf.util.test.filter.JavaClassFileFilter;
 import org.jrdf.util.test.filter.MarkedAsSerializableClassFilter;
 import org.jrdf.util.test.filter.RecursiveFileFinder;
 import org.jrdf.vocabulary.Vocabulary;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,14 +86,15 @@ import java.util.List;
  * @author Tom Adams
  * @version $Id$
  */
-public final class SerializationIntegrationTest extends TestCase {
+public final class SerializationIntegrationTest {
     private static final String PATH_ROOT = "/";
     private static final Class<Vocabulary> PRODUCTION_CLASS = Vocabulary.class;
     private static final String DOT = ".";
     private static final MarkedAsSerializableClassFilter FILTER_MARKED_AS_SERIALIZABLE =
         new MarkedAsSerializableClassFilter();
 
-    public void testSerializationClaims() {
+    @Test
+    public void serializationClaims() {
         File packageRoot = getLocation(PATH_ROOT);
         Collection<File> allClasses = new RecursiveFileFinder().findFiles(packageRoot, new JavaClassFileFilter());
         Collection<Class<?>> serializableClasses = getSerializableClasses(packageRoot, allClasses);
@@ -121,16 +119,12 @@ public final class SerializationIntegrationTest extends TestCase {
     // FIXME TJA: Remove excluded classes once all classes serialize properly
     private Collection<Class<?>> getExcludedClasses() {
         Collection<Class<?>> excludedClasses = new ArrayList<Class<?>>();
-        excludedClasses.add(GraphImpl.class);
-        excludedClasses.add(LongIndexMem.class);
-        excludedClasses.add(NullaryTuple.class);
+        excludedClasses.add(LexerException.class);
+        excludedClasses.add(ParserException.class);
         excludedClasses.add(NodeTypeEnum.class);
         excludedClasses.add(DatatypeType.class);
         excludedClasses.add(SparqlResultType.class);
-        excludedClasses.add(LexerException.class);
-        excludedClasses.add(ParserException.class);
         excludedClasses.add(AnswerType.class);
-//        excludedClasses.add(SelectQueryImpl.class); // not sure why this doesn't work, it references Expression.ALL
         return excludedClasses;
     }
 

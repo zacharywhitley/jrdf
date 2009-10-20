@@ -59,7 +59,7 @@
 
 package org.jrdf;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Test that the Wiring is correct.
@@ -67,8 +67,9 @@ import junit.framework.TestCase;
  * @author Andrew Newman
  * @version $Id$
  */
-public class JrdfFactoryImplIntegrationTest extends TestCase {
-    public void testWiring() {
+public class JrdfFactoryImplIntegrationTest {
+    @Test
+    public void checkWiringIsOkay() {
         TestJRDFFactory jrdfFactory = TestJRDFFactory.getFactory();
         jrdfFactory.getNewGraph();
         jrdfFactory.getNewTupleComparator();

@@ -59,58 +59,65 @@
 
 package org.jrdf.collection;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class BdbMapFactoryIntegrationTest extends TestCase {
+public class BdbMapFactoryIntegrationTest {
     private static final int NO_STRINGS = 100;
     private final DirectoryHandler directoryHandler = new TempDirectoryHandler();
     private final BdbEnvironmentHandler mapHandler = new BdbEnvironmentHandlerImpl(directoryHandler);
     private MapFactory factory;
 
-    public void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() {
         directoryHandler.removeDir();
     }
 
-    public void testCreateStringLong() {
+    @Test
+    public void createStringLong() {
         factory = new BdbMapFactory(mapHandler, "testDb2");
         Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
-        for (int i = 0; i < NO_STRINGS; i++) {
-            stringPool.put("Foo" + i, new Long(i));
-            Long aLong = stringPool.get("Foo" + i);
-            assertEquals(new Long(i).longValue(), aLong.longValue());
+        for (long nodeNumber = 0; nodeNumber < NO_STRINGS; nodeNumber++) {
+            stringPool.put("Foo" + nodeNumber, nodeNumber);
+            Long retrievedIdByName = stringPool.get("Foo" + nodeNumber);
+            assertThat(retrievedIdByName, equalTo(nodeNumber));
         }
     }
 
-    public void testCreateLongString() {
+    @Test
+    public void createLongString() {
         factory = new BdbMapFactory(mapHandler, "testDb3");
         Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
-        for (int i = 0; i < NO_STRINGS; i++) {
-            stringPool.put(new Long(i), "Foo" + i);
-            String value = stringPool.get(new Long(i));
-            assertEquals("Foo" + i, value);
+        for (long nodeNumber = 0; nodeNumber < NO_STRINGS; nodeNumber++) {
+            final String stringValue = "Foo" + nodeNumber;
+            stringPool.put(nodeNumber, stringValue);
+            String retrievedValue = stringPool.get(nodeNumber);
+            assertThat(retrievedValue, equalTo(stringValue));
         }
     }
 
+    @Test
     public void testCreateLongArrayList() {
         factory = new BdbMapFactory(mapHandler, "testDb4");
         Map<Long, LinkedList<Long[]>> tripleStore = factory.createMap(Long.class, LinkedList.class);
-        for (int i = 0; i < NO_STRINGS; i++) {
+        for (long nodeNumber = 0; nodeNumber < NO_STRINGS; nodeNumber++) {
             LinkedList<Long[]> list = new LinkedList<Long[]>();
-            list.add(new Long[]{new Long(i + 1), new Long(i + 2)});
-            tripleStore.put(new Long(i), list);
-            LinkedList<Long[]> longs = tripleStore.get(new Long(i));
+            list.add(new Long[]{nodeNumber + 1, nodeNumber + 2});
+            tripleStore.put(nodeNumber, list);
+            LinkedList<Long[]> longs = tripleStore.get(nodeNumber);
             for (int index = 0; index < list.size() - 1; index++) {
                 Long[] listValues = list.get(index);
-                assertEquals(Arrays.asList(longs.get(i)), Arrays.asList(listValues));
+                assertThat(listValues, arrayContaining(longs.get((int) nodeNumber)));
             }
         }
     }
