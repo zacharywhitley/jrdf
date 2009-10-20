@@ -59,7 +59,5 @@
 package org.jrdf.query.client;
 
 public interface SparqlAnswerHandlerFactory {
-    SparqlAnswerHandlerImpl createXmlSparqlAnswerHandlerFactory();
-
-    SparqlAnswerHandlerImpl createJsonSparqlAnswerHandlerFactory();
+    SparqlAnswerHandler createSparqlAnswerHandlerFactory();
 }

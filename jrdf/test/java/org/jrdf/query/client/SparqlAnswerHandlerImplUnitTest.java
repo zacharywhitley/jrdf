@@ -87,13 +87,15 @@ import org.restlet.resource.Representation;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(PowerMockRunner.class)
 public class SparqlAnswerHandlerImplUnitTest {
     private static final Class<?> TEST_CLASS = SparqlAnswerHandlerImpl.class;
     private static final Class<?> TARGET_INTERFACE = SparqlAnswerHandler.class;
-    private static final Class[] PARAM_TYPES = {SparqlAnswerFactory.class, SparqlParserFactory.class, MediaType.class};
+    private static final Class[] PARAM_TYPES = {SparqlAnswerFactory.class, Map.class};
     @Mock private SparqlAnswerFactory mockAnswerFactory;
     @Mock private SparqlParserFactory mockParserFactory;
     private MediaType mediaType = MediaTypeExtensions.APPLICATION_SPARQL_XML;
@@ -101,7 +103,9 @@ public class SparqlAnswerHandlerImplUnitTest {
 
     @Before
     public void createHandler() {
-        handler = new SparqlAnswerHandlerImpl(mockAnswerFactory, mockParserFactory, mediaType);
+        final Map<MediaType, SparqlParserFactory> map = new HashMap<MediaType, SparqlParserFactory>();
+        map.put(mediaType, mockParserFactory);
+        handler = new SparqlAnswerHandlerImpl(mockAnswerFactory, map);
     }
 
     @Test
@@ -123,6 +127,7 @@ public class SparqlAnswerHandlerImplUnitTest {
     @Test
     public void getAnswerReturnsAnswer() throws Exception {
         final Representation mockRepresentation = createMock(Representation.class);
+        expect(mockRepresentation.getMediaType()).andReturn(mediaType);
         final InputStream mockInput = createMock(InputStream.class);
         expect(mockRepresentation.getStream()).andReturn(mockInput);
         final Answer mockAnswer = createMock(Answer.class);
@@ -133,8 +138,18 @@ public class SparqlAnswerHandlerImplUnitTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void getAnswerThrowsException() throws Exception {
+    public void wrongMediaTypeThrowsException() throws Exception {
         final Representation mockRepresentation = createMock(Representation.class);
+        expect(mockRepresentation.getMediaType()).andReturn(MediaType.ALL);
+        replayAll();
+        handler.getAnswer(mockRepresentation);
+        verifyAll();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void getStreamThrowsIOExceptionIsWrapped() throws Exception {
+        final Representation mockRepresentation = createMock(Representation.class);
+        expect(mockRepresentation.getMediaType()).andReturn(mediaType);
         expect(mockRepresentation.getStream()).andThrow(new IOException());
         replayAll();
         handler.getAnswer(mockRepresentation);

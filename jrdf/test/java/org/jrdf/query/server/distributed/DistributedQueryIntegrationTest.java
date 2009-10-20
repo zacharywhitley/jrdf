@@ -116,7 +116,7 @@ public class DistributedQueryIntegrationTest {
         GRAPH_NAME);
     private static final URI DISTRIBUTED_SERVER_END_POINT = create("http://" + LOCAL_HOST + ":" + DISTRIBUTED_PORT);
     private static final SparqlAnswerHandlerFactory HANDLER_FACTORY = new SparqlAnswerHandlerFactoryImpl();
-    private static final SparqlAnswerHandler ANSWER_HANDLER = HANDLER_FACTORY.createXmlSparqlAnswerHandlerFactory();
+    private static final SparqlAnswerHandler ANSWER_HANDLER = HANDLER_FACTORY.createSparqlAnswerHandlerFactory();
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;

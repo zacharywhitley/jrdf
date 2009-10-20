@@ -70,23 +70,23 @@ import org.restlet.resource.Representation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class SparqlAnswerHandlerImpl implements SparqlAnswerHandler {
     private final SparqlAnswerFactory answerFactory;
-    private final SparqlParserFactory parserFactory;
-    private final MediaType mediaType;
+    private final Map<MediaType, SparqlParserFactory> typeToParser;
 
     public SparqlAnswerHandlerImpl(final SparqlAnswerFactory newAnswerFactory,
-        final SparqlParserFactory newParserFactory, final MediaType newMediaType) {
-        checkNotNull(newAnswerFactory, newParserFactory, newMediaType);
-        answerFactory = newAnswerFactory;
-        parserFactory = newParserFactory;
-        mediaType = newMediaType;
+        final Map<MediaType, SparqlParserFactory> newTypeToParser) {
+        checkNotNull(newAnswerFactory, newTypeToParser);
+        this.answerFactory = newAnswerFactory;
+        this.typeToParser = newTypeToParser;
     }
 
     public Answer getAnswer(Representation output) {
         checkNotNull(output);
         try {
+            SparqlParserFactory parserFactory = tryGetParserFactory(output.getMediaType());
             return answerFactory.createStreamingAnswer(output.getStream(), parserFactory);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -97,7 +97,18 @@ public final class SparqlAnswerHandlerImpl implements SparqlAnswerHandler {
         checkNotNull(request);
         ClientInfo clientInfo = request.getClientInfo();
         List<Preference<MediaType>> preferenceList = new ArrayList<Preference<MediaType>>();
-        preferenceList.add(new Preference<MediaType>(mediaType));
+        for (MediaType mediaType : typeToParser.keySet()) {
+            preferenceList.add(new Preference<MediaType>(mediaType));
+        }
         clientInfo.setAcceptedMediaTypes(preferenceList);
+    }
+
+    private SparqlParserFactory tryGetParserFactory(MediaType mediaType) {
+        final SparqlParserFactory parserFactory = typeToParser.get(mediaType);
+        if (parserFactory == null) {
+            throw new RuntimeException("Unknown Media Type: " + mediaType);
+        } else {
+            return parserFactory;
+        }
     }
 }
