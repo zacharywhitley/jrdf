@@ -72,7 +72,8 @@ import org.jrdf.query.client.CallableQueryClientImpl;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.client.SparqlAnswerHandler;
-import org.jrdf.query.client.XmlSparqlAnswerHandler;
+import org.jrdf.query.client.SparqlAnswerHandlerFactory;
+import org.jrdf.query.client.SparqlAnswerHandlerFactoryImpl;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
@@ -97,7 +98,8 @@ public class LocalQueryIntegrationTest {
     private static final String ASK_QUERY_STRING = "ASK WHERE { ?s ?p ?o. }";
     private static final URI LOCAL_SERVER_END_POINT = URI.create("http://" + LOCAL_HOST + ":" + 8182 + GRAPH_PATH +
         GRAPH);
-    private static final SparqlAnswerHandler ANSWER_HANDLER = new XmlSparqlAnswerHandler();
+    private static final SparqlAnswerHandlerFactory HANDLER_FACTORY = new SparqlAnswerHandlerFactoryImpl();
+    private static final SparqlAnswerHandler ANSWER_HANDLER = HANDLER_FACTORY.createXmlSparqlAnswerHandlerFactory();
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;

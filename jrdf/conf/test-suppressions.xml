@@ -6,4 +6,5 @@
     <suppress checks="BooleanExpressionComplexity" files="MockFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SableCcSparqlParserIntegrationTest"/>
     <suppress checks="ReturnCount" files="MockFactory"/>
+    <suppress checks="CyclomaticComplexity" files="MockFactory"/>
 </suppressions>

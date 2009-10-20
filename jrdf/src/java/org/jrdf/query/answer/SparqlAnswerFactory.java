@@ -66,5 +66,5 @@ import java.io.InputStream;
  * @version $Id$
  */
 public interface SparqlAnswerFactory {
-    Answer createStreamingXmlAnswer(InputStream stream);
+    Answer createStreamingAnswer(InputStream stream, final SparqlParserFactory sparqlParserFactory);
 }

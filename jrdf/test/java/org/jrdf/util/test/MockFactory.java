@@ -62,6 +62,7 @@ import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
+import org.restlet.data.MediaType;
 
 import java.net.URI;
 import java.net.URL;
@@ -169,7 +170,8 @@ public class MockFactory {
     private static boolean isStubClass(Class clazz) {
         return (clazz.equals(URL.class) || clazz.equals(URI.class) ||
             clazz.equals(String.class)) || clazz.equals(ATriple.class) ||
-            clazz.equals(Set.class) || clazz.equals(Long.class);
+            clazz.equals(Set.class) || clazz.equals(Long.class) ||
+            clazz.equals(MediaType.class);
     }
 
     private static Object createStubClass(Class clazz) {
