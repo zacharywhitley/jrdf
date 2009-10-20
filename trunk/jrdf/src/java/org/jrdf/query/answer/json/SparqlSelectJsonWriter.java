@@ -83,7 +83,7 @@ public class SparqlSelectJsonWriter extends AbstractSparqlJsonWriter {
     }
 
     public boolean hasMoreResults() {
-        return iterator.hasNext() && ((maxRows == -1) || count < maxRows);
+        return ((maxRows == -1) || count < maxRows) && iterator.hasNext();
     }
 
     public void writeHead() throws JSONException {
