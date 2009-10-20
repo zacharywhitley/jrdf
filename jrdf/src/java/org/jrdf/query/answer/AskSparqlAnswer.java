@@ -59,7 +59,6 @@
 package org.jrdf.query.answer;
 
 import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
-import org.jrdf.query.client.SparqlAnswerHandler;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -72,8 +71,8 @@ public class AskSparqlAnswer implements AskAnswer {
     private StreamingSparqlParser answerStreamParser;
     private boolean result;
 
-    public AskSparqlAnswer(final SparqlAnswerHandler handler, final InputStream newInputStream) {
-        this(new StreamingSparqlParserImpl(handler, newInputStream));
+    public AskSparqlAnswer(final SparqlParserFactory newFactory, final InputStream newInputStream) {
+        this(new StreamingSparqlParserImpl(newFactory, newInputStream));
     }
 
     public AskSparqlAnswer(final StreamingSparqlParser newAnswerStreamParser) {

@@ -58,10 +58,10 @@
 
 package org.jrdf.query.answer.xml;
 
-import org.jrdf.query.answer.TypeValue;
+import org.jrdf.query.answer.SparqlParserFactory;
 import org.jrdf.query.answer.StreamingSparqlParser;
 import org.jrdf.query.answer.StreamingSparqlParserImpl;
-import org.jrdf.query.client.SparqlAnswerHandler;
+import org.jrdf.query.answer.TypeValue;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
@@ -75,10 +75,10 @@ import java.util.LinkedHashSet;
 public class SparqlMultiXmlStreamQueueWriter extends AbstractSparqlXmlWriter implements SparqlMultiXmlStreamWriter {
     private StreamingSparqlParser streamParser;
 
-    public SparqlMultiXmlStreamQueueWriter(final SparqlAnswerHandler newHandler, final Writer newWriter,
+    public SparqlMultiXmlStreamQueueWriter(final SparqlParserFactory newFactory, final Writer newWriter,
         final InputStream... streams) {
         createXmlStreamWriter(newWriter);
-        this.streamParser = new StreamingSparqlParserImpl(newHandler, streams);
+        this.streamParser = new StreamingSparqlParserImpl(newFactory, streams);
     }
 
     public void addStream(InputStream stream) {
