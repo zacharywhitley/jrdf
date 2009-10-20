@@ -59,17 +59,21 @@
 
 package org.jrdf.example.performance;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Set;
 
-public class BdbSortedSetFactoryPerformance extends TestCase {
+public class BdbSortedSetFactoryPerformance {
     private static final int RUNS = 100000;
     private static final int MILLISECONDS = 1000;
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
@@ -78,33 +82,38 @@ public class BdbSortedSetFactoryPerformance extends TestCase {
     private CollectionFactory factory;
     private Set<String> strSet;
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         HANDLER.removeDir();
         storedSetHandler = new BdbEnvironmentHandlerImpl(HANDLER);
     }
 
-    public void testInitialAddingToSet() {
+    @After
+    public void closeFactory() {
+        factory.close();
+    }
+
+    @Test
+    public void performanceInsertSpeedTest() {
         factory = new BdbCollectionFactory(storedSetHandler, databaseName);
         strSet = factory.createSet(String.class);
         long start = System.currentTimeMillis();
         for (int i = 0; i < RUNS; i++) {
-            strSet.add(new String(Integer.toString(i)));
+            strSet.add(Integer.toString(i));
         }
         long end = System.currentTimeMillis();
         System.out.println("Inserting " + RUNS + " strings takes " + (end - start) / (float) MILLISECONDS + " seconds");
-        assertEquals("Set have " + RUNS + " entries", RUNS, strSet.size());
-        factory.close();
+        assertThat("Set have " + RUNS + " entries", strSet.size(), equalTo(RUNS));
     }
 
-    public void testAddDuplicates() {
+    @Test
+    public void addingDuplicatesAreRemoved() {
         factory = new BdbCollectionFactory(storedSetHandler, databaseName);
         strSet = factory.createSet(String.class);
         strSet.clear();
         strSet.add("triples");
         strSet.add("triples");
-        assertEquals("collection only has 1 entry", 1, strSet.size());
-        assertEquals("collection only contains \"triples\"", "triples", strSet.iterator().next());
-        factory.close();
+        assertThat("collection only has 1 entry", strSet.size(), equalTo(1));
+        assertThat("collection only contains \"triples\"", strSet.iterator().next(), equalTo("triples"));
     }
 }
