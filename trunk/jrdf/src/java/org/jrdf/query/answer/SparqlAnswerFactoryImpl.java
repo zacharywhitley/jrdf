@@ -59,7 +59,7 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.client.XmlSparqlAnswerHandler;
+import org.jrdf.query.answer.xml.parser.XmlSparqlParserFactory;
 
 import java.io.InputStream;
 
@@ -69,7 +69,7 @@ import java.io.InputStream;
  */
 public class SparqlAnswerFactoryImpl implements SparqlAnswerFactory {
     public Answer createStreamingXmlAnswer(InputStream stream) {
-        StreamingSparqlParser streamAnswerParser = new StreamingSparqlParserImpl(new XmlSparqlAnswerHandler(), stream);
+        StreamingSparqlParser streamAnswerParser = new StreamingSparqlParserImpl(new XmlSparqlParserFactory(), stream);
         if (!streamAnswerParser.getVariables().isEmpty()) {
             return new SelectSparqlAnswer(streamAnswerParser);
         } else {

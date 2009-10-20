@@ -59,8 +59,6 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.client.SparqlAnswerHandler;
-
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -69,8 +67,8 @@ import java.util.LinkedHashSet;
 public class SelectSparqlAnswer implements SelectAnswer {
     private StreamingSparqlParser answerStreamParser;
 
-    public SelectSparqlAnswer(final SparqlAnswerHandler newHandler, final InputStream newInputStream) {
-        this(new StreamingSparqlParserImpl(newHandler, newInputStream));
+    public SelectSparqlAnswer(final SparqlParserFactory newFactory, final InputStream newInputStream) {
+        this(new StreamingSparqlParserImpl(newFactory, newInputStream));
     }
 
     public SelectSparqlAnswer(final StreamingSparqlParser newAnswerStreamParser) {

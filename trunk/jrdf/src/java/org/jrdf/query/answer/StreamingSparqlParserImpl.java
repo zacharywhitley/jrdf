@@ -59,8 +59,6 @@
 
 package org.jrdf.query.answer;
 
-import org.jrdf.query.client.SparqlAnswerHandler;
-
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 import java.util.LinkedHashSet;
@@ -68,7 +66,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class StreamingSparqlParserImpl implements StreamingSparqlParser {
-    private final SparqlAnswerHandler handler;
+    private final SparqlParserFactory parserFactory;
     private SparqlParser parser;
     private BlockingQueue<InputStream> streamQueue;
     private LinkedHashSet<String> variables;
@@ -78,8 +76,8 @@ public class StreamingSparqlParserImpl implements StreamingSparqlParser {
     private boolean hasMore;
     private TypeValue[] results;
 
-    public StreamingSparqlParserImpl(final SparqlAnswerHandler newHandler, final InputStream... streams) {
-        this.handler = newHandler;
+    public StreamingSparqlParserImpl(final SparqlParserFactory newParserFactory, final InputStream... streams) {
+        this.parserFactory = newParserFactory;
         this.hasMore = false;
         this.variables = new LinkedHashSet<String>();
         this.streamQueue = new LinkedBlockingQueue<InputStream>();
@@ -149,7 +147,7 @@ public class StreamingSparqlParserImpl implements StreamingSparqlParser {
             if (parser != null) {
                 parser.close();
             }
-            parser = handler.getParser(currentStream);
+            parser = parserFactory.getParser(currentStream);
             parseVariables();
             parseHead();
             if (!hasMore) {
