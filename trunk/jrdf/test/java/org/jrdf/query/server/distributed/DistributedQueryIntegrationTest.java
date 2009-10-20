@@ -71,7 +71,8 @@ import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.QueryClientImpl;
 import org.jrdf.query.client.SparqlAnswerHandler;
-import org.jrdf.query.client.XmlSparqlAnswerHandler;
+import org.jrdf.query.client.SparqlAnswerHandlerFactory;
+import org.jrdf.query.client.SparqlAnswerHandlerFactoryImpl;
 import org.jrdf.query.server.SpringDistributedServer;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
@@ -91,8 +92,8 @@ import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.StringRepresentation;
 
 import java.net.URI;
+import static java.net.URI.create;
 import java.net.URL;
-import static java.net.URI.*;
 import static java.util.Collections.EMPTY_MAP;
 import java.util.Iterator;
 import java.util.Set;
@@ -114,7 +115,8 @@ public class DistributedQueryIntegrationTest {
     private static final URI SERVER_END_POINT = create("http://" + LOCAL_HOST + ":" + LOCAL_PORT + GRAPH_PATH +
         GRAPH_NAME);
     private static final URI DISTRIBUTED_SERVER_END_POINT = create("http://" + LOCAL_HOST + ":" + DISTRIBUTED_PORT);
-    private static final SparqlAnswerHandler ANSWER_HANDLER = new XmlSparqlAnswerHandler();
+    private static final SparqlAnswerHandlerFactory HANDLER_FACTORY = new SparqlAnswerHandlerFactoryImpl();
+    private static final SparqlAnswerHandler ANSWER_HANDLER = HANDLER_FACTORY.createXmlSparqlAnswerHandlerFactory();
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;

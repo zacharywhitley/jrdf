@@ -111,6 +111,7 @@
 
     <bean id="distributedGraphApplication" class="org.jrdf.query.server.distributed.DistributedQueryGraphApplicationImpl">
         <constructor-arg ref="graphApplication"/>
+        <constructor-arg ref="xmlSparqlAnswerHandler"/>
     </bean>
 
     <!-- Setup servers to query -->
@@ -175,5 +176,15 @@
     <bean id="localGraphsResourceHtml" class="org.jrdf.query.server.FreemarkerRepresentationFactory">
         <property name="templateName" value="graphDistributed-html.ftl"/>
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    </bean>
+
+    <bean id="xmlSparqlAnswerHandler" class="org.jrdf.query.client.SparqlAnswerHandlerImpl">
+        <constructor-arg index="0">
+            <bean class="org.jrdf.query.answer.SparqlAnswerFactoryImpl"/>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <bean class="org.jrdf.query.answer.xml.parser.XmlSparqlParserFactory"/>
+        </constructor-arg>
+        <constructor-arg index="2" ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML"/>
     </bean>
 </beans>

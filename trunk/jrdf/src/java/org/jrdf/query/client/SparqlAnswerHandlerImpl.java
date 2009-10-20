@@ -58,10 +58,9 @@
 
 package org.jrdf.query.client;
 
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.SparqlAnswerFactory;
-import org.jrdf.query.answer.SparqlAnswerFactoryImpl;
+import org.jrdf.query.answer.SparqlParserFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
@@ -72,13 +71,23 @@ import org.restlet.resource.Representation;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class XmlSparqlAnswerHandler implements SparqlAnswerHandler {
-    private static final SparqlAnswerFactory SPARQL_ANSWER_STREAMING_FACTORY = new SparqlAnswerFactoryImpl();
+public final class SparqlAnswerHandlerImpl implements SparqlAnswerHandler {
+    private final SparqlAnswerFactory answerFactory;
+    private final SparqlParserFactory parserFactory;
+    private final MediaType mediaType;
+
+    public SparqlAnswerHandlerImpl(final SparqlAnswerFactory newAnswerFactory,
+        final SparqlParserFactory newParserFactory, final MediaType newMediaType) {
+        checkNotNull(newAnswerFactory, newParserFactory, newMediaType);
+        answerFactory = newAnswerFactory;
+        parserFactory = newParserFactory;
+        mediaType = newMediaType;
+    }
 
     public Answer getAnswer(Representation output) {
         checkNotNull(output);
         try {
-            return SPARQL_ANSWER_STREAMING_FACTORY.createStreamingXmlAnswer(output.getStream());
+            return answerFactory.createStreamingAnswer(output.getStream(), parserFactory);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -88,7 +97,7 @@ public final class XmlSparqlAnswerHandler implements SparqlAnswerHandler {
         checkNotNull(request);
         ClientInfo clientInfo = request.getClientInfo();
         List<Preference<MediaType>> preferenceList = new ArrayList<Preference<MediaType>>();
-        preferenceList.add(new Preference<MediaType>(APPLICATION_SPARQL_XML));
+        preferenceList.add(new Preference<MediaType>(mediaType));
         clientInfo.setAcceptedMediaTypes(preferenceList);
     }
 }

@@ -63,12 +63,11 @@ import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.client.QueryClient;
 import org.jrdf.query.client.SparqlAnswerHandler;
-import org.jrdf.query.client.XmlSparqlAnswerHandler;
 import org.jrdf.query.server.GraphApplication;
 import org.restlet.resource.ResourceException;
 
 import java.net.URI;
-import static java.net.URI.*;
+import static java.net.URI.create;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -81,12 +80,13 @@ import java.util.Set;
 public class DistributedQueryGraphApplicationImpl implements DistributedQueryGraphApplication {
     private static final int DEFAULT_PORT = 8182;
     private static final int INVALID_TIME_TAKEN = -1;
-    // TODO AN Wire this in an support having different handlers.
-    private static final SparqlAnswerHandler ANSWER_HANDLER = new XmlSparqlAnswerHandler();
+    private final SparqlAnswerHandler handler;
     private Set<URI> servers;
     private GraphApplication application;
 
-    public DistributedQueryGraphApplicationImpl(GraphApplication newApplication) {
+    public DistributedQueryGraphApplicationImpl(final GraphApplication newApplication,
+        final SparqlAnswerHandler newHandler) {
+        this.handler = newHandler;
         this.application = newApplication;
         this.servers = new HashSet<URI>();
     }
@@ -114,7 +114,7 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
 
     public Answer answerQuery(String graphName, String queryString, long maxRows) throws ResourceException {
         try {
-            final QueryClient queryClient = new DistributedQueryClientImpl(servers, ANSWER_HANDLER);
+            final QueryClient queryClient = new DistributedQueryClientImpl(servers, handler);
             final Map<String, String> ext = new HashMap<String, String>();
             ext.put("maxRows", Long.toString(maxRows));
             return queryClient.executeQuery(queryString, ext);

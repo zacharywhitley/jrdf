@@ -63,15 +63,16 @@ import org.jrdf.graph.AnyNode;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.AnySubjectNode;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.BlankNodeImpl;
 import org.jrdf.graph.local.LiteralImpl;
 import org.jrdf.graph.local.URIReferenceImpl;
+import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.query.answer.SelectAnswerImpl;
 import org.jrdf.query.expression.SingleConstraint;
 import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.restlet.data.MediaType;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -126,6 +127,7 @@ public final class ArnoldTheInstantiator {
         instantiators.put(ATriple.class, new ATripleInstantiator());
         instantiators.put(Set.class, new SetInstantiator());
         instantiators.put(Map.class, new MapInstantiator());
+        instantiators.put(MediaType.class, new MediaTypeInstantiator());
     }
 
     private static class URLInstantiator implements Instantiator {
@@ -170,6 +172,12 @@ public final class ArnoldTheInstantiator {
     private static class MapInstantiator implements Instantiator {
         public Object instantiate() {
             return new HashMap();
+        }
+    }
+
+    private static class MediaTypeInstantiator implements Instantiator {
+        public Object instantiate() {
+            return MediaType.ALL;
         }
     }
 }
