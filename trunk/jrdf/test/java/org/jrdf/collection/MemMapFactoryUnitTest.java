@@ -59,18 +59,53 @@
 
 package org.jrdf.collection;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.expectNew;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
-public class MemMapFactoryUnitTest extends TestCase {
-    public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(MapFactory.class, MemMapFactory.class);
-        ClassPropertiesTestUtil.checkConstructor(MemMapFactory.class, Modifier.PUBLIC);
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(MemMapFactory.class)
+public class MemMapFactoryUnitTest {
+    @Test
+    public void classProperties() throws Exception {
+        checkImplementationOfInterface(MapFactory.class, MemMapFactory.class);
+        checkConstructor(MemMapFactory.class, Modifier.PUBLIC);
     }
 
-    public void testClose() {
+    @Test
+    public void createsHashMap() throws Exception {
+        final Map map = createMock(HashMap.class);
+        final MapFactory factory = new MemMapFactory();
+        expectNew(HashMap.class).andReturn((HashMap) map);
+        replayAll();
+        final Map<String, String> returnedMap = factory.createMap(String.class, String.class);
+        assertThat(returnedMap, equalTo(map));
+        verifyAll();
+    }
+
+    @Test
+    public void createsHashMapWithName() throws Exception {
+        final MapFactory factory = new MemMapFactory();
+        final Map<String, String> returnedMap = factory.createMap(String.class, String.class, "fred");
+        final Map<String, String> existingMap = factory.openExistingMap(String.class, String.class, "fred");
+        assertThat(returnedMap, equalTo(existingMap));
+    }
+
+    @Test
+    public void closeDoesNothing() {
         new MemMapFactory().close();
     }
 }

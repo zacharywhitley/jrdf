@@ -63,62 +63,69 @@ import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BdbMapFactoryUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public class BdbMapFactoryUnitTest {
     private static final Class[] PARAM_TYPES = {BdbEnvironmentHandler.class, String.class};
     private static final String[] PARAMETER_NAMES = {"newHandler", "newDatabaseName"};
-    private MockFactory mockFactory = new MockFactory();
-    private BdbEnvironmentHandler storedMapHandler;
-    private String databaseName = "dbName" + System.currentTimeMillis();
-    private Environment environment;
-    private Database database;
+    private static final String DATABASE_NAME = "dbName" + System.currentTimeMillis();
+    @Mock private BdbEnvironmentHandler storedMapHandler;
+    @Mock private Environment environment;
+    @Mock private Database database;
 
-    public void setUp() {
-        storedMapHandler = mockFactory.createMock(BdbEnvironmentHandler.class);
-    }
-
-    public void testClassProperties() throws Exception {
+    @Test
+    public void classProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(MapFactory.class, BdbMapFactory.class);
         checkConstructor(BdbMapFactory.class, Modifier.PUBLIC, PARAM_TYPES);
         checkConstructNullAssertion(BdbMapFactory.class, PARAM_TYPES);
         checkConstructorSetsFieldsAndFieldsPrivateFinal(BdbMapFactory.class, PARAM_TYPES, PARAMETER_NAMES);
     }
 
-    public void testCreateMap() throws Exception {
-        HashMap<String, String> expectedMap = creatMapExpectations();
-        mockFactory.replay();
-        BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
+    @Test
+    public void createMap() throws Exception {
+        Map<String, String> expectedMap = creatMapExpectations();
+        replayAll();
+        BdbMapFactory factory = new BdbMapFactory(storedMapHandler, DATABASE_NAME);
         Map<String, String> actualMap = factory.createMap(String.class, String.class);
-        assertTrue(expectedMap == actualMap);
-        mockFactory.verify();
+        assertThat(actualMap, is(expectedMap));
+        verifyAll();
     }
 
+    @Test
     public void testHandleException() throws Exception {
         expect(storedMapHandler.setUpEnvironment()).andThrow(new DatabaseException());
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                mockFactory.replay();
-                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
+                replayAll();
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, DATABASE_NAME);
                 factory.createMap(String.class, String.class);
-                mockFactory.verify();
+                verifyAll();
             }
         });
     }
 
+    @Test
     public void testClose() throws Exception {
         creatMapExpectations();
         environment.sync();
@@ -127,13 +134,14 @@ public class BdbMapFactoryUnitTest extends TestCase {
         expectLastCall();
         database.close();
         expectLastCall();
-        mockFactory.replay();
-        MapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
+        replayAll();
+        MapFactory factory = new BdbMapFactory(storedMapHandler, DATABASE_NAME);
         factory.createMap(String.class, String.class);
         factory.close();
-        mockFactory.verify();
+        verifyAll();
     }
 
+    @Test
     public void testCloseCatalogEvenWithExceptionInEnvironment() throws Exception {
         creatMapExpectations();
         environment.sync();
@@ -144,15 +152,16 @@ public class BdbMapFactoryUnitTest extends TestCase {
         expectLastCall();
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                mockFactory.replay();
-                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
+                replayAll();
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, DATABASE_NAME);
                 factory.createMap(String.class, String.class);
                 factory.close();
-                mockFactory.verify();
+                verifyAll();
             }
         });
     }
 
+    @Test
     public void testCloseBothExceptions() throws Exception {
         creatMapExpectations();
         environment.sync();
@@ -161,23 +170,21 @@ public class BdbMapFactoryUnitTest extends TestCase {
         expectLastCall().andThrow(new DatabaseException());
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                mockFactory.replay();
-                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
+                replayAll();
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, DATABASE_NAME);
                 factory.createMap(String.class, String.class);
                 factory.close();
-                mockFactory.verify();
+                verifyAll();
             }
         });
     }
 
     private HashMap<String, String> creatMapExpectations() throws Exception {
         HashMap<String, String> expectedMap = new HashMap<String, String>();
-        environment = mockFactory.createMock(Environment.class);
         expect(storedMapHandler.setUpEnvironment()).andReturn(environment);
-        DatabaseConfig databaseConfig = mockFactory.createMock(DatabaseConfig.class);
+        DatabaseConfig databaseConfig = createMock(DatabaseConfig.class);
         expect(storedMapHandler.setUpDatabaseConfig(false)).andReturn(databaseConfig);
-        database = mockFactory.createMock(Database.class);
-        expect(storedMapHandler.setupDatabase(environment, databaseName + 1, databaseConfig)).andReturn(database);
+        expect(storedMapHandler.setupDatabase(environment, DATABASE_NAME + 1, databaseConfig)).andReturn(database);
         expect(storedMapHandler.createMap(database, String.class, String.class)).
             andReturn(expectedMap);
         return expectedMap;
