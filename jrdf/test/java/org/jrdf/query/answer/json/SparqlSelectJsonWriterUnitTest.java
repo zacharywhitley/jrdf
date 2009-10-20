@@ -70,12 +70,17 @@ import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_1;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_2;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_3;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
-import static org.jrdf.query.answer.json.JsonTestUtil.*;
-import org.jrdf.util.test.MockFactory;
+import static org.jrdf.query.answer.json.JsonTestUtil.checkBindings;
+import static org.jrdf.query.answer.json.JsonTestUtil.checkJSONStringArrayValues;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -83,20 +88,16 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 
+@RunWith(PowerMockRunner.class)
 public class SparqlSelectJsonWriterUnitTest {
     private TypeValueArrayFactory factory = new TypeValueArrayFactoryImpl();
-    private final MockFactory mockFactory = new MockFactory();
-    private SelectAnswer selectAnswer;
-    private Iterator<TypeValue[]> mockIterator;
+    @Mock private SelectAnswer selectAnswer;
+    @Mock private Iterator<TypeValue[]> mockIterator;
+    @Mock private Writer mockWriter;
     private StringWriter stringWriter;
-    private Writer mockWriter;
 
-    @SuppressWarnings({ "unchecked" })
     @Before
     public void setUp() throws Exception {
-        selectAnswer = mockFactory.createMock(SelectAnswer.class);
-        mockIterator = mockFactory.createMock(Iterator.class);
-        mockWriter = mockFactory.createMock(Writer.class);
         stringWriter = new StringWriter();
     }
 
@@ -106,14 +107,12 @@ public class SparqlSelectJsonWriterUnitTest {
         expectLastCall();
         mockWriter.close();
         expectLastCall();
-
-        mockFactory.replay();
+        replayAll();
         final SparqlJsonWriter writer = new SparqlSelectJsonWriter(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
             0L);
         writer.flush();
         writer.close();
-
-        mockFactory.verify();
+        verifyAll();
     }
 
     @Test(expected = JSONException.class)
@@ -122,13 +121,11 @@ public class SparqlSelectJsonWriterUnitTest {
         expect(selectAnswer.numberOfTuples()).andReturn(0L);
         mockWriter.flush();
         expectLastCall().andThrow(new IOException());
-
-        mockFactory.replay();
+        replayAll();
         final SparqlJsonWriter writer = new SparqlSelectJsonWriter(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
             0L);
         writer.flush();
-
-        mockFactory.verify();
+        verifyAll();
     }
 
     @Test(expected = JSONException.class)
@@ -137,23 +134,21 @@ public class SparqlSelectJsonWriterUnitTest {
         expect(selectAnswer.numberOfTuples()).andReturn(0L);
         mockWriter.close();
         expectLastCall().andThrow(new IOException());
-
-        mockFactory.replay();
+        replayAll();
         final SparqlJsonWriter writer = new SparqlSelectJsonWriter(mockWriter, NO_LINKS, NO_VARIABLES, mockIterator,
             0L);
         writer.close();
-
-        mockFactory.verify();
+        verifyAll();
     }
 
     @Test
     public void emptyAnswer() throws Exception {
-        checkAnswer(NO_LINKS, NO_VARIABLES, 0);
+        checkAnswer(NO_LINKS, NO_VARIABLES, -1);
     }
 
     @Test
     public void noResults() throws Exception {
-        checkAnswer(NO_LINKS, TEST_VARIABLES, 0);
+        checkAnswer(NO_LINKS, TEST_VARIABLES, -1);
     }
 
     @Test
@@ -162,20 +157,28 @@ public class SparqlSelectJsonWriterUnitTest {
     }
 
     @Test
-    public void maxRows() throws Exception {
+    public void maxRowsZeroWithResultsAvailable() throws Exception {
+        checkAnswer(NO_LINKS, TEST_VARIABLES, 0, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+    }
+
+    @Test
+    public void maxRowsLessThanResultsAvailable() throws Exception {
         checkAnswer(NO_LINKS, TEST_VARIABLES, 1, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
+    }
+
+    @Test
+    public void maxRowsGreaterThanResultsAvailable() throws Exception {
+        checkAnswer(NO_LINKS, TEST_VARIABLES, 4, TEST_BINDINGS_1, TEST_BINDINGS_2, TEST_BINDINGS_3);
     }
 
     public void checkAnswer(final String[] links, final String[] variables, final int numberOfResults,
         final Map<String, TypeValue>... bindings) throws JSONException {
         setupExpectationsForResults(variables, numberOfResults == -1 ? bindings.length : numberOfResults, bindings);
-        mockFactory.replay();
-
+        replayAll();
         final SparqlJsonWriter writer = new SparqlSelectJsonWriter(stringWriter, links, variables, mockIterator,
             numberOfResults);
         writer.writeFullDocument();
-        mockFactory.verify();
-
+        verifyAll();
         final JSONObject head = new JSONObject(stringWriter.toString()).getJSONObject("head");
         checkJSONStringArrayValues(head, "vars", variables);
         final JSONObject results = new JSONObject(stringWriter.toString()).getJSONObject("results");
@@ -183,15 +186,19 @@ public class SparqlSelectJsonWriterUnitTest {
     }
 
     private void setupExpectationsForResults(final String[] variables, final int numberOfResults,
-        final Map<String, TypeValue>... results) {
+        final Map<String, TypeValue>... bindings) {
         // Number of loops around the iterator
-        if (numberOfResults > 0) {
-            expect(mockIterator.hasNext()).andReturn(true).times(numberOfResults);
+        int numberOfExpectations = numberOfResults > bindings.length ? bindings.length : numberOfResults;
+        if (numberOfExpectations > 0) {
+            expect(mockIterator.hasNext()).andReturn(true).times(numberOfExpectations);
         }
-        expect(mockIterator.hasNext()).andReturn(false).once();
+        // Won't get to the end of the iterator if max results less than available.
+        if (numberOfResults >= bindings.length) {
+            expect(mockIterator.hasNext()).andReturn(false).once();
+        }
         // Number of results
-        for (int i = 0; i < numberOfResults; i++) {
-            expect(mockIterator.next()).andReturn(factory.mapToArray(variables, results[i]));
+        for (int i = 0; i < numberOfExpectations; i++) {
+            expect(mockIterator.next()).andReturn(factory.mapToArray(variables, bindings[i]));
         }
     }
 }

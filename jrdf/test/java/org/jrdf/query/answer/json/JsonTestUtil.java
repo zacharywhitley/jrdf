@@ -143,7 +143,8 @@ public class JsonTestUtil {
 
     public static void checkBindings(final JSONArray bindings, int numberOfResults,
         Map<String, TypeValue>... allResults) throws JSONException {
-        for (int i = 0; i < numberOfResults; i++) {
+        int resultsToCheck = numberOfResults > allResults.length ? allResults.length : numberOfResults;
+        for (int i = 0; i < resultsToCheck; i++) {
             final JSONObject aBinding = bindings.getJSONObject(i);
             final Map<String, TypeValue> expectedBindings = allResults[i];
             assertThat(aBinding, notNullValue());
