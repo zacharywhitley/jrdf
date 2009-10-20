@@ -58,22 +58,25 @@
 
 package org.jrdf.query.client;
 
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON;
-import static org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML;
+import org.jrdf.query.MediaTypeExtensions;
 import org.jrdf.query.answer.SparqlAnswerFactoryImpl;
+import org.jrdf.query.answer.SparqlParserFactory;
 import org.jrdf.query.answer.json.parser.JsonSparqlParserFactory;
 import org.jrdf.query.answer.xml.parser.XmlSparqlParserFactory;
+import org.restlet.data.MediaType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SparqlAnswerHandlerFactoryImpl implements SparqlAnswerHandlerFactory {
     private static final SparqlAnswerFactoryImpl SPARQL_ANSWER_FACTORY = new SparqlAnswerFactoryImpl();
     private static final XmlSparqlParserFactory XML_SPARQL_PARSER_FACTORY = new XmlSparqlParserFactory();
     private static final JsonSparqlParserFactory JSON_SPARQL_PARSER_FACTORY = new JsonSparqlParserFactory();
 
-    public SparqlAnswerHandlerImpl createXmlSparqlAnswerHandlerFactory() {
-        return new SparqlAnswerHandlerImpl(SPARQL_ANSWER_FACTORY, XML_SPARQL_PARSER_FACTORY, APPLICATION_SPARQL_XML);
-    }
-
-    public SparqlAnswerHandlerImpl createJsonSparqlAnswerHandlerFactory() {
-        return new SparqlAnswerHandlerImpl(SPARQL_ANSWER_FACTORY, JSON_SPARQL_PARSER_FACTORY, APPLICATION_SPARQL_JSON);
+    public SparqlAnswerHandler createSparqlAnswerHandlerFactory() {
+        final Map<MediaType, SparqlParserFactory> map = new HashMap<MediaType, SparqlParserFactory>();
+        map.put(MediaTypeExtensions.APPLICATION_SPARQL_XML, XML_SPARQL_PARSER_FACTORY);
+        map.put(MediaTypeExtensions.APPLICATION_SPARQL_JSON, JSON_SPARQL_PARSER_FACTORY);
+        return new SparqlAnswerHandlerImpl(SPARQL_ANSWER_FACTORY, map);
     }
 }

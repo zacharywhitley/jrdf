@@ -99,7 +99,7 @@ public class LocalQueryIntegrationTest {
     private static final URI LOCAL_SERVER_END_POINT = URI.create("http://" + LOCAL_HOST + ":" + 8182 + GRAPH_PATH +
         GRAPH);
     private static final SparqlAnswerHandlerFactory HANDLER_FACTORY = new SparqlAnswerHandlerFactoryImpl();
-    private static final SparqlAnswerHandler ANSWER_HANDLER = HANDLER_FACTORY.createXmlSparqlAnswerHandlerFactory();
+    private static final SparqlAnswerHandler ANSWER_HANDLER = HANDLER_FACTORY.createSparqlAnswerHandlerFactory();
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;

@@ -111,7 +111,7 @@
 
     <bean id="distributedGraphApplication" class="org.jrdf.query.server.distributed.DistributedQueryGraphApplicationImpl">
         <constructor-arg ref="graphApplication"/>
-        <constructor-arg ref="xmlSparqlAnswerHandler"/>
+        <constructor-arg ref="sparqlAnswerHandler"/>
     </bean>
 
     <!-- Setup servers to query -->
@@ -178,13 +178,20 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="xmlSparqlAnswerHandler" class="org.jrdf.query.client.SparqlAnswerHandlerImpl">
-        <constructor-arg index="0">
+    <bean id="sparqlAnswerHandler" class="org.jrdf.query.client.SparqlAnswerHandlerImpl">
+        <constructor-arg>
             <bean class="org.jrdf.query.answer.SparqlAnswerFactoryImpl"/>
         </constructor-arg>
-        <constructor-arg index="1">
-            <bean class="org.jrdf.query.answer.xml.parser.XmlSparqlParserFactory"/>
+        <constructor-arg>
+            <map>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML"
+                       value-ref="xmlSparqlParserFactory"/>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON"
+                       value-ref="jsonSparqlParserFactory"/>
+            </map>
         </constructor-arg>
-        <constructor-arg index="2" ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML"/>
     </bean>
+
+    <bean id="xmlSparqlParserFactory" class="org.jrdf.query.answer.xml.parser.XmlSparqlParserFactory"/>
+    <bean id="jsonSparqlParserFactory" class="org.jrdf.query.answer.json.parser.JsonSparqlParserFactory"/>
 </beans>
