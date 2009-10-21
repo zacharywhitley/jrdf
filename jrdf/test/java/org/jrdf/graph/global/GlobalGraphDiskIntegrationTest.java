@@ -63,6 +63,7 @@ import org.jrdf.JRDFFactory;
 import org.jrdf.SortedDiskGlobalJRDFFactory;
 import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
+import org.junit.After;
 
 /**
  * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
@@ -82,7 +83,7 @@ public class GlobalGraphDiskIntegrationTest extends AbstractGraphIntegrationTest
         return FACTORY.getNewGraph();
     }
 
-    @Override
+    @After
     public void tearDown() {
         graph.clear();
         FACTORY.close();
