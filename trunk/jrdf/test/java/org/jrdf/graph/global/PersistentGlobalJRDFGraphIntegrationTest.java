@@ -77,6 +77,10 @@ import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
+import org.junit.After;
+import org.junit.Before;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 
 import java.net.URI;
 
@@ -95,16 +99,15 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
     private static int graphNumber = 1;
     private PersistentGlobalJRDFFactory factory;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         HANDLER.makeDir();
         factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
         super.setUp();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
-        super.tearDown();
         graph.close();
         factory.close();
         HANDLER.removeDir();
@@ -135,14 +138,14 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
         addMolecule(tripleFactory.createTriple(bnode1, ref3, ref3), 3L);
         factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
         moleculeGraph = factory.getExistingGraph("foo");
-        assertEquals(3L, moleculeGraph.getNumberOfMolecules());
+        assertThat(moleculeGraph.getNumberOfMolecules(), is(3L));
     }
 
     private void addMolecule(Triple triple, long expectedMoleculeNumber) throws GraphException {
         MoleculeGraph moleculeGraph = factory.getExistingGraph("foo");
-        assertEquals(expectedMoleculeNumber - 1, moleculeGraph.getNumberOfMolecules());
+        assertThat(moleculeGraph.getNumberOfMolecules(), is(expectedMoleculeNumber - 1));
         moleculeGraph.add(MOLECULE_FACTORY.createMolecule(triple));
-        assertEquals(expectedMoleculeNumber, moleculeGraph.getNumberOfMolecules());
+        assertThat(moleculeGraph.getNumberOfMolecules(), is(expectedMoleculeNumber));
         moleculeGraph.close();
         factory.close();
     }

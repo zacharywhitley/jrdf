@@ -63,6 +63,7 @@ import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryGlobalJRDFFactory;
 import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
+import org.junit.After;
 
 /**
  * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
@@ -82,7 +83,7 @@ public class GlobalGraphMemIntegrationTest extends AbstractGraphIntegrationTest 
         return FACTORY.getNewGraph();
     }
 
-    @Override
+    @After
     public void tearDown() {
         FACTORY.close();
     }
