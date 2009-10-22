@@ -62,24 +62,19 @@ package org.jrdf.graph;
 import junit.framework.TestCase;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 import org.jrdf.util.test.URIReference1;
 import org.jrdf.util.test.URIReference2;
-import static org.jrdf.util.test.AssertThrows.*;
+import org.junit.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 
-/**
- * Unit test for {@link AbstractURIReference}.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
 public abstract class AbstractURIReferenceUnitTest extends TestCase {
     private URI uri1 = URI.create("http://foo/bar");
     private URI uri2 = URI.create("http://bar/baz");
@@ -125,16 +120,19 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
         checkSerialialVersionUid(AbstractURIReference.class, 8034954863132812197L);
     }
 
+    @Test
     public void testConstructor() throws Exception {
         checkNotAbsoluteURIThrowsException();
         checkNotAbsoluteURINoCheck();
     }
 
+    @Test
     public void testHashCode() {
         checkConsistentHashCode();
         checkEqualObjectsReturnSameHashCode();
     }
 
+    @Test
     public void testEquals() throws Exception {
         checkNullComparisonObject();
         checkReflexive();

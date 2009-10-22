@@ -59,10 +59,13 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-import org.jrdf.util.test.SerializationTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
+import org.junit.Test;
 
 import java.lang.reflect.Modifier;
 
@@ -72,20 +75,20 @@ import java.lang.reflect.Modifier;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class AnyObjectNodeUnitTest extends TestCase {
-
-    private static final String EXPECTED_TO_STRING = "ANY_OBJECT";
-
+public class AnyObjectNodeUnitTest {
+    @Test
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ObjectNode.class, AnyObjectNode.class);
-        ClassPropertiesTestUtil.checkConstructor(AnyObjectNode.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
+        checkImplementationOfInterfaceAndFinal(ObjectNode.class, AnyObjectNode.class);
+        checkConstructor(AnyObjectNode.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
     }
 
+    @Test
     public void testSerialVersionUid() {
-        SerializationTestUtil.checkSerialialVersionUid(AnyObjectNode.class, 8654340032080018169L);
+        checkSerialialVersionUid(AnyObjectNode.class, 8654340032080018169L);
     }
 
+    @Test
     public void testToString() {
-        assertEquals(EXPECTED_TO_STRING, AnyObjectNode.ANY_OBJECT_NODE.toString());
+        assertThat(AnyObjectNode.ANY_OBJECT_NODE.toString(), equalTo("ANY_OBJECT"));
     }
 }

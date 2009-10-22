@@ -59,12 +59,12 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import org.jrdf.util.test.MockFactory;
+import org.junit.Test;
 
 import java.lang.reflect.Modifier;
 
@@ -74,18 +74,20 @@ import java.lang.reflect.Modifier;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class TypedNodeVisitorAdapterUnitTest extends TestCase {
+public class TypedNodeVisitorAdapterUnitTest {
     private static final MockFactory FACTORY = new MockFactory();
     private static final BlankNode BLANK_NODE = FACTORY.createMock(BlankNode.class);
     private static final Literal LITERAL = FACTORY.createMock(Literal.class);
     private static final URIReference URI_REFERENCE = FACTORY.createMock(URIReference.class);
 
+    @Test
     public void testClassProperties() {
         checkClassPublic(TypedNodeVisitorAdapter.class);
         checkImplementationOfInterface(TypedNodeVisitor.class, TypedNodeVisitorAdapter.class);
         checkConstructor(TypedNodeVisitorAdapter.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
     }
 
+    @Test
     public void testEmptyCalls() {
         TypedNodeVisitorAdapter adapter = new TypedNodeVisitorAdapter();
         adapter.visitBlankNode(BLANK_NODE);

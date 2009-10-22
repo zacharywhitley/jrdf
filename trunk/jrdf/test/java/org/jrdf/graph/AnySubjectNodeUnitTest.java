@@ -60,35 +60,32 @@
 package org.jrdf.graph;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-import org.jrdf.util.test.SerializationTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialization;
+import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.lang.reflect.Modifier;
 
-/**
- * Test the properties of the AnySubjectNode.
- *
- * @author Andrew Newman
- * @author Tom Adams
- * @version $Id$
- */
 public class AnySubjectNodeUnitTest extends TestCase {
-
-    private static final String EXPECTED_TO_STRING = "ANY_SUBJECT";
-
+    @Test
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SubjectNode.class, AnySubjectNode.class);
-        ClassPropertiesTestUtil.checkConstructor(AnySubjectNode.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
-        // FIXME TJA: This probably belongs in an integration test
-        SerializationTestUtil.checkSerialization(AnySubjectNode.ANY_SUBJECT_NODE);
+        checkImplementationOfInterfaceAndFinal(SubjectNode.class, AnySubjectNode.class);
+        checkConstructor(AnySubjectNode.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
+        checkSerialization(AnySubjectNode.ANY_SUBJECT_NODE);
     }
 
+    @Test
     public void testSerialVersionUid() {
-        SerializationTestUtil.checkSerialialVersionUid(AnySubjectNode.class, -971680612480915602L);
+        checkSerialialVersionUid(AnySubjectNode.class, -971680612480915602L);
     }
 
+    @Test
     public void testToString() {
-        assertEquals(EXPECTED_TO_STRING, AnySubjectNode.ANY_SUBJECT_NODE.toString());
+        assertThat(AnySubjectNode.ANY_SUBJECT_NODE.toString(), equalTo("ANY_SUBJECT"));
     }
 }

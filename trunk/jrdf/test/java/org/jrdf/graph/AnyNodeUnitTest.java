@@ -59,10 +59,13 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.SerializationTestUtil;
+import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.lang.reflect.Modifier;
 
@@ -73,20 +76,20 @@ import java.lang.reflect.Modifier;
  * @author Tom Adams
  * @version $Id$
  */
-public class AnyNodeUnitTest extends TestCase {
-
-    private static final String EXPECTED_TO_STRING = "ANY";
-
+public class AnyNodeUnitTest {
+    @Test
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Node.class, AnyNode.class);
-        ClassPropertiesTestUtil.checkConstructor(AnyNode.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
+        checkImplementationOfInterfaceAndFinal(Node.class, AnyNode.class);
+        checkConstructor(AnyNode.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
     }
 
+    @Test
     public void testSerialVersionUid() {
         SerializationTestUtil.checkSerialialVersionUid(AnyNode.class, -4846208755020186880L);
     }
 
+    @Test
     public void testToString() {
-        assertEquals(EXPECTED_TO_STRING, AnyNode.ANY_NODE.toString());
+        assertThat(AnyNode.ANY_NODE.toString(), equalTo("ANY"));
     }
 }

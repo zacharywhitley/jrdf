@@ -59,14 +59,23 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.Triple1;
 import org.jrdf.util.test.Triple2;
-import org.jrdf.util.test.TripleTestUtil;
+import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
+import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
+import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_3;
+import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 import org.jrdf.vocabulary.XSD;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -79,8 +88,7 @@ import java.net.URI;
  * @author Andrew Newman
  * @version $Revision$
  */
-public abstract class AbstractTripleUnitTest extends TestCase {
-
+public abstract class AbstractTripleUnitTest {
     private Triple triple2;
     private Triple triple3;
     private Triple triple4;
@@ -88,25 +96,13 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     private Triple triple6;
     private URIReference uriUrnFoo;
 
-    /**
-     * Constructs a new test with the given name.
-     *
-     * @param name the name of the test
-     */
-    public AbstractTripleUnitTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() throws Exception {
-        triple2 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE, TripleTestUtil.URI_BOOK_1);
-        triple3 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE, TripleTestUtil.URI_BOOK_1);
-        triple4 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE,
-            TripleTestUtil.LITERAL_BOOK_TITLE);
-        triple5 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE,
-            TripleTestUtil.LITERAL_BOOK_TITLE, XSD.STRING);
-        triple6 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE,
-            TripleTestUtil.LITERAL_BOOK_TITLE, "en");
-
+        triple2 = createTriple(URI_BOOK_3, URI_DC_TITLE, URI_BOOK_1);
+        triple3 = createTriple(URI_BOOK_3, URI_DC_TITLE, URI_BOOK_1);
+        triple4 = createTriple(URI_BOOK_3, URI_DC_TITLE, LITERAL_BOOK_TITLE);
+        triple5 = createTriple(URI_BOOK_3, URI_DC_TITLE, LITERAL_BOOK_TITLE, XSD.STRING);
+        triple6 = createTriple(URI_BOOK_3, URI_DC_TITLE, LITERAL_BOOK_TITLE, "en");
         uriUrnFoo = createResource(URI.create("urn:foo"));
     }
 
@@ -124,11 +120,13 @@ public abstract class AbstractTripleUnitTest extends TestCase {
 
     public abstract void testClassProperties();
 
+    @Test
     public void testHashCode() {
         checkConsistentHashCode();
         checkEqualObjectsReturnSameHashCode();
     }
 
+    @Test
     public void testEquals() {
         checkNullComparisonObject();
         checkReflexive();
@@ -140,15 +138,15 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     protected void checkClassProperties(Class newClass) {
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, newClass);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, newClass);
-        ClassPropertiesTestUtil.checkExtensionOf(AbstractTriple.class, newClass);
+        checkImplementationOfInterface(Triple.class, newClass);
+        checkImplementationOfInterface(Serializable.class, newClass);
+        checkExtensionOf(AbstractTriple.class, newClass);
     }
 
     protected void checkAbstractClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, AbstractTriple.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AbstractTriple.class);
-        ClassPropertiesTestUtil.checkConstructor(AbstractTriple.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
+        checkImplementationOfInterface(Triple.class, AbstractTriple.class);
+        checkImplementationOfInterface(Serializable.class, AbstractTriple.class);
+        checkConstructor(AbstractTriple.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
         SerializationTestUtil.checkSerialialVersionUid(AbstractTriple.class, 8737092494833012690L);
     }
 
@@ -163,13 +161,13 @@ public abstract class AbstractTripleUnitTest extends TestCase {
         Triple x = triple2;
         Triple y = triple2;
         checkEqual(x, y);
-        assertEquals(x.hashCode(), y.hashCode());
+        assertThat(x.hashCode(), equalTo(y.hashCode()));
     }
 
     private void checkConsistentHashCode(Triple triple) {
         int hashCode1 = triple.hashCode();
         int hashCode2 = triple.hashCode();
-        assertEquals(hashCode1, hashCode2);
+        assertThat(hashCode1, equalTo(hashCode2));
     }
 
     private void checkReflexive() {
@@ -227,16 +225,16 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkEqual(Triple x, Triple y) {
-        assertEquals(x, y);
+        assertThat(x, equalTo(y));
     }
 
     private void checkNotEqual(Object x, Object y) {
-        assertFalse(x.equals(y));
+        assertThat(x.equals(y), is(false));
     }
 
     private void checkDifferentImplementationsAreEqual() {
         Triple t1 = new Triple1(uriUrnFoo, uriUrnFoo, uriUrnFoo);
         Triple t2 = new Triple2(uriUrnFoo, uriUrnFoo, uriUrnFoo);
-        assertEquals(t1, t2);
+        assertThat(t1, equalTo(t2));
     }
 }
