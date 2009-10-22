@@ -60,6 +60,7 @@
 package org.jrdf.graph;
 
 import org.jrdf.util.test.NodeTestUtil;
+import org.junit.Test;
 
 import java.net.URI;
 
@@ -71,15 +72,6 @@ import java.net.URI;
  * @version $Revision$
  */
 public final class TripleImplUnitTest extends AbstractTripleUnitTest {
-
-    /**
-     * Constructs a new test with the given name.
-     *
-     * @param name the name of the test
-     */
-    public TripleImplUnitTest(String name) {
-        super(name);
-    }
 
     public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         return new TripleImpl(subject, predicate, object);
@@ -105,6 +97,7 @@ public final class TripleImplUnitTest extends AbstractTripleUnitTest {
         return NodeTestUtil.createResource(uri);
     }
 
+    @Test
     public void testClassProperties() {
         this.checkClassProperties(TripleImpl.class);
         this.checkAbstractClassProperties();

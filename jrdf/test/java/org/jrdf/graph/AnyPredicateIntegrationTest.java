@@ -61,15 +61,10 @@ package org.jrdf.graph;
 
 import junit.framework.TestCase;
 import org.jrdf.util.test.SerializationTestUtil;
+import org.junit.Test;
 
-/**
- * Integration test for {@link AnyPredicateNode}.
- *
- * @author Tom Adams
- * @version $Id$
- */
 public final class AnyPredicateIntegrationTest extends TestCase {
-
+    @Test
     public void testSerialization() {
         SerializationTestUtil.checkSerialization(AnyPredicateNode.ANY_PREDICATE_NODE);
     }

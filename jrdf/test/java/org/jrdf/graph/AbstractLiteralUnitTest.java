@@ -59,19 +59,15 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialization;
 import org.jrdf.vocabulary.XSD;
+import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.net.URI;
 
-/**
- * Unit test for {@link AbstractLiteral}.
- *
- * @author Andrew Newman
- * @version $Revision: 1395 $
- */
-public abstract class AbstractLiteralUnitTest extends TestCase {
+public abstract class AbstractLiteralUnitTest {
     private static final String DATE = "1980-01-01T10:00:10.000+10:00";
     private static final String DURATION = "P1D";
     private static final String G_MONTH_STR = "--11";
@@ -82,9 +78,7 @@ public abstract class AbstractLiteralUnitTest extends TestCase {
 
     public abstract Literal createLiteral(String newLexicalForm, URI newDatatypeURI) throws Exception;
 
-    public void setUp() throws Exception {
-    }
-
+    @Test
     public void testSerialization() throws Exception {
         Literal literal1 = createLiteral(DATE, XSD.DATE_TIME);
         Literal literal2 = createLiteral(G_MONTH_STR, XSD.G_MONTH);
@@ -94,8 +88,9 @@ public abstract class AbstractLiteralUnitTest extends TestCase {
         checkSerialization(literal3);
     }
 
+    @Test
     public void testToString() throws Exception {
         Literal literal1 = createLiteral(DATE, XSD.DATE_TIME);
-        assertEquals("\"1980-01-01T10:00:10.000+10:00\"^^<" + XSD.DATE_TIME + ">", literal1.toString());
+        assertThat(literal1.toString(), equalTo("\"1980-01-01T10:00:10.000+10:00\"^^<" + XSD.DATE_TIME + ">"));
     }
 }

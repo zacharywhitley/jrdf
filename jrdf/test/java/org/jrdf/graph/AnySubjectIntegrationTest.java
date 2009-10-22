@@ -59,8 +59,8 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
 import org.jrdf.util.test.SerializationTestUtil;
+import org.junit.Test;
 
 /**
  * Integration test for {@link AnySubjectNode}.
@@ -68,8 +68,8 @@ import org.jrdf.util.test.SerializationTestUtil;
  * @author Tom Adams
  * @version $Id$
  */
-public final class AnySubjectIntegrationTest extends TestCase {
-
+public final class AnySubjectIntegrationTest {
+    @Test
     public void testSerialization() {
         SerializationTestUtil.checkSerialization(AnySubjectNode.ANY_SUBJECT_NODE);
     }

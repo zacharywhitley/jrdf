@@ -66,6 +66,7 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 
 public class GraphNumberOfTriplesMatcher extends TypeSafeMatcher<Graph> {
     private final long expectedSize;
+    private boolean isEmpty;
 
     public GraphNumberOfTriplesMatcher(final long newExpectedSize) {
         this.expectedSize = newExpectedSize;
@@ -73,11 +74,16 @@ public class GraphNumberOfTriplesMatcher extends TypeSafeMatcher<Graph> {
 
     @Override
     public boolean matchesSafely(Graph graph) {
-        return graph.getNumberOfTriples() == expectedSize;
+        isEmpty = graph.isEmpty();
+        return ((isEmpty && expectedSize == 0) || (!isEmpty && graph.getNumberOfTriples() == expectedSize));
     }
 
     public void describeTo(Description description) {
-        description.appendText("Graph was not of the correct size, expected: " + expectedSize);
+        if (isEmpty) {
+            description.appendText("Graph was empty, expected: " + expectedSize);
+        } else {
+            description.appendText("Graph was not of the correct size, expected: " + expectedSize);
+        }
     }
 
     @Factory
