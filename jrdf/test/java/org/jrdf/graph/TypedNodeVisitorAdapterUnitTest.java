@@ -63,8 +63,10 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import org.jrdf.util.test.MockFactory;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Modifier;
 
@@ -74,11 +76,11 @@ import java.lang.reflect.Modifier;
  * @author Andrew Newman
  * @version $Revision:$
  */
+@RunWith(PowerMockRunner.class)
 public class TypedNodeVisitorAdapterUnitTest {
-    private static final MockFactory FACTORY = new MockFactory();
-    private static final BlankNode BLANK_NODE = FACTORY.createMock(BlankNode.class);
-    private static final Literal LITERAL = FACTORY.createMock(Literal.class);
-    private static final URIReference URI_REFERENCE = FACTORY.createMock(URIReference.class);
+    @Mock private BlankNode blankNode;
+    @Mock private Literal literal;
+    @Mock private URIReference uriReference;
 
     @Test
     public void testClassProperties() {
@@ -90,8 +92,8 @@ public class TypedNodeVisitorAdapterUnitTest {
     @Test
     public void testEmptyCalls() {
         TypedNodeVisitorAdapter adapter = new TypedNodeVisitorAdapter();
-        adapter.visitBlankNode(BLANK_NODE);
-        adapter.visitLiteral(LITERAL);
-        adapter.visitURIReference(URI_REFERENCE);
+        adapter.visitBlankNode(blankNode);
+        adapter.visitLiteral(literal);
+        adapter.visitURIReference(uriReference);
     }
 }

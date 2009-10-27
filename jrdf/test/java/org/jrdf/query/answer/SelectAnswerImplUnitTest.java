@@ -59,14 +59,18 @@
 
 package org.jrdf.query.answer;
 
-import junit.framework.TestCase;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.EvaluatedRelation;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.modules.junit4.PowerMockRunner;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import static org.easymock.classextension.EasyMock.createMock;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -78,11 +82,12 @@ import java.util.LinkedHashSet;
  * @author Tom Adams
  * @version $Revision$
  */
-public final class SelectAnswerImplUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public final class SelectAnswerImplUnitTest {
     private static final Class<?>[] PARAM_TYPES =
         new Class[]{LinkedHashSet.class, EvaluatedRelation.class, Long.TYPE, Boolean.TYPE};
-    private MockFactory factory = new MockFactory();
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Answer.class, SelectAnswerImpl.class);
         checkImplementationOfInterfaceAndFinal(Serializable.class, SelectAnswerImpl.class);
@@ -90,15 +95,17 @@ public final class SelectAnswerImplUnitTest extends TestCase {
         checkConstructNullAssertion(SelectAnswerImpl.class, PARAM_TYPES);
     }
 
+    @Test
     public void testSerialVersionUid() {
         checkSerialialVersionUid(SelectAnswerImpl.class, 3778815984074679718L);
     }
 
+    @Test
     public void testNullArgument() {
-        EvaluatedRelation relation = factory.createMock(EvaluatedRelation.class);
+        EvaluatedRelation relation = createMock(EvaluatedRelation.class);
         LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
-        factory.replay();
+        replayAll();
         new SelectAnswerImpl(heading, relation, 100, true);
-        factory.verify();
+        verifyAll();
     }
 }
