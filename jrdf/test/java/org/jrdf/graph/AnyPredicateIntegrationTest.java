@@ -59,13 +59,12 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.SerializationTestUtil;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialization;
 import org.junit.Test;
 
-public final class AnyPredicateIntegrationTest extends TestCase {
+public final class AnyPredicateIntegrationTest {
     @Test
     public void testSerialization() {
-        SerializationTestUtil.checkSerialization(AnyPredicateNode.ANY_PREDICATE_NODE);
+        checkSerialization(AnyPredicateNode.ANY_PREDICATE_NODE);
     }
 }

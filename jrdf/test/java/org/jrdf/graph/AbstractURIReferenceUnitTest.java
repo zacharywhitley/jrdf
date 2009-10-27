@@ -59,7 +59,9 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
@@ -69,13 +71,14 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfIn
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 import org.jrdf.util.test.URIReference1;
 import org.jrdf.util.test.URIReference2;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 
-public abstract class AbstractURIReferenceUnitTest extends TestCase {
+public abstract class AbstractURIReferenceUnitTest {
     private URI uri1 = URI.create("http://foo/bar");
     private URI uri2 = URI.create("http://bar/baz");
     private URI uri3 = URI.create("ftp://bar/baz");
@@ -84,15 +87,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     private URIReference ref2;
     private URIReference ref3;
 
-    /**
-     * Constructs a new test with the given name.
-     *
-     * @param name the name of the test
-     */
-    public AbstractURIReferenceUnitTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() throws Exception {
         ref1 = createResource(uri1);
         ref2 = createResource(uri2);
@@ -152,7 +147,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     private void checkConsistentHashCode(URIReference ref) {
         int hashCode1 = ref.hashCode();
         int hashCode2 = ref.hashCode();
-        assertEquals(hashCode1, hashCode2);
+        assertThat(hashCode1, equalTo(hashCode2));
     }
 
     private void checkReflexive() throws Exception {
@@ -161,51 +156,51 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     }
 
     private void checkDifferentClass() {
-        checkNotEquals(uri1, URI.create("mailto:here.com"));
+        assertThat(uri1, not(equalTo((Object) URI.create("mailto:here.com"))));
     }
 
     private void checkSymmetric() throws Exception {
         URIReference x = createResource(uri1);
         URIReference y = createResource(uri1);
-        checkEquals(x, y);
-        checkEquals(y, y);
+        assertThat(x, equalTo(y));
+        assertThat(y, equalTo(y));
     }
 
     private void checkTransitive() throws Exception {
         URIReference x = createResource(uri2);
         URIReference y = createResource(uri2);
         URIReference z = createResource(uri2);
-        checkEquals(x, y);
-        checkEquals(y, z);
-        checkEquals(x, z);
+        assertThat(x, equalTo(y));
+        assertThat(y, equalTo(z));
+        assertThat(x, equalTo(z));
     }
 
     private void checkConsistentEquals() throws Exception {
         URIReference x = createResource(uri1);
         URIReference y = createResource(uri1);
-        checkEquals(x, y);
-        checkEquals(x, y);
+        assertThat(x, equalTo(y));
+        assertThat(x, equalTo(y));
     }
 
     private void checkUnequal() {
-        checkNotEquals(ref1, ref2);
-        checkNotEquals(ref1, ref3);
+        assertThat(ref1, not(equalTo((Object) ref2)));
+        assertThat(ref1, not(equalTo((Object) ref3)));
     }
 
     private void checkSameValueSameReference() {
         URIReference x = ref1;
         URIReference y = x;
-        checkEquals(x, y);
+        assertThat(x, equalTo(y));
     }
 
     private void checkSameValueDifferentReference() throws Exception {
         URIReference x = createResource(uri1);
         URIReference y = createResource(uri1);
-        checkEquals(x, y);
+        assertThat(x, equalTo(y));
     }
 
     private void checkNullComparisonObject() {
-        checkNotEquals(ref1, null);
+        assertThat(ref1, not(equalTo(null)));
     }
 
     private void checkNotAbsoluteURIThrowsException() {
@@ -217,17 +212,12 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     }
 
     private void checkNotAbsoluteURINoCheck() throws Exception {
-        try {
-            createResource(notAbsURI, false);
-        } catch (Exception e) {
-            fail("Should not throw an exception when an relative URI is given and checking is off.");
-        }
+        createResource(notAbsURI, false);
         checkCreateException(new AssertThrows.Block() {
             public void execute() throws Throwable {
                 createResource(notAbsURI, true);
             }
         });
-
     }
 
     private void checkCreateException(AssertThrows.Block block) {
@@ -237,22 +227,14 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     private void checkEqualObjectsReturnSameHashCode() {
         URIReference x = ref1;
         URIReference y = ref1;
-        checkEquals(x, y);
-        assertEquals(x.hashCode(), y.hashCode());
-    }
-
-    private void checkEquals(URIReference x, URIReference y) {
-        assertEquals(x, y);
-    }
-
-    private void checkNotEquals(Object x, Object y) {
-        assertFalse(x.equals(y));
+        assertThat(x, equalTo(y));
+        assertThat(x.hashCode(), equalTo(y.hashCode()));
     }
 
     private void checkDifferentImplementationsAreEqual() {
         URIReference testRef1 = new URIReference1(uri1);
         URIReference testRef2 = new URIReference2(uri1);
-        assertEquals(testRef1, testRef2);
+        assertThat(testRef1, equalTo(testRef2));
     }
 
 }

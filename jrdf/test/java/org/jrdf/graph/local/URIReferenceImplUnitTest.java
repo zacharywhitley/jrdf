@@ -75,15 +75,6 @@ public final class URIReferenceImplUnitTest extends AbstractURIReferenceUnitTest
 
     // TODO Test drive Long ids.
 
-    /**
-     * Constructs a new test with the given name.
-     *
-     * @param name the name of the test
-     */
-    public URIReferenceImplUnitTest(String name) {
-        super(name);
-    }
-
     public URIReference createResource(URI uri) throws Exception {
         return new URIReferenceImpl(uri, 1L);
     }
