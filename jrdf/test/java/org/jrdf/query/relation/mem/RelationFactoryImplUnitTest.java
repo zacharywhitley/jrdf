@@ -59,7 +59,9 @@
 
 package org.jrdf.query.relation.mem;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.EvaluatedRelation;
@@ -70,21 +72,25 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RelationFactoryImplUnitTest extends TestCase {
-    private static final MockFactory FACTORY = new MockFactory();
+@RunWith(PowerMockRunner.class)
+public class RelationFactoryImplUnitTest {
     private static final Class[] CONSTRUCTOR_TYPES = {AttributeComparator.class, TupleComparator.class};
     private static final String[] CONSTRUCTOR_NAMES = {"attributeComparator", "tupleComparator"};
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.createMock(AttributeComparator.class);
-    private static final TupleComparator TUPLE_COMPARATOR = FACTORY.createMock(TupleComparator.class);
     private static final Set<Tuple> TUPLES = new HashSet<Tuple>();
     private static final Set<Attribute> HEADING = new HashSet<Attribute>();
+    @Mock private AttributeComparator attributeComparator;
+    @Mock private TupleComparator tupleComparator;
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(RelationFactory.class, RelationFactoryImpl.class);
         checkConstructor(RelationFactoryImpl.class, Modifier.PUBLIC, CONSTRUCTOR_TYPES);
@@ -93,22 +99,23 @@ public class RelationFactoryImplUnitTest extends TestCase {
             CONSTRUCTOR_NAMES);
     }
 
+    @Test
     public void testGetRelation() {
-        RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
+        RelationFactory relationFactory = new RelationFactoryImpl(attributeComparator, tupleComparator);
         EvaluatedRelation relation = relationFactory.getRelation(TUPLES);
         checkRelation(relation);
     }
 
+    @Test
     public void testGetRelationWithHeading() {
-        RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
+        RelationFactory relationFactory = new RelationFactoryImpl(attributeComparator, tupleComparator);
         EvaluatedRelation relation = relationFactory.getRelation(HEADING, TUPLES);
         checkRelation(relation);
-        assertSame(HEADING, relation.getHeading());
+        assertThat(relation.getHeading(), is(HEADING));
     }
 
     private void checkRelation(EvaluatedRelation relation) {
-        assertSame(TUPLES, relation.getTuples());
-        assertTrue(relation instanceof RelationImpl);
+        assertThat(relation.getTuples(), is(TUPLES));
+        assertThat(relation, instanceOf(RelationImpl.class));
     }
-
 }

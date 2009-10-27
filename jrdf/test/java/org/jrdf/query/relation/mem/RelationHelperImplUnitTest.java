@@ -59,9 +59,13 @@
 
 package org.jrdf.query.relation.mem;
 
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.jrdf.TestJRDFFactory.getFactory;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.EvaluatedRelation;
@@ -73,8 +77,14 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndF
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
-import org.jrdf.graph.NodeComparator;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -84,23 +94,22 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class RelationHelperImplUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public class RelationHelperImplUnitTest {
     private static final Class[] PARAMETERS = {AttributeComparator.class, NodeComparator.class};
     private static final String[] PARAMETER_NAMES = {"attributeComparator", "nodeComparator"};
-    private MockFactory factory;
-    private AttributeComparator mockAttributeComparator;
+    @Mock private AttributeComparator mockAttributeComparator;
+    @Mock private NodeComparator mockNodeComparator;
     private AttributeComparator realAttributeComparator;
-    private NodeComparator mockNodeComparator;
     private NodeComparator realNodeComparator;
 
+    @Before
     public void setUp() {
-        factory = new MockFactory();
-        mockAttributeComparator = factory.createMock(AttributeComparator.class);
-        mockNodeComparator = factory.createMock(NodeComparator.class);
         realAttributeComparator = getFactory().getNewAttributeComparator();
         realNodeComparator = getFactory().getNewNodeComparator();
     }
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(RelationHelper.class, RelationHelperImpl.class);
         checkImplementationOfInterface(Serializable.class, RelationHelperImpl.class);
@@ -109,15 +118,17 @@ public class RelationHelperImplUnitTest extends TestCase {
         checkConstructNullAssertion(RelationHelperImpl.class, PARAMETERS);
     }
 
+    @Test
     public void testGetMockHeading() {
         RelationHelper relationHelper = new RelationHelperImpl(mockAttributeComparator, mockNodeComparator);
         EvaluatedRelation relation = createRelation(new HashSet<Attribute>());
-        factory.replay();
+        replayAll();
         Set<Attribute> headingUnions = relationHelper.getHeadingUnions(relation);
         checkIsSorted(headingUnions);
-        factory.verify();
+        verifyAll();
     }
 
+    @Test
     public void testGetHeading() {
         RelationHelper relationHelper = new RelationHelperImpl(realAttributeComparator, realNodeComparator);
         Set<Attribute> set1 = new HashSet<Attribute>();
@@ -126,13 +137,14 @@ public class RelationHelperImplUnitTest extends TestCase {
         set2.add(TEST_ATTRIBUTE_FOO_POS);
         EvaluatedRelation relation1 = createRelation(set1);
         EvaluatedRelation relation2 = createRelation(set2);
-        factory.replay();
+        replayAll();
         Set<Attribute> headingUnions = relationHelper.getHeadingUnions(relation1, relation2);
-        factory.verify();
-        assertTrue(headingUnions.contains(TEST_ATTRIBUTE_BAR_VAR));
-        assertTrue(headingUnions.contains(TEST_ATTRIBUTE_FOO_POS));
+        verifyAll();
+        assertThat(headingUnions, hasItem(TEST_ATTRIBUTE_BAR_VAR));
+        assertThat(headingUnions, hasItem(TEST_ATTRIBUTE_FOO_POS));
     }
 
+    @Test
     public void testGetHeadingIntersections() {
         RelationHelper relationHelper = new RelationHelperImpl(realAttributeComparator, realNodeComparator);
         SortedSet<Attribute> set1 = new TreeSet<Attribute>(realAttributeComparator);
@@ -143,29 +155,29 @@ public class RelationHelperImplUnitTest extends TestCase {
         set2.add(TEST_ATTRIBUTE_BAZ_VAR);
         EvaluatedRelation relation1 = createSortedRelation(set1);
         EvaluatedRelation relation2 = createSortedRelation(set2);
-        factory.replay();
+        replayAll();
         Set<Attribute> headingIntersections = relationHelper.getHeadingIntersections(relation1, relation2);
-        factory.verify();
-        assertTrue(headingIntersections.contains(TEST_ATTRIBUTE_BAZ_VAR));
-        assertFalse(headingIntersections.contains(TEST_ATTRIBUTE_BAR_VAR));
-        assertFalse(headingIntersections.contains(TEST_ATTRIBUTE_FOO_POS));
+        verifyAll();
+        assertThat(headingIntersections, hasItem(TEST_ATTRIBUTE_BAZ_VAR));
+        assertThat(headingIntersections, not(hasItem(TEST_ATTRIBUTE_BAR_VAR)));
+        assertThat(headingIntersections, not(hasItem(TEST_ATTRIBUTE_FOO_POS)));
     }
 
     private void checkIsSorted(Set<Attribute> headingUnions) {
-        assertTrue(headingUnions instanceof SortedSet);
+        assertThat(headingUnions, instanceOf(SortedSet.class));
         SortedSet<Attribute> sorted = (SortedSet<Attribute>) headingUnions;
         Comparator<? super Attribute> comparator = sorted.comparator();
-        assertTrue(comparator instanceof AttributeComparator);
+        assertThat(comparator, instanceOf(AttributeComparator.class));
     }
 
     private EvaluatedRelation createRelation(Set<Attribute> set) {
-        EvaluatedRelation relation = factory.createMock(EvaluatedRelation.class);
+        EvaluatedRelation relation = createMock(EvaluatedRelation.class);
         expect(relation.getHeading()).andReturn(set);
         return relation;
     }
 
     private EvaluatedRelation createSortedRelation(SortedSet<Attribute> set) {
-        EvaluatedRelation relation = factory.createMock(EvaluatedRelation.class);
+        EvaluatedRelation relation = createMock(EvaluatedRelation.class);
         expect(relation.getSortedHeading()).andReturn(set);
         return relation;
     }

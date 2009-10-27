@@ -1135,8 +1135,6 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/junit/cpsuite-1.2.4.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit/junit-4.7.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-library-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -1216,6 +1214,14 @@
         <root url="jar://$PROJECT_DIR$/lib/powermock/powermock-module-junit3-1.3.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/powermock/powermock-classloading-1.3.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/powermock/objenesis-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="hamcrest">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit/hamcrest-library-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
