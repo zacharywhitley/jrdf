@@ -58,7 +58,6 @@
  */
 package org.jrdf.query.relation.mem;
 
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
@@ -70,7 +69,16 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
-import org.jrdf.util.test.MockFactory;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.resetAll;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import org.powermock.modules.junit4.PowerMockRunner;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -81,20 +89,17 @@ import java.lang.reflect.Modifier;
  * @author Andrew Newman
  * @version $Id$
  */
-public class AttributeComparatorImplUnitTest extends TestCase {
-    private static final MockFactory FACTORY = new MockFactory();
-    private static final Attribute ATTRIBUTE = FACTORY.createMock(Attribute.class);
-    private static final TypeComparator NODE_COMPARATOR = FACTORY.createMock(TypeComparator.class);
-    private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR
-        = FACTORY.createMock(AttributeNameComparator.class);
+@RunWith(PowerMockRunner.class)
+public class AttributeComparatorImplUnitTest {
     private static final int BEFORE = 1;
     private static final int AFTER = -1;
-
-    public void setUp() {
-    }
+    @Mock private Attribute attribute;
+    @Mock private TypeComparator nodeComparator;
+    @Mock private AttributeNameComparator attributeNameComparator;
 
     // TODO (AN) Ensure that it's Serializable - as the collection won't be if the Comparator isn't.
     // TODO (AN) These next three methods could become some sort of comparator test util.
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(AttributeComparator.class, AttributeComparatorImpl.class);
         checkImplementationOfInterface(Serializable.class, AttributeComparator.class);
@@ -102,59 +107,59 @@ public class AttributeComparatorImplUnitTest extends TestCase {
             TypeComparator.class, AttributeNameComparator.class);
     }
 
+    @Test
     public void testNullPointerException() {
-        checkNullPointerException(createComparator(NODE_COMPARATOR, ATTRIBUTE_NAME_COMPARATOR), ATTRIBUTE, null);
-        checkNullPointerException(createComparator(NODE_COMPARATOR, ATTRIBUTE_NAME_COMPARATOR), null, ATTRIBUTE);
+        checkNullPointerException(newComparator(nodeComparator, attributeNameComparator), attribute, null);
+        checkNullPointerException(newComparator(nodeComparator, attributeNameComparator), null, attribute);
     }
 
+    @Test
     public void testIdentity() {
-        AttributeComparator comparator = createComparator(NODE_COMPARATOR, ATTRIBUTE_NAME_COMPARATOR);
-        Attribute att2 = new TestAttribute(FACTORY.createMock(Attribute.class));
+        AttributeComparator comparator = newComparator(nodeComparator, attributeNameComparator);
+        Attribute att2 = new TestAttribute(createMock(Attribute.class));
         TestAttribute att1 = new TestAttribute(att2);
         int result = comparator.compare(att1, att2);
-        assertTrue("Should return equal for att1, att2", result == 0);
-        assertTrue("Should call att1.equals(att2)", att1.isEqualsCalled());
-
+        assertThat("Should return equal for att1, att2", result == 0);
+        assertThat("Should call att1.equals(att2)", att1.isEqualsCalled());
     }
 
+    @Test
     public void testNodeTypeComparator() {
         checkNodeTypeComparator(BEFORE);
         checkNodeTypeComparator(AFTER);
     }
 
     // TODO (AN) Finish testAttributeNameComparator
-
     private void checkNodeTypeComparator(int expectedResult) {
-        NodeType t1 = FACTORY.createMock(NodeType.class);
-        NodeType t2 = FACTORY.createMock(NodeType.class);
+        NodeType t1 = createMock(NodeType.class);
+        NodeType t2 = createMock(NodeType.class);
         Attribute attribute1 = createAttribute(t1);
         Attribute attribute2 = createAttribute(t2);
         TypeComparator typeComparator = createTypeComparator(t1, t2, expectedResult);
-        AttributeComparator comparator = createComparator(typeComparator, ATTRIBUTE_NAME_COMPARATOR);
-        FACTORY.replay();
+        AttributeComparator comparator = newComparator(typeComparator, attributeNameComparator);
+        replayAll();
         int result = comparator.compare(attribute1, attribute2);
-        FACTORY.verify();
-        FACTORY.reset();
-        assertEquals(expectedResult, result);
+        verifyAll();
+        resetAll();
+        assertThat(result, equalTo(expectedResult));
     }
 
     private Attribute createAttribute(NodeType type) {
-        Attribute att = FACTORY.createMock(Attribute.class);
+        Attribute att = createMock(Attribute.class);
         att.getType();
         expectLastCall().andReturn(type);
         return att;
     }
 
     private TypeComparator createTypeComparator(NodeType t1, NodeType t2, int expectedResult) {
-        TypeComparator typeComparator = FACTORY.createMock(TypeComparator.class);
+        TypeComparator typeComparator = createMock(TypeComparator.class);
         typeComparator.compare(t1, t2);
         expectLastCall().andReturn(expectedResult);
         return typeComparator;
     }
 
-    private AttributeComparator createComparator(TypeComparator nodeComparator,
-        AttributeNameComparator attributeNameComparator) {
-        return new AttributeComparatorImpl(nodeComparator, attributeNameComparator);
+    private AttributeComparator newComparator(TypeComparator comparator, AttributeNameComparator nameComparator) {
+        return new AttributeComparatorImpl(comparator, nameComparator);
     }
 
     private static class TestAttribute implements Attribute {
