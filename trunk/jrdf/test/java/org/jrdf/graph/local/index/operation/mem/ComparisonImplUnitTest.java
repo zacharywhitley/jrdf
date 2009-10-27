@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.local.index.operation.mem;
 
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -73,12 +72,21 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import org.jrdf.util.test.MockFactory;
 import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_2;
 import static org.jrdf.util.test.TripleTestUtil.createTripleAllSame;
 import static org.jrdf.util.test.TripleTestUtil.createTripleIterable;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.resetAll;
+import org.powermock.modules.junit4.PowerMockRunner;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 
 import java.lang.reflect.Modifier;
 
@@ -91,7 +99,8 @@ import java.lang.reflect.Modifier;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class ComparisonImplUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public class ComparisonImplUnitTest {
     private static final boolean GRAPH_EMPTY = true;
     private static final boolean GRAPH_CONTAINS_NODES = false;
     private static final boolean ARE_UNEQUAL = false;
@@ -101,44 +110,45 @@ public class ComparisonImplUnitTest extends TestCase {
     private static final Triple TRIPLE_3 = TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
     private static final Triple[] TRIPLES_1 = {TRIPLE_1, TRIPLE_2};
     private static final Triple[] TRIPLES_2 = {TRIPLE_1, TRIPLE_3};
+    @Mock private Graph mockGraph1;
+    @Mock private Graph mockGraph2;
     private Comparison comparison;
-    private Graph mockGraph1;
-    private Graph mockGraph2;
-    private MockFactory mockFactory;
 
+    @Before
     public void setUp() throws Exception {
         comparison = new ComparisonImpl();
-        mockFactory = new MockFactory();
-        mockGraph1 = mockFactory.createMock(Graph.class);
-        mockGraph2 = mockFactory.createMock(Graph.class);
     }
 
+    @Test
     public void testClassProperties() {
         checkClassFinal(ComparisonImpl.class);
         checkImplementationOfInterface(Comparison.class, ComparisonImpl.class);
         checkConstructor(ComparisonImpl.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
     }
 
+    @Test
     public void testIsGroundedEmptyGraph() throws Exception {
         mockGraph1.isEmpty();
         expectLastCall().andReturn(GRAPH_EMPTY);
-        mockFactory.replay();
-        assertTrue(comparison.isGrounded(mockGraph1));
-        mockFactory.verify();
+        replayAll();
+        assertThat(comparison.isGrounded(mockGraph1), is(true));
+        verifyAll();
     }
 
-
+    @Test
     public void testEmptyGraphEquality() throws Exception {
         checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_EMPTY, ARE_EQUAL);
         checkEmptyGroundedGraphs(GRAPH_CONTAINS_NODES, GRAPH_EMPTY, ARE_UNEQUAL);
         checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_CONTAINS_NODES, ARE_UNEQUAL);
     }
 
+    @Test
     public void testDifferentSizedGraphsAreNotIsomorphic() throws Exception {
         checkDifferentSizeGraphsAreNotIsomorphic(1L, 123L, ARE_UNEQUAL);
         checkDifferentSizeGraphsAreNotIsomorphic(21L, 1L, ARE_UNEQUAL);
     }
 
+    @Test
     public void testGraphContent() throws Exception {
         checkGraphContent(TRIPLES_1, TRIPLES_2, ARE_UNEQUAL);
         checkGraphContent(TRIPLES_2, TRIPLES_1, ARE_UNEQUAL);
@@ -147,21 +157,21 @@ public class ComparisonImplUnitTest extends TestCase {
     }
 
     private void checkEmptyGroundedGraphs(boolean graph1Empty, boolean graph2Empty, boolean areEqual) throws Exception {
-        mockFactory.reset();
+        resetAll();
         setUpEmptyCalls(graph1Empty, graph2Empty);
         replayAssertAndVerify("Graph 1 empty: " + graph1Empty + " Graph 2 empty: " + graph2Empty, areEqual);
     }
 
     private void checkDifferentSizeGraphsAreNotIsomorphic(long graph1Size, long graph2Size, boolean areEqual)
         throws Exception {
-        mockFactory.reset();
+        resetAll();
         setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
         setUpNumberOfTripleCalls(graph1Size, graph2Size);
         replayAssertAndVerify("Graph 1 size: " + graph1Size + " Graph 2 size: " + graph2Size, areEqual);
     }
 
     private void checkGraphContent(Triple[] triples1, Triple[] triples2, boolean areEqual) throws Exception {
-        mockFactory.reset();
+        resetAll();
         setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
         setUpNumberOfTripleCalls(triples1.length, triples2.length);
         setUpFindAndIteratorCalls(triples1, triples2);
@@ -201,8 +211,8 @@ public class ComparisonImplUnitTest extends TestCase {
 
     private void replayAssertAndVerify(String message, boolean areEqual)
         throws GraphException {
-        mockFactory.replay();
-        assertEquals(message, areEqual, comparison.groundedGraphsAreEqual(mockGraph1, mockGraph2));
-        mockFactory.verify();
+        replayAll();
+        assertThat(message, comparison.groundedGraphsAreEqual(mockGraph1, mockGraph2), is(areEqual));
+        verifyAll();
     }
 }
