@@ -59,69 +59,79 @@
 
 package org.jrdf.parser.bnodefactory;
 
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.collection.MapFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.util.test.MockFactory;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.HashMap;
 
-public class ParserBlankNodeFactoryImplUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public class ParserBlankNodeFactoryImplUnitTest {
     private static final String NODE_ID = "foo" + System.currentTimeMillis();
-    private final MockFactory mockFactory = new MockFactory();
-    private GraphElementFactory graphElementFactory;
-    private BlankNode blankNode;
+    @Mock private GraphElementFactory graphElementFactory;
+    @Mock private MapFactory mapFactory;
+    @Mock private BlankNode blankNode;
     private ParserBlankNodeFactory nodeFactory;
-    private MapFactory mapFactory;
 
+    @Before
     public void setUp() {
-        mapFactory = mockFactory.createMock(MapFactory.class);
         expect(mapFactory.createMap(String.class, BlankNode.class)).andReturn(new HashMap<String, BlankNode>());
-        graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
-        blankNode = mockFactory.createMock(BlankNode.class);
     }
 
+    @Test
     public void testCreateBlankNode() throws Exception {
         expect(graphElementFactory.createBlankNode()).andReturn(blankNode);
-        mockFactory.replay();
+        replayAll();
         nodeFactory = new ParserBlankNodeFactoryImpl(mapFactory, graphElementFactory);
         BlankNode actualBlankNode = nodeFactory.createBlankNode();
-        assertTrue("Expected the blank node to be the one created in the mock", actualBlankNode == blankNode);
-        mockFactory.verify();
+        assertThat("Expected the blank node to be the one created in the mock", actualBlankNode, is(blankNode));
+        verifyAll();
     }
 
+    @Test
     public void testCreateBlankNodeWithId() throws Exception {
         expect(graphElementFactory.createBlankNode()).andReturn(blankNode);
-        expect(graphElementFactory.createBlankNode()).andReturn(mockFactory.createMock(BlankNode.class)).anyTimes();
-        mockFactory.replay();
+        expect(graphElementFactory.createBlankNode()).andReturn(createMock(BlankNode.class)).anyTimes();
+        replayAll();
         nodeFactory = new ParserBlankNodeFactoryImpl(mapFactory, graphElementFactory);
         checkBlankNodeCreationById();
         checkBlankNodeCreationById();
         BlankNode actualBlankNode = nodeFactory.createBlankNode("bar");
-        assertTrue("Expected the blank node to be different with a different id", actualBlankNode != blankNode);
-        mockFactory.verify();
+        assertThat("Expected the blank node to be different with a different id", actualBlankNode, is(not(blankNode)));
+        verifyAll();
     }
 
+    @Test
     public void testClear() throws Exception {
-        expect(graphElementFactory.createBlankNode()).andReturn(mockFactory.createMock(BlankNode.class));
-        expect(graphElementFactory.createBlankNode()).andReturn(mockFactory.createMock(BlankNode.class));
-        mockFactory.replay();
+        expect(graphElementFactory.createBlankNode()).andReturn(createMock(BlankNode.class));
+        expect(graphElementFactory.createBlankNode()).andReturn(createMock(BlankNode.class));
+        replayAll();
         nodeFactory = new ParserBlankNodeFactoryImpl(mapFactory, graphElementFactory);
         BlankNode firstBlankNode = nodeFactory.createBlankNode(NODE_ID);
         nodeFactory.clear();
         BlankNode secondBlankNode = nodeFactory.createBlankNode(NODE_ID);
         BlankNode thirdBlankNode = nodeFactory.createBlankNode(NODE_ID);
-        assertTrue(firstBlankNode != secondBlankNode);
-        assertTrue(secondBlankNode == thirdBlankNode);
-        mockFactory.verify();
+        assertThat(firstBlankNode, is(not(secondBlankNode)));
+        assertThat(secondBlankNode, is(thirdBlankNode));
+        verifyAll();
     }
 
     private void checkBlankNodeCreationById() throws GraphElementFactoryException {
         BlankNode actualBlankNode = nodeFactory.createBlankNode(NODE_ID);
-        assertTrue("Expected the blank node to be the one created in the mock by id", actualBlankNode == blankNode);
+        assertThat("Expected the blank node to be the one created in the mock by id", actualBlankNode, is(blankNode));
     }
 }

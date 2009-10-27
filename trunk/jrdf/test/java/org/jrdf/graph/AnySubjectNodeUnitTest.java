@@ -59,19 +59,18 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialization;
 import org.junit.Test;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.lang.reflect.Modifier;
 
-public class AnySubjectNodeUnitTest extends TestCase {
+public class AnySubjectNodeUnitTest {
     @Test
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(SubjectNode.class, AnySubjectNode.class);
