@@ -59,14 +59,23 @@
 
 package org.jrdf.query.relation.mem;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.modules.junit4.PowerMockRunner;
+import static org.easymock.EasyMock.expect;
 
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -77,23 +86,36 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class TupleFactoryImplUnitTest extends TestCase {
-    private static final MockFactory FACTORY = new MockFactory();
-    private static final Map<Attribute, Node> MOCK_AVP = FACTORY.createMock(Map.class);
+@RunWith(PowerMockRunner.class)
+public class TupleFactoryImplUnitTest {
+    @Mock private Map<Attribute, Node> mockAvp;
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(TupleFactory.class, TupleFactoryImpl.class);
         checkConstructor(TupleFactoryImpl.class, Modifier.PUBLIC);
     }
 
+    @Test
     public void testGetTupleBySet() {
         TupleFactory tupleFactory = new TupleFactoryImpl();
-        Tuple tuple = tupleFactory.getTuple(MOCK_AVP);
-        assertSame(MOCK_AVP, tuple.getAttributeValues());
-        assertTrue(tuple instanceof TupleImpl);
+        replayAll();
+        Tuple tuple = tupleFactory.getTuple(mockAvp);
+        verifyAll();
+        assertThat(tuple.getAttributeValues(), is(mockAvp));
+        assertThat(tuple, instanceOf(TupleImpl.class));
     }
 
-// TODO (AN) Add test for testing creating a tuple with a list.
-//    public void testGetTupleByList() {
-//    }
+    @Test
+    public void testConvertMultipleTuplesToOne() {
+        TupleFactory tupleFactory = new TupleFactoryImpl();
+        final Tuple mockTuple = createMock(Tuple.class);
+        expect(mockTuple.getAttributeValues()).andReturn(mockAvp);
+        expect(mockAvp.size()).andReturn(0).anyTimes();
+        replayAll();
+        final Tuple tuple = tupleFactory.getTuple(mockTuple);
+        verifyAll();
+        assertThat(tuple.getAttributeValues(), is(mockAvp));
+        assertThat(tuple, instanceOf(TupleImpl.class));
+    }
 }

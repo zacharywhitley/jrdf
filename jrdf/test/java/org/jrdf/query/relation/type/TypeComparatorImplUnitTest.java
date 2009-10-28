@@ -59,43 +59,49 @@
 
 package org.jrdf.query.relation.type;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.util.NodeTypeComparator;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
-import org.jrdf.util.test.MockFactory;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 
 /**
  * Tests the ordering of types - first comes S, P, O and then BNode, URI, Literal.
- *
- * @author Andrew Newman
- * @version $Revision:$
  */
-public class TypeComparatorImplUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public class TypeComparatorImplUnitTest {
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
-    private static final MockFactory FACTORY = new MockFactory();
     private static final NodeType BNODE_TYPE = new BlankNodeType();
     private static final NodeType URI_NODE_TYPE = new URIReferenceNodeType();
     private static final NodeType LITERAL_NODE_TYPE = new LiteralNodeType();
     private static final NodeType SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
     private static final NodeType PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
     private static final NodeType OBJECT_POSITIONAL_NODE = new ObjectNodeType();
-    private TypeComparator typeComparator;
+    @Mock
     private NodeType mockNodeType;
+    private TypeComparator typeComparator;
 
+    @Before
     public void setUp() throws Exception {
         typeComparator = TestJRDFFactory.getFactory().getNewTypeComparator();
-        mockNodeType = FACTORY.createMock(NodeType.class);
     }
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(TypeComparator.class, TypeComparatorImpl.class);
         checkImplementationOfInterface(Serializable.class, TypeComparator.class);
@@ -103,55 +109,64 @@ public class TypeComparatorImplUnitTest extends TestCase {
         checkConstructor(TypeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
     }
 
+    @Test
     public void testNullPointerException() {
         checkNullPointerException(typeComparator, mockNodeType, null);
         checkNullPointerException(typeComparator, null, mockNodeType);
     }
 
+    @Test
     public void testCompareEqual() {
-        FACTORY.replay();
+        replayAll();
         int result = typeComparator.compare(mockNodeType, mockNodeType);
-        FACTORY.verify();
-        assertTrue(EQUAL == result);
+        verifyAll();
+        assertThat(result, is(EQUAL));
     }
 
+    @Test
     public void testIdentity() {
-        assertEquals(EQUAL, typeComparator.compare(BNODE_TYPE, BNODE_TYPE));
+        assertThat(typeComparator.compare(BNODE_TYPE, BNODE_TYPE), is(EQUAL));
     }
 
+    @Test
     public void testNodeTypeOrder() {
-        assertEquals(BEFORE, typeComparator.compare(BNODE_TYPE, URI_NODE_TYPE));
-        assertEquals(BEFORE, typeComparator.compare(BNODE_TYPE, LITERAL_NODE_TYPE));
-        assertEquals(BEFORE, typeComparator.compare(URI_NODE_TYPE, LITERAL_NODE_TYPE));
+        assertThat(typeComparator.compare(BNODE_TYPE, URI_NODE_TYPE), is(BEFORE));
+        assertThat(typeComparator.compare(BNODE_TYPE, LITERAL_NODE_TYPE), is(BEFORE));
+        assertThat(typeComparator.compare(URI_NODE_TYPE, LITERAL_NODE_TYPE), is(BEFORE));
     }
 
+    @Test
     public void testNodeTypeOrderAntiCommutation() {
-        assertEquals(AFTER, typeComparator.compare(URI_NODE_TYPE, BNODE_TYPE));
-        assertEquals(AFTER, typeComparator.compare(LITERAL_NODE_TYPE, BNODE_TYPE));
-        assertEquals(AFTER, typeComparator.compare(LITERAL_NODE_TYPE, URI_NODE_TYPE));
+        assertThat(typeComparator.compare(URI_NODE_TYPE, BNODE_TYPE), is(AFTER));
+        assertThat(typeComparator.compare(LITERAL_NODE_TYPE, BNODE_TYPE), is(AFTER));
+        assertThat(typeComparator.compare(LITERAL_NODE_TYPE, URI_NODE_TYPE), is(AFTER));
     }
 
+    @Test
     public void testPositionalNodeOrder() {
-        assertEquals(BEFORE, typeComparator.compare(SUBJECT_POSITIONAL_NODE, PREDICATE_POSITIONAL_NODE));
-        assertEquals(BEFORE, typeComparator.compare(SUBJECT_POSITIONAL_NODE, OBJECT_POSITIONAL_NODE));
-        assertEquals(BEFORE, typeComparator.compare(PREDICATE_POSITIONAL_NODE, OBJECT_POSITIONAL_NODE));
+        assertThat(typeComparator.compare(SUBJECT_POSITIONAL_NODE, PREDICATE_POSITIONAL_NODE), is(BEFORE));
+        assertThat(typeComparator.compare(SUBJECT_POSITIONAL_NODE, OBJECT_POSITIONAL_NODE), is(BEFORE));
+        assertThat(typeComparator.compare(PREDICATE_POSITIONAL_NODE, OBJECT_POSITIONAL_NODE), is(BEFORE));
     }
 
+    @Test
     public void testPositionalNodeOrderAntiCommutation() {
-        assertEquals(AFTER, typeComparator.compare(PREDICATE_POSITIONAL_NODE, SUBJECT_POSITIONAL_NODE));
-        assertEquals(AFTER, typeComparator.compare(OBJECT_POSITIONAL_NODE, SUBJECT_POSITIONAL_NODE));
-        assertEquals(AFTER, typeComparator.compare(OBJECT_POSITIONAL_NODE, PREDICATE_POSITIONAL_NODE));
+        assertThat(typeComparator.compare(PREDICATE_POSITIONAL_NODE, SUBJECT_POSITIONAL_NODE), is(AFTER));
+        assertThat(typeComparator.compare(OBJECT_POSITIONAL_NODE, SUBJECT_POSITIONAL_NODE), is(AFTER));
+        assertThat(typeComparator.compare(OBJECT_POSITIONAL_NODE, PREDICATE_POSITIONAL_NODE), is(AFTER));
     }
 
+    @Test
     public void testNodeTypeAndPositionalTypeOrder() {
-        assertEquals(BEFORE, typeComparator.compare(BNODE_TYPE, SUBJECT_POSITIONAL_NODE));
-        assertEquals(BEFORE, typeComparator.compare(URI_NODE_TYPE, PREDICATE_POSITIONAL_NODE));
-        assertEquals(BEFORE, typeComparator.compare(LITERAL_NODE_TYPE, OBJECT_POSITIONAL_NODE));
+        assertThat(typeComparator.compare(BNODE_TYPE, SUBJECT_POSITIONAL_NODE), is(BEFORE));
+        assertThat(typeComparator.compare(URI_NODE_TYPE, PREDICATE_POSITIONAL_NODE), is(BEFORE));
+        assertThat(typeComparator.compare(LITERAL_NODE_TYPE, OBJECT_POSITIONAL_NODE), is(BEFORE));
     }
 
+    @Test
     public void testNodeTypeAndPositionalTypeOrderAntiCommutation() {
-        assertEquals(AFTER, typeComparator.compare(SUBJECT_POSITIONAL_NODE, BNODE_TYPE));
-        assertEquals(AFTER, typeComparator.compare(PREDICATE_POSITIONAL_NODE, URI_NODE_TYPE));
-        assertEquals(AFTER, typeComparator.compare(OBJECT_POSITIONAL_NODE, LITERAL_NODE_TYPE));
+        assertThat(typeComparator.compare(SUBJECT_POSITIONAL_NODE, BNODE_TYPE), is(AFTER));
+        assertThat(typeComparator.compare(PREDICATE_POSITIONAL_NODE, URI_NODE_TYPE), is(AFTER));
+        assertThat(typeComparator.compare(OBJECT_POSITIONAL_NODE, LITERAL_NODE_TYPE), is(AFTER));
     }
 }

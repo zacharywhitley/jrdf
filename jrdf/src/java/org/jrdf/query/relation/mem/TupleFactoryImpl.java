@@ -69,9 +69,6 @@ import java.util.Map;
 
 /**
  * Creates purely in memory implementations of tuples.
- *
- * @author Andrew Newman
- * @version $Revision:$
  */
 public final class TupleFactoryImpl implements TupleFactory {
     private static final long serialVersionUID = 6162523916425888190L;
