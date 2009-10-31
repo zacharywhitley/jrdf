@@ -58,7 +58,6 @@
  */
 package org.jrdf.query.relation.mem;
 
-import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
@@ -76,11 +75,17 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfIn
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.isFieldOfType;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.modules.junit4.PowerMockRunner;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-public class RelationImplUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public class RelationImplUnitTest {
     private static final String HEADING_NAME = "heading";
     private static final String TUPLES_NAME = "tuples";
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
@@ -98,12 +103,14 @@ public class RelationImplUnitTest extends TestCase {
     public static final EvaluatedRelation TEST_RELATION_2 = createRelation(TUPLES_2);
     public static final EvaluatedRelation TEST_RELATION_3 = createRelation(TUPLES_3);
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(EvaluatedRelation.class, RelationImpl.class);
         checkConstructor(RelationImpl.class, 0, PARAM_TYPES_1);
         checkConstructor(RelationImpl.class, 0, PARAM_TYPES_2);
     }
 
+    @Test
     public void testConstructorAndFields() {
         checkConstructNullAssertion(RelationImpl.class, PARAM_TYPES_1);
         checkConstructNullAssertion(RelationImpl.class, PARAM_TYPES_2);
@@ -113,6 +120,7 @@ public class RelationImplUnitTest extends TestCase {
         isFieldOfType(RelationImpl.class, Set.class, HEADING_NAME);
     }
 
+    @Test
     public void testConstructor() {
         checkStandardConstructor(createHeading(TUPLES_1), TUPLES_1, TEST_RELATION_1);
         checkStandardConstructor(createHeading(TUPLES_2), TUPLES_2, TEST_RELATION_2);
@@ -121,8 +129,8 @@ public class RelationImplUnitTest extends TestCase {
     private void checkStandardConstructor(Set<Attribute> heading, Set<Tuple> tuples, EvaluatedRelation relation) {
         checkFieldValue(relation, HEADING_NAME, heading);
         checkFieldValue(relation, TUPLES_NAME, tuples);
-        assertEquals(heading, relation.getHeading());
-        assertEquals(tuples, relation.getTuples());
+        assertThat(relation.getHeading(), equalTo(heading));
+        assertThat(relation.getTuples(), equalTo(tuples));
     }
 
     private static Set<Attribute> createHeading(Set<Tuple> tuples) {

@@ -3,8 +3,8 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-    <suppress checks="BooleanExpressionComplexity" files="MockFactory"/>
+    <suppress checks="BooleanExpressionComplexity" files="MockTestUtil"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SableCcSparqlParserIntegrationTest"/>
-    <suppress checks="ReturnCount" files="MockFactory"/>
-    <suppress checks="CyclomaticComplexity" files="MockFactory"/>
+    <suppress checks="ReturnCount" files="MockTestUtil"/>
+    <suppress checks="CyclomaticComplexity" files="MockTestUtil"/>
 </suppressions>

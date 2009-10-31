@@ -59,80 +59,94 @@
 
 package org.jrdf.writer.mem;
 
-import junit.framework.TestCase;
 import static org.easymock.classextension.EasyMock.expect;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.hamcrest.Matchers;
 import org.jrdf.graph.BlankNode;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
-import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.ReflectTestUtil.getFieldValue;
 import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 import org.jrdf.writer.BlankNodeRegistry;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-@SuppressWarnings({ "unchecked" })
-public class MemBlankNodeRegistryImplUnitTest extends TestCase {
-    private static final MockFactory FACTORY = new MockFactory();
+@RunWith(PowerMockRunner.class)
+public class MemBlankNodeRegistryImplUnitTest {
     private static final String[] PARAM_NAMES = {"node"};
     private static final Class[] PARAM_TYPES = {BlankNode.class};
     private static final ParameterDefinition GET_NODEID_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
     private static final String FIELD_1_NAME = "blankNodeList";
-    private List<BlankNode> bNodes;
-    private BlankNode blankNode;
+    @Mock private List<BlankNode> bNodes;
+    @Mock private BlankNode blankNode;
     private BlankNodeRegistry nodeRegistry;
 
+    @Before public void createRegistry() {
+        nodeRegistry = new MemBlankNodeRegistryImpl();
+    }
+
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(BlankNodeRegistry.class, MemBlankNodeRegistryImpl.class);
         checkConstructor(MemBlankNodeRegistryImpl.class, Modifier.PUBLIC);
         checkFieldIsOfTypePrivateAndFinal(MemBlankNodeRegistryImpl.class, List.class, FIELD_1_NAME);
-        assertNotNull(getFieldValue(new MemBlankNodeRegistryImpl(), FIELD_1_NAME));
+        assertThat(getFieldValue(new MemBlankNodeRegistryImpl(), FIELD_1_NAME), Matchers.notNullValue());
     }
 
+    @Test
     public void testBadParams() throws Exception {
         checkMethodNullAssertions(new MemBlankNodeRegistryImpl(), "getNodeId", GET_NODEID_DEFINITION);
     }
 
-    public void testGetSuccessfulyNodeId() {
+    @Test
+    public void testGetSuccessfulyNodeId1() {
         checkSuccessfulGetNodeId(0);
+    }
+
+    @Test
+    public void testGetSuccessfulyNodeId2() {
         checkSuccessfulGetNodeId(95);
     }
 
-    public void testBadNodeId() {
+    @Test
+    public void testBadNodeId1() {
         checkBadGetNodeId(98);
+    }
+
+    @Test
+    public void testBadNodeId2() {
         checkBadGetNodeId(129);
     }
 
     private void checkSuccessfulGetNodeId(int nodeId) {
-        setUpMocks();
         expect(bNodes.indexOf(blankNode)).andReturn(nodeId);
         insertFieldAndCall(nodeId);
     }
 
     private void checkBadGetNodeId(int nodeId) {
-        setUpMocks();
         expect(bNodes.indexOf(blankNode)).andReturn(-1);
         expect(bNodes.add(blankNode)).andReturn(true);
         expect(bNodes.indexOf(blankNode)).andReturn(nodeId);
         insertFieldAndCall(nodeId);
     }
 
-    private void setUpMocks() {
-        FACTORY.reset();
-        nodeRegistry = new MemBlankNodeRegistryImpl();
-        bNodes = FACTORY.createMock(List.class);
-        blankNode = FACTORY.createMock(BlankNode.class);
-    }
-
     private void insertFieldAndCall(int nodeId) {
         insertFieldValue(nodeRegistry, FIELD_1_NAME, bNodes);
-        FACTORY.replay();
+        replayAll();
         String s = nodeRegistry.getNodeId(blankNode);
-        FACTORY.verify();
-        assertEquals("bNode_" + nodeId, s);
+        verifyAll();
+        assertThat(s, equalTo("bNode_" + nodeId));
     }
 }

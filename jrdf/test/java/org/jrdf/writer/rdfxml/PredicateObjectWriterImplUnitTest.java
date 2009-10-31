@@ -59,9 +59,11 @@
 
 package org.jrdf.writer.rdfxml;
 
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
@@ -72,20 +74,29 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
+// org.jrdf.util.test.MockTestUtil.createMock
+import static org.jrdf.util.test.MockTestUtil.createMock;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 import static org.jrdf.util.test.ReflectTestUtil.getFieldValue;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 
-public class PredicateObjectWriterImplUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public class PredicateObjectWriterImplUnitTest {
     private static final Class<?>[] PARAM_TYPES = new Class[]{RdfNamespaceMap.class, BlankNodeRegistry.class,
         XMLStreamWriter.class, XmlLiteralWriter.class};
     private static final String NODE_ID = "foo";
@@ -94,21 +105,18 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
     private static final String LANGUAGE_LITERAL = "foo@en-au";
     private static final String DATA_TYPE = "xsd:int";
     private static final String NEW_LINE = "\n";
-    private MockFactory factory = new MockFactory();
-    private RdfNamespaceMap map;
-    private BlankNodeRegistry blankNodeRegistry;
-    private XMLStreamWriter xmlStreamWriter;
+    @Mock private RdfNamespaceMap map;
+    @Mock private BlankNodeRegistry blankNodeRegistry;
+    @Mock private XMLStreamWriter xmlStreamWriter;
+    @Mock private XmlLiteralWriter xmlLiteralWriter;
     private PredicateObjectWriter writer;
-    private XmlLiteralWriter xmlLiteralWriter;
 
-    public void setUp() {
-        map = factory.createMock(RdfNamespaceMap.class);
-        blankNodeRegistry = factory.createMock(BlankNodeRegistry.class);
-        xmlStreamWriter = factory.createMock(XMLStreamWriter.class);
-        xmlLiteralWriter = factory.createMock(XmlLiteralWriter.class);
+    @Before
+    public void createWriter() {
         writer = new PredicateObjectWriterImpl(map, blankNodeRegistry, xmlStreamWriter, xmlLiteralWriter);
     }
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(PredicateObjectWriter.class, PredicateObjectWriterImpl.class);
         checkConstructor(PredicateObjectWriterImpl.class, Modifier.PUBLIC, PARAM_TYPES);
@@ -125,84 +133,91 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
             new Class[]{Node.class}));
     }
 
+    @Test
     public void testWritePredicateObjectTest() throws Exception {
-        URIReference predicate = factory.createMock(URIReference.class);
-        URIReference object = factory.createMock(URIReference.class);
+        URIReference predicate = createMock(URIReference.class);
+        URIReference object = createMock(URIReference.class);
         expect(map.replaceNamespace(predicate)).andReturn(NODE_ID);
         xmlStreamWriter.writeStartElement(NODE_ID);
         object.accept(writer);
         xmlStreamWriter.writeEndElement();
         xmlStreamWriter.writeCharacters(NEW_LINE);
         xmlStreamWriter.flush();
-        factory.replay();
+        replayAll();
         writer.writePredicateObject(predicate, object);
-        factory.verify();
+        verifyAll();
     }
 
+    @Test
     public void testVisitBlankNode() throws Exception {
         final BlankNode node = createNodeExpectations();
-        factory.replay();
+        replayAll();
         writer.visitBlankNode(node);
-        factory.verify();
+        verifyAll();
     }
 
+    @Test
     public void testVisitURIReference() throws Exception {
-        URIReference node = factory.createMock(URIReference.class);
-        URI uri = factory.createMock(URI.class);
+        URIReference node = createMock(URIReference.class);
+        URI uri = createMock(URI.class);
         expect(node.getURI()).andReturn(uri);
         xmlStreamWriter.writeAttribute("rdf:resource", "http://www.slashdot.org");
-        factory.replay();
+        replayAll();
         writer.visitURIReference(node);
-        factory.verify();
+        verifyAll();
     }
 
+    @Test
     public void testVisitLanguageLiteral() throws Exception {
-        Literal node = factory.createMock(Literal.class);
+        Literal node = createMock(Literal.class);
         expect(node.isDatatypedLiteral()).andReturn(false).times(2);
         expect(node.isLanguageLiteral()).andReturn(true);
         expect(node.getLanguage()).andReturn(LANGUAGE);
         xmlStreamWriter.writeAttribute("xml:lang", LANGUAGE);
         expect(node.getLexicalForm()).andReturn(LANGUAGE_LITERAL);
         xmlStreamWriter.writeCharacters(LANGUAGE_LITERAL);
-        factory.replay();
+        replayAll();
         writer.visitLiteral(node);
-        factory.verify();
+        verifyAll();
     }
 
+    @Test
     public void testVisitDatatypeLiteral() throws Exception {
-        Literal node = factory.createMock(Literal.class);
+        Literal node = createMock(Literal.class);
         expect(node.isDatatypedLiteral()).andReturn(true).times(2);
         expect(node.getDatatypeURI()).andReturn(URI.create(DATA_TYPE));
         expect(node.getDatatypeURI()).andReturn(URI.create(DATA_TYPE));
         xmlStreamWriter.writeAttribute("rdf:datatype", DATA_TYPE);
         expect(node.getLexicalForm()).andReturn("foo^^xsd:int");
         xmlStreamWriter.writeCharacters("foo^^xsd:int");
-        factory.replay();
+        replayAll();
         writer.visitLiteral(node);
-        factory.verify();
+        verifyAll();
     }
 
+    @Test
     public void testVisitNode() throws Exception {
-        Node node = factory.createMock(Node.class);
-        factory.replay();
+        Node node = createMock(Node.class);
+        replayAll();
         writer.visitNode(node);
-        factory.verify();
+        verifyAll();
         Object obj = getFieldValue(writer, "exception");
-        assertEquals(WriteException.class, obj.getClass());
-        assertTrue(((WriteException) obj).getMessage().startsWith("Unknown object node type:"));
+        assertThat(obj, instanceOf(WriteException.class));
+        assertThat(((WriteException) obj).getMessage(), startsWith("Unknown object node type:"));
     }
 
+    @Test
     public void testVisitBlankNodeWithException() throws Exception {
         final BlankNode node = createNodeExpectations();
         expectLastCall().andThrow(EXPECTED_EXCEPTION);
-        factory.replay();
+        replayAll();
         writer.visitBlankNode(node);
-        factory.verify();
+        verifyAll();
         checkFieldValue(writer, "exception", EXPECTED_EXCEPTION);
     }
 
     private BlankNode createNodeExpectations() throws XMLStreamException {
-        BlankNode node = factory.createMock(BlankNode.class);
+        BlankNode node = createMock(BlankNode.class);
         expect(blankNodeRegistry.getNodeId(node)).andReturn(NODE_ID);
         xmlStreamWriter.writeAttribute("rdf:nodeID", NODE_ID);
         return node;

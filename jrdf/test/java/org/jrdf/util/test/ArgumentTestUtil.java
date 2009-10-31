@@ -72,7 +72,6 @@ import java.lang.reflect.InvocationTargetException;
  * Tests the contract of a method or constructor so that the methods throw IllegalArgumentException if null is passed.
  */
 public class ArgumentTestUtil {
-    private static final MockFactory FACTORY = new MockFactory();
     private static final String CANNOT_BE_NULL = " cannot be null";
     private static final String CANNOT_BE_EMPTY = " cannot be the empty string";
 
@@ -89,7 +88,7 @@ public class ArgumentTestUtil {
     }
 
     public static void checkConstructorSetsFields(Class[] paramTypes, Class<?> clazz, String[] parameterNames) {
-        Object[] args = FACTORY.createArgs(paramTypes, -1);
+        Object[] args = createArgs(paramTypes, -1);
         ParamSpec spec = new ParamSpec(paramTypes, args);
         Object obj = createInstanceUsingConstructor(clazz, spec);
         for (int index = 0; index < parameterNames.length; index++) {
@@ -107,7 +106,7 @@ public class ArgumentTestUtil {
         for (int index = 0; index < paramTypes.length; index++) {
             if (!paramTypes[index].isPrimitive()) {
                 String message = "Parameter " + (index + 1) + CANNOT_BE_NULL;
-                Object[] args = FACTORY.createArgs(paramTypes, index);
+                Object[] args = createArgs(paramTypes, index);
                 final ParamSpec params = new ParamSpec(paramTypes, args);
                 assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
                     public void execute() throws Throwable {
@@ -143,7 +142,7 @@ public class ArgumentTestUtil {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
         for (int index = 0; index < parameterTypes.length; index++) {
             if (checkParameter[index]) {
-                final Object[] args = FACTORY.createArgs(parameterTypes, index);
+                final Object[] args = createArgs(parameterTypes, index);
                 checkThrowsIllegalArgumentException("Parameter " + (index + 1) + CANNOT_BE_NULL, obj, methodName,
                     parameterTypes, args);
             }
@@ -155,7 +154,7 @@ public class ArgumentTestUtil {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
         for (int index = 0; index < parameterTypes.length; index++) {
             if (checkParameter[index]) {
-                final Object[] args = FACTORY.createArgs(parameterTypes, index);
+                final Object[] args = createArgs(parameterTypes, index);
                 if (parameterTypes[index].equals(String.class)) {
                     checkStringIllegalArgumentException(obj, methodName, paramDefinition, index, args);
                 } else {
@@ -213,7 +212,7 @@ public class ArgumentTestUtil {
     private static String removeNewPrefix(String fieldName) {
         String finalString;
         String name = fieldName.substring(3, fieldName.length());
-        String lowCaseFirstChar = new String(name.substring(0, 1)).toLowerCase();
+        String lowCaseFirstChar = name.substring(0, 1).toLowerCase();
         finalString = lowCaseFirstChar + name.substring(1, name.length());
         return finalString;
     }
@@ -222,5 +221,15 @@ public class ArgumentTestUtil {
         for (int i = 0; i < fieldNames.length; i++) {
             checkFieldIsOfTypeAndPrivate(clazz, fieldTypes[i], fieldNames[i]);
         }
+    }
+
+    private static Object[] createArgs(Class<?>[] parameterTypes, int index) {
+        Object[] objects = new Object[parameterTypes.length];
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (i != index) {
+                objects[i] = MockTestUtil.createMock(parameterTypes[i]);
+            }
+        }
+        return objects;
     }
 }

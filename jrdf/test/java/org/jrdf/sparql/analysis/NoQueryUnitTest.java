@@ -73,7 +73,7 @@ import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPublicConstan
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.jrdf.util.test.MockTestUtil.createMock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.Serializable;

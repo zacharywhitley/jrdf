@@ -83,7 +83,7 @@ import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.jrdf.util.test.MockTestUtil.createMock;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 import org.powermock.api.easymock.annotation.Mock;

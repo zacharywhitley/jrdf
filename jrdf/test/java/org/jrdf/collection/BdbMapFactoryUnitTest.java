@@ -77,7 +77,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.jrdf.util.test.MockTestUtil.createMock;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 

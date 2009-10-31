@@ -69,22 +69,20 @@ import static org.hamcrest.Matchers.arrayContaining;
 import static org.jrdf.query.answer.SparqlResultType.BLANK_NODE;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
-import org.jrdf.util.test.MockFactory;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
 
+@RunWith(PowerMockRunner.class)
 public class SparqlSelectJsonResultsParserImplUnitTest {
-    private final MockFactory mockFactory = new MockFactory();
-    private JsonParser mockJsonParser;
+    @Mock private JsonParser mockJsonParser;
     private LinkedHashSet<String> variables = new LinkedHashSet<String>();
-
-    @Before
-    public void setUp() throws Exception {
-        mockJsonParser = mockFactory.createMock(JsonParser.class);
-    }
 
     @Test
     public void closeClosesParser() throws Exception {
@@ -92,11 +90,11 @@ public class SparqlSelectJsonResultsParserImplUnitTest {
         mockJsonParser.close();
         expectLastCall();
 
-        mockFactory.replay();
+        replayAll();
         final SparqlJsonResultsParser jsonParser = new SparqlSelectJsonResultsParserImpl(variables, mockJsonParser);
         final boolean closedOkay = jsonParser.close();
 
-        mockFactory.verify();
+        verifyAll();
         assertThat(closedOkay, is(true));
     }
 
@@ -106,12 +104,12 @@ public class SparqlSelectJsonResultsParserImplUnitTest {
         mockJsonParser.close();
         expectLastCall().andThrow(new IOException());
 
-        mockFactory.replay();
+        replayAll();
         final SparqlJsonResultsParser jsonParser =
             new SparqlSelectJsonResultsParserImpl(variables, mockJsonParser);
         jsonParser.close();
 
-        mockFactory.verify();
+        verifyAll();
     }
 
     @Test(expected = UnsupportedOperationException.class)
