@@ -68,106 +68,108 @@ import org.jrdf.query.answer.SparqlProtocol;
 import org.jrdf.query.answer.SparqlResultType;
 import org.jrdf.query.answer.TypeValue;
 import org.jrdf.query.answer.TypeValueImpl;
-import org.jrdf.util.test.MockFactory;
-import org.junit.Before;
-import org.junit.Rule;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
+@RunWith(PowerMockRunner.class)
 public class SparqlAskJsonResultsParserImplUnitTest {
-    @Rule public ExpectedException thrown = ExpectedException.none();
     private static final String CANNOT_PARSE = "Cannot parse token: ";
     private static final JsonToken BOGUS_TOKEN = JsonToken.NOT_AVAILABLE;
-    private final MockFactory mockFactory = new MockFactory();
-    private JsonParser mockJsonParser;
-
-    @Before
-    public void setUp() throws Exception {
-        mockJsonParser = mockFactory.createMock(JsonParser.class);
-    }
+    @Mock private JsonParser mockJsonParser;
 
     @Test
     public void testCreateWithoutBoolean() throws Exception {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage(CANNOT_PARSE + "null");
-
         expect(mockJsonParser.getCurrentName()).andReturn("fred");
-        mockFactory.replay();
-        new SparqlAskJsonResultsParserImpl(mockJsonParser);
-        mockFactory.verify();
+        replayAll();
+        assertThrows(IllegalStateException.class, CANNOT_PARSE + "null", new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new SparqlAskJsonResultsParserImpl(mockJsonParser);
+            }
+        });
+        verifyAll();
     }
 
     @Test
     public void testCreateWithTrue() throws Exception {
         createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.VALUE_TRUE);
-        mockFactory.replay();
+        replayAll();
         final SparqlAskJsonResultsParserImpl parser = new SparqlAskJsonResultsParserImpl(mockJsonParser);
-        mockFactory.verify();
+        verifyAll();
         checkResult(parser, "true");
     }
 
     @Test
     public void testCreateWithFalse() throws Exception {
         createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.VALUE_FALSE);
-        mockFactory.replay();
+        replayAll();
         final SparqlAskJsonResultsParserImpl parser = new SparqlAskJsonResultsParserImpl(mockJsonParser);
-        mockFactory.verify();
+        verifyAll();
         checkResult(parser, "false");
     }
 
     @Test
     public void tryingToReturnTwoResultsThrowsException() throws Exception {
-        thrown.expect(NoSuchElementException.class);
-        thrown.expectMessage("No more results available");
-
         createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.VALUE_FALSE);
-        mockFactory.replay();
-        final SparqlAskJsonResultsParserImpl parser = new SparqlAskJsonResultsParserImpl(mockJsonParser);
-        mockFactory.verify();
-        parser.next();
-        parser.next();
+        replayAll();
+        assertThrows(NoSuchElementException.class, "No more results available", new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                final SparqlAskJsonResultsParserImpl parser = new SparqlAskJsonResultsParserImpl(mockJsonParser);
+                verifyAll();
+                parser.next();
+                parser.next();
+            }
+        });
+
     }
 
     @Test
     public void testCreateWithIllegalValueThrowsIllegalStateException() throws Exception {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage(CANNOT_PARSE + BOGUS_TOKEN);
-
         createConstructorExpectations(SparqlProtocol.BOOLEAN, BOGUS_TOKEN);
-        mockFactory.replay();
-        new SparqlAskJsonResultsParserImpl(mockJsonParser);
-        mockFactory.verify();
+        replayAll();
+        assertThrows(IllegalStateException.class, CANNOT_PARSE + BOGUS_TOKEN, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new SparqlAskJsonResultsParserImpl(mockJsonParser);
+            }
+        });
+        verifyAll();
     }
 
     @Test(expected = RuntimeException.class)
     public void testWrapsException() throws Exception {
         expect(mockJsonParser.getCurrentName()).andReturn(SparqlProtocol.BOOLEAN);
         expect(mockJsonParser.nextValue()).andThrow(new IOException());
-        mockFactory.replay();
+        replayAll();
         new SparqlAskJsonResultsParserImpl(mockJsonParser);
-        mockFactory.verify();
+        verifyAll();
     }
 
     @Test
     public void testRemove() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot remove on this iterator");
-
         createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.VALUE_FALSE);
-        mockFactory.replay();
-        new SparqlAskJsonResultsParserImpl(mockJsonParser).remove();
-        mockFactory.verify();
+        replayAll();
+        assertThrows(UnsupportedOperationException.class, "Cannot remove on this iterator", new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new SparqlAskJsonResultsParserImpl(mockJsonParser).remove();
+            }
+        });
+        verifyAll();
     }
 
     @Test
     public void testAlwaysReturnTrue() throws Exception {
         createConstructorExpectations(SparqlProtocol.BOOLEAN, JsonToken.VALUE_FALSE);
-        mockFactory.replay();
+        replayAll();
         final boolean closeResult = new SparqlAskJsonResultsParserImpl(mockJsonParser).close();
-        mockFactory.verify();
+        verifyAll();
         assertThat(closeResult, is(true));
     }
 

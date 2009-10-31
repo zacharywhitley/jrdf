@@ -62,31 +62,34 @@ package org.jrdf.writer.bdb;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.collection.MapFactory;
+import org.jrdf.graph.BlankNode;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import org.jrdf.writer.BlankNodeRegistry;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import static org.jrdf.util.test.MockTestUtil.createMock;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
+@RunWith(PowerMockRunner.class)
 public class BdbBlankNodeRegistryImplUnitTest extends TestCase {
     private static final Class[] PARAM_TYPES = {MapFactory.class};
     private static final String[] PARAMETER_NAMES = {"newMapFactory"};
-    private MockFactory mockFactory = new MockFactory();
-    private MapFactory mapFactory;
     private BlankNodeRegistry bdbBlankNodeRegistry;
+    @Mock private MapFactory mapFactory;
 
-    public void setUp() {
-        mapFactory = mockFactory.createMock(MapFactory.class);
-    }
-
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(BlankNodeRegistry.class, BdbBlankNodeRegistryImpl.class);
         checkConstructor(BdbBlankNodeRegistryImpl.class, Modifier.PUBLIC, PARAM_TYPES);
@@ -96,12 +99,13 @@ public class BdbBlankNodeRegistryImplUnitTest extends TestCase {
             new String[]{"node"}, new Class[]{BlankNode.class}));
     }
 
+    @Test
     public void testGetNodeIdAndClear() {
         expect(mapFactory.createMap(BlankNode.class, Long.class)).andReturn(new HashMap<BlankNode, Long>());
-        BlankNode blankNode1 = mockFactory.createMock(BlankNode.class);
-        BlankNode blankNode2 = mockFactory.createMock(BlankNode.class);
-        BlankNode blankNode3 = mockFactory.createMock(BlankNode.class);
-        mockFactory.replay();
+        BlankNode blankNode1 = createMock(BlankNode.class);
+        BlankNode blankNode2 = createMock(BlankNode.class);
+        BlankNode blankNode3 = createMock(BlankNode.class);
+        replayAll();
         bdbBlankNodeRegistry = new BdbBlankNodeRegistryImpl(mapFactory);
         checkId(blankNode1, "bNode_0");
         checkId(blankNode1, "bNode_0");
@@ -111,17 +115,17 @@ public class BdbBlankNodeRegistryImplUnitTest extends TestCase {
         bdbBlankNodeRegistry.clear();
         checkId(blankNode3, "bNode_0");
         checkId(blankNode2, "bNode_1");
-        mockFactory.verify();
+        verifyAll();
     }
 
     public void testClose() {
         expect(mapFactory.createMap(BlankNode.class, Long.class)).andReturn(new HashMap<BlankNode, Long>());
         mapFactory.close();
         expectLastCall();
-        mockFactory.replay();
+        replayAll();
         bdbBlankNodeRegistry = new BdbBlankNodeRegistryImpl(mapFactory);
         bdbBlankNodeRegistry.close();
-        mockFactory.verify();
+        verifyAll();
     }
 
     private void checkId(BlankNode blankNode, String expectedValue) {

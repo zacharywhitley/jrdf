@@ -75,7 +75,7 @@ import org.powermock.api.easymock.annotation.Mock;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 import static org.powermock.api.easymock.PowerMock.resetAll;
-import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.jrdf.util.test.MockTestUtil.createMock;
 import org.powermock.modules.junit4.PowerMockRunner;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;

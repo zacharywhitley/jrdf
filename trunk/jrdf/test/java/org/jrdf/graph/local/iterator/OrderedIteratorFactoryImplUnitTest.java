@@ -66,7 +66,7 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.URIReference1;
 
 import java.lang.reflect.Modifier;
@@ -85,18 +85,17 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     private static final PredicateNode BAZ = new URIReference1(URI.create("urn:baz"));
     private static final List<PredicateNode> ORDER_VALUES = asList(BAR, BAZ, FOO, IMRAN);
     private static final Long RESOURCE_ID = System.currentTimeMillis();
-    private final MockFactory mockFactory = new MockFactory();
     private Localizer localizer;
     private GraphHandler[] graphHandlers;
     private IteratorTrackingCollectionFactory collectionFactory;
 
     public void setUp() {
-        localizer = mockFactory.createMock(Localizer.class);
-        GraphHandler graphHandler012 = mockFactory.createMock(GraphHandler.class);
-        GraphHandler graphHandler120 = mockFactory.createMock(GraphHandler.class);
-        GraphHandler graphHandler201 = mockFactory.createMock(GraphHandler.class);
+        localizer = MockTestUtil.createMock(Localizer.class);
+        GraphHandler graphHandler012 = MockTestUtil.createMock(GraphHandler.class);
+        GraphHandler graphHandler120 = MockTestUtil.createMock(GraphHandler.class);
+        GraphHandler graphHandler201 = MockTestUtil.createMock(GraphHandler.class);
         graphHandlers = new GraphHandler[] {graphHandler012, graphHandler120, graphHandler201};
-        collectionFactory = mockFactory.createMock(IteratorTrackingCollectionFactory.class);
+        collectionFactory = MockTestUtil.createMock(IteratorTrackingCollectionFactory.class);
     }
 
     public void testClassProperties() throws Exception {

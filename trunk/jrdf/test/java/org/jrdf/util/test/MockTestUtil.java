@@ -1,9 +1,9 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,34 +54,24 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
+
 package org.jrdf.util.test;
 
-import org.easymock.classextension.EasyMock;
-import org.easymock.classextension.IMocksControl;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
+import org.powermock.api.easymock.PowerMock;
 import org.restlet.data.MediaType;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
-/**
- * A utility that allows you to treat a collection of MockControls.
- *
- * @author Andrew Newman
- * @version $Id$
- */
-public class MockFactory {
+public class MockTestUtil {
     private static final ArnoldTheInstantiator INSTANTIATOR = new ArnoldTheInstantiator();
-    private List<IMocksControl> controls = new ArrayList<IMocksControl>();
 
     @SuppressWarnings({ "unchecked" })
-    public <T> T createMock(Class<T> clazz) {
+    public static <T> T createMock(Class<T> clazz) {
         if (clazz.isPrimitive()) {
             if (clazz.equals(Long.TYPE)) {
                 return (T) new Long(1L);
@@ -95,75 +85,7 @@ public class MockFactory {
         } else if (isStubClass(clazz)) {
             return (T) createStubClass(clazz);
         } else {
-            IMocksControl control = EasyMock.createControl();
-            controls.add(control);
-            return control.createMock(clazz);
-        }
-    }
-
-    public <T> T createNiceMock(Class<T> clazz) {
-        IMocksControl control = EasyMock.createNiceControl();
-        controls.add(control);
-        return control.createMock(clazz);
-    }
-
-    public <T> T createStrictMock(Class<T> clazz) {
-        IMocksControl control = EasyMock.createStrictControl();
-        controls.add(control);
-        return control.createMock(clazz);
-    }
-
-    /**
-     * Creates mocked implementations of the parameter type given.
-     *
-     * @param parameterTypes the types to create.
-     * @param index the index to use in which to create a null Object - can be -1 and will not create any nulls.
-     * @return an array of created types.
-     */
-    @SuppressWarnings({ "unchecked" })
-    public Object[] createArgs(Class[] parameterTypes, int index) {
-        Object[] objects = new Object[parameterTypes.length];
-        for (int i = 0; i < parameterTypes.length; i++) {
-            if (i != index) {
-                objects[i] = createMock(parameterTypes[i]);
-            }
-        }
-        return objects;
-    }
-
-    public IMocksControl createControl() {
-        IMocksControl control = EasyMock.createControl();
-        controls.add(control);
-        return control;
-    }
-
-    public IMocksControl createNiceControl() {
-        IMocksControl niceControl = EasyMock.createNiceControl();
-        controls.add(niceControl);
-        return niceControl;
-    }
-
-    public IMocksControl createStrictControl() {
-        IMocksControl strictControl = EasyMock.createStrictControl();
-        controls.add(strictControl);
-        return strictControl;
-    }
-
-    public void replay() {
-        for (IMocksControl control : controls) {
-            control.replay();
-        }
-    }
-
-    public void verify() {
-        for (IMocksControl control : controls) {
-            control.verify();
-        }
-    }
-
-    public void reset() {
-        for (IMocksControl control : controls) {
-            control.reset();
+            return PowerMock.createMock(clazz);
         }
     }
 
