@@ -59,24 +59,31 @@
 
 package org.jrdf.sparql.analysis;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
-import org.jrdf.query.answer.EmptyAnswer;
+import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
+import static org.jrdf.sparql.analysis.NoQuery.NO_QUERY;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPublicConstant;
-import org.jrdf.util.test.MockFactory;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 
-public class NoQueryUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public class NoQueryUnitTest {
     private static final Class[] PARAM_TYPES = {};
-    private MockFactory factory = new MockFactory();
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Query.class, NoQuery.class);
         checkImplementationOfInterfaceAndFinal(Serializable.class, NoQuery.class);
@@ -85,11 +92,11 @@ public class NoQueryUnitTest extends TestCase {
         checkSerialialVersionUid(NoQuery.class, -1815852679585213051L);
     }
 
+    @Test
     public void testNoQueryValues() {
-        Query query = NoQuery.NO_QUERY;
-        Graph graph = factory.createMock(Graph.class);
-        QueryEngine queryEngine = factory.createMock(QueryEngine.class);
-        assertNotNull(query);
-        assertEquals(EmptyAnswer.EMPTY_ANSWER, query.executeQuery(graph, queryEngine));
+        Graph graph = createMock(Graph.class);
+        QueryEngine queryEngine = createMock(QueryEngine.class);
+        assertThat(NO_QUERY, notNullValue());
+        assertThat(NO_QUERY.executeQuery(graph, queryEngine), equalTo(EMPTY_ANSWER));
     }
 }
