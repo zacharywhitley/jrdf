@@ -72,7 +72,6 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class ListGraphsResource extends ConfigurableRestletResource {
     private GraphLister graphLister;
 

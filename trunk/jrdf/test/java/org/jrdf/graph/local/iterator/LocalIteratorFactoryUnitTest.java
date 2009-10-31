@@ -60,18 +60,18 @@ package org.jrdf.graph.local.iterator;
 
 import junit.framework.TestCase;
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 public class LocalIteratorFactoryUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(IteratorFactory.class, CopyingLocalIteratorFactory.class);
-        checkConstructor(CopyingLocalIteratorFactory.class, Modifier.PUBLIC, GraphHandler[].class, Localizer.class,
+        checkConstructor(CopyingLocalIteratorFactory.class, Modifier.PUBLIC, List.class, Localizer.class,
             IteratorTrackingCollectionFactory.class);
     }
 }

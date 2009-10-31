@@ -66,6 +66,7 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.List;
 import java.util.SortedSet;
 
 /**
@@ -73,10 +74,10 @@ import java.util.SortedSet;
  */
 public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     private final Localizer localizer;
-    private final GraphHandler[] graphHandlers;
+    private final List<GraphHandler> graphHandlers;
     private final IteratorTrackingCollectionFactory collectionFactory;
 
-    public OrderedIteratorFactoryImpl(Localizer newLocalizer, GraphHandler[] newGraphHandlers,
+    public OrderedIteratorFactoryImpl(Localizer newLocalizer, List<GraphHandler> newGraphHandlers,
         IteratorTrackingCollectionFactory newCollectionFactory) {
         checkNotNull(newLocalizer, newGraphHandlers, newCollectionFactory);
         this.localizer = newLocalizer;
@@ -89,27 +90,27 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newGraphIterator() {
-        return sortTriples(new GraphIterator(graphHandlers[0]));
+        return sortTriples(new GraphIterator(graphHandlers.get(0)));
     }
 
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return sortTriples(new OneFixedIterator(fixedFirstNode, graphHandlers[index]));
+        return sortTriples(new OneFixedIterator(fixedFirstNode, graphHandlers.get(index)));
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return sortTriples(new TwoFixedIterator(fixedFirstNode, fixedSecondNode, graphHandlers[index]));
+        return sortTriples(new TwoFixedIterator(fixedFirstNode, fixedSecondNode, graphHandlers.get(index)));
     }
 
     public ClosableIterator<Triple> newThreeFixedIterator(Long[] nodes) {
-        return new ThreeFixedIterator(nodes, graphHandlers[0]);
+        return new ThreeFixedIterator(nodes, graphHandlers.get(0));
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return sortPredicates(new AnyResourcePredicateIterator(graphHandlers[1]));
+        return sortPredicates(new AnyResourcePredicateIterator(graphHandlers.get(1)));
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return sortPredicates(new FixedResourcePredicateIterator(resource, graphHandlers[0], graphHandlers[1]));
+        return sortPredicates(new FixedResourcePredicateIterator(resource, graphHandlers.get(0), graphHandlers.get(1)));
     }
 
     public IteratorFactory getUnsortedIteratorFactory() {
@@ -122,7 +123,7 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
             orderedSet.add(closableIterator.next());
         }
         closableIterator.close();
-        return new TripleClosableIterator(collectionFactory, orderedSet.iterator(), localizer, graphHandlers[0]);
+        return new TripleClosableIterator(collectionFactory, orderedSet.iterator(), localizer, graphHandlers.get(0));
     }
 
     private ClosableIterator<PredicateNode> sortPredicates(ClosableIterator<PredicateNode> closableIterator) {

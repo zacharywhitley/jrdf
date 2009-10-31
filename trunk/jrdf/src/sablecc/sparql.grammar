@@ -39,6 +39,8 @@ Tokens
   {def}                select           = ('SELECT' | 'select');
   {def}                ask              = ('ASK' | 'ask');
   {def}                describe         = ('DESCRIBE' | 'describe');
+  {def}                from             = ('FROM' | 'from');
+  {def}                named            = ('NAMED' | 'named');
   {def}                where            = ('WHERE' | 'where');
   {def}                union            = ('UNION' | 'union');
   {def}                optional         = ('OPTIONAL' | 'optional');
@@ -106,8 +108,8 @@ Ignored Tokens
 
 Productions
   start =
-    {select_query} prolog select_clause where_clause |
-    {ask_query} prolog ask_clause where_clause;
+    {select_query} prolog select_clause dataset_clause* where_clause |
+    {ask_query} prolog ask_clause dataset_clause* where_clause;
 
   prolog =
     {prefixdecl} prefixdecl* ;
@@ -121,6 +123,12 @@ Productions
 
   ask_clause =
     ask ;
+
+  dataset_clause =
+    {default_source_selector} from source_selector |
+    {named_source_selector} from named source_selector;
+
+  source_selector = iri_ref_or_prefixed_name;
 
   where_clause =
     where? group_graph_pattern;

@@ -84,11 +84,15 @@ import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.OrderedIteratorFactoryImpl;
-import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
+import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.btree.BTree;
+
+import static java.util.Arrays.asList;
+import java.util.List;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -98,7 +102,7 @@ import org.jrdf.util.btree.BTree;
  */
 public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private LongIndex[] longIndexes;
-    private GraphHandler[] graphHandlers;
+    private List<GraphHandler> graphHandlers;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
@@ -113,11 +117,8 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         nodePool = newNodePoolFactory.createNewNodePool();
         this.nodePool.clear();
         this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
-        this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
-            new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
-        this.iteratorFactory = new OrderedIteratorFactoryImpl(localizer, graphHandlers,
-            new BdbCollectionFactory(new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()),
-                "tmpResults" + graphNumber));
+        this.graphHandlers = createGraphHandlers(newLongIndexes);
+        this.iteratorFactory = createIteratorFactory(graphNumber);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);
         ResourceFactory resourceFactory = new ResourceFactoryImpl(readWriteGraph, valueFactory);
@@ -136,5 +137,19 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
 
     public IteratorFactory getIteratorFactory() {
         return iteratorFactory;
+    }
+
+    private List<GraphHandler> createGraphHandlers(LongIndex[] newLongIndexes) {
+        final GraphHandler graphHandler012 = new GraphHandler012(newLongIndexes, nodePool);
+        final GraphHandler graphHandler120 = new GraphHandler120(newLongIndexes, nodePool);
+        final GraphHandler graphHandler201 = new GraphHandler201(newLongIndexes, nodePool);
+        return asList(graphHandler012, graphHandler120, graphHandler201);
+    }
+
+    private IteratorFactory createIteratorFactory(long graphNumber) {
+        final BdbEnvironmentHandler environmentHandler = new BdbEnvironmentHandlerImpl(new TempDirectoryHandler());
+        final BdbCollectionFactory collectionFactory = new BdbCollectionFactory(environmentHandler, "tmpResults" +
+            graphNumber);
+        return new OrderedIteratorFactoryImpl(localizer, graphHandlers, collectionFactory);
     }
 }
