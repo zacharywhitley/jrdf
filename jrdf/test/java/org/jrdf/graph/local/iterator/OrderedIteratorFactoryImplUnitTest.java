@@ -64,46 +64,54 @@ import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.URIReference1;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import static java.util.Arrays.asList;
 import java.util.List;
 
+@RunWith(PowerMockRunner.class)
 public class OrderedIteratorFactoryImplUnitTest extends TestCase {
-    private static final Class<?>[] PARAM_TYPES = {Localizer.class, GraphHandler[].class,
+    private static final Class<?>[] PARAM_TYPES = {Localizer.class, List.class,
         IteratorTrackingCollectionFactory.class};
-    //private static final String[] PARAMETER_NAMES = new String[]{"newLocalizer", "newGraphHandlers",
-    //        "newCollectionFactory"};
+    private static final String[] PARAMETER_NAMES = new String[]{"newLocalizer", "newGraphHandlers",
+            "newCollectionFactory"};
     private static final PredicateNode IMRAN = new URIReference1(URI.create("urn:imran"));
     private static final PredicateNode FOO = new URIReference1(URI.create("urn:foo"));
     private static final PredicateNode BAR = new URIReference1(URI.create("urn:bar"));
     private static final PredicateNode BAZ = new URIReference1(URI.create("urn:baz"));
     private static final List<PredicateNode> ORDER_VALUES = asList(BAR, BAZ, FOO, IMRAN);
     private static final Long RESOURCE_ID = System.currentTimeMillis();
-    private Localizer localizer;
-    private GraphHandler[] graphHandlers;
-    private IteratorTrackingCollectionFactory collectionFactory;
+    @Mock private Localizer localizer;
+    @Mock private IteratorTrackingCollectionFactory collectionFactory;
+    private List<GraphHandler> graphHandlers;
 
+    @Before
     public void setUp() {
-        localizer = MockTestUtil.createMock(Localizer.class);
         GraphHandler graphHandler012 = MockTestUtil.createMock(GraphHandler.class);
         GraphHandler graphHandler120 = MockTestUtil.createMock(GraphHandler.class);
         GraphHandler graphHandler201 = MockTestUtil.createMock(GraphHandler.class);
-        graphHandlers = new GraphHandler[] {graphHandler012, graphHandler120, graphHandler201};
-        collectionFactory = MockTestUtil.createMock(IteratorTrackingCollectionFactory.class);
+        graphHandlers = asList(graphHandler012, graphHandler120, graphHandler201);
     }
 
+    @Test
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(IteratorFactory.class, OrderedIteratorFactoryImpl.class);
         checkConstructor(OrderedIteratorFactoryImpl.class, Modifier.PUBLIC, PARAM_TYPES);
-        //checkConstructNullAssertion(OrderedIteratorFactoryImpl.class, PARAM_TYPES);
-        //checkConstructorSetsFieldsAndFieldsPrivateFinal(OrderedIteratorFactoryImpl.class, PARAM_TYPES,
-        //    PARAMETER_NAMES);
+        checkConstructNullAssertion(OrderedIteratorFactoryImpl.class, PARAM_TYPES);
+        checkConstructorSetsFieldsAndFieldsPrivateFinal(OrderedIteratorFactoryImpl.class, PARAM_TYPES,
+            PARAMETER_NAMES);
     }
 
 //    public void testSortedNewPredicateIterator() {

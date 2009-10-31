@@ -64,6 +64,8 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.List;
+
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
  *
@@ -71,10 +73,10 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  * @version $Id$
  */
 public final class LocalIteratorFactory implements IteratorFactory {
-    private final GraphHandler[] graphHandlers;
+    private final List<GraphHandler> graphHandlers;
 
-    public LocalIteratorFactory(final GraphHandler[] newGraphHandlers) {
-        checkNotNull((Object) newGraphHandlers);
+    public LocalIteratorFactory(final List<GraphHandler> newGraphHandlers) {
+        checkNotNull(newGraphHandlers);
         this.graphHandlers = newGraphHandlers;
     }
 
@@ -83,27 +85,27 @@ public final class LocalIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newGraphIterator() {
-        return new GraphIterator(graphHandlers[0]);
+        return new GraphIterator(graphHandlers.get(0));
     }
 
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return new OneFixedIterator(fixedFirstNode, graphHandlers[index]);
+        return new OneFixedIterator(fixedFirstNode, graphHandlers.get(index));
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, graphHandlers[index]);
+        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, graphHandlers.get(index));
     }
 
     public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
-        return new ThreeFixedIterator(newNodes, graphHandlers[0]);
+        return new ThreeFixedIterator(newNodes, graphHandlers.get(0));
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return new AnyResourcePredicateIterator(graphHandlers[1]);
+        return new AnyResourcePredicateIterator(graphHandlers.get(1));
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return new FixedResourcePredicateIterator(resource, graphHandlers[0], graphHandlers[1]);
+        return new FixedResourcePredicateIterator(resource, graphHandlers.get(0), graphHandlers.get(1));
     }
 
     public IteratorFactory getUnsortedIteratorFactory() {

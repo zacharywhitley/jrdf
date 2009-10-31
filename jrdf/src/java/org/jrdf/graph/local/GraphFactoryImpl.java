@@ -78,6 +78,9 @@ import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
 
+import java.util.List;
+import static java.util.Arrays.asList;
+
 /**
  * Creates a new Graph implementation based on required types.
  *
@@ -86,7 +89,7 @@ import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
  */
 public final class GraphFactoryImpl implements ReadWriteGraphFactory {
     private LongIndex[] longIndexes;
-    private GraphHandler[] graphHandlers;
+    private List<GraphHandler> graphHandlers;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
@@ -99,8 +102,7 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNewNodePool();
         this.nodePool.clear();
-        this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
-            new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
+        this.graphHandlers = createGraphHandlers(newLongIndexes);
         Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
         this.iteratorFactory = new CopyingLocalIteratorFactory(graphHandlers, localizer, newCollectionFactory);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
@@ -121,5 +123,12 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
 
     public IteratorFactory getIteratorFactory() {
         return iteratorFactory;
+    }
+
+    private List<GraphHandler> createGraphHandlers(LongIndex[] newLongIndexes) {
+        final GraphHandler graphHandler012 = new GraphHandler012(newLongIndexes, nodePool);
+        final GraphHandler graphHandler120 = new GraphHandler120(newLongIndexes, nodePool);
+        final GraphHandler graphHandler201 = new GraphHandler201(newLongIndexes, nodePool);
+        return asList(graphHandler012, graphHandler120, graphHandler201);
     }
 }

@@ -75,11 +75,11 @@ import java.util.List;
  * @version $Id$
  */
 public final class CopyingLocalIteratorFactory implements IteratorFactory {
-    private final GraphHandler[] graphHandlers;
+    private final List<GraphHandler> graphHandlers;
     private final Localizer localizer;
     private final IteratorTrackingCollectionFactory collectionFactory;
 
-    public CopyingLocalIteratorFactory(final GraphHandler[] newGraphHandlers, final Localizer newLocalizer,
+    public CopyingLocalIteratorFactory(final List<GraphHandler> newGraphHandlers, final Localizer newLocalizer,
         final IteratorTrackingCollectionFactory newCollectionFactory) {
         checkNotNull(newGraphHandlers, newLocalizer, newCollectionFactory);
         this.graphHandlers = newGraphHandlers;
@@ -96,27 +96,27 @@ public final class CopyingLocalIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newGraphIterator() {
-        return copyTriples(new GraphIterator(graphHandlers[0]));
+        return copyTriples(new GraphIterator(graphHandlers.get(0)));
     }
 
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return copyTriples(new OneFixedIterator(fixedFirstNode, graphHandlers[index]));
+        return copyTriples(new OneFixedIterator(fixedFirstNode, graphHandlers.get(index)));
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return copyTriples(new TwoFixedIterator(fixedFirstNode, fixedSecondNode, graphHandlers[index]));
+        return copyTriples(new TwoFixedIterator(fixedFirstNode, fixedSecondNode, graphHandlers.get(index)));
     }
 
     public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
-        return copyTriples(new ThreeFixedIterator(newNodes, graphHandlers[0]));
+        return copyTriples(new ThreeFixedIterator(newNodes, graphHandlers.get(0)));
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return new AnyResourcePredicateIterator(graphHandlers[1]);
+        return new AnyResourcePredicateIterator(graphHandlers.get(1));
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return new FixedResourcePredicateIterator(resource, graphHandlers[0], graphHandlers[1]);
+        return new FixedResourcePredicateIterator(resource, graphHandlers.get(0), graphHandlers.get(1));
     }
 
     private ClosableIterator<Triple> copyTriples(ClosableIterator<Triple> closableIterator) {
@@ -125,6 +125,6 @@ public final class CopyingLocalIteratorFactory implements IteratorFactory {
             list.add(closableIterator.next());
         }
         closableIterator.close();
-        return new TripleClosableIterator(collectionFactory, list.iterator(), localizer, graphHandlers[0]);
+        return new TripleClosableIterator(collectionFactory, list.iterator(), localizer, graphHandlers.get(0));
     }
 }
