@@ -62,7 +62,7 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
 import org.jrdf.query.answer.Answer;
-import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
+import static org.jrdf.query.answer.EmptySelectAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
 

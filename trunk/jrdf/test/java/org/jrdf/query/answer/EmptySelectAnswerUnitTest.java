@@ -63,7 +63,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.emptyArray;
-import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
+import static org.jrdf.query.answer.EmptySelectAnswer.EMPTY_ANSWER;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPublicConstant;
@@ -74,16 +74,16 @@ import org.junit.Test;
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 
-public class EmptyAnswerUnitTest {
+public class EmptySelectAnswerUnitTest {
     private static final Class[] PARAM_TYPES = {};
 
     @Test
     public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(Answer.class, EmptyAnswer.class);
-        checkImplementationOfInterfaceAndFinal(Serializable.class, EmptyAnswer.class);
-        checkConstructor(EmptyAnswer.class, Modifier.PRIVATE, PARAM_TYPES);
-        checkFieldPublicConstant(EmptyAnswer.class, "EMPTY_ANSWER");
-        checkSerialialVersionUid(EmptyAnswer.class, -7374613298128439580L);
+        checkImplementationOfInterfaceAndFinal(Answer.class, EmptySelectAnswer.class);
+        checkImplementationOfInterfaceAndFinal(Serializable.class, EmptySelectAnswer.class);
+        checkConstructor(EmptySelectAnswer.class, Modifier.PRIVATE, PARAM_TYPES);
+        checkFieldPublicConstant(EmptySelectAnswer.class, "EMPTY_ANSWER");
+        checkSerialialVersionUid(EmptySelectAnswer.class, -7374613298128439580L);
     }
 
     @Test
@@ -94,5 +94,7 @@ public class EmptyAnswerUnitTest {
         assertThat(answer.getTimeTaken(), is(0L));
         assertThat(answer.numberOfTuples(), is(0L));
         assertThat(answer, equalTo(EMPTY_ANSWER));
+        assertThat(answer.toString(), equalTo(""));
+        assertThat(answer.columnValuesIterator().hasNext(), equalTo(false));
     }
 }

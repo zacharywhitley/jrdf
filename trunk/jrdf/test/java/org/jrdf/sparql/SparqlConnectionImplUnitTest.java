@@ -68,7 +68,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.answer.Answer;
-import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
+import static org.jrdf.query.answer.EmptySelectAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.util.param.ParameterTestUtil;

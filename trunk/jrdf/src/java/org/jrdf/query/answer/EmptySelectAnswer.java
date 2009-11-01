@@ -64,7 +64,7 @@ import org.jrdf.util.EmptyClosableIterator;
 import java.io.Serializable;
 import java.util.Iterator;
 
-public final class EmptyAnswer implements SelectAnswer, Serializable {
+public final class EmptySelectAnswer implements SelectAnswer, Serializable {
     private static final long serialVersionUID = -7374613298128439580L;
     private static final String[] NO_VARIABLES = new String[]{};
     private static final EmptyClosableIterator<TypeValue[]> NO_COLUMN_VALUES_ITERATOR =
@@ -73,9 +73,9 @@ public final class EmptyAnswer implements SelectAnswer, Serializable {
     /**
      * An empty answer the returns no columns, values and 0 time taken.
      */
-    public static final Answer EMPTY_ANSWER = new EmptyAnswer();
+    public static final Answer EMPTY_ANSWER = new EmptySelectAnswer();
 
-    private EmptyAnswer() {
+    private EmptySelectAnswer() {
     }
 
     public String[] getVariableNames() {

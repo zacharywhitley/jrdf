@@ -64,7 +64,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
-import static org.jrdf.query.answer.EmptyAnswer.EMPTY_ANSWER;
+import static org.jrdf.query.answer.EmptySelectAnswer.EMPTY_ANSWER;
 import org.jrdf.query.execute.QueryEngine;
 import static org.jrdf.sparql.analysis.NoQuery.NO_QUERY;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;

@@ -72,17 +72,13 @@ public class SparqlXmlRepresentationFactory implements RepresentationFactory, An
     private MediaType mediaType;
 
     public Representation createRepresentation(MediaType defaultMediaType, Map<String, Object> dataModel) {
-        try {
-            Representation representation = Representation.createEmpty();
-            final Answer answer = (Answer) dataModel.get("answer");
-            if (answer != null) {
-                mediaType = defaultMediaType;
-                representation = answer.accept(this);
-            }
-            return representation;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Representation representation = Representation.createEmpty();
+        final Answer answer = (Answer) dataModel.get("answer");
+        if (answer != null) {
+            mediaType = defaultMediaType;
+            representation = answer.accept(this);
         }
+        return representation;
     }
 
     public Representation visitAskAnswer(AskAnswer askAnswer) {
