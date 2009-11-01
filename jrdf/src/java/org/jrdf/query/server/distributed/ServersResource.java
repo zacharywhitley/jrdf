@@ -77,7 +77,6 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class ServersResource extends ConfigurableRestletResource {
     private static final int LOCAL_PORT_NUMBER = 8182;
     private static final String DEFAULT_PORT_STRING = "defaultPort";
