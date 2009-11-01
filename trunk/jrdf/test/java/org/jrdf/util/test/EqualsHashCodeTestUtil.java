@@ -1,12 +1,26 @@
 package org.jrdf.util.test;
 
 import static org.jrdf.util.test.ClassPropertiesTestUtil.isClassFinal;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-public class EqualsTestUtil {
+public class EqualsHashCodeTestUtil {
+    public static void assertHashCode(final Object original, final Object equalToOriginal) {
+        assertTrue("Original and equalToOriginal should be equal to each other", original.equals(equalToOriginal));
+        int hashCode1 = original.hashCode();
+        int hashCodeTwice = original.hashCode();
+        int hashCode2 = equalToOriginal.hashCode();
+        assertEquals("Hashcode should produce same results twice", hashCode1, hashCodeTwice);
+        assertEquals("Equal objects should have equal hashcodes", hashCode1, hashCode2);
+    }
+
     public static void assertEquality(final Object original, final Object equalToOriginal,
             final Object sameClassButUnequal, final Object subclassWithSameValues) {
         checkParameters(original, equalToOriginal, sameClassButUnequal, subclassWithSameValues);

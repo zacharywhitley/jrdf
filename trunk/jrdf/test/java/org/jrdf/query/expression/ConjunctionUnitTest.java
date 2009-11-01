@@ -59,13 +59,27 @@
 
 package org.jrdf.query.expression;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.hamcrest.Matchers;
+import org.jrdf.graph.Node;
+import org.jrdf.query.relation.Attribute;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR1_SUBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.RESOURCE_1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.RESOURCE_3;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkInstanceImplementsInterface;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertEquality;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertHashCode;
+import org.junit.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 
 /**
  * Conjunction test case.
@@ -73,12 +87,68 @@ import java.lang.reflect.Modifier;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class ConjunctionUnitTest extends TestCase {
-    public void testClassProperties() {
+public class ConjunctionUnitTest {
+    private static final SingleValue LHS = new SingleValue(POS_BAR1_SUBJECT_R1);
+    private static final SingleValue RHS = new SingleValue(POS_FOO3_OBJECT_R3);
+    private static final EmptyExpression EMPTY_EXPRESSION = new EmptyExpression();
+
+    @Test
+    public void classProperties() {
         checkImplementationOfInterfaceAndFinal(Expression.class, Conjunction.class);
         checkInstanceImplementsInterface(Serializable.class, Conjunction.class);
         checkConstructor(Conjunction.class, Modifier.PUBLIC, Expression.class, Expression.class);
     }
 
-    // TODO (AN) Use Gsbase EqualsTester to test drive equality and hashcode.
+    @Test
+    public void getValuesWithEmpty() {
+        final BiOperandExpression conj1 = new Conjunction(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        assertThat(conj1.getValue(), equalTo(Collections.<Attribute, Node>emptyMap()));
+    }
+
+    @Test
+    public void getValuesCombinesValues() {
+        final BiOperandExpression conj1 = new Conjunction(LHS, RHS);
+        assertThat(conj1.getValue(), Matchers.<Attribute, Node>hasEntry(POS_BAR1_SUBJECT, RESOURCE_1));
+        assertThat(conj1.getValue(), Matchers.<Attribute, Node>hasEntry(POS_FOO3_OBJECT, RESOURCE_3));
+    }
+
+    @Test
+    public void sameValuesAreEqual() {
+        BiOperandExpression conj1 = new Conjunction(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        BiOperandExpression conj2 = new Conjunction(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        BiOperandExpression unequalConj = new Conjunction(EMPTY_EXPRESSION, null);
+        assertEquality(conj1, conj2, unequalConj, null);
+        assertHashCode(conj1, conj2);
+
+        conj1 = new Conjunction(LHS, RHS);
+        conj2 = new Conjunction(LHS, RHS);
+        assertEquality(conj1, conj2, unequalConj, null);
+        assertHashCode(conj1, conj2);
+    }
+
+    @Test
+    public void sameNullValuesAreEqual() {
+        final BiOperandExpression conj1 = new Conjunction(EMPTY_EXPRESSION, null);
+        final BiOperandExpression conj2 = new Conjunction(EMPTY_EXPRESSION, null);
+        final BiOperandExpression unequalConj = new Conjunction(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        assertEquality(conj1, conj2, unequalConj, null);
+        assertHashCode(conj1, conj2);
+    }
+
+    @Test
+    public void sameNullValuesAreEqual2() {
+        final BiOperandExpression conj1 = new Conjunction(null, EMPTY_EXPRESSION);
+        final BiOperandExpression conj2 = new Conjunction(null, EMPTY_EXPRESSION);
+        final BiOperandExpression unequalConj = new Conjunction(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        assertEquality(conj1, conj2, unequalConj, null);
+        assertHashCode(conj1, conj2);
+    }
+
+    @Test
+    public void sameNullValuesAreEqual3() {
+        final BiOperandExpression conj1 = new Conjunction(null, null);
+        final BiOperandExpression conj2 = new Conjunction(null, null);
+        final BiOperandExpression unequalconj = new Conjunction(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        assertEquality(conj1, conj2, unequalconj, null);
+    }
 }

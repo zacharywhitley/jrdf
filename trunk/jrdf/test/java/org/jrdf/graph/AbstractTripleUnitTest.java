@@ -66,6 +66,7 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertHashCode;
 import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.Triple1;
 import org.jrdf.util.test.Triple2;
@@ -151,10 +152,10 @@ public abstract class AbstractTripleUnitTest {
     }
 
     private void checkConsistentHashCode() {
-        checkConsistentHashCode(triple3);
-        checkConsistentHashCode(triple4);
-        checkConsistentHashCode(triple5);
-        checkConsistentHashCode(triple6);
+        assertHashCode(triple3, triple3);
+        assertHashCode(triple4, triple4);
+        assertHashCode(triple5, triple5);
+        assertHashCode(triple6, triple6);
     }
 
     private void checkEqualObjectsReturnSameHashCode() {
@@ -162,12 +163,6 @@ public abstract class AbstractTripleUnitTest {
         Triple y = triple2;
         checkEqual(x, y);
         assertThat(x.hashCode(), equalTo(y.hashCode()));
-    }
-
-    private void checkConsistentHashCode(Triple triple) {
-        int hashCode1 = triple.hashCode();
-        int hashCode2 = triple.hashCode();
-        assertThat(hashCode1, equalTo(hashCode2));
     }
 
     private void checkReflexive() {

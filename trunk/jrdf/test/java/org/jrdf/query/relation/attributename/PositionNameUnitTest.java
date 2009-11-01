@@ -63,7 +63,7 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.FieldPropertiesTestUtil;
-import static org.jrdf.util.test.EqualsTestUtil.assertEquality;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertEquality;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;

@@ -71,7 +71,7 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfIn
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkMarkedAsSerializable;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypeAndPrivate;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
-import static org.jrdf.util.test.EqualsTestUtil.assertEquality;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertEquality;
 
 import java.lang.reflect.Modifier;
 

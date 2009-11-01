@@ -62,7 +62,7 @@ package org.jrdf.query.relation.type;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
-import static org.jrdf.util.test.EqualsTestUtil.assertEquality;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertEquality;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;

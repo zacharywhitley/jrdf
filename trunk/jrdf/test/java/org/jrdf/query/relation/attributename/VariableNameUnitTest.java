@@ -60,7 +60,7 @@ package org.jrdf.query.relation.attributename;
 
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import static org.jrdf.util.test.EqualsTestUtil.assertEquality;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertEquality;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfType;

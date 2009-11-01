@@ -69,7 +69,7 @@ import java.util.Map;
 
 public final class Union implements BiOperandExpression, Serializable {
     private static final long serialVersionUID = -3805021039393789553L;
-    private static final int DUMMY_HASHCODE = 47;
+    private static final int PRIME = 31;
     private Expression lhs;
     private Expression rhs;
 
@@ -117,10 +117,11 @@ public final class Union implements BiOperandExpression, Serializable {
         return determineEqualityFromFields(this, (Union) obj);
     }
 
+    @Override
     public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
-        int hash = DUMMY_HASHCODE + lhs.hashCode();
-        return hash * DUMMY_HASHCODE + rhs.hashCode();
+        int result = lhs != null ? lhs.hashCode() : 0;
+        result = PRIME * result + (rhs != null ? rhs.hashCode() : 0);
+        return result;
     }
 
     public String toString() {
@@ -131,11 +132,19 @@ public final class Union implements BiOperandExpression, Serializable {
         return lhsEqual(o1, o2) && rhsEqual(o1, o2);
     }
 
-    private boolean rhsEqual(Union o1, Union o2) {
-        return o1.rhs.equals(o2.rhs);
+    private boolean lhsEqual(Union o1, Union o2) {
+        if (o1.lhs == null) {
+            return o2.lhs == null;
+        } else {
+            return o1.lhs.equals(o2.lhs);
+        }
     }
 
-    private boolean lhsEqual(Union o1, Union o2) {
-        return o1.lhs.equals(o2.lhs);
+    private boolean rhsEqual(Union o1, Union o2) {
+        if (o1.rhs == null) {
+            return o2.rhs == null;
+        } else {
+            return o1.rhs.equals(o2.rhs);
+        }
     }
 }
