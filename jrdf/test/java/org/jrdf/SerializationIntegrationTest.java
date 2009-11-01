@@ -59,7 +59,6 @@
 
 package org.jrdf;
 
-import org.jrdf.query.answer.AnswerType;
 import org.jrdf.query.answer.DatatypeType;
 import org.jrdf.query.answer.SparqlResultType;
 import org.jrdf.sparql.parser.lexer.LexerException;
@@ -124,7 +123,6 @@ public final class SerializationIntegrationTest {
         excludedClasses.add(NodeTypeEnum.class);
         excludedClasses.add(DatatypeType.class);
         excludedClasses.add(SparqlResultType.class);
-        excludedClasses.add(AnswerType.class);
         return excludedClasses;
     }
 
