@@ -141,14 +141,14 @@ public class TypeValueImpl implements TypeValue {
     }
 
     private boolean compareTypeAndValue(TypeValue typeValue) {
-        return getType().equals(typeValue.getType()) && getValue().equals(typeValue.getValue());
+        return type.equals(typeValue.getType()) && value.equals(typeValue.getValue());
     }
 
     private boolean compareSuffixAndSuffixType(TypeValue typeValue) {
         // TODO AN Create null datatype.
         final DatatypeType suffixTypeToCompare = typeValue.getSuffixType();
         final String suffixToCompare = typeValue.getSuffix();
-        return suffixTypeToCompare.equals(getSuffixType()) && suffixToCompare.equals(getSuffix());
+        return suffixTypeToCompare.equals(suffixType) && suffixToCompare.equals(suffix);
     }
 
     @Override

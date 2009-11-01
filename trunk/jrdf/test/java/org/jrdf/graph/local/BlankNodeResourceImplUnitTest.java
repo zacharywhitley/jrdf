@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.local;
 
-import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
@@ -67,17 +66,21 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.EqualsTestUtil.assertEquality;
+import org.junit.Before;
+import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 
-public class BlankNodeResourceImplUnitTest extends TestCase {
-    private Graph newGraph;
+public class BlankNodeResourceImplUnitTest {
     private BlankNode blankNode1;
     private BlankNode blankNode2;
     private Resource resource1;
     private Resource resource2;
     private Resource resource3;
 
+    @Before
     public void setUp() throws Exception {
-        newGraph = TestJRDFFactory.getFactory().getNewGraph();
+        Graph newGraph = TestJRDFFactory.getFactory().getNewGraph();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
         blankNode1 = graphElementFactory.createBlankNode();
         blankNode2 = graphElementFactory.createBlankNode();
@@ -86,12 +89,14 @@ public class BlankNodeResourceImplUnitTest extends TestCase {
         resource3 = graphElementFactory.createResource(blankNode2);
     }
 
+    @Test
     public void testEquals() throws Exception {
         assertEquality(resource1, resource2, resource3, null);
-        assertTrue(blankNode1.equals(resource1));
-        assertTrue(resource1.equals(blankNode1));
+        assertThat(blankNode1, equalTo((BlankNode) resource1));
+        assertThat((BlankNode) resource1, equalTo(blankNode1));
     }
 
+    @Test
     public void testGetURI() {
         AssertThrows.assertThrows(UnsupportedOperationException.class, "Blank nodes resource, does not have a URI",
             new AssertThrows.Block() {

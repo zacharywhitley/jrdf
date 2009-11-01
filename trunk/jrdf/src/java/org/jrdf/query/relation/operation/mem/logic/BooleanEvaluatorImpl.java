@@ -149,7 +149,7 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
     }
 
     public boolean evaluate(Tuple newTuple, LogicExpression expression) {
-        setTuple(newTuple);
+        tuple = newTuple;
         return expression.accept(this);
     }
 

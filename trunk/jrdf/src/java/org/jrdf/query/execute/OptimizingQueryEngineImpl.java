@@ -198,7 +198,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
-        ((OptimizingQueryEngineImpl) queryEngine).setCacheHandler(cacheHandler);
+        ((OptimizingQueryEngineImpl) queryEngine).cacheHandler = cacheHandler;
         return expression.accept(queryEngine);
     }
 
@@ -206,7 +206,7 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
-        ((OptimizingQueryEngineImpl) queryEngine).setShortCircuit(newShortCircuit);
+        ((OptimizingQueryEngineImpl) queryEngine).shortCircuit = newShortCircuit;
         return expression.accept(queryEngine);
     }
 

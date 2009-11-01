@@ -67,7 +67,7 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import static org.jrdf.sparql.builder.TripleSpecHelper.createAVariable;
-import static org.jrdf.sparql.builder.TripleSpecHelper.*;
+import static org.jrdf.sparql.builder.TripleSpecHelper.createResource;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
@@ -97,7 +97,7 @@ public final class VariableTripleSpec implements TripleSpec {
         attributes.add(predciateAtt);
         Attribute objectAtt = new AttributeImpl(new VariableName(variableName), new ObjectNodeType());
         attributes.add(objectAtt);
-        return attributes.toArray(new Attribute[]{});
+        return attributes.toArray(new Attribute[attributes.size()]);
     }
 
     public ATriple getTriple() {

@@ -143,10 +143,10 @@ public final class Conjunction implements BiOperandExpression {
     }
 
     private boolean rhsEqual(Conjunction o1, Conjunction o2) {
-        return o1.getRhs().equals(o2.getRhs());
+        return o1.rhs.equals(o2.rhs);
     }
 
     private boolean lhsEqual(Conjunction o1, Conjunction o2) {
-        return o1.getLhs().equals(o2.getLhs());
+        return o1.lhs.equals(o2.lhs);
     }
 }

@@ -114,7 +114,7 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
                     Molecule sm1 = sm1s.iterator().next();
                     Molecule sm2 = sm2s.iterator().next();
                     Map<BlankNode, BlankNode> curMap = startPopulateMap(sm1, sm2);
-                    if (curMap.size() == 0) {
+                    if (curMap.isEmpty()) {
                         return curMap;
                     } else {
                         for (Map.Entry<BlankNode, BlankNode> entry : curMap.entrySet()) {

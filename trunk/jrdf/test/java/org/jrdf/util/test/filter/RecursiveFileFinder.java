@@ -63,6 +63,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Arrays;
 
 /**
  * Given a directory, find all files matching a given criteria under that directory.
@@ -99,9 +100,7 @@ public final class RecursiveFileFinder {
 
     private Collection<File> toCollection(File[] filesInDir) {
         Collection<File> files = new ArrayList<File>();
-        for (File file : filesInDir) {
-            files.add(file);
-        }
+        files.addAll(Arrays.asList(filesInDir));
         return files;
     }
 }

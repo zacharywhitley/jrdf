@@ -104,7 +104,7 @@ public final class LiteralTripleSpec implements TripleSpec {
         attributes.add(predciateAtt);
         Attribute objectAtt = new AttributeImpl(new PositionName("OBJECT1"), new ObjectNodeType());
         attributes.add(objectAtt);
-        return attributes.toArray(new Attribute[]{});
+        return attributes.toArray(new Attribute[attributes.size()]);
     }
 
     public ATriple getTriple() {

@@ -89,7 +89,7 @@ public class FreemarkerRepresentationFactory implements RepresentationFactory {
     }
 
     public Representation createRepresentation(final MediaType defaultMediaType, final Map<String, Object> dataModel) {
-        MediaType actualMediaType = getMediaType();
+        MediaType actualMediaType = mediaType;
         if (actualMediaType == null) {
             actualMediaType = defaultMediaType;
         }

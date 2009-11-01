@@ -59,15 +59,18 @@
 
 package org.jrdf.util.btree;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 
-public class ByteHandlerUnitTest extends TestCase {
+public class ByteHandlerUnitTest {
 
+    @Test
     public void testEncodeDecode() {
         byte[] bytes = ByteHandler.toBytes(1234L, 3456L, 123456838L);
         Long[] newLong = ByteHandler.fromBytes(bytes, 3);
-        assertEquals(1234L, (long) newLong[0]);
-        assertEquals(3456L, (long) newLong[1]);
-        assertEquals(123456838L, (long) newLong[2]);
+        assertThat(newLong[0], equalTo(1234L));
+        assertThat(newLong[1], equalTo(3456L));
+        assertThat(newLong[2], equalTo(123456838L));
     }
 }

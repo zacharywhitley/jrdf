@@ -173,6 +173,6 @@ public final class Projection implements Expression {
     }
 
     private boolean determineEqualityFromFields(Projection o1, Projection o2) {
-        return o1.getAttributes().equals(o2.getAttributes());
+        return o1.attributes.equals(o2.attributes);
     }
 }

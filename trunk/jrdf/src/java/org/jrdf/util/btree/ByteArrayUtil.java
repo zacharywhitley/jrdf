@@ -131,10 +131,10 @@ public class ByteArrayUtil {
      * supplied byte array.
      **/
     public static String toHexString(byte[] array) {
-        StringBuffer result = new StringBuffer(2 * array.length);
+        StringBuilder result = new StringBuilder(2 * array.length);
 
-        for (int i = 0; i < array.length; i++) {
-            String hex = Integer.toHexString(array[i] & 0xff);
+        for (byte anArray : array) {
+            String hex = Integer.toHexString(anArray & 0xff);
 
             if (hex.length() == 1) {
                 result.append('0');

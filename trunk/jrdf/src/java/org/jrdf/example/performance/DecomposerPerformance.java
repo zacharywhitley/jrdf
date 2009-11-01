@@ -118,7 +118,7 @@ public class DecomposerPerformance {
         Set<Molecule> results = new TreeSet<Molecule>(tripleComparator);
         long startTime = System.currentTimeMillis();
         Set<Molecule> moleculeSet = decomposer.decompose(graph);
-        Molecule[] molecules = moleculeSet.toArray(new Molecule[]{});
+        Molecule[] molecules = moleculeSet.toArray(new Molecule[moleculeSet.size()]);
         results.add(molecules[0]);
         int count = mergeMolecules(results, moleculeSet);
         System.out.println("Time taken " + (System.currentTimeMillis() - startTime) + ", comparisons: " + count +

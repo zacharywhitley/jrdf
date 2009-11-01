@@ -118,7 +118,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter<EvaluatedRela
 
     @Override
     public EvaluatedRelation visitProjection(Projection projection) {
-        setAllVariables(projection.getAllVariables());
+        allVariables = projection.getAllVariables();
         EvaluatedRelation expression = getExpression(projection.getNextExpression());
         LinkedHashSet<Attribute> attributes = projection.getAttributes();
         result = project.include(expression, attributes);

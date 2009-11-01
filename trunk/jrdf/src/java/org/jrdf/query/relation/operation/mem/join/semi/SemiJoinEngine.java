@@ -116,7 +116,7 @@ public class SemiJoinEngine implements TupleEngine {
         }
 
         // Only add results if they are the same size
-        if ((allAttributeValuePairs.size() > 0 && !contradiction)) {
+        if ((!allAttributeValuePairs.isEmpty() && !contradiction)) {
             Tuple t = tupleFactory.getTuple(lhsAttributeValuePairs);
             result.add(t);
         }

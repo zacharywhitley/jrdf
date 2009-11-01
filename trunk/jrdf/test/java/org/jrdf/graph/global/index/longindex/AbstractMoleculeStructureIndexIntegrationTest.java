@@ -187,7 +187,7 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
         index.add(2L, 4L, 5L, 6L, 7L);
         index.add(1L, 1L, 2L, 3L, 5L);
         ClosableIterator<Long> iterator = index.getFifthIndex(1L, 1L, 2L, 3L);
-        Set<Long> set = asSet(new Long[]{4L, 5L});
+        Set<Long> set = asSet(4L, 5L);
         checkLongIterator(set, iterator);
     }
 
@@ -201,7 +201,7 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
         index.add(1L, 1L, 2L, 3L, 5L);
         index.add(1L, 1L, 2L, 2L, 7L);
         final ClosableIterator<Long> iterator = index.getFourthIndexOnly(1L, 1L, 2L);
-        Set<Long> set = asSet(new Long[]{2L, 3L, 4L, 5L});
+        Set<Long> set = asSet(2L, 3L, 4L, 5L);
         checkLongIterator(set, iterator);
     }
 
@@ -215,7 +215,7 @@ public abstract class AbstractMoleculeStructureIndexIntegrationTest extends Test
         index.add(1L, 1L, 2L, 3L, 5L);
         index.add(1L, 1L, 2L, 2L, 7L);
         final ClosableIterator<Long> iterator = index.getAllFourthIndex();
-        Set<Long> set = asSet(new Long[]{2L, 3L, 4L, 5L, 6L});
+        Set<Long> set = asSet(2L, 3L, 4L, 5L, 6L);
         checkLongIterator(set, iterator);
     }
 

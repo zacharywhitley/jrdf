@@ -138,10 +138,10 @@ public class LogicAndExpression implements LogicExpression, BiOperandExpression 
     }
 
     private boolean rhsEqual(LogicAndExpression o1, LogicAndExpression o2) {
-        return o1.getRhs().equals(o2.getRhs());
+        return o1.rhs.equals(o2.rhs);
     }
 
     private boolean lhsEqual(LogicAndExpression o1, LogicAndExpression o2) {
-        return o1.getLhs().equals(o2.getLhs());
+        return o1.lhs.equals(o2.lhs);
     }
 }

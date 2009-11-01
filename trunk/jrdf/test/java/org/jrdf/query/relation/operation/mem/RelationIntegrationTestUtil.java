@@ -99,6 +99,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.LinkedHashMap;
+import java.util.Arrays;
 
 public class RelationIntegrationTestUtil {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
@@ -261,9 +262,7 @@ public class RelationIntegrationTestUtil {
 
     public static Set<Attribute> createHeading(Attribute... attributes) {
         Set<Attribute> newAttributes = new TreeSet<Attribute>(ATTRIBUTE_COMPARATOR);
-        for (Attribute attribute : attributes) {
-            newAttributes.add(attribute);
-        }
+        newAttributes.addAll(Arrays.asList(attributes));
         return newAttributes;
     }
 

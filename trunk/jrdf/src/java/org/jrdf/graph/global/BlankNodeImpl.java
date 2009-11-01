@@ -121,7 +121,7 @@ public class BlankNodeImpl extends AbstractBlankNode {
         // Cast and check for equality by value. (same class)
         try {
             BlankNodeImpl tmpNode = (BlankNodeImpl) obj;
-            return tmpNode.getUID().equals(uid);
+            return tmpNode.uid.equals(uid);
         } catch (ClassCastException cce) {
             return false;
         }

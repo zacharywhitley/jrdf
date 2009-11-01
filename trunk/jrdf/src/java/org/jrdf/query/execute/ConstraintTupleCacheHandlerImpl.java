@@ -142,7 +142,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
                 map.put(getCachedValues(attributeName).size(), attribute);
             }
         }
-        if (map.size() == 0) {
+        if (map.isEmpty()) {
             return null;
         } else {
             return map.entrySet().iterator().next().getValue();
@@ -165,7 +165,7 @@ public class ConstraintTupleCacheHandlerImpl implements ConstraintTupleCacheHand
         Set<Node> voSet = getMatchingVOs(attribute, getTuples(result, attribute));
         Set<Node> cached = cache.get(attributeName);
         if (time > timeStamp) {
-            setTimeStamp(time);
+            timeStamp = time;
         }
         if (cached != null) {
             voSet.retainAll(cached);

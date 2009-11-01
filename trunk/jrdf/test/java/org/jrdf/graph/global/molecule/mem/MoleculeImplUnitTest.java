@@ -85,6 +85,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Arrays;
 
 public class MoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
@@ -210,9 +211,7 @@ public class MoleculeImplUnitTest extends TestCase {
 
     private void checkHasHeadMolecules(Molecule actualMolecule, Triple... triples) {
         Set<Triple> moleculeContents = new HashSet<Triple>();
-        for (Triple triple : triples) {
-            moleculeContents.add(triple);
-        }
+        moleculeContents.addAll(Arrays.asList(triples));
         Iterator<Triple> rootTriples = actualMolecule.getRootTriples();
         while (rootTriples.hasNext()) {
             Triple tmpTriple = rootTriples.next();

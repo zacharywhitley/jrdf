@@ -101,7 +101,7 @@ public class ProjectImpl implements Project {
 
     public EvaluatedRelation exclude(EvaluatedRelation relation, Set<Attribute> attributes) {
         // TODO (AN) Test drive short circuit
-        if (attributes.size() == 0) {
+        if (attributes.isEmpty()) {
             return relation;
         }
 
@@ -116,7 +116,7 @@ public class ProjectImpl implements Project {
         for (Tuple tuple : tuples) {
             Tuple newTuple = createNewTuples(tuple, newHeading);
             // TODO (AN) Only add non empty attributes - this failed.
-            if (newTuple.getAttributeValues().size() > 0) {
+            if (!newTuple.getAttributeValues().isEmpty()) {
                 newTuples.add(newTuple);
             }
         }
