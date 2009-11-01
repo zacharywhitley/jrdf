@@ -59,42 +59,87 @@
 
 package org.jrdf.sparql.parser;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.jrdf.sparql.parser.lexer.Lexer;
 import org.jrdf.sparql.parser.parser.Parser;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
+import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivateConstant;
+import static org.jrdf.util.test.MockTestUtil.createMock;
 import org.jrdf.util.test.ParameterDefinition;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivateConstant;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.createMockAndExpectNew;
+import static org.powermock.api.easymock.PowerMock.expectLastCall;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
+import java.io.IOException;
+import java.io.PushbackReader;
+import java.io.StringReader;
 import java.lang.reflect.Modifier;
 
-public final class ParserFactoryImplUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public final class ParserFactoryImplUnitTest {
     private static final int BUFFER_SIZE = 256;
     private static final String BUFFER_SIZE_FIELD = "PUSHBACK_BUFFER_SIZE";
 
+    @Test
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(ParserFactory.class, ParserFactoryImpl.class);
         checkConstructor(ParserFactoryImpl.class, Modifier.PUBLIC);
     }
 
+    @Test
     public void testSetBufferSize() {
         checkFieldIsOfTypePrivateAndFinal(ParserFactoryImpl.class, Integer.TYPE, BUFFER_SIZE_FIELD);
         checkFieldPrivateConstant(ParserFactoryImpl.class, BUFFER_SIZE_FIELD);
         checkFieldValue(new ParserFactoryImpl(), BUFFER_SIZE_FIELD, BUFFER_SIZE);
     }
 
+    @Test
     public void testCreateParserBadQuery() {
         ParserFactory parserFactory = new ParserFactoryImpl();
         checkMethodNullAndEmptyAssertions(parserFactory, "getParser", new ParameterDefinition(
             new String[]{"queryText"}, new Class[]{String.class}));
     }
 
-    public void testCreateParser() {
-        ParserFactory parserFactory = new ParserFactoryImpl();
-        Parser parser = parserFactory.getParser("foo");
-        assertNotNull(parser);
+    @Test
+    @PrepareForTest(ParserFactoryImpl.class)
+    public void createParser() throws Exception {
+        final StringReader reader = createMockAndExpectNew(StringReader.class, "foo");
+        final PushbackReader pushbackReader = createMockAndExpectNew(PushbackReader.class, reader, 256);
+        final Lexer lexer = createMockAndExpectNew(Lexer.class, pushbackReader);
+        final Parser mockParser = createMockAndExpectNew(Parser.class, lexer);
+        replayAll();
+        final ParserFactory parserFactory = new ParserFactoryImpl();
+        final Parser actualParser = parserFactory.getParser("foo");
+        verifyAll();
+        assertThat(actualParser, equalTo(mockParser));
+    }
+
+    @Test
+    @PrepareForTest(ParserFactoryImpl.class)
+    public void closeThrowsException() throws Exception {
+        final PushbackReader reader = createMock(PushbackReader.class);
+        reader.close();
+        expectLastCall().andThrow(new IOException());
+        replayAll();
+        final ParserFactory parserFactory = new ParserFactoryImpl();
+        Whitebox.setInternalState(parserFactory, "reader", reader);
+        AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                parserFactory.close();
+            }
+        });
+        verifyAll();
     }
 }
