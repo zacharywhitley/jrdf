@@ -71,6 +71,7 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfIn
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 import org.jrdf.util.test.URIReference1;
 import org.jrdf.util.test.URIReference2;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertHashCode;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -123,8 +124,8 @@ public abstract class AbstractURIReferenceUnitTest {
 
     @Test
     public void testHashCode() {
-        checkConsistentHashCode();
-        checkEqualObjectsReturnSameHashCode();
+        assertHashCode(ref1, ref1);
+        assertHashCode(ref2, ref2);
     }
 
     @Test
@@ -137,17 +138,6 @@ public abstract class AbstractURIReferenceUnitTest {
         checkConsistentEquals();
         checkUnequal();
         checkDifferentImplementationsAreEqual();
-    }
-
-    private void checkConsistentHashCode() {
-        checkConsistentHashCode(ref1);
-        checkConsistentHashCode(ref2);
-    }
-
-    private void checkConsistentHashCode(URIReference ref) {
-        int hashCode1 = ref.hashCode();
-        int hashCode2 = ref.hashCode();
-        assertThat(hashCode1, equalTo(hashCode2));
     }
 
     private void checkReflexive() throws Exception {
@@ -222,13 +212,6 @@ public abstract class AbstractURIReferenceUnitTest {
 
     private void checkCreateException(AssertThrows.Block block) {
         assertThrows(IllegalArgumentException.class, "\"" + notAbsURI + "\" is not absolute", block);
-    }
-
-    private void checkEqualObjectsReturnSameHashCode() {
-        URIReference x = ref1;
-        URIReference y = ref1;
-        assertThat(x, equalTo(y));
-        assertThat(x.hashCode(), equalTo(y.hashCode()));
     }
 
     private void checkDifferentImplementationsAreEqual() {

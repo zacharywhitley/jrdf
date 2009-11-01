@@ -97,7 +97,6 @@ public class NTripleUtilImplUnitTest {
     private NTripleUtil util;
 
     @Before
-
     public void setUp() {
         util = new NTripleUtilImpl(regexMatcherFactory);
     }

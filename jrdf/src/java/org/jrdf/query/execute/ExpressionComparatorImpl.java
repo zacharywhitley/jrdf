@@ -67,7 +67,6 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.LangOperator;
-import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.SingleConstraint;
@@ -111,98 +110,114 @@ public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter<Int
         }
     }
 
+    @Override
     public Integer visitConstraint(SingleConstraint constraint) {
         return constraint.size();
     }
 
+    @Override
     public Integer visitFilter(Filter filter) {
         int lhs = getNext(filter.getLhs());
         int rhs = getNext(filter.getRhs());
         return (lhs + rhs);
     }
 
+    @Override
     public Integer visitConjunction(Conjunction conjunction) {
         int lhs = getNext(conjunction.getLhs());
         int rhs = getNext(conjunction.getRhs());
         return (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
+    @Override
     public Integer visitProjection(Projection projection) {
         return getNext(projection.getNextExpression());
     }
 
+    @Override
     public Integer visitEmptyConstraint(EmptyConstraint constraint) {
         return constraint.size();
     }
 
+    @Override
     public Integer visitUnion(Union union) {
         int lhs = getNext(union.getLhs());
         int rhs = getNext(union.getRhs());
         return (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
+    @Override
     public Integer visitOptional(Optional optional) {
         int lhs = getNext(optional.getLhs());
         int rhs = getNext(optional.getRhs());
         return (int) Math.ceil((lhs + rhs) * 1.0 / 2);
     }
 
+    @Override
     public Integer visitStr(StrOperator str) {
-        return visitOperator(str);
+        return str.size();
     }
 
+    @Override
     public Integer visitLang(LangOperator lang) {
-        return visitOperator(lang);
+        return lang.size();
     }
 
+    @Override
     public Integer visitBound(BoundOperator bound) {
-        return visitOperator(bound);
+        return bound.size();
     }
 
-    private Integer visitOperator(Operator operator) {
-        return operator.size();
-    }
-
+    @Override
     public Integer visitLogicAnd(LogicAndExpression andExpression) {
         int lhs = getNext(andExpression.getLhs());
         int rhs = getNext(andExpression.getRhs());
         return (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
     }
 
+    @Override
     public Integer visitLogicOr(LogicOrExpression orExpression) {
         int lhs = getNext(orExpression.getLhs());
         int rhs = getNext(orExpression.getRhs());
         return (int) Math.ceil((lhs + rhs) * 1.0 / 2) + 1;
     }
 
+    @Override
     public Integer visitLogicNot(LogicNotExpression notExpression) {
         return notExpression.size();
     }
 
+    @Override
     public Integer visitEqualsExpression(EqualsExpression equalsExpression) {
         return equalsExpression.size();
     }
 
+    @Override
     public Integer visitAsk(Ask ask) {
         return getNext(ask.getNextExpression());
     }
 
+    @Override
     public Integer visitLessThanExpression(LessThanExpression lessThanExpression) {
         return lessThanExpression.size();
     }
 
+    @Override
     public Integer visitNEqualsExpression(NEqualsExpression nEqualsExpression) {
         return nEqualsExpression.size();
     }
 
+    @Override
     public Integer visitSingleValue(SingleValue value) {
         return value.size();
     }
 
+    @Override
     public Integer visitTrue(TrueExpression trueExp) {
         return trueExp.size();
     }
 
+    @Override
     public Integer visitFalse(FalseExpression falseExp) {
         return falseExp.size();
     }

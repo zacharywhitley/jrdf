@@ -59,18 +59,90 @@
 
 package org.jrdf.query.expression;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.hamcrest.Matchers;
+import org.jrdf.graph.Node;
+import org.jrdf.query.relation.Attribute;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR1_SUBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.RESOURCE_1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.RESOURCE_3;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkInstanceImplementsInterface;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertEquality;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertHashCode;
+import org.junit.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 
-public class UnionUnitTest extends TestCase {
-    public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Expression.class, Union.class);
-        ClassPropertiesTestUtil.checkInstanceImplementsInterface(Serializable.class, Union.class);
-        ClassPropertiesTestUtil.checkConstructor(Union.class, Modifier.PUBLIC, Expression.class, Expression.class);
+public class UnionUnitTest {
+    private static final SingleValue LHS = new SingleValue(POS_BAR1_SUBJECT_R1);
+    private static final SingleValue RHS = new SingleValue(POS_FOO3_OBJECT_R3);
+    private static final EmptyExpression EMPTY_EXPRESSION = new EmptyExpression();
+
+    @Test
+    public void classProperties() {
+        checkImplementationOfInterfaceAndFinal(Expression.class, Union.class);
+        checkInstanceImplementsInterface(Serializable.class, Union.class);
+        checkConstructor(Union.class, Modifier.PUBLIC, Expression.class, Expression.class);
     }
 
-    // TODO (AN) Use Gsbase EqualsTester to test drive equality and hashcode.
+    @Test
+    public void getValuesWithEmpty() {
+        final BiOperandExpression union1 = new Union(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        assertThat(union1.getValue(), equalTo(Collections.<Attribute, Node>emptyMap()));
+    }
+
+    @Test
+    public void getValuesCombinesValues() {
+        final BiOperandExpression union1 = new Union(LHS, RHS);
+        assertThat(union1.getValue(), Matchers.<Attribute, Node>hasEntry(POS_BAR1_SUBJECT, RESOURCE_1));
+        assertThat(union1.getValue(), Matchers.<Attribute, Node>hasEntry(POS_FOO3_OBJECT, RESOURCE_3));
+    }
+
+    @Test
+    public void sameValuesAreEqual() {
+        BiOperandExpression union1 = new Union(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        BiOperandExpression union2 = new Union(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        BiOperandExpression unequalUnion = new Union(EMPTY_EXPRESSION, null);
+        assertEquality(union1, union2, unequalUnion, null);
+        assertHashCode(union1, union2);
+
+        union1 = new Union(LHS, RHS);
+        union2 = new Union(LHS, RHS);
+        assertEquality(union1, union2, unequalUnion, null);
+        assertHashCode(union1, union2);
+    }
+
+    @Test
+    public void sameNullValuesAreEqual() {
+        final BiOperandExpression union1 = new Union(EMPTY_EXPRESSION, null);
+        final BiOperandExpression union2 = new Union(EMPTY_EXPRESSION, null);
+        final BiOperandExpression unequalUnion = new Union(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        assertEquality(union1, union2, unequalUnion, null);
+        assertHashCode(union1, union2);
+    }
+
+    @Test
+    public void sameNullValuesAreEqual2() {
+        final BiOperandExpression union1 = new Union(null, EMPTY_EXPRESSION);
+        final BiOperandExpression union2 = new Union(null, EMPTY_EXPRESSION);
+        final BiOperandExpression unequalUnion = new Union(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        assertEquality(union1, union2, unequalUnion, null);
+        assertHashCode(union1, union2);
+    }
+
+    @Test
+    public void sameNullValuesAreEqual3() {
+        final BiOperandExpression union1 = new Union(null, null);
+        final BiOperandExpression union2 = new Union(null, null);
+        final BiOperandExpression unequalUnion = new Union(EMPTY_EXPRESSION, EMPTY_EXPRESSION);
+        assertEquality(union1, union2, unequalUnion, null);
+    }
 }

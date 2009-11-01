@@ -65,7 +65,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.EqualsTestUtil.assertEquality;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.assertEquality;
 import org.junit.Before;
 import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;

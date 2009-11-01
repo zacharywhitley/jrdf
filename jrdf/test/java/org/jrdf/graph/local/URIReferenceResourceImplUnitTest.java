@@ -65,7 +65,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import static org.jrdf.util.test.EqualsTestUtil.*;
+import static org.jrdf.util.test.EqualsHashCodeTestUtil.*;
 
 import java.net.URI;
 
