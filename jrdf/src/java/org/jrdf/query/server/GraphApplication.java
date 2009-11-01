@@ -69,10 +69,6 @@ public interface GraphApplication {
 
     String getGraphsDir();
 
-    String getFormat();
-
-    void setFormat(String format);
-
     long getMaxRows();
 
     void setMaxRows(long rows);

@@ -127,14 +127,6 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         return application.getGraphsDir();
     }
 
-    public String getFormat() {
-        return application.getFormat();
-    }
-
-    public void setFormat(String format) {
-        application.setFormat(format);
-    }
-
     public long getMaxRows() {
         return application.getMaxRows();
     }
