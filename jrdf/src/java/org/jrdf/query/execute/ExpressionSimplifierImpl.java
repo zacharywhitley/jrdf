@@ -489,6 +489,6 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Void>
             return null;
         }
         tmpExpression.accept(this);
-        return getExpression();
+        return expression;
     }
 }

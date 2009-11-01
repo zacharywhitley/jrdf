@@ -176,7 +176,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
 
     @Override
     public void caseABlockOfTriples(ABlockOfTriples node) {
-        if (node.getMoreTriples().size() != 0) {
+        if (!node.getMoreTriples().isEmpty()) {
             Expression lhs = getExpression((org.jrdf.sparql.parser.node.Node) node.getTriple().clone());
             LinkedList<PMoreTriples> moreTriples = node.getMoreTriples();
             List<Expression> expressions = new ArrayList<Expression>();

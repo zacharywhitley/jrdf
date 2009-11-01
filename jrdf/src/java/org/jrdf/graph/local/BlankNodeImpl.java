@@ -160,7 +160,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
         }
         try {
             GlobalizedBlankNode tmpNode = (GlobalizedBlankNode) obj;
-            return getId().equals(tmpNode.getId()) && getUID().equals(tmpNode.getUID());
+            return id.equals(tmpNode.getId()) && uid.equals(tmpNode.getUID());
         } catch (ClassCastException cce) {
             return false;
         }

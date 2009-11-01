@@ -76,7 +76,7 @@ public class AnyURIValue implements DatatypeValue {
         this.value = URI.create(newValue);
     }
 
-    public AnyURIValue(final URI newValue) {
+    private AnyURIValue(final URI newValue) {
         this.value = newValue;
     }
 

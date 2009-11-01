@@ -84,7 +84,7 @@ public class LongListBinding extends TupleBinding<List<Long[]>> {
     public void objectToEntry(List<Long[]> list, TupleOutput tupleOutput) {
         tupleOutput.writeLong(list.size());
         int arrayLength = 0;
-        if (list.size() != 0) {
+        if (!list.isEmpty()) {
             arrayLength = list.get(0).length;
         }
         tupleOutput.writeInt(arrayLength);

@@ -91,9 +91,7 @@ public class EntryIteratorFixedLengthLongArray implements ClosableIterator<Long[
             fixed = 0;
         } else {
             fixed = nodes.length;
-            for (int i = 0; i < nodes.length; i++) {
-                longs[i] = nodes[i];
-            }
+            System.arraycopy(nodes, 0, longs, 0, nodes.length);
         }
         return longs;
     }
@@ -110,9 +108,7 @@ public class EntryIteratorFixedLengthLongArray implements ClosableIterator<Long[
         final int returnLength = length - fixed;
         Long[] longs = ByteHandler.fromBytes(currentValues, length);
         Long[] returnValues = new Long[returnLength];
-        for (int i = fixed; i < length; i++) {
-            returnValues[i - fixed] = longs[i];
-        }
+        System.arraycopy(longs, fixed, returnValues, fixed - fixed, length - fixed);
         getNextValues();
         return returnValues;
     }

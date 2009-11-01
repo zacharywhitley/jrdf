@@ -90,7 +90,7 @@ public final class VariableName implements AttributeName {
             return true;
         }
         try {
-            return ((AttributeName) obj).getLiteral().equals(getLiteral());
+            return ((AttributeName) obj).getLiteral().equals(variableName);
         } catch (ClassCastException cce) {
             return false;
         }

@@ -119,6 +119,6 @@ public final class TupleImpl implements Tuple {
     }
 
     private boolean determineEqualityFromFields(Tuple tuple) {
-        return tuple.getAttributeValues().equals(getAttributeValues());
+        return tuple.getAttributeValues().equals(attributeValues);
     }
 }

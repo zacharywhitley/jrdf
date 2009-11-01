@@ -90,7 +90,7 @@ public final class PositionName implements AttributeName {
             return true;
         }
         try {
-            return ((AttributeName) obj).getLiteral().equals(getLiteral());
+            return ((AttributeName) obj).getLiteral().equals(positionName);
         } catch (ClassCastException cce) {
             return false;
         }

@@ -166,7 +166,7 @@ public final class RelationImpl implements EvaluatedRelation {
     }
 
     public ClosableIterator<Tuple> iterator() {
-        return new ClosableIteratorImpl<Tuple>(getTuples().iterator());
+        return new ClosableIteratorImpl<Tuple>(tuples.iterator());
     }
 
     // TODO (AN) Test drive me
@@ -205,8 +205,8 @@ public final class RelationImpl implements EvaluatedRelation {
     }
 
     private boolean determineEqualityFromFields(EvaluatedRelation answer) {
-        if (answer.getHeading().equals(getHeading())) {
-            if (answer.getTuples().equals(getTuples())) {
+        if (answer.getHeading().equals(heading)) {
+            if (answer.getTuples().equals(tuples)) {
                 return true;
             }
         }

@@ -148,7 +148,7 @@ public class SparqlMultiXmlStreamWriterIntegrationTest extends TestCase {
         inputStream.close();
     }
 
-    class RunnableStreamWriter implements Runnable {
+    static class RunnableStreamWriter implements Runnable {
 
         private InputStream stream;
 

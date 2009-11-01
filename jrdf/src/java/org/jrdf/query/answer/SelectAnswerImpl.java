@@ -181,7 +181,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
     }
 
     private boolean determineEqualityFromFields(SelectAnswerImpl answer) {
-        if (answer.getTimeTaken() == getTimeTaken()) {
+        if (answer.timeTaken == timeTaken) {
             if (answer.results.equals(results)) {
                 return true;
             }

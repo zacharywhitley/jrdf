@@ -159,7 +159,7 @@ public class DatatypeFactoryImplUnitTest {
         DatatypeValue value = datatypeFactory.createValue(XSD.ANY_URI, URI_STR);
         assertThat(value.getLexicalForm(), equalTo(URI_STR));
         final URI uri = new URI(URI_STR);
-        AnyURIValue anyUriValue1 = new AnyURIValue(uri);
+        DatatypeValue anyUriValue1 = new AnyURIValue().create(uri);
         assertThat(value.equals(anyUriValue1), is(true));
     }
 

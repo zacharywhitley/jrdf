@@ -135,6 +135,6 @@ public class Ask implements Expression {
     }
 
     private boolean determineEqualityFromFields(Ask o1, Ask o2) {
-        return o1.getNextExpression().equals(o2.getNextExpression());
+        return o1.nextExpression.equals(o2.nextExpression);
     }
 }

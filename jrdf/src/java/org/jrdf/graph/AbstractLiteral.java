@@ -330,10 +330,10 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * @param buffer The buffer to append the relevant datatype to.
      */
     private void appendType(StringBuffer buffer) {
-        if (!NULL_URI.equals(getDatatypeURI())) {
-            buffer.append("^^<").append(getDatatypeURI()).append('>');
-        } else if (getLanguage().length() > 0) {
-            buffer.append('@').append(getLanguage());
+        if (!NULL_URI.equals(datatypeURI)) {
+            buffer.append("^^<").append(datatypeURI).append('>');
+        } else if (language.length() > 0) {
+            buffer.append('@').append(language);
         }
     }
 }

@@ -63,7 +63,7 @@ import org.jrdf.graph.local.ReadWriteGraph;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
-import java.net.URISyntaxException;
+import static java.net.URI.create;
 import java.util.Iterator;
 
 /**
@@ -216,20 +216,15 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     private void addContainer(SubjectNode subjectNode, Container container) throws TripleFactoryException {
-        // assert that the statement is not already reified
         try {
             // Insert statements from colletion.
             long counter = 1L;
             for (ObjectNode object : container) {
-                final URI uri = new URI(RDF.BASE_URI + "_" + counter++);
+                final URI uri = create(RDF.BASE_URI + "_" + counter++);
                 final URIReference predicateNode = elementFactory.createURIReference(uri);
                 graph.localizeAndAdd(subjectNode, predicateNode, object);
             }
-        } catch (URISyntaxException e) {
-            throw new TripleFactoryException(e);
-        } catch (GraphElementFactoryException e) {
-            throw new TripleFactoryException(e);
-        } catch (GraphException e) {
+        } catch (RuntimeException e) {
             throw new TripleFactoryException(e);
         }
     }
