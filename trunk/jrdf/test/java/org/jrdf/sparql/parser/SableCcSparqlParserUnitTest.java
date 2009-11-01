@@ -128,14 +128,17 @@ public final class SableCcSparqlParserUnitTest {
         verifyAll();
     }
 
+    @Test
     public void testParseThrowsParserException() throws Exception {
         checkThrowsException(PARSER_EXECPTION, ERROR_MSG + " token: [foo ]");
     }
 
+    @Test
     public void testParseThrowsLexerException() throws Exception {
         checkThrowsException(LEXER_EXECPTION, ERROR_MSG);
     }
 
+    @Test
     public void testParseThrowsIOException() throws Exception {
         checkThrowsException(IO_EXCEPTION, ERROR_MSG);
     }

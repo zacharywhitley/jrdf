@@ -74,7 +74,7 @@ import java.util.Map;
 
 public final class QueryClientImpl implements QueryClient {
     private final URI endPointUri;
-    private final Client client;
+    private Client client;
     private final SparqlAnswerHandler answerHandler;
     private Request request;
 
@@ -94,6 +94,9 @@ public final class QueryClientImpl implements QueryClient {
     }
 
     public Answer executeQuery() {
+        if (request == null) {
+            throw new IllegalStateException("No query to execute, call setQuery first");
+        }
         return answerHandler.getAnswer(getRepresentation());
     }
 
@@ -108,6 +111,7 @@ public final class QueryClientImpl implements QueryClient {
     }
 
     private Reference createReferenceFromQuery(final Map<String, String> queryParameters) {
+        validateEndPointUri();
         final Reference ref = new Reference(endPointUri.getScheme(), endPointUri.getHost(), endPointUri.getPort(),
             endPointUri.getPath(), null, null);
         for (final String key : queryParameters.keySet()) {
@@ -125,6 +129,12 @@ public final class QueryClientImpl implements QueryClient {
             return response.getEntity();
         } else {
             return handleFail(status);
+        }
+    }
+
+    private void validateEndPointUri() {
+        if (!endPointUri.isAbsolute()) {
+            throw new IllegalArgumentException("The SPARQL end point must have a scheme.  Given URI: " + endPointUri);
         }
     }
 

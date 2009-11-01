@@ -61,24 +61,16 @@ package org.jrdf.graph.local.iterator;
 
 import junit.framework.TestCase;
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockTestUtil;
-import org.jrdf.util.test.URIReference1;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Modifier;
-import java.net.URI;
-import static java.util.Arrays.asList;
 import java.util.List;
 
 @RunWith(PowerMockRunner.class)
@@ -86,24 +78,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     private static final Class<?>[] PARAM_TYPES = {Localizer.class, List.class,
         IteratorTrackingCollectionFactory.class};
     private static final String[] PARAMETER_NAMES = new String[]{"newLocalizer", "newGraphHandlers",
-            "newCollectionFactory"};
-    private static final PredicateNode IMRAN = new URIReference1(URI.create("urn:imran"));
-    private static final PredicateNode FOO = new URIReference1(URI.create("urn:foo"));
-    private static final PredicateNode BAR = new URIReference1(URI.create("urn:bar"));
-    private static final PredicateNode BAZ = new URIReference1(URI.create("urn:baz"));
-    private static final List<PredicateNode> ORDER_VALUES = asList(BAR, BAZ, FOO, IMRAN);
-    private static final Long RESOURCE_ID = System.currentTimeMillis();
-    @Mock private Localizer localizer;
-    @Mock private IteratorTrackingCollectionFactory collectionFactory;
-    private List<GraphHandler> graphHandlers;
-
-    @Before
-    public void setUp() {
-        GraphHandler graphHandler012 = MockTestUtil.createMock(GraphHandler.class);
-        GraphHandler graphHandler120 = MockTestUtil.createMock(GraphHandler.class);
-        GraphHandler graphHandler201 = MockTestUtil.createMock(GraphHandler.class);
-        graphHandlers = asList(graphHandler012, graphHandler120, graphHandler201);
-    }
+        "newCollectionFactory"};
 
     @Test
     public void testClassProperties() throws Exception {
@@ -113,57 +88,4 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
         checkConstructorSetsFieldsAndFieldsPrivateFinal(OrderedIteratorFactoryImpl.class, PARAM_TYPES,
             PARAMETER_NAMES);
     }
-
-//    public void testSortedNewPredicateIterator() {
-//        expect(iteratorFactory.newPredicateIterator()).andReturn(createPredicateIterator());
-//        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-//        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-//        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-//        expect(collectionFactory.createSet(PredicateNode.class)).andReturn(new TreeSet<PredicateNode>(comparator));
-//        IteratorFactory factory = createOrderedIteratorFactory();
-//        mockFactory.replay();
-//        ClosableIterator<PredicateNode> actualIterator = factory.newPredicateIterator();
-//        checkValuesAreSorted(actualIterator, ORDER_VALUES);
-//        mockFactory.verify();
-//    }
-
-//    public void testSortedNewPredicateIteratorWithResource() {
-//        expect(iteratorFactory.newPredicateIterator(RESOURCE_ID)).andReturn(createPredicateIterator());
-//        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-//        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-//        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-//        expect(collectionFactory.createSet(PredicateNode.class)).andReturn(new TreeSet<PredicateNode>(comparator));
-//        IteratorFactory factory = createOrderedIteratorFactory();
-//        mockFactory.replay();
-//        ClosableIterator<PredicateNode> actualIterator = factory.newPredicateIterator(RESOURCE_ID);
-//        checkValuesAreSorted(actualIterator, ORDER_VALUES);
-//        mockFactory.verify();
-//    }
-
-//    private IteratorFactory createOrderedIteratorFactory() {
-//        return new OrderedIteratorFactoryImpl(localizer, graphHandlers, collectionFactory);
-//    }
-//
-//    private PredicateClosableIterator createPredicateIterator() {
-//        Iterator<PredicateNode> iterator = createTestNodes().iterator();
-//        return new PredicateClosableIterator(iterator);
-//    }
-//
-//    private Set<PredicateNode> createTestNodes() {
-//        final Set<PredicateNode> nodes = new HashSet<PredicateNode>();
-//        nodes.add(FOO);
-//        nodes.add(BAR);
-//        nodes.add(BAZ);
-//        nodes.add(IMRAN);
-//        return nodes;
-//    }
-//
-//    private void checkValuesAreSorted(ClosableIterator<PredicateNode> actualIterator,
-//        List<PredicateNode> expectedValues) {
-//        int index = 0;
-//        while (actualIterator.hasNext()) {
-//            assertEquals(expectedValues.get(index), actualIterator.next());
-//            index++;
-//        }
-//    }
 }

@@ -90,10 +90,6 @@ public final class LiteralMatcherImpl implements LiteralMatcher, Serializable {
         nTripleUtil = newNTripleUtil;
     }
 
-    public void setPattern(final String newPattern) {
-        pattern = Pattern.compile(newPattern);
-    }
-
     public boolean matches(final String s) {
         checkNotEmptyString("s", s);
         return regexFactory.createMatcher(pattern, s).matches();

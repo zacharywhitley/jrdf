@@ -12,6 +12,7 @@ public class EqualsTestUtil {
         checkParameters(original, equalToOriginal, sameClassButUnequal, subclassWithSameValues);
         //CHECKSTYLE:OFF
         assertFalse("original should not equal null", original.equals(null));
+        assertFalse("original should not equal wrong class", original.equals(String.class));
         //CHECKSTYLE:ON
         assertTrue("original should equal itself", original.equals(original));
         assertEquals("original should be equal to equalToOriginal", original, equalToOriginal);
