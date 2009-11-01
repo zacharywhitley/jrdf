@@ -76,7 +76,6 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
     private Answer answer;
     private boolean tooManyRows;
     private long maxRows;
-    private String format;
 
     public GraphApplicationImpl(DirectoryHandler newHandler, SparqlConnection newConnection) {
         this.handler = newHandler;
@@ -126,14 +125,6 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
 
     public long getMaxRows() {
         return maxRows;
-    }
-
-    public void setFormat(String newFormat) {
-        this.format = newFormat;
-    }
-
-    public String getFormat() {
-        return format;
     }
 
     public String getGraphsDir() {
