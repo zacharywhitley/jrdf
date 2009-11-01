@@ -118,6 +118,7 @@ public class BdbBlankNodeRegistryImplUnitTest extends TestCase {
         verifyAll();
     }
 
+    @Test
     public void testClose() {
         expect(mapFactory.createMap(BlankNode.class, Long.class)).andReturn(new HashMap<BlankNode, Long>());
         mapFactory.close();

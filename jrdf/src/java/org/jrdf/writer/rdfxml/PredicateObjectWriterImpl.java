@@ -75,6 +75,7 @@ import org.jrdf.writer.WriteException;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.net.URI;
 
 /**
  * Represents a statement about a resource.
@@ -124,7 +125,8 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     public void visitURIReference(URIReference uriReference) {
         checkNotNull(uriReference);
         try {
-            xmlStreamWriter.writeAttribute("rdf:resource", uriReference.getURI().toString());
+            final URI uri = uriReference.getURI();
+            xmlStreamWriter.writeAttribute("rdf:resource", uri.toString());
         } catch (XMLStreamException e) {
             exception = e;
         }
