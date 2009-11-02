@@ -73,9 +73,9 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version :$
  */
-public class EqualsExpression implements LogicExpression, BiOperandExpression {
+public final class EqualsExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = 1297973700912646394L;
-    private static final int DUMMY_HASHCODE = 47;
+    private static final int PRIME = 31;
     private static final String EQUALS = "=";
     private Expression lhs;
     private Expression rhs;
@@ -111,10 +111,11 @@ public class EqualsExpression implements LogicExpression, BiOperandExpression {
         return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
+    @Override
     public int hashCode() {
-        int hash = DUMMY_HASHCODE + lhs.hashCode();
-        hash = hash * DUMMY_HASHCODE + rhs.hashCode();
-        return hash * DUMMY_HASHCODE * EQUALS.hashCode();
+        int result = lhs != null ? lhs.hashCode() : 0;
+        result = PRIME * result + (rhs != null ? rhs.hashCode() : 0);
+        return result;
     }
 
     public String toString() {
@@ -138,11 +139,19 @@ public class EqualsExpression implements LogicExpression, BiOperandExpression {
         return lhsEqual(o1, o2) && rhsEqual(o1, o2);
     }
 
-    private boolean rhsEqual(EqualsExpression o1, EqualsExpression o2) {
-        return o1.rhs.equals(o2.rhs);
+    private boolean lhsEqual(EqualsExpression o1, EqualsExpression o2) {
+        if (o1.lhs == null) {
+            return o2.lhs == null;
+        } else {
+            return o1.lhs.equals(o2.lhs);
+        }
     }
 
-    private boolean lhsEqual(EqualsExpression o1, EqualsExpression o2) {
-        return o1.lhs.equals(o2.lhs);
+    private boolean rhsEqual(EqualsExpression o1, EqualsExpression o2) {
+        if (o1.rhs == null) {
+            return o2.rhs == null;
+        } else {
+            return o1.rhs.equals(o2.rhs);
+        }
     }
 }

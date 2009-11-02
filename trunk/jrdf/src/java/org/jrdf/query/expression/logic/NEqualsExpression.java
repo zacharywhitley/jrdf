@@ -73,10 +73,9 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
-public class NEqualsExpression implements LogicExpression, BiOperandExpression {
+public final class NEqualsExpression implements LogicExpression, BiOperandExpression {
     private static final long serialVersionUID = -5583172009536428369L;
-    private static final int DUMMY_HASHCODE = 47;
+    private static final int PRIME = 31;
     private static final String NEQUALS = "!=";
     private Expression lhs;
     private Expression rhs;
@@ -112,11 +111,11 @@ public class NEqualsExpression implements LogicExpression, BiOperandExpression {
         return (lhs.size() + rhs.size()) / 2 + 1;
     }
 
+    @Override
     public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
-        int hash = DUMMY_HASHCODE + lhs.hashCode();
-        hash = hash * DUMMY_HASHCODE + rhs.hashCode();
-        return hash * DUMMY_HASHCODE + NEQUALS.hashCode();
+        int result = lhs != null ? lhs.hashCode() : 0;
+        result = PRIME * result + (rhs != null ? rhs.hashCode() : 0);
+        return result;
     }
 
     public String toString() {
@@ -141,10 +140,18 @@ public class NEqualsExpression implements LogicExpression, BiOperandExpression {
     }
 
     private boolean rhsEqual(NEqualsExpression o1, NEqualsExpression o2) {
-        return o1.rhs.equals(o2.rhs);
+        if (o1.rhs == null) {
+            return o2.rhs == null;
+        } else {
+            return o1.rhs.equals(o2.rhs);
+        }
     }
 
     private boolean lhsEqual(NEqualsExpression o1, NEqualsExpression o2) {
-        return o1.lhs.equals(o2.lhs);
+        if (o1.lhs == null) {
+            return o2.lhs == null;
+        } else {
+            return o1.lhs.equals(o2.lhs);
+        }
     }
 }

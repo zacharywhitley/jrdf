@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,22 +54,24 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.query.expression;
+package org.jrdf.query.expression.logic;
 
+import org.jrdf.query.expression.BiOperandExpression;
+import org.jrdf.query.expression.AbstractBiOperandExpressionUnitTest;
+import org.jrdf.query.expression.Expression;
 import org.junit.Test;
 
-public class UnionUnitTest extends AbstractBiOperandExpressionUnitTest {
+public class EqualsExpressionUnitTest extends AbstractBiOperandExpressionUnitTest {
 
     public BiOperandExpression createClass(Expression lhs, Expression rhs) {
-        return new Union(lhs, rhs);
+        return new EqualsExpression(lhs, rhs);
     }
 
     @Test
     public void classProperties() {
-        assertClassProperties(Union.class);
+        assertClassProperties(EqualsExpression.class);
     }
 
     @Test
