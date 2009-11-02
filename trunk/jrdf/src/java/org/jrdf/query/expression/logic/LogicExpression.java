@@ -60,12 +60,10 @@
 package org.jrdf.query.expression.logic;
 
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 
 /**
  * @author Yuan-Fang Li
  * @version :$
  */
 public interface LogicExpression extends Expression {
-    <R> R accept(ExpressionVisitor<R> v);
 }
