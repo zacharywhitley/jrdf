@@ -74,12 +74,9 @@ import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.restlet.data.MediaType;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -91,20 +88,22 @@ import java.util.Set;
  */
 public final class ArnoldTheInstantiator {
 
-    private final Map<Class, Instantiator> instantiators = new HashMap<Class, Instantiator>();
+    private final Map<Class<?>, Instantiator<?>> instantiators = new HashMap<Class<?>, Instantiator<?>>();
 
     public ArnoldTheInstantiator() {
         addKnownInstantiators();
     }
 
-    public Object instantiate(Class<?> cls) {
+    @SuppressWarnings({ "unchecked" })
+    public <T> T instantiate(Class<T> cls) {
         if (instantiators.containsKey(cls)) {
-            return instantiators.get(cls).instantiate();
+            final Instantiator<T> instantiator = (Instantiator<T>) instantiators.get(cls);
+            return instantiator.instantiate();
         }
         return newInstance(cls);
     }
 
-    private Object newInstance(Class<?> cls) {
+    private <T> T newInstance(Class<T> cls) {
         return ReflectTestUtil.newInstance(cls);
     }
 
@@ -113,13 +112,13 @@ public final class ArnoldTheInstantiator {
         instantiators.put(LiteralImpl.class, new LiteralImplInstantiator());
         instantiators.put(LongIndexMem.class, new LongIndexMemInstantiator());
         instantiators.put(URIReferenceImpl.class, new URIReferenceImplInstantiator());
-        instantiators.put(NullaryTuple.class, new TrueNodeInstantiator());
+        instantiators.put(NullaryTuple.class, new NullaryTupleInstantiator());
         instantiators.put(AnyNode.class, new AnyNodeInstantiator());
         instantiators.put(AnySubjectNode.class, new AnySubjectNodeInstantiator());
         instantiators.put(AnyPredicateNode.class, new AnyPredicateNodeInstantiator());
         instantiators.put(AnyObjectNode.class, new AnyObjectNodeInstantiator());
-        instantiators.put(SelectAnswerImpl.class, new AnswerInstantiator());
-        instantiators.put(SingleConstraint.class, new ConstraintTripleInstantiator());
+        instantiators.put(SelectAnswerImpl.class, new SelectAnswerImplInstantiator());
+        instantiators.put(SingleConstraint.class, new SingleConstraintInstantiator());
         instantiators.put(URL.class, new URLInstantiator());
         instantiators.put(URI.class, new URIInstantiator());
         instantiators.put(String.class, new StringInstantiator());
@@ -128,57 +127,6 @@ public final class ArnoldTheInstantiator {
         instantiators.put(Set.class, new SetInstantiator());
         instantiators.put(Map.class, new MapInstantiator());
         instantiators.put(MediaType.class, new MediaTypeInstantiator());
-    }
-
-    private static class URLInstantiator implements Instantiator {
-        public Object instantiate() {
-            try {
-                return new java.net.URL("file:///this/is/anything");
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-    }
-
-    private static class URIInstantiator implements Instantiator {
-        public Object instantiate() {
-            try {
-                return new java.net.URI("http://www.slashdot.org");
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private static class StringInstantiator implements Instantiator {
-        public Object instantiate() {
-            return "Hello";
-        }
-    }
-
-    private static class ATripleInstantiator implements Instantiator {
-        public Object instantiate() {
-            return new ATriple();
-        }
-    }
-
-    private static class SetInstantiator implements Instantiator {
-        public Object instantiate() {
-            return new HashSet();
-        }
-    }
-
-    private static class MapInstantiator implements Instantiator {
-        public Object instantiate() {
-            return new HashMap();
-        }
-    }
-
-    private static class MediaTypeInstantiator implements Instantiator {
-        public Object instantiate() {
-            return MediaType.ALL;
-        }
     }
 }
 

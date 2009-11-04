@@ -1,9 +1,9 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,37 +54,19 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.Node;
-import org.jrdf.query.expression.SingleConstraint;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.util.test.ParamSpec;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import java.util.LinkedHashMap;
-
-/**
- * {@link Instantiator} for {@link org.jrdf.query.expression.SingleConstraint}.
- *
- * @author Tom Adams
- * @version $Id$
- */
-final class ConstraintTripleInstantiator implements Instantiator {
-    private static final Class<SingleConstraint> CLASS_CONSTRAINT_TRIPLE = SingleConstraint.class;
-
-    public Object instantiate() {
-        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_CONSTRAINT_TRIPLE, createParams());
-    }
-
-    private ParamSpec createParams() {
-        LinkedHashMap<Attribute, Node> avp = TripleTestUtil.AVO_BOOK_1_DC_SUBJECT_LITERAL;
-        Object[] params = {avp};
-        Class<?>[] types = new Class[]{LinkedHashMap.class};
-        return new ParamSpec(types, params);
+class URIInstantiator implements Instantiator<URI> {
+    public URI instantiate() {
+        try {
+            return new java.net.URI("http://www.slashdot.org");
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

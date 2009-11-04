@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import static java.util.Arrays.*;
 import java.util.NoSuchElementException;
@@ -112,6 +113,7 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
     public OneFixedIterator(Long fixedFirstNode, GraphHandler newHandler) {
+        checkNotNull(fixedFirstNode, newHandler);
         // store the node factory and other starting data
         handler = newHandler;
         first = fixedFirstNode;
@@ -146,6 +148,9 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
                 throw new IllegalStateException(ge.getMessage() + " triple: " + asList(currentNodes));
             }
         } else {
+            if (!hasNext()) {
+                close();
+            }
             throw new IllegalStateException("Next not called or beyond end of data");
         }
     }
@@ -153,6 +158,7 @@ public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
     public boolean close() {
         if (subIndex != null && !hasClosed) {
             subIndex.close();
+            hasClosed = true;
         }
         return true;
     }

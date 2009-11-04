@@ -59,6 +59,7 @@
 
 package org.jrdf.util.test.instantiate;
 
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.URIReferenceImpl;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
@@ -71,14 +72,12 @@ import java.net.URI;
  * @author Tom Adams
  * @version $Id$
  */
-final class URIReferenceImplInstantiator implements Instantiator {
-
-    private static final Class<URIReferenceImpl> CLASS_URI_REFERENCE_IMPL = URIReferenceImpl.class;
+final class URIReferenceImplInstantiator implements Instantiator<URIReference> {
     private static final String NODE_ID = "0";
     private static final URI A_URI = URI.create("urn:foo");
 
-    public Object instantiate() {
-        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_URI_REFERENCE_IMPL, createParams());
+    public URIReference instantiate() {
+        return ReflectTestUtil.createInstanceUsingConstructor(URIReferenceImpl.class, createParams());
     }
 
     private ParamSpec createParams() {

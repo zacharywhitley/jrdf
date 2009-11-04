@@ -186,7 +186,7 @@ public final class ClassPropertiesTestUtil {
             expectedModifier == constructorModifier);
     }
 
-    public static Constructor tryGetConstructor(Class<?> cls, ParamSpec params) {
+    public static <T> Constructor<T> tryGetConstructor(Class<T> cls, ParamSpec params) {
         Constructor constructor = tryGetConstructor(cls, params.getTypes());
         constructor.setAccessible(true);
         return constructor;

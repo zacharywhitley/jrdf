@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.NoSuchElementException;
 
@@ -99,6 +100,7 @@ public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
      * Constructor.
      */
     public ThreeFixedIterator(Long[] newNodes, GraphHandler newHandler) {
+        checkNotNull(newNodes, newHandler);
         nodes = newNodes;
         handler = newHandler;
         createTriple();

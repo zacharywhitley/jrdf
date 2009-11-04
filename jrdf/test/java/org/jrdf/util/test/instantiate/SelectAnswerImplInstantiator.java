@@ -59,26 +59,29 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.local.BlankNodeImpl;
+import org.jrdf.query.answer.SelectAnswer;
+import org.jrdf.query.answer.SelectAnswerImpl;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.EvaluatedRelation;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.util.test.ParamSpec;
 import static org.jrdf.util.test.ReflectTestUtil.createInstanceUsingConstructor;
 
+import java.util.LinkedHashSet;
+
 /**
- * {@link Instantiator} for {@link BlankNodeImpl}.
+ * {@link Instantiator} for {@link org.jrdf.query.answer.SelectAnswer}.
  *
- * @author Tom Adams
  * @version $Id$
  */
-final class BlankNodeImplInstantiator implements Instantiator<BlankNode> {
+final class SelectAnswerImplInstantiator implements Instantiator<SelectAnswer> {
 
-    private static final String NODE_ID = "0";
-
-    public BlankNode instantiate() {
-        return createInstanceUsingConstructor(BlankNodeImpl.class, createParams());
+    public SelectAnswer instantiate() {
+        return createInstanceUsingConstructor(SelectAnswerImpl.class, createParams());
     }
 
     private ParamSpec createParams() {
-        return new ParamSpec(NODE_ID, new Long(NODE_ID));
+        return new ParamSpec(new Class[]{LinkedHashSet.class, EvaluatedRelation.class, Long.TYPE, Boolean.TYPE},
+            new Object[]{new LinkedHashSet<Attribute>(), RELATION_DUM, 0L, Boolean.FALSE});
     }
 }

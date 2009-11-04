@@ -65,7 +65,7 @@ package org.jrdf.util.test.instantiate;
  * @author Tom Adams
  * @version $Id$
  */
-interface Instantiator {
+interface Instantiator<T> {
 
-    Object instantiate();
+    T instantiate();
 }

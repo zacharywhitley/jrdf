@@ -59,8 +59,8 @@
 
 package org.jrdf.util.test.instantiate;
 
-public class LongInstantiator implements Instantiator {
-    public Object instantiate() {
-        return new Long(123);
+public class LongInstantiator implements Instantiator<Long> {
+    public Long instantiate() {
+        return 123L;
     }
 }

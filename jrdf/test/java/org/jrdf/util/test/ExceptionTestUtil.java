@@ -61,6 +61,7 @@ package org.jrdf.util.test;
 
 import junit.framework.Assert;
 import static org.jrdf.util.test.MockTestUtil.createMock;
+import static org.jrdf.util.test.ReflectTestUtil.*;
 
 /**
  * Allows the overall test driving of generic exceptions.
@@ -75,45 +76,45 @@ public class ExceptionTestUtil {
     private ExceptionTestUtil() {
     }
 
-    public static void testInheritableClassProperties(Class<?> clazz) {
+    public static <T extends Exception> void testInheritableClassProperties(Class<T> clazz) {
         ClassPropertiesTestUtil.checkExtensionOf(Exception.class, clazz);
     }
 
-    public static void testFinalClassProperties(Class<?> clazz) {
+    public static <T extends Exception> void testFinalClassProperties(Class<T> clazz) {
         ClassPropertiesTestUtil.checkClassFinal(clazz);
         ClassPropertiesTestUtil.checkExtensionOf(Exception.class, clazz);
     }
 
-    public static void testMessageConstructor(Class<?> clazz) {
+    public static <T extends Exception> void testMessageConstructor(Class<T> clazz) {
         checkGetMessage(clazz, FIRST_MESSAGE);
         checkGetMessage(clazz, FIRST_SECOND);
     }
 
-    public static void testMessageAndThrowableConstructor(Class<?> clazz) {
+    public static <T extends Exception> void testMessageAndThrowableConstructor(Class<T> clazz) {
         checkGetMessageAndThrowable(clazz, FIRST_MESSAGE, createMock(Throwable.class));
         checkGetMessageAndThrowable(clazz, FIRST_SECOND, createMock(Throwable.class));
     }
 
-    public static void testThrowableConstructor(Class<?> clazz) {
+    public static <T extends Exception> void testThrowableConstructor(Class<T> clazz) {
         checkGetThrowable(clazz, createMock(Throwable.class));
     }
 
-    private static void checkGetMessageAndThrowable(Class<?> clazz, String message, Throwable t) {
+    private static <T extends Exception> void checkGetMessageAndThrowable(Class<T> clazz, String message, Throwable t) {
         ParamSpec params = new ParamSpec(new Class[]{String.class, Throwable.class}, new Object[]{message, t});
-        Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
+        Exception exception = createInstanceUsingConstructor(clazz, params);
         Assert.assertEquals(message, exception.getMessage());
         Assert.assertTrue(t == exception.getCause());
     }
 
-    private static void checkGetMessage(Class<?> clazz, String message) {
+    private static <T extends Exception> void checkGetMessage(Class<T> clazz, String message) {
         ParamSpec params = new ParamSpec(message);
-        Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
+        Exception exception = createInstanceUsingConstructor(clazz, params);
         Assert.assertEquals(message, exception.getMessage());
     }
 
-    private static void checkGetThrowable(Class<?> clazz, Throwable t) {
+    private static <T extends Exception> void checkGetThrowable(Class<T> clazz, Throwable t) {
         ParamSpec params = new ParamSpec(new Class[]{Throwable.class}, new Object[]{t});
-        Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
+        Exception exception = createInstanceUsingConstructor(clazz, params);
         Assert.assertTrue(t == exception.getCause());
     }
 }

@@ -59,26 +59,18 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.local.BlankNodeImpl;
-import org.jrdf.util.test.ParamSpec;
-import static org.jrdf.util.test.ReflectTestUtil.createInstanceUsingConstructor;
+import org.jrdf.query.relation.constants.NullaryTuple;
+import org.jrdf.query.relation.Tuple;
 
 /**
- * {@link Instantiator} for {@link BlankNodeImpl}.
+ * {@link Instantiator} for {@link org.jrdf.query.relation.constants.NullaryTuple}.
  *
  * @author Tom Adams
  * @version $Id$
  */
-final class BlankNodeImplInstantiator implements Instantiator<BlankNode> {
+final class NullaryTupleInstantiator implements Instantiator<Tuple> {
 
-    private static final String NODE_ID = "0";
-
-    public BlankNode instantiate() {
-        return createInstanceUsingConstructor(BlankNodeImpl.class, createParams());
-    }
-
-    private ParamSpec createParams() {
-        return new ParamSpec(NODE_ID, new Long(NODE_ID));
+    public Tuple instantiate() {
+        return NullaryTuple.NULLARY_TUPLE;
     }
 }

@@ -59,9 +59,10 @@
 
 package org.jrdf.util.test.instantiate;
 
+import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.util.test.ParamSpec;
-import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.ReflectTestUtil.createInstanceUsingConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,13 +74,11 @@ import java.util.Set;
  * @author Tom Adams
  * @version $Id$
  */
-final class LongIndexMemInstantiator implements Instantiator {
-
-    private static final Class<LongIndexMem> CLASS_LONG_INDEX_MEM = LongIndexMem.class;
+final class LongIndexMemInstantiator implements Instantiator<LongIndex> {
     private static final Map<Long, Map<Long, Set<Long>>> INDEX = new HashMap<Long, Map<Long, Set<Long>>>();
 
-    public Object instantiate() {
-        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_LONG_INDEX_MEM, createParams());
+    public LongIndex instantiate() {
+        return createInstanceUsingConstructor(LongIndexMem.class, createParams());
     }
 
     private ParamSpec createParams() {

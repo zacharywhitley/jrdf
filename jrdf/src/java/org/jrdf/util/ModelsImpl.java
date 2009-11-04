@@ -101,13 +101,8 @@ public class ModelsImpl implements Models {
             GraphElementFactory elementFactory = graph.getElementFactory();
             PredicateNode type = elementFactory.createURIReference(RDF.TYPE);
             ObjectNode graphName = elementFactory.createURIReference(GRAPH);
-            ClosableIterable<Triple> triples = graph.find(ANY_SUBJECT_NODE, type, graphName);
-            try {
-                for (Triple triple : triples) {
-                    addResource(elementFactory, triple);
-                }
-            } finally {
-                triples.iterator().close();
+            for (Triple triple : graph.find(ANY_SUBJECT_NODE, type, graphName)) {
+                addResource(elementFactory, triple);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
