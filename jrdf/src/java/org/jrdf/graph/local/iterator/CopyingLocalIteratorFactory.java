@@ -64,6 +64,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.EmptyClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.List;
@@ -92,7 +93,7 @@ public final class CopyingLocalIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
-        return new TripleEmptyClosableIterator();
+        return new EmptyClosableIterator<Triple>();
     }
 
     public ClosableIterator<Triple> newGraphIterator() {

@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.NoSuchElementException;
 
@@ -105,11 +106,11 @@ public final class GraphIterator implements ClosableLocalIterator<Triple> {
      * @throws IllegalArgumentException Must be created with implementations from the memory package.
      */
     public GraphIterator(GraphHandler newHandler) {
+        checkNotNull(newHandler);
         // store the node factory
         handler = newHandler;
         iterator = handler.getEntries();
     }
-
 
     /**
      * Returns true if the iteration has more elements.

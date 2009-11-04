@@ -65,7 +65,6 @@ import java.util.NoSuchElementException;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class EmptyClosableIterator<E> implements ClosableIterator<E> {
     public boolean hasNext() {
         return false;

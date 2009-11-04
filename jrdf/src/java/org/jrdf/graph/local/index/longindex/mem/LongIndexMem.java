@@ -61,13 +61,13 @@ package org.jrdf.graph.local.index.longindex.mem;
 
 import org.jrdf.graph.local.index.AbstractIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.util.LongArrayEmptyClosableIterator;
-import org.jrdf.util.LongEmptyClosableIterator;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
+import org.jrdf.util.EmptyClosableIterator;
 import org.jrdf.util.FlatteningThreeLongClosableIterator;
 import org.jrdf.util.FlatteningTwoLongClosableIterator;
+import org.jrdf.util.LongArrayEmptyClosableIterator;
 
 import java.util.Map;
 import java.util.Set;
@@ -112,6 +112,6 @@ public final class LongIndexMem extends AbstractIndex<Long> implements LongIndex
                 return new ClosableIteratorImpl<Long>(secondMap.iterator());
             }
         }
-        return new LongEmptyClosableIterator();
+        return new EmptyClosableIterator<Long>();
     }
 }
