@@ -62,6 +62,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.EmptyClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public final class LocalIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
-        return new TripleEmptyClosableIterator();
+        return new EmptyClosableIterator<Triple>();
     }
 
     public ClosableIterator<Triple> newGraphIterator() {

@@ -66,10 +66,10 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.FixedResourcePredicateIterator;
 import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.graph.local.iterator.TripleEmptyClosableIterator;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.EmptyClosableIterator;
 import org.jrdf.util.btree.BTree;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
@@ -89,7 +89,7 @@ public final class DiskIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
-        return new TripleEmptyClosableIterator();
+        return new EmptyClosableIterator<Triple>();
     }
 
     public ClosableIterator<Triple> newGraphIterator() {

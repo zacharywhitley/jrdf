@@ -65,18 +65,18 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
 import org.jrdf.util.ClosableMap;
 import org.jrdf.util.ClosableMapImpl;
+import org.jrdf.util.EmptyClosableIterator;
 import org.jrdf.util.FlatteningFiveLongClosableIterator;
 import org.jrdf.util.FlatteningFourLongClosableIterator;
 import org.jrdf.util.FlatteningThreeLongClosableIterator;
 import org.jrdf.util.FlatteningTwoLongClosableIterator;
 import org.jrdf.util.LongArrayEmptyClosableIterator;
-import org.jrdf.util.LongEmptyClosableIterator;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collection;
 
 public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
     private ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>> index;
@@ -220,7 +220,7 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
                 }
             }
         }
-        return new LongEmptyClosableIterator();
+        return new EmptyClosableIterator<Long>();
     }
 
     public ClosableIterator<Long> getFourthIndexOnly(Long first, Long second, Long third) {
@@ -234,7 +234,7 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
                 }
             }
         }
-        return new LongEmptyClosableIterator();
+        return new EmptyClosableIterator<Long>();
     }
 
     public ClosableIterator<Long> getAllFourthIndex() {
@@ -263,7 +263,7 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
                 return new ClosableIteratorImpl<Long>(squash(closableMaps, longs).iterator());
             }
         }
-        return new LongEmptyClosableIterator();
+        return new EmptyClosableIterator<Long>();
     }
 
     public ClosableIterator<Long> getFourthForOneValue(Long first) {
@@ -273,7 +273,7 @@ public class MoleculeStructureIndexMem implements MoleculeStructureIndex<Long> {
             final Collection<ClosableMap<Long, ClosableMap<Long, Set<Long>>>> collection = subIndex.values();
             return new ClosableIteratorImpl<Long>(moreSquash(collection, longs).iterator());
         }
-        return new LongEmptyClosableIterator();
+        return new EmptyClosableIterator<Long>();
     }
 
     private Set<Long> moreSquash(Collection<ClosableMap<Long, ClosableMap<Long, Set<Long>>>> collection,

@@ -59,15 +59,62 @@
 package org.jrdf.graph.local.iterator;
 
 import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.IteratorTestUtil.expectCallingRemoveBeforeNextThrowsException;
+import static org.jrdf.util.test.IteratorTestUtil.expectCallingWithNoResultsThrowsException;
+import static org.jrdf.util.test.MockTestUtil.createMock;
+import org.jrdf.util.test.ParamSpec;
+import org.jrdf.util.ClosableIterator;
+import org.junit.Test;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.reflect.Whitebox;
+import static org.easymock.EasyMock.expect;
 
 import static java.lang.reflect.Modifier.PUBLIC;
+import java.util.Iterator;
 
 public class GraphIteratorUnitTest extends TestCase {
+    private static final Class<GraphIterator> CLASS_UNDER_TEST = GraphIterator.class;
+
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(ClosableLocalIterator.class, GraphIterator.class);
         checkConstructor(GraphIterator.class, PUBLIC, GraphHandler.class);
+        checkConstructNullAssertion(CLASS_UNDER_TEST, GraphHandler.class);
+    }
+
+    @Test
+    public void closableIteratorContractForNext() {
+        final ParamSpec args = createArgsAndNoResultsExpectations();
+        replayAll();
+        final Iterator<Triple> iterator = expectCallingWithNoResultsThrowsException(CLASS_UNDER_TEST,
+            args);
+        verifyAll();
+        assertThat(Whitebox.<Boolean>getInternalState(iterator, "hasClosed"), is(true));
+    }
+
+    @Test
+    public void closableIteratorConstractForRemove() {
+        final ParamSpec args = createArgsAndNoResultsExpectations();
+        replayAll();
+        final Iterator<Triple> iterator = expectCallingRemoveBeforeNextThrowsException(CLASS_UNDER_TEST,
+            args);
+        verifyAll();
+        assertThat(Whitebox.<Boolean>getInternalState(iterator, "hasClosed"), is(true));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private ParamSpec createArgsAndNoResultsExpectations() {
+        final GraphHandler handler = createMock(GraphHandler.class);
+        final ClosableIterator<Long[]> iterator = createMock(ClosableIterator.class);
+        expect(iterator.hasNext()).andReturn(false);
+        expect(handler.getEntries()).andReturn(iterator);
+        return new ParamSpec(new Class<?>[]{Long.class, GraphHandler.class}, new Object[]{handler});
     }
 }

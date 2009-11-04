@@ -64,10 +64,10 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
+import org.jrdf.util.EmptyClosableIterator;
 import org.jrdf.util.FlatteningEntrySetClosableIterator;
 import org.jrdf.util.ListToOneValueClosableIterator;
 import org.jrdf.util.LongArrayEmptyClosableIterator;
-import org.jrdf.util.LongEmptyClosableIterator;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -147,7 +147,7 @@ public final class LongIndexBdb implements LongIndex {
     public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
         final List<Long[]> list = index.get(first);
         if (list == null) {
-            return new LongEmptyClosableIterator();
+            return new EmptyClosableIterator<Long>();
         } else {
             return new ListToOneValueClosableIterator(second, list.iterator());
         }
