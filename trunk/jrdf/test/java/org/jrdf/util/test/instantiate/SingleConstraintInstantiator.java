@@ -59,30 +59,32 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.answer.SelectAnswerImpl;
+import org.jrdf.graph.Node;
+import org.jrdf.query.expression.SingleConstraint;
+import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.EvaluatedRelation;
-import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.util.test.ParamSpec;
-import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.ReflectTestUtil.createInstanceUsingConstructor;
+import org.jrdf.util.test.TripleTestUtil;
 
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.answer.SelectAnswerImpl}.
+ * {@link Instantiator} for {@link org.jrdf.query.expression.SingleConstraint}.
  *
+ * @author Tom Adams
  * @version $Id$
  */
-final class AnswerInstantiator implements Instantiator {
+final class SingleConstraintInstantiator implements Instantiator<Constraint> {
 
-    private static final Class<SelectAnswerImpl> CLASS_DEFAULT_ANSWER = SelectAnswerImpl.class;
-
-    public Object instantiate() {
-        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_ANSWER, createParams());
+    public Constraint instantiate() {
+        return createInstanceUsingConstructor(SingleConstraint.class, createParams());
     }
 
     private ParamSpec createParams() {
-        return new ParamSpec(new Class[]{LinkedHashSet.class, EvaluatedRelation.class, Long.TYPE, Boolean.TYPE},
-            new Object[]{new LinkedHashSet<Attribute>(), RELATION_DUM, 0L, Boolean.FALSE});
+        LinkedHashMap<Attribute, Node> avp = TripleTestUtil.AVO_BOOK_1_DC_SUBJECT_LITERAL;
+        Object[] params = {avp};
+        Class<?>[] types = new Class[]{LinkedHashMap.class};
+        return new ParamSpec(types, params);
     }
 }

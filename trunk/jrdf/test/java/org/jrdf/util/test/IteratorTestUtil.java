@@ -1,9 +1,9 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,31 +54,45 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.util.test.instantiate;
+package org.jrdf.util.test;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.local.BlankNodeImpl;
-import org.jrdf.util.test.ParamSpec;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.ReflectTestUtil.createInstanceUsingConstructor;
 
-/**
- * {@link Instantiator} for {@link BlankNodeImpl}.
- *
- * @author Tom Adams
- * @version $Id$
- */
-final class BlankNodeImplInstantiator implements Instantiator<BlankNode> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-    private static final String NODE_ID = "0";
-
-    public BlankNode instantiate() {
-        return createInstanceUsingConstructor(BlankNodeImpl.class, createParams());
+public final class IteratorTestUtil {
+    private IteratorTestUtil() {
     }
 
-    private ParamSpec createParams() {
-        return new ParamSpec(NODE_ID, new Long(NODE_ID));
+    /**
+     * Calling next before with no more (or any) results throws a no such element exception.
+     */
+    public static <T> Iterator<T> expectCallingWithNoResultsThrowsException(
+        final Class<? extends Iterator<T>> cls, ParamSpec args) {
+        final Iterator<T> iterator = createInstanceUsingConstructor(cls, args);
+        assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                iterator.next();
+            }
+        });
+        return iterator;
+    }
+
+    /**
+     * Calling remove before calling next throws an exception.
+     */
+    public static <T> Iterator<T> expectCallingRemoveBeforeNextThrowsException(
+        final Class<? extends Iterator<T>> cls, ParamSpec args) {
+        final Iterator<T> iterator = createInstanceUsingConstructor(cls, args);
+        assertThrows(IllegalStateException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                iterator.remove();
+            }
+        });
+        return iterator;
     }
 }

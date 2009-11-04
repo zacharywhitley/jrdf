@@ -60,6 +60,7 @@
 package org.jrdf.util.test.instantiate;
 
 import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.Node;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.graph.AnyObjectNode}.
@@ -67,9 +68,9 @@ import org.jrdf.graph.AnyObjectNode;
  * @author Tom Adams
  * @version $Id$
  */
-final class AnyObjectNodeInstantiator implements Instantiator {
+final class AnyObjectNodeInstantiator implements Instantiator<Node> {
 
-    public Object instantiate() {
+    public Node instantiate() {
         return AnyObjectNode.ANY_OBJECT_NODE;
     }
 }

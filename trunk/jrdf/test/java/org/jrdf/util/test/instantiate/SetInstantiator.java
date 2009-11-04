@@ -1,9 +1,9 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,22 +54,15 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.relation.constants.NullaryTuple;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * {@link Instantiator} for {@link org.jrdf.query.relation.constants.NullaryTuple}.
- *
- * @author Tom Adams
- * @version $Id$
- */
-final class TrueNodeInstantiator implements Instantiator {
-
-    public Object instantiate() {
-        return NullaryTuple.NULLARY_TUPLE;
+class SetInstantiator implements Instantiator<Set> {
+    public Set instantiate() {
+        return new HashSet();
     }
 }

@@ -112,12 +112,12 @@ public final class ReflectTestUtil {
         }
     }
 
-    public static Object newInstance(Class<?> cls) {
+    public static <T> T newInstance(Class<T> cls) {
         return createInstanceUsingConstructor(cls, PARAMS_NONE);
     }
 
-    public static Object createInstanceUsingConstructor(Class<?> cls, ParamSpec params) {
-        Constructor<?> constructor = ClassPropertiesTestUtil.tryGetConstructor(cls, params);
+    public static <T> T createInstanceUsingConstructor(Class<T> cls, ParamSpec params) {
+        Constructor<T> constructor = ClassPropertiesTestUtil.tryGetConstructor(cls, params);
         return invokeConstructor(cls, constructor, params);
     }
 
@@ -149,7 +149,7 @@ public final class ReflectTestUtil {
         }
     }
 
-    private static Object invokeConstructor(Class<?> cls, Constructor<?> constructor, ParamSpec params) {
+    private static <T> T invokeConstructor(Class<T> cls, Constructor<T> constructor, ParamSpec params) {
         try {
             return constructor.newInstance(params.getParams());
         } catch (Exception e) {

@@ -87,10 +87,10 @@ public class ArgumentTestUtil {
         checkConstructorSetsFields(paramTypes, clazz, parameterNames);
     }
 
-    public static void checkConstructorSetsFields(Class[] paramTypes, Class<?> clazz, String[] parameterNames) {
+    public static <T> void checkConstructorSetsFields(Class[] paramTypes, Class<T> clazz, String[] parameterNames) {
         Object[] args = createArgs(paramTypes, -1);
         ParamSpec spec = new ParamSpec(paramTypes, args);
-        Object obj = createInstanceUsingConstructor(clazz, spec);
+        T obj = createInstanceUsingConstructor(clazz, spec);
         for (int index = 0; index < parameterNames.length; index++) {
             String finalString;
             if (parameterNames[index].startsWith("new")) {
@@ -102,7 +102,7 @@ public class ArgumentTestUtil {
         }
     }
 
-    public static void checkConstructNullAssertion(final Class<?> clazz, final Class[] paramTypes) {
+    public static void checkConstructNullAssertion(final Class<?> clazz, final Class... paramTypes) {
         for (int index = 0; index < paramTypes.length; index++) {
             if (!paramTypes[index].isPrimitive()) {
                 String message = "Parameter " + (index + 1) + CANNOT_BE_NULL;

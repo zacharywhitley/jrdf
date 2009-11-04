@@ -59,23 +59,23 @@
 
 package org.jrdf.util.test.instantiate;
 
+import org.jrdf.graph.Literal;
 import org.jrdf.graph.local.LiteralImpl;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
 
 /**
- * {@link Instantiator} for {@link LiteralImpl}.
+ * {@link Instantiator} for {@link Literal}.
  *
  * @author Tom Adams
  * @version $Id$
  */
-final class LiteralImplInstantiator implements Instantiator {
+final class LiteralImplInstantiator implements Instantiator<Literal> {
 
-    private static final Class<LiteralImpl> CLASS_LITERAL_IMPL = LiteralImpl.class;
     private static final String LEXICAL_VALUE = "LEXICAL VALUE";
 
-    public Object instantiate() {
-        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_LITERAL_IMPL, createParams());
+    public Literal instantiate() {
+        return ReflectTestUtil.createInstanceUsingConstructor(LiteralImpl.class, createParams());
     }
 
     private ParamSpec createParams() {

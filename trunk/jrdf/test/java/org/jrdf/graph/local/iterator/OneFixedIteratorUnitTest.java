@@ -58,17 +58,68 @@
  */
 package org.jrdf.graph.local.iterator;
 
-import junit.framework.TestCase;
+import static org.easymock.EasyMock.expect;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.IteratorTestUtil.expectCallingWithNoResultsThrowsException;
+import static org.jrdf.util.test.IteratorTestUtil.expectCallingRemoveBeforeNextThrowsException;
+import static org.jrdf.util.test.MockTestUtil.createMock;
+import org.jrdf.util.test.ParamSpec;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import static java.lang.reflect.Modifier.PUBLIC;
+import java.util.Iterator;
 
-public class OneFixedIteratorUnitTest extends TestCase {
+@RunWith(PowerMockRunner.class)
+public class OneFixedIteratorUnitTest {
+    private static final long INDEX = 1L;
+    private static final Class<OneFixedIterator> CLASS_UNDER_TEST = OneFixedIterator.class;
 
+    @Test
     public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(ClosableLocalIterator.class, OneFixedIterator.class);
-        checkConstructor(OneFixedIterator.class, PUBLIC, Long.class, GraphHandler.class);
+        checkImplementationOfInterfaceAndFinal(ClosableLocalIterator.class, CLASS_UNDER_TEST);
+        checkConstructor(CLASS_UNDER_TEST, PUBLIC, Long.class, GraphHandler.class);
+        checkConstructNullAssertion(CLASS_UNDER_TEST, Long.class, GraphHandler.class);
+    }
+
+    @Test
+    public void closableIteratorContractForNext() {
+        final ParamSpec args = createArgsAndNoResultsExpectations();
+        replayAll();
+        final Iterator<Triple> iterator = expectCallingWithNoResultsThrowsException(CLASS_UNDER_TEST,
+            args);
+        verifyAll();
+        assertThat(Whitebox.<Boolean>getInternalState(iterator, "hasClosed"), is(true));
+    }
+
+    @Test
+    public void closableIteratorConstractForRemove() {
+        final ParamSpec args = createArgsAndNoResultsExpectations();
+        replayAll();
+        final Iterator<Triple> iterator = expectCallingRemoveBeforeNextThrowsException(CLASS_UNDER_TEST,
+            args);
+        verifyAll();
+        assertThat(Whitebox.<Boolean>getInternalState(iterator, "hasClosed"), is(true));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private ParamSpec createArgsAndNoResultsExpectations() {
+        final GraphHandler handler = createMock(GraphHandler.class);
+        final ClosableIterator<Long[]> subIndex = createMock(ClosableIterator.class);
+        expect(handler.getSubIndex(INDEX)).andReturn(subIndex);
+        expect(subIndex.hasNext()).andReturn(false);
+        expect(subIndex.close()).andReturn(true);
+        return new ParamSpec(new Class<?>[]{Long.class, GraphHandler.class}, new Object[]{INDEX, handler});
     }
 }

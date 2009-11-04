@@ -63,6 +63,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.NoSuchElementException;
 
@@ -115,6 +116,7 @@ public final class TwoFixedIterator implements ClosableLocalIterator<Triple> {
      * Constructor.  Sets up the internal iterators.
      */
     public TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, GraphHandler newHandler) {
+        checkNotNull(fixedFirstNode, fixedSecondNode, newHandler);
         // store the node factory and other starting data
         first = fixedFirstNode;
         second = fixedSecondNode;
