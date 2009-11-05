@@ -210,7 +210,7 @@
         </javadoc>
     </target>
 
-    <target name="test" depends="-code-coverage, unit-test, integration-test, coverage-report"/>
+    <target name="test" depends="dist, -init-code-coverage, -instrument-classes, unit-test, integration-test, coverage-report"/>
     <target name="unit-test" depends="dist, -instrument-classes">
         <test.macro type="unit"/>
     </target>
@@ -221,7 +221,7 @@
         <test.macro type="performance"/>
     </target>
 
-    <target name="-code-coverage" description="turns on code coverage">
+    <target name="-init-code-coverage">
         <mkdir dir="${out.instr.dir}"/>
         <mkdir dir="${coverage.dir}"/>
         <delete file="${basedir}/cobertura.ser"/>

@@ -89,17 +89,18 @@ import static org.jrdf.util.test.NodeTestUtil.createResource;
 import org.jrdf.vocabulary.RDF;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
-import java.util.LinkedHashMap;
-import java.util.Arrays;
 
 public class RelationIntegrationTestUtil {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
@@ -260,8 +261,8 @@ public class RelationIntegrationTestUtil {
         return RELATION_FACTORY.getRelation(newTuples);
     }
 
-    public static Set<Attribute> createHeading(Attribute... attributes) {
-        Set<Attribute> newAttributes = new TreeSet<Attribute>(ATTRIBUTE_COMPARATOR);
+    public static SortedSet<Attribute> createHeading(Attribute... attributes) {
+        SortedSet<Attribute> newAttributes = new TreeSet<Attribute>(ATTRIBUTE_COMPARATOR);
         newAttributes.addAll(Arrays.asList(attributes));
         return newAttributes;
     }

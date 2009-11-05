@@ -168,12 +168,12 @@ public class SubsumptionEngine implements TupleEngine {
         return onlyContainsValues;
     }
 
-    private boolean tuple1SubsumesTuple2(int subsumes) {
-        return subsumes == 1;
-    }
-
     private boolean tuple2SubsumesTuple1(int subsumes) {
         return subsumes == -1;
+    }
+
+    private boolean tuple1SubsumesTuple2(int subsumes) {
+        return subsumes == 1;
     }
 
     public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
