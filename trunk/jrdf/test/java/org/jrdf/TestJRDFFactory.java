@@ -231,6 +231,10 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (DyadicJoin) BEAN_FACTORY.getBean("minLeftOuterJoin");
     }
 
+    public TupleEngine getNewSubsumptionEngine() {
+        return (TupleEngine) BEAN_FACTORY.getBean("subsumptionJoinEngine");
+    }
+
     public GraphRelationFactory getNewGraphRelationFactory() {
         return (GraphRelationFactory) BEAN_FACTORY.getBean("graphRelationFactory");
     }
