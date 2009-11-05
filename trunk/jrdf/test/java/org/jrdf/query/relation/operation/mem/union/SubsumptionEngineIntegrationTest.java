@@ -115,7 +115,7 @@ public class SubsumptionEngineIntegrationTest {
     }
 
     @Test
-    public void differentTuplesWithNoSharedValuesReturnsEmpty() {
+    public void differentTuplesWithConflictingValueReturnsEmpty() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R4, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3);
         Set<Tuple> expectedResult = Collections.emptySet();
@@ -125,7 +125,7 @@ public class SubsumptionEngineIntegrationTest {
     }
 
     @Test
-    public void differentTuplesWithOneSharedValueReturnsEmpty() {
+    public void differentTuplesWithOneSharedValueButConflictingOtherValueReturnsEmpty() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2);
         Set<Tuple> expectedResult = Collections.emptySet();
@@ -135,12 +135,14 @@ public class SubsumptionEngineIntegrationTest {
     }
 
     @Test
-    public void secondTupleHasDifferentValueThanFirstTupleReturnsNothing() {
+    public void differentTuplesWithOneSharedValueButAnExtraAttributeReturnsEmpty() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R4, POS_FOO4_PREDICATE_R3);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3);
         Set<Tuple> expectedResult = Collections.emptySet();
-        checkProcess(createHeading(VAR_BAR1_SUBJECT, POS_FOO2_PREDICATE, POS_FOO3_OBJECT, POS_FOO4_PREDICATE),
-            createRelation(expectedResult), createRelation(tuple1), createRelation(tuple2));
+        final SortedSet<Attribute> expectedHeading =
+            createHeading(VAR_BAR1_SUBJECT, POS_FOO2_PREDICATE, POS_FOO3_OBJECT, POS_FOO4_PREDICATE);
+        checkProcess(expectedHeading, createRelation(expectedResult), createRelation(tuple1), createRelation(tuple2));
+        checkProcess(expectedHeading, createRelation(expectedResult), createRelation(tuple2), createRelation(tuple1));
     }
 
     private void checkProcess(SortedSet<Attribute> expectedHeading, final EvaluatedRelation expectedResult,
