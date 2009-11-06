@@ -83,6 +83,15 @@ public class SubsumptionEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
+    public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
+        EvaluatedRelation relation2, SortedSet<Tuple> result) {
+        for (Tuple tuple1 : relation1.getTuples()) {
+            for (Tuple tuple2 : relation2.getTuples()) {
+                process(headings, result, tuple1, tuple2);
+            }
+        }
+    }
+
     /**
      * Returns the tuples to be subsumed in the result set.
      *
@@ -111,31 +120,31 @@ public class SubsumptionEngine implements TupleEngine {
      * @return -1 indicates avps2 subsumes avps1, 1 indicates avps1 subsumes avps2 and 0 means they do not share any
      *         common values or are equal.
      */
-    // TODO Tuple Refactor.
-    public int subsumes(SortedSet<Attribute> headings, Map<Attribute, Node> avps1,
-        Map<Attribute, Node> avps2) {
-
-        // Don't subsume if all the values are collection.
-        int noHeadings = headings.size();
-        if (avps1.size() == noHeadings && avps2.size() == noHeadings) {
+    public int subsumes(SortedSet<Attribute> headings, Map<Attribute, Node> avps1, Map<Attribute, Node> avps2) {
+        // Don't subsume if the merged headings are the same size as the avps.
+        int numberOfHeadings = headings.size();
+        if (avps1.size() == numberOfHeadings && avps2.size() == numberOfHeadings) {
             return 0;
         }
 
-        // Compare avps and look for an equal avp.
-        boolean found = false;
-        for (Attribute attribute : avps1.keySet()) {
-            if (avps2.keySet().contains(attribute) && avps1.get(attribute).equals(avps2.get(attribute))) {
-                found = true;
-                break;
-            }
-        }
-
         // If found a matching avp then check if not subsumed
-        if (found) {
+        if (findAnyEqualAttributeValue(avps1, avps2)) {
             return areSubsumedBy(avps1, avps2);
         } else {
             return 0;
         }
+    }
+
+    private boolean findAnyEqualAttributeValue(Map<Attribute, Node> avps1, Map<Attribute, Node> avps2) {
+        boolean found = false;
+        for (Map.Entry<Attribute, Node> attributeValue : avps1.entrySet()) {
+            final Node avpsNode2 = avps2.get(attributeValue.getKey());
+            found = avpsNode2 != null && attributeValue.getValue().equals(avpsNode2);
+            if (found) {
+                break;
+            }
+        }
+        return found;
     }
 
     /**
@@ -155,33 +164,24 @@ public class SubsumptionEngine implements TupleEngine {
         return 0;
     }
 
-    private boolean onlyContainsAttributesValues(Map<Attribute, Node> avps1,
-        Map<Attribute, Node> avps2) {
-        boolean onlyContainsValues = false;
-        for (Attribute attribute : avps2.keySet()) {
-            onlyContainsValues = avps1.keySet().contains(attribute) &&
-                avps1.get(attribute).equals(avps2.get(attribute));
-            if (!onlyContainsValues) {
+    private boolean onlyContainsAttributesValues(Map<Attribute, Node> avps1, Map<Attribute, Node> avps2) {
+        boolean found = false;
+        for (Map.Entry<Attribute, Node> attributeValue : avps2.entrySet()) {
+            final Node avpsNode1 = avps1.get(attributeValue.getKey());
+            found = avpsNode1 != null && avpsNode1.equals(attributeValue.getValue());
+            if(!found) {
                 break;
             }
         }
-        return onlyContainsValues;
+        return found;
     }
 
     private boolean tuple2SubsumesTuple1(int subsumes) {
         return subsumes == -1;
     }
 
+
     private boolean tuple1SubsumesTuple2(int subsumes) {
         return subsumes == 1;
-    }
-
-    public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
-        EvaluatedRelation relation2, SortedSet<Tuple> result) {
-        for (Tuple tuple1 : relation1.getTuples()) {
-            for (Tuple tuple2 : relation2.getTuples()) {
-                process(headings, result, tuple1, tuple2);
-            }
-        }
     }
 }
