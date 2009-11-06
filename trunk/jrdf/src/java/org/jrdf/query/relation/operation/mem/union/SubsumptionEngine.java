@@ -169,7 +169,7 @@ public class SubsumptionEngine implements TupleEngine {
         for (Map.Entry<Attribute, Node> attributeValue : avps2.entrySet()) {
             final Node avpsNode1 = avps1.get(attributeValue.getKey());
             found = avpsNode1 != null && avpsNode1.equals(attributeValue.getValue());
-            if(!found) {
+            if (!found) {
                 break;
             }
         }
