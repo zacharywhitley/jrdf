@@ -78,8 +78,8 @@ import java.util.TreeSet;
  * Common tuple processing code - gets headings and then processes tuples using the tuple engine.
  */
 public final class RelationProcessorImpl implements RelationProcessor {
-    private RelationFactory relationFactory;
-    private TupleComparator tupleComparator;
+    private final RelationFactory relationFactory;
+    private final TupleComparator tupleComparator;
 
     public RelationProcessorImpl(RelationFactory newRelationFactory, TupleComparator newTupleComparator) {
         checkNotNull(newRelationFactory, newTupleComparator);

@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,7 +54,6 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.relation.operation.mem.join.natural;
@@ -62,47 +61,59 @@ package org.jrdf.query.relation.operation.mem.join.natural;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.mem.RelationHelper;
-import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.SortedSet;
-import java.util.TreeSet;
-import static java.util.Collections.unmodifiableSortedSet;
+import java.util.Set;
+import java.util.Iterator;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-public class SortMergeNaturalJoinEngine implements TupleEngine {
-    private static final SortedSet<Attribute> EMPTY_ATTRIBUTE_SET = unmodifiableSortedSet(new TreeSet<Attribute>());
-    private final TupleEngine naturalJoinEngine;
-    private final RelationHelper relationHelper;
-    private final MultiSortMergeJoin multiSortMergeJoin;
-    private final SortMergeJoinImpl sortMergeJoin;
+public class MultiSortMergeJoin {
+    private SortMergeJoinImpl sortMergeJoin;
 
-    public SortMergeNaturalJoinEngine(RelationHelper newRelationHelper, TupleEngine newNaturalJoinEngine,
-        SortMergeJoinImpl newSortMergeJoin) {
-        this.relationHelper = newRelationHelper;
-        this.naturalJoinEngine = newNaturalJoinEngine;
+    public MultiSortMergeJoin(SortMergeJoinImpl newSortMergeJoin) {
         this.sortMergeJoin = newSortMergeJoin;
-        this.multiSortMergeJoin = new MultiSortMergeJoin(sortMergeJoin);
     }
 
-    public SortedSet<Attribute> getHeading(EvaluatedRelation relation1, EvaluatedRelation relation2) {
-        return relationHelper.getHeadingUnions(relation1, relation2);
+    public void mergeJoin(SortedSet<Attribute> headings, EvaluatedRelation relation1,
+        EvaluatedRelation relation2, SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result) {
+        Attribute attr = chooseACommonHeading(headings, relation1, relation2);
+        commonHeadings.remove(attr);
+        sortMergeJoin.mergeJoin(headings, relation1, relation2, attr, commonHeadings, result);
     }
 
-    public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
-            EvaluatedRelation relation2, SortedSet<Tuple> result) {
-        SortedSet<Attribute> commonHeadings = relationHelper.getHeadingIntersections(relation1, relation2);
-        if (commonHeadings.size() > 1) {
-            multiSortMergeJoin.mergeJoin(headings, relation1, relation2, commonHeadings, result);
-        } else if (commonHeadings.size() == 1) {
-            sortMergeJoin.mergeJoin(headings, relation1, relation2, commonHeadings.iterator().next(),
-                EMPTY_ATTRIBUTE_SET, result);
-        } else {
-            naturalJoinEngine.processRelations(headings, relation1, relation2, result);
+    private Attribute chooseACommonHeading(Set<Attribute> headings, EvaluatedRelation rel1, EvaluatedRelation rel2) {
+        final Iterator<Attribute> iterator = headings.iterator();
+        Attribute attribute = iterator.next();
+        Attribute result = attribute;
+        long curMin = estimateJoinCost(attribute, rel1, rel2);
+        while (iterator.hasNext()) {
+            attribute = iterator.next();
+            long cost = estimateJoinCost(attribute, rel1, rel2);
+            if (curMin > cost) {
+                curMin = cost;
+                result = attribute;
+            }
         }
+        return result;
+    }
 
+    private long estimateJoinCost(Attribute attribute, EvaluatedRelation rel1, EvaluatedRelation rel2) {
+        long b1, b2, ub1, ub2;
+        long size1 = rel1.getTupleSize();
+        long size2 = rel2.getTupleSize();
+        b1 = getNumberOfBoundAttributes(attribute, rel1);
+        b2 = getNumberOfBoundAttributes(attribute, rel2);
+        ub1 = size1 - b1;
+        ub2 = size2 - b2;
+        return b1 + b2 + (b1 * ub2) + (b2 * ub1) + (ub1 * ub2);
+    }
+
+    private long getNumberOfBoundAttributes(Attribute attribute, EvaluatedRelation relation) {
+        long size = 0;
+        for (Tuple tuple : relation) {
+            if (tuple.getValue(attribute) != null) {
+                size++;
+            }
+        }
+        return size;
     }
 }

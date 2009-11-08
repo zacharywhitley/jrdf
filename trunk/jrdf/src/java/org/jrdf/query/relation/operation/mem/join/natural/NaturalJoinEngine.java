@@ -73,8 +73,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 /**
- * Combines two relations attributes if they have common tuple values.  The
- * same as AND in Algebra A.
+ * Combines two relations attributes if they have common tuple values.  The same as AND in Algebra A.
  * <p/>
  * The general algorithm is:
  * 1. Find all matching attributes on two relations.
@@ -97,11 +96,8 @@ public class NaturalJoinEngine implements TupleEngine {
 
     public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
         EvaluatedRelation relation2, SortedSet<Tuple> result) {
-        doNaturalJoin(headings, relation1.getTuples(), relation2.getTuples(), result);
-    }
-
-    protected void doNaturalJoin(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
-        SortedSet<Tuple> result) {
+        Set<Tuple> tuples1 = relation1.getTuples();
+        Set<Tuple> tuples2 = relation2.getTuples();
         if (tuples1.size() < tuples2.size()) {
             startDoubleLoopProcessing(headings, tuples1, tuples2, result);
         } else {
@@ -109,7 +105,7 @@ public class NaturalJoinEngine implements TupleEngine {
         }
     }
 
-    protected void startDoubleLoopProcessing(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
+    private void startDoubleLoopProcessing(SortedSet<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
         SortedSet<Tuple> result) {
         for (final Tuple tuple1 : tuples1) {
             for (final Tuple tuple2 : tuples2) {
