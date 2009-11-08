@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,7 +54,6 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.relation.operation.mem.join.natural;
@@ -62,47 +61,10 @@ package org.jrdf.query.relation.operation.mem.join.natural;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.mem.RelationHelper;
-import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.SortedSet;
-import java.util.TreeSet;
-import static java.util.Collections.unmodifiableSortedSet;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-public class SortMergeNaturalJoinEngine implements TupleEngine {
-    private static final SortedSet<Attribute> EMPTY_ATTRIBUTE_SET = unmodifiableSortedSet(new TreeSet<Attribute>());
-    private final TupleEngine naturalJoinEngine;
-    private final RelationHelper relationHelper;
-    private final MultiSortMergeJoin multiSortMergeJoin;
-    private final SortMergeJoinImpl sortMergeJoin;
-
-    public SortMergeNaturalJoinEngine(RelationHelper newRelationHelper, TupleEngine newNaturalJoinEngine,
-        SortMergeJoinImpl newSortMergeJoin) {
-        this.relationHelper = newRelationHelper;
-        this.naturalJoinEngine = newNaturalJoinEngine;
-        this.sortMergeJoin = newSortMergeJoin;
-        this.multiSortMergeJoin = new MultiSortMergeJoin(sortMergeJoin);
-    }
-
-    public SortedSet<Attribute> getHeading(EvaluatedRelation relation1, EvaluatedRelation relation2) {
-        return relationHelper.getHeadingUnions(relation1, relation2);
-    }
-
-    public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
-            EvaluatedRelation relation2, SortedSet<Tuple> result) {
-        SortedSet<Attribute> commonHeadings = relationHelper.getHeadingIntersections(relation1, relation2);
-        if (commonHeadings.size() > 1) {
-            multiSortMergeJoin.mergeJoin(headings, relation1, relation2, commonHeadings, result);
-        } else if (commonHeadings.size() == 1) {
-            sortMergeJoin.mergeJoin(headings, relation1, relation2, commonHeadings.iterator().next(),
-                EMPTY_ATTRIBUTE_SET, result);
-        } else {
-            naturalJoinEngine.processRelations(headings, relation1, relation2, result);
-        }
-
-    }
+public interface SortMergeJoin {
+    void mergeJoin(SortedSet<Attribute> headings, EvaluatedRelation rel1, EvaluatedRelation rel2,
+        Attribute attribute, SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result);
 }

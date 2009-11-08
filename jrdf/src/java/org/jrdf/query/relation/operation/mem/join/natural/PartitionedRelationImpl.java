@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,55 +54,76 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.query.relation.operation.mem.join.natural;
 
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.mem.RelationHelper;
-import org.jrdf.query.relation.operation.mem.join.TupleEngine;
+import org.jrdf.query.relation.mem.AttributeTupleComparatorImpl;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-import static java.util.Collections.unmodifiableSortedSet;
+import java.util.ArrayList;
+import static java.util.Collections.sort;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-/**
- * @author Yuan-Fang Li
- * @version :$
- */
-public class SortMergeNaturalJoinEngine implements TupleEngine {
-    private static final SortedSet<Attribute> EMPTY_ATTRIBUTE_SET = unmodifiableSortedSet(new TreeSet<Attribute>());
-    private final TupleEngine naturalJoinEngine;
-    private final RelationHelper relationHelper;
-    private final MultiSortMergeJoin multiSortMergeJoin;
-    private final SortMergeJoinImpl sortMergeJoin;
+public class PartitionedRelationImpl implements PartitionedRelation {
+    private final Attribute attribute;
+    private final EvaluatedRelation relation;
+    private final Set<Tuple> boundSet;
+    private final Set<Tuple> unboundSet;
+    private final List<Tuple> orderedBoundedSet;
+    private AttributeTupleComparator tupleAVComparator;
 
-    public SortMergeNaturalJoinEngine(RelationHelper newRelationHelper, TupleEngine newNaturalJoinEngine,
-        SortMergeJoinImpl newSortMergeJoin) {
-        this.relationHelper = newRelationHelper;
-        this.naturalJoinEngine = newNaturalJoinEngine;
-        this.sortMergeJoin = newSortMergeJoin;
-        this.multiSortMergeJoin = new MultiSortMergeJoin(sortMergeJoin);
+    public PartitionedRelationImpl(NodeComparator newNodeComparator, Attribute newAttribute,
+        EvaluatedRelation newRelation) {
+        this.tupleAVComparator = new AttributeTupleComparatorImpl(newNodeComparator);
+        this.attribute = newAttribute;
+        this.relation = newRelation;
+        this.boundSet = new HashSet<Tuple>();
+        this.unboundSet = new HashSet<Tuple>();
+        this.orderedBoundedSet = new ArrayList<Tuple>();
+        this.tupleAVComparator.setAttribute(attribute);
+        partitionWithBoundAndUnboundAttributes();
     }
 
-    public SortedSet<Attribute> getHeading(EvaluatedRelation relation1, EvaluatedRelation relation2) {
-        return relationHelper.getHeadingUnions(relation1, relation2);
+    public Set<Tuple> getBoundSet() {
+        return boundSet;
     }
 
-    public void processRelations(SortedSet<Attribute> headings, EvaluatedRelation relation1,
-            EvaluatedRelation relation2, SortedSet<Tuple> result) {
-        SortedSet<Attribute> commonHeadings = relationHelper.getHeadingIntersections(relation1, relation2);
-        if (commonHeadings.size() > 1) {
-            multiSortMergeJoin.mergeJoin(headings, relation1, relation2, commonHeadings, result);
-        } else if (commonHeadings.size() == 1) {
-            sortMergeJoin.mergeJoin(headings, relation1, relation2, commonHeadings.iterator().next(),
-                EMPTY_ATTRIBUTE_SET, result);
-        } else {
-            naturalJoinEngine.processRelations(headings, relation1, relation2, result);
+    public List<Tuple> getSourceBoundSet() {
+        return orderedBoundedSet;
+    }
+
+    public Iterator<Tuple> getSortedBoundedSetIterator() {
+        return orderedBoundedSet.iterator();
+    }
+
+    public Set<Tuple> getUnboundSet() {
+        return unboundSet;
+    }
+
+    public Tuple getTupleFromList(int idx) {
+        if (idx < orderedBoundedSet.size()) {
+            return orderedBoundedSet.get(idx);
         }
+        return null;
+    }
 
+    private void partitionWithBoundAndUnboundAttributes() {
+        for (Tuple tuple : relation.getTuples()) {
+            if (tuple.getValue(attribute) != null) {
+                boundSet.add(tuple);
+            } else if (!boundSet.contains(tuple)) {
+                unboundSet.add(tuple);
+            }
+        }
+        orderedBoundedSet.addAll(boundSet);
+        sort(orderedBoundedSet, tupleAVComparator);
     }
 }

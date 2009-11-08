@@ -145,10 +145,18 @@
         <constructor-arg ref="relationHelper"/>
     </bean>
 
-    <bean id="sortMergeNaturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine">
-        <constructor-arg ref="tupleFactory"/>
-        <constructor-arg ref="relationHelper"/>
+    <bean id="sortMergeJoin" class="org.jrdf.query.relation.operation.mem.join.natural.SortMergeJoinImpl">
+        <constructor-arg ref="naturalJoinEngine"/>
         <constructor-arg ref="nodeComparator"/>
+        <constructor-arg ref="relationFactory"/>
+        <constructor-arg ref="relationHelper"/>
+        <constructor-arg ref="tupleFactory"/>
+    </bean>
+
+    <bean id="sortMergeNaturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine">
+        <constructor-arg ref="relationHelper"/>
+        <constructor-arg ref="naturalJoinEngine"/>
+        <constructor-arg ref="sortMergeJoin"/>
     </bean>
 
     <bean id="semiJoinEngine" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinEngine">
