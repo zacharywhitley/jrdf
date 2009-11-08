@@ -58,8 +58,8 @@
 
 package org.jrdf.query.relation.operation.mem.join.natural;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
@@ -76,8 +76,6 @@ public class SortMergeJoinImpl implements SortMergeJoin {
     private final RelationFactory relationFactory;
     private final RelationHelper relationHelper;
     private final TupleFactory tupleFactory;
-    private int pos1;
-    private int pos2;
 
     public SortMergeJoinImpl(TupleEngine newNaturalJoinEngine, NodeComparator newNodeComparator,
         RelationFactory newRelationFactory, RelationHelper newRelationHelper, TupleFactory newTupleFactory) {
@@ -93,9 +91,9 @@ public class SortMergeJoinImpl implements SortMergeJoin {
         final PartitionedRelation sets1 = new PartitionedRelationImpl(nodeComparator, attribute, rel1);
         final PartitionedRelation sets2 = new PartitionedRelationImpl(nodeComparator, attribute, rel2);
         if (sets1.getBoundSet().size() <= sets2.getBoundSet().size()) {
-            doProperSortMergeJoin(commonHeadings, sets1, sets2, attribute, result);
+            doProperSortMergeJoin(commonHeadings, sets1, sets2, result);
         } else {
-            doProperSortMergeJoin(commonHeadings, sets2, sets1, attribute, result);
+            doProperSortMergeJoin(commonHeadings, sets2, sets1, result);
         }
         engine.processRelations(headings, relationFactory.getRelation(sets1.getBoundSet()),
             relationFactory.getRelation(sets2.getUnboundSet()), result);
@@ -106,18 +104,39 @@ public class SortMergeJoinImpl implements SortMergeJoin {
     }
 
     private void doProperSortMergeJoin(SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
-        PartitionedRelation sets2, Attribute attribute, SortedSet<Tuple> result) {
-        pos1 = 0;
-        pos2 = 0;
+        PartitionedRelation sets2, SortedSet<Tuple> result) {
+        int pos1 = 0;
+        int pos2 = 0;
         Tuple tuple1 = sets1.getTupleFromList(pos1);
         Tuple tuple2 = sets2.getTupleFromList(pos2);
         while (tuple1 != null && tuple2 != null) {
-            int compare = nodeComparator.compare(tuple1.getValue(attribute), tuple2.getValue(attribute));
-            if (compare == 0) {
-                processSameTuples(commonHeadings, attribute, sets1, sets2, tuple1, result);
+            if (valuesAreEqual(sets1.getNodeFromList(pos1), sets2.getNodeFromList(pos2))) {
+                int newPos2 = pos2 + 1;
+                boolean incrementPos1 = true;
+                int i = pos1;
+                while (passedEnd(sets1, i)) {
+                    if (!valuesAreEqual(sets1.getNodeFromList(i), sets1.getNodeFromList(pos1))) {
+                        pos1 = i;
+                        incrementPos1 = false;
+                        break;
+                    } else {
+                        int j = pos2;
+                        while (passedEnd(sets2, j) && valuesAreEqual(sets1.getNodeFromList(i),
+                            sets2.getNodeFromList(j))) {
+                            newPos2 = j;
+                            addToResult(commonHeadings, sets1.getTupleFromList(i), sets2.getTupleFromList(j), result);
+                            j++;
+                        }
+                    }
+                    i++;
+                }
+                if (incrementPos1) {
+                    pos1++;
+                }
+                pos2 = newPos2;
                 tuple1 = sets1.getTupleFromList(pos1);
                 tuple2 = sets2.getTupleFromList(pos2);
-            } else if (compare > 0) {
+            } else if (nodeComparator.compare(sets1.getNodeFromList(pos1), sets2.getNodeFromList(pos2)) > 0) {
                 tuple2 = sets2.getTupleFromList(++pos2);
             } else {
                 tuple1 = sets1.getTupleFromList(++pos1);
@@ -125,32 +144,12 @@ public class SortMergeJoinImpl implements SortMergeJoin {
         }
     }
 
-    private void processSameTuples(SortedSet<Attribute> commonHeadings, Attribute attribute, PartitionedRelation l1,
-        PartitionedRelation l2, Tuple pivot, SortedSet<Tuple> result) {
-        int newPos2 = pos2 + 1;
-        boolean incrementPos1 = true;
-        for (int i = pos1; i < l1.getSourceBoundSet().size(); i++) {
-            Tuple t1 = l1.getSourceBoundSet().get(i);
-            final Node t1Value = t1.getValue(attribute);
-            if (nodeComparator.compare(t1Value, pivot.getValue(attribute)) != 0) {
-                pos1 = i;
-                incrementPos1 = false;
-                break;
-            } else {
-                for (int j = pos2; j < l2.getSourceBoundSet().size(); j++) {
-                    newPos2 = j;
-                    Tuple t2 = l2.getSourceBoundSet().get(j);
-                    if (nodeComparator.compare(t1Value, t2.getValue(attribute)) != 0) {
-                        break;
-                    }
-                    addToResult(commonHeadings, t1, t2, result);
-                }
-            }
-        }
-        if (incrementPos1) {
-            pos1++;
-        }
-        pos2 = newPos2;
+    private boolean passedEnd(PartitionedRelation sets2, int j) {
+        return j < sets2.getSortedBoundSet().size();
+    }
+
+    private boolean valuesAreEqual(final Node v1, final Node v2) {
+        return nodeComparator.compare(v1, v2) == 0;
     }
 
     private void addToResult(SortedSet<Attribute> commonHeadings, Tuple tuple1, Tuple tuple2, SortedSet<Tuple> result) {

@@ -58,6 +58,7 @@
 
 package org.jrdf.query.relation.operation.mem.join.natural;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeTupleComparator;
@@ -96,7 +97,7 @@ public class PartitionedRelationImpl implements PartitionedRelation {
         return boundSet;
     }
 
-    public List<Tuple> getSourceBoundSet() {
+    public List<Tuple> getSortedBoundSet() {
         return orderedBoundedSet;
     }
 
@@ -113,6 +114,15 @@ public class PartitionedRelationImpl implements PartitionedRelation {
             return orderedBoundedSet.get(idx);
         }
         return null;
+    }
+
+    public Node getNodeFromList(int idx) {
+        final Tuple list = getTupleFromList(idx);
+        if (list != null) {
+            return list.getValue(attribute);
+        } else {
+            return null;
+        }
     }
 
     private void partitionWithBoundAndUnboundAttributes() {

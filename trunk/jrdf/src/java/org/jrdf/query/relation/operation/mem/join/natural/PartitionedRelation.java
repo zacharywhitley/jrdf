@@ -59,6 +59,7 @@
 package org.jrdf.query.relation.operation.mem.join.natural;
 
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.graph.Node;
 
 import java.util.Set;
 import java.util.List;
@@ -67,11 +68,13 @@ import java.util.Iterator;
 public interface PartitionedRelation {
     Set<Tuple> getBoundSet();
 
-    List<Tuple> getSourceBoundSet();
+    List<Tuple> getSortedBoundSet();
 
     Iterator<Tuple> getSortedBoundedSetIterator();
 
     Set<Tuple> getUnboundSet();
 
     Tuple getTupleFromList(int idx);
+
+    Node getNodeFromList(int idx);
 }
