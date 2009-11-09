@@ -128,16 +128,18 @@ public class SortMergeJoinImpl implements SortMergeJoin {
 
     private void mergeSameValues(Node initLhsValue, SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
         PartitionedRelation sets2, SortedSet<Tuple> result) {
-        rhsPos++;
+        int originalRhs = rhsPos;
         while (!passedEnd(sets1, lhsPos) && valuesAreEqual(sets1.getNodeFromList(lhsPos), initLhsValue)) {
-            rhsPos--;
+            rhsPos = originalRhs;
             while (!passedEnd(sets2, rhsPos) && valuesAreEqual(sets1.getNodeFromList(lhsPos),
                 sets2.getNodeFromList(rhsPos))) {
                 addToResult(commonHeadings, sets1.getTupleFromList(lhsPos), sets2.getTupleFromList(rhsPos), result);
                 rhsPos++;
             }
             lhsPos++;
-            rhsPos--;
+        }
+        if (originalRhs == rhsPos) {
+            rhsPos++;
         }
     }
 
