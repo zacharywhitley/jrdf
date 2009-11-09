@@ -76,6 +76,8 @@ public class SortMergeJoinImpl implements SortMergeJoin {
     private final RelationFactory relationFactory;
     private final RelationHelper relationHelper;
     private final TupleFactory tupleFactory;
+    private int lhsPos;
+    private int rhsPos;
 
     public SortMergeJoinImpl(TupleEngine newNaturalJoinEngine, NodeComparator newNodeComparator,
         RelationFactory newRelationFactory, RelationHelper newRelationHelper, TupleFactory newTupleFactory) {
@@ -105,31 +107,37 @@ public class SortMergeJoinImpl implements SortMergeJoin {
 
     private void doProperSortMergeJoin(SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
         PartitionedRelation sets2, SortedSet<Tuple> result) {
-        int pos1 = 0;
-        int pos2 = 0;
-        Tuple lhs = sets1.getTupleFromList(pos1);
-        Tuple rhs = sets2.getTupleFromList(pos2);
+        lhsPos = 0;
+        rhsPos = 0;
+        Tuple lhs = sets1.getTupleFromList(lhsPos);
+        Tuple rhs = sets2.getTupleFromList(rhsPos);
         while (lhs != null && rhs != null) {
-            final Node initLhsValue = sets1.getNodeFromList(pos1);
-            if (valuesAreEqual(initLhsValue, sets2.getNodeFromList(pos2))) {
-                pos2++;
-                while (!passedEnd(sets1, pos1) && valuesAreEqual(sets1.getNodeFromList(pos1), initLhsValue)) {
-                    pos2--;
-                    while (!passedEnd(sets2, pos2) && valuesAreEqual(sets1.getNodeFromList(pos1),
-                        sets2.getNodeFromList(pos2))) {
-                        addToResult(commonHeadings, sets1.getTupleFromList(pos1), sets2.getTupleFromList(pos2), result);
-                        pos2++;
-                    }
-                    pos1++;
-                    pos2--;
-                }
-                lhs = sets1.getTupleFromList(pos1);
-                rhs = sets2.getTupleFromList(pos2);
-            } else if (nodeComparator.compare(initLhsValue, sets2.getNodeFromList(pos2)) > 0) {
-                rhs = sets2.getTupleFromList(++pos2);
+            final Node initLhsValue = sets1.getNodeFromList(lhsPos);
+            final Node initRhsValue = sets2.getNodeFromList(rhsPos);
+            if (valuesAreEqual(initLhsValue, initRhsValue)) {
+                mergeSameValues(commonHeadings, sets1, sets2, result, initLhsValue);
+                lhs = sets1.getTupleFromList(lhsPos);
+                rhs = sets2.getTupleFromList(rhsPos);
+            } else if (nodeComparator.compare(initLhsValue, initRhsValue) > 0) {
+                rhs = sets2.getTupleFromList(++rhsPos);
             } else {
-                lhs = sets1.getTupleFromList(++pos1);
+                lhs = sets1.getTupleFromList(++lhsPos);
             }
+        }
+    }
+
+    private void mergeSameValues(SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
+        PartitionedRelation sets2, SortedSet<Tuple> result, Node initLhsValue) {
+        rhsPos++;
+        while (!passedEnd(sets1, lhsPos) && valuesAreEqual(sets1.getNodeFromList(lhsPos), initLhsValue)) {
+            rhsPos--;
+            while (!passedEnd(sets2, rhsPos) && valuesAreEqual(sets1.getNodeFromList(lhsPos),
+                sets2.getNodeFromList(rhsPos))) {
+                addToResult(commonHeadings, sets1.getTupleFromList(lhsPos), sets2.getTupleFromList(rhsPos), result);
+                rhsPos++;
+            }
+            lhsPos++;
+            rhsPos--;
         }
     }
 
