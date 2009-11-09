@@ -63,57 +63,8 @@ import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 
 import java.util.SortedSet;
-import java.util.Set;
-import java.util.Iterator;
 
-public class MultiSortMergeJoin {
-    private SortMergeJoinImpl sortMergeJoin;
-
-    public MultiSortMergeJoin(SortMergeJoinImpl newSortMergeJoin) {
-        this.sortMergeJoin = newSortMergeJoin;
-    }
-
-    public void mergeJoin(SortedSet<Attribute> headings, EvaluatedRelation relation1,
-        EvaluatedRelation relation2, SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result) {
-        Attribute attr = chooseACommonHeading(headings, relation1, relation2);
-        commonHeadings.remove(attr);
-        sortMergeJoin.mergeJoin(headings, relation1, relation2, attr, commonHeadings, result);
-    }
-
-    private Attribute chooseACommonHeading(Set<Attribute> headings, EvaluatedRelation rel1, EvaluatedRelation rel2) {
-        final Iterator<Attribute> iterator = headings.iterator();
-        Attribute attribute = iterator.next();
-        Attribute result = attribute;
-        long curMin = estimateJoinCost(attribute, rel1, rel2);
-        while (iterator.hasNext()) {
-            attribute = iterator.next();
-            long cost = estimateJoinCost(attribute, rel1, rel2);
-            if (curMin > cost) {
-                curMin = cost;
-                result = attribute;
-            }
-        }
-        return result;
-    }
-
-    private long estimateJoinCost(Attribute attribute, EvaluatedRelation rel1, EvaluatedRelation rel2) {
-        long b1, b2, ub1, ub2;
-        long size1 = rel1.getTupleSize();
-        long size2 = rel2.getTupleSize();
-        b1 = getNumberOfBoundAttributes(attribute, rel1);
-        b2 = getNumberOfBoundAttributes(attribute, rel2);
-        ub1 = size1 - b1;
-        ub2 = size2 - b2;
-        return b1 + b2 + (b1 * ub2) + (b2 * ub1) + (ub1 * ub2);
-    }
-
-    private long getNumberOfBoundAttributes(Attribute attribute, EvaluatedRelation relation) {
-        long size = 0;
-        for (Tuple tuple : relation) {
-            if (tuple.getValue(attribute) != null) {
-                size++;
-            }
-        }
-        return size;
-    }
+public interface MultiSortMergeJoin {
+    void mergeJoin(SortedSet<Attribute> headings, SortedSet<Attribute> commonHeadings,
+        EvaluatedRelation relation1, EvaluatedRelation relation2, SortedSet<Tuple> result);
 }

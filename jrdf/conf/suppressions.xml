@@ -44,15 +44,11 @@
     <suppress checks="JavaNCSS" files="OWL"/>
     <suppress checks="JavaNCSS" files="BasicOperations"/>
     <suppress checks="JavaNCSS" files="NodeTypeBinding"/>
-    <suppress checks="JavaNCSS" files="SortMergeJoinImpl"/>
     <suppress checks="JavaNCSS" files="SparqlStreamingAnswerFactoryImpl"/>
     <suppress checks="JavaNCSS" files="ExpressionSimplifierImpl"/>
     <suppress checks="JavaNCSS" files="FilterAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="NodeTypeBinding"/>
-    <suppress checks="CyclomaticComplexity" files="SortMergeJoinImpl"/>
-    <suppress checks="ParameterNumber" files="SortMergeJoin"/>
-    <suppress checks="ParameterNumber" files="SortMergeJoinImpl"/>
 
     <!-- Cleanup molecule implementation -->
     <suppress checks="BooleanExpressionComplexity" files="FlatteningFiveLongClosableIterator"/>

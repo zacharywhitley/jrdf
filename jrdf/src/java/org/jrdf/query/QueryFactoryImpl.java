@@ -94,9 +94,11 @@ import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl;
 import org.jrdf.query.relation.operation.mem.join.NadicJoinImpl;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
+import org.jrdf.query.relation.operation.mem.join.natural.MultiSortMergeJoinImpl;
 import org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine;
-import org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine;
+import org.jrdf.query.relation.operation.mem.join.natural.SortMergeJoin;
 import org.jrdf.query.relation.operation.mem.join.natural.SortMergeJoinImpl;
+import org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine;
 import org.jrdf.query.relation.operation.mem.logic.BooleanEvaluatorImpl;
 import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
 import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
@@ -154,10 +156,11 @@ public class QueryFactoryImpl implements QueryFactory {
     public QueryEngine createQueryEngine() {
         Project project = new ProjectImpl(TUPLE_FACTORY, RELATION_FACTORY);
         TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, RELATION_HELPER);
-        SortMergeJoinImpl sortMergeJoin = new SortMergeJoinImpl(joinTupleEngine, NODE_COMPARATOR, RELATION_FACTORY,
+        SortMergeJoin sortMergeJoin = new SortMergeJoinImpl(joinTupleEngine, NODE_COMPARATOR, RELATION_FACTORY,
             RELATION_HELPER, TUPLE_FACTORY);
+        MultiSortMergeJoinImpl multiSortMergeJoin = new MultiSortMergeJoinImpl(sortMergeJoin, NODE_COMPARATOR);
         TupleEngine optJoinTupleEngine = new SortMergeNaturalJoinEngine(RELATION_HELPER, joinTupleEngine,
-            sortMergeJoin);
+            multiSortMergeJoin);
         TupleEngine unionTupleEngine = new OuterUnionEngine(RELATION_HELPER);
         NadicJoin join = new NadicJoinImpl(RELATION_PROCESSOR, optJoinTupleEngine);
         BooleanEvaluator evaluator = new BooleanEvaluatorImpl(NODE_COMPARATOR);

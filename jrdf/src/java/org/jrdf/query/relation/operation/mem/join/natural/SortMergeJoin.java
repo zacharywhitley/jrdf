@@ -59,12 +59,13 @@
 package org.jrdf.query.relation.operation.mem.join.natural;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 
 import java.util.SortedSet;
 
 public interface SortMergeJoin {
-    void mergeJoin(SortedSet<Attribute> headings, EvaluatedRelation rel1, EvaluatedRelation rel2,
-        Attribute attribute, SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result);
+    void mergeJoin(SortedSet<Attribute> headings,
+        SortedSet<Attribute> commonHeadings, final PartitionedRelation sets1, final PartitionedRelation sets2,
+        SortedSet<Tuple> result
+    );
 }
