@@ -69,7 +69,6 @@ import org.jrdf.query.relation.mem.AttributeTupleComparatorImpl;
 import java.util.ArrayList;
 import static java.util.Collections.sort;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -80,6 +79,19 @@ public class PartitionedRelationImpl implements PartitionedRelation {
     private final Set<Tuple> unboundSet;
     private final List<Tuple> orderedBoundedSet;
     private AttributeTupleComparator tupleAVComparator;
+    private int index;
+
+    private PartitionedRelationImpl(Attribute newAttribute, EvaluatedRelation newEvaluatedRelation,
+        Set<Tuple> newBoundSet, Set<Tuple> newUnboundSet, List<Tuple> newOrderedBoundedSet,
+        AttributeTupleComparator newTupleAVComparator, int newIndex) {
+        this.attribute = newAttribute;
+        this.relation = newEvaluatedRelation;
+        this.boundSet = newBoundSet;
+        this.unboundSet = newUnboundSet;
+        this.orderedBoundedSet = newOrderedBoundedSet;
+        this.tupleAVComparator = newTupleAVComparator;
+        this.index = newIndex;
+    }
 
     public PartitionedRelationImpl(NodeComparator newNodeComparator, Attribute newAttribute,
         EvaluatedRelation newRelation) {
@@ -93,36 +105,33 @@ public class PartitionedRelationImpl implements PartitionedRelation {
         partitionWithBoundAndUnboundAttributes();
     }
 
+    public PartitionedRelation copy() {
+        return new PartitionedRelationImpl(attribute, relation, boundSet, unboundSet, orderedBoundedSet,
+            tupleAVComparator, index);
+    }
+
     public Set<Tuple> getBoundSet() {
         return boundSet;
-    }
-
-    public List<Tuple> getSortedBoundSet() {
-        return orderedBoundedSet;
-    }
-
-    public Iterator<Tuple> getSortedBoundedSetIterator() {
-        return orderedBoundedSet.iterator();
     }
 
     public Set<Tuple> getUnboundSet() {
         return unboundSet;
     }
 
-    public Tuple getTupleFromList(int idx) {
-        if (idx < orderedBoundedSet.size()) {
-            return orderedBoundedSet.get(idx);
-        }
-        return null;
+    public boolean hasNext() {
+        return index < orderedBoundedSet.size();
     }
 
-    public Node getNodeFromList(int idx) {
-        final Tuple list = getTupleFromList(idx);
-        if (list != null) {
-            return list.getValue(attribute);
-        } else {
-            return null;
-        }
+    public void next() {
+        index++;
+    }
+
+    public Tuple currentTuple() {
+        return orderedBoundedSet.get(index);
+    }
+
+    public Node curretNode() {
+        return currentTuple().getValue(attribute);
     }
 
     private void partitionWithBoundAndUnboundAttributes() {
