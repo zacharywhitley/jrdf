@@ -58,23 +58,23 @@
 
 package org.jrdf.query.relation.operation.mem.join.natural;
 
-import org.jrdf.query.relation.Tuple;
 import org.jrdf.graph.Node;
+import org.jrdf.query.relation.Tuple;
 
 import java.util.Set;
-import java.util.List;
-import java.util.Iterator;
 
 public interface PartitionedRelation {
     Set<Tuple> getBoundSet();
 
-    List<Tuple> getSortedBoundSet();
-
-    Iterator<Tuple> getSortedBoundedSetIterator();
-
     Set<Tuple> getUnboundSet();
 
-    Tuple getTupleFromList(int idx);
+    boolean hasNext();
 
-    Node getNodeFromList(int idx);
+    Tuple currentTuple();
+
+    Node curretNode();
+
+    void next();
+
+    PartitionedRelation copy();
 }

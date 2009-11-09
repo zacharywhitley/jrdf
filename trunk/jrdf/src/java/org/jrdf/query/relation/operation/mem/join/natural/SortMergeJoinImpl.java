@@ -75,8 +75,6 @@ public class SortMergeJoinImpl implements SortMergeJoin {
     private final RelationFactory relationFactory;
     private final RelationHelper relationHelper;
     private final TupleFactory tupleFactory;
-    private int lhsPos;
-    private int rhsPos;
 
     public SortMergeJoinImpl(TupleEngine newNaturalJoinEngine, NodeComparator newNodeComparator,
         RelationFactory newRelationFactory, RelationHelper newRelationHelper, TupleFactory newTupleFactory) {
@@ -104,38 +102,31 @@ public class SortMergeJoinImpl implements SortMergeJoin {
 
     private void doProperSortMergeJoin(SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
         PartitionedRelation sets2, SortedSet<Tuple> result) {
-        lhsPos = 0;
-        rhsPos = 0;
-        while (sets1.getTupleFromList(lhsPos) != null && sets2.getTupleFromList(rhsPos) != null) {
-            if (valuesAreEqual(sets1.getNodeFromList(lhsPos), sets2.getNodeFromList(rhsPos))) {
-                mergeSameValues(sets1.getNodeFromList(lhsPos), commonHeadings, sets1, sets2, result);
-            } else if (nodeComparator.compare(sets1.getNodeFromList(lhsPos), sets2.getNodeFromList(rhsPos)) > 0) {
-                rhsPos++;
+        while (sets1.hasNext() && sets2.hasNext()) {
+            if (valuesAreEqual(sets1.curretNode(), sets2.curretNode())) {
+                mergeSameValues(sets1.curretNode(), commonHeadings, sets1, sets2, result);
+            } else if (nodeComparator.compare(sets1.curretNode(), sets2.curretNode()) > 0) {
+                sets2.next();
             } else {
-                lhsPos++;
+                sets1.next();
             }
         }
     }
 
     private void mergeSameValues(Node initLhsValue, SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
         PartitionedRelation sets2, SortedSet<Tuple> result) {
-        int originalRhs = rhsPos;
-        while (!passedEnd(sets1, lhsPos) && valuesAreEqual(sets1.getNodeFromList(lhsPos), initLhsValue)) {
-            rhsPos = originalRhs;
-            while (!passedEnd(sets2, rhsPos) && valuesAreEqual(sets1.getNodeFromList(lhsPos),
-                sets2.getNodeFromList(rhsPos))) {
-                addToResult(commonHeadings, sets1.getTupleFromList(lhsPos), sets2.getTupleFromList(rhsPos), result);
-                rhsPos++;
+        PartitionedRelation originalRhs = sets2;
+        while (sets1.hasNext() && valuesAreEqual(sets1.curretNode(), initLhsValue)) {
+            sets2 = originalRhs.copy();
+            while (sets2.hasNext() && valuesAreEqual(sets1.curretNode(), sets2.curretNode())) {
+                addToResult(commonHeadings, sets1.currentTuple(), sets2.currentTuple(), result);
+                sets2.next();
             }
-            lhsPos++;
+            sets1.next();
         }
-        if (originalRhs == rhsPos) {
-            rhsPos++;
+        if (originalRhs == sets2) {
+            sets2.next();
         }
-    }
-
-    private boolean passedEnd(PartitionedRelation relation, int currentIndex) {
-        return relation.getSortedBoundSet().size() <= currentIndex;
     }
 
     private boolean valuesAreEqual(final Node v1, final Node v2) {
