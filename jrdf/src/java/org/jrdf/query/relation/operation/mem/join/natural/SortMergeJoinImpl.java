@@ -58,8 +58,8 @@
 
 package org.jrdf.query.relation.operation.mem.join.natural;
 
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
@@ -107,39 +107,34 @@ public class SortMergeJoinImpl implements SortMergeJoin {
         PartitionedRelation sets2, SortedSet<Tuple> result) {
         int pos1 = 0;
         int pos2 = 0;
-        Tuple tuple1 = sets1.getTupleFromList(pos1);
-        Tuple tuple2 = sets2.getTupleFromList(pos2);
-        while (tuple1 != null && tuple2 != null) {
-            final Node nodeFromList = sets1.getNodeFromList(pos1);
-            if (valuesAreEqual(nodeFromList, sets2.getNodeFromList(pos2))) {
+        Tuple lhs = sets1.getTupleFromList(pos1);
+        Tuple rhs = sets2.getTupleFromList(pos2);
+        while (lhs != null && rhs != null) {
+            final Node initLhsValue = sets1.getNodeFromList(pos1);
+            if (valuesAreEqual(initLhsValue, sets2.getNodeFromList(pos2))) {
                 int newPos2 = pos2 + 1;
-                while (passedEnd(sets1, pos1)) {
-                    if (!valuesAreEqual(sets1.getNodeFromList(pos1), nodeFromList)) {
-                        break;
-                    } else {
-                        int j = pos2;
-                        while (passedEnd(sets2, j) && valuesAreEqual(sets1.getNodeFromList(pos1),
-                            sets2.getNodeFromList(j))) {
-                            newPos2 = j;
-                            addToResult(commonHeadings, sets1.getTupleFromList(pos1), sets2.getTupleFromList(j), result);
-                            j++;
-                        }
+                while (!passedEnd(sets1, pos1) && valuesAreEqual(sets1.getNodeFromList(pos1), initLhsValue)) {
+                    int j = pos2;
+                    while (!passedEnd(sets2, j) && valuesAreEqual(sets1.getNodeFromList(pos1), sets2.getNodeFromList(j))) {
+                        newPos2 = j;
+                        addToResult(commonHeadings, sets1.getTupleFromList(pos1), sets2.getTupleFromList(j), result);
+                        j++;
                     }
                     pos1++;
                 }
                 pos2 = newPos2;
-                tuple1 = sets1.getTupleFromList(pos1);
-                tuple2 = sets2.getTupleFromList(pos2);
-            } else if (nodeComparator.compare(nodeFromList, sets2.getNodeFromList(pos2)) > 0) {
-                tuple2 = sets2.getTupleFromList(++pos2);
+                lhs = sets1.getTupleFromList(pos1);
+                rhs = sets2.getTupleFromList(pos2);
+            } else if (nodeComparator.compare(initLhsValue, sets2.getNodeFromList(pos2)) > 0) {
+                rhs = sets2.getTupleFromList(++pos2);
             } else {
-                tuple1 = sets1.getTupleFromList(++pos1);
+                lhs = sets1.getTupleFromList(++pos1);
             }
         }
     }
 
-    private boolean passedEnd(PartitionedRelation sets2, int j) {
-        return j < sets2.getSortedBoundSet().size();
+    private boolean passedEnd(PartitionedRelation relation, int currentIndex) {
+        return relation.getSortedBoundSet().size() <= currentIndex;
     }
 
     private boolean valuesAreEqual(final Node v1, final Node v2) {
