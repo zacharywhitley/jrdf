@@ -153,10 +153,15 @@
         <constructor-arg ref="tupleFactory"/>
     </bean>
 
+    <bean id="multiSortMergeJoin" class="org.jrdf.query.relation.operation.mem.join.natural.MultiSortMergeJoinImpl">
+        <constructor-arg ref="sortMergeJoin"/>
+        <constructor-arg ref="nodeComparator"/>
+    </bean>
+
     <bean id="sortMergeNaturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.SortMergeNaturalJoinEngine">
         <constructor-arg ref="relationHelper"/>
         <constructor-arg ref="naturalJoinEngine"/>
-        <constructor-arg ref="sortMergeJoin"/>
+        <constructor-arg ref="multiSortMergeJoin"/>
     </bean>
 
     <bean id="semiJoinEngine" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinEngine">

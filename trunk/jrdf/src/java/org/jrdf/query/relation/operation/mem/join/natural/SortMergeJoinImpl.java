@@ -61,7 +61,6 @@ package org.jrdf.query.relation.operation.mem.join.natural;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
@@ -88,40 +87,32 @@ public class SortMergeJoinImpl implements SortMergeJoin {
         this.tupleFactory = newTupleFactory;
     }
 
-    public void mergeJoin(SortedSet<Attribute> headings, EvaluatedRelation rel1, EvaluatedRelation rel2,
-        Attribute attribute, SortedSet<Attribute> commonHeadings, SortedSet<Tuple> result) {
-        final PartitionedRelation sets1 = new PartitionedRelationImpl(nodeComparator, attribute, rel1);
-        final PartitionedRelation sets2 = new PartitionedRelationImpl(nodeComparator, attribute, rel2);
-        if (sets1.getBoundSet().size() <= sets2.getBoundSet().size()) {
-            doProperSortMergeJoin(commonHeadings, sets1, sets2, result);
+    public void mergeJoin(SortedSet<Attribute> headings, SortedSet<Attribute> commonHeadings,
+        final PartitionedRelation relation1, final PartitionedRelation relation2, SortedSet<Tuple> result) {
+        if (relation1.getBoundSet().size() <= relation2.getBoundSet().size()) {
+            doProperSortMergeJoin(commonHeadings, relation1, relation2, result);
         } else {
-            doProperSortMergeJoin(commonHeadings, sets2, sets1, result);
+            doProperSortMergeJoin(commonHeadings, relation2, relation1, result);
         }
-        engine.processRelations(headings, relationFactory.getRelation(sets1.getBoundSet()),
-            relationFactory.getRelation(sets2.getUnboundSet()), result);
-        engine.processRelations(headings, relationFactory.getRelation(sets2.getBoundSet()),
-            relationFactory.getRelation(sets1.getUnboundSet()), result);
-        engine.processRelations(headings, relationFactory.getRelation(sets1.getUnboundSet()),
-            relationFactory.getRelation(sets2.getUnboundSet()), result);
+        engine.processRelations(headings, relationFactory.getRelation(relation1.getBoundSet()),
+            relationFactory.getRelation(relation2.getUnboundSet()), result);
+        engine.processRelations(headings, relationFactory.getRelation(relation2.getBoundSet()),
+            relationFactory.getRelation(relation1.getUnboundSet()), result);
+        engine.processRelations(headings, relationFactory.getRelation(relation1.getUnboundSet()),
+            relationFactory.getRelation(relation2.getUnboundSet()), result);
     }
 
     private void doProperSortMergeJoin(SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
         PartitionedRelation sets2, SortedSet<Tuple> result) {
         lhsPos = 0;
         rhsPos = 0;
-        Tuple lhs = sets1.getTupleFromList(lhsPos);
-        Tuple rhs = sets2.getTupleFromList(rhsPos);
-        while (lhs != null && rhs != null) {
-            final Node initLhsValue = sets1.getNodeFromList(lhsPos);
-            final Node initRhsValue = sets2.getNodeFromList(rhsPos);
-            if (valuesAreEqual(initLhsValue, initRhsValue)) {
-                mergeSameValues(initLhsValue, commonHeadings, sets1, sets2, result);
-                lhs = sets1.getTupleFromList(lhsPos);
-                rhs = sets2.getTupleFromList(rhsPos);
-            } else if (nodeComparator.compare(initLhsValue, initRhsValue) > 0) {
-                rhs = sets2.getTupleFromList(++rhsPos);
+        while (sets1.getTupleFromList(lhsPos) != null && sets2.getTupleFromList(rhsPos) != null) {
+            if (valuesAreEqual(sets1.getNodeFromList(lhsPos), sets2.getNodeFromList(rhsPos))) {
+                mergeSameValues(sets1.getNodeFromList(lhsPos), commonHeadings, sets1, sets2, result);
+            } else if (nodeComparator.compare(sets1.getNodeFromList(lhsPos), sets2.getNodeFromList(rhsPos)) > 0) {
+                rhsPos++;
             } else {
-                lhs = sets1.getTupleFromList(++lhsPos);
+                lhsPos++;
             }
         }
     }
