@@ -115,7 +115,7 @@ public class SortMergeJoinImpl implements SortMergeJoin {
             final Node initLhsValue = sets1.getNodeFromList(lhsPos);
             final Node initRhsValue = sets2.getNodeFromList(rhsPos);
             if (valuesAreEqual(initLhsValue, initRhsValue)) {
-                mergeSameValues(commonHeadings, sets1, sets2, result, initLhsValue);
+                mergeSameValues(initLhsValue, commonHeadings, sets1, sets2, result);
                 lhs = sets1.getTupleFromList(lhsPos);
                 rhs = sets2.getTupleFromList(rhsPos);
             } else if (nodeComparator.compare(initLhsValue, initRhsValue) > 0) {
@@ -126,8 +126,8 @@ public class SortMergeJoinImpl implements SortMergeJoin {
         }
     }
 
-    private void mergeSameValues(SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
-        PartitionedRelation sets2, SortedSet<Tuple> result, Node initLhsValue) {
+    private void mergeSameValues(Node initLhsValue, SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
+        PartitionedRelation sets2, SortedSet<Tuple> result) {
         rhsPos++;
         while (!passedEnd(sets1, lhsPos) && valuesAreEqual(sets1.getNodeFromList(lhsPos), initLhsValue)) {
             rhsPos--;
