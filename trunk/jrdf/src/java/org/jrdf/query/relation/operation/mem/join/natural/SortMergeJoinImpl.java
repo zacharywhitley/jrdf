@@ -112,18 +112,17 @@ public class SortMergeJoinImpl implements SortMergeJoin {
         while (lhs != null && rhs != null) {
             final Node initLhsValue = sets1.getNodeFromList(pos1);
             if (valuesAreEqual(initLhsValue, sets2.getNodeFromList(pos2))) {
-                int newPos2 = pos2 + 1;
+                pos2++;
                 while (!passedEnd(sets1, pos1) && valuesAreEqual(sets1.getNodeFromList(pos1), initLhsValue)) {
-                    int j = pos2;
-                    while (!passedEnd(sets2, j) && valuesAreEqual(sets1.getNodeFromList(pos1),
-                        sets2.getNodeFromList(j))) {
-                        newPos2 = j;
-                        addToResult(commonHeadings, sets1.getTupleFromList(pos1), sets2.getTupleFromList(j), result);
-                        j++;
+                    pos2--;
+                    while (!passedEnd(sets2, pos2) && valuesAreEqual(sets1.getNodeFromList(pos1),
+                        sets2.getNodeFromList(pos2))) {
+                        addToResult(commonHeadings, sets1.getTupleFromList(pos1), sets2.getTupleFromList(pos2), result);
+                        pos2++;
                     }
                     pos1++;
+                    pos2--;
                 }
-                pos2 = newPos2;
                 lhs = sets1.getTupleFromList(pos1);
                 rhs = sets2.getTupleFromList(pos2);
             } else if (nodeComparator.compare(initLhsValue, sets2.getNodeFromList(pos2)) > 0) {
