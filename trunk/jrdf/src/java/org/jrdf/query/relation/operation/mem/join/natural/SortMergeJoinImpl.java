@@ -110,33 +110,27 @@ public class SortMergeJoinImpl implements SortMergeJoin {
         Tuple tuple1 = sets1.getTupleFromList(pos1);
         Tuple tuple2 = sets2.getTupleFromList(pos2);
         while (tuple1 != null && tuple2 != null) {
-            if (valuesAreEqual(sets1.getNodeFromList(pos1), sets2.getNodeFromList(pos2))) {
+            final Node nodeFromList = sets1.getNodeFromList(pos1);
+            if (valuesAreEqual(nodeFromList, sets2.getNodeFromList(pos2))) {
                 int newPos2 = pos2 + 1;
-                boolean incrementPos1 = true;
-                int i = pos1;
-                while (passedEnd(sets1, i)) {
-                    if (!valuesAreEqual(sets1.getNodeFromList(i), sets1.getNodeFromList(pos1))) {
-                        pos1 = i;
-                        incrementPos1 = false;
+                while (passedEnd(sets1, pos1)) {
+                    if (!valuesAreEqual(sets1.getNodeFromList(pos1), nodeFromList)) {
                         break;
                     } else {
                         int j = pos2;
-                        while (passedEnd(sets2, j) && valuesAreEqual(sets1.getNodeFromList(i),
+                        while (passedEnd(sets2, j) && valuesAreEqual(sets1.getNodeFromList(pos1),
                             sets2.getNodeFromList(j))) {
                             newPos2 = j;
-                            addToResult(commonHeadings, sets1.getTupleFromList(i), sets2.getTupleFromList(j), result);
+                            addToResult(commonHeadings, sets1.getTupleFromList(pos1), sets2.getTupleFromList(j), result);
                             j++;
                         }
                     }
-                    i++;
-                }
-                if (incrementPos1) {
                     pos1++;
                 }
                 pos2 = newPos2;
                 tuple1 = sets1.getTupleFromList(pos1);
                 tuple2 = sets2.getTupleFromList(pos2);
-            } else if (nodeComparator.compare(sets1.getNodeFromList(pos1), sets2.getNodeFromList(pos2)) > 0) {
+            } else if (nodeComparator.compare(nodeFromList, sets2.getNodeFromList(pos2)) > 0) {
                 tuple2 = sets2.getTupleFromList(++pos2);
             } else {
                 tuple1 = sets1.getTupleFromList(++pos1);
