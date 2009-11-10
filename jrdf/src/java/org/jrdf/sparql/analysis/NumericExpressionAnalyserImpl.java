@@ -121,7 +121,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         node.getBracketedVar().apply(this);
         try {
             this.expression = new BoundOperator(getSingleAvp());
-            this.attributeName = null;
         } catch (ParserException e) {
             this.exception = e;
         }
@@ -132,7 +131,6 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         node.getBracketedExpression().apply(this);
         try {
             this.expression = new LangOperator(getSingleAvp());
-            this.attributeName = null;
         } catch (ParserException e) {
             this.exception = e;
         }
@@ -219,14 +217,14 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
         if (exception != null) {
             throw exception;
         }
-        Map<Attribute, Node> returnValue = new HashMap<Attribute, Node>();
+        Map<Attribute, Node> returnValue = new HashMap<Attribute, Node>(1);
         final Map<AttributeName, PositionalNodeType> namePosMap = collector.getAttributes();
         if (attributeName == null) {
             returnValue.put(NULLARY_ATTRIBUTE, value);
         } else {
             NodeType type = namePosMap.get(attributeName);
-            type = (type != null) ? type : new ObjectNodeType();
-            Attribute attribute = attributeName == null ? NULLARY_ATTRIBUTE : new AttributeImpl(attributeName, type);
+            type = (type == null) ? new ObjectNodeType() : type;
+            Attribute attribute = new AttributeImpl(attributeName, type);
             returnValue.put(attribute, value);
             collector.addConstraints(returnValue);
         }
