@@ -128,9 +128,9 @@ public class ProjectImpl implements Project {
     private Tuple createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
         Map<Attribute, Node> avps = tuple.getAttributeValues();
         Map<Attribute, Node> newAvps = new HashMap<Attribute, Node>();
-        for (Attribute attribute : avps.keySet()) {
-            if (newHeading.contains(attribute)) {
-                newAvps.put(attribute, avps.get(attribute));
+        for (Map.Entry<Attribute, Node> entry : avps.entrySet()) {
+            if (newHeading.contains(entry.getKey())) {
+                newAvps.put(entry.getKey(), entry.getValue());
             }
         }
 

@@ -67,29 +67,51 @@ import org.jrdf.writer.rdfxml.RdfXmlWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 
+/**
+ * A helper class that allows you to read and write RDF formatted files.  This turns all checked exceptions into
+ * runtime.
+ */
 public final class Writer {
     private Writer() {
     }
 
     public static void writeNTriples(File file, Graph graph) {
         try {
-            RdfWriter writer = new NTriplesWriterImpl();
-            writer.write(graph, new FileOutputStream(file));
+            tryWriteNTriple(file, graph);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    private static void tryWriteNTriple(File file, Graph graph) throws Exception {
+        final OutputStream fileOutputStream = new FileOutputStream(file);
+        try {
+            final RdfWriter writer = new NTriplesWriterImpl();
+            writer.write(graph, fileOutputStream);
+        } finally {
+            fileOutputStream.close();
+        }
+    }
+
     public static void writeRdfXml(File file, Graph graph) {
         try {
-            BlankNodeRegistry nodeRegistry = new MemBlankNodeRegistryImpl();
-            nodeRegistry.clear();
-            RdfNamespaceMap map = new RdfNamespaceMapImpl();
-            RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
-            writer.write(graph, new FileOutputStream(file));
+            tryWriteRdfXml(file, graph);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void tryWriteRdfXml(File file, Graph graph) throws Exception {
+        final BlankNodeRegistry nodeRegistry = new MemBlankNodeRegistryImpl();
+        final RdfNamespaceMap map = new RdfNamespaceMapImpl();
+        final RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
+        final OutputStream fileOutputStream = new FileOutputStream(file);
+        try {
+            writer.write(graph, fileOutputStream);
+        } finally {
+            fileOutputStream.close();
         }
     }
 }

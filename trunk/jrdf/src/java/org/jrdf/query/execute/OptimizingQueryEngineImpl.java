@@ -104,7 +104,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     public EvaluatedRelation visitAsk(Ask ask) {
         clearCacheHandler();
         this.cacheHandler = new ConstraintTupleCacheHandlerImpl();
-        System.gc();
         this.shortCircuit = true;
         this.allVariables = ask.getAllVariables();
         this.result = getExpression(ask.getNextExpression(), shortCircuit);
@@ -115,7 +114,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
     public EvaluatedRelation visitProjection(Projection projection) {
         clearCacheHandler();
         cacheHandler = new ConstraintTupleCacheHandlerImpl();
-        System.gc();
         return super.visitProjection(projection);
     }
 
@@ -189,10 +187,6 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         return RELATION_FACTORY.getRelation(constraint.getAvo(allVariables).keySet(), tuples);
     }
 
-    private void setCacheHandler(ConstraintTupleCacheHandler handler) {
-        this.cacheHandler = handler;
-    }
-
     @Override
     protected EvaluatedRelation getExpression(Expression expression) {
         QueryEngine queryEngine = new OptimizingQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
@@ -208,9 +202,5 @@ public class OptimizingQueryEngineImpl extends NaiveQueryEngineImpl implements Q
         queryEngine.setAllVariables(allVariables);
         ((OptimizingQueryEngineImpl) queryEngine).shortCircuit = newShortCircuit;
         return expression.accept(queryEngine);
-    }
-
-    private void setShortCircuit(boolean newShortCircuit) {
-        this.shortCircuit = newShortCircuit;
     }
 }

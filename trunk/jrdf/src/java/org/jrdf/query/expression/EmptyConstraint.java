@@ -77,7 +77,6 @@ public final class EmptyConstraint implements Constraint {
      * Represents the EMPTY GRAPH PATTERN - or empty constraint.
      */
     public static final EmptyConstraint EMPTY_CONSTRAINT = new EmptyConstraint();
-    private static final int DUMMY_HASHCODE = 47;
     private static final long serialVersionUID = 8277006464668938996L;
 
     private EmptyConstraint() {
@@ -109,14 +108,12 @@ public final class EmptyConstraint implements Constraint {
         return 0;
     }
 
+    @Override
     public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
-        return DUMMY_HASHCODE + toString().hashCode();
+        return toString().hashCode();
     }
 
-    /**
-     * Delegates to <code>getAvp().toString()</code>.
-     */
+    @Override
     public String toString() {
         return "EMPTY";
     }

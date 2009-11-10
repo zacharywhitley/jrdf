@@ -390,13 +390,12 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Void>
 
     private LinkedHashMap<Attribute, Node> updateAVPVariables(Map<Attribute, Node> avp) {
         LinkedHashMap<Attribute, Node> newAVP = new LinkedHashMap<Attribute, Node>();
-        for (Attribute attribute : avp.keySet()) {
-            final Node vo = avp.get(attribute);
-            final Attribute newAttribute = variableMap.get(attribute);
+        for (Map.Entry<Attribute, Node> entry : avp.entrySet()) {
+            final Attribute newAttribute = variableMap.get(entry.getKey());
             if (newAttribute != null) {
-                newAVP.put(newAttribute, vo);
+                newAVP.put(newAttribute, entry.getValue());
             } else {
-                newAVP.put(attribute, vo);
+                newAVP.put(entry.getKey(), entry.getValue());
             }
         }
         return newAVP;
@@ -451,9 +450,9 @@ public class ExpressionSimplifierImpl extends ExpressionVisitorAdapter<Void>
 
     private LinkedHashMap<Attribute, Node> updateAVO(Map<Attribute, Node> oldAvo) {
         LinkedHashMap<Attribute, Node> avo = updateAVPVariables(oldAvo);
-        for (Attribute attribute : avo.keySet()) {
-            if (attributeValues.get(attribute) != null) {
-                avo.put(attribute, attributeValues.get(attribute));
+        for (Map.Entry<Attribute, Node> entry : avo.entrySet()) {
+            if (attributeValues.get(entry.getKey()) != null) {
+                avo.put(entry.getKey(), attributeValues.get(entry.getKey()));
             }
         }
         return avo;

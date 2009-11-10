@@ -140,10 +140,8 @@ public final class RelationImpl implements EvaluatedRelation {
     }
 
     private boolean contains(Map<Attribute, Node> map, Map<Attribute, Node> avo) {
-        final Set<Attribute> keys = avo.keySet();
-        for (Attribute attr : keys) {
-            Node vo = avo.get(attr);
-            if (map.get(attr) == null || !map.get(attr).equals(vo)) {
+        for (Map.Entry<Attribute, Node> entry : avo.entrySet()) {
+            if (map.get(entry.getKey()) == null || !map.get(entry.getKey()).equals(entry.getValue())) {
                 return false;
             }
         }

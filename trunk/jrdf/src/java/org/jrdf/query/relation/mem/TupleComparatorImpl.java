@@ -117,10 +117,10 @@ public final class TupleComparatorImpl implements TupleComparator {
     private int compareAttributeValues(Map<Attribute, Node> attributeValues1,
         Map<Attribute, Node> attributeValues2) {
         int result = 0;
-        for (Attribute attribute : attributeValues1.keySet()) {
-            if (attributeValues2.keySet().contains(attribute)) {
-                final org.jrdf.graph.Node value1 = attributeValues1.get(attribute);
-                final org.jrdf.graph.Node value2 = attributeValues2.get(attribute);
+        for (Map.Entry<Attribute, Node> entry : attributeValues1.entrySet()) {
+            if (attributeValues2.keySet().contains(entry.getKey())) {
+                final Node value1 = entry.getValue();
+                final Node value2 = attributeValues2.get(entry.getKey());
                 result = nodeComparator.compare(value1, value2);
                 if (result != 0) {
                     break;
