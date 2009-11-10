@@ -80,12 +80,12 @@
                         <lookup-method name="createResource" bean="serversResource"/>
                     </bean>
                 </entry>
-                <entry key="/graphs">
+                <entry key="/graph/">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="listGraphsResource"/>
                     </bean>
                 </entry>
-                <entry key="/graphs/{graph}">
+                <entry key="/graph/{graph}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="distributedQueryGraphResource"/>
                     </bean>

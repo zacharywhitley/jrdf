@@ -77,12 +77,12 @@
             <map>
                 <entry key="" value-ref="redirector">
                 </entry>
-                <entry key="/graphs">
+                <entry key="/graph/">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="listGraphsResource"/>
                     </bean>
                 </entry>
-                <entry key="/graphs/{graph}">
+                <entry key="/graph/{graph}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="localQueryGraphResource"/>
                     </bean>
@@ -94,7 +94,7 @@
     <!-- Redirector -->
     <bean id="redirector" class="org.restlet.Redirector">
         <constructor-arg index="0" ref="component.childContext"/>
-        <constructor-arg index="1" value="/graphs"/>
+        <constructor-arg index="1" value="/graph/"/>
         <constructor-arg index="2" ref="org.restlet.Redirector.MODE_CLIENT_PERMANENT"/>
     </bean>
 

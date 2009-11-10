@@ -13,7 +13,7 @@
     <#list graphs?keys as graph>
     <tr>
         <td>${graph}</td>
-        <td><a href="/graphs/${graphs[graph]}">${graphs[graph]}</a></td>
+        <td><a href="/graph/${graphs[graph]}">${graphs[graph]}</a></td>
     </tr>
     </#list>
 </table>
