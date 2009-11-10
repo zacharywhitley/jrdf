@@ -108,7 +108,7 @@ public class EntryIteratorFixedLengthLongArray implements ClosableIterator<Long[
         final int returnLength = length - fixed;
         Long[] longs = ByteHandler.fromBytes(currentValues, length);
         Long[] returnValues = new Long[returnLength];
-        System.arraycopy(longs, fixed, returnValues, fixed - fixed, length - fixed);
+        System.arraycopy(longs, fixed, returnValues, 0, length - fixed);
         getNextValues();
         return returnValues;
     }

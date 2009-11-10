@@ -114,8 +114,8 @@ public final class QueryClientImpl implements QueryClient {
         validateEndPointUri();
         final Reference ref = new Reference(endPointUri.getScheme(), endPointUri.getHost(), endPointUri.getPort(),
             endPointUri.getPath(), null, null);
-        for (final String key : queryParameters.keySet()) {
-            ref.addQueryParameter(key, queryParameters.get(key));
+        for (final Map.Entry<String, String> entry : queryParameters.entrySet()) {
+            ref.addQueryParameter(entry.getKey(), entry.getValue());
         }
         return ref;
     }

@@ -68,7 +68,6 @@ import java.util.Map;
 
 public class EmptyExpression implements Expression {
     private static final long serialVersionUID = 4636572000909954329L;
-    private static final int DUMMY_HASHCODE = 47;
 
     public Map<Attribute, Node> getValue() {
         return Collections.emptyMap();
@@ -98,7 +97,7 @@ public class EmptyExpression implements Expression {
 
     @Override
     public int hashCode() {
-        return DUMMY_HASHCODE + toString().hashCode();
+        return toString().hashCode();
     }
 
     @Override
