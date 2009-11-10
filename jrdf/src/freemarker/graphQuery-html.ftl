@@ -43,7 +43,7 @@ WHERE {
 </form>
 </div>
 <div>
-<a href="/graphs">Select another graph<a/>
+<a href="/graph/">Select another graph<a/>
 </div>
 </body>
 </html>

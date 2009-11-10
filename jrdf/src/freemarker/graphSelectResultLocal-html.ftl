@@ -39,7 +39,7 @@
 <div>
     <br/>
     <br/>
-    <a href="/graphs/${graphName}">Write a new query</a>
+    <a href="/graph/${graphName}">Write a new query</a>
     <br/>
     <br/>
 </div>
