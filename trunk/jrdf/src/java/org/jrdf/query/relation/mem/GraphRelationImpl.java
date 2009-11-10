@@ -71,7 +71,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeTupleComparator;
-import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.util.ClosableIterator;
@@ -82,7 +82,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * Implementation of relations containing 3 column heading (subject, predicate, object).
@@ -91,7 +90,7 @@ import java.util.TreeSet;
  * @version $Id: RelationImpl.java 556 2006-06-13 06:38:55Z newmana $
  */
 // TODO (AN) Come back and add unit tests and integration tests!!!!!
-public final class GraphRelationImpl implements GraphRelation {
+public final class GraphRelationImpl implements EvaluatedRelation {
     private static final Triple ALL_TRIPLE = new TripleImpl(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
     private static final int TRIPLE = 3;
     private final Graph graph;
@@ -157,26 +156,10 @@ public final class GraphRelationImpl implements GraphRelation {
         if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(GraphRelation.class, obj)) {
+        if (!EqualsUtil.hasSuperClassOrInterface(GraphRelationImpl.class, obj)) {
             return false;
         }
-        return determineEqualityFromFields((GraphRelation) obj);
-    }
-
-    //TODO YF change this to a disk-based set to make it more scalable
-    private SortedSet<Tuple> getTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
-        ClosableIterator<Triple> closableIterator = getIterator(searchTriple);
-        try {
-            SortedSet<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
-            while (closableIterator.hasNext()) {
-                Triple triple = closableIterator.next();
-                Map<Attribute, Node> avo = avpHelper.createAvo(triple, attributes);
-                tuples.add(tupleFactory.getTuple(avo));
-            }
-            return tuples;
-        } finally {
-            closableIterator.close();
-        }
+        return determineEqualityFromFields((GraphRelationImpl) obj);
     }
 
     //TODO YF change this to a disk-based set to make it more scalable
@@ -195,16 +178,16 @@ public final class GraphRelationImpl implements GraphRelation {
         }
     }
 
-    private boolean determineEqualityFromFields(GraphRelation graphRelation) {
+    private ClosableIterator<Triple> getIterator(Triple searchTriple) {
+        return graph.findUnsorted(searchTriple.getSubject(), searchTriple.getPredicate(), searchTriple.getObject());
+    }
+
+    private boolean determineEqualityFromFields(GraphRelationImpl graphRelation) {
         if (graphRelation.getHeading().equals(getHeading())) {
             if (graphRelation.getTuples().equals(getTuples())) {
                 return true;
             }
         }
         return false;
-    }
-
-    private ClosableIterator<Triple> getIterator(Triple searchTriple) {
-        return graph.findUnsorted(searchTriple.getSubject(), searchTriple.getPredicate(), searchTriple.getObject());
     }
 }

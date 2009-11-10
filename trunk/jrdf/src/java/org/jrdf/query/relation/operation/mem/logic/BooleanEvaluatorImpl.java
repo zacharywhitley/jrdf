@@ -98,8 +98,8 @@ public class BooleanEvaluatorImpl extends ExpressionVisitorAdapter<Boolean> impl
 
     @Override
     public Boolean visitBound(BoundOperator bound) {
-        final Node valueOperation = getNextValue(bound);
-        return (valueOperation != null);
+        final Node value = getNextValue(bound);
+        return (value != null);
     }
 
     @Override

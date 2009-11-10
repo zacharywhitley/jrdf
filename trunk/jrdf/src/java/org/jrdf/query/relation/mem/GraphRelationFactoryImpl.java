@@ -61,7 +61,7 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.relation.AttributeTupleComparator;
-import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.TupleFactory;
 
 /**
@@ -84,7 +84,7 @@ public class GraphRelationFactoryImpl implements GraphRelationFactory {
         this.tupleFactory = newTupleFactory;
     }
 
-    public GraphRelation createRelation(Graph graph) {
+    public EvaluatedRelation createRelation(Graph graph) {
         return new GraphRelationImpl(graph, attributeFactory, avpHelper, tupleComparator, tupleFactory);
     }
 }
