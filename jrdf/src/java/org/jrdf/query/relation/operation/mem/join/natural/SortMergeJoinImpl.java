@@ -100,32 +100,28 @@ public class SortMergeJoinImpl implements SortMergeJoin {
             relationFactory.getRelation(relation2.getUnboundSet()), result);
     }
 
-    private void doProperSortMergeJoin(SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
-        PartitionedRelation sets2, SortedSet<Tuple> result) {
-        while (sets1.hasNext() && sets2.hasNext()) {
-            if (valuesAreEqual(sets1.curretNode(), sets2.curretNode())) {
-                mergeSameValues(sets1.curretNode(), commonHeadings, sets1, sets2, result);
-            } else if (nodeComparator.compare(sets1.curretNode(), sets2.curretNode()) > 0) {
-                sets2.next();
+    private void doProperSortMergeJoin(SortedSet<Attribute> commonHeadings, PartitionedRelation lhs,
+        PartitionedRelation rhs, SortedSet<Tuple> result) {
+        while (lhs.hasNext() && rhs.hasNext()) {
+            if (valuesAreEqual(lhs.curretNode(), rhs.curretNode())) {
+                mergeSameValues(lhs.curretNode(), commonHeadings, lhs, rhs, result);
+            } else if (nodeComparator.compare(lhs.curretNode(), rhs.curretNode()) > 0) {
+                rhs.next();
             } else {
-                sets1.next();
+                lhs.next();
             }
         }
     }
 
-    private void mergeSameValues(Node initLhsValue, SortedSet<Attribute> commonHeadings, PartitionedRelation sets1,
-        PartitionedRelation sets2, SortedSet<Tuple> result) {
-        PartitionedRelation originalRhs = sets2;
-        while (sets1.hasNext() && valuesAreEqual(sets1.curretNode(), initLhsValue)) {
-            sets2 = originalRhs.copy();
-            while (sets2.hasNext() && valuesAreEqual(sets1.curretNode(), sets2.curretNode())) {
-                addToResult(commonHeadings, sets1.currentTuple(), sets2.currentTuple(), result);
-                sets2.next();
+    private void mergeSameValues(Node initLhsValue, SortedSet<Attribute> commonHeadings, PartitionedRelation lhs,
+        PartitionedRelation rhs, SortedSet<Tuple> result) {
+        while (lhs.hasNext() && valuesAreEqual(lhs.curretNode(), initLhsValue)) {
+            PartitionedRelation rhsCopy = rhs.copy();
+            while (rhsCopy.hasNext() && valuesAreEqual(lhs.curretNode(), rhsCopy.curretNode())) {
+                addToResult(commonHeadings, lhs.currentTuple(), rhsCopy.currentTuple(), result);
+                rhsCopy.next();
             }
-            sets1.next();
-        }
-        if (originalRhs == sets2) {
-            sets2.next();
+            lhs.next();
         }
     }
 

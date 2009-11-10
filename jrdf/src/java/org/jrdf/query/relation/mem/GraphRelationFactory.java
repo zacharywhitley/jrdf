@@ -60,14 +60,15 @@
 package org.jrdf.query.relation.mem;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.EvaluatedRelation;
 
 /**
- * A builder that always throws exceptions.
+ * Creates a relation representation and RDF graph.  The relation will have three attributes: subject, predicate, and
+ * object.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
 public interface GraphRelationFactory {
-    GraphRelation createRelation(Graph graph);
+    EvaluatedRelation createRelation(Graph graph);
 }

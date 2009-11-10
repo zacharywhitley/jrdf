@@ -68,7 +68,6 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -113,7 +112,7 @@ public final class SelectQueryImpl implements Query {
     }
 
     private EvaluatedRelation getResult(Graph graph, QueryEngine queryEngine) {
-        GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
+        EvaluatedRelation entireGraph = graphRelationFactory.createRelation(graph);
         queryEngine.initialiseBaseRelation(entireGraph);
         ExpressionSimplifier<Void> simplifier = new ExpressionSimplifierImpl();
         expression.accept(simplifier);

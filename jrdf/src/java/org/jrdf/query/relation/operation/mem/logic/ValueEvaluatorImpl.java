@@ -133,8 +133,8 @@ public class ValueEvaluatorImpl extends ExpressionVisitorAdapter<Node> implement
 
     @Override
     public Node visitBound(BoundOperator bound) {
-        final Node valueOperation = getValue(bound);
-        boolean contradiction = (valueOperation == null);
+        final Node value = getValue(bound);
+        boolean contradiction = (value == null);
         return new LiteralImpl(Boolean.toString(contradiction), XSD.BOOLEAN);
     }
 
