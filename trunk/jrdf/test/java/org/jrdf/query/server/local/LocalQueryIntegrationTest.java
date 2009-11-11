@@ -90,7 +90,7 @@ import java.util.Set;
 
 public class LocalQueryIntegrationTest {
     private static final String LOCAL_HOST = "127.0.0.1";
-    private static final String GRAPH_PATH = "/graphs/";
+    private static final String GRAPH_PATH = "/graph/";
     private static final String GRAPH = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
