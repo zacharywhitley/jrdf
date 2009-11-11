@@ -147,12 +147,12 @@ public class ServersResource extends ConfigurableRestletResource {
         final String[] strings = servers.split("[\\s,;]");
         for (String server : strings) {
             if (server.length() > 0) {
-                processServerString(server, action);
+                processServerString(action, server);
             }
         }
     }
 
-    private void processServerString(String server, String action) {
+    private void processServerString(String action, String server) {
         if ("add".equalsIgnoreCase(action)) {
             application.addServers(server);
         } else if ("remove".equalsIgnoreCase(action)) {

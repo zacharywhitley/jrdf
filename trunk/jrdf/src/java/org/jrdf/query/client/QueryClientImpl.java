@@ -107,7 +107,7 @@ public final class QueryClientImpl implements QueryClient {
     }
 
     public String toString() {
-        return request.toString();
+        return request.getClientInfo().getAddress();
     }
 
     private Reference createReferenceFromQuery(final Map<String, String> queryParameters) {

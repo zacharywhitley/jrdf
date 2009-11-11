@@ -93,6 +93,7 @@ public class DistributedServerClient {
         Representation representation = form.getWebRepresentation();
         URL url = localServerEndPoint.toURL();
         String requestURL = url.toString();
+        System.err.println("Reqest " + requestURL);
         Request request = new Request(Method.POST, requestURL, representation);
         Response response = client.handle(request);
         if (!response.getStatus().isSuccess()) {
