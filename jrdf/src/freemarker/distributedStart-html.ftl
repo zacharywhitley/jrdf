@@ -24,7 +24,7 @@
 <p/>
 <p/>
 <div>
-    List of servers:
+    List of servers (just hostnames, port will default to 8182):
     <form id="servers" name="serversForm" method="post" action="serversUpdated.html">
         <textarea id="serverText" name="serversString" rows="6" cols="70"></textarea>
         <p/>

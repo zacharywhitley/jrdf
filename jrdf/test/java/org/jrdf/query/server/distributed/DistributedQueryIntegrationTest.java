@@ -103,7 +103,7 @@ import java.util.Set;
  * @version :$
  */
 public class DistributedQueryIntegrationTest {
-    private static final String GRAPH_PATH = "/graphs/";
+    private static final String GRAPH_PATH = "/graph/";
     private static final String GRAPH_NAME = "foo";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
@@ -114,7 +114,7 @@ public class DistributedQueryIntegrationTest {
     private static final String LOCAL_HOST = "127.0.0.1";
     private static final URI SERVER_END_POINT = create("http://" + LOCAL_HOST + ":" + LOCAL_PORT + GRAPH_PATH +
         GRAPH_NAME);
-    private static final URI DISTRIBUTED_SERVER_END_POINT = create("http://" + LOCAL_HOST + ":" + DISTRIBUTED_PORT);
+    private static final URI SERVER_CONFIG = create("http://" + LOCAL_HOST + ":" + DISTRIBUTED_PORT);
     private static final SparqlAnswerHandlerFactory HANDLER_FACTORY = new SparqlAnswerHandlerFactoryImpl();
     private static final SparqlAnswerHandler ANSWER_HANDLER = HANDLER_FACTORY.createSparqlAnswerHandlerFactory();
     private MoleculeGraph graph;
@@ -161,7 +161,7 @@ public class DistributedQueryIntegrationTest {
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        DistributedServerClient serverClient = new DistributedServerClient(DISTRIBUTED_SERVER_END_POINT);
+        DistributedServerClient serverClient = new DistributedServerClient(SERVER_CONFIG);
         serverClient.postDistributedServer("add", LOCAL_HOST);
         QueryClient client = new QueryClientImpl(SERVER_END_POINT, ANSWER_HANDLER);
         Answer answer = client.executeQuery(SELECT_QUERY_STRING, EMPTY_MAP);
@@ -171,7 +171,7 @@ public class DistributedQueryIntegrationTest {
     @Test
     public void testDistributedClientEmptyAskQuery() throws Exception {
         assertEquals(0, graph.getNumberOfTriples());
-        DistributedServerClient serverClient = new DistributedServerClient(DISTRIBUTED_SERVER_END_POINT);
+        DistributedServerClient serverClient = new DistributedServerClient(SERVER_CONFIG);
         serverClient.postDistributedServer("add", LOCAL_HOST);
         QueryClient client = new QueryClientImpl(SERVER_END_POINT, ANSWER_HANDLER);
         AskAnswer answer = (AskAnswer) client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);
@@ -186,7 +186,7 @@ public class DistributedQueryIntegrationTest {
         graph.add(b1, p, b2);
         graph.add(b2, p, b1);
         assertEquals(2, graph.getNumberOfTriples());
-        DistributedServerClient serverClient = new DistributedServerClient(DISTRIBUTED_SERVER_END_POINT);
+        DistributedServerClient serverClient = new DistributedServerClient(SERVER_CONFIG);
         serverClient.postDistributedServer("add", LOCAL_HOST);
         QueryClient client = new QueryClientImpl(SERVER_END_POINT, ANSWER_HANDLER);
         AskAnswer answer = (AskAnswer) client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);

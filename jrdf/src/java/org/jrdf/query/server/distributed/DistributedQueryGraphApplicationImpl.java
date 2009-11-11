@@ -114,7 +114,12 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
 
     public Answer answerQuery(String graphName, String queryString, long maxRows) throws ResourceException {
         try {
-            final QueryClient queryClient = new DistributedQueryClientImpl(servers, handler);
+            System.err.println("Here!");
+            Set<URI> fullServerNames = new HashSet<URI>();
+            for (URI server : servers) {
+                fullServerNames.add(create(server.toString() + "/graph/" + graphName));
+            }
+            final QueryClient queryClient = new DistributedQueryClientImpl(fullServerNames, handler);
             final Map<String, String> ext = new HashMap<String, String>();
             ext.put("maxRows", Long.toString(maxRows));
             return queryClient.executeQuery(queryString, ext);

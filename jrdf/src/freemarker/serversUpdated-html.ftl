@@ -24,7 +24,7 @@
 <p/>
 <div>
 Actions:<br/>
-    <dd>1. Head to the distributed <a href="/graphs">query</a> page.</dd><br/>
+    <dd>1. Head to the distributed <a href="/graph/">query</a> page.</dd><br/>
     <dd>2. Make changes to the server list <a href="/">again</a>.</dd>
 </div>
 

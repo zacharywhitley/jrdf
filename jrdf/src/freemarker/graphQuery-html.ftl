@@ -7,7 +7,7 @@
     Sparql query for graph <i>${graphName}</i>
   </h1>
   <div>
-  <form id="sparql" name="sparqlForm" method="get" action="${graphName}/">
+  <form id="sparql" name="sparqlForm" method="get" action="${graphName}">
   Query:
   <br/>
     <textarea id="sparqlText" name="query" rows="6" cols="70">
