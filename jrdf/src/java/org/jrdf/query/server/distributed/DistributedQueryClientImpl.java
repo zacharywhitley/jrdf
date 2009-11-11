@@ -92,7 +92,6 @@ public class DistributedQueryClientImpl implements QueryClient {
     public DistributedQueryClientImpl(final Collection<URI> servers, final SparqlAnswerHandler answerHandler) {
         this.queryClients = new LinkedList<CallableQueryClient>();
         for (final URI server : servers) {
-            System.err.println("Server: " + server);
             final CallableQueryClient client = new CallableQueryClientImpl(server, answerHandler);
             this.queryClients.add(client);
         }
@@ -103,7 +102,6 @@ public class DistributedQueryClientImpl implements QueryClient {
     public void setQuery(final String queryString, final Map<String, String> queryExtensions) {
         for (final QueryClient queryClient : queryClients) {
             queryClient.setQuery(queryString, queryExtensions);
-            System.err.println("Querying: " + queryClient);
         }
     }
 
@@ -142,7 +140,6 @@ public class DistributedQueryClientImpl implements QueryClient {
 
     private void executeQuries() {
         for (final CallableQueryClient queryClient : queryClients) {
-            System.err.println("Querying: " + queryClient);
             final Future<Answer> future = executor.submit(queryClient);
             answers.add(future);
         }
