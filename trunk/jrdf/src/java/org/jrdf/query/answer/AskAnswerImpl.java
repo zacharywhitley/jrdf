@@ -60,10 +60,11 @@
 package org.jrdf.query.answer;
 
 import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -101,15 +102,15 @@ public class AskAnswerImpl implements AskAnswer, Serializable {
         return NO_VARIABLES;
     }
 
-    public Iterator<TypeValue[]> columnValuesIterator() {
+    public ClosableIterator<TypeValue[]> columnValuesIterator() {
         TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(result));
         Set<TypeValue[]> set = new HashSet<TypeValue[]>();
         set.add(new TypeValue[]{typeValue});
-        return set.iterator();
+        return new ClosableIteratorImpl<TypeValue[]>(set.iterator());
     }
 
     public String toString() {
-        return ASK_VARIABLE_NAME + "\nValue " + result;
+        return "Boolean Result" + "\nValue " + result;
     }
 
     public <R> R accept(AnswerVisitor<R> visitor) {

@@ -59,8 +59,9 @@
 
 package org.jrdf.query.answer;
 
+import org.jrdf.util.ClosableIterator;
+
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 // TODO AN/YF - Can we do time taken and number of tuples (maybe based on how much so far?)
@@ -83,7 +84,7 @@ public class SelectSparqlAnswer implements SelectAnswer {
         return variables;
     }
 
-    public Iterator<TypeValue[]> columnValuesIterator() {
+    public ClosableIterator<TypeValue[]> columnValuesIterator() {
         return answerStreamParser;
     }
 

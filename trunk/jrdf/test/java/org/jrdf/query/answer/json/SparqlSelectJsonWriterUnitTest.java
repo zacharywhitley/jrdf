@@ -72,27 +72,27 @@ import static org.jrdf.query.answer.json.JsonTestUtil.TEST_BINDINGS_3;
 import static org.jrdf.query.answer.json.JsonTestUtil.TEST_VARIABLES;
 import static org.jrdf.query.answer.json.JsonTestUtil.checkBindings;
 import static org.jrdf.query.answer.json.JsonTestUtil.checkJSONStringArrayValues;
+import org.jrdf.util.ClosableIterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.annotation.Mock;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
+import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.Map;
 
 @RunWith(PowerMockRunner.class)
 public class SparqlSelectJsonWriterUnitTest {
     private TypeValueArrayFactory factory = new TypeValueArrayFactoryImpl();
     @Mock private SelectAnswer selectAnswer;
-    @Mock private Iterator<TypeValue[]> mockIterator;
+    @Mock private ClosableIterator<TypeValue[]> mockIterator;
     @Mock private Writer mockWriter;
     private StringWriter stringWriter;
 

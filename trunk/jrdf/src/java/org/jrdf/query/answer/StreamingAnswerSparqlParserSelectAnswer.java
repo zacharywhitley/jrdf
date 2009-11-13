@@ -58,7 +58,8 @@
 
 package org.jrdf.query.answer;
 
-import java.util.Iterator;
+import org.jrdf.util.ClosableIterator;
+
 import java.util.LinkedHashSet;
 
 public class StreamingAnswerSparqlParserSelectAnswer implements SelectAnswer {
@@ -76,7 +77,7 @@ public class StreamingAnswerSparqlParserSelectAnswer implements SelectAnswer {
         return variables;
     }
 
-    public Iterator<TypeValue[]> columnValuesIterator() {
+    public ClosableIterator<TypeValue[]> columnValuesIterator() {
         return multiAnswerParser;
     }
 

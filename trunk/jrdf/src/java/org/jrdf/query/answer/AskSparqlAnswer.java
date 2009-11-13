@@ -59,11 +59,12 @@
 package org.jrdf.query.answer;
 
 import static org.jrdf.query.answer.SparqlResultType.BOOLEAN;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class AskSparqlAnswer implements AskAnswer {
@@ -98,12 +99,12 @@ public class AskSparqlAnswer implements AskAnswer {
         return NO_VARIABLES;
     }
 
-    public Iterator<TypeValue[]> columnValuesIterator() {
+    public ClosableIterator<TypeValue[]> columnValuesIterator() {
         try {
             TypeValue typeValue = new TypeValueImpl(BOOLEAN, Boolean.toString(getResult()));
             Set<TypeValue[]> set = new HashSet<TypeValue[]>();
             set.add(new TypeValue[]{typeValue});
-            return set.iterator();
+            return new ClosableIteratorImpl<TypeValue[]>(set.iterator());
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
