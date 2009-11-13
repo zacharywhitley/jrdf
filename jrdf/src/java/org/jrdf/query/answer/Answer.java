@@ -59,7 +59,7 @@
 
 package org.jrdf.query.answer;
 
-import java.util.Iterator;
+import org.jrdf.util.ClosableIterator;
 
 /**
  * An answer to a SPARQL query.  A SPARQL query does not represent an RDF graph or relation but a series of variables
@@ -83,7 +83,7 @@ public interface Answer extends AnswerVisitable {
      *
      * @return a stream of results.
      */
-    Iterator<TypeValue[]> columnValuesIterator();
+    ClosableIterator<TypeValue[]> columnValuesIterator();
 
     /**
      * The number of tuples in the result.

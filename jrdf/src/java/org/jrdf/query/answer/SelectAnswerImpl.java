@@ -64,6 +64,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -72,7 +73,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -115,7 +115,7 @@ public final class SelectAnswerImpl implements SelectAnswer, Serializable {
         return vars;
     }
 
-    public Iterator<TypeValue[]> columnValuesIterator() {
+    public ClosableIterator<TypeValue[]> columnValuesIterator() {
         return new AnswerIterator(heading, results.iterator());
     }
 

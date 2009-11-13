@@ -58,6 +58,12 @@
 
 package org.jrdf.query.answer;
 
-public interface StreamingAnswerSparqlParser extends SparqlParser {
+import org.jrdf.util.ClosableIterator;
+
+import java.util.LinkedHashSet;
+
+public interface StreamingAnswerSparqlParser extends ClosableIterator<TypeValue[]> {
     void addAnswer(Answer answer) throws InterruptedException;
+
+    LinkedHashSet<String> getVariables();
 }

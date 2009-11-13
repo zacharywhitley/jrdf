@@ -59,10 +59,10 @@
 
 package org.jrdf.query.answer;
 
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EmptyClosableIterator;
 
 import java.io.Serializable;
-import java.util.Iterator;
 
 public final class EmptySelectAnswer implements SelectAnswer, Serializable {
     private static final long serialVersionUID = -7374613298128439580L;
@@ -82,7 +82,7 @@ public final class EmptySelectAnswer implements SelectAnswer, Serializable {
         return NO_VARIABLES;
     }
 
-    public Iterator<TypeValue[]> columnValuesIterator() {
+    public ClosableIterator<TypeValue[]> columnValuesIterator() {
         return NO_COLUMN_VALUES_ITERATOR;
     }
 

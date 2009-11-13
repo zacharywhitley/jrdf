@@ -58,20 +58,22 @@
 
 package org.jrdf.query.answer;
 
+import org.jrdf.util.ClosableIterator;
+
 import javax.xml.stream.XMLStreamException;
+import static java.util.Arrays.asList;
 import java.util.LinkedHashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class StreamingAnswerSparqlParserImpl implements StreamingAnswerSparqlParser {
-    private SparqlParser parser;
     private BlockingQueue<Answer> answerQueue;
     private LinkedHashSet<String> variables;
-    private LinkedHashSet<String> link;
-    private boolean gotLink;
     private boolean gotVariables;
     private boolean hasMore;
     private TypeValue[] results;
+    private ClosableIterator<TypeValue[]> currentIterator;
+    private Answer currentAnswer;
 
     public StreamingAnswerSparqlParserImpl(final Answer... answers) {
         this.hasMore = false;
@@ -92,17 +94,13 @@ public class StreamingAnswerSparqlParserImpl implements StreamingAnswerSparqlPar
         return variables;
     }
 
-    public LinkedHashSet<String> getLink() {
-        return link;
-    }
-
     public boolean hasNext() {
         return hasMore;
     }
 
     public TypeValue[] next() {
-        if (parser.hasNext()) {
-            results = parser.next();
+        if (currentIterator.hasNext()) {
+            results = currentIterator.next();
         }
         hasMore = hasMore();
         return results;
@@ -113,8 +111,8 @@ public class StreamingAnswerSparqlParserImpl implements StreamingAnswerSparqlPar
     }
 
     public boolean close() {
-        if (parser != null) {
-            parser.close();
+        if (currentIterator != null) {
+            currentIterator.close();
         }
         answerQueue.clear();
         return true;
@@ -131,32 +129,26 @@ public class StreamingAnswerSparqlParserImpl implements StreamingAnswerSparqlPar
     }
 
     private void setupNextParser() {
-        final Answer currentAnswer = answerQueue.poll();
+        currentAnswer = answerQueue.poll();
         if (currentAnswer != null) {
-            if (parser != null) {
-                parser.close();
+            if (currentIterator != null) {
+                currentIterator.close();
             }
+            currentIterator = currentAnswer.columnValuesIterator();
             parseVariables();
-            parseHead();
             if (!hasMore) {
                 hasMore = hasMore();
             }
         } else {
-            parser = null;
+            currentAnswer = null;
+            currentIterator = null;
         }
     }
 
     private void parseVariables() {
         if (!gotVariables) {
-            variables = parser.getVariables();
+            variables.addAll(asList(currentAnswer.getVariableNames()));
             gotVariables = true;
-        }
-    }
-
-    private void parseHead() {
-        if (!gotLink) {
-            link = parser.getLink();
-            gotLink = true;
         }
     }
 
@@ -170,8 +162,8 @@ public class StreamingAnswerSparqlParserImpl implements StreamingAnswerSparqlPar
 
     private boolean getToNextStreamResult() throws XMLStreamException {
         boolean gotNext = false;
-        while (parser != null && !gotNext) {
-            gotNext = parser.hasNext();
+        while (currentAnswer != null && !gotNext) {
+            gotNext = currentIterator.hasNext();
             if (!gotNext) {
                 setupNextParser();
             }

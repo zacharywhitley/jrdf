@@ -63,17 +63,17 @@ import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.constants.NullaryNode;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class AnswerIterator implements Iterator<TypeValue[]> {
+public class AnswerIterator implements ClosableIterator<TypeValue[]> {
     private Set<Attribute> heading;
-    private Iterator<Tuple> tupleIterator;
+    private ClosableIterator<Tuple> tupleIterator;
     private NodeToTypeValue nodeToTypeValue = new NodeToTypeValueImpl();
 
-    public AnswerIterator(Set<Attribute> newHeading, Iterator<Tuple> newTupleIterator) {
+    public AnswerIterator(Set<Attribute> newHeading, ClosableIterator<Tuple> newTupleIterator) {
         this.heading = newHeading;
         this.tupleIterator = newTupleIterator;
     }
@@ -105,5 +105,9 @@ public class AnswerIterator implements Iterator<TypeValue[]> {
 
     public void remove() {
         throw new UnsupportedOperationException("Cannot remove values from an answer iterator");
+    }
+
+    public boolean close() {
+        return tupleIterator.close();
     }
 }
