@@ -83,6 +83,7 @@ import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsTriple;
 import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
+import static org.jrdf.util.test.matcher.GraphEmptyMatcher.isEmpty;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -184,7 +185,7 @@ public abstract class AbstractGraphIntegrationTest {
 
     @Test
     public void checkThatNewGraphIsEmpty() throws Exception {
-        assertThat(graph, hasNumberOfTriples(0L));
+        assertThat(graph, isEmpty());
     }
 
     @Test

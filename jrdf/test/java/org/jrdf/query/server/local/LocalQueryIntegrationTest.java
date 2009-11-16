@@ -58,6 +58,7 @@
 
 package org.jrdf.query.server.local;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.graph.BlankNode;
@@ -78,12 +79,12 @@ import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import static org.jrdf.util.test.SetUtil.asSet;
+import static org.jrdf.util.test.matcher.GraphEmptyMatcher.isEmpty;
 import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.net.URI;
 import static java.net.URI.create;
@@ -124,7 +125,7 @@ public class LocalQueryIntegrationTest {
 
     @Test
     public void falseAnswerUsingAnAskQueryOnEmptyGraph() throws Exception {
-        assertThat(graph, hasNumberOfTriples(0L));
+        assertThat(graph, isEmpty());
         QueryClient client = new QueryClientImpl(LOCAL_SERVER_END_POINT, ANSWER_HANDLER);
         final Answer answer1 = client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);
         AskAnswer answer = (AskAnswer) answer1;
