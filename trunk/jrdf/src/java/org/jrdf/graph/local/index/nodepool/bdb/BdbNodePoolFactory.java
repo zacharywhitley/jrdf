@@ -94,7 +94,7 @@ public class BdbNodePoolFactory implements NodePoolFactory {
         final Map<Long, String> literalNodePool = nodePoolMapFactory.createMap(Long.class, String.class, "lnp");
         final Map<String, Long> stringPool = stringPoolMapFactory.createMap(String.class, Long.class, "sp");
         final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
-        final NodePoolImpl pool = new NodePoolImpl(nodeTypePool, stringPool);
+        final NodePool pool = new NodePoolImpl(nodeTypePool, stringPool);
         pool.clear();
         return pool;
     }
