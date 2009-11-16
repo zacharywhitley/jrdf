@@ -62,7 +62,7 @@ package org.jrdf.graph;
 // Java packages
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -70,9 +70,9 @@ import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsMatchingTriples;
 import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsTriple;
+import static org.jrdf.util.test.matcher.GraphEmptyMatcher.isEmpty;
 import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 import org.jrdf.vocabulary.RDF;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -146,7 +146,7 @@ public abstract class AbstractTripleFactoryUnitTest {
         reifyObject = getReifyObject();
         rdfType = getRdfType();
         rdfStatement = getRdfStatement();
-        assertThat(graph.isEmpty(), is(true));
+        assertThat(graph, isEmpty());
     }
 
     /**
