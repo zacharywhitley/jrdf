@@ -86,15 +86,7 @@ public class BdbNodePoolFactory implements NodePoolFactory {
     }
 
     public NodePool createNewNodePool() {
-        nodePoolMapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
-        stringPoolMapFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
-        StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
-        final Map<Long, String> blankNodePool = nodePoolMapFactory.createMap(Long.class, String.class, "bnp");
-        final Map<Long, String> uriNodePool = nodePoolMapFactory.createMap(Long.class, String.class, "npm");
-        final Map<Long, String> literalNodePool = nodePoolMapFactory.createMap(Long.class, String.class, "lnp");
-        final Map<String, Long> stringPool = stringPoolMapFactory.createMap(String.class, Long.class, "sp");
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
-        final NodePool pool = new NodePoolImpl(nodeTypePool, stringPool);
+        final NodePool pool = openExistingNodePool();
         pool.clear();
         return pool;
     }
