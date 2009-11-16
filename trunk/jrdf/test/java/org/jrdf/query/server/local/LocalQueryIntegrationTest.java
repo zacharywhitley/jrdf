@@ -58,6 +58,8 @@
 
 package org.jrdf.query.server.local;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
@@ -82,7 +84,6 @@ import static org.jrdf.util.test.SetUtil.asSet;
 import static org.jrdf.util.test.matcher.GraphEmptyMatcher.isEmpty;
 import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -127,9 +128,8 @@ public class LocalQueryIntegrationTest {
     public void falseAnswerUsingAnAskQueryOnEmptyGraph() throws Exception {
         assertThat(graph, isEmpty());
         QueryClient client = new QueryClientImpl(LOCAL_SERVER_END_POINT, ANSWER_HANDLER);
-        final Answer answer1 = client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);
-        AskAnswer answer = (AskAnswer) answer1;
-        assertEquals(false, answer.getResult());
+        AskAnswer answer = (AskAnswer) client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);
+        assertThat(answer.getResult(), is(false));
     }
 
     @Test
@@ -147,9 +147,9 @@ public class LocalQueryIntegrationTest {
 
 //    @Test
 //    public void foo() throws Exception {
-//        final QueryClient client = new QueryClientImpl(createServerPort("api.talis.com", 80), ANSWER_HANDLER);
-//        final Answer answer = client.executeQuery("/stores/space/services/sparql",
-// "SELECT * WHERE { ?s ?p <http://nasa.dataincubator.org/spacecraft/1957-001B>. }", EMPTY_MAP);
+//        final QueryClient client = new QueryClientImpl(create("http://api.talis.com:80/stores/space/services/sparql"),
+//            ANSWER_HANDLER);
+//        final Answer answer = client.executeQuery("SELECT * WHERE { ?s ?p ?o }", EMPTY_MAP);
 //        System.err.println("Answer: " + Arrays.asList(answer.getVariableNames()));
 //        final Iterator<TypeValue[]> iterator = answer.columnValuesIterator();
 //        while (iterator.hasNext()) {
@@ -159,13 +159,13 @@ public class LocalQueryIntegrationTest {
 
     private void checkAnswer(Answer answer, int noResults, Set<String> expectedVariableNames) throws Exception {
         Set<String> actualVariableNames = asSet(answer.getVariableNames());
-        assertEquals(expectedVariableNames, actualVariableNames);
+        assertThat(actualVariableNames, equalTo(expectedVariableNames));
         Iterator<TypeValue[]> iterator = answer.columnValuesIterator();
         int counter = 0;
         while (iterator.hasNext()) {
             counter++;
             iterator.next();
         }
-        assertEquals(noResults, counter);
+        assertThat(counter, is(noResults));
     }
 }
