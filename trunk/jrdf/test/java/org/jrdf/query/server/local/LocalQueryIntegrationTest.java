@@ -78,28 +78,28 @@ import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import static org.jrdf.util.test.SetUtil.asSet;
+import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.net.URI;
+import static java.net.URI.create;
 import static java.util.Collections.EMPTY_MAP;
 import java.util.Iterator;
 import java.util.Set;
 
 public class LocalQueryIntegrationTest {
-    private static final String LOCAL_HOST = "127.0.0.1";
-    private static final String GRAPH_PATH = "/graph/";
     private static final String GRAPH = "foo";
-    private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
-    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final String SELECT_QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
     private static final String ASK_QUERY_STRING = "ASK WHERE { ?s ?p ?o. }";
-    private static final URI LOCAL_SERVER_END_POINT = URI.create("http://" + LOCAL_HOST + ":" + 8182 + GRAPH_PATH +
-        GRAPH);
+    private static final URI LOCAL_SERVER_END_POINT = create("http://127.0.0.1:8182/graph/" + GRAPH);
+    private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final SparqlAnswerHandlerFactory HANDLER_FACTORY = new SparqlAnswerHandlerFactoryImpl();
     private static final SparqlAnswerHandler ANSWER_HANDLER = HANDLER_FACTORY.createSparqlAnswerHandlerFactory();
+    private PersistentGlobalJRDFFactory factory;
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
@@ -108,8 +108,8 @@ public class LocalQueryIntegrationTest {
     public void setUp() throws Exception {
         HANDLER.removeDir();
         HANDLER.makeDir();
-        graph = FACTORY.getGraph(GRAPH);
-        graph.clear();
+        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+        graph = factory.getGraph(GRAPH);
         elementFactory = graph.getElementFactory();
         localQueryServer = new SpringLocalServer();
         localQueryServer.start();
@@ -118,13 +118,13 @@ public class LocalQueryIntegrationTest {
     @After
     public void tearDown() throws Exception {
         graph.close();
-        FACTORY.close();
+        factory.close();
         localQueryServer.stop();
     }
 
     @Test
     public void falseAnswerUsingAnAskQueryOnEmptyGraph() throws Exception {
-        assertEquals(0, graph.getNumberOfTriples());
+        assertThat(graph, hasNumberOfTriples(0L));
         QueryClient client = new QueryClientImpl(LOCAL_SERVER_END_POINT, ANSWER_HANDLER);
         final Answer answer1 = client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);
         AskAnswer answer = (AskAnswer) answer1;
@@ -133,12 +133,12 @@ public class LocalQueryIntegrationTest {
 
     @Test
     public void createSimpleGraphAndGetAllResults() throws Exception {
-        final URIReference p = elementFactory.createURIReference(URI.create("urn:p"));
+        final URIReference p = elementFactory.createURIReference(create("urn:p"));
         final BlankNode b1 = elementFactory.createBlankNode();
         final BlankNode b2 = elementFactory.createBlankNode();
         graph.add(b1, p, b1);
         graph.add(b2, p, b2);
-        assertEquals(2, graph.getNumberOfTriples());
+        assertThat(graph, hasNumberOfTriples(2L));
         CallableQueryClient queryClient = new CallableQueryClientImpl(LOCAL_SERVER_END_POINT, ANSWER_HANDLER);
         Answer answer = queryClient.executeQuery(SELECT_QUERY_STRING, EMPTY_MAP);
         checkAnswer(answer, 2, asSet("s", "p", "o"));
