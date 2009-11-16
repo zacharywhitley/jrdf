@@ -87,11 +87,8 @@ public class SelectAnswerSparqlRepresentation extends WriterRepresentation {
     public void write(Writer writer) throws IOException {
         try {
             final SparqlWriter answerWriter = createAnswerWriter(writer);
-            try {
-                answerWriter.writeFullDocument();
-            } finally {
-                answerWriter.close();
-            }
+            // Don't close the writer - this will be done by calling code.
+            answerWriter.writeFullDocument();
         } catch (Exception e) {
             throw new IOException(e.getMessage());
         }
