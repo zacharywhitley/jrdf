@@ -61,7 +61,7 @@ package org.jrdf.collection;
 
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.DatabaseExistsException;
 import com.sleepycat.je.Environment;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -73,11 +73,11 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndF
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.MockTestUtil.createMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import static org.jrdf.util.test.MockTestUtil.createMock;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -114,7 +114,7 @@ public class BdbMapFactoryUnitTest {
 
     @Test
     public void testHandleException() throws Exception {
-        expect(storedMapHandler.setUpEnvironment()).andThrow(new DatabaseException());
+        expect(storedMapHandler.setUpEnvironment()).andThrow(new DatabaseExistsException(""));
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 replayAll();
@@ -147,7 +147,7 @@ public class BdbMapFactoryUnitTest {
         environment.sync();
         expectLastCall();
         environment.close();
-        expectLastCall().andThrow(new DatabaseException());
+        expectLastCall().andThrow(new DatabaseExistsException(""));
         database.close();
         expectLastCall();
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
@@ -167,7 +167,7 @@ public class BdbMapFactoryUnitTest {
         environment.sync();
         expectLastCall();
         environment.close();
-        expectLastCall().andThrow(new DatabaseException());
+        expectLastCall().andThrow(new DatabaseExistsException(""));
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 replayAll();
