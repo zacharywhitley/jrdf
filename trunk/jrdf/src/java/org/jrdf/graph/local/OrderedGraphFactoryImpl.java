@@ -111,7 +111,6 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         IteratorTrackingCollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNewNodePool();
-        this.nodePool.clear();
         this.collectionFactory = newCollectionFactory;
         init(newLongIndexes);
     }
