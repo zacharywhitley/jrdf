@@ -1114,7 +1114,7 @@
     </library>
     <library name="je">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/je/je-3.3.82.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/je/je-4.0.71.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
