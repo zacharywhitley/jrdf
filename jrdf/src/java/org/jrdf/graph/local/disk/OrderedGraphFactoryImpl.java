@@ -115,7 +115,6 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         long graphNumber) {
         this.longIndexes = newLongIndexes;
         nodePool = newNodePoolFactory.createNewNodePool();
-        this.nodePool.clear();
         this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
         this.graphHandlers = createGraphHandlers(newLongIndexes);
         this.iteratorFactory = createIteratorFactory(graphNumber);

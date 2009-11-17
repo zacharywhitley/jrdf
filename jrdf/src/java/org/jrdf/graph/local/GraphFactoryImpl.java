@@ -101,7 +101,6 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
         IteratorTrackingCollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNewNodePool();
-        this.nodePool.clear();
         this.graphHandlers = createGraphHandlers(newLongIndexes);
         Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
         this.iteratorFactory = new CopyingLocalIteratorFactory(graphHandlers, localizer, newCollectionFactory);
