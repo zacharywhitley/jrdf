@@ -67,7 +67,6 @@ import com.sleepycat.collections.StoredMap;
 import com.sleepycat.collections.StoredSortedKeySet;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import org.jrdf.graph.BlankNode;
@@ -98,7 +97,7 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         binding.put(Triple.class, new TripleBinding());
     }
 
-    public Environment setUpEnvironment() throws DatabaseException {
+    public Environment setUpEnvironment() {
         File dir = handler.makeDir();
         EnvironmentConfig env = new EnvironmentConfig();
         env.setSharedCache(true);
@@ -115,7 +114,7 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         return dbConfig;
     }
 
-    public Database setupDatabase(Environment env, String dbName, DatabaseConfig dbConfig) throws DatabaseException {
+    public Database setupDatabase(Environment env, String dbName, DatabaseConfig dbConfig) {
         return env.openDatabase(null, dbName, dbConfig);
     }
 

@@ -57,7 +57,7 @@
     <property name="spring.version" value="2.5.6"/>
     <property name="restlet.version" value="1.1.6"/>
     <property name="freemarker.version" value="2.3.15"/>
-    <property name="bdbje.version" value="3.3.82"/>
+    <property name="bdbje.version" value="4.0.71"/>
     <property name="groovy.version" value="1.6.3"/>
     <property name="cobertura.version" value="1.9.3"/>
 
