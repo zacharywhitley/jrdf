@@ -1,3 +1,12 @@
+JRDF Release 0.5.6
+==================
+* JSON SPARQL Parser and Writer support (Feature 2900728).
+* Calling find uses more and more disk space (Bug 2900731).
+* Make the SPARQL query clients able to use URIs to specify endpoints (Bug 2900734).
+* Path for SPARQL endpoint should use graph not graphs (Bug 2900737).
+* Refactor SortMerge so that it can be made disk based and possibly lazy (Bug 2900740).
+* TypeValueImpl equal is wrong (Bug 2827711).
+
 JRDF Release 0.5.5.5
 ====================
 * Removal of ValueOperations with introduction of new FILTER implementation (Feature 2820351).
@@ -8,8 +17,8 @@ JRDF Release 0.5.5.5
 * Follows SPARQL rather than Relational semantics for empty graph patterns (Bug 2405529).
 * RdfWriter has the wrong kinds of exceptions (Bug 2302897).
 * Make Checked Exceptions Unchecked (Bug 2820359).
-* Java 6 sTaX (XML Pull Parser) has different behavior than Woodstox causing
-a problem with XML Literal writing (Bug 2272447).
+* Java 6 sTaX (XML Pull Parser) has different behavior than Woodstox causing a problem with XML Literal writing
+  (Bug 2272447).
 * Multiple calls to find do not release memory (Bug 2820364).
 
 JRDF Release 0.5.5.4

@@ -63,9 +63,11 @@ import org.jrdf.query.relation.Tuple;
 
 import java.util.SortedSet;
 
+/**
+ * Implements a sort-merge algorithm which sorts the largest relation and interleaves the second.
+ */
 public interface SortMergeJoin {
     void mergeJoin(SortedSet<Attribute> headings,
         SortedSet<Attribute> commonHeadings, final PartitionedRelation sets1, final PartitionedRelation sets2,
-        SortedSet<Tuple> result
-    );
+        SortedSet<Tuple> result);
 }
