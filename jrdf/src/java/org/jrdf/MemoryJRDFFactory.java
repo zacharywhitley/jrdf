@@ -59,6 +59,7 @@
 
 package org.jrdf;
 
+import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.GraphFactoryImpl;
@@ -97,7 +98,7 @@ public final class MemoryJRDFFactory implements JRDFFactory {
     public Graph getNewGraph() {
         LongIndex[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
-        MemCollectionFactory collectionFactory = new MemCollectionFactory();
+        IteratorTrackingCollectionFactory collectionFactory = new MemCollectionFactory();
         return new GraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
     }
 

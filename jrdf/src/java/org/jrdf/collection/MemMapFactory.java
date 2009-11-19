@@ -69,6 +69,10 @@ public final class MemMapFactory implements MapFactory {
         return new HashMap<T, U>();
     }
 
+    public <A, T, U extends A> Map<T, U> createTemporaryMap(Class<T> clazz1, Class<A> clazz2) {
+        return createMap(clazz1, clazz2);
+    }
+
     public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
         final Map<T, U> map = new HashMap<T, U>();
         existingMaps.put(name, map);

@@ -57,28 +57,20 @@
  *
  */
 
-package org.jrdf.graph.local;
+package org.jrdf;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
+import org.junit.After;
 
-/**
- * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
- *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- * @author Andrew Newman
- * @version $Revision: 1499 $
- */
-public class SortedGraphImplIntegrationTest extends AbstractGraphIntegrationTest {
-    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
+public class SortedMemoryGlobalGraphJRDFFactoryIntegrationTest extends AbstractGraphIntegrationTest {
+    private static final JRDFFactory FACTORY = SortedMemoryGlobalJRDFFactory.getFactory();
 
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
+    @After
+    public void tearDown() {
+        FACTORY.close();
+    }
+
     public Graph newGraph() throws Exception {
         return FACTORY.getNewGraph();
     }

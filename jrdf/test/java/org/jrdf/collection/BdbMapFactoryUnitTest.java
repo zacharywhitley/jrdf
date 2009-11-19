@@ -82,6 +82,7 @@ import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -115,7 +116,7 @@ public class BdbMapFactoryUnitTest {
     @Test
     public void testHandleException() throws Exception {
         expect(storedMapHandler.setUpEnvironment()).andThrow(new DatabaseExistsException(""));
-        AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
+        AssertThrows.assertThrows(DatabaseExistsException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 replayAll();
                 BdbMapFactory factory = new BdbMapFactory(storedMapHandler, DATABASE_NAME);
@@ -150,7 +151,7 @@ public class BdbMapFactoryUnitTest {
         expectLastCall().andThrow(new DatabaseExistsException(""));
         database.close();
         expectLastCall();
-        AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
+        AssertThrows.assertThrows(DatabaseExistsException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 replayAll();
                 BdbMapFactory factory = new BdbMapFactory(storedMapHandler, DATABASE_NAME);
@@ -168,7 +169,7 @@ public class BdbMapFactoryUnitTest {
         expectLastCall();
         environment.close();
         expectLastCall().andThrow(new DatabaseExistsException(""));
-        AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
+        AssertThrows.assertThrows(DatabaseExistsException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 replayAll();
                 BdbMapFactory factory = new BdbMapFactory(storedMapHandler, DATABASE_NAME);
@@ -180,10 +181,11 @@ public class BdbMapFactoryUnitTest {
     }
 
     private HashMap<String, String> creatMapExpectations() throws Exception {
+        expect(environment.getDatabaseNames()).andReturn(new ArrayList<String>());
         HashMap<String, String> expectedMap = new HashMap<String, String>();
         expect(storedMapHandler.setUpEnvironment()).andReturn(environment);
         DatabaseConfig databaseConfig = createMock(DatabaseConfig.class);
-        expect(storedMapHandler.setUpDatabaseConfig(false)).andReturn(databaseConfig);
+        expect(storedMapHandler.setUpDatabaseConfig(false, false)).andReturn(databaseConfig);
         expect(storedMapHandler.setupDatabase(environment, DATABASE_NAME + 1, databaseConfig)).andReturn(database);
         expect(storedMapHandler.createMap(database, String.class, String.class)).
             andReturn(expectedMap);

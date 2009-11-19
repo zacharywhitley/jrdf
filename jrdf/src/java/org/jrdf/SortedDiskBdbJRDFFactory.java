@@ -84,12 +84,6 @@ import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public final class SortedDiskBdbJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
@@ -122,7 +116,9 @@ public final class SortedDiskBdbJRDFFactory implements JRDFFactory {
         openIndexes.addAll(asList(indexes));
         openMapFactories.add(factory);
         openFactories.add(nodePoolFactory);
-        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
+        final Graph graph = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
+        graph.clear();
+        return graph;
     }
 
     public SparqlConnection getNewSparqlConnection() {

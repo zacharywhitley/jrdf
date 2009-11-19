@@ -112,6 +112,7 @@ public class BdbSortedSetFactoryIntegrationTest {
     @After
     public void tearDown() {
         factory.close();
+        HANDLER.removeDir();
     }
 
     @Test

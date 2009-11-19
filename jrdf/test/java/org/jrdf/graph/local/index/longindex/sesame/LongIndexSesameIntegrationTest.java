@@ -71,6 +71,7 @@ public class LongIndexSesameIntegrationTest extends AbstractLongIndexIntegration
     private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final String INDEX_FILE_NAME = "sesTestDb";
 
+    @Override
     public void setUp() {
         BTreeFactory bTreeFactory = new BTreeFactoryImpl();
         BTree tree = bTreeFactory.createBTree(HANDLER, INDEX_FILE_NAME);
@@ -78,6 +79,7 @@ public class LongIndexSesameIntegrationTest extends AbstractLongIndexIntegration
         longIndex.clear();
     }
 
+    @Override
     public void tearDown() {
         longIndex.close();
         new File(HANDLER.getDir(), INDEX_FILE_NAME).delete();

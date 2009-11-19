@@ -97,7 +97,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         graph = newGraph;
         elementFactory = graph.getElementFactory();
         tripleFactory = graph.getTripleFactory();
-        newBNodeMap = mapFactory.createMap(Long.class, BlankNode.class);
+        newBNodeMap = mapFactory.createTemporaryMap(Long.class, BlankNode.class);
         setFactory = sFac;
         triplesToRemove = setFactory.createSet(Triple.class);
         triplesToAdd = setFactory.createSet(Triple.class);

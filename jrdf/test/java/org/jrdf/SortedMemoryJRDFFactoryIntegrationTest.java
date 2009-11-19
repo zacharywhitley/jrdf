@@ -57,67 +57,15 @@
  *
  */
 
-package org.jrdf.graph.local.index.graphhandler;
+package org.jrdf;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleImpl;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.AbstractGraphIntegrationTest;
+import org.jrdf.graph.Graph;
 
-/**
- * Handles operations on 012 index.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public class GraphHandler012 extends AbstractGraphHandler {
-    private LongIndex index012;
-    private LongIndex index120;
-    private LongIndex index201;
+public class SortedMemoryJRDFFactoryIntegrationTest extends AbstractGraphIntegrationTest {
+    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
 
-    public GraphHandler012(LongIndex[] indexes, NodePool newNodePool) {
-        this.index012 = indexes[0];
-        this.index120 = indexes[1];
-        this.index201 = indexes[2];
-        this.nodePool = newNodePool;
-    }
-
-    public ClosableIterator<Long[]> getSubIndex(Long first) {
-        return index012.getSubIndex(first);
-    }
-
-    public ClosableIterator<Long> getSubSubIndex(Long first, Long second) {
-        return index012.getSubSubIndex(first, second);
-    }
-
-    public boolean removeSubIndex(Long first) {
-        return index012.removeSubIndex(first);
-    }
-
-    public ClosableIterator<Long[]> getEntries() {
-        return index012.iterator();
-    }
-
-    public Triple createTriple(Long... nodes) {
-        final Node subNode = nodePool.getNodeById(nodes[0]);
-        final Node predNode = nodePool.getNodeById(nodes[1]);
-        final Node objNode = nodePool.getNodeById(nodes[2]);
-
-        SubjectNode subject = (SubjectNode) subNode;
-        PredicateNode predicate = (PredicateNode) predNode;
-        ObjectNode object = (ObjectNode) objNode;
-        return new TripleImpl(subject, predicate, object);
-    }
-
-    public void remove(Long... currentNodes) throws GraphException {
-        index012.remove(currentNodes[0], currentNodes[1], currentNodes[2]);
-        index120.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
-        index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
+    public Graph newGraph() throws Exception {
+        return FACTORY.getNewGraph();
     }
 }

@@ -65,12 +65,18 @@ import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
 public class LongIndexBdbUnitTest extends AbstractLongIndexUnitTest {
+    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
 
+    @Override
     public void setUp() {
-        TempDirectoryHandler directoryHandler = new TempDirectoryHandler();
-        directoryHandler.removeDir();
-        factory = new BdbMapFactory(new BdbEnvironmentHandlerImpl(directoryHandler), "database");
+        HANDLER.removeDir();
+        factory = new BdbMapFactory(new BdbEnvironmentHandlerImpl(HANDLER), "database");
         longIndex = new LongIndexBdb(factory);
         longIndex.clear();
+    }
+
+    @Override
+    public void tearDown() {
+        HANDLER.removeDir();
     }
 }

@@ -62,6 +62,10 @@ package org.jrdf.graph.local.util;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedDiskJRDFFactory;
+import org.jrdf.collection.BdbCollectionFactory;
+import org.jrdf.collection.BdbMapFactory;
+import org.jrdf.collection.CollectionFactory;
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.AbstractBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -77,10 +81,6 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.collection.BdbMapFactory;
-import org.jrdf.collection.MapFactory;
-import org.jrdf.collection.BdbCollectionFactory;
-import org.jrdf.collection.CollectionFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
@@ -95,7 +95,7 @@ import java.util.Set;
 
 public class CopyGraphUtilImplUnitTest extends TestCase {
     private static final TempDirectoryHandler DIR_HANDLER = new TempDirectoryHandler();
-    private static final JRDFFactory FACTORY = SortedDiskJRDFFactory.getFactory();
+    private JRDFFactory factory;
     private BdbEnvironmentHandler handler1;
     private BdbEnvironmentHandler handler2;
     private MapFactory mapFactory;
@@ -129,11 +129,12 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
     private GraphElementFactory eFac2;
 
     private Graph newGraph() {
-        return FACTORY.getNewGraph();
+        return factory.getNewGraph();
     }
 
     public void setUp() throws Exception {
-        DIR_HANDLER.removeDir();
+        //DIR_HANDLER.makeDir();
+        factory = SortedDiskJRDFFactory.getFactory();
 
         graph1 = newGraph();
         graph2 = newGraph();
@@ -169,7 +170,8 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         cgUtil.close();
         mapFactory.close();
         setFactory.close();
-        FACTORY.close();
+        factory.close();
+        DIR_HANDLER.removeDir();
     }
 
     public void testInitialInsert() throws GraphException {
