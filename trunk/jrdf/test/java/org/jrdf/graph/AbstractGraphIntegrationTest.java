@@ -321,12 +321,10 @@ public abstract class AbstractGraphIntegrationTest {
         // now clear out the graph
         assertThat(graph.isEmpty(), is(false));
         graph.remove(blank1, ref2, blank2);
-        assertThat(graph.isEmpty(), is(true));
-        assertThat(graph.getNumberOfTriples(), is(0L));
+        assertThat(graph, isEmpty());
 
         checkIllegalRemove(GraphException.class, FAILED_TO_REMOVE_TRIPLE, ref1, ref1, ref1);
-        assertThat(graph.isEmpty(), is(true));
-        assertThat(graph.getNumberOfTriples(), is(0L));
+        assertThat(graph, isEmpty());
     }
 
     private void checkIllegalRemove(final Class<?> expectedException, final String expectedMessage,
@@ -685,7 +683,7 @@ public abstract class AbstractGraphIntegrationTest {
         }
 
         if (numberOfTriplesInGraph == 0) {
-            assertThat(graph.isEmpty(), is(true));
+            assertThat(graph, isEmpty());
         }
 
         assertThat(ci.hasNext(), is(false));

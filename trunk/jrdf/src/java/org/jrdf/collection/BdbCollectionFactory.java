@@ -79,31 +79,27 @@ import java.util.Stack;
  */
 public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
     private final BdbEnvironmentHandler handler;
-    private final String databaseName;
+    private final String baseDatabaseName;
     private Environment env;
-    private Map<Iterator<?>, Database> databases = new HashMap<Iterator<?>, Database>();
     private long collectionNumber;
-    private Stack<Database> currentDatabase = new Stack<Database>();
+    private Map<Iterator<?>, Database> mappedDatabases = new HashMap<Iterator<?>, Database>();
+    private Stack<Database> unmappedDatabases = new Stack<Database>();
 
     public BdbCollectionFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
         checkNotNull(newHandler, newDatabaseName);
         this.handler = newHandler;
-        this.databaseName = newDatabaseName;
+        this.baseDatabaseName = newDatabaseName;
     }
 
     public <T> SortedSet<T> createSet(Class<T> clazz) {
-        final SortedSet<T> set = createSet(clazz, null);
-        set.clear();
-        return set;
+        return createSet(clazz, null);
     }
 
     @SuppressWarnings({ "unchecked" })
     public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
         try {
-            createDatabase((Comparator<byte[]>) comparator);
-            final SortedSet<T> set = handler.createSet(currentDatabase.peek(), clazz);
-            set.clear();
-            return set;
+            final Database database = createDatabase((Comparator<byte[]>) comparator);
+            return handler.createSet(database, clazz);
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
@@ -111,10 +107,8 @@ public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
 
     public <T> List<T> createList(Class<T> clazz) {
         try {
-            createDatabase(null);
-            final List<T> list = handler.createList(currentDatabase.peek(), clazz);
-            list.clear();
-            return list;
+            final Database database = createDatabase(null);
+            return handler.createList(database, clazz);
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
@@ -123,63 +117,60 @@ public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
     public void close() {
         try {
             collectionNumber = 0;
-            closeDatabases();
+            closeMappedDatabases();
         } finally {
-            closeEnvironment();
+            try {
+                closeUnmappedDatabases();
+            } finally {
+                closeEnvironment();
+            }
         }
     }
 
     public void trackCurrentIteratorResource(Iterator<?> iterator) {
-        databases.remove(null);
-        databases.put(iterator, currentDatabase.peek());
+        mappedDatabases.put(iterator, unmappedDatabases.pop());
     }
 
     public void removeIteratorResources(Iterator<?> iterator) {
-        final Database database = currentDatabase.pop();
+        final Database database = mappedDatabases.get(iterator);
         if (database != null) {
-            try {
-                final String name = database.getDatabaseName();
-                database.close();
-                env.removeDatabase(null, name);
-                databases.remove(iterator);
-            } catch (DatabaseException e) {
-                throw new RuntimeException(e);
-            }
+            database.close();
+            mappedDatabases.remove(iterator);
+        } else {
+            throw new RuntimeException("Tried to remove unmapped iterator: " + iterator);
         }
     }
 
-    private void createDatabase(Comparator<byte[]> comparator) throws DatabaseException {
+    private Database createDatabase(Comparator<byte[]> comparator) throws DatabaseException {
         collectionNumber++;
         env = handler.setUpEnvironment();
-        DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
+        DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false, true);
         if (comparator != null) {
             dbConfig.setOverrideBtreeComparator(true);
             dbConfig.setBtreeComparator(comparator);
         }
-        currentDatabase.push(handler.setupDatabase(env, databaseName + collectionNumber, dbConfig));
-        databases.put(null, currentDatabase.peek());
+        final String databaseName = baseDatabaseName + collectionNumber;
+        final Database database = handler.setupDatabase(env, databaseName, dbConfig);
+        unmappedDatabases.push(database);
+        return database;
     }
 
-    private void closeDatabases() {
-        try {
-            if (!databases.isEmpty()) {
-                for (Database database : databases.values()) {
-                    database.close();
-                }
-            }
-            databases.clear();
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+    private void closeMappedDatabases() {
+        for (Database database : mappedDatabases.values()) {
+            database.close();
+        }
+        mappedDatabases.clear();
+    }
+
+    private void closeUnmappedDatabases() {
+        for (Database database : unmappedDatabases) {
+            database.close();
         }
     }
 
     private void closeEnvironment() {
-        try {
-            if (env != null) {
-                env.close();
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+        if (env != null) {
+            env.close();
         }
     }
 }

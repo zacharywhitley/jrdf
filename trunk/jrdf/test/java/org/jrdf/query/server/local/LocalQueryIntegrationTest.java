@@ -78,6 +78,7 @@ import org.jrdf.query.client.SparqlAnswerHandler;
 import org.jrdf.query.client.SparqlAnswerHandlerFactory;
 import org.jrdf.query.client.SparqlAnswerHandlerFactoryImpl;
 import org.jrdf.query.server.SpringLocalServer;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import static org.jrdf.util.test.SetUtil.asSet;
@@ -90,7 +91,6 @@ import org.junit.Test;
 import java.net.URI;
 import static java.net.URI.create;
 import static java.util.Collections.EMPTY_MAP;
-import java.util.Iterator;
 import java.util.Set;
 
 public class LocalQueryIntegrationTest {
@@ -160,12 +160,16 @@ public class LocalQueryIntegrationTest {
     private void checkAnswer(Answer answer, int noResults, Set<String> expectedVariableNames) throws Exception {
         Set<String> actualVariableNames = asSet(answer.getVariableNames());
         assertThat(actualVariableNames, equalTo(expectedVariableNames));
-        Iterator<TypeValue[]> iterator = answer.columnValuesIterator();
-        int counter = 0;
-        while (iterator.hasNext()) {
-            counter++;
-            iterator.next();
+        ClosableIterator<TypeValue[]> iterator = answer.columnValuesIterator();
+        try {
+            int counter = 0;
+            while (iterator.hasNext()) {
+                counter++;
+                iterator.next();
+            }
+            assertThat(counter, is(noResults));
+        } finally {
+            iterator.close();
         }
-        assertThat(counter, is(noResults));
     }
 }

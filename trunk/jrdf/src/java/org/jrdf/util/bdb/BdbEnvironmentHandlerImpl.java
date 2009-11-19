@@ -107,10 +107,13 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         return new Environment(dir, env);
     }
 
-    public DatabaseConfig setUpDatabaseConfig(boolean transactional) {
+    public DatabaseConfig setUpDatabaseConfig(boolean transactional, boolean temporary) {
         DatabaseConfig dbConfig = new DatabaseConfig();
+        // TODO It would be nice to get this going
+        //dbConfig.setExclusiveCreate(true);
         dbConfig.setTransactional(transactional);
         dbConfig.setAllowCreate(true);
+        dbConfig.setTemporary(temporary);
         return dbConfig;
     }
 

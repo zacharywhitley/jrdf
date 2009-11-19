@@ -96,7 +96,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 // TODO Write a test to check that writing triples and getting molecules synchronise.  Especially with creating
-
 // new URIs across data structures.  e.g. create a triple with a new molecule and then do a find on it.
 public class MoleculeGraphImplIntegrationTest extends AbstractMoleculeGraphIntegrationTest {
     private MoleculeGraph destGraph;

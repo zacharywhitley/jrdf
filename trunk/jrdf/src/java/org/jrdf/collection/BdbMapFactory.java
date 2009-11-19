@@ -61,7 +61,6 @@ package org.jrdf.collection;
 
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -88,22 +87,17 @@ public final class BdbMapFactory implements MapFactory {
         return createMap(clazz1, clazz2, Long.toString(mapNumber));
     }
 
+    public <A, T, U extends A> Map<T, U> createTemporaryMap(Class<T> clazz1, Class<A> clazz2) {
+        mapNumber++;
+        return reallyCreateMap(clazz1, clazz2, Long.toString(mapNumber), true, true);
+    }
+
     public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
-        final Map<T, U> map = openExistingMap(clazz1, clazz2, name);
-        map.clear();
-        return map;
+        return reallyCreateMap(clazz1, clazz2, name, false, true);
     }
 
     public <A, T, U extends A> Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name) {
-        try {
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
-            databases.add(database);
-            return handler.createMap(database, clazz1, clazz2);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+        return reallyCreateMap(clazz1, clazz2, name, false, false);
     }
 
     public void close() {
@@ -115,28 +109,32 @@ public final class BdbMapFactory implements MapFactory {
         }
     }
 
-    private void closeDatabase() {
-        try {
-            if (!databases.isEmpty()) {
-                for (Database database : databases) {
-                    database.close();
-                }
-            }
-            databases.clear();
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+    private <A, T, U extends A> Map<T, U> reallyCreateMap(Class<T> clazz1, Class<A> clazz2, String name,
+        boolean temporary, boolean removeExisting) {
+        env = handler.setUpEnvironment();
+        if (env.getDatabaseNames().contains(name) && removeExisting) {
+            env.removeDatabase(null, name);
         }
+        DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false, temporary);
+        Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
+        databases.add(database);
+        return handler.createMap(database, clazz1, clazz2);
+    }
+
+    private void closeDatabase() {
+        if (!databases.isEmpty()) {
+            for (Database database : databases) {
+                database.close();
+            }
+        }
+        databases.clear();
     }
 
     private void closeEnvironment() {
-        try {
-            if (env != null) {
-                env.sync();
-                env.close();
-                env = null;
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+        if (env != null) {
+            env.sync();
+            env.close();
+            env = null;
         }
     }
 }

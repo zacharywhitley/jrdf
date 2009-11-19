@@ -57,34 +57,33 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedDiskBdbGlobalJRDFFactory;
 import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
+import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 import org.junit.After;
+import org.junit.Before;
 
-/**
- * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
- *
- * @author Andrew Newman
- * @version $Revision: 1499 $
- */
-public class GlobalGraphDiskBdbIntegrationTest extends AbstractGraphIntegrationTest {
-    private static final JRDFFactory FACTORY = SortedDiskBdbGlobalJRDFFactory.getFactory();
+public class SortedDiskBdbJRDFFactoryIntegrationTest extends AbstractGraphIntegrationTest {
+    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final JRDFFactory FACTORY = SortedDiskBdbJRDFFactory.getFactory();
 
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
-    public Graph newGraph() throws Exception {
-        return FACTORY.getNewGraph();
+    @Before
+    public void setUp() throws Exception {
+        HANDLER.makeDir();
+        super.setUp();
     }
 
     @After
     public void tearDown() {
         FACTORY.close();
+        HANDLER.removeDir();
+    }
+
+    @Override
+    public Graph newGraph() throws Exception {
+        return FACTORY.getNewGraph();
     }
 }

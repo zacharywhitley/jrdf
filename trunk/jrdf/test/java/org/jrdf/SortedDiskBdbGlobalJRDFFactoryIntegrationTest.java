@@ -57,37 +57,32 @@
  *
  */
 
-package org.jrdf.graph.local;
+package org.jrdf;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedDiskJRDFFactory;
 import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
+import org.junit.After;
+import org.junit.Before;
 
-public class SesameGraphImplIntegrationTest extends AbstractGraphIntegrationTest {
-    private static final JRDFFactory FACTORY = SortedDiskJRDFFactory.getFactory();
+public class SortedDiskBdbGlobalJRDFFactoryIntegrationTest extends AbstractGraphIntegrationTest {
+    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final JRDFFactory FACTORY = SortedDiskBdbGlobalJRDFFactory.getFactory();
 
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
-    @Override
-    public Graph newGraph() throws Exception {
-        Graph newGraph = FACTORY.getNewGraph();
-        newGraph.clear();
-        return newGraph;
-    }
-
+    @Before
     public void setUp() throws Exception {
-        final DirectoryHandler handler = new TempDirectoryHandler();
-        handler.removeDir();
+        HANDLER.makeDir();
         super.setUp();
     }
 
+    @After
     public void tearDown() {
         FACTORY.close();
+        HANDLER.removeDir();
+    }
+
+    public Graph newGraph() throws Exception {
+        return FACTORY.getNewGraph();
     }
 }

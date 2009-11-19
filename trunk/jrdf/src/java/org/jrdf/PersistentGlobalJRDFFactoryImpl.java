@@ -121,7 +121,9 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
     }
 
     public MoleculeGraph getNewGraph() {
-        return getGraph("default");
+        final MoleculeGraph moleculeGraph = getGraph("default");
+        moleculeGraph.clear();
+        return moleculeGraph;
     }
 
     public MoleculeGraph getGraph(String name) {

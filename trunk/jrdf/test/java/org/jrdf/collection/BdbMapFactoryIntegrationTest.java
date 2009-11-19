@@ -66,6 +66,7 @@ import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -80,6 +81,12 @@ public class BdbMapFactoryIntegrationTest {
 
     @Before
     public void setUp() {
+        directoryHandler.removeDir();
+        directoryHandler.makeDir();
+    }
+
+    @After
+    public void tearDown() {
         directoryHandler.removeDir();
     }
 

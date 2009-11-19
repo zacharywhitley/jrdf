@@ -69,18 +69,20 @@ import org.jrdf.util.btree.BTreeFactoryImpl;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class MoleculeStructureIndexSesameIntegrationTest extends AbstractMoleculeStructureIndexIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private BTreeFactory btreeFactory;
 
+    @Override
     public void setUp() throws Exception {
         btreeFactory = new BTreeFactoryImpl();
         index = new MoleculeStructureIndexSesame(btreeFactory.createQuinBTree(HANDLER, "testStructure"));
         index.clear();
     }
 
+    @Override
     public void tearDown() {
         index.close();
+        HANDLER.removeDir();
     }
 }

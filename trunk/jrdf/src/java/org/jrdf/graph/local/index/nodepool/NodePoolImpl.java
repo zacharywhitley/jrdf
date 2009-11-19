@@ -92,7 +92,7 @@ public final class NodePoolImpl implements NodePool {
         checkNotNull(newNodeTypePool, newStringPool);
         this.nodeTypePool = newNodeTypePool;
         this.stringPool = newStringPool;
-        nextNode = nodeTypePool.getNumberOfEntries() + 1L;
+        this.nextNode = nodeTypePool.getNumberOfEntries() + 1L;
     }
 
     public Node getNodeIfExists(Long nodeId) {

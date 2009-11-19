@@ -57,10 +57,10 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf;
 
-import org.jrdf.PersistentGlobalJRDFFactory;
-import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
@@ -70,6 +70,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.graph.global.molecule.MoleculeComparator;
 import org.jrdf.graph.global.molecule.MoleculeFactory;
 import org.jrdf.graph.global.molecule.mem.MoleculeFactoryImpl;
@@ -79,17 +80,10 @@ import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import org.junit.After;
 import org.junit.Before;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
+import org.junit.Test;
 
 import java.net.URI;
 
-/**
- * Implementation of {@link org.jrdf.graph.AbstractGraphIntegrationTest} test case.
- *
- * @author Andrew Newman
- * @version $Revision: 1499 $
- */
 public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final TripleComparator TRIPLE_COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
@@ -108,22 +102,18 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
 
     @After
     public void tearDown() throws Exception {
-        graph.close();
+        //graph.close();
         factory.close();
         HANDLER.removeDir();
     }
 
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
     public Graph newGraph() throws Exception {
         MoleculeGraph moleculeGraph = factory.getNewGraph("temp" + graphNumber++);
         moleculeGraph.clear();
         return moleculeGraph;
     }
 
+    @Test
     public void testMoleculeSize() throws Exception {
         MoleculeGraph moleculeGraph = factory.getNewGraph("foo");
         moleculeGraph.clear();

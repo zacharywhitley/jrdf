@@ -120,7 +120,9 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
         openIndexes.addAll(asList(indexes));
         openFactories.add(nodePoolFactory);
         collectionFactory = new BdbCollectionFactory(BDB_HANDLER, "collection" + graphNumber);
-        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
+        final Graph graph = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
+        graph.clear();
+        return graph;
     }
 
     public SparqlConnection getNewSparqlConnection() {
