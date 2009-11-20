@@ -73,10 +73,6 @@ public final class MemBlankNodeRegistryImpl implements BlankNodeRegistry {
         blankNodeList = new LinkedList<BlankNode>();
     }
 
-    public MemBlankNodeRegistryImpl(List<BlankNode> newBlankNodeList) {
-        this.blankNodeList = newBlankNodeList;
-    }
-
     public String getNodeId(BlankNode node) {
         checkNotNull(node);
         int id = blankNodeList.indexOf(node);

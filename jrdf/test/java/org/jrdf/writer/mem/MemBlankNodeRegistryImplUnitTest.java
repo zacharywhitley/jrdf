@@ -130,6 +130,11 @@ public class MemBlankNodeRegistryImplUnitTest {
         checkBadGetNodeId(129);
     }
 
+    @Test
+    public void testCloseDoesNothing() {
+        nodeRegistry.close();
+    }
+
     private void checkSuccessfulGetNodeId(int nodeId) {
         expect(bNodes.indexOf(blankNode)).andReturn(nodeId);
         insertFieldAndCall(nodeId);
