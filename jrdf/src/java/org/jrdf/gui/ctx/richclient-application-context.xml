@@ -9,7 +9,7 @@
 
     <bean id="applicationDescriptor"
           class="org.springframework.richclient.application.support.DefaultApplicationDescriptor">
-        <property name="version" value="0.5.5"/>
+        <property name="version" value="0.5.6"/>
     </bean>
 
     <bean id="jrdfGuiLifecycleAdvisor"
