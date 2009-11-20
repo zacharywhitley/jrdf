@@ -97,6 +97,17 @@ public class MemMapFactoryUnitTest {
     }
 
     @Test
+    public void createsTempHashMap() throws Exception {
+        final Map map = createMock(HashMap.class);
+        final MapFactory factory = new MemMapFactory();
+        expectNew(HashMap.class).andReturn((HashMap) map);
+        replayAll();
+        final Map<String, String> returnedMap = factory.createTemporaryMap(String.class, String.class);
+        assertThat(returnedMap, equalTo(map));
+        verifyAll();
+    }
+
+    @Test
     public void createsHashMapWithName() throws Exception {
         final MapFactory factory = new MemMapFactory();
         final Map<String, String> returnedMap = factory.createMap(String.class, String.class, "fred");
