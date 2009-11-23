@@ -84,10 +84,11 @@ public class NTriplesWriterImpl implements NTriplesWriter {
     private static final String SPACE = " ";
     private static final String END_OF_TRIPLE = SPACE + "." + NEW_LINE;
     private PrintWriter printWriter;
+    private OutputStreamWriter writer;
     private WriteException exception;
 
     public void write(Graph graph, OutputStream stream) throws WriteException, GraphException {
-        final OutputStreamWriter writer = new OutputStreamWriter(stream);
+        writer = new OutputStreamWriter(stream);
         try {
             write(graph, writer);
         } finally {
@@ -99,12 +100,26 @@ public class NTriplesWriterImpl implements NTriplesWriter {
         }
     }
 
-    public void write(Graph graph, Writer writer) throws WriteException, GraphException {
-        printWriter = new PrintWriter(writer);
+    public void write(Graph graph, Writer newWriter) throws WriteException, GraphException {
+        printWriter = new PrintWriter(newWriter);
         try {
             write(graph, (String) null);
         } finally {
             printWriter.close();
+        }
+    }
+
+    public void close() throws WriteException {
+        try {
+            printWriter.close();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    throw new WriteException(e);
+                }
+            }
         }
     }
 

@@ -296,6 +296,8 @@ public class GraphImpl implements Graph {
             writer.write(this, sw);
         } catch (Exception e) {
             throw new RuntimeException("Unable to get String representation of graph", e);
+        } finally {
+            writer.close();
         }
         return sw.toString();
     }

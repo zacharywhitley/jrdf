@@ -147,7 +147,11 @@ public class NTriplesWriterIntegrationTest extends TestCase {
         addStandardValuesToGraph(NEW_GRAPH);
         final StringWriter out = new StringWriter();
         final NTriplesWriter writer = new NTriplesWriterImpl();
-        writer.write(NEW_GRAPH, out);
+        try {
+            writer.write(NEW_GRAPH, out);
+        } finally {
+            writer.close();
+        }
         return out;
     }
 }

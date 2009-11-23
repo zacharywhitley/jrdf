@@ -209,7 +209,11 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
             nodeRegistry.clear();
             RdfNamespaceMap map = new RdfNamespaceMapImpl();
             RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
-            writer.write(graph, out);
+            try {
+                writer.write(graph, out);
+            } finally {
+                writer.close();
+            }
         } finally {
             out.close();
         }
