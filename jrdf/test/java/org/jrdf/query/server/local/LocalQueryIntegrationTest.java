@@ -134,12 +134,7 @@ public class LocalQueryIntegrationTest {
 
     @Test
     public void createSimpleGraphAndGetAllResults() throws Exception {
-        final URIReference p = elementFactory.createURIReference(create("urn:p"));
-        final BlankNode b1 = elementFactory.createBlankNode();
-        final BlankNode b2 = elementFactory.createBlankNode();
-        graph.add(b1, p, b1);
-        graph.add(b2, p, b2);
-        assertThat(graph, hasNumberOfTriples(2L));
+        addTriples();
         CallableQueryClient queryClient = new CallableQueryClientImpl(LOCAL_SERVER_END_POINT, ANSWER_HANDLER);
         Answer answer = queryClient.executeQuery(SELECT_QUERY_STRING, EMPTY_MAP);
         checkAnswer(answer, 2, asSet("s", "p", "o"));
@@ -156,6 +151,15 @@ public class LocalQueryIntegrationTest {
 //            System.err.println("Row: " + Arrays.asList(iterator.next()));
 //        }
 //    }
+
+    private void addTriples() {
+        final URIReference p = elementFactory.createURIReference(create("urn:p"));
+        final BlankNode b1 = elementFactory.createBlankNode();
+        final BlankNode b2 = elementFactory.createBlankNode();
+        graph.add(b1, p, b1);
+        graph.add(b2, p, b2);
+        assertThat(graph, hasNumberOfTriples(2L));
+    }
 
     private void checkAnswer(Answer answer, int noResults, Set<String> expectedVariableNames) throws Exception {
         Set<String> actualVariableNames = asSet(answer.getVariableNames());

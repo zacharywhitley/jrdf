@@ -82,6 +82,7 @@ public class GraphResource extends ConfigurableRestletResource {
     private static final String GRAPH_VALUE = "graph";
     private static final String MAX_ROWS = "maxRows";
     private static final String GRAPH_NAME = "graphName";
+    private static final String GRAPH_REF = "graphRef";
     private String graphName;
     private String queryString;
     private long maxRows;
@@ -99,9 +100,9 @@ public class GraphResource extends ConfigurableRestletResource {
             maxRows = getMaxRows();
             queryString = getQueryString();
             if (queryString == null) {
-                rep = queryPageRepresentation(variant);
+                rep = nonQueryRepresentation(variant);
             } else {
-                rep = queryResultRepresentation(variant);
+                rep = queryRepresentation(variant);
             }
             getResponse().setStatus(SUCCESS_OK);
         } catch (Exception e) {
@@ -132,13 +133,14 @@ public class GraphResource extends ConfigurableRestletResource {
         }
     }
 
-    protected Representation queryPageRepresentation(Variant variant) throws IOException {
+    protected Representation nonQueryRepresentation(Variant variant) throws IOException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         dataModel.put(GRAPH_NAME, graphName);
+        dataModel.put(GRAPH_REF, graphApplication.getGraph(graphName));
         return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }
 
-    private Representation queryResultRepresentation(Variant variant) throws ResourceException {
+    private Representation queryRepresentation(Variant variant) throws ResourceException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         Answer answer = graphApplication.answerQuery(graphName, queryString, maxRows);
         dataModel.put("query", queryString);

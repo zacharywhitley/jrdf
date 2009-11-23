@@ -91,9 +91,16 @@ public interface RdfWriter {
      * Writes the Graph contents to the Writer.
      *
      * @param graph  Graph input
-     * @param writer Writer output. Caller is responsible for closing writers.
+     * @param newWriter Writer output. Caller is responsible for closing writers.
      * @throws WriteException If the writer encounters an unrecoverable error.
      * @throws GraphException If an exception occurrs while reading the graph.
      */
-    void write(Graph graph, Writer writer) throws WriteException, GraphException;
+    void write(Graph graph, Writer newWriter) throws WriteException, GraphException;
+
+    /**
+     * Close any streams - should be part of a try/finally block.
+     *
+     * @throws WriteException if there's an exception closing the streams.
+     */
+    void close() throws WriteException;
 }

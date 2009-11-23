@@ -80,7 +80,11 @@ public class WritePerformanceImpl implements WritePerformance {
         try {
             registry.clear();
             RdfWriter writer = new RdfXmlWriter(registry, new RdfNamespaceMapImpl());
-            writer.write(graph, out);
+            try {
+                writer.write(graph, out);
+            } finally {
+                writer.close();
+            }
         } finally {
             out.close();
         }

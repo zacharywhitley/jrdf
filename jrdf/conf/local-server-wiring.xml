@@ -14,6 +14,9 @@
     <bean id="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
+    <bean id="org.restlet.data.MediaType.APPLICATION_RDF_XML"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
     <bean id="org.restlet.data.MediaType.APPLICATION_XML"
           class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
 
@@ -70,6 +73,7 @@
     <!-- Resources for displaying -->
     <bean id="jsonRepresentationFactory" class="org.jrdf.query.server.JsonRepresentationFactory"/>
     <bean id="sparqlXmlRepresentationFactory" class="org.jrdf.query.server.SparqlXmlRepresentationFactory"/>
+    <bean id="rdfXmlRepresentationFactory" class="org.jrdf.query.server.RdfXmlRepresentationFactory"/>
 
     <!-- Router for Resources -->
     <bean id="router" class="org.restlet.ext.spring.SpringRouter">
@@ -77,7 +81,7 @@
             <map>
                 <entry key="" value-ref="redirector">
                 </entry>
-                <entry key="/graph/">
+                <entry key="/graph">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="listGraphsResource"/>
                     </bean>
@@ -145,6 +149,7 @@
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="localGraphsResourceHtml"/>
                 <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON" value-ref="jsonRepresentationFactory"/>
                 <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML" value-ref="sparqlXmlRepresentationFactory"/>
+                <entry key-ref="org.restlet.data.MediaType.APPLICATION_RDF_XML" value-ref="rdfXmlRepresentationFactory"/>
             </map>
         </property>
     </bean>

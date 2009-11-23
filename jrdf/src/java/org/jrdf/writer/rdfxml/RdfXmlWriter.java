@@ -92,7 +92,12 @@ public class RdfXmlWriter implements RdfWriter {
     private static final XMLOutputFactory FACTORY = XMLOutputFactory.newInstance();
 
     /**
-     * PrintWriter output. Caller is responsible for closing stream.
+     * Wrapper of output stream.
+     */
+    private OutputStreamWriter writer;
+
+    /**
+     * PrintWriter output.
      */
     private PrintWriter printWriter;
 
@@ -117,27 +122,31 @@ public class RdfXmlWriter implements RdfWriter {
         this.names = newNames;
     }
 
-    public void write(Graph graph, OutputStream stream) throws WriteException, GraphException {
-        final OutputStreamWriter writer = new OutputStreamWriter(stream);
-        try {
-            write(graph, writer);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                throw new WriteException(e);
-            }
-        }
+    public void write(Graph graph, OutputStream stream) throws GraphException {
+        writer = new OutputStreamWriter(stream);
+        write(graph, writer);
     }
 
-    public void write(Graph graph, Writer writer) throws WriteException, GraphException {
-        printWriter = new PrintWriter(writer);
+    public void write(Graph graph, Writer newWriter) throws GraphException {
         try {
+            printWriter = new PrintWriter(newWriter);
             write(graph, (String) null);
         } catch (XMLStreamException e) {
             throw new WriteException(e);
-        } finally {
+        }
+    }
+
+    public void close() throws WriteException {
+        try {
             printWriter.close();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                throw new WriteException(e);
+            }
         }
     }
 
@@ -145,7 +154,7 @@ public class RdfXmlWriter implements RdfWriter {
      * Writes the graph contents to the writer, including the specified encoding
      * in the XML header.
      *
-     * @param graph    Graph to be written.
+     * @param graph Graph to be written.
      * @param encoding String XML encoding attribute.
      * @throws GraphException If the graph cannot be read.
      * @throws WriteException If the contents could not be written
@@ -193,14 +202,14 @@ public class RdfXmlWriter implements RdfWriter {
             iterator();
         try {
             final IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
-            final ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter,
+            final ResourceWriter resourceWriter = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter,
                 new XmlLiteralWriterImpl(xmlStreamWriter));
             while (stack.hasNext()) {
                 final Triple currentTriple = stack.pop();
-                writer.setTriple(currentTriple);
-                writer.writeStart();
-                writer.writeNestedStatements(stack);
-                writer.writeEnd();
+                resourceWriter.setTriple(currentTriple);
+                resourceWriter.writeStart();
+                resourceWriter.writeNestedStatements(stack);
+                resourceWriter.writeEnd();
             }
         } finally {
             iter.close();

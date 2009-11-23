@@ -89,7 +89,11 @@ public final class Writer {
         final OutputStream fileOutputStream = new FileOutputStream(file);
         try {
             final RdfWriter writer = new NTriplesWriterImpl();
-            writer.write(graph, fileOutputStream);
+            try {
+                writer.write(graph, fileOutputStream);
+            } finally {
+                writer.close();
+            }
         } finally {
             fileOutputStream.close();
         }
@@ -109,7 +113,11 @@ public final class Writer {
         final RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
         final OutputStream fileOutputStream = new FileOutputStream(file);
         try {
-            writer.write(graph, fileOutputStream);
+            try {
+                writer.write(graph, fileOutputStream);
+            } finally {
+                writer.close();
+            }
         } finally {
             fileOutputStream.close();
         }

@@ -83,4 +83,8 @@ public class MemRdfXmlWriter implements RdfWriter {
     public void write(Graph graph, Writer writer) throws WriteException, GraphException {
         rdfXmlWriter.write(graph, writer);
     }
+
+    public void close() throws WriteException {
+        rdfXmlWriter.close();
+    }
 }
