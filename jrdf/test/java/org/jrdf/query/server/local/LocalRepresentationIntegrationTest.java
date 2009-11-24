@@ -58,8 +58,8 @@
 
 package org.jrdf.query.server.local;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
@@ -91,8 +91,9 @@ import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 
 import java.io.StringReader;
-import java.net.URI;
+import java.io.UnsupportedEncodingException;
 import static java.net.URI.create;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -149,7 +150,7 @@ public class LocalRepresentationIntegrationTest {
         dataModel.put("graphRef", graph);
         final Representation representation = xmlRepresentationFactory.createRepresentation(APPLICATION_RDF_XML,
             dataModel);
-        Request request = new Request(Method.PUT, createRef("bar"), representation);
+        Request request = new Request(Method.PUT, createRef("http://www.example.org/abc"), representation);
         final Response response = client.handle(request);
         assertThat(response.getStatus(), equalTo(Status.SUCCESS_CREATED));
     }
@@ -163,8 +164,7 @@ public class LocalRepresentationIntegrationTest {
         assertThat(graph, hasNumberOfTriples(3L));
     }
 
-    private Reference createRef(final String graphName) {
-        URI uri = create(BASE_ADDRESS + graphName);
-        return new Reference(uri.getScheme(), uri.getHost(), uri.getPort(), uri.getPath(), null, null);
+    private Reference createRef(final String graphName) throws UnsupportedEncodingException {
+        return new Reference(BASE_ADDRESS + URLEncoder.encode(graphName, "UTF-8"));
     }
 }
