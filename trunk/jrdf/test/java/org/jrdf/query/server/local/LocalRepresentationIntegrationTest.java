@@ -59,6 +59,7 @@
 package org.jrdf.query.server.local;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
@@ -68,60 +69,89 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import org.jrdf.query.server.RdfXmlRepresentationFactory;
+import org.jrdf.query.server.RepresentationFactory;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
+import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
 import org.restlet.data.Method;
 import org.restlet.data.Preference;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Status;
+import org.restlet.resource.Representation;
 
 import java.io.StringReader;
 import java.net.URI;
 import static java.net.URI.create;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LocalRepresentationIntegrationTest {
     private static final String GRAPH = "foo";
-    private static final URI LOCAL_SERVER_END_POINT = create("http://127.0.0.1:8182/graph/" + GRAPH);
+    private static final String BASE_ADDRESS = "http://127.0.0.1:8182/graph/";
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
+    private SpringLocalServer localQueryServer;
+    private PersistentGlobalJRDFFactory factory;
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private Client client;
-    private Reference ref;
 
     @Before
     public void setUp() throws Exception {
         HANDLER.removeDir();
         HANDLER.makeDir();
-        PersistentGlobalJRDFFactory factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
         graph = factory.getGraph(GRAPH);
         elementFactory = graph.getElementFactory();
-        SpringLocalServer localQueryServer = new SpringLocalServer();
+        localQueryServer = new SpringLocalServer();
         localQueryServer.start();
-        client = new Client(LOCAL_SERVER_END_POINT.getScheme());
-        ref = new Reference(LOCAL_SERVER_END_POINT.getScheme(), LOCAL_SERVER_END_POINT.getHost(),
-            LOCAL_SERVER_END_POINT.getPort(), LOCAL_SERVER_END_POINT.getPath(), null, null);
+        // Wait for server to start.
+        Thread.sleep(200);
+        client = new Client("http");
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        graph.close();
+        factory.close();
+        localQueryServer.stop();
     }
 
     @Test
     public void gettingRdfXml() throws Exception {
         addTriples();
-        Request request = new Request(Method.GET, ref);
+        Request request = new Request(Method.GET, createRef(GRAPH));
         ClientInfo clientInfo = request.getClientInfo();
-        clientInfo.setAcceptedMediaTypes(Arrays.asList(new Preference<MediaType>(MediaType.APPLICATION_RDF_XML)));
+        clientInfo.setAcceptedMediaTypes(Arrays.asList(new Preference<MediaType>(APPLICATION_RDF_XML)));
         final Response response = client.handle(request);
         final Graph resultGraph = MemoryJRDFFactory.getFactory().getNewGraph();
         final StringReader reader = new StringReader(response.getEntity().getText());
         new GraphRdfXmlParser(resultGraph, new MemMapFactory()).parse(reader, "");
         assertThat(resultGraph, hasNumberOfTriples(3L));
+    }
+
+    @Test
+    public void putRdfXml() throws Exception {
+        addTriples();
+        final RepresentationFactory xmlRepresentationFactory = new RdfXmlRepresentationFactory();
+        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put("graphRef", graph);
+        final Representation representation = xmlRepresentationFactory.createRepresentation(APPLICATION_RDF_XML,
+            dataModel);
+        Request request = new Request(Method.PUT, createRef("bar"), representation);
+        final Response response = client.handle(request);
+        assertThat(response.getStatus(), equalTo(Status.SUCCESS_CREATED));
     }
 
     private void addTriples() {
@@ -131,5 +161,10 @@ public class LocalRepresentationIntegrationTest {
         graph.add(s, p, elementFactory.createBlankNode());
         graph.add(s, p, elementFactory.createBlankNode());
         assertThat(graph, hasNumberOfTriples(3L));
+    }
+
+    private Reference createRef(final String graphName) {
+        URI uri = create(BASE_ADDRESS + graphName);
+        return new Reference(uri.getScheme(), uri.getHost(), uri.getPort(), uri.getPath(), null, null);
     }
 }
