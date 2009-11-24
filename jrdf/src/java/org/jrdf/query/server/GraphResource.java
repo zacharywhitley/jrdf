@@ -59,9 +59,17 @@
 
 package org.jrdf.query.server;
 
+import org.jrdf.graph.Graph;
+import org.jrdf.parser.RdfReader;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
+import org.jrdf.collection.MemMapFactory;
+import org.restlet.Context;
+import org.restlet.data.MediaType;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.data.Status;
 import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
@@ -76,7 +84,6 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version : $Id: $
  */
-
 public class GraphResource extends ConfigurableRestletResource {
     private static final long DEFAULT_MAX_ROWS = 1000;
     private static final String GRAPH_VALUE = "graph";
@@ -88,8 +95,35 @@ public class GraphResource extends ConfigurableRestletResource {
     private long maxRows;
     private GraphApplication graphApplication;
 
+    @Override
+    public void init(final Context context, final Request request, final Response response) {
+        super.init(context, request, response);
+        setModifiable(true);
+    }
+
     public void setGraphApplication(GraphApplication newGraphApplication) {
         this.graphApplication = newGraphApplication;
+    }
+
+    @Override
+    public void storeRepresentation(Representation entity) throws ResourceException {
+        final Graph graph = graphApplication.getGraph(getGraph());
+        final Status status;
+        if (graph.getNumberOfTriples() == 0) {
+            status = Status.SUCCESS_CREATED;
+        } else {
+            status = Status.SUCCESS_OK;
+        }
+        if (entity.getMediaType().equals(MediaType.APPLICATION_RDF_XML)) {
+            try {
+                new RdfReader(graph, new MemMapFactory()).parseRdfXml(entity.getStream());
+            } catch (IOException e) {
+                throw new RuntimeException();
+            }
+        } else {
+            getResponse().setStatus(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE);
+        }
+        getResponse().setStatus(status);
     }
 
     @Override
@@ -147,7 +181,7 @@ public class GraphResource extends ConfigurableRestletResource {
         dataModel.put(GRAPH_NAME, graphName);
         dataModel.put("timeTaken", graphApplication.getTimeTaken());
         dataModel.put("tooManyRows", graphApplication.isTooManyRows());
-        dataModel.put("maxRows", graphApplication.getMaxRows());
+        dataModel.put(MAX_ROWS, graphApplication.getMaxRows());
         dataModel.put("answer", answer);
         if (answer instanceof SelectAnswer) {
             dataModel.put("answerType", "select");
