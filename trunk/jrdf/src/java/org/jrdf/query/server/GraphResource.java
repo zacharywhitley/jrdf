@@ -167,7 +167,7 @@ public class GraphResource extends ConfigurableRestletResource {
         }
     }
 
-    protected Representation nonQueryRepresentation(Variant variant) throws IOException {
+    private Representation nonQueryRepresentation(Variant variant) throws IOException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         dataModel.put(GRAPH_NAME, graphName);
         dataModel.put(GRAPH_REF, graphApplication.getGraph(graphName));
