@@ -97,7 +97,7 @@ public class ConfigurableRestletResource extends Resource {
     @Override
     public List<Variant> getVariants() {
         final List<Variant> variants = new LinkedList<Variant>();
-        for (MediaType mediaType : getRepresentationTemplates().keySet()) {
+        for (MediaType mediaType : getViewRepresentation().keySet()) {
             variants.add(new Variant(mediaType));
         }
         return variants;
@@ -105,10 +105,10 @@ public class ConfigurableRestletResource extends Resource {
 
     @Override
     public void setVariants(List<Variant> variants) {
-        throw new UnsupportedOperationException("use setRepresentationTemplates instead");
+        throw new UnsupportedOperationException("use setViewRepresentation instead");
     }
 
-    public Map<MediaType, RepresentationFactory> getRepresentationTemplates() {
+    public Map<MediaType, RepresentationFactory> getViewRepresentation() {
         if (representationTemplates != null) {
             return representationTemplates;
         } else {
@@ -116,7 +116,7 @@ public class ConfigurableRestletResource extends Resource {
         }
     }
 
-    public void setRepresentationTemplates(final Map<MediaType, RepresentationFactory> newRepresentationTemplates) {
+    public void setViewRepresentation(final Map<MediaType, RepresentationFactory> newRepresentationTemplates) {
         if (this.representationTemplates == null) {
             this.representationTemplates = new LinkedHashMap<MediaType, RepresentationFactory>();
         } else {

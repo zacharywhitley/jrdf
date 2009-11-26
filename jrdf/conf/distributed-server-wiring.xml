@@ -118,7 +118,7 @@
     <bean id="serversResource" class="org.jrdf.query.server.distributed.ServersResource">
         <property name="distributedQueryGraphApplication" ref="distributedGraphApplication"/>
         <property name="available" value="true"/>
-        <property name="representationTemplates">
+        <property name="viewRepresentation">
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="distributedStartPage"/>
             </map>
@@ -146,7 +146,7 @@
     <bean id="listGraphsResource" class="org.jrdf.query.server.ListGraphsResource" scope="prototype">
         <property name="graphLister" ref="graphLister"/>
         <property name="available" value="true"/>
-        <property name="representationTemplates">
+        <property name="viewRepresentation">
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="graphsResourceHtml"/>
                 <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON" value-ref="jsonRepresentationFactory"/>
@@ -164,7 +164,7 @@
     <bean id="distributedQueryGraphResource" class="org.jrdf.query.server.GraphResource" scope="prototype">
         <property name="graphApplication" ref="distributedGraphApplication"/>
         <property name="available" value="true"/>
-        <property name="representationTemplates">
+        <property name="viewRepresentation">
             <map>
                 <entry key-ref="org.restlet.data.MediaType.TEXT_HTML" value-ref="localGraphsResourceHtml"/>
                 <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON" value-ref="jsonRepresentationFactory"/>
