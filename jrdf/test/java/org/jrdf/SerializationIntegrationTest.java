@@ -61,6 +61,7 @@ package org.jrdf;
 
 import org.jrdf.query.answer.DatatypeType;
 import org.jrdf.query.answer.SparqlResultType;
+import org.jrdf.query.server.GraphResourceRequestParameters;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.NodeTypeEnum;
@@ -116,11 +117,13 @@ public final class SerializationIntegrationTest {
     }
 
     // FIXME TJA: Remove excluded classes once all classes serialize properly
+    // FIXME Is there a way to exclude Enums?
     private Collection<Class<?>> getExcludedClasses() {
         Collection<Class<?>> excludedClasses = new ArrayList<Class<?>>();
         excludedClasses.add(LexerException.class);
         excludedClasses.add(ParserException.class);
         excludedClasses.add(NodeTypeEnum.class);
+        excludedClasses.add(GraphResourceRequestParameters.class);
         excludedClasses.add(DatatypeType.class);
         excludedClasses.add(SparqlResultType.class);
         return excludedClasses;
