@@ -141,8 +141,13 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
+    <bean id="graphRepresentation" class="org.jrdf.query.server.GraphRepresentationImpl">
+        <property name="graphApplication" ref="graphApplication"/>
+    </bean>
+
     <bean id="localQueryGraphResource" class="org.jrdf.query.server.GraphResource" scope="prototype">
         <property name="graphApplication" ref="graphApplication"/>
+        <property name="graphRepresentation" ref="graphRepresentation"/>
         <property name="available" value="true"/>
         <property name="viewRepresentation">
             <map>
