@@ -133,6 +133,8 @@ public class DistributedQueryIntegrationTest {
         localQueryServer.start();
         distributedServer = new SpringDistributedServer();
         distributedServer.start();
+        // Wait for the servers to start.
+        Thread.sleep(200);
     }
 
     @After

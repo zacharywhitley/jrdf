@@ -58,12 +58,63 @@
 
 package org.jrdf.query.server;
 
+import org.jrdf.collection.MemMapFactory;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Graph;
+import org.jrdf.parser.RdfReader;
+import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
+import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
 import org.restlet.data.Request;
 import org.restlet.data.Status;
+import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
+import static org.restlet.data.Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE;
+import static org.restlet.data.Status.SUCCESS_CREATED;
+import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 
-public interface GraphRepresentation {
-    void setGraphApplication(GraphApplication newGraphApplication);
+import java.io.IOException;
 
-    Status storeRepresentation(Request request) throws ResourceException;
+public class GraphStoreRepresentationImpl implements GraphStoreRepresentation {
+    private GraphApplication graphApplication;
+
+    public void setGraphApplication(GraphApplication newGraphApplication) {
+        this.graphApplication = newGraphApplication;
+    }
+
+    public Status storeRepresentation(Request request) throws ResourceException {
+        final Graph graph = getGraph(request);
+        removeIfThereAreExistingTriples(graph);
+        return tryParseAndAddToGraph(request.getEntity(), graph);
+    }
+
+    private Graph getGraph(Request newRequest) {
+        final String graphName = GRAPH_IN.getValue(newRequest);
+        return graphApplication.getGraph(graphName);
+    }
+
+    private void removeIfThereAreExistingTriples(Graph graph) {
+        if (graph.getNumberOfTriples() != 0) {
+            graph.remove(graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator());
+        }
+    }
+
+    private Status tryParseAndAddToGraph(Representation entity, Graph graph) {
+        if (entity.getMediaType().equals(APPLICATION_RDF_XML)) {
+            return tryParseRdfXml(entity, graph);
+        } else {
+            return CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE;
+        }
+    }
+
+    private Status tryParseRdfXml(Representation entity, Graph graph) {
+        try {
+            new RdfReader(graph, new MemMapFactory()).parseRdfXml(entity.getStream());
+            return SUCCESS_CREATED;
+        } catch (IOException e) {
+            return CLIENT_ERROR_BAD_REQUEST;
+        }
+    }
+
 }

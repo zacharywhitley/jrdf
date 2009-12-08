@@ -64,9 +64,12 @@ import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.collection.MemMapFactory;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.query.server.RdfXmlRepresentationFactory;
 import org.jrdf.query.server.SpringLocalServer;
@@ -80,12 +83,13 @@ import org.restlet.Client;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
 import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
-import org.restlet.data.Method;
+import static org.restlet.data.Method.GET;
+import static org.restlet.data.Method.PUT;
 import org.restlet.data.Preference;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.data.Status;
+import static org.restlet.data.Status.SUCCESS_CREATED;
 import org.restlet.resource.Representation;
 
 import java.io.StringReader;
@@ -100,7 +104,6 @@ public class LocalRepresentationIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private SpringLocalServer localQueryServer;
     private PersistentGlobalJRDFFactory factory;
-    private MoleculeGraph graph;
     private Client client;
 
     @Before
@@ -108,7 +111,6 @@ public class LocalRepresentationIntegrationTest {
         HANDLER.removeDir();
         HANDLER.makeDir();
         factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-        graph = factory.getGraph("foo");
         localQueryServer = new SpringLocalServer();
         localQueryServer.start();
         // Wait for server to start.
@@ -118,37 +120,33 @@ public class LocalRepresentationIntegrationTest {
 
     @After
     public void tearDown() throws Exception {
-        graph.close();
         factory.close();
         localQueryServer.stop();
     }
 
     @Test
-    public void gettingRdfXml() throws Exception {
-        addTriples();
-        Request request = new Request(Method.GET, createRef("foo"));
-        ClientInfo clientInfo = request.getClientInfo();
-        clientInfo.setAcceptedMediaTypes(Arrays.asList(new Preference<MediaType>(APPLICATION_RDF_XML)));
-        final Response response = client.handle(request);
-        final Graph resultGraph = parseResult(response);
-        assertThat(resultGraph, hasNumberOfTriples(3L));
+    public void getExistingRdfXmlGraph() throws Exception {
+        final Graph graph = factory.getGraph("foo");
+        addTriples(graph);
+        assertSameGraph("foo", graph);
     }
 
     @Test
-    public void putRdfXml() throws Exception {
-        addTriples();
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put("graphRef", graph);
-        final Representation representation = new RdfXmlRepresentationFactory().createRepresentation(
-            APPLICATION_RDF_XML, dataModel);
-        Request request = new Request(Method.PUT, createRef("http://www.example.org/abc"), representation);
-        final Response response = client.handle(request);
-        assertThat(response.getStatus(), equalTo(Status.SUCCESS_CREATED));
+    public void putOnceRdfXmlTriples() throws Exception {
+        final Graph graphToPut = putTriplesToGraph("http://www.example.org/abc");
+        assertSameGraph("http://www.example.org/abc", graphToPut);
     }
 
-    private void addTriples() {
+    @Test
+    public void putTwiceRdfXmlTriples() throws Exception {
+        putTriplesToGraph("http://www.example.org/abc");
+        final Graph graphToPut = putTriplesToGraph("http://www.example.org/abc");
+        assertSameGraph("http://www.example.org/abc", graphToPut);
+    }
+
+    private void addTriples(final Graph graph) {
         final TripleFactory tripleFactory = graph.getTripleFactory();
-        int oId = 0;
+        long oId = System.currentTimeMillis();
         tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
         tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
         tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
@@ -157,6 +155,35 @@ public class LocalRepresentationIntegrationTest {
 
     private Reference createRef(final String graphName) throws UnsupportedEncodingException {
         return new Reference("http://127.0.0.1:8182/graph/" + URLEncoder.encode(graphName, "UTF-8"));
+    }
+
+    private Graph putTriplesToGraph(final String graphName) throws Exception {
+        final Graph graphToPut = MemoryJRDFFactory.getFactory().getNewGraph();
+        addTriples(graphToPut);
+        putGraph(graphName, graphToPut);
+        return graphToPut;
+    }
+
+    private void assertSameGraph(String graphName, Graph expectedGraph) throws Exception {
+        Request request = new Request(GET, createRef(graphName));
+        ClientInfo clientInfo = request.getClientInfo();
+        clientInfo.setAcceptedMediaTypes(Arrays.asList(new Preference<MediaType>(APPLICATION_RDF_XML)));
+        Response response = client.handle(request);
+        final Graph resultGraph = parseResult(response);
+        assertThat(resultGraph.getNumberOfTriples(), equalTo(expectedGraph.getNumberOfTriples()));
+        for (Triple triple : expectedGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE)) {
+            assertThat("Result Graph should contain: " + triple, resultGraph.contains(triple));
+        }
+    }
+
+    private void putGraph(final String graphName, Graph graphToPut) throws UnsupportedEncodingException {
+        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put("graphRef", graphToPut);
+        final Representation representation = new RdfXmlRepresentationFactory().createRepresentation(
+            APPLICATION_RDF_XML, dataModel);
+        Request request = new Request(PUT, createRef(graphName), representation);
+        Response response = client.handle(request);
+        assertThat(response.getStatus(), equalTo(SUCCESS_CREATED));
     }
 
     private Graph parseResult(Response response) throws Exception {

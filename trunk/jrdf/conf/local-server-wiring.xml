@@ -141,7 +141,7 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="graphRepresentation" class="org.jrdf.query.server.GraphRepresentationImpl">
+    <bean id="graphRepresentation" class="org.jrdf.query.server.GraphStoreRepresentationImpl">
         <property name="graphApplication" ref="graphApplication"/>
     </bean>
 
