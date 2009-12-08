@@ -95,7 +95,7 @@ public class GraphResource extends ConfigurableRestletResource {
     private String queryString;
     private long maxRows;
     private GraphApplication graphApplication;
-    private GraphRepresentation graphRepresentation;
+    private GraphStoreRepresentation graphRepresentation;
 
     @Override
     public void init(final Context context, final Request request, final Response response) {
@@ -107,7 +107,7 @@ public class GraphResource extends ConfigurableRestletResource {
         this.graphApplication = newGraphApplication;
     }
 
-    public void setGraphRepresentation(GraphRepresentation newGraphRepresentation) {
+    public void setGraphRepresentation(GraphStoreRepresentation newGraphRepresentation) {
         this.graphRepresentation = newGraphRepresentation;
     }
 

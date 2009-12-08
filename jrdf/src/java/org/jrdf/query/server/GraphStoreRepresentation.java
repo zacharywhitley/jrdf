@@ -58,57 +58,12 @@
 
 package org.jrdf.query.server;
 
-import org.jrdf.collection.MemMapFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.RdfReader;
-import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
-import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
 import org.restlet.data.Request;
 import org.restlet.data.Status;
-import static org.restlet.data.Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE;
-import static org.restlet.data.Status.SUCCESS_CREATED;
-import static org.restlet.data.Status.SUCCESS_OK;
-import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 
-import java.io.IOException;
+public interface GraphStoreRepresentation {
+    void setGraphApplication(GraphApplication newGraphApplication);
 
-public class GraphRepresentationImpl implements GraphRepresentation {
-    private GraphApplication graphApplication;
-
-    public void setGraphApplication(GraphApplication newGraphApplication) {
-        this.graphApplication = newGraphApplication;
-    }
-
-    public Status storeRepresentation(Request request) throws ResourceException {
-        final Graph graph = getGraph(request);
-        final Status status;
-        if (graph.getNumberOfTriples() == 0) {
-            status = tryParseAndAddToGraph(request.getEntity(), graph);
-        } else {
-            status = SUCCESS_OK;
-        }
-        return status;
-    }
-
-    private Status tryParseAndAddToGraph(Representation entity, Graph graph) {
-        final Status status;
-        if (entity.getMediaType().equals(APPLICATION_RDF_XML)) {
-            status = SUCCESS_CREATED;
-            try {
-                new RdfReader(graph, new MemMapFactory()).parseRdfXml(entity.getStream());
-            } catch (IOException e) {
-                throw new RuntimeException();
-            }
-        } else {
-            status = CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE;
-        }
-        return status;
-    }
-
-    private Graph getGraph(Request newRequest) {
-        final String graphName = GRAPH_IN.getValue(newRequest);
-        return graphApplication.getGraph(graphName);
-    }
-
+    Status storeRepresentation(Request request) throws ResourceException;
 }
