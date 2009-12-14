@@ -144,7 +144,7 @@ public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
     private Database createDatabase(Comparator<byte[]> comparator) throws DatabaseException {
         collectionNumber++;
         env = handler.setUpEnvironment();
-        DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false, true);
+        DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
         if (comparator != null) {
             dbConfig.setOverrideBtreeComparator(true);
             dbConfig.setBtreeComparator(comparator);

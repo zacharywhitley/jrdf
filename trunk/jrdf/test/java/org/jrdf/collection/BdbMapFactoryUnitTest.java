@@ -63,21 +63,10 @@ import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseExistsException;
 import com.sleepycat.je.Environment;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.MockTestUtil.createMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -85,6 +74,18 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.MockTestUtil.createMock;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 @RunWith(PowerMockRunner.class)
 public class BdbMapFactoryUnitTest {
@@ -185,7 +186,7 @@ public class BdbMapFactoryUnitTest {
         HashMap<String, String> expectedMap = new HashMap<String, String>();
         expect(storedMapHandler.setUpEnvironment()).andReturn(environment);
         DatabaseConfig databaseConfig = createMock(DatabaseConfig.class);
-        expect(storedMapHandler.setUpDatabaseConfig(false, false)).andReturn(databaseConfig);
+        expect(storedMapHandler.setUpDatabaseConfig(true)).andReturn(databaseConfig);
         expect(storedMapHandler.setupDatabase(environment, DATABASE_NAME + 1, databaseConfig)).andReturn(database);
         expect(storedMapHandler.createMap(database, String.class, String.class)).
             andReturn(expectedMap);

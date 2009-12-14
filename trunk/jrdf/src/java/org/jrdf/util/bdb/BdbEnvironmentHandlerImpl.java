@@ -100,20 +100,20 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
     public Environment setUpEnvironment() {
         File dir = handler.makeDir();
         EnvironmentConfig env = new EnvironmentConfig();
-        env.setSharedCache(true);
         env.setTransactional(true);
+        env.setSharedCache(true);
         env.setAllowCreate(true);
         env.setSharedCache(true);
         return new Environment(dir, env);
     }
 
-    public DatabaseConfig setUpDatabaseConfig(boolean transactional, boolean temporary) {
+    public DatabaseConfig setUpDatabaseConfig(boolean keepDatabase) {
         DatabaseConfig dbConfig = new DatabaseConfig();
         // TODO It would be nice to get this going
         //dbConfig.setExclusiveCreate(true);
-        dbConfig.setTransactional(transactional);
+        dbConfig.setTransactional(keepDatabase);
+        dbConfig.setTemporary(!keepDatabase);
         dbConfig.setAllowCreate(true);
-        dbConfig.setTemporary(temporary);
         return dbConfig;
     }
 

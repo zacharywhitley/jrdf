@@ -71,7 +71,7 @@ import java.util.SortedSet;
 public interface BdbEnvironmentHandler {
     Environment setUpEnvironment() throws DatabaseException;
 
-    DatabaseConfig setUpDatabaseConfig(boolean transactional, boolean temporary);
+    DatabaseConfig setUpDatabaseConfig(boolean keepDatabase);
 
     Database setupDatabase(Environment env, String dbName, DatabaseConfig dbConfig) throws DatabaseException;
 

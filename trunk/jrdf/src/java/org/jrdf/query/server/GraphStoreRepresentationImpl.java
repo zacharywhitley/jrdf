@@ -83,16 +83,37 @@ public class GraphStoreRepresentationImpl implements GraphStoreRepresentation {
         this.graphApplication = newGraphApplication;
     }
 
+    public Status acceptRepresentation(Request request) throws ResourceException {
+        final Graph graph = getGraph(request);
+        return tryParseAndAddToGraph(request.getEntity(), graph);
+    }
+
     public Status storeRepresentation(Request request) throws ResourceException {
         final Graph graph = getGraph(request);
         removeIfThereAreExistingTriples(graph);
         return tryParseAndAddToGraph(request.getEntity(), graph);
     }
 
+
+//    public Status removeRepresentations(Request request) throws ResourceException {
+//        if (hasGraph(request)) {
+//            final Graph graph = getGraph(request);
+//            removeIfThereAreExistingTriples(graph);
+//            return SUCCESS_OK;
+//        } else {
+//            return CLIENT_ERROR_BAD_REQUEST;
+//        }
+//    }
+
     private Graph getGraph(Request newRequest) {
         final String graphName = GRAPH_IN.getValue(newRequest);
         return graphApplication.getGraph(graphName);
     }
+
+//    private boolean hasGraph(Request newRequest) {
+//        final String graphName = GRAPH_IN.getValue(newRequest);
+//        return graphApplication.hasGraph(graphName);
+//    }
 
     private void removeIfThereAreExistingTriples(Graph graph) {
         if (graph.getNumberOfTriples() != 0) {

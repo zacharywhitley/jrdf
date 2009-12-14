@@ -118,6 +118,18 @@ public class GraphResource extends ConfigurableRestletResource {
     }
 
     @Override
+    public void acceptRepresentation(Representation entity) throws ResourceException {
+        final Status status = graphRepresentation.acceptRepresentation(getRequest());
+        getResponse().setStatus(status);
+    }
+
+//    @Override
+//    public void removeRepresentations() throws ResourceException {
+//        final Status status = graphRepresentation.removeRepresentations(getRequest());
+//        getResponse().setStatus(status);
+//    }
+
+    @Override
     public Representation represent(Variant variant) {
         Representation rep = null;
         try {
@@ -138,12 +150,18 @@ public class GraphResource extends ConfigurableRestletResource {
     }
 
     private Long getMaxRows() {
-        final Long tmpMaxRows = (Long) MAX_ROWS_IN.getValue(getRequest());
-        if (tmpMaxRows == null) {
-            return DEFAULT_MAX_ROWS;
-        } else {
-            return tmpMaxRows;
+        Long rows;
+        try {
+            final String tmpMaxRows = (String) MAX_ROWS_IN.getValue(getRequest());
+            if (tmpMaxRows != null) {
+                rows = Long.parseLong(tmpMaxRows);
+            } else {
+                rows = DEFAULT_MAX_ROWS;
+            }
+        } catch (NumberFormatException e) {
+            rows = DEFAULT_MAX_ROWS;
         }
+        return rows;
     }
 
     private Representation nonQueryRepresentation(Variant variant) throws IOException {
