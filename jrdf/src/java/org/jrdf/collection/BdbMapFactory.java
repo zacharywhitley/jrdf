@@ -63,11 +63,12 @@ import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.Environment;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public final class BdbMapFactory implements MapFactory {
     private final BdbEnvironmentHandler handler;
@@ -89,15 +90,15 @@ public final class BdbMapFactory implements MapFactory {
 
     public <A, T, U extends A> Map<T, U> createTemporaryMap(Class<T> clazz1, Class<A> clazz2) {
         mapNumber++;
-        return reallyCreateMap(clazz1, clazz2, Long.toString(mapNumber), true, true);
+        return reallyCreateMap(clazz1, clazz2, Long.toString(mapNumber), false, true);
     }
 
     public <A, T, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2, String name) {
-        return reallyCreateMap(clazz1, clazz2, name, false, true);
+        return reallyCreateMap(clazz1, clazz2, name, true, true);
     }
 
     public <A, T, U extends A> Map<T, U> openExistingMap(Class<T> clazz1, Class<A> clazz2, String name) {
-        return reallyCreateMap(clazz1, clazz2, name, false, false);
+        return reallyCreateMap(clazz1, clazz2, name, true, false);
     }
 
     public void close() {
@@ -110,12 +111,12 @@ public final class BdbMapFactory implements MapFactory {
     }
 
     private <A, T, U extends A> Map<T, U> reallyCreateMap(Class<T> clazz1, Class<A> clazz2, String name,
-        boolean temporary, boolean removeExisting) {
+        boolean keepMap, boolean removeExisting) {
         env = handler.setUpEnvironment();
         if (env.getDatabaseNames().contains(name) && removeExisting) {
             env.removeDatabase(null, name);
         }
-        DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false, temporary);
+        DatabaseConfig dbConfig = handler.setUpDatabaseConfig(keepMap);
         Database database = handler.setupDatabase(env, databaseName + name, dbConfig);
         databases.add(database);
         return handler.createMap(database, clazz1, clazz2);

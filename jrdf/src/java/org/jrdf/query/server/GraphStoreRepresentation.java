@@ -66,4 +66,8 @@ public interface GraphStoreRepresentation {
     void setGraphApplication(GraphApplication newGraphApplication);
 
     Status storeRepresentation(Request request) throws ResourceException;
+
+    Status acceptRepresentation(Request request) throws ResourceException;
+
+    //Status removeRepresentations(Request request) throws ResourceException;
 }

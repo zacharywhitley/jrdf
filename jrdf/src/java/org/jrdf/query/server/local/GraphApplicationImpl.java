@@ -87,6 +87,10 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
         factory.close();
     }
 
+    public boolean hasGraph(String name) {
+        return factory.hasGraph(name);
+    }
+
     public MoleculeGraph getGraph(String name) {
         return factory.getGraph(name);
     }

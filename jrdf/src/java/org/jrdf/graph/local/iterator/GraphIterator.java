@@ -63,9 +63,10 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.NoSuchElementException;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * An iterator that iterates over an entire graph.

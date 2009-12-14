@@ -151,6 +151,10 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         return application.getGraph();
     }
 
+    public boolean hasGraph(String name) {
+        return application.hasGraph(name);
+    }
+
     public long getTimeTaken() {
         return INVALID_TIME_TAKEN;
     }

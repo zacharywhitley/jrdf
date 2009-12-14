@@ -82,4 +82,6 @@ public interface GraphApplication {
     long getTimeTaken();
 
     boolean isTooManyRows();
+
+    boolean hasGraph(String name);
 }

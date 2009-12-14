@@ -77,26 +77,27 @@ import org.jrdf.query.server.SpringDistributedServer;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
-import static org.jrdf.util.test.SetUtil.asSet;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.restlet.Client;
 import org.restlet.data.Method;
-import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.StringRepresentation;
 
 import java.net.URI;
-import static java.net.URI.create;
 import java.net.URL;
-import static java.util.Collections.EMPTY_MAP;
 import java.util.Iterator;
 import java.util.Set;
+
+import static java.net.URI.create;
+import static java.util.Collections.EMPTY_MAP;
+import static org.jrdf.util.test.SetUtil.asSet;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.restlet.data.Protocol.HTTP;
+import static org.restlet.data.Status.SUCCESS_OK;
 
 /**
  * @author Yuan-Fang Li
@@ -105,8 +106,10 @@ import java.util.Set;
 public class DistributedQueryIntegrationTest {
     private static final String GRAPH_PATH = "/graph/";
     private static final String GRAPH_NAME = "foo";
-    private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
-    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+    private static final DirectoryHandler LOCAL_HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
+    private static final DirectoryHandler DIST_HANDLER = new TempDirectoryHandler("distPerstMoleculeGraph");
+    private static final PersistentGlobalJRDFFactory FACTORY =
+            PersistentGlobalJRDFFactoryImpl.getFactory(LOCAL_HANDLER);
     private static final String SELECT_QUERY_STRING = "SELECT * WHERE { ?s ?p ?o. }";
     private static final String ASK_QUERY_STRING = "ASK WHERE { ?s ?p ?o. }";
     private static final int DISTRIBUTED_PORT = 8183;
@@ -124,8 +127,10 @@ public class DistributedQueryIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        HANDLER.removeDir();
-        HANDLER.makeDir();
+        LOCAL_HANDLER.removeDir();
+        LOCAL_HANDLER.makeDir();
+        DIST_HANDLER.removeDir();
+        DIST_HANDLER.makeDir();
         graph = FACTORY.getGraph(GRAPH_NAME);
         graph.clear();
         elementFactory = graph.getElementFactory();
