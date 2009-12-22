@@ -141,13 +141,17 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="graphRepresentation" class="org.jrdf.query.server.GraphStoreRepresentationImpl">
+    <bean id="graphStoreRepresentation" class="org.jrdf.query.server.GraphStoreRepresentationImpl" scope="prototype">
         <property name="graphApplication" ref="graphApplication"/>
     </bean>
 
-    <bean id="localQueryGraphResource" class="org.jrdf.query.server.GraphResource" scope="prototype">
+    <bean id="graphRepresentation" class="org.jrdf.query.server.GraphRepresentationImpl" scope="prototype">
         <property name="graphApplication" ref="graphApplication"/>
-        <property name="graphStoreRepresentation" ref="graphRepresentation"/>
+    </bean>
+
+    <bean id="localQueryGraphResource" class="org.jrdf.query.server.LocalGraphResource" scope="prototype">
+        <property name="graphRepresentation" ref="graphRepresentation"/>
+        <property name="graphStoreRepresentation" ref="graphStoreRepresentation"/>
         <property name="available" value="true"/>
         <property name="viewRepresentation">
             <map>
@@ -157,11 +161,6 @@
                 <entry key-ref="org.restlet.data.MediaType.APPLICATION_RDF_XML" value-ref="rdfXmlRepresentationFactory"/>
             </map>
         </property>
-        <!--<property name="storeRepresentation">-->
-            <!--<map>-->
-                <!--<entry key-ref="org.restlet.data.MediaType.APPLICATION_RDF_XML" value-ref="rdfXmlStoreFactory"/>-->
-            <!--</map>-->
-        <!--</property>-->
     </bean>
 
     <bean id="localGraphsResourceHtml" class="org.jrdf.query.server.FreemarkerRepresentationFactory">

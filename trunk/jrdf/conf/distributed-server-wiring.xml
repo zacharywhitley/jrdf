@@ -160,9 +160,13 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <!-- Interface for distributed queries -->
-    <bean id="distributedQueryGraphResource" class="org.jrdf.query.server.GraphResource" scope="prototype">
+    <bean id="graphRepresentation" class="org.jrdf.query.server.GraphRepresentationImpl" scope="prototype">
         <property name="graphApplication" ref="distributedGraphApplication"/>
+    </bean>
+
+    <!-- Interface for distributed queries -->
+    <bean id="distributedQueryGraphResource" class="org.jrdf.query.server.DistributedGraphResource" scope="prototype">
+        <property name="graphRepresentation" ref="graphRepresentation"/>
         <property name="available" value="true"/>
         <property name="viewRepresentation">
             <map>
@@ -184,10 +188,8 @@
         </constructor-arg>
         <constructor-arg>
             <map>
-                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML"
-                       value-ref="xmlSparqlParserFactory"/>
-                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON"
-                       value-ref="jsonSparqlParserFactory"/>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML" value-ref="xmlSparqlParserFactory"/>
+                <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON" value-ref="jsonSparqlParserFactory"/>
             </map>
         </constructor-arg>
     </bean>
