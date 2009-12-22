@@ -59,43 +59,24 @@
 
 package org.jrdf.query.server;
 
-import org.jrdf.query.answer.Answer;
-import org.jrdf.query.answer.AskAnswer;
-import org.jrdf.query.answer.SelectAnswer;
-import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
-import static org.jrdf.query.server.GraphResourceRequestParameters.MAX_ROWS_IN;
-import static org.jrdf.query.server.GraphResourceRequestParameters.QUERY_IN;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND;
-import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
-import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A graph that is stored locally on this server - so can be modified.
+ *
  * @author Yuan-Fang Li
  * @version : $Id: $
  */
-public class GraphResource extends ConfigurableRestletResource {
-    private static final long DEFAULT_MAX_ROWS = 1000;
-    private static final String GRAPH = "graphName";
-    private static final String GRAPH_REF = "graphRef";
-    private static final String TIME_TAKEN = "timeTaken";
-    private static final String MAX_ROWS = "maxRows";
-    private static final String TOO_MANY_ROWS = "tooManyRows";
-    private static final String ANSWER = "answer";
-    private String graphName;
-    private String queryString;
-    private long maxRows;
-    private GraphApplication graphApplication;
+public class LocalGraphResource extends ConfigurableRestletResource {
+    private GraphRepresentation graphRepresentation;
     private GraphStoreRepresentation graphStoreRepresentation;
 
     @Override
@@ -104,8 +85,8 @@ public class GraphResource extends ConfigurableRestletResource {
         setModifiable(true);
     }
 
-    public void setGraphApplication(GraphApplication newGraphApplication) {
-        this.graphApplication = newGraphApplication;
+    public void setGraphRepresentation(GraphRepresentation newGraphRepresentation) {
+        this.graphRepresentation = newGraphRepresentation;
     }
 
     public void setGraphStoreRepresentation(GraphStoreRepresentation newGraphStoreRepresentation) {
@@ -132,73 +113,7 @@ public class GraphResource extends ConfigurableRestletResource {
 
     @Override
     public Representation represent(Variant variant) {
-        Representation rep = null;
-        try {
-            getValues();
-            if (graphApplication.hasGraph(graphName)) {
-                rep = getGraphRepresentation(variant);
-            } else {
-                getResponse().setStatus(CLIENT_ERROR_NOT_FOUND);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
-        }
-        return rep;
-    }
-
-    private void getValues() {
-        graphName = GRAPH_IN.getValue(getRequest());
-        maxRows = getMaxRows();
-        queryString = QUERY_IN.getValue(getRequest());
-    }
-
-    private Long getMaxRows() {
-        Long rows;
-        try {
-            final String tmpMaxRows = (String) MAX_ROWS_IN.getValue(getRequest());
-            if (tmpMaxRows != null) {
-                rows = Long.parseLong(tmpMaxRows);
-            } else {
-                rows = DEFAULT_MAX_ROWS;
-            }
-        } catch (NumberFormatException e) {
-            rows = DEFAULT_MAX_ROWS;
-        }
-        return rows;
-    }
-
-    private Representation getGraphRepresentation(Variant variant) throws IOException, ResourceException {
-        Representation rep;
-        if (queryString == null) {
-            rep = nonQueryRepresentation(variant);
-        } else {
-            rep = queryRepresentation(variant);
-        }
-        getResponse().setStatus(SUCCESS_OK);
-        return rep;
-    }
-
-    private Representation nonQueryRepresentation(Variant variant) throws IOException {
-        Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put(GRAPH, graphName);
-        dataModel.put(GRAPH_REF, graphApplication.getGraph(graphName));
-        return createTemplateRepresentation(variant.getMediaType(), dataModel);
-    }
-
-    private Representation queryRepresentation(Variant variant) throws ResourceException {
-        Map<String, Object> dataModel = new HashMap<String, Object>();
-        Answer answer = graphApplication.answerQuery(graphName, queryString, maxRows);
-        dataModel.put(GRAPH, graphName);
-        dataModel.put(MAX_ROWS, graphApplication.getMaxRows());
-        dataModel.put(TIME_TAKEN, graphApplication.getTimeTaken());
-        dataModel.put(TOO_MANY_ROWS, graphApplication.isTooManyRows());
-        dataModel.put(ANSWER, answer);
-        if (answer instanceof SelectAnswer) {
-            dataModel.put("answerType", "select");
-        } else if (answer instanceof AskAnswer) {
-            dataModel.put("answerType", "ask");
-        }
+        final Map<String, Object> dataModel = graphRepresentation.represent(getRequest(), getResponse());
         return createTemplateRepresentation(variant.getMediaType(), dataModel);
     }
 }
