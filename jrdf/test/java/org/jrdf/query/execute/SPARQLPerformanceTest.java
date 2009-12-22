@@ -96,7 +96,7 @@ import java.util.Map;
 
 public class SPARQLPerformanceTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
-    private PersistentGlobalJRDFFactory factory;
+    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final LineHandlerFactory PARSER_FACTORY = new N3ParserFactory();
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
     private static final Map<String, Integer> FILE_RESULT_MAP = new LinkedHashMap<String, Integer>() {
@@ -129,9 +129,9 @@ public class SPARQLPerformanceTest extends TestCase {
         super.setUp();
         HANDLER.removeDir();
         HANDLER.makeDir();
-        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-        graph = factory.getGraph("sparql_test");
-        connection = factory.getNewSparqlConnection();
+        FACTORY.refresh();
+        graph = FACTORY.getGraph("sparql_test");
+        connection = FACTORY.getNewSparqlConnection();
         parseGraph("rdf-tests/sparql/sp2b.n3");
     }
 
@@ -140,7 +140,7 @@ public class SPARQLPerformanceTest extends TestCase {
         super.tearDown();
         graph.clear();
         graph.close();
-        factory.close();
+        FACTORY.close();
         HANDLER.removeDir();
     }
 

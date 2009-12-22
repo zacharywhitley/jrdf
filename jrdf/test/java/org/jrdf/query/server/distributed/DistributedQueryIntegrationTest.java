@@ -59,6 +59,9 @@
 
 package org.jrdf.query.server.distributed;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.graph.BlankNode;
@@ -77,27 +80,26 @@ import org.jrdf.query.server.SpringDistributedServer;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
+import static org.jrdf.util.test.SetUtil.asSet;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.restlet.Client;
 import org.restlet.data.Method;
+import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.StringRepresentation;
 
 import java.net.URI;
+import static java.net.URI.create;
 import java.net.URL;
+import static java.util.Collections.EMPTY_MAP;
 import java.util.Iterator;
 import java.util.Set;
-
-import static java.net.URI.create;
-import static java.util.Collections.EMPTY_MAP;
-import static org.jrdf.util.test.SetUtil.asSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.restlet.data.Protocol.HTTP;
-import static org.restlet.data.Status.SUCCESS_OK;
 
 /**
  * @author Yuan-Fang Li
@@ -131,6 +133,7 @@ public class DistributedQueryIntegrationTest {
         LOCAL_HANDLER.makeDir();
         DIST_HANDLER.removeDir();
         DIST_HANDLER.makeDir();
+        FACTORY.refresh();
         graph = FACTORY.getGraph(GRAPH_NAME);
         graph.clear();
         elementFactory = graph.getElementFactory();
@@ -144,7 +147,6 @@ public class DistributedQueryIntegrationTest {
 
     @After
     public void tearDown() throws Exception {
-        graph.close();
         FACTORY.close();
         localQueryServer.stop();
         distributedServer.stop();
@@ -182,7 +184,7 @@ public class DistributedQueryIntegrationTest {
         serverClient.postDistributedServer("add", LOCAL_HOST);
         QueryClient client = new QueryClientImpl(SERVER_END_POINT, ANSWER_HANDLER);
         AskAnswer answer = (AskAnswer) client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);
-        assertEquals(false, answer.getResult());
+        assertThat(answer.getResult(), is(false));
     }
 
     @Test
@@ -197,18 +199,18 @@ public class DistributedQueryIntegrationTest {
         serverClient.postDistributedServer("add", LOCAL_HOST);
         QueryClient client = new QueryClientImpl(SERVER_END_POINT, ANSWER_HANDLER);
         AskAnswer answer = (AskAnswer) client.executeQuery(ASK_QUERY_STRING, EMPTY_MAP);
-        assertEquals(true, answer.getResult());
+        assertThat(answer.getResult(), is(true));
     }
 
-    private void checkAnswer(Answer answer, int noResults, Set<String> expectedVariableNames) throws Exception {
-        Set<String> actualVariableNames = asSet(answer.getVariableNames());
-        assertEquals(expectedVariableNames, actualVariableNames);
+    private void checkAnswer(Answer answer, int expectedNumberOfResults, Set<String> expectedVariableNames)
+        throws Exception {
         Iterator<TypeValue[]> iterator = answer.columnValuesIterator();
-        int counter = 0;
+        int actualNumberOfResults = 0;
         while (iterator.hasNext()) {
-            counter++;
+            actualNumberOfResults++;
             iterator.next();
         }
-        assertEquals(noResults, counter);
+        assertThat(asSet(answer.getVariableNames()), equalTo(expectedVariableNames));
+        assertThat(actualNumberOfResults, equalTo(expectedNumberOfResults));
     }
 }

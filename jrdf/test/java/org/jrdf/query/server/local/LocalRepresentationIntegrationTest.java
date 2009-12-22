@@ -58,10 +58,15 @@
 
 package org.jrdf.query.server.local;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.collection.MemMapFactory;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
@@ -70,50 +75,46 @@ import org.jrdf.query.server.RdfXmlRepresentationFactory;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
+import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
+import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
 import org.restlet.data.Method;
+import static org.restlet.data.Method.GET;
+import static org.restlet.data.Method.POST;
+import static org.restlet.data.Method.PUT;
 import org.restlet.data.Preference;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND;
+import static org.restlet.data.Status.SUCCESS_CREATED;
 import org.restlet.resource.Representation;
 
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import static java.net.URI.create;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import static java.net.URI.create;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
-import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
-import static org.restlet.data.Method.GET;
-import static org.restlet.data.Method.POST;
-import static org.restlet.data.Method.PUT;
-import static org.restlet.data.Status.SUCCESS_CREATED;
+import static java.lang.System.*;
 
 public class LocalRepresentationIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
+    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private SpringLocalServer localQueryServer;
-    private PersistentGlobalJRDFFactory factory;
     private Client client;
 
     @Before
     public void setUp() throws Exception {
         HANDLER.removeDir();
         HANDLER.makeDir();
-        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+        FACTORY.refresh();
         localQueryServer = new SpringLocalServer();
         localQueryServer.start();
         // Wait for server to start.
@@ -123,15 +124,22 @@ public class LocalRepresentationIntegrationTest {
 
     @After
     public void tearDown() throws Exception {
-        //factory.close();
+        FACTORY.close();
         localQueryServer.stop();
     }
 
     @Test
+    public void getNonExistentGraphNotFound() throws Exception {
+        final Response response = getGraph(currentTimeMillis() + "");
+        assertThat(response.getStatus(), equalTo(CLIENT_ERROR_NOT_FOUND));
+    }
+
+    @Test
     public void getExistingRdfXmlGraph() throws Exception {
-        final Graph graph = factory.getGraph("foo");
+        final String graphName = "graph" + currentTimeMillis();
+        final Graph graph = FACTORY.getGraph(graphName);
         addTriples(graph);
-        assertSameGraph("foo", graph);
+        assertSameGraph(graphName, graph);
     }
 
     @Test
@@ -169,7 +177,7 @@ public class LocalRepresentationIntegrationTest {
 
     private void addTriples(final Graph graph) {
         final TripleFactory tripleFactory = graph.getTripleFactory();
-        long oId = System.currentTimeMillis();
+        long oId = currentTimeMillis();
         tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
         tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
         tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
@@ -195,11 +203,15 @@ public class LocalRepresentationIntegrationTest {
         return graph;
     }
 
-    private void assertSameGraph(final String graphName, final Graph expectedGraph) throws Exception {
+    private Response getGraph(String graphName) throws UnsupportedEncodingException {
         Request request = new Request(GET, createRef(graphName));
         ClientInfo clientInfo = request.getClientInfo();
         clientInfo.setAcceptedMediaTypes(Arrays.asList(new Preference<MediaType>(APPLICATION_RDF_XML)));
-        Response response = client.handle(request);
+        return client.handle(request);
+    }
+
+    private void assertSameGraph(final String graphName, final Graph expectedGraph) throws Exception {
+        Response response = getGraph(graphName);
         final Graph resultGraph = parseResult(response);
         assertThat(resultGraph.getNumberOfTriples(), equalTo(expectedGraph.getNumberOfTriples()));
         for (Triple triple : expectedGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE)) {

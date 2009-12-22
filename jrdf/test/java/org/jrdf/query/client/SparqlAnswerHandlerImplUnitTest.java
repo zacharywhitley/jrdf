@@ -78,6 +78,7 @@ import org.junit.runner.RunWith;
 import static org.jrdf.util.test.MockTestUtil.createMock;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.expectLastCall;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.restlet.data.MediaType;
@@ -130,6 +131,8 @@ public class SparqlAnswerHandlerImplUnitTest {
         expect(mockRepresentation.getMediaType()).andReturn(mediaType);
         final InputStream mockInput = createMock(InputStream.class);
         expect(mockRepresentation.getStream()).andReturn(mockInput);
+        mockRepresentation.release();
+        expectLastCall();
         final Answer mockAnswer = createMock(Answer.class);
         expect(mockAnswerFactory.createStreamingAnswer(mockInput, mockParserFactory)).andReturn(mockAnswer);
         replayAll();
@@ -141,6 +144,8 @@ public class SparqlAnswerHandlerImplUnitTest {
     public void wrongMediaTypeThrowsException() throws Exception {
         final Representation mockRepresentation = createMock(Representation.class);
         expect(mockRepresentation.getMediaType()).andReturn(MediaType.ALL);
+        mockRepresentation.release();
+        expectLastCall();
         replayAll();
         handler.getAnswer(mockRepresentation);
         verifyAll();
@@ -151,6 +156,8 @@ public class SparqlAnswerHandlerImplUnitTest {
         final Representation mockRepresentation = createMock(Representation.class);
         expect(mockRepresentation.getMediaType()).andReturn(mediaType);
         expect(mockRepresentation.getStream()).andThrow(new IOException());
+        mockRepresentation.release();
+        expectLastCall();
         replayAll();
         handler.getAnswer(mockRepresentation);
         verifyAll();
