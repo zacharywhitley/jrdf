@@ -60,6 +60,7 @@ package org.jrdf.query.server;
 
 import static org.easymock.EasyMock.expect;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -101,7 +102,7 @@ public class DistributedGraphResourceUnitTest {
         replayAll();
         final Representation representation = resource.represent(mockVariant);
         verifyAll();
-        assertThat(representation, equalTo(mockRepresentation));
+        assertThat(representation, is(mockRepresentation));
     }
 
     @Test
@@ -112,6 +113,7 @@ public class DistributedGraphResourceUnitTest {
         replayAll();
         resource.storeRepresentation(mockRepresentation);
         verifyAll();
+        assertThat(resource.isModifiable(), equalTo(false));
     }
 
     private DistributedGraphResource createResource() {
