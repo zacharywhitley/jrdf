@@ -71,6 +71,7 @@ import org.restlet.data.Status;
 import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
 import static org.restlet.data.Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE;
 import static org.restlet.data.Status.SUCCESS_CREATED;
+import static org.restlet.data.Status.*;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 
@@ -95,25 +96,25 @@ public class GraphStoreRepresentationImpl implements GraphStoreRepresentation {
     }
 
 
-//    public Status removeRepresentations(Request request) throws ResourceException {
-//        if (hasGraph(request)) {
-//            final Graph graph = getGraph(request);
-//            removeIfThereAreExistingTriples(graph);
-//            return SUCCESS_OK;
-//        } else {
-//            return CLIENT_ERROR_BAD_REQUEST;
-//        }
-//    }
+    public Status removeRepresentations(Request request) throws ResourceException {
+        if (hasGraph(request)) {
+            final Graph graph = getGraph(request);
+            removeIfThereAreExistingTriples(graph);
+            return SUCCESS_OK;
+        } else {
+            return CLIENT_ERROR_BAD_REQUEST;
+        }
+    }
 
     private Graph getGraph(Request newRequest) {
         final String graphName = GRAPH_IN.getValue(newRequest);
         return graphApplication.getGraph(graphName);
     }
 
-//    private boolean hasGraph(Request newRequest) {
-//        final String graphName = GRAPH_IN.getValue(newRequest);
-//        return graphApplication.hasGraph(graphName);
-//    }
+    private boolean hasGraph(Request newRequest) {
+        final String graphName = GRAPH_IN.getValue(newRequest);
+        return graphApplication.hasGraph(graphName);
+    }
 
     private void removeIfThereAreExistingTriples(Graph graph) {
         if (graph.getNumberOfTriples() != 0) {

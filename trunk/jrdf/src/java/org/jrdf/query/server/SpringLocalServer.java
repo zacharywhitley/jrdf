@@ -62,8 +62,6 @@ package org.jrdf.query.server;
 import org.restlet.Component;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.logging.Level;
-
 /**
  * A server that allows you to deploy a local JRDF server.
  *
@@ -81,7 +79,6 @@ public final class SpringLocalServer {
     public void start() throws Exception {
         beanFactory = new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
         component = (Component) beanFactory.getBean("component");
-        component.getLogger().setLevel(Level.OFF);
         component.start();
     }
 
