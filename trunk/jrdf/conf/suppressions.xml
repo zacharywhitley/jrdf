@@ -10,7 +10,6 @@
     <suppress checks="ClassDataAbstractionCoupling" files="LocalIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="GraphResource"/>
     <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
@@ -25,8 +24,6 @@
     <suppress checks="ClassDataAbstractionCoupling" files="PersistentJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="PersistentGlobalJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="LongIndexBdb"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="ServersResource"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="QueryClientImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="FilterAnalyserImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ExpressionSimplifierImpl"/>
@@ -44,7 +41,6 @@
     <suppress checks="JavaNCSS" files="OWL"/>
     <suppress checks="JavaNCSS" files="BasicOperations"/>
     <suppress checks="JavaNCSS" files="NodeTypeBinding"/>
-    <suppress checks="JavaNCSS" files="SparqlStreamingAnswerFactoryImpl"/>
     <suppress checks="JavaNCSS" files="ExpressionSimplifierImpl"/>
     <suppress checks="JavaNCSS" files="FilterAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
