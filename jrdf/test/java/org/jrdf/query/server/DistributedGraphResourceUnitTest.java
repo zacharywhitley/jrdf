@@ -63,15 +63,18 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.powermock.api.easymock.PowerMock.expectLastCall;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.api.easymock.annotation.MockStrict;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
+import static org.restlet.data.MediaType.ALL;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import static org.restlet.data.MediaType.*;
+import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
 
@@ -80,9 +83,9 @@ import java.util.Map;
 
 @RunWith(PowerMockRunner.class)
 public class DistributedGraphResourceUnitTest {
-    @Mock private Context mockContext;
-    @Mock private Request mockRequest;
-    @Mock private Response mockResponse;
+    @MockStrict private Context mockContext;
+    @MockStrict private Request mockRequest;
+    @MockStrict private Response mockResponse;
     @Mock private GraphRepresentation mockGraphRepresentation;
     @Mock private Variant mockVariant;
     @Mock private RepresentationFactory mockRepresentationFactory;
@@ -90,16 +93,25 @@ public class DistributedGraphResourceUnitTest {
     @Mock private Map<String, Object> dataModel;
 
     @Test
-    public void callRepresent() {
+    public void canCallRepresent() {
         final DistributedGraphResource resource = createResource();
         expect(mockRepresentationFactory.createRepresentation(ALL, dataModel)).andReturn(mockRepresentation);
         expect(mockGraphRepresentation.represent(mockRequest, mockResponse)).andReturn(dataModel);
         expect(mockVariant.getMediaType()).andReturn(ALL);
-
         replayAll();
         final Representation representation = resource.represent(mockVariant);
         verifyAll();
         assertThat(representation, equalTo(mockRepresentation));
+    }
+
+    @Test
+    public void cannotCallStore() throws Exception {
+        final DistributedGraphResource resource = createResource();
+        mockResponse.setStatus(SERVER_ERROR_INTERNAL);
+        expectLastCall();
+        replayAll();
+        resource.storeRepresentation(mockRepresentation);
+        verifyAll();
     }
 
     private DistributedGraphResource createResource() {

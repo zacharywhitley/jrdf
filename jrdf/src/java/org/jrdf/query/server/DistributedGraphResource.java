@@ -78,7 +78,7 @@ public class DistributedGraphResource extends ConfigurableRestletResource {
     @Override
     public void init(final Context context, final Request request, final Response response) {
         super.init(context, request, response);
-        setModifiable(true);
+        setModifiable(false);
     }
 
     public void setGraphRepresentation(GraphRepresentation newGraphRepresentation) {
