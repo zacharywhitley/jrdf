@@ -101,7 +101,7 @@ public class LocalQueryIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final SparqlAnswerHandlerFactory HANDLER_FACTORY = new SparqlAnswerHandlerFactoryImpl();
     private static final SparqlAnswerHandler ANSWER_HANDLER = HANDLER_FACTORY.createSparqlAnswerHandlerFactory();
-    private PersistentGlobalJRDFFactory factory;
+    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private MoleculeGraph graph;
     private GraphElementFactory elementFactory;
     private SpringLocalServer localQueryServer;
@@ -110,8 +110,8 @@ public class LocalQueryIntegrationTest {
     public void setUp() throws Exception {
         HANDLER.removeDir();
         HANDLER.makeDir();
-        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-        graph = factory.getGraph(GRAPH);
+        FACTORY.refresh();
+        graph = FACTORY.getGraph(GRAPH);
         elementFactory = graph.getElementFactory();
         localQueryServer = new SpringLocalServer();
         localQueryServer.start();
@@ -120,7 +120,7 @@ public class LocalQueryIntegrationTest {
     @After
     public void tearDown() throws Exception {
         graph.close();
-        factory.close();
+        FACTORY.close();
         localQueryServer.stop();
     }
 

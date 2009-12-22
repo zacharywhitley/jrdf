@@ -89,33 +89,32 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
     private static final TripleComparator TRIPLE_COMPARATOR = new TripleComparatorFactoryImpl().newComparator();
     private static final MoleculeComparator MOLECULE_COMPARATOR =
             new MoleculeHeadTripleComparatorImpl(TRIPLE_COMPARATOR);
+    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
     private static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(MOLECULE_COMPARATOR);
     private static int graphNumber = 1;
-    private PersistentGlobalJRDFFactory factory;
 
     @Before
     public void setUp() throws Exception {
+        HANDLER.removeDir();
         HANDLER.makeDir();
-        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+        FACTORY.refresh();
         super.setUp();
     }
 
     @After
     public void tearDown() throws Exception {
-        //graph.close();
-        factory.close();
-        HANDLER.removeDir();
+        FACTORY.close();
     }
 
     public Graph newGraph() throws Exception {
-        MoleculeGraph moleculeGraph = factory.getNewGraph("temp" + graphNumber++);
+        MoleculeGraph moleculeGraph = FACTORY.getNewGraph("temp" + graphNumber++);
         moleculeGraph.clear();
         return moleculeGraph;
     }
 
     @Test
     public void testMoleculeSize() throws Exception {
-        MoleculeGraph moleculeGraph = factory.getNewGraph("foo");
+        MoleculeGraph moleculeGraph = FACTORY.getNewGraph("foo");
         moleculeGraph.clear();
         GraphElementFactory graphElementFactory = moleculeGraph.getElementFactory();
         TripleFactory tripleFactory = moleculeGraph.getTripleFactory();
@@ -126,17 +125,17 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
         addMolecule(tripleFactory.createTriple(bnode1, ref1, ref1), 1L);
         addMolecule(tripleFactory.createTriple(bnode1, ref2, ref2), 2L);
         addMolecule(tripleFactory.createTriple(bnode1, ref3, ref3), 3L);
-        factory = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-        moleculeGraph = factory.getExistingGraph("foo");
+        FACTORY.refresh();
+        moleculeGraph = FACTORY.getExistingGraph("foo");
         assertThat(moleculeGraph.getNumberOfMolecules(), is(3L));
     }
 
     private void addMolecule(Triple triple, long expectedMoleculeNumber) throws GraphException {
-        MoleculeGraph moleculeGraph = factory.getExistingGraph("foo");
+        MoleculeGraph moleculeGraph = FACTORY.getExistingGraph("foo");
         assertThat(moleculeGraph.getNumberOfMolecules(), is(expectedMoleculeNumber - 1));
         moleculeGraph.add(MOLECULE_FACTORY.createMolecule(triple));
         assertThat(moleculeGraph.getNumberOfMolecules(), is(expectedMoleculeNumber));
         moleculeGraph.close();
-        factory.close();
+        FACTORY.close();
     }
 }

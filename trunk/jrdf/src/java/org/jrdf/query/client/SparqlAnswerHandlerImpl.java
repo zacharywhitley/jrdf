@@ -90,6 +90,8 @@ public final class SparqlAnswerHandlerImpl implements SparqlAnswerHandler {
             return answerFactory.createStreamingAnswer(output.getStream(), parserFactory);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            output.release();
         }
     }
 

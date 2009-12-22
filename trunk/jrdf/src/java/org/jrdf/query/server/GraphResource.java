@@ -62,13 +62,14 @@ package org.jrdf.query.server;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
+import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
 import static org.jrdf.query.server.GraphResourceRequestParameters.MAX_ROWS_IN;
 import static org.jrdf.query.server.GraphResourceRequestParameters.QUERY_IN;
-import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
+import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND;
 import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
 import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
@@ -133,20 +134,23 @@ public class GraphResource extends ConfigurableRestletResource {
     public Representation represent(Variant variant) {
         Representation rep = null;
         try {
-            graphName = GRAPH_IN.getValue(getRequest());
-            maxRows = getMaxRows();
-            queryString = QUERY_IN.getValue(getRequest());
-            if (queryString == null) {
-                rep = nonQueryRepresentation(variant);
+            getValues();
+            if (graphApplication.hasGraph(graphName)) {
+                rep = getGraphRepresentation(variant);
             } else {
-                rep = queryRepresentation(variant);
+                getResponse().setStatus(CLIENT_ERROR_NOT_FOUND);
             }
-            getResponse().setStatus(SUCCESS_OK);
         } catch (Exception e) {
             e.printStackTrace();
             getResponse().setStatus(SERVER_ERROR_INTERNAL, e, e.getMessage().replace("\n", ""));
         }
         return rep;
+    }
+
+    private void getValues() {
+        graphName = GRAPH_IN.getValue(getRequest());
+        maxRows = getMaxRows();
+        queryString = QUERY_IN.getValue(getRequest());
     }
 
     private Long getMaxRows() {
@@ -162,6 +166,17 @@ public class GraphResource extends ConfigurableRestletResource {
             rows = DEFAULT_MAX_ROWS;
         }
         return rows;
+    }
+
+    private Representation getGraphRepresentation(Variant variant) throws IOException, ResourceException {
+        Representation rep;
+        if (queryString == null) {
+            rep = nonQueryRepresentation(variant);
+        } else {
+            rep = queryRepresentation(variant);
+        }
+        getResponse().setStatus(SUCCESS_OK);
+        return rep;
     }
 
     private Representation nonQueryRepresentation(Variant variant) throws IOException {
