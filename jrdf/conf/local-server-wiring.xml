@@ -147,7 +147,7 @@
 
     <bean id="localQueryGraphResource" class="org.jrdf.query.server.GraphResource" scope="prototype">
         <property name="graphApplication" ref="graphApplication"/>
-        <property name="graphRepresentation" ref="graphRepresentation"/>
+        <property name="graphStoreRepresentation" ref="graphRepresentation"/>
         <property name="available" value="true"/>
         <property name="viewRepresentation">
             <map>

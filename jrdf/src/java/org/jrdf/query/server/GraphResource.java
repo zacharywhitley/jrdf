@@ -96,7 +96,7 @@ public class GraphResource extends ConfigurableRestletResource {
     private String queryString;
     private long maxRows;
     private GraphApplication graphApplication;
-    private GraphStoreRepresentation graphRepresentation;
+    private GraphStoreRepresentation graphStoreRepresentation;
 
     @Override
     public void init(final Context context, final Request request, final Response response) {
@@ -108,27 +108,27 @@ public class GraphResource extends ConfigurableRestletResource {
         this.graphApplication = newGraphApplication;
     }
 
-    public void setGraphRepresentation(GraphStoreRepresentation newGraphRepresentation) {
-        this.graphRepresentation = newGraphRepresentation;
+    public void setGraphStoreRepresentation(GraphStoreRepresentation newGraphStoreRepresentation) {
+        this.graphStoreRepresentation = newGraphStoreRepresentation;
     }
 
     @Override
     public void storeRepresentation(Representation entity) throws ResourceException {
-        final Status status = graphRepresentation.storeRepresentation(getRequest());
+        final Status status = graphStoreRepresentation.storeRepresentation(getRequest());
         getResponse().setStatus(status);
     }
 
     @Override
     public void acceptRepresentation(Representation entity) throws ResourceException {
-        final Status status = graphRepresentation.acceptRepresentation(getRequest());
+        final Status status = graphStoreRepresentation.acceptRepresentation(getRequest());
         getResponse().setStatus(status);
     }
 
-//    @Override
-//    public void removeRepresentations() throws ResourceException {
-//        final Status status = graphRepresentation.removeRepresentations(getRequest());
-//        getResponse().setStatus(status);
-//    }
+    @Override
+    public void removeRepresentations() throws ResourceException {
+        final Status status = graphStoreRepresentation.removeRepresentations(getRequest());
+        getResponse().setStatus(status);
+    }
 
     @Override
     public Representation represent(Variant variant) {

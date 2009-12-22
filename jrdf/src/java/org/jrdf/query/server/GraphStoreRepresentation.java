@@ -69,5 +69,5 @@ public interface GraphStoreRepresentation {
 
     Status acceptRepresentation(Request request) throws ResourceException;
 
-    //Status removeRepresentations(Request request) throws ResourceException;
+    Status removeRepresentations(Request request) throws ResourceException;
 }

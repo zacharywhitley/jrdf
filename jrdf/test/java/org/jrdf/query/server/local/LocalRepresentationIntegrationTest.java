@@ -84,6 +84,7 @@ import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
 import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
 import org.restlet.data.Method;
+import static org.restlet.data.Method.DELETE;
 import static org.restlet.data.Method.GET;
 import static org.restlet.data.Method.POST;
 import static org.restlet.data.Method.PUT;
@@ -91,22 +92,25 @@ import org.restlet.data.Preference;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
 import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND;
 import static org.restlet.data.Status.SUCCESS_CREATED;
+import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
 
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import static java.lang.System.currentTimeMillis;
 import static java.net.URI.create;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import static java.lang.System.*;
 
 public class LocalRepresentationIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+    private static final Graph EMPTY_GRAPH = MemoryJRDFFactory.getFactory().getNewGraph();
     private SpringLocalServer localQueryServer;
     private Client client;
 
@@ -117,8 +121,6 @@ public class LocalRepresentationIntegrationTest {
         FACTORY.refresh();
         localQueryServer = new SpringLocalServer();
         localQueryServer.start();
-        // Wait for server to start.
-        Thread.sleep(200);
         client = new Client("http");
     }
 
@@ -165,15 +167,21 @@ public class LocalRepresentationIntegrationTest {
         assertSameGraph("http://www.example.org/def", graph1);
     }
 
-//    @Test
-//    public void deleteGraph() throws Exception {
-//        final Graph graph = postTriplesToGraph("http://www.example.org/def");
-//        Request request = new Request(Method.DELETE, createRef("http://www.example.org/ghi"));
-//        Response response = client.handle(request);
-//        assertThat(response.getStatus(), equalTo(Status.SUCCESS_OK));
-//        response = client.handle(request);
-//        assertThat(response.getStatus(), equalTo(Status.CLIENT_ERROR_BAD_REQUEST));
-//    }
+    @Test
+    public void deleteGraphRemovesAllTriples() throws Exception {
+        postTriplesToGraph("http://www.example.org/def");
+        Request request = new Request(DELETE, createRef("http://www.example.org/def"));
+        Response response = client.handle(request);
+        assertThat(response.getStatus(), equalTo(SUCCESS_OK));
+        assertSameGraph("http://www.example.org/def", EMPTY_GRAPH);
+    }
+
+    @Test
+    public void deleteNonExistentGraphIsBadRequest() throws Exception {
+        Request request = new Request(DELETE, createRef("http://www.example.org/def"));
+        Response response = client.handle(request);
+        assertThat(response.getStatus(), equalTo(CLIENT_ERROR_BAD_REQUEST));
+    }
 
     private void addTriples(final Graph graph) {
         final TripleFactory tripleFactory = graph.getTripleFactory();
