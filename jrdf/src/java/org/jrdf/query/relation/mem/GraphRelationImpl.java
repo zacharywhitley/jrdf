@@ -74,9 +74,12 @@ import org.jrdf.query.relation.AttributeTupleComparator;
 import org.jrdf.query.relation.EvaluatedRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
+import static org.jrdf.util.ClosableIterators.with;
 import org.jrdf.util.EqualsUtil;
+import org.jrdf.util.Function;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -163,23 +166,17 @@ public final class GraphRelationImpl implements EvaluatedRelation {
     }
 
     //TODO YF change this to a disk-based set to make it more scalable
-    private Set<Tuple> getUnsortedTuplesFromGraph(Triple searchTriple, Attribute[] attributes) {
-        ClosableIterator<Triple> closableIterator = getIterator(searchTriple);
-        try {
-            Set<Tuple> tuples = new HashSet<Tuple>();
-            while (closableIterator.hasNext()) {
-                Triple triple = closableIterator.next();
-                Map<Attribute, Node> avo = avpHelper.createAvo(triple, attributes);
-                tuples.add(tupleFactory.getTuple(avo));
+    private Set<Tuple> getUnsortedTuplesFromGraph(final Triple searchTriple, final Attribute[] attributes) {
+        return with(graph.find(searchTriple), new Function<Set<Tuple>, ClosableIterable<Triple>>() {
+            public Set<Tuple> apply(ClosableIterable<Triple> object) {
+                Set<Tuple> tuples = new HashSet<Tuple>();
+                for (Triple triple : object) {
+                    Map<Attribute, Node> avo = avpHelper.createAvo(triple, attributes);
+                    tuples.add(tupleFactory.getTuple(avo));
+                }
+                return tuples;
             }
-            return tuples;
-        } finally {
-            closableIterator.close();
-        }
-    }
-
-    private ClosableIterator<Triple> getIterator(Triple searchTriple) {
-        return graph.findUnsorted(searchTriple.getSubject(), searchTriple.getPredicate(), searchTriple.getObject());
+        });
     }
 
     private boolean determineEqualityFromFields(GraphRelationImpl graphRelation) {
