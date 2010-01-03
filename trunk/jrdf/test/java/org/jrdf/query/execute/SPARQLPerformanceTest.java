@@ -93,7 +93,6 @@ import java.util.Map;
  * @author Yuan-Fang Li
  * @version $Id$
  */
-
 public class SPARQLPerformanceTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
@@ -132,7 +131,7 @@ public class SPARQLPerformanceTest extends TestCase {
         FACTORY.refresh();
         graph = FACTORY.getGraph("sparql_test");
         connection = FACTORY.getNewSparqlConnection();
-        parseGraph("rdf-tests/sparql/sp2b.n3");
+        parseGraph("rdf-tests/sparql/sp2b.n3.zip");
     }
 
     @Override
@@ -178,10 +177,13 @@ public class SPARQLPerformanceTest extends TestCase {
 
     private void parseGraph(final String fileName) throws GraphException, IOException, StatementHandlerException,
         ParseException {
+        System.out.println("Parsing Graph");
+        long startTime = System.currentTimeMillis();
         assertEquals(0, graph.getNumberOfTriples());
         final InputStream in = getSampleData(this.getClass(), fileName);
         final Parser parser = new GraphLineParser(graph, PARSER_FACTORY.createParser(graph, MAP_FACTORY));
         parser.parse(in, fileName);
         assertEquals(50168, graph.getNumberOfTriples());
+        System.out.println("Parsed Graph in: " + (System.currentTimeMillis() - startTime));
     }
 }

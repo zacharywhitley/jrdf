@@ -71,6 +71,7 @@
             <fileset dir="${test.src.dir}" includes="**/*.txt"/>
             <fileset dir="${test.src.dir}" includes="**/*.n3"/>
             <fileset dir="${test.src.dir}" includes="**/*.sparql"/>
+            <fileset dir="${test.src.dir}" includes="**/*.zip"/>
         </copy>
     </target>
 
