@@ -57,79 +57,65 @@
  *
  */
 
-package org.jrdf.parser.n3.parser;
+package org.jrdf.parser.turtle.parser;
 
-import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.ntriples.parser.LiteralMatcher;
-import org.jrdf.parser.ntriples.parser.NTripleUtil;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.parser.ParseException;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.LiteralParser;
+import org.jrdf.parser.ntriples.parser.ObjectParser;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
-import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.io.Serializable;
 import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
 
-public final class NamespaceAwareLiteralMatcherImpl implements LiteralMatcher, Serializable {
-    private static final long serialVersionUID = -1198268919417815649L;
-    private static final int LITERAL_VALUES_LENGTH = 3;
-    private Pattern pattern = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
-        "(" +
-        "\\@(\\p{Lower}[\\-\\p{Alnum}]*)?|" +
-        "\\^\\^\\<([\\x20-\\x7E]+)\\>|" +
-        "\\^\\^(\\p{Alpha}[\\x20-\\x7E]*?):((\\p{Alpha}[\\x20-\\x7E]*)?)" +
-        ")*\\p{Blank}*");
-    private static final int LITERAL_INDEX = 1;
-    private static final int LANGUAGE_INDEX = 3;
-    private static final int DATATYPE_URI_INDEX = 4;
-    private static final int DATATYPE_PREFIX_INDEX = 5;
-    private static final int DATATYPE_LOCAL_NAME_INDEX = 6;
-    private RegexMatcherFactory regexFactory;
-    private NTripleUtil nTripleUtil;
-    private NamespaceListener listener;
+public final class NamespaceAwareObjectParser implements ObjectParser {
+    private static final Pattern REGEX = compile(
+        "(<([\\x20-\\x7E]+?)>|((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))" +
+        "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
+    private static final int LINE_GROUP = 0;
+    private static final int URI_GROUP = 2;
+    private static final int NS_LOCAL_NAME_GROUP = 3;
+    private static final int BLANK_NODE_GROUP = 6;
+    private static final int LITERAL_GROUP = 7;
+    private final RegexMatcherFactory factory;
+    private final NamespaceAwareURIReferenceParser uriReferenceParser;
+    private final BlankNodeParser blankNodeParser;
+    private final LiteralParser literalParser;
 
-    private NamespaceAwareLiteralMatcherImpl() {
+    public NamespaceAwareObjectParser(final RegexMatcherFactory newFactory,
+        final NamespaceAwareURIReferenceParser newUriReferenceParser, final BlankNodeParser newBlankNodeParser,
+        final LiteralParser newLiteralParser) {
+        checkNotNull(newFactory, newUriReferenceParser, newBlankNodeParser, newLiteralParser);
+        factory = newFactory;
+        uriReferenceParser = newUriReferenceParser;
+        blankNodeParser = newBlankNodeParser;
+        literalParser = newLiteralParser;
     }
 
-    public NamespaceAwareLiteralMatcherImpl(RegexMatcherFactory newRegexFactory, NTripleUtil newNTripleUtil,
-        NamespaceListener newListener) {
-        checkNotNull(newRegexFactory, newNTripleUtil);
-        regexFactory = newRegexFactory;
-        nTripleUtil = newNTripleUtil;
-        listener = newListener;
-    }
-
-    public void setPattern(String newPattern) {
-        pattern = Pattern.compile(newPattern);
-    }
-
-    public boolean matches(String s) {
-        checkNotEmptyString("s", s);
-        return regexFactory.createMatcher(pattern, s).matches();
-    }
-
-    public String[] parse(String s) {
-        checkNotEmptyString("s", s);
-        RegexMatcher matcher = regexFactory.createMatcher(pattern, s);
-        String[] values = new String[LITERAL_VALUES_LENGTH];
-        if (matcher.matches()) {
-            String ntriplesLiteral = matcher.group(LITERAL_INDEX);
-            values[0] = nTripleUtil.unescapeLiteral(ntriplesLiteral);
-            values[1] = matcher.group(LANGUAGE_INDEX);
-            values[2] = getDatatypeString(matcher);
+    public ObjectNode parseNode(final CharSequence line) throws ParseException {
+        checkNotNull(line);
+        final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
+        if (regexMatcher.matches()) {
+            return parseObject(regexMatcher);
+        } else {
+            throw new IllegalArgumentException("Couldn't match line: " + line);
         }
-        return values;
     }
 
-    private String getDatatypeString(RegexMatcher matcher) {
-        String result = null;
-        final String prefix = matcher.group(DATATYPE_PREFIX_INDEX);
-        final String fullURI = matcher.group(DATATYPE_URI_INDEX);
-        if (fullURI != null) {
-            result = fullURI;
-        } else if (prefix != null) {
-            result = listener.getFullURI(prefix) + matcher.group(DATATYPE_LOCAL_NAME_INDEX);
+    private ObjectNode parseObject(final RegexMatcher matcher) throws ParseException {
+        if (matcher.group(URI_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+        } else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
+            return uriReferenceParser.parseURIReferenceWithNamespace(matcher.group(NS_LOCAL_NAME_GROUP));
+        } else if (matcher.group(BLANK_NODE_GROUP) != null) {
+            return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
+        } else if (matcher.group(LITERAL_GROUP) != null) {
+            return literalParser.parseLiteral(matcher.group(LITERAL_GROUP));
+        } else {
+            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
         }
-        return result;
     }
 }

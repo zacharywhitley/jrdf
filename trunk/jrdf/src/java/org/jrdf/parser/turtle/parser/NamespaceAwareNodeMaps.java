@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.parser.n3.parser;
+package org.jrdf.parser.turtle.parser;
 
 import org.jrdf.graph.Node;
 import org.jrdf.parser.ParseException;

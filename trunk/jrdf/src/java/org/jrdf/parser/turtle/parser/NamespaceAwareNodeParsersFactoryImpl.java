@@ -57,37 +57,54 @@
  *
  */
 
-package org.jrdf.parser.n3.parser;
+package org.jrdf.parser.turtle.parser;
 
+import org.jrdf.collection.MapFactory;
+import org.jrdf.graph.Graph;
 import org.jrdf.parser.NamespaceListener;
-import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.LiteralParser;
+import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
+import org.jrdf.parser.ntriples.parser.NTripleUtil;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 
-import java.util.regex.Pattern;
-
-public class PrefixParserImpl implements PrefixParser {
-    private static final Pattern PREFIX_REGEX = Pattern.compile("\\p{Blank}*" +
-        "@prefix\\p{Blank}+" +
-        "([a-zA-Z][\\x20-\\x7E]*)?:" +
-        "\\p{Blank}+\\<(([\\x20-\\x7E]+?))\\>\\p{Blank}*\\.\\p{Blank}*");
-    private static final int PREFIX_GROUP = 1;
-    private static final int URI_GROUP = 2;
+public class NamespaceAwareNodeParsersFactoryImpl implements NamespaceAwareNodeParsersFactory {
+    private final Graph graph;
+    private final MapFactory mapFactory;
     private final RegexMatcherFactory regexMatcherFactory;
-    private NamespaceListener listener;
+    private final NamespaceListener namespaceListener;
+    private final NTripleUtil util;
 
-    public PrefixParserImpl(RegexMatcherFactory newRegexMatcherFactory, final NamespaceListener newListener) {
+    public NamespaceAwareNodeParsersFactoryImpl(final Graph newGraph, final MapFactory newMapFactory,
+        final RegexMatcherFactory newRegexMatcherFactory, final NamespaceListener newNamespaceListener) {
+        graph = newGraph;
+        mapFactory = newMapFactory;
         regexMatcherFactory = newRegexMatcherFactory;
-        listener = newListener;
+        namespaceListener = newNamespaceListener;
+        util = new NTripleUtilImpl(regexMatcherFactory);
     }
 
-    public boolean handlePrefix(final CharSequence line) {
-        final RegexMatcher prefixMatcher = regexMatcherFactory.createMatcher(PREFIX_REGEX, line);
-        final boolean matched = prefixMatcher.matches();
-        if (matched) {
-            final String prefix = prefixMatcher.group(PREFIX_GROUP);
-            final String uri = prefixMatcher.group(URI_GROUP);
-            listener.handleNamespace(prefix, uri);
-        }
-        return matched;
+    public NamespaceAwareURIReferenceParser getUriReferenceParser() {
+        return new NamespaceAwareURIReferenceParserImpl(graph.getElementFactory(), util, namespaceListener,
+            regexMatcherFactory);
+    }
+
+    public BlankNodeParser getBlankNodeParser() {
+        return new BlankNodeParserImpl(new ParserBlankNodeFactoryImpl(mapFactory, graph.getElementFactory()));
+    }
+
+    public BlankNodeParser getBlankNodeParserWithFactory(final ParserBlankNodeFactory parserBlankNodeFactory) {
+        return new BlankNodeParserImpl(parserBlankNodeFactory);
+    }
+
+    public LiteralParser getLiteralParser() {
+        final LiteralMatcher literalMatcher = new NamespaceAwareLiteralMatcherImpl(regexMatcherFactory, util,
+            namespaceListener);
+        return new LiteralParserImpl(graph.getElementFactory(), literalMatcher);
     }
 }
