@@ -59,28 +59,29 @@
 
 package org.jrdf.parser.n3;
 
-import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 import static org.jrdf.parser.line.LineParserTestUtil.parseN3File;
 import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
+import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.Set;
 
-public class N3ParserIntegrationTest extends TestCase {
-    private static final String TEST_DATA = "org/jrdf/parser/n3/test.n3";
+public class N3ParserIntegrationTest {
+    private static final String GOOD_NTRIPLE_FILE = "org/jrdf/parser/n3/test.n3";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
 
-    public void testParseFile() throws Exception {
-        final InputStream input = getSampleData(getClass(), TEST_DATA);
+    @Test
+    public void successfullyParseNTriplesFile() throws Exception {
+        final InputStream input = getSampleData(getClass(), GOOD_NTRIPLE_FILE);
         try {
             final Set<Triple> expectedTriples = standardTestWithN3();
             final Set<Triple> actualResults = parseN3File(input, NEW_GRAPH, CREATOR);
