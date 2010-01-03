@@ -1,7 +1,7 @@
 Package org.jrdf.sparql.parser;
 
 /*
- * SPARQL Query Language for RDF SableCC grammar.
+ * SPARQL Query Language SableCC grammar.
  * $Id$
  */
 
