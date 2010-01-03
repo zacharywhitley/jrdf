@@ -58,63 +58,31 @@
 
 package org.jrdf.parser.turtle.parser;
 
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcher;
-import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
-import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
-import org.jrdf.util.test.ParameterDefinition;
-import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.easymock.annotation.Mock;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-import org.powermock.modules.junit4.PowerMockRunner;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.eq;
-import static org.hamcrest.MatcherAssert.assertThat;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
 
-@RunWith(PowerMockRunner.class)
-public class DirectiveParserImplUnitTest {
-    private static final Class<?> TEST_CLASS = DirectiveParserImpl.class;
-    private static final Class<?> TARGET_INTERFACE = DirectiveParser.class;
-    private static final Class[] PARAM_TYPES = {RegexMatcherFactory.class, PrefixParser.class};
-    private static final String[] PARAM_NAMES = {"regexFactory", "prefixParser"};
-    private static final String PATTERN =  "\\p{Blank}*(@prefix)|(@base).*";
-    private static final Pattern DIRECTIVE_REGEX = Pattern.compile(PATTERN);
-    private static final String LINE = "@prefix foo <http://foo> ." + System.currentTimeMillis();
-    @Mock private RegexMatcherFactory matcherFactory;
-    @Mock private PrefixParser prefixParser;
-    @Mock private RegexMatcher matcher;
-    private DirectiveParser directiveParser;
+public final class DirectiveParserImpl implements DirectiveParser {
+    private static final Pattern PATTERN =  compile("\\p{Blank}*(@prefix)|(@base).*");
+    private final RegexMatcherFactory regexFactory;
+    private final PrefixParser prefixParser;
 
-    @Before
-    public void create() {
-        directiveParser = new DirectiveParserImpl(matcherFactory, prefixParser);
+    public DirectiveParserImpl(RegexMatcherFactory newMatcherFactory, PrefixParser newPrefixParser) {
+        checkNotNull(newMatcherFactory, newPrefixParser);
+        regexFactory = newMatcherFactory;
+        prefixParser = newPrefixParser;
     }
 
-    @Test
-    public void classProperties() {
-        hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAM_NAMES);
-    }
-
-    @Test
-    public void methodProperties() {
-        checkMethodNullAssertions(directiveParser, "handleDirective", new ParameterDefinition(new String[]{"line"},
-            new Class[]{CharSequence.class}));
-    }
-
-    @Test
-    public void validPrefix() throws Exception {
-        expect(matcherFactory.createMatcher(eqPattern(DIRECTIVE_REGEX), eq(LINE))).andReturn(matcher);
-        expect(matcher.matches()).andReturn(true);
-        expect(prefixParser.handlePrefix(LINE)).andReturn(true);
-        replayAll();
-        final boolean matched = directiveParser.handleDirective(LINE);
-        verifyAll();
-        assertThat("Directive should have matched", matched);
+    public boolean handleDirective(CharSequence line) {
+        checkNotNull(line);
+        final RegexMatcher regexMatcher = regexFactory.createMatcher(PATTERN, line);
+        if (regexMatcher.matches()) {
+            return prefixParser.handlePrefix(line);
+        } else {
+            return false;
+        }
     }
 }
