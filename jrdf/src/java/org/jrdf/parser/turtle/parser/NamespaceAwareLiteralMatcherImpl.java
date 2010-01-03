@@ -57,61 +57,79 @@
  *
  */
 
-package org.jrdf.parser.n3.parser;
+package org.jrdf.parser.turtle.parser;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.parser.ParseException;
-import static org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps.OBJECT_REGEX;
-import static org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps.PREDICATE_REGEX;
-import static org.jrdf.parser.n3.parser.NamespaceAwareNodeMaps.SUBJECT_REGEX;
-import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.RegexTripleParser;
-import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.NamespaceListener;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
-public class NamespaceAwareTripleParser implements TripleParser {
-    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(<(.+?)>|((.+?):(.+?))|_:(.+?))\\p{Blank}+" +
-        "(<(.+?)>|((.+?):(.+?)))\\p{Blank}+" +
-        "(<(.+?)>|((.+?):(.+?))|_:(.+?)|(.+?))\\p{Blank}*\\.\\p{Blank}*");
-    private static final int SUBJECT_GROUP = 1;
-    private static final int PREDICATE_GROUP = 7;
-    private static final int OBJECT_GROUP = 12;
-    private final RegexMatcherFactory regexMatcherFactory;
-    private final BlankNodeParser blankNodeParser;
-    private final RegexTripleParser tripleParser;
+public final class NamespaceAwareLiteralMatcherImpl implements LiteralMatcher, Serializable {
+    private static final long serialVersionUID = -1198268919417815649L;
+    private static final int LITERAL_VALUES_LENGTH = 3;
+    private Pattern pattern = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
+        "(" +
+        "\\@(\\p{Lower}[\\-\\p{Alnum}]*)?|" +
+        "\\^\\^\\<([\\x20-\\x7E]+)\\>|" +
+        "\\^\\^(\\p{Alpha}[\\x20-\\x7E]*?):((\\p{Alpha}[\\x20-\\x7E]*)?)" +
+        ")*\\p{Blank}*");
+    private static final int LITERAL_INDEX = 1;
+    private static final int LANGUAGE_INDEX = 3;
+    private static final int DATATYPE_URI_INDEX = 4;
+    private static final int DATATYPE_PREFIX_INDEX = 5;
+    private static final int DATATYPE_LOCAL_NAME_INDEX = 6;
+    private RegexMatcherFactory regexFactory;
+    private NTripleUtil nTripleUtil;
+    private NamespaceListener listener;
 
-    public NamespaceAwareTripleParser(final RegexMatcherFactory newRegexFactory,
-        final BlankNodeParser newBlankNodeParser, final RegexTripleParser newTripleParser) {
-        checkNotNull(newRegexFactory, newBlankNodeParser, newTripleParser);
-        regexMatcherFactory = newRegexFactory;
-        blankNodeParser = newBlankNodeParser;
-        tripleParser = newTripleParser;
+    private NamespaceAwareLiteralMatcherImpl() {
     }
 
-    // This is a duplicate with TripleParserImpl - but it will stop being a duplicate when all the features of N3 are
-    // implemented (such as blank nodes, short hand for predicates, etc).
-    public Triple parseTriple(final CharSequence line) {
-        try {
-            final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
-            if (regexMatcher.matches()) {
-                final RegexMatcher matcher1 = tripleParser.createMatcher(regexMatcher, SUBJECT_REGEX, SUBJECT_GROUP);
-                final RegexMatcher matcher2 = tripleParser.createMatcher(regexMatcher, PREDICATE_REGEX,
-                    PREDICATE_GROUP);
-                final RegexMatcher matcher3 = tripleParser.createMatcher(regexMatcher, OBJECT_REGEX, OBJECT_GROUP);
-                return tripleParser.parseTripleLine(matcher1, matcher2, matcher3);
-            }
-            return null;
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+    public NamespaceAwareLiteralMatcherImpl(RegexMatcherFactory newRegexFactory, NTripleUtil newNTripleUtil,
+        NamespaceListener newListener) {
+        checkNotNull(newRegexFactory, newNTripleUtil);
+        regexFactory = newRegexFactory;
+        nTripleUtil = newNTripleUtil;
+        listener = newListener;
+    }
+
+    public void setPattern(String newPattern) {
+        pattern = Pattern.compile(newPattern);
+    }
+
+    public boolean matches(String s) {
+        checkNotEmptyString("s", s);
+        return regexFactory.createMatcher(pattern, s).matches();
+    }
+
+    public String[] parse(String s) {
+        checkNotEmptyString("s", s);
+        RegexMatcher matcher = regexFactory.createMatcher(pattern, s);
+        String[] values = new String[LITERAL_VALUES_LENGTH];
+        if (matcher.matches()) {
+            String ntriplesLiteral = matcher.group(LITERAL_INDEX);
+            values[0] = nTripleUtil.unescapeLiteral(ntriplesLiteral);
+            values[1] = matcher.group(LANGUAGE_INDEX);
+            values[2] = getDatatypeString(matcher);
         }
+        return values;
     }
 
-    public void clear() {
-        blankNodeParser.clear();
+    private String getDatatypeString(RegexMatcher matcher) {
+        String result = null;
+        final String prefix = matcher.group(DATATYPE_PREFIX_INDEX);
+        final String fullURI = matcher.group(DATATYPE_URI_INDEX);
+        if (fullURI != null) {
+            result = fullURI;
+        } else if (prefix != null) {
+            result = listener.getFullURI(prefix) + matcher.group(DATATYPE_LOCAL_NAME_INDEX);
+        }
+        return result;
     }
 }

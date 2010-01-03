@@ -57,65 +57,61 @@
  *
  */
 
-package org.jrdf.parser.n3.parser;
+package org.jrdf.parser.turtle.parser;
 
-import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.parser.ParseException;
+import static org.jrdf.parser.turtle.parser.NamespaceAwareNodeMaps.OBJECT_REGEX;
+import static org.jrdf.parser.turtle.parser.NamespaceAwareNodeMaps.PREDICATE_REGEX;
+import static org.jrdf.parser.turtle.parser.NamespaceAwareNodeMaps.SUBJECT_REGEX;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.LiteralParser;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
+import org.jrdf.parser.ntriples.parser.RegexTripleParser;
+import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.regex.Pattern;
-import static java.util.regex.Pattern.compile;
 
-public final class NamespaceAwareObjectParser implements ObjectParser {
-    private static final Pattern REGEX = compile(
-        "(<([\\x20-\\x7E]+?)>|((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))" +
-        "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
-    private static final int LINE_GROUP = 0;
-    private static final int URI_GROUP = 2;
-    private static final int NS_LOCAL_NAME_GROUP = 3;
-    private static final int BLANK_NODE_GROUP = 6;
-    private static final int LITERAL_GROUP = 7;
-    private final RegexMatcherFactory factory;
-    private final NamespaceAwareURIReferenceParser uriReferenceParser;
+public class NamespaceAwareTripleParser implements TripleParser {
+    private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
+        "(<(.+?)>|((.+?):(.+?))|_:(.+?))\\p{Blank}+" +
+        "(<(.+?)>|((.+?):(.+?)))\\p{Blank}+" +
+        "(<(.+?)>|((.+?):(.+?))|_:(.+?)|(.+?))\\p{Blank}*\\.\\p{Blank}*");
+    private static final int SUBJECT_GROUP = 1;
+    private static final int PREDICATE_GROUP = 7;
+    private static final int OBJECT_GROUP = 12;
+    private final RegexMatcherFactory regexMatcherFactory;
     private final BlankNodeParser blankNodeParser;
-    private final LiteralParser literalParser;
+    private final RegexTripleParser tripleParser;
 
-    public NamespaceAwareObjectParser(final RegexMatcherFactory newFactory,
-        final NamespaceAwareURIReferenceParser newUriReferenceParser, final BlankNodeParser newBlankNodeParser,
-        final LiteralParser newLiteralParser) {
-        checkNotNull(newFactory, newUriReferenceParser, newBlankNodeParser, newLiteralParser);
-        factory = newFactory;
-        uriReferenceParser = newUriReferenceParser;
+    public NamespaceAwareTripleParser(final RegexMatcherFactory newRegexFactory,
+        final BlankNodeParser newBlankNodeParser, final RegexTripleParser newTripleParser) {
+        checkNotNull(newRegexFactory, newBlankNodeParser, newTripleParser);
+        regexMatcherFactory = newRegexFactory;
         blankNodeParser = newBlankNodeParser;
-        literalParser = newLiteralParser;
+        tripleParser = newTripleParser;
     }
 
-    public ObjectNode parseNode(final CharSequence line) throws ParseException {
-        checkNotNull(line);
-        final RegexMatcher regexMatcher = factory.createMatcher(REGEX, line);
-        if (regexMatcher.matches()) {
-            return parseObject(regexMatcher);
-        } else {
-            throw new IllegalArgumentException("Couldn't match line: " + line);
+    // This is a duplicate with TripleParserImpl - but it will stop being a duplicate when all the features of N3 are
+    // implemented (such as blank nodes, short hand for predicates, etc).
+    public Triple parseTriple(final CharSequence line) {
+        try {
+            final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
+            if (regexMatcher.matches()) {
+                final RegexMatcher matcher1 = tripleParser.createMatcher(regexMatcher, SUBJECT_REGEX, SUBJECT_GROUP);
+                final RegexMatcher matcher2 = tripleParser.createMatcher(regexMatcher, PREDICATE_REGEX,
+                    PREDICATE_GROUP);
+                final RegexMatcher matcher3 = tripleParser.createMatcher(regexMatcher, OBJECT_REGEX, OBJECT_GROUP);
+                return tripleParser.parseTripleLine(matcher1, matcher2, matcher3);
+            }
+            return null;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private ObjectNode parseObject(final RegexMatcher matcher) throws ParseException {
-        if (matcher.group(URI_GROUP) != null) {
-            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
-        } else if (matcher.group(NS_LOCAL_NAME_GROUP) != null) {
-            return uriReferenceParser.parseURIReferenceWithNamespace(matcher.group(NS_LOCAL_NAME_GROUP));
-        } else if (matcher.group(BLANK_NODE_GROUP) != null) {
-            return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
-        } else if (matcher.group(LITERAL_GROUP) != null) {
-            return literalParser.parseLiteral(matcher.group(LITERAL_GROUP));
-        } else {
-            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
-        }
+    public void clear() {
+        blankNodeParser.clear();
     }
 }

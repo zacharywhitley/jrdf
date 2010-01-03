@@ -57,8 +57,10 @@
  *
  */
 
-package org.jrdf.parser.n3.parser;
+package org.jrdf.parser.turtle.parser;
 
-public interface PrefixParser {
-    boolean handlePrefix(CharSequence line);
+import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
+
+public interface NamespaceAwareNodeParsersFactory extends NodeParsersFactory {
+    NamespaceAwareURIReferenceParser getUriReferenceParser();
 }
