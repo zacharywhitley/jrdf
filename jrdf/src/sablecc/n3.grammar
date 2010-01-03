@@ -26,8 +26,6 @@ Helpers
 
 States
   def,      /* default state */
-  pre,      /* prefix */
-  bas,      /* base */
   qesc,     /* escaping character in quoted literal with '\' */
   dbqesc,   /* escaping character in double quoted literal with '\' */
   qlit,     /* quoted literal */
@@ -43,7 +41,6 @@ Tokens
   {def}                comma            = ',';
   {def}                plus             = '+';
   {def}                minus            = '-';
-
   {def}                true_literal     = 'true';
   {def}                false_literal    = 'false';
 
@@ -137,10 +134,14 @@ Productions
   qname_element =
       {qname} [ncname_prefix]:identifier colon [nc_name]:identifier;
 
-  literal =
+/**  literal =
     {rdf_literal} rdf_literal |
     {numeric_literal} numeric_literal |
     {boolean_literal} boolean_literal;
+**/
+
+  literal =
+    {rdf_literal} rdf_literal;
 
   rdf_literal =
     {untyped_literal} literal_value |
