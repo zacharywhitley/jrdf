@@ -5,13 +5,23 @@
 
     <target name="gen-sparql-parser" depends="-sparql-parser-uptodate" unless="sparql-parser-uptodate">
         <sablecc.macro grammar.file="sparql.grammar"/>
+    </target>
+
+    <target name="gen-n3-parser" depends="-n3-parser-uptodate" unless="n3-parser-uptodate">
         <sablecc.macro grammar.file="n3.grammar"/>
     </target>
 
     <target name="-sparql-parser-uptodate">
         <uptodate property="sparql-parser-uptodate"
                   targetfile="${gen.src.dir}/org/jrdf/sparql/parser/analysis/DepthFirstAdapter.java">
-            <srcfiles dir="${sablecc.src.dir}" includes="sparql.grammar, n3.grammar"/>
+            <srcfiles dir="${sablecc.src.dir}" includes="sparql.grammar"/>
+        </uptodate>
+    </target>
+    
+    <target name="-n3-parser-uptodate">
+        <uptodate property="n3-parser-uptodate"
+                  targetfile="${gen.src.dir}/org/jrdf/parser/n3/analysis/DepthFirstAdapter.java">
+            <srcfiles dir="${sablecc.src.dir}" includes="n3.grammar"/>
         </uptodate>
     </target>
 

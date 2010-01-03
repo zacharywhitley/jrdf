@@ -28,13 +28,22 @@ States
   def,      /* default state */
   pre,      /* prefix */
   bas,      /* base */
-  com,      /* comment */
+  qesc,     /* escaping character in quoted literal with '\' */
+  dbqesc,   /* escaping character in double quoted literal with '\' */
+  qlit,     /* quoted literal */
+  dbqlit,   /* double quoted literal */
+  lang,     /* language tag after literal */
+  com;      /* comment */
 
 Tokens
   {def}                prefix           = '@prefix';
+  {def}                colon            = ':';
   {def}                base             = '@base';
   {def}                verb_a           = 'a';
   {def}                comma            = ',';
+  {def}                plus             = '+';
+  {def}                minus            = '-';
+
   {def}                true_literal     = 'true';
   {def}                false_literal    = 'false';
 
@@ -45,6 +54,8 @@ Tokens
 
   {def}                           node_seperator  = ';';
   {def}                           stmt_seperator  = '.';
+
+  {def}                           prefix_name    = letter (letter | digit | '_' | '$' | '?' )*;
 
   {def}                           identifier     = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           resource       = '<' urlchar* '>';
@@ -93,7 +104,7 @@ Productions
 
   verb =
     {predicate_verb} predicate |
-    {a_verb} a_verb;
+    {a_verb} verb_a;
 
   object_list =
     object more_objects*;
@@ -102,22 +113,22 @@ Productions
     comma object;
 
   verb_object_list =
-    node_seperator verb object_list* node_seperator?;
+    node_seperator verb object_list*;
 
   subject =
     {subject_resource} iri_ref_or_prefixed_name |
-    {subject_blank} blank;
+    {subject_blank} blank_node;
 
   predicate =
     {predicate_resource} iri_ref_or_prefixed_name;
 
   object =
     {object_resource} iri_ref_or_prefixed_name |
-    {object_blank} blank |
+    {object_blank} blank_node |
     {object_literal} literal;
 
-  blank =
-    {empty_blank_node} = empty_node;
+  blank_node =
+    {empty_blank_node} empty_node;
 
   iri_ref_or_prefixed_name =
     {iri_ref} resource |
