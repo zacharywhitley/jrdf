@@ -89,12 +89,12 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 
-public class N3EventReaderFactory implements RDFEventReaderFactory {
+public class TurtleEventReaderFactory implements RDFEventReaderFactory {
     private static final RegexMatcherFactory REGEX_MATCHER_FACTORY = new RegexMatcherFactoryImpl();
     private final NamespaceListener namespaceListener;
     private final MapFactory mapFactory;
 
-    public N3EventReaderFactory(final MapFactory newMapFactory, final NamespaceListener newNamespaceListener) {
+    public TurtleEventReaderFactory(final MapFactory newMapFactory, final NamespaceListener newNamespaceListener) {
         mapFactory = newMapFactory;
         namespaceListener = newNamespaceListener;
     }
@@ -102,14 +102,14 @@ public class N3EventReaderFactory implements RDFEventReaderFactory {
     public RDFEventReader createRDFEventReader(final InputStream stream, final URI baseURI, final Graph graph) {
         final TriplesParser triplesParser = new TriplesParserImpl(init(graph));
         final PrefixParser prefixParser = new PrefixParserImpl(REGEX_MATCHER_FACTORY, namespaceListener);
-        final FormatParser parser = new N3FormatParser(triplesParser, prefixParser);
+        final FormatParser parser = new TurtleFormatParser(triplesParser, prefixParser);
         return new RDFEventReaderImpl(stream, baseURI, parser);
     }
 
     public RDFEventReader createRDFEventReader(final Reader reader, final URI baseURI, final Graph graph) {
         final TriplesParser triplesParser = new TriplesParserImpl(init(graph));
         final PrefixParser prefixParser = new PrefixParserImpl(REGEX_MATCHER_FACTORY, namespaceListener);
-        final FormatParser parser = new N3FormatParser(triplesParser, prefixParser);
+        final FormatParser parser = new TurtleFormatParser(triplesParser, prefixParser);
         return new RDFEventReaderImpl(reader, baseURI, parser);
     }
 
