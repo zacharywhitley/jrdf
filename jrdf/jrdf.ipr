@@ -99,6 +99,7 @@
       <entry name="?*.ftl" />
       <entry name="?*.sparql" />
       <entry name="?*.n3" />
+      <entry name="?*.zip" />
     </wildcardResourcePatterns>
   </component>
   <component name="CopyrightManager" default="default">

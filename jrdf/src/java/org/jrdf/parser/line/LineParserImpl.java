@@ -80,7 +80,12 @@ public class LineParserImpl implements LineParser {
     }
 
     public void parse(final InputStream in, final String baseURI) throws IOException, StatementHandlerException {
-        parse(new InputStreamReader(in), baseURI);
+        final InputStreamReader streamReader = new InputStreamReader(in);
+        try {
+            parse(streamReader, baseURI);
+        } finally {
+            streamReader.close();
+        }
     }
 
     public void parse(final Reader reader, final String baseURI) throws IOException, StatementHandlerException {

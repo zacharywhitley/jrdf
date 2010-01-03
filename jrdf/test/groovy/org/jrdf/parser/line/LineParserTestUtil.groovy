@@ -75,6 +75,8 @@ import org.jrdf.parser.line.LineHandler
 import org.jrdf.parser.line.LineParserImpl
 import org.jrdf.parser.ntriples.NTriplesParserFactory
 import org.jrdf.parser.n3.N3ParserFactory
+import java.util.zip.ZipFile
+import java.util.zip.ZipEntry
 
 class LineParserTestUtil {
 
@@ -83,7 +85,13 @@ class LineParserTestUtil {
 
     static InputStream getSampleData(Class clazz, String fileName) throws IOException {
         URL source = clazz.getClassLoader().getResource(fileName)
-        return source.openStream()
+        if (fileName.endsWith("zip")) {
+            def file = new ZipFile(new File(source.getFile()))
+            def entry = file.entries().nextElement()
+            return file.getInputStream(entry)
+        } else {
+            return source.openStream()
+        }
     }
 
     static Set<Triple> getTriplesWithReader(RDFEventReader eventReader) {
