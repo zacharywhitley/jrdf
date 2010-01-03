@@ -66,7 +66,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.parser.line.GraphLineParser;
 import org.jrdf.parser.line.LineHandler;
 import org.jrdf.parser.line.LineHandlerFactory;
-import org.jrdf.parser.turtle.N3ParserFactory;
+import org.jrdf.parser.turtle.TurtleParserFactory;
 import org.jrdf.parser.ntriples.NTriplesParserFactory;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 
@@ -82,7 +82,7 @@ import java.io.InputStream;
  */
 public final class RdfReader {
     private LineHandlerFactory ntriplesFactory = new NTriplesParserFactory();
-    private LineHandlerFactory n3Factory = new N3ParserFactory();
+    private LineHandlerFactory n3Factory = new TurtleParserFactory();
     private Graph graph = MemoryJRDFFactory.getFactory().getNewGraph();
     private MapFactory mapFactory = new MemMapFactory();
 

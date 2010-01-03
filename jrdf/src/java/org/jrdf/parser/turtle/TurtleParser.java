@@ -58,45 +58,38 @@
 
 package org.jrdf.parser.turtle;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleImpl;
-import org.jrdf.parser.line.FormatParser;
+import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.line.LineHandler;
 import org.jrdf.parser.line.TriplesParser;
 import org.jrdf.parser.ntriples.parser.CommentsParser;
-import org.jrdf.parser.ntriples.parser.CommentsParserImpl;
 import org.jrdf.parser.turtle.parser.PrefixParser;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-public class N3FormatParser implements FormatParser {
-    private final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-    private final CommentsParser commentsParser = new CommentsParserImpl(matcherFactory);
-    private final TriplesParser parser;
+public class TurtleParser implements LineHandler {
+    private final CommentsParser commentsParser;
     private final PrefixParser prefixParser;
-    private Triple currentTriple;
+    private final TriplesParser triplesParser;
 
-    public N3FormatParser(final TriplesParser newParser, final PrefixParser newPrefixParser) {
-        parser = newParser;
+    public TurtleParser(final CommentsParser newCommentsParser, final PrefixParser newPrefixParser,
+        final TriplesParser newTriplesParser) {
+        commentsParser = newCommentsParser;
+        triplesParser = newTriplesParser;
         prefixParser = newPrefixParser;
-        parser.setStatementHandler(this);
     }
 
-    public void parseLine(final CharSequence line) {
+    public void setStatementHandler(final StatementHandler newStatementHandler) {
+        triplesParser.setStatementHandler(newStatementHandler);
+    }
+
+    public void handleLine(final CharSequence line) throws StatementHandlerException {
         if (!commentsParser.handleComment(line)) {
             if (!prefixParser.handlePrefix(line)) {
-                parser.handleTriple(line);
+                triplesParser.handleTriple(line);
             }
         }
     }
 
-    public Triple getTriple() {
-        return currentTriple;
-    }
-
-    public void handleStatement(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object) {
-        currentTriple = new TripleImpl(subject, predicate, object);
+    public void clear() {
+        triplesParser.clear();
     }
 }

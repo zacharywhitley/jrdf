@@ -58,40 +58,45 @@
 
 package org.jrdf.parser.turtle;
 
-import org.jrdf.collection.MapFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.line.LineHandler;
-import org.jrdf.parser.line.LineHandlerFactory;
-import org.jrdf.parser.line.TriplesParserImpl;
-import org.jrdf.parser.mem.MemNamespaceListener;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleImpl;
+import org.jrdf.parser.line.FormatParser;
+import org.jrdf.parser.line.TriplesParser;
+import org.jrdf.parser.ntriples.parser.CommentsParser;
 import org.jrdf.parser.ntriples.parser.CommentsParserImpl;
-import org.jrdf.parser.ntriples.parser.NodeMaps;
-import org.jrdf.parser.ntriples.parser.RegexTripleParser;
-import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
-import org.jrdf.parser.ntriples.parser.TripleParser;
-import org.jrdf.parser.turtle.parser.NamespaceAwareNodeMaps;
-import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactory;
-import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactoryImpl;
-import org.jrdf.parser.turtle.parser.NamespaceAwareTripleParser;
-import org.jrdf.parser.turtle.parser.PrefixParserImpl;
+import org.jrdf.parser.turtle.parser.PrefixParser;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-public class N3ParserFactory implements LineHandlerFactory {
-    public LineHandler createParser(final Graph newGraph, final MapFactory mapFactory) {
-        final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        final NamespaceListener listener = new MemNamespaceListener();
-        final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph,
-            mapFactory, matcherFactory, listener);
-        final NodeMaps nodeMaps = new NamespaceAwareNodeMaps(parsersFactory.getUriReferenceParser(),
-            parsersFactory.getBlankNodeParser(), parsersFactory.getLiteralParser());
-        final RegexTripleParser parser = new RegexTripleParserImpl(matcherFactory, newGraph.getTripleFactory(),
-            nodeMaps);
-        final TripleParser tripleParser = new NamespaceAwareTripleParser(matcherFactory,
-            parsersFactory.getBlankNodeParser(), parser);
-        return new N3Parser(new CommentsParserImpl(matcherFactory),
-            new PrefixParserImpl(matcherFactory, listener),
-            new TriplesParserImpl(tripleParser));
+public class TurtleFormatParser implements FormatParser {
+    private final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+    private final CommentsParser commentsParser = new CommentsParserImpl(matcherFactory);
+    private final TriplesParser parser;
+    private final PrefixParser prefixParser;
+    private Triple currentTriple;
+
+    public TurtleFormatParser(final TriplesParser newParser, final PrefixParser newPrefixParser) {
+        parser = newParser;
+        prefixParser = newPrefixParser;
+        parser.setStatementHandler(this);
+    }
+
+    public void parseLine(final CharSequence line) {
+        if (!commentsParser.handleComment(line)) {
+            if (!prefixParser.handlePrefix(line)) {
+                parser.handleTriple(line);
+            }
+        }
+    }
+
+    public Triple getTriple() {
+        return currentTriple;
+    }
+
+    public void handleStatement(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object) {
+        currentTriple = new TripleImpl(subject, predicate, object);
     }
 }
