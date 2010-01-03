@@ -39,6 +39,7 @@ Tokens
   {def}                base             = '@base';
   {def}                verb_a           = 'a';
   {def}                comma            = ',';
+  {def}                underscore       = '_';
   {def}                plus             = '+';
   {def}                minus            = '-';
   {def}                true_literal     = 'true';
@@ -125,6 +126,7 @@ Productions
     {object_literal} literal;
 
   blank_node =
+    {node_id} underscore identifier |
     {empty_blank_node} empty_node;
 
   iri_ref_or_prefixed_name =
@@ -134,14 +136,10 @@ Productions
   qname_element =
       {qname} [ncname_prefix]:identifier colon [nc_name]:identifier;
 
-/**  literal =
+  literal =
     {rdf_literal} rdf_literal |
     {numeric_literal} numeric_literal |
     {boolean_literal} boolean_literal;
-**/
-
-  literal =
-    {rdf_literal} rdf_literal;
 
   rdf_literal =
     {untyped_literal} literal_value |
