@@ -105,7 +105,7 @@ public class QueryModelImpl implements QueryModel {
         rdfReader = new RdfReader(graph, mapFactory);
         if (fileName.endsWith(".nt")) {
             rdfReader.parseNTriples(url.openStream());
-        } else if (fileName.endsWith(".n3")) {
+        } else if (fileName.endsWith(".turtle")) {
             rdfReader.parseN3(url.openStream());
         } else if (fileName.endsWith(".rdf")) {
             rdfReader.parseRdfXml(url.openStream());

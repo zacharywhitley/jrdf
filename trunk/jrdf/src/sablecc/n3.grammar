@@ -1,4 +1,4 @@
-Package org.jrdf.parser.n3.parser;
+Package org.jrdf.parser.turtle.parser;
 
 /*
  * N3 SableCC grammar.

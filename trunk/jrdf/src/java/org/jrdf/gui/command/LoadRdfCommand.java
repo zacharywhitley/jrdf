@@ -91,7 +91,7 @@ public class LoadRdfCommand extends ApplicationWindowAwareCommand {
 
     protected void doExecuteCommand() {
         JFrame control = getContext().getWindow().getControl();
-        File file = showFileChooser(control, asList("rdf", "nt", "n3"), "Ok", null);
+        File file = showFileChooser(control, asList("rdf", "nt", "turtle"), "Ok", null);
         if (file != null) {
             tryLoadModel(file).execute();
         }
