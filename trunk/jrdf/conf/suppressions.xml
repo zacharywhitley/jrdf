@@ -29,8 +29,8 @@
     <suppress checks="ClassDataAbstractionCoupling" files="ExpressionSimplifierImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesEventReaderFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesParserFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="N3EventReaderFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="N3ParserFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="TurtleEventReaderFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="TurtleParserFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="NumericExpressionAnalyserImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>

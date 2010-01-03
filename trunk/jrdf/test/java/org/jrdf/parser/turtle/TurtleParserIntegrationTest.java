@@ -57,44 +57,37 @@
  *
  */
 
-package org.jrdf.parser.n3;
+package org.jrdf.parser.turtle;
 
-import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.NamespaceListenerImpl;
-import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
-import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.RDFEventReaderFactory;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
-import static org.jrdf.parser.line.LineParserTestUtil.getTriplesWithReader;
+import static org.jrdf.parser.line.LineParserTestUtil.parseN3File;
 import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
+import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
+import org.junit.Test;
 
 import java.io.InputStream;
-import static java.net.URI.create;
 import java.util.Set;
 
-public class N3EventReaderIntegrationTest extends TestCase {
-    private static final String TEST_DATA = "org/jrdf/parser/n3/test.n3";
+public class TurtleParserIntegrationTest {
+    private static final String GOOD_NTRIPLE_FILE = "org/jrdf/parser/turtle/test.n3";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
-    private static final NamespaceListener LISTENER = new NamespaceListenerImpl(CREATOR);
-    private static final RDFEventReaderFactory N3_RDF_INPUT_FACTORY = new N3EventReaderFactory(CREATOR, LISTENER);
 
-    public void testParseFile() throws Exception {
-        final InputStream input = getSampleData(getClass(), TEST_DATA);
-        final RDFEventReader eventReader = N3_RDF_INPUT_FACTORY.createRDFEventReader(input, create("foo"), NEW_GRAPH);
+    @Test
+    public void successfullyParseNTriplesFile() throws Exception {
+        final InputStream input = getSampleData(getClass(), GOOD_NTRIPLE_FILE);
         try {
             final Set<Triple> expectedTriples = standardTestWithN3();
-            final Set<Triple> actualResults = getTriplesWithReader(eventReader);
+            final Set<Triple> actualResults = parseN3File(input, NEW_GRAPH, CREATOR);
             checkGraph(expectedTriples, actualResults);
         } finally {
-            eventReader.close();
+            input.close();
         }
     }
 }

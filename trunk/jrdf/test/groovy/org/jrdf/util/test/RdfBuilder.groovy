@@ -67,10 +67,10 @@ import org.jrdf.graph.PredicateNode
 import org.jrdf.graph.SubjectNode
 import org.jrdf.parser.NamespaceListener
 import org.jrdf.parser.mem.MemNamespaceListener
-import org.jrdf.parser.n3.parser.NamespaceAwareNodeParsersFactoryImpl
+import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactoryImpl
 import org.jrdf.parser.ntriples.parser.ObjectParser
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl
-import org.jrdf.parser.n3.parser.NamespaceAwareObjectParser
+import org.jrdf.parser.turtle.parser.NamespaceAwareObjectParser
 
 class RdfBuilder extends BuilderSupport {
     private final Graph graph

@@ -68,15 +68,16 @@ import org.jrdf.graph.Triple
 import org.jrdf.parser.GraphStatementHandler
 import org.jrdf.parser.ParserBlankNodeFactory
 import org.jrdf.parser.RDFEventReader
-import org.jrdf.parser.n3.N3ParserFactory
+import org.jrdf.parser.turtle.TurtleParserFactory
 import org.jrdf.util.test.RdfBuilder
 import org.jrdf.collection.MapFactory
 import org.jrdf.parser.line.LineHandler
 import org.jrdf.parser.line.LineParserImpl
 import org.jrdf.parser.ntriples.NTriplesParserFactory
-import org.jrdf.parser.n3.N3ParserFactory
+import org.jrdf.parser.turtle.TurtleParserFactory
 import java.util.zip.ZipFile
 import java.util.zip.ZipEntry
+import org.jrdf.parser.turtle.TurtleParserFactory
 
 class LineParserTestUtil {
 
@@ -109,7 +110,7 @@ class LineParserTestUtil {
     }
 
     static Set<Triple> parseN3File(InputStream input, Graph graph, MapFactory mapFactory) {
-        def parserFactory = new N3ParserFactory()
+        def parserFactory = new TurtleParserFactory()
         def ntriplesParser = parserFactory.createParser(graph, mapFactory)
         return parseFile(ntriplesParser, input, graph)
     }
