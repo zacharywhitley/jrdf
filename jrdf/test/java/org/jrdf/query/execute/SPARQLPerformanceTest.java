@@ -72,7 +72,7 @@ import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.line.GraphLineParser;
 import org.jrdf.parser.line.LineHandlerFactory;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
-import org.jrdf.parser.n3.N3ParserFactory;
+import org.jrdf.parser.turtle.TurtleParserFactory;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
@@ -96,7 +96,7 @@ import java.util.Map;
 public class SPARQLPerformanceTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-    private static final LineHandlerFactory PARSER_FACTORY = new N3ParserFactory();
+    private static final LineHandlerFactory PARSER_FACTORY = new TurtleParserFactory();
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
     private static final Map<String, Integer> FILE_RESULT_MAP = new LinkedHashMap<String, Integer>() {
         {
