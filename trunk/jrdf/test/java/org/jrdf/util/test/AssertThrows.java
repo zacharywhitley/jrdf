@@ -59,8 +59,10 @@
 
 package org.jrdf.util.test;
 
+import groovy.lang.Closure;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
+import org.codehaus.groovy.runtime.InvokerInvocationException;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -76,6 +78,18 @@ public class AssertThrows {
     private AssertThrows() {
     }
 
+    public static void assertThrows(Class exceptionClass, String message, final Closure closure) {
+        assertThrows(exceptionClass, message, new Block() {
+            public void execute() throws Throwable {
+                try {
+                    closure.call();
+                } catch (InvokerInvocationException e) {
+                    throw e.getCause();
+                }
+            }
+        });
+    }
+
     public static void assertThrows(Class exceptionClass, String message, Block block) {
         try {
             block.execute();
@@ -86,6 +100,18 @@ public class AssertThrows {
             checkExceptionClass(exceptionClass, t);
             Assert.assertEquals(message, t.getMessage());
         }
+    }
+
+    public static void assertThrows(Class exceptionClass, final Closure closure) {
+        assertThrows(exceptionClass, new Block() {
+            public void execute() throws Throwable {
+                try {
+                    closure.call();
+                } catch (InvokerInvocationException e) {
+                    throw e.getCause();
+                }
+            }
+        });
     }
 
     public static void assertThrows(Class exceptionClass, Block block) {

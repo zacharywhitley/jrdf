@@ -58,42 +58,6 @@
 
 package org.jrdf.parser.turtle.parser;
 
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
-import java.util.regex.Pattern;
-import static java.util.regex.Pattern.compile;
-
-public final class DirectiveParserImpl implements DirectiveParser {
-    private static final Pattern PATTERN =  compile("\\p{Blank}*(@prefix)|(@base).*");
-    private static final int PREFIX_GROUP = 1;
-    private static final int BASE_GROUP = 2;
-    private final RegexMatcherFactory regexFactory;
-    private final PrefixParser prefixParser;
-    private final BaseParser baseParser;
-
-    public DirectiveParserImpl(RegexMatcherFactory newMatcherFactory, PrefixParser newPrefixParser,
-        BaseParser newBaseParser) {
-        checkNotNull(newMatcherFactory, newPrefixParser, newBaseParser);
-        regexFactory = newMatcherFactory;
-        prefixParser = newPrefixParser;
-        baseParser = newBaseParser;
-    }
-
-    public boolean handleDirective(CharSequence line) {
-        checkNotNull(line);
-        final RegexMatcher regexMatcher = regexFactory.createMatcher(PATTERN, line);
-        return regexMatcher.matches() && parseDirective(line, regexMatcher);
-    }
-
-    private boolean parseDirective(CharSequence line, RegexMatcher regexMatcher) {
-        if (regexMatcher.group(PREFIX_GROUP) != null) {
-            return prefixParser.handlePrefix(line);
-        } else if (regexMatcher.group(BASE_GROUP) != null) {
-            return baseParser.handleBase(line);
-        } else {
-            throw new IllegalArgumentException("Couldn't match line: " + line);
-        }
-    }
+public interface BaseParser {
+    boolean handleBase(CharSequence line);
 }
