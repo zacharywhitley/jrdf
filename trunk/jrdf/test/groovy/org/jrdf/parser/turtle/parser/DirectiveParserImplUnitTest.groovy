@@ -78,24 +78,29 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.regex.Pattern
 import org.jrdf.util.test.AssertThrows
 import static org.jrdf.util.test.AssertThrows.assertThrows
-import org.jrdf.util.test.AssertThrows.Block;
+import org.jrdf.util.test.AssertThrows.Block
+import org.jrdf.util.boundary.RegexMatcherImpl
+import java.util.regex.Matcher;
 
 @RunWith(PowerMockRunner.class)
 public class DirectiveParserImplUnitTest {
+
     private static final Class<?> TARGET_INTERFACE = DirectiveParser.class
     private static final Class<?> TEST_CLASS = DirectiveParserImpl.class
     private static final Class[] PARAM_TYPES = [RegexMatcherFactory.class, PrefixParser.class, BaseParser.class]
     private static final String[] PARAM_NAMES = ["regexFactory", "prefixParser"]
-    private static final String PATTERN =  "\\p{Blank}*(@prefix)|(@base).*"
+    private static final String PATTERN =  "\\p{Blank}*(@prefix.*)|(@base.*)|(@.*)"
     private static final Pattern DIRECTIVE_REGEX = Pattern.compile(PATTERN)
-    private static final String LINE = "@prefix foo <http://foo> ." + System.currentTimeMillis()
+    private static final String VALID_PREFIX = "@prefix foo <http://foo> ."
+    private static final String VALID_BASE = "@base <http://foo> ."
+    private static final String INVALID_DIRECTIVE = "@justwrong ."
     private static final int PREFIX_GROUP = 1
     private static final int BASE_GROUP = 2
     @Mock private RegexMatcherFactory matcherFactory
     @Mock private PrefixParser prefixParser
-    @Mock private RegexMatcher matcher
     @Mock private BaseParser baseParser
     private DirectiveParser directiveParser
+    private RegexMatcher matcher
 
     @Before
     def void create() {
@@ -115,40 +120,36 @@ public class DirectiveParserImplUnitTest {
 
     @Test
     def void validPrefix() throws Exception {
+        matcher = new RegexMatcherImpl(new Matcher(DIRECTIVE_REGEX, VALID_PREFIX))
         def prefixExpectations = {
-            expect(prefixParser.handlePrefix(LINE)).andReturn(true)
-            expect(matcher.group(PREFIX_GROUP)).andReturn("hello")
+            expect(prefixParser.handlePrefix(VALID_PREFIX)).andReturn(true)
         }
-        checkValidDirective(prefixExpectations)
+        checkValidDirective(prefixExpectations, VALID_PREFIX)
     }
 
     @Test
     def void validBase() throws Exception {
+        matcher = new RegexMatcherImpl(new Matcher(DIRECTIVE_REGEX, VALID_BASE))
         def baseExpectations = {
-            expect(matcher.group(PREFIX_GROUP)).andReturn(null)
-            expect(matcher.group(BASE_GROUP)).andReturn("hello")
-            expect(baseParser.handleBase(LINE)).andReturn(true)
+            expect(baseParser.handleBase(VALID_BASE)).andReturn(true)
         }
-        checkValidDirective(baseExpectations)
+        checkValidDirective(baseExpectations, VALID_BASE)
     }
 
     @Test
     def void illegalGroup() throws Exception {
-        expect(matcherFactory.createMatcher(eqPattern(DIRECTIVE_REGEX), eq(LINE))).andReturn(matcher)
-        expect(matcher.matches()).andReturn(true)
-        expect(matcher.group(PREFIX_GROUP)).andReturn(null)
-        expect(matcher.group(BASE_GROUP)).andReturn(null)
+        matcher = new RegexMatcherImpl(new Matcher(DIRECTIVE_REGEX, INVALID_DIRECTIVE))
+        expect(matcherFactory.createMatcher(eqPattern(DIRECTIVE_REGEX), eq(INVALID_DIRECTIVE))).andReturn(matcher)
         replayAll()
-        assertThrows(IllegalArgumentException.class, { directiveParser.handleDirective(LINE) })
+        assertThrows(IllegalArgumentException.class, { directiveParser.handleDirective(INVALID_DIRECTIVE) })
         verifyAll()
     }
 
-    def checkValidDirective(final Closure matchedExpectations) {
-        expect(matcherFactory.createMatcher(eqPattern(DIRECTIVE_REGEX), eq(LINE))).andReturn(matcher)
-        expect(matcher.matches()).andReturn(true)
+    def checkValidDirective(Closure matchedExpectations, CharSequence line) {
+        expect(matcherFactory.createMatcher(eqPattern(DIRECTIVE_REGEX), eq(line))).andReturn(matcher)
         matchedExpectations()
         replayAll()
-        final boolean matched = directiveParser.handleDirective(LINE)
+        final boolean matched = directiveParser.handleDirective(line)
         verifyAll()
         assertThat("Directive should have matched", matched)
     }

@@ -66,7 +66,7 @@ import java.util.regex.Pattern;
 import static java.util.regex.Pattern.compile;
 
 public final class DirectiveParserImpl implements DirectiveParser {
-    private static final Pattern PATTERN =  compile("\\p{Blank}*(@prefix)|(@base).*");
+    private static final Pattern PATTERN =  compile("\\p{Blank}*(@prefix.*)|(@base.*)|(@.*)");
     private static final int PREFIX_GROUP = 1;
     private static final int BASE_GROUP = 2;
     private final RegexMatcherFactory regexFactory;
