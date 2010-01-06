@@ -59,12 +59,13 @@
 package org.jrdf.parser.turtle;
 
 import org.jrdf.collection.MapFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.parser.NamespaceListener;
+import org.jrdf.parser.NamespaceListenerImpl;
 import org.jrdf.parser.line.LineHandler;
 import org.jrdf.parser.line.LineHandlerFactory;
 import org.jrdf.parser.line.TriplesParserImpl;
-import org.jrdf.parser.mem.MemNamespaceListener;
 import org.jrdf.parser.ntriples.parser.CommentsParserImpl;
 import org.jrdf.parser.ntriples.parser.NodeMaps;
 import org.jrdf.parser.ntriples.parser.RegexTripleParser;
@@ -81,7 +82,7 @@ import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 public class TurtleParserFactory implements LineHandlerFactory {
     public LineHandler createParser(final Graph newGraph, final MapFactory mapFactory) {
         final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        final NamespaceListener listener = new MemNamespaceListener();
+        final NamespaceListener listener = new NamespaceListenerImpl(new MemMapFactory());
         final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph,
             mapFactory, matcherFactory, listener);
         final NodeMaps nodeMaps = new NamespaceAwareNodeMaps(parsersFactory.getUriReferenceParser(),
