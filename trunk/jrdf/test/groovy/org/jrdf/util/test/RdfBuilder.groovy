@@ -66,11 +66,11 @@ import org.jrdf.graph.ObjectNode
 import org.jrdf.graph.PredicateNode
 import org.jrdf.graph.SubjectNode
 import org.jrdf.parser.NamespaceListener
-import org.jrdf.parser.mem.MemNamespaceListener
 import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactoryImpl
 import org.jrdf.parser.ntriples.parser.ObjectParser
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl
 import org.jrdf.parser.turtle.parser.NamespaceAwareObjectParser
+import org.jrdf.parser.NamespaceListenerImpl
 
 class RdfBuilder extends BuilderSupport {
     private final Graph graph
@@ -82,7 +82,7 @@ class RdfBuilder extends BuilderSupport {
 
     public RdfBuilder(final Graph newGraph) {
         graph = newGraph
-        listener = new MemNamespaceListener()
+        listener = new NamespaceListenerImpl(new MemMapFactory())
         def matcherFactory = new RegexMatcherFactoryImpl()
         final parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(newGraph, new MemMapFactory(), matcherFactory,
             listener)
