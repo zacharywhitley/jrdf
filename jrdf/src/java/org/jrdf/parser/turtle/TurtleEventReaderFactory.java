@@ -79,7 +79,7 @@ import org.jrdf.parser.turtle.parser.NamespaceAwareNodeMaps;
 import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactory;
 import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactoryImpl;
 import org.jrdf.parser.turtle.parser.NamespaceAwareTripleParser;
-import org.jrdf.parser.turtle.parser.NamespaceAwareURIReferenceParser;
+import org.jrdf.parser.turtle.parser.NamespaceAwareQNameParser;
 import org.jrdf.parser.turtle.parser.PrefixParser;
 import org.jrdf.parser.turtle.parser.PrefixParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
@@ -116,7 +116,7 @@ public class TurtleEventReaderFactory implements RDFEventReaderFactory {
     private TripleParser init(final Graph graph) {
         final NamespaceAwareNodeParsersFactory parsersFactory = new NamespaceAwareNodeParsersFactoryImpl(graph,
             mapFactory, REGEX_MATCHER_FACTORY, namespaceListener);
-        final NamespaceAwareURIReferenceParser uriReferenceParser = parsersFactory.getUriReferenceParser();
+        final NamespaceAwareQNameParser uriReferenceParser = parsersFactory.getUriReferenceParser();
         final ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(mapFactory,
             graph.getElementFactory());
         final BlankNodeParser blankNodeParser = parsersFactory.getBlankNodeParserWithFactory(blankNodeFactory);

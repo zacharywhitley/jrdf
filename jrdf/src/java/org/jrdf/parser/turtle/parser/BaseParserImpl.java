@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,30 +54,37 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.parser;
+package org.jrdf.parser.turtle.parser;
 
-/**
- * An interface defining methods for receiving namespace declarations from an RDF parser.
- */
-public interface NamespaceListener {
+import org.jrdf.parser.NamespaceListener;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 
-    /**
-     * Called by an RDF parser when it has encountered a new namespace
-     * declaration.
-     *
-     * @param prefix The prefix that is used in the namespace declaration.
-     * @param uri The URI of the namespace.
-     */
-    void handleNamespace(String prefix, String uri);
+import java.util.regex.Pattern;
 
-    /**
-     * Given a prefix return the full URI.
-     *
-     * @param prefix the local name/prefix of the uri.
-     * @return the fully qualified URI.
-     */
-    String getFullURI(String prefix);
+public class BaseParserImpl implements BaseParser {
+    private static final Pattern PREFIX_REGEX = Pattern.compile(
+        "\\p{Blank}*@base\\p{Blank}+<([\\x20-\\x7E]+?)>\\p{Blank}*\\.\\p{Blank}*");
+    private static final int URI_GROUP = 1;
+    private final RegexMatcherFactory regexMatcherFactory;
+    private NamespaceListener listener;
+
+    public BaseParserImpl(RegexMatcherFactory newRegexMatcherFactory, final NamespaceListener newListener) {
+        regexMatcherFactory = newRegexMatcherFactory;
+        listener = newListener;
+    }
+
+    public boolean handleBase(final CharSequence line) {
+        final RegexMatcher prefixMatcher = regexMatcherFactory.createMatcher(PREFIX_REGEX, line);
+        final boolean matched = prefixMatcher.matches();
+        if (matched) {
+            final String uri = prefixMatcher.group(URI_GROUP);
+            listener.handleNamespace("", uri);
+        } else {
+            throw new IllegalArgumentException("Couldn't match line: " + line);
+        }
+        return matched;
+    }
 }

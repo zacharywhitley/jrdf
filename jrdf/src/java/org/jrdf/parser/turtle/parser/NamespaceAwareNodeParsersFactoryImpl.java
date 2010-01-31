@@ -89,8 +89,8 @@ public class NamespaceAwareNodeParsersFactoryImpl implements NamespaceAwareNodeP
         util = new NTripleUtilImpl(regexMatcherFactory);
     }
 
-    public NamespaceAwareURIReferenceParser getUriReferenceParser() {
-        return new NamespaceAwareURIReferenceParserImpl(graph.getElementFactory(), util, namespaceListener,
+    public NamespaceAwareQNameParser getUriReferenceParser() {
+        return new NamespaceAwareQNameParserImpl(graph.getElementFactory(), util, namespaceListener,
             regexMatcherFactory);
     }
 

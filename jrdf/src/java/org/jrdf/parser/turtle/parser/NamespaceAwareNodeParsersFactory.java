@@ -62,5 +62,5 @@ package org.jrdf.parser.turtle.parser;
 import org.jrdf.parser.ntriples.parser.NodeParsersFactory;
 
 public interface NamespaceAwareNodeParsersFactory extends NodeParsersFactory {
-    NamespaceAwareURIReferenceParser getUriReferenceParser();
+    NamespaceAwareQNameParser getUriReferenceParser();
 }

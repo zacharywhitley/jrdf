@@ -80,8 +80,11 @@ public class NamespaceListenerImpl implements NamespaceListener, Serializable {
     }
 
     public void handleNamespace(String prefix, String uri) {
-        if (map.get(prefix) == null) {
+        final String currentValue = map.get(prefix);
+        if (currentValue == null) {
             map.put(prefix, uri);
+        } else if ("".equals(prefix)) {
+            map.put("", currentValue + uri);
         } else {
             throw new IllegalArgumentException("Existing prefix mapping for: " + prefix + "and " + uri);
         }

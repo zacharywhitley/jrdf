@@ -63,18 +63,18 @@ import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.line.LineHandler;
 import org.jrdf.parser.line.TriplesParser;
 import org.jrdf.parser.ntriples.parser.CommentsParser;
-import org.jrdf.parser.turtle.parser.PrefixParser;
+import org.jrdf.parser.turtle.parser.DirectiveParser;
 
 public class TurtleParser implements LineHandler {
     private final CommentsParser commentsParser;
-    private final PrefixParser prefixParser;
+    private final DirectiveParser directiveParser;
     private final TriplesParser triplesParser;
 
-    public TurtleParser(final CommentsParser newCommentsParser, final PrefixParser newPrefixParser,
+    public TurtleParser(final CommentsParser newCommentsParser, final DirectiveParser newPrefixParser,
         final TriplesParser newTriplesParser) {
         commentsParser = newCommentsParser;
         triplesParser = newTriplesParser;
-        prefixParser = newPrefixParser;
+        directiveParser = newPrefixParser;
     }
 
     public void setStatementHandler(final StatementHandler newStatementHandler) {
@@ -83,7 +83,7 @@ public class TurtleParser implements LineHandler {
 
     public void handleLine(final CharSequence line) throws StatementHandlerException {
         if (!commentsParser.handleComment(line)) {
-            if (!prefixParser.handlePrefix(line)) {
+            if (!directiveParser.handleDirective(line)) {
                 triplesParser.handleTriple(line);
             }
         }

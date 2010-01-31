@@ -97,7 +97,7 @@ public class NamespaceAwareNodeMaps implements NodeMaps {
     private static final int NS_LOCAL_NAME_GROUP = 3;
     private static final int BLANK_NODE_GROUP = 6;
     private static final int LITERAL_GROUP = 7;
-    private final NamespaceAwareURIReferenceParser uriReferenceParser;
+    private final NamespaceAwareQNameParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalNodeParser;
     private final Map<Integer, RegexNodeParser> groupMatches = new HashMap<Integer, RegexNodeParser>();
@@ -105,7 +105,7 @@ public class NamespaceAwareNodeMaps implements NodeMaps {
     private Map<Integer, RegexNodeParser> predicateGroupMatches;
     private Map<Integer, RegexNodeParser> objectGroupMatches;
 
-    public NamespaceAwareNodeMaps(final NamespaceAwareURIReferenceParser newURIReferenceParser,
+    public NamespaceAwareNodeMaps(final NamespaceAwareQNameParser newURIReferenceParser,
         final BlankNodeParser newBlankNodeParser, final LiteralParser newLiteralNodeParser) {
         checkNotNull(newURIReferenceParser, newBlankNodeParser, newLiteralNodeParser);
         uriReferenceParser = newURIReferenceParser;
