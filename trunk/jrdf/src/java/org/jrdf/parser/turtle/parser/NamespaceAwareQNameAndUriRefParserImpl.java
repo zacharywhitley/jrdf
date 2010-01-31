@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,30 +54,52 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.parser;
+package org.jrdf.parser.turtle.parser;
 
-/**
- * An interface defining methods for receiving namespace declarations from an RDF parser.
- */
-public interface NamespaceListener {
+import org.jrdf.graph.URIReference;
+import org.jrdf.parser.NamespaceListener;
+import org.jrdf.parser.ParseException;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 
-    /**
-     * Called by an RDF parser when it has encountered a new namespace
-     * declaration.
-     *
-     * @param prefix The prefix that is used in the namespace declaration.
-     * @param uri The URI of the namespace.
-     */
-    void handleNamespace(String prefix, String uri);
+import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
 
-    /**
-     * Given a prefix return the full URI.
-     *
-     * @param prefix the local name/prefix of the uri.
-     * @return the fully qualified URI.
-     */
-    String getFullURI(String prefix);
+public final class NamespaceAwareQNameAndUriRefParserImpl implements NamespaceAwareQNameParser {
+    private static final int PREFIX_GROUP = 2;
+    private static final int LOCAL_GROUP = 3;
+    private static final int URI_REF_GROUP = 4;
+    private static final Pattern REGEX = compile("((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))|" +
+        "(\\<(\\p{Alpha}[\\x20-\\x7E]*?)\\>)");
+    private final NamespaceAwareQNameParser nameParser;
+    private final RegexMatcherFactory matcherFactory;
+    private final NamespaceListener listener;
+
+    public NamespaceAwareQNameAndUriRefParserImpl(final NamespaceAwareQNameParser newNameParser,
+        final RegexMatcherFactory newMatcherFactory, final NamespaceListener newListener) {
+        this.nameParser = newNameParser;
+        this.matcherFactory = newMatcherFactory;
+        this.listener = newListener;
+    }
+
+    public URIReference parseURIReference(String s) throws ParseException {
+        return nameParser.parseURIReference(s);
+    }
+
+    public URIReference parseURIReferenceWithNamespace(String s) throws ParseException {
+        final RegexMatcher regexMatcher = matcherFactory.createMatcher(REGEX, s);
+        if (regexMatcher.matches()) {
+            String prefix = regexMatcher.group(PREFIX_GROUP);
+            String local = regexMatcher.group(LOCAL_GROUP);
+            String uriRef = regexMatcher.group(URI_REF_GROUP);
+            if (prefix != null && local != null) {
+                return parseURIReference(listener.getFullURI(prefix) + local);
+            } else if (uriRef != null) {
+                return parseURIReference(listener.getFullURI("") + uriRef);
+            }
+        }
+        return null;
+    }
 }

@@ -71,10 +71,14 @@ import org.jrdf.parser.ntriples.parser.NodeMaps;
 import org.jrdf.parser.ntriples.parser.RegexTripleParser;
 import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.turtle.parser.BaseParser;
+import org.jrdf.parser.turtle.parser.BaseParserImpl;
+import org.jrdf.parser.turtle.parser.DirectiveParserImpl;
 import org.jrdf.parser.turtle.parser.NamespaceAwareNodeMaps;
 import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactory;
 import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactoryImpl;
 import org.jrdf.parser.turtle.parser.NamespaceAwareTripleParser;
+import org.jrdf.parser.turtle.parser.PrefixParser;
 import org.jrdf.parser.turtle.parser.PrefixParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
@@ -91,8 +95,10 @@ public class TurtleParserFactory implements LineHandlerFactory {
             nodeMaps);
         final TripleParser tripleParser = new NamespaceAwareTripleParser(matcherFactory,
             parsersFactory.getBlankNodeParser(), parser);
+        final PrefixParser prefixParser = new PrefixParserImpl(matcherFactory, listener);
+        final BaseParser baseParser = new BaseParserImpl(matcherFactory, listener);
         return new TurtleParser(new CommentsParserImpl(matcherFactory),
-            new PrefixParserImpl(matcherFactory, listener),
+            new DirectiveParserImpl(matcherFactory, prefixParser, baseParser),
             new TriplesParserImpl(tripleParser));
     }
 }

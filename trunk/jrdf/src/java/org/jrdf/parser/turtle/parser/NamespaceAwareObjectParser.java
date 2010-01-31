@@ -81,12 +81,12 @@ public final class NamespaceAwareObjectParser implements ObjectParser {
     private static final int BLANK_NODE_GROUP = 6;
     private static final int LITERAL_GROUP = 7;
     private final RegexMatcherFactory factory;
-    private final NamespaceAwareURIReferenceParser uriReferenceParser;
+    private final NamespaceAwareQNameParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalParser;
 
     public NamespaceAwareObjectParser(final RegexMatcherFactory newFactory,
-        final NamespaceAwareURIReferenceParser newUriReferenceParser, final BlankNodeParser newBlankNodeParser,
+        final NamespaceAwareQNameParser newUriReferenceParser, final BlankNodeParser newBlankNodeParser,
         final LiteralParser newLiteralParser) {
         checkNotNull(newFactory, newUriReferenceParser, newBlankNodeParser, newLiteralParser);
         factory = newFactory;

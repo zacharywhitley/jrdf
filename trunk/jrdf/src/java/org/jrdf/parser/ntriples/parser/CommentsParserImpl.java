@@ -64,7 +64,8 @@ import org.jrdf.util.boundary.RegexMatcherFactory;
 import java.util.regex.Pattern;
 
 public class CommentsParserImpl implements CommentsParser {
-    private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
+    private static final Pattern COMMENT_REGEX = Pattern.compile("(\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*)|" +
+        "(\\p{Blank}*)");
     private final RegexMatcherFactory regexMatcherFactory;
 
     public CommentsParserImpl(RegexMatcherFactory newRegexMatcherFactory) {

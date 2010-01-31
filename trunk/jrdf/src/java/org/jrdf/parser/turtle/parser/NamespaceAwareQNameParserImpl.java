@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,7 +54,6 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.parser.turtle.parser;
@@ -74,7 +73,7 @@ import static java.net.URI.create;
 import java.util.regex.Pattern;
 import static java.util.regex.Pattern.compile;
 
-public final class NamespaceAwareURIReferenceParserImpl implements NamespaceAwareURIReferenceParser {
+public final class NamespaceAwareQNameParserImpl implements NamespaceAwareQNameParser {
     private static final int PREFIX_GROUP = 2;
     private static final int LOCAL_GROUP = 3;
     private static final Pattern REGEX = compile("((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))");
@@ -83,7 +82,7 @@ public final class NamespaceAwareURIReferenceParserImpl implements NamespaceAwar
     private final NamespaceListener listener;
     private final RegexMatcherFactory matcherFactory;
 
-    public NamespaceAwareURIReferenceParserImpl(GraphElementFactory newGraphElementFactory, NTripleUtil newNTripleUtil,
+    public NamespaceAwareQNameParserImpl(GraphElementFactory newGraphElementFactory, NTripleUtil newNTripleUtil,
         NamespaceListener newListener, final RegexMatcherFactory newMatcherFactory) {
         checkNotNull(newGraphElementFactory, newNTripleUtil);
         graphElementFactory = newGraphElementFactory;

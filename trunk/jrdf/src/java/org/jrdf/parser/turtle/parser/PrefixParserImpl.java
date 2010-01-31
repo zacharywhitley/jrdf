@@ -65,10 +65,9 @@ import org.jrdf.util.boundary.RegexMatcherFactory;
 import java.util.regex.Pattern;
 
 public class PrefixParserImpl implements PrefixParser {
-    private static final Pattern PREFIX_REGEX = Pattern.compile("\\p{Blank}*" +
-        "@prefix\\p{Blank}+" +
-        "([a-zA-Z][\\x20-\\x7E]*)?:" +
-        "\\p{Blank}+\\<(([\\x20-\\x7E]+?))\\>\\p{Blank}*\\.\\p{Blank}*");
+    private static final Pattern PREFIX_REGEX = Pattern.compile(
+        "\\p{Blank}*@prefix\\p{Blank}+([a-zA-Z][\\x20-\\x7E]*)?:" +
+        "\\p{Blank}+<([\\x20-\\x7E]+?)>\\p{Blank}*\\.\\p{Blank}*");
     private static final int PREFIX_GROUP = 1;
     private static final int URI_GROUP = 2;
     private final RegexMatcherFactory regexMatcherFactory;
