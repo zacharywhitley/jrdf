@@ -67,7 +67,7 @@ import org.jrdf.parser.line.FormatParser;
 import org.jrdf.parser.line.TriplesParser;
 import org.jrdf.parser.ntriples.parser.CommentsParser;
 import org.jrdf.parser.ntriples.parser.CommentsParserImpl;
-import org.jrdf.parser.turtle.parser.PrefixParser;
+import org.jrdf.parser.turtle.parser.DirectiveParser;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
@@ -75,18 +75,18 @@ public class TurtleFormatParser implements FormatParser {
     private final RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
     private final CommentsParser commentsParser = new CommentsParserImpl(matcherFactory);
     private final TriplesParser parser;
-    private final PrefixParser prefixParser;
+    private final DirectiveParser directiveParser;
     private Triple currentTriple;
 
-    public TurtleFormatParser(final TriplesParser newParser, final PrefixParser newPrefixParser) {
+    public TurtleFormatParser(final TriplesParser newParser, final DirectiveParser newDirectiveParser) {
         parser = newParser;
-        prefixParser = newPrefixParser;
+        directiveParser = newDirectiveParser;
         parser.setStatementHandler(this);
     }
 
     public void parseLine(final CharSequence line) {
         if (!commentsParser.handleComment(line)) {
-            if (!prefixParser.handlePrefix(line)) {
+            if (!directiveParser.handleDirective(line)) {
                 parser.handleTriple(line);
             }
         }

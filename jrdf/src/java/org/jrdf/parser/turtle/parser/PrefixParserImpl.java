@@ -85,6 +85,8 @@ public class PrefixParserImpl implements PrefixParser {
             final String prefix = prefixMatcher.group(PREFIX_GROUP);
             final String uri = prefixMatcher.group(URI_GROUP);
             listener.handleNamespace(prefix, uri);
+        } else {
+            throw new IllegalArgumentException("Couldn't match line: " + line);
         }
         return matched;
     }
