@@ -75,11 +75,15 @@ import org.jrdf.parser.ntriples.parser.NodeMaps;
 import org.jrdf.parser.ntriples.parser.RegexTripleParser;
 import org.jrdf.parser.ntriples.parser.RegexTripleParserImpl;
 import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.turtle.parser.BaseParser;
+import org.jrdf.parser.turtle.parser.BaseParserImpl;
+import org.jrdf.parser.turtle.parser.DirectiveParser;
+import org.jrdf.parser.turtle.parser.DirectiveParserImpl;
 import org.jrdf.parser.turtle.parser.NamespaceAwareNodeMaps;
 import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactory;
 import org.jrdf.parser.turtle.parser.NamespaceAwareNodeParsersFactoryImpl;
-import org.jrdf.parser.turtle.parser.NamespaceAwareTripleParser;
 import org.jrdf.parser.turtle.parser.NamespaceAwareQNameParser;
+import org.jrdf.parser.turtle.parser.NamespaceAwareTripleParser;
 import org.jrdf.parser.turtle.parser.PrefixParser;
 import org.jrdf.parser.turtle.parser.PrefixParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
@@ -102,14 +106,20 @@ public class TurtleEventReaderFactory implements RDFEventReaderFactory {
     public RDFEventReader createRDFEventReader(final InputStream stream, final URI baseURI, final Graph graph) {
         final TriplesParser triplesParser = new TriplesParserImpl(init(graph));
         final PrefixParser prefixParser = new PrefixParserImpl(REGEX_MATCHER_FACTORY, namespaceListener);
-        final FormatParser parser = new TurtleFormatParser(triplesParser, prefixParser);
+        final BaseParser baseParser = new BaseParserImpl(REGEX_MATCHER_FACTORY, namespaceListener);
+        final DirectiveParser directiveParser = new DirectiveParserImpl(REGEX_MATCHER_FACTORY, prefixParser,
+            baseParser);
+        final FormatParser parser = new TurtleFormatParser(triplesParser, directiveParser);
         return new RDFEventReaderImpl(stream, baseURI, parser);
     }
 
     public RDFEventReader createRDFEventReader(final Reader reader, final URI baseURI, final Graph graph) {
         final TriplesParser triplesParser = new TriplesParserImpl(init(graph));
         final PrefixParser prefixParser = new PrefixParserImpl(REGEX_MATCHER_FACTORY, namespaceListener);
-        final FormatParser parser = new TurtleFormatParser(triplesParser, prefixParser);
+        final BaseParser baseParser = new BaseParserImpl(REGEX_MATCHER_FACTORY, namespaceListener);
+        final DirectiveParser directiveParser = new DirectiveParserImpl(REGEX_MATCHER_FACTORY, prefixParser,
+            baseParser);
+        final FormatParser parser = new TurtleFormatParser(triplesParser, directiveParser);
         return new RDFEventReaderImpl(reader, baseURI, parser);
     }
 

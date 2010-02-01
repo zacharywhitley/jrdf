@@ -90,4 +90,21 @@ public class TurtleParserIntegrationTest {
             input.close();
         }
     }
+
+//    @Test
+//    public void testBadTurtleFiles() throws Exception {
+//        for (int i = 0; i <= 14; i++) {
+//            final InputStream input = getSampleData(getClass(), "org/jrdf/parser/turtle/tests/bad-0" + i + ".ttl");
+//            try {
+//                System.err.println("Parsing: " + i);
+//                assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+//                    public void execute() throws Throwable {
+//                        parseN3File(input, NEW_GRAPH, CREATOR);
+//                    }
+//                });
+//            } finally {
+//                input.close();
+//            }
+//        }
+//    }
 }
