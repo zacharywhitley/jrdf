@@ -85,9 +85,10 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
 
-import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -135,6 +136,9 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
     }
 
     public MoleculeGraph getNewGraph(String name) {
+        if (base.hasGraph(name)) {
+            throw new IllegalArgumentException("Graph already exists: " + name);
+        }
         long graphNumber = base.addNewGraph(name);
         return getGraph(graphNumber);
     }
@@ -165,7 +169,7 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
-            new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
+                new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
         IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
         final long curMaxMoleculeId = readIndex.getMaxMoleculeId();
@@ -175,11 +179,11 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
     }
 
     private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes(long graphNumber) {
-        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesameSync[] {
-            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "spomd" + graphNumber)),
-            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "posmd" + graphNumber)),
-            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "ospmd" + graphNumber)),
-            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "dmspo" + graphNumber)),
+        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesameSync[]{
+                new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "spomd" + graphNumber)),
+                new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "posmd" + graphNumber)),
+                new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "ospmd" + graphNumber)),
+                new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "dmspo" + graphNumber)),
         };
         openStructureIndexes.addAll(asList(indexes));
         return indexes;
