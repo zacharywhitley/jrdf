@@ -72,9 +72,10 @@ import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
 
-import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -107,7 +108,9 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
     }
 
     public Graph getNewGraph() {
-        return getGraph("default");
+        Graph graph = getGraph("default");
+        graph.clear();
+        return graph;
     }
 
     public Graph getGraph(String name) {
