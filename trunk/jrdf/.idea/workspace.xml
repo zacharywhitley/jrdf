@@ -2,40 +2,9 @@
 <project version="4">
   <component name="ChangeListManager" verified="true">
     <list default="true" readonly="true" id="5f69896d-903c-435c-be50-51d53e92fe41" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/powermock.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/je.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/spring_rcp.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/PersistentGlobalJRDFFactoryImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/PersistentGlobalJRDFFactoryImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/PersistentJRDFFactoryImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/PersistentJRDFFactoryImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/jackson.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/junit.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/wstx_asl.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/restlet.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/jakarta_commons.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/sablecc/n3.grammar" afterPath="$PROJECT_DIR$/src/sablecc/turtle.grammar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/unused.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/hamcrest.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/freemarker.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/spring.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/groovy_1_6_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/ant.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/projectCodeStyle.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/easymock.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RELEASE-NOTES" afterPath="$PROJECT_DIR$/RELEASE-NOTES" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jrdf.iml" afterPath="$PROJECT_DIR$/jrdf.iml" />
     </list>
     <ignored path="jrdf.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,11 +16,11 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/jrdf$PositionNameUnitTest.ic" NAME="PositionNameUnitTest Coverage Results" MODIFIED="1257024823589" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
-      <FILTER>org.jrdf.query.relation.attributename.*</FILTER>
-    </SUITE>
     <SUITE FILE_PATH="coverage/jrdf$SubsumptionEngineIntegrationTest.ic" NAME="SubsumptionEngineIntegrationTest Coverage Results" MODIFIED="1257454534477" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true">
       <FILTER>org.jrdf.query.relation.operation.mem.union.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/jrdf$PositionNameUnitTest.ic" NAME="PositionNameUnitTest Coverage Results" MODIFIED="1257024823589" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.jrdf.query.relation.attributename.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/jrdf$SparqlXmlRepresentationFactoryUnitTest.ic" NAME="SparqlXmlRepresentationFactoryUnitTest Coverage Results" MODIFIED="1257046334846" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true">
       <FILTER>org.jrdf.query.server.*</FILTER>
@@ -130,8 +99,8 @@
       <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="exception_breakpoints_groupByClasses" value="true" />
+      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -145,17 +114,24 @@
         <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/PersistentJRDFFactoryImpl.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="107" column="32" selection-start="4422" selection-end="4422" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BdbCollectionFactory.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="BdbCollectionFactory.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/collection/BdbCollectionFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="46" selection-start="5585" selection-end="5585" vertical-scroll-proportion="0.5243488">
+            <state line="146" column="46" selection-start="5585" selection-end="5585" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RELEASE-NOTES" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/RELEASE-NOTES">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1" column="18" selection-start="37" selection-end="37" vertical-scroll-proportion="0.013590034">
               <folding />
             </state>
           </provider>
@@ -192,9 +168,7 @@
         <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/PersistentGlobalJRDFFactoryImpl.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="98" column="38" selection-start="4351" selection-end="4351" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -203,9 +177,7 @@
         <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/server/local/LocalQueryIntegrationTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="95" column="38" selection-start="4149" selection-end="4174" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -220,7 +192,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/java/org/jrdf/util/bdb/BdbEnvironmentHandler.java" />
         <option value="$PROJECT_DIR$/src/java/org/jrdf/collection/BdbCollectionFactory.java" />
         <option value="$PROJECT_DIR$/src/java/org/jrdf/query/server/GraphResource.java" />
         <option value="$PROJECT_DIR$/build.xml" />
@@ -236,6 +207,7 @@
         <option value="$PROJECT_DIR$/src/java/org/jrdf/parser/turtle/TurtleEventReaderFactory.java" />
         <option value="$PROJECT_DIR$/src/java/org/jrdf/PersistentJRDFFactoryImpl.java" />
         <option value="$PROJECT_DIR$/src/java/org/jrdf/PersistentGlobalJRDFFactoryImpl.java" />
+        <option value="$PROJECT_DIR$/RELEASE-NOTES" />
       </list>
     </option>
   </component>
@@ -280,6 +252,11 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Favorites" />
+      <pane id="Scope" />
+      <pane id="PackagesPane">
+        <subPane />
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -570,27 +547,22 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane">
-        <subPane />
-      </pane>
-      <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="265" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="239" />
     <property name="project.structure.last.edited" value="SDKs" />
-    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="239" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="29" />
-    <property name="OverrideImplement.combined" value="true" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="253" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="253" />
+    <property name="OverrideImplement.combined" value="true" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
+    <property name="options.splitter.main.proportions" value="0.3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
     <property name="RunManagerConfig.showSettingsBeforeRunnig" value="false" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
     <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
@@ -612,13 +584,13 @@
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder4" value="4" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder1" value="1" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.includeInheritedMembers" value="false" />
-    <property name="dynamic.classpath" value="false" />
     <property name="options.searchVisible" value="true" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RunManager" selected="Application.PersistanceExample">
     <configuration default="false" name="LocalRepresentationIntegrationTest.getExistingRdfXmlGraph" type="JUnit" factoryName="JUnit" temporary="true">
@@ -991,12 +963,12 @@
       <item index="1" class="java.lang.String" itemvalue="JUnit.BdbMapFactoryUnitTest" />
       <item index="2" class="java.lang.String" itemvalue="JUnit.DistributedQueryIntegrationTest" />
       <item index="3" class="java.lang.String" itemvalue="JUnit.DistributedQueryIntegrationTest.testDistributedClient" />
-      <item index="4" class="java.lang.String" itemvalue="Application.SparqlGui" />
-      <item index="5" class="java.lang.String" itemvalue="Application.DiskPerformance" />
-      <item index="6" class="java.lang.String" itemvalue="Application.SpringDistributedServer" />
-      <item index="7" class="java.lang.String" itemvalue="Application.SpringLocalServer" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.AllWithoutPerformanceTestRunner" />
-      <item index="9" class="java.lang.String" itemvalue="Application.PersistanceExample" />
+      <item index="4" class="java.lang.String" itemvalue="Application.PersistanceExample" />
+      <item index="5" class="java.lang.String" itemvalue="Application.SparqlGui" />
+      <item index="6" class="java.lang.String" itemvalue="Application.DiskPerformance" />
+      <item index="7" class="java.lang.String" itemvalue="Application.SpringDistributedServer" />
+      <item index="8" class="java.lang.String" itemvalue="Application.SpringLocalServer" />
+      <item index="9" class="java.lang.String" itemvalue="JUnit.AllWithoutPerformanceTestRunner" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -1072,23 +1044,23 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44408602" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44946235" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.107909255" sideWeight="0.6236559" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42179486" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3967742" sideWeight="0.0" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3688172" sideWeight="0.85285103" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.0" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924587" sideWeight="0.6666667" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2801962" sideWeight="0.5483871" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.329859" sideWeight="0.6634409" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32580644" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44946235" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Dataflow to this" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1153,118 +1125,86 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1.6-src.zip!/org.restlet/org/restlet/data/Reference.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="13" selection-start="5329" selection-end="5329" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1.6-src.zip!/org.restlet/org/restlet/Finder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="66" column="13" selection-start="2752" selection-end="2752" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="66" column="13" selection-start="2752" selection-end="2752" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/lib/restlet/restlet-1.1.6-src.zip!/org.restlet/org/restlet/Component.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1262" column="29" selection-start="49255" selection-end="49255" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="1262" column="29" selection-start="49255" selection-end="49255" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/server/SpringLocalServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="86" column="24" selection-start="3552" selection-end="3552" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="86" column="24" selection-start="3552" selection-end="3552" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/PersistentGlobalJRDFGraphIntegrationTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="133" column="49" selection-start="5956" selection-end="5956" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="133" column="49" selection-start="5956" selection-end="5956" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/SortedDiskBdbJRDFFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="86" column="19" selection-start="3731" selection-end="3731" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="86" column="19" selection-start="3731" selection-end="3731" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/SortedDiskGlobalJRDFFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="109" column="19" selection-start="4884" selection-end="4884" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="109" column="19" selection-start="4884" selection-end="4884" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/SortedDiskJRDFFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="19" selection-start="3989" selection-end="3989" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="93" column="19" selection-start="3989" selection-end="3989" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/server/distributed/DistributedQueryIntegrationTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="113" column="29" selection-start="4814" selection-end="4814" vertical-scroll-proportion="0.27385893">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/BasePersistentJRDFFactoryImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="136" column="42" selection-start="5679" selection-end="5679" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/server/local/LocalQueryIntegrationTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="38" selection-start="4149" selection-end="4174" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/PersistentGlobalJRDFFactoryImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="38" selection-start="4351" selection-end="4351" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/example/PersistanceExample.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="27" selection-start="3595" selection-end="3595" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="113" column="29" selection-start="4814" selection-end="4814" vertical-scroll-proportion="0.27385893" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/PersistentJRDFFactoryImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="107" column="32" selection-start="4422" selection-end="4422" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
+        <state line="107" column="32" selection-start="4422" selection-end="4422" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/util/bdb/BdbEnvironmentHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="73" column="19" selection-start="3033" selection-end="3033" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="73" column="19" selection-start="3033" selection-end="3033" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/BasePersistentJRDFFactoryImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="136" column="42" selection-start="5679" selection-end="5679" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/example/PersistanceExample.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="27" selection-start="3595" selection-end="3595" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/PersistentGlobalJRDFFactoryImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="38" selection-start="4351" selection-end="4351" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/server/local/LocalQueryIntegrationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="95" column="38" selection-start="4149" selection-end="4174" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/collection/BdbCollectionFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="46" selection-start="5585" selection-end="5585" vertical-scroll-proportion="0.5243488">
+        <state line="146" column="46" selection-start="5585" selection-end="5585" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RELEASE-NOTES">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="18" selection-start="37" selection-end="37" vertical-scroll-proportion="0.013590034">
           <folding />
         </state>
       </provider>
