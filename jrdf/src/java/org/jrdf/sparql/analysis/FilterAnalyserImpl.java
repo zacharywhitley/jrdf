@@ -71,7 +71,6 @@ import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.LogicOrExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
-import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
 import org.jrdf.sparql.builder.LiteralBuilder;
 import org.jrdf.sparql.builder.URIReferenceBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
@@ -99,6 +98,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
 
 public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnalyser {
     private Expression expression = new EmptyExpression();
