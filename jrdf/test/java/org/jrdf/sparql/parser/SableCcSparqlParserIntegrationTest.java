@@ -333,20 +333,6 @@ public final class SableCcSparqlParserIntegrationTest {
             " SELECT * WHERE { ?s ?p 'hello'^^xsd:string }", spHello3);
     }
 
-//    @Test
-//    public void bug2969667() throws Exception {
-//        Expression expression;
-//        Literal date = createLiteral("2010-03-12T22:36:40Z", XSD.DATE_TIME);
-//        expression = createConstraintExpression("date", "", date, 1);
-//        checkConstraintExpression("PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\n" +
-//                "SELECT ?s ?p ?o\n" +
-//                "WHERE {\n" +
-//                "?s ?p ?o .\n" +
-//                "?s <urn:created> ?date .\n" +
-//                "FILTER ( ?date > \"2010-03-12T22:36:40Z\"^^xsd:dateTime )\n" +
-//                "}", expression);
-//    }
-
     @Test
     public void testLiteralWithIncorrectPrefix() {
         String message = "Unable to parse query syntax token: xsd ";
@@ -405,6 +391,20 @@ public final class SableCcSparqlParserIntegrationTest {
         final Expression spFalse = createConstraintExpression("s", "p", falseLiteral, 1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p false }", spFalse);
     }
+
+//    @Test
+//    public void bug2969667() throws Exception {
+//        Expression expression;
+//        Literal date = createLiteral("2010-03-12T22:36:40Z", XSD.DATE_TIME);
+//        expression = createConstraintExpression("date", "", date, 1);
+//        checkConstraintExpression("PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\n" +
+//                "SELECT ?s ?p ?o\n" +
+//                "WHERE {\n" +
+//                "?s ?p ?o .\n" +
+//                "?s <urn:created> ?date .\n" +
+//                "FILTER ( ?date > \"2010-03-12T22:36:40Z\"^^xsd:dateTime )\n" +
+//                "}", expression);
+//    }
 
     @Test
     public void testFilterUntypedLiteral() throws Exception {

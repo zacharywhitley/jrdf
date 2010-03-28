@@ -81,6 +81,7 @@ import org.jrdf.sparql.parser.node.AConditionalAndExpression;
 import org.jrdf.sparql.parser.node.AConditionalOrExpression;
 import org.jrdf.sparql.parser.node.AEMoreNumericExpression;
 import org.jrdf.sparql.parser.node.AFalseBooleanLiteral;
+import org.jrdf.sparql.parser.node.AGtMoreNumericExpression;
 import org.jrdf.sparql.parser.node.ALtMoreNumericExpression;
 import org.jrdf.sparql.parser.node.AMoreValueLogical;
 import org.jrdf.sparql.parser.node.ANeMoreNumericExpression;
@@ -90,6 +91,7 @@ import org.jrdf.sparql.parser.node.ATrueBooleanLiteral;
 import org.jrdf.sparql.parser.node.PMoreConditionalAndExpression;
 import org.jrdf.sparql.parser.node.PMoreNumericExpression;
 import org.jrdf.sparql.parser.node.PMoreValueLogical;
+import org.jrdf.sparql.parser.node.PNumericExpression;
 import org.jrdf.sparql.parser.node.PPrimaryExpression;
 import org.jrdf.sparql.parser.parser.ParserException;
 
@@ -222,10 +224,7 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
     @Override
     public void caseAEMoreNumericExpression(AEMoreNumericExpression node) {
         try {
-            Expression lhsExp = expression;
-            node.getNumericExpression().apply(numericExpressionAnalyser);
-            Expression rhsExp = numericExpressionAnalyser.getExpression();
-            final List<Expression> expressions = tryUpdateAttribute(lhsExp, rhsExp);
+            final List<Expression> expressions = getLhsAndRhsOfNumericExpression(node.getNumericExpression());
             expression = new EqualsExpression(expressions.get(0), expressions.get(1));
         } catch (ParserException e) {
             exception = e;
@@ -235,11 +234,18 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
     @Override
     public void caseANeMoreNumericExpression(ANeMoreNumericExpression node) {
         try {
-            Expression lhsExp = expression;
-            node.getNumericExpression().apply(numericExpressionAnalyser);
-            Expression rhsExp = numericExpressionAnalyser.getExpression();
-            final List<Expression> expressions = tryUpdateAttribute(lhsExp, rhsExp);
+            final List<Expression> expressions = getLhsAndRhsOfNumericExpression(node.getNumericExpression());
             expression = new NEqualsExpression(expressions.get(0), expressions.get(1));
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
+
+    @Override
+    public void caseAGtMoreNumericExpression(AGtMoreNumericExpression node) {
+        try {
+            final List<Expression> expressions = getLhsAndRhsOfNumericExpression(node.getNumericExpression());
+            expression = new LessThanExpression(expressions.get(1), expressions.get(0));
         } catch (ParserException e) {
             exception = e;
         }
@@ -248,10 +254,7 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
     @Override
     public void caseALtMoreNumericExpression(ALtMoreNumericExpression node) {
         try {
-            Expression lhsExp = expression;
-            node.getNumericExpression().apply(numericExpressionAnalyser);
-            Expression rhsExp = numericExpressionAnalyser.getExpression();
-            final List<Expression> expressions = tryUpdateAttribute(lhsExp, rhsExp);
+            final List<Expression> expressions = getLhsAndRhsOfNumericExpression(node.getNumericExpression());
             expression = new LessThanExpression(expressions.get(0), expressions.get(1));
         } catch (ParserException e) {
             exception = e;
@@ -276,6 +279,14 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
         } catch (ParserException e) {
             exception = e;
         }
+    }
+
+    private List<Expression> getLhsAndRhsOfNumericExpression(PNumericExpression numericExpression)
+            throws ParserException {
+        Expression lhsExp = expression;
+        numericExpression.apply(numericExpressionAnalyser);
+        Expression rhsExp = numericExpressionAnalyser.getExpression();
+        return tryUpdateAttribute(lhsExp, rhsExp);
     }
 
     private List<Expression> tryUpdateAttribute(Expression lhs,

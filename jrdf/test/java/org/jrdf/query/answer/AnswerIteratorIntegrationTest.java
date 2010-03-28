@@ -67,9 +67,9 @@ import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.ClosableIterator;
 import org.junit.Test;
 
-import java.net.URI;
 import java.util.UUID;
 
+import static java.net.URI.create;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.is;
@@ -83,11 +83,11 @@ public class AnswerIteratorIntegrationTest {
     @Test
     public void testSimpleIteration() throws Exception {
         Resource r = ef.createResource();
-        r.addValue(new URI("urn:uuid"), UUID.randomUUID().toString());
+        r.addValue(create("urn:uuid"), UUID.randomUUID().toString());
 
         Resource r2 = ef.createResource();
-        r2.addValue(new URI("urn:uuid"), UUID.randomUUID().toString());
-        r2.addValue(new URI("urn:test"), "abc");
+        r2.addValue(create("urn:uuid"), UUID.randomUUID().toString());
+        r2.addValue(create("urn:test"), "abc");
 
         String query =
                 "SELECT ?uuid ?test " +

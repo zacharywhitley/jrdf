@@ -58,25 +58,27 @@
 
 package org.jrdf.sparql.parser;
 
-import static org.jrdf.graph.AnyNode.ANY_NODE;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
+import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
-import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.logic.EqualsExpression;
-import org.jrdf.query.expression.logic.LogicExpression;
-import org.jrdf.query.expression.logic.NEqualsExpression;
-import org.jrdf.query.expression.logic.LogicNotExpression;
+import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicAndExpression;
+import org.jrdf.query.expression.logic.LogicExpression;
+import org.jrdf.query.expression.logic.LogicNotExpression;
+import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createAttValue;
-import static org.jrdf.util.test.NodeTestUtil.createLiteral;
 
 import java.net.URI;
+
+import static org.jrdf.graph.AnyNode.ANY_NODE;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createAttValue;
+import static org.jrdf.util.test.NodeTestUtil.createLiteral;
 
 public class OperatorTestUtil {
     private Operator op;
@@ -113,6 +115,16 @@ public class OperatorTestUtil {
     public LogicExpression eq(Literal literal) {
         Constraint value = new SingleValue(createAttValue(getAttribute(op), literal));
         return new EqualsExpression(op, value);
+    }
+
+    public LogicExpression lt(Literal literal) {
+        Constraint value = new SingleValue(createAttValue(getAttribute(op), literal));
+        return new LessThanExpression(op, value);
+    }
+
+    public LogicExpression gt(Literal literal) {
+        Constraint value = new SingleValue(createAttValue(getAttribute(op), literal));
+        return new LessThanExpression(value, op);
     }
 
     public LogicExpression neq(Literal literal) {
