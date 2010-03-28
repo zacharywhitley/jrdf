@@ -59,8 +59,6 @@
 
 package org.jrdf.sparql.parser;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
@@ -70,19 +68,16 @@ import org.jrdf.query.Query;
 import org.jrdf.query.SelectQueryImpl;
 import org.jrdf.query.expression.Ask;
 import org.jrdf.query.expression.Conjunction;
-import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.EqualsExpression;
-import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
 import org.jrdf.query.expression.logic.LogicAndExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.LogicOrExpression;
-import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.attributename.VariableName;
@@ -91,15 +86,27 @@ import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.vocabulary.XSD;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.lang.reflect.Field;
+import java.net.URI;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
+import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
+import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import static org.jrdf.sparql.parser.OperatorTestUtil.bound;
 import static org.jrdf.sparql.parser.OperatorTestUtil.lang;
 import static org.jrdf.sparql.parser.OperatorTestUtil.literal;
 import static org.jrdf.sparql.parser.OperatorTestUtil.not;
 import static org.jrdf.sparql.parser.OperatorTestUtil.str;
-import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.NodeTestUtil.createLiteral;
-import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.ANY_SPO;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
@@ -109,13 +116,7 @@ import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
 import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
-import org.jrdf.vocabulary.XSD;
 import static org.jrdf.vocabulary.XSD.BOOLEAN;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.lang.reflect.Field;
-import java.net.URI;
 
 public final class SableCcSparqlParserIntegrationTest {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
@@ -153,21 +154,21 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testSingleConstraint() throws Exception {
+    public void singleConstraint() throws Exception {
         checkConstraintExpression("SELECT * " +
             "WHERE  { <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title }",
             BOOK_1_DC_TITLE_ID_1);
     }
 
     @Test
-    public void testSingleConstraint2() throws Exception {
+    public void singleConstraint2() throws Exception {
         checkConstraintExpression("SELECT * " +
             "WHERE  { <http://example.org/book/book2> <http://purl.org/dc/elements/1.1/title> ?title }",
             BOOK_2_DC_TITLE_ID_1);
     }
 
     @Test
-    public void testPrefix() throws Exception {
+    public void prefix() throws Exception {
         checkConstraintExpression("PREFIX examplebook: <http://example.org/book/> \n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
             "SELECT * " +
@@ -176,7 +177,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testTwoConstraints() throws Exception {
+    public void twoConstraints() throws Exception {
         checkConstraintExpression("SELECT * " +
             "WHERE  { <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title . " +
             "<http://example.org/book/book2> <http://purl.org/dc/elements/1.1/title> ?title }",
@@ -184,12 +185,12 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testTwoConstraints2() throws Exception {
+    public void twoConstraints2() throws Exception {
         checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . {} } ", new Conjunction(ANY_SPO, EMPTY_CONSTRAINT));
     }
 
     @Test
-    public void testTwoNestConstraintsInnerRight() throws Exception {
+    public void twoNestConstraintsInnerRight() throws Exception {
         checkConstraintExpression("SELECT * \n" +
             "WHERE { <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title . " +
             "{<http://example.org/book/book2> <http://purl.org/dc/elements/1.1/title> ?title }}",
@@ -197,7 +198,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testThreeConstraints() throws Exception {
+    public void treeConstraints() throws Exception {
         checkConstraintExpression("SELECT * " +
             "WHERE  { <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title . " +
             "<http://example.org/book/book2> <http://purl.org/dc/elements/1.1/title> ?title . " +
@@ -206,7 +207,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testUnionConstraint() throws Exception {
+    public void unionConstraint() throws Exception {
         checkConstraintExpression("SELECT * \n" +
             "WHERE {{ <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title} \n" +
             "UNION {<http://example.org/book/book2> <http://purl.org/dc/elements/1.1/title> ?title }}",
@@ -223,7 +224,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testUnionConstraint3() throws Exception {
+    public void unionConstraint3() throws Exception {
         checkConstraintExpression("SELECT * \n" +
             "WHERE {{ <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title} \n" +
             "UNION {<http://example.org/book/book2> <http://purl.org/dc/elements/1.1/title> ?title } \n" +
@@ -231,7 +232,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testUnionConstraint4() throws Exception {
+    public void unionConstraint4() throws Exception {
         checkConstraintExpression("SELECT * \n" +
             "WHERE {{} UNION { <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title} \n" +
             "UNION {<http://example.org/book/book2> <http://purl.org/dc/elements/1.1/title> ?title } }",
@@ -239,7 +240,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testSingleOptionalConstraint() throws Exception {
+    public void singleOptionalConstraint() throws Exception {
         Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
         checkConstraintExpression("SELECT * " +
             "WHERE { { ?x <http://xmlns.com/foaf/0.1/name> ?name } OPTIONAL " +
@@ -247,7 +248,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testOptionalConstraint1() throws Exception {
+    public void optionalConstraint1() throws Exception {
         Optional optional1 = new Optional(FOAF_NICK_EXP_2, FOAF_MBOX_EXP_3);
         Optional optional2 = new Optional(FOAF_NAME_EXP_1, optional1);
         checkConstraintExpression("SELECT * WHERE  { ?x <http://xmlns.com/foaf/0.1/name> ?name . \n" +
@@ -257,7 +258,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testOptionalConstraint2() throws Exception {
+    public void optionalConstraint2() throws Exception {
         Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_ALIAS_EXP_2);
         Optional optional2 = new Optional(optional1, FOAF_ALIAS_EXP_3);
         checkConstraintExpression("SELECT * WHERE  { ?x <http://xmlns.com/foaf/0.1/name> ?name .\n" +
@@ -267,7 +268,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testOptionalConstraint3() throws Exception {
+    public void optionalConstraint3() throws Exception {
         Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_ALIAS_EXP_2);
         Optional optional2 = new Optional(optional1, FOAF_ALIAS_EXP_3);
         checkConstraintExpression("SELECT * WHERE  { { ?x <http://xmlns.com/foaf/0.1/name> ?name } .\n" +
@@ -277,7 +278,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testComplicatedOptional1() throws Exception {
+    public void complicatedOptional1() throws Exception {
         Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
         Optional optional2 = new Optional(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
         Conjunction expectedExpression = new Conjunction(optional1, optional2);
@@ -290,7 +291,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testComplicatedOptional2() throws Exception {
+    public void complicatedOptional2() throws Exception {
         Optional optional1 = new Optional(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
         Optional optional2 = new Optional(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
         Optional expectedExpression = new Optional(optional1, optional2);
@@ -303,7 +304,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testLiteralQuote() throws Exception {
+    public void literalQuote() throws Exception {
         Expression spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'The Pragmatic Programmer' } ", spPrag1);
         Expression spPrag2 = createConstraintExpression("s", "p", LITERAL, 2);
@@ -311,7 +312,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testLiteralWithLanguage() throws Exception {
+    public void literalWithLanguage() throws Exception {
         Expression spHello1 = createConstraintExpression("s", "p", createLiteral("hello", "en"), 1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'hello'@en }", spHello1);
         Expression spHello2 = createConstraintExpression("s", "p", createLiteral("hello", "en"), 2);
@@ -319,7 +320,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testLiteralWithDatatype() throws Exception {
+    public void literalWithDatatype() throws Exception {
         Literal one = createLiteral("1", XSD.INTEGER);
         Literal helloString = createLiteral("hello", XSD.STRING);
         Expression spHello1 = createConstraintExpression("s", "p", one, 1);
@@ -331,6 +332,20 @@ public final class SableCcSparqlParserIntegrationTest {
         checkConstraintExpression("PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>" +
             " SELECT * WHERE { ?s ?p 'hello'^^xsd:string }", spHello3);
     }
+
+//    @Test
+//    public void bug2969667() throws Exception {
+//        Expression expression;
+//        Literal date = createLiteral("2010-03-12T22:36:40Z", XSD.DATE_TIME);
+//        expression = createConstraintExpression("date", "", date, 1);
+//        checkConstraintExpression("PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\n" +
+//                "SELECT ?s ?p ?o\n" +
+//                "WHERE {\n" +
+//                "?s ?p ?o .\n" +
+//                "?s <urn:created> ?date .\n" +
+//                "FILTER ( ?date > \"2010-03-12T22:36:40Z\"^^xsd:dateTime )\n" +
+//                "}", expression);
+//    }
 
     @Test
     public void testLiteralWithIncorrectPrefix() {

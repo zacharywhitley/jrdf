@@ -91,11 +91,10 @@ public class AnswerIterator implements ClosableIterator<TypeValue[]> {
         TypeValue[] results = new TypeValue[heading.size()];
         int index = 0;
         for (Attribute headingAttribute : heading) {
-            org.jrdf.graph.Node value;
-            try {
-                value = avps.get(headingAttribute);
-            } catch (Exception e) {
-                value = NullaryNode.NULLARY_NODE;
+            org.jrdf.graph.Node value = NullaryNode.NULLARY_NODE;
+            Node tmpNode = avps.get(headingAttribute);
+            if (tmpNode != null) {
+                value = tmpNode;
             }
             results[index] = nodeToTypeValue.convert(value);
             index++;
