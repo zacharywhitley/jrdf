@@ -72,8 +72,10 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.Filter;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
+import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.logic.EqualsExpression;
+import org.jrdf.query.expression.logic.LessThanExpression;
 import org.jrdf.query.expression.logic.LogicAndExpression;
 import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicNotExpression;
@@ -88,18 +90,20 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.vocabulary.XSD;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.net.URI;
 
+import static java.net.URI.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.graph.AnyNode.ANY_NODE;
 import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
 import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createAttValue;
 import static org.jrdf.sparql.parser.OperatorTestUtil.bound;
 import static org.jrdf.sparql.parser.OperatorTestUtil.lang;
 import static org.jrdf.sparql.parser.OperatorTestUtil.literal;
@@ -117,11 +121,16 @@ import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
 import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 import static org.jrdf.vocabulary.XSD.BOOLEAN;
+import static org.jrdf.vocabulary.XSD.DATE_TIME;
+import static org.jrdf.vocabulary.XSD.DECIMAL;
+import static org.jrdf.vocabulary.XSD.DOUBLE;
+import static org.jrdf.vocabulary.XSD.INTEGER;
+import static org.jrdf.vocabulary.XSD.STRING;
 
 public final class SableCcSparqlParserIntegrationTest {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
-    private static final URI PURL_DATE = URI.create("http://purl.org/dc/elements/1.1/date");
+    private static final URI PURL_DATE = create("http://purl.org/dc/elements/1.1/date");
     private static final Literal LITERAL = createLiteral("The Pragmatic Programmer");
     private static final Expression BOOK1_AND_2_CONJUNCTION
         = new Conjunction(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
@@ -321,8 +330,8 @@ public final class SableCcSparqlParserIntegrationTest {
 
     @Test
     public void literalWithDatatype() throws Exception {
-        Literal one = createLiteral("1", XSD.INTEGER);
-        Literal helloString = createLiteral("hello", XSD.STRING);
+        Literal one = createLiteral("1", INTEGER);
+        Literal helloString = createLiteral("hello", STRING);
         Expression spHello1 = createConstraintExpression("s", "p", one, 1);
         Expression spHello2 = createConstraintExpression("s", "p", helloString, 2);
         Expression spHello3 = createConstraintExpression("s", "p", helloString, 3);
@@ -344,9 +353,9 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testUnsignedNumericIntegerLiteral() throws Exception {
-        Literal one = createLiteral("1", XSD.INTEGER);
-        Literal posTwo = createLiteral("+02", XSD.INTEGER);
+    public void unsignedNumericIntegerLiteral() throws Exception {
+        Literal one = createLiteral("1", INTEGER);
+        Literal posTwo = createLiteral("+02", INTEGER);
         Expression spOne = createConstraintExpression("s", "p", one, 1);
         Expression spPosTwo = createConstraintExpression("s", "p", posTwo, 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1 }", spOne);
@@ -354,10 +363,10 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testUnsignedNumericDecimalLiteral() throws Exception {
-        Literal onePointThree = createLiteral("1.3", XSD.DECIMAL);
-        Literal onePointThreeZeroZeroZero = createLiteral("1.300", XSD.DECIMAL);
-        Literal negOnePointThreeZeroZeroZero = createLiteral("-1.300", XSD.DECIMAL);
+    public void unsignedNumericDecimalLiteral() throws Exception {
+        Literal onePointThree = createLiteral("1.3", DECIMAL);
+        Literal onePointThreeZeroZeroZero = createLiteral("1.300", DECIMAL);
+        Literal negOnePointThreeZeroZeroZero = createLiteral("-1.300", DECIMAL);
         Expression spOnePointThree = createConstraintExpression("s", "p", onePointThree, 1);
         Expression spOnePointThreeZeroZeroZero = createConstraintExpression("s", "p",
             onePointThreeZeroZeroZero, 2);
@@ -369,9 +378,9 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testUnsignedNumericDoubleLiteral() throws Exception {
-        Literal doubleLiteral = createLiteral("1.3e6", XSD.DOUBLE);
-        Literal signedDoubleLiteral = createLiteral("+1.3E06", XSD.DOUBLE);
+    public void unsignedNumericDoubleLiteral() throws Exception {
+        Literal doubleLiteral = createLiteral("1.3e6", DOUBLE);
+        Literal signedDoubleLiteral = createLiteral("+1.3E06", DOUBLE);
         Expression spDouble = createConstraintExpression("s", "p", doubleLiteral, 1);
         Expression spSignedDouble = createConstraintExpression("s", "p", signedDoubleLiteral, 2);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 1.3e6 }", spDouble);
@@ -379,45 +388,45 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testBooleanLiteral() throws Exception {
+    public void booleanLiteral() throws Exception {
         final Literal trueLiteral = createLiteral("true", BOOLEAN);
         final Expression spTrue = createConstraintExpression("s", "p", trueLiteral, 1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p true }", spTrue);
     }
 
     @Test
-    public void testBooleanLiteralFalse() throws Exception {
+    public void booleanLiteralFalse() throws Exception {
         final Literal falseLiteral = createLiteral("false", BOOLEAN);
         final Expression spFalse = createConstraintExpression("s", "p", falseLiteral, 1);
         checkConstraintExpression("SELECT * WHERE { ?s ?p false }", spFalse);
     }
 
-//    @Test
-//    public void bug2969667() throws Exception {
-//        Expression expression;
-//        Literal date = createLiteral("2010-03-12T22:36:40Z", XSD.DATE_TIME);
-//        expression = createConstraintExpression("date", "", date, 1);
-//        checkConstraintExpression("PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\n" +
-//                "SELECT ?s ?p ?o\n" +
-//                "WHERE {\n" +
-//                "?s ?p ?o .\n" +
-//                "?s <urn:created> ?date .\n" +
-//                "FILTER ( ?date > \"2010-03-12T22:36:40Z\"^^xsd:dateTime )\n" +
-//                "}", expression);
-//    }
-
     @Test
-    public void testFilterUntypedLiteral() throws Exception {
-        final LogicExpression strVarOEqUnknown = str(oVar("o")).eq(literal("unknown"));
-        final Expression matchSpoAndFilter = new Filter(createConstraintExpression("s", "p", "o"), strVarOEqUnknown);
-        checkConstraintExpression("SELECT * \n" +
-            "WHERE { ?s ?p ?o . \n" +
-            "FILTER( str(?o) = \"unknown\" ) }", matchSpoAndFilter);
+    public void filterWithGreaterThan() throws Exception {
+        Literal dateValue = createLiteral("2010-03-12T22:36:40Z", DATE_TIME);
+        Attribute dateAtt = oVar("date");
+        SingleValue lhs = new SingleValue(createAttValue(dateAtt, ANY_NODE));
+        SingleValue rhs = new SingleValue(createAttValue(dateAtt, dateValue));
+        LogicExpression greaterThanSomeDate = new LessThanExpression(rhs, lhs);
+        Expression spo = createConstraintExpression("s", "p", "o");
+        Expression urnCreated = createConstraintExpression("s", create("urn:created"), "date", 2);
+        Expression expression = new Filter(new Conjunction(spo, urnCreated), greaterThanSomeDate);
+        checkConstraintExpression(
+                "PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> " +
+                "SELECT * WHERE { ?s ?p ?o . ?s <urn:created> ?date ." +
+                "FILTER ( ?date > \"2010-03-12T22:36:40Z\"^^xsd:dateTime ) }", expression);
     }
 
     @Test
-    public void testFilterWithTypeLiteral() throws Exception {
-        final LogicExpression strVarOEqUnknown = str(oVar("o")).eq(literal("unknown", XSD.STRING));
+    public void filterUntypedLiteral() throws Exception {
+        final LogicExpression strVarOEqUnknown = str(oVar("o")).eq(literal("unknown"));
+        final Expression matchSpoAndFilter = new Filter(createConstraintExpression("s", "p", "o"), strVarOEqUnknown);
+        checkConstraintExpression("SELECT * WHERE { ?s ?p ?o . FILTER( str(?o) = \"unknown\" ) }", matchSpoAndFilter);
+    }
+
+    @Test
+    public void filterWithTypeLiteral() throws Exception {
+        final LogicExpression strVarOEqUnknown = str(oVar("o")).eq(literal("unknown", STRING));
         final Expression matchSpoAndFilter = new Filter(createConstraintExpression("s", "p", "o"), strVarOEqUnknown);
         checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
             "SELECT *\n" +
@@ -426,10 +435,11 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testBooleanNotStrOperators() throws Exception {
+    public void booleanNotStrOperators() throws Exception {
         final LogicExpression notStrVarNameEqAbc = not(str(oVar("name")).eq(literal("abc")));
         final Expression matchNameAndFilter = new Filter(FOAF_NAME_EXP_1, notStrVarNameEqAbc);
-        checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        checkConstraintExpression(
+            "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
             "SELECT ?name\n" +
             "WHERE { ?x foaf:name ?name . " +
@@ -437,7 +447,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testNeqExpression() throws Exception {
+    public void neqExpression() throws Exception {
         final Expression matchNameAndFilter = new Filter(FOAF_NAME_EXP_1, str(oVar("name")).neq(literal("abc")));
         checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
@@ -447,7 +457,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testEqLangOperator() throws Exception {
+    public void eqLangOperator() throws Exception {
         final LogicExpression eqnExp = lang(oVar("name")).eq(literal("en"));
         final Expression matchNameAndFilter = new Filter(FOAF_NAME_EXP_1, eqnExp);
         checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
@@ -458,7 +468,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testOppositeEqLangOperator() throws Exception {
+    public void oppositeEqLangOperator() throws Exception {
         final LogicExpression eqnExp = literal("en").eq(lang(oVar("name")));
         final Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
         checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
@@ -469,7 +479,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testBooleanNotOperator() throws Exception {
+    public void booleanNotOperator() throws Exception {
         final LogicExpression boundVar = bound(oVar("name"));
         final LogicExpression notBound = new LogicNotExpression(boundVar);
         final Expression matchNameAndFilter = new Filter(FOAF_NAME_EXP_1, notBound);
@@ -481,7 +491,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testThreePartOptional() throws Exception {
+    public void threePartOptional() throws Exception {
         final Expression optional = new Optional(FOAF_NAME_EXP_1, DC_DATE_EXP_2);
         final LogicExpression boundVar = bound(oVar("date"));
         final Expression optionalAndFilter = new Filter(optional, boundVar);
@@ -494,7 +504,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testRareBooleanFilter() throws Exception {
+    public void rareBooleanFilter() throws Exception {
         LogicExpression andExp = new LogicAndExpression(bound(sVar("x")), bound(oVar("name")));
         LogicExpression equalsExp = new EqualsExpression(andExp, TRUE_EXPRESSION);
         Expression filterExpression = new Filter(FOAF_NAME_EXP_1, equalsExp);
@@ -506,7 +516,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testEqLangOperatorDiffVariables() throws Exception {
+    public void eqLangOperatorDiffVariables() throws Exception {
         LogicExpression eqnExp = lang(oVar("name")).eq(lang(oVar("nick")));
         Expression conj = new Conjunction(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
         Expression filterExpression = new Filter(conj, eqnExp);
@@ -518,7 +528,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testActualLangTag() throws Exception {
+    public void languageTag() throws Exception {
         LogicExpression eqnExp = lang(oVar("name")).eq(literal("en"));
         Expression filterExpression = new Filter(FOAF_NAME_EXP_1, eqnExp);
         checkConstraintExpression("PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
@@ -529,7 +539,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testLogicAndExpression() throws Exception {
+    public void logicalAndExpression() throws Exception {
         LogicExpression equalsExpression = str(oVar("name")).eq(createLiteral("abc"));
         LogicExpression boundExpression = bound(sVar("x"));
         LogicExpression andExpression = new LogicAndExpression(equalsExpression, boundExpression);
@@ -542,7 +552,7 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testLogicOrExpression() throws Exception {
+    public void logicalOrExpression() throws Exception {
         LogicExpression equalsExpression = str(oVar("name")).eq(createLiteral("abc"));
         LogicExpression boundExpression = bound(sVar("x"));
         LogicExpression orExpression = new LogicOrExpression(equalsExpression, boundExpression);
@@ -555,28 +565,28 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
-    public void testSimpleAskQuery() throws Exception {
+    public void simpleAskQuery() throws Exception {
         Expression spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
         checkConstraintExpression("ASK WHERE { ?s ?p 'The Pragmatic Programmer' } ", spPrag1);
     }
 
     @Test
-    public void testSimpleTrueBoolean() throws Exception {
+    public void trueBoolean() throws Exception {
         Expression spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
         Filter filter = new Filter(spPrag1, TRUE_EXPRESSION);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'The Pragmatic Programmer' FILTER (TRUE) } ", filter);
     }
 
     @Test
-    public void testSimpleFalseBoolean() throws Exception {
+    public void falseBoolean() throws Exception {
         Expression spPrag1 = createConstraintExpression("s", "p", LITERAL, 1);
         Filter filter = new Filter(spPrag1, FALSE_EXPRESSION);
         checkConstraintExpression("SELECT * WHERE { ?s ?p 'The Pragmatic Programmer' FILTER (FALSE) } ", filter);
     }
 
     @Test
-    public void testPrefixInFilteredAsk() throws Exception {
-        LogicExpression equalsExpression = str(oVar("o")).eq(createLiteral("unknown", XSD.STRING));
+    public void prefixInFilteredAsk() throws Exception {
+        LogicExpression equalsExpression = str(oVar("o")).eq(createLiteral("unknown", STRING));
         final Expression filterExpression = new Filter(createConstraintExpression("s", "p", "o"), equalsExpression);
         checkConstraintExpression("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
             "ASK WHERE { ?s ?p ?o . FILTER(str(?o) = \"unknown\"^^xsd:string) }", filterExpression);
