@@ -66,12 +66,9 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.SingleValue;
 import org.jrdf.query.expression.StrOperator;
-import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
-import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
-import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
@@ -92,6 +89,10 @@ import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.jrdf.query.expression.logic.FalseExpression.FALSE_EXPRESSION;
+import static org.jrdf.query.expression.logic.TrueExpression.TRUE_EXPRESSION;
+import static org.jrdf.query.relation.constants.NullaryAttribute.NULLARY_ATTRIBUTE;
 
 public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements NumericExpressionAnalyser {
     private ParserException exception;
@@ -223,6 +224,8 @@ public class NumericExpressionAnalyserImpl extends DepthFirstAdapter implements 
             returnValue.put(NULLARY_ATTRIBUTE, value);
         } else {
             NodeType type = namePosMap.get(attributeName);
+            // TODO This may not be correct - shouldn't it be SubjectPredicateObjectNodeType or an error
+            // Currently leaning towards an error.
             type = (type == null) ? new ObjectNodeType() : type;
             Attribute attribute = new AttributeImpl(attributeName, type);
             returnValue.put(attribute, value);
