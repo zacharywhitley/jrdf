@@ -78,12 +78,12 @@ Tokens
   {def}                           decimal        = digit+ '.' digit* | '.' digit+;
   {def}                           double         = digitstart ('e' | 'E') digit+;
 
+  {def}                           lt             = '<';
   {def}                           resource       = '<' urlchar* '>';
   {def}                           lbracket       = '(';
   {def}                           rbracket       = ')';
   {def}                           equals         = '=';
   {def}                           nequals        = '!=';
-  {def}                           lt             = '<';
   {def}                           lte            = '<=';
   {def}                           gt             = '>';
   {def}                           gte            = '>=';
@@ -232,8 +232,8 @@ Productions
     {false} false_literal ;
 
   constraint =
-    {builtincall} builtincall |
-    {bracketed_expression} bracketed_expression;
+    {bracketed_expression} bracketed_expression |
+    {builtincall} builtincall;
 
   builtincall =
     {str} str_call bracketed_expression |
@@ -284,12 +284,12 @@ Productions
 
   primary_expression =
     {bracketed_expression} bracketed_expression |
+    {builtincall} builtincall |
+    {resource_or_qname} iri_ref_or_prefixed_name;
     {rdf_literal} rdf_literal |
     {numeric_literal} numeric_literal |
     {boolean_literal} boolean_literal |
     {variable} variable |
-    {builtincall} builtincall |
-    {resource_or_qname} iri_ref_or_prefixed_name;
 
   iri_ref_or_prefixed_name =
     {iri_ref} resource |

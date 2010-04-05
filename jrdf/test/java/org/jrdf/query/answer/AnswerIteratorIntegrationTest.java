@@ -92,8 +92,8 @@ public class AnswerIteratorIntegrationTest {
         String query =
                 "SELECT ?uuid ?test " +
                 "WHERE { " +
-                "	?s <urn:uuid> ?uuid . " +
-                "	OPTIONAL { ?s <urn:test> ?test } . " +
+                "?s <urn:uuid> ?uuid . " +
+                "OPTIONAL { ?s <urn:test> ?test } . " +
                 "}";
 
         SparqlConnection sparql = factory.getNewSparqlConnection();
