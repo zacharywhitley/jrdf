@@ -169,7 +169,7 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
-                new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
+            new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
         IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
         Graph graph = new OrderedGraphFactoryImpl(longIndexes, nodePool, collectionFactory).getGraph();
         final long curMaxMoleculeId = readIndex.getMaxMoleculeId();
@@ -180,10 +180,10 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
 
     private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes(long graphNumber) {
         MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesameSync[]{
-                new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "spomd" + graphNumber)),
-                new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "posmd" + graphNumber)),
-                new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "ospmd" + graphNumber)),
-                new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "dmspo" + graphNumber)),
+            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "spomd" + graphNumber)),
+            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "posmd" + graphNumber)),
+            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "ospmd" + graphNumber)),
+            new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "dmspo" + graphNumber)),
         };
         openStructureIndexes.addAll(asList(indexes));
         return indexes;
