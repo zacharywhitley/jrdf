@@ -129,7 +129,6 @@ public class FilterAnalyserImpl extends DepthFirstAdapter implements FilterAnaly
 
     @Override
     public void caseARelationalExpression(ARelationalExpression node) {
-        System.err.println("Rel Exp " + node);
         node.getNumericExpression().apply(this);
         final PMoreNumericExpression moreExpressions = node.getMoreNumericExpression();
         if (moreExpressions != null) {
