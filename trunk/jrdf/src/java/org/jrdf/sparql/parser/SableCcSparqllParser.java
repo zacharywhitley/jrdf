@@ -72,10 +72,11 @@ import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.parser.ParserException;
-import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.IOException;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public final class SableCcSparqllParser implements SparqlParser {
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";

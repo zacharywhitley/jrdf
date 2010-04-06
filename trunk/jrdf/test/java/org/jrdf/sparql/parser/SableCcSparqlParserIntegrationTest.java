@@ -418,6 +418,27 @@ public final class SableCcSparqlParserIntegrationTest {
     }
 
     @Test
+    public void filterInTheMiddle() throws Exception {
+        final Expression expression1 = createConstraintExpression("s", create("urn:time"), "time", 1);
+        Literal dateValue = createLiteral("1248040800000", DATE_TIME);
+        Attribute dateAtt = oVar("time");
+        SingleValue lhs = new SingleValue(createAttValue(dateAtt, ANY_NODE));
+        SingleValue rhs = new SingleValue(createAttValue(dateAtt, dateValue));
+        LogicExpression greaterThanSomeDate = new LessThanExpression(lhs, rhs);
+        final Expression expression2 = new Filter(createConstraintExpression("s", create("urn:variable"),
+                "variable", 2), greaterThanSomeDate);
+        final Conjunction expression = new Conjunction(expression1, expression2);
+        checkConstraintExpression(
+                "PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\n" +
+                "SELECT *\n" +
+                "WHERE {\n" +
+                "?s <urn:time> ?time .\n" +
+                "FILTER ( ?time < \"1248040800000\"^^xsd:dateTime ) .\n" +
+                "?s <urn:variable> ?variable .\n" +
+                "}", expression);
+    }
+
+    @Test
     public void filterUntypedLiteral() throws Exception {
         final LogicExpression strVarOEqUnknown = str(oVar("o")).eq(literal("unknown"));
         final Expression matchSpoAndFilter = new Filter(createConstraintExpression("s", "p", "o"), strVarOEqUnknown);

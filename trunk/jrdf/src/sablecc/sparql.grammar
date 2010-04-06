@@ -20,7 +20,7 @@ Helpers
   nonquote   = [character - [quote + '\']];
   nondbquote = [character - [dbquote + '\']];
   nonslash   = [[33..126] - sl];
-  urlchar    = [character - '>'];
+  urlchar    = [character - ['>' + '<']];
   echar      = 't' | 'b' | 'n' | 'r' | 'f' | '\' | dbquote | quote;
   digitstart = digit+ '.' digit* | '.' digit+ | digit+;
 
@@ -285,11 +285,11 @@ Productions
   primary_expression =
     {bracketed_expression} bracketed_expression |
     {builtincall} builtincall |
-    {resource_or_qname} iri_ref_or_prefixed_name;
+    {resource_or_qname} iri_ref_or_prefixed_name |
     {rdf_literal} rdf_literal |
     {numeric_literal} numeric_literal |
     {boolean_literal} boolean_literal |
-    {variable} variable |
+    {variable} variable;
 
   iri_ref_or_prefixed_name =
     {iri_ref} resource |
