@@ -15,12 +15,14 @@ Helpers
   dbquote    = 34;
   quote      = 39;
   sl         = 47;
-  whitespace = ' ' | tab | lf | cr;
+  space      = ' ';
+  whitespace = space | tab | lf | cr;
   nonblank   = [33..126];
   nonquote   = [character - [quote + '\']];
   nondbquote = [character - [dbquote + '\']];
   nonslash   = [[33..126] - sl];
-  urlchar    = [character - ['>' + '<']];
+  badurlchar = [[[[[[[[['<' + '>'] + dbquote] + space] + '{'] + '}'] + '|'] + '\'] + '^'] + '`'];
+  urlchar    = [character - badurlchar];
   echar      = 't' | 'b' | 'n' | 'r' | 'f' | '\' | dbquote | quote;
   digitstart = digit+ '.' digit* | '.' digit+ | digit+;
 
