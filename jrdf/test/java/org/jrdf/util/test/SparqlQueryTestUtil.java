@@ -68,7 +68,6 @@ import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_2;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_3;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.createBookDcTitleExpression;
-import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 
 /**
  * Artefacts used in tests.
@@ -149,7 +148,7 @@ public final class SparqlQueryTestUtil {
     public static final Expression BOOK_2_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
     public static final Expression BOOK_2_DC_TITLE_ID_2 = createBookDcTitleExpression(URI_BOOK_2, 2);
     public static final Expression BOOK_3_DC_TITLE_ID_3 = createBookDcTitleExpression(URI_BOOK_3, 3);
-    public static final Expression ANY_SPO = createConstraintExpression("s", "p", "o");
+    public static final Expression ANY_SPO = TripleTestUtil.triple("s", "p", "o");
 
     private SparqlQueryTestUtil() {
     }

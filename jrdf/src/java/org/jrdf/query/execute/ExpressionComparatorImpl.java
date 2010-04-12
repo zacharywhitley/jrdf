@@ -87,7 +87,7 @@ import org.jrdf.query.expression.logic.TrueExpression;
  * @version :$
  */
 public final class ExpressionComparatorImpl extends ExpressionVisitorAdapter<Integer>
-    implements ExpressionComparator<Integer> {
+        implements ExpressionComparator<Integer> {
     private static final long serialVersionUID = 4884876904025513571L;
 
     /**

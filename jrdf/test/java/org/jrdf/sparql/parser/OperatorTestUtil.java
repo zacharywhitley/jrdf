@@ -62,6 +62,8 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.query.expression.BoundOperator;
 import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.LangOperator;
 import org.jrdf.query.expression.Operator;
 import org.jrdf.query.expression.SingleValue;
@@ -73,8 +75,14 @@ import org.jrdf.query.expression.logic.LogicExpression;
 import org.jrdf.query.expression.logic.LogicNotExpression;
 import org.jrdf.query.expression.logic.NEqualsExpression;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.constants.NullaryNode;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.type.ObjectNodeType;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.jrdf.graph.AnyNode.ANY_NODE;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createAttValue;
@@ -92,11 +100,16 @@ public class OperatorTestUtil {
         this.node = newNode;
     }
 
-    public static OperatorTestUtil literal(String literal) {
+    public static OperatorTestUtil var(final String varName) {
+        Attribute attribute = new AttributeImpl(new VariableName(varName), new ObjectNodeType());
+        return new OperatorTestUtil(new NoOp(attribute));
+    }
+
+    public static OperatorTestUtil literal(final String literal) {
         return new OperatorTestUtil(createLiteral(literal));
     }
 
-    public static OperatorTestUtil literal(String literal, URI datatype) {
+    public static OperatorTestUtil literal(final String literal, final URI datatype) {
         return new OperatorTestUtil(createLiteral(literal, datatype));
     }
 
@@ -113,23 +126,31 @@ public class OperatorTestUtil {
     }
 
     public LogicExpression eq(Literal literal) {
-        Constraint value = new SingleValue(createAttValue(getAttribute(op), literal));
-        return new EqualsExpression(op, value);
+        Attribute attribute = getAttribute(op);
+        Expression lhs = getExp(attribute);
+        Expression rhs = new SingleValue(createAttValue(attribute, literal));
+        return new EqualsExpression(lhs, rhs);
     }
 
     public LogicExpression lt(Literal literal) {
-        Constraint value = new SingleValue(createAttValue(getAttribute(op), literal));
-        return new LessThanExpression(op, value);
+        Attribute attribute = getAttribute(op);
+        Expression lhs = getExp(attribute);
+        Expression rhs = new SingleValue(createAttValue(attribute, literal));
+        return new LessThanExpression(lhs, rhs);
     }
 
     public LogicExpression gt(Literal literal) {
-        Constraint value = new SingleValue(createAttValue(getAttribute(op), literal));
-        return new LessThanExpression(value, op);
+        Attribute attribute = getAttribute(op);
+        Expression lhs = new SingleValue(createAttValue(attribute, literal));
+        Expression rhs = getExp(attribute);
+        return new LessThanExpression(lhs, rhs);
     }
 
     public LogicExpression neq(Literal literal) {
-        Constraint value = new SingleValue(createAttValue(getAttribute(op), literal));
-        return new NEqualsExpression(op, value);
+        Attribute attribute = getAttribute(op);
+        Expression lhs = getExp(attribute);
+        Expression rhs = new SingleValue(createAttValue(attribute, literal));
+        return new NEqualsExpression(lhs, rhs);
     }
 
     public LogicExpression eq(OperatorTestUtil util) {
@@ -164,5 +185,36 @@ public class OperatorTestUtil {
 
     private Attribute getAttribute(final Operator operator) {
         return operator.getValue().keySet().iterator().next();
+    }
+
+    private Expression getExp(Attribute attribute) {
+        if (op instanceof NoOp) {
+            // Unwrap operation
+            return new SingleValue(createAttValue(attribute, ANY_NODE));
+        } else {
+            return op;
+        }
+    }
+
+    private static class NoOp implements Operator {
+        private Attribute attribute;
+
+        private NoOp(Attribute newAttribute) {
+            this.attribute = newAttribute;
+        }
+                                               
+        public <R> R accept(ExpressionVisitor<R> v) {
+            return null;
+        }
+
+        public int size() {
+            return 0;
+        }
+
+        public Map<Attribute, Node> getValue() {
+            Map<Attribute, Node> map = new HashMap<Attribute, Node>();
+            map.put(attribute, NullaryNode.NULLARY_NODE);
+            return map;
+        }
     }
 }

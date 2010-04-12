@@ -94,7 +94,9 @@ import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.sparql.builder.QueryBuilder;
 import static org.jrdf.util.test.NodeTestUtil.createLiteral;
 import org.jrdf.util.test.ReflectTestUtil;
-import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
+import org.jrdf.util.test.TripleTestUtil;
+
+import static org.jrdf.util.test.TripleTestUtil.triple;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
@@ -133,12 +135,12 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     protected static final Attribute ATTR_O3 = new AttributeImpl(ATTRIBUTE_O3, OBJECT_NODE_TYPE);
 
     private ExpressionSimplifier<Void> simplifier;
-    private static final Expression SPO_CONSTRAINT = createConstraintExpression("s", "p", "o");
-    private static final Expression SPO1_CONSTRAINT = createConstraintExpression("s", "p", "o1");
-    private static final Expression S1PO1_CONSTRAINT = createConstraintExpression("s1", "p", "o1");
-    private static final Expression S1PO_CONSTRAINT = createConstraintExpression("s1", "p", "o");
-    private static final Expression S2PO2_CONSTRAINT = createConstraintExpression("s2", "p", "o2");
-    private static final Expression S3PO3_CONSTRAINT = createConstraintExpression("s3", "p", "o3");
+    private static final Expression SPO_CONSTRAINT = TripleTestUtil.triple("s", "p", "o");
+    private static final Expression SPO1_CONSTRAINT = TripleTestUtil.triple("s", "p", "o1");
+    private static final Expression S1PO1_CONSTRAINT = TripleTestUtil.triple("s1", "p", "o1");
+    private static final Expression S1PO_CONSTRAINT = TripleTestUtil.triple("s1", "p", "o");
+    private static final Expression S2PO2_CONSTRAINT = TripleTestUtil.triple("s2", "p", "o2");
+    private static final Expression S3PO3_CONSTRAINT = TripleTestUtil.triple("s3", "p", "o3");
 
     @Override
     protected void setUp() throws Exception {
@@ -151,10 +153,10 @@ public class ExpressionSimplifierImplIntegrationTest extends TestCase {
     public void testSimpleQuery() throws Exception {
         String queryText = "SELECT * WHERE { ?s ?p 'hello'@en }";
         Literal literal = createLiteral("hello", "en");
-        Expression constraint = createConstraintExpression("s", "p", literal, 1);
+        Expression constraint = triple("s", "p", literal, 1);
         checkExpression(constraint, queryText);
         queryText = "ASK WHERE { ?s ?p 'hello'@en }";
-        constraint = createConstraintExpression("s", "p", literal, 2);
+        constraint = triple("s", "p", literal, 2);
         checkExpression(constraint, queryText);
     }
 
