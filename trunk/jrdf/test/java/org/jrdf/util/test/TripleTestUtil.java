@@ -111,11 +111,9 @@ public class TripleTestUtil {
     public static final String LITERAL_BOOK_TITLE = "The Pragmatic Programmer";
     public static final Triple TRIPLE_BOOK_1_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_2_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_2);
-    public static final Triple TRIPLE_BOOK_3_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_3);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = createDcSubjectTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = createDcSubjectTriple(URI_BOOK_1, LITERAL_BOOK_TITLE);
     public static final Triple TRIPLE_VARIABLE_VARIABLE_SUBJECT = createVariableSubjectTriple(URI_DC_SUBJECT);
-    public static final Triple SPO_VARIABLES = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
     public static final LinkedHashMap<Attribute, Node> AVO_BOOK_1_DC_SUBJECT_LITERAL =
@@ -128,16 +126,14 @@ public class TripleTestUtil {
         return new SingleConstraint(avp);
     }
 
-    public static Expression createConstraintExpression(String varSubject, URI predicate,
-        String varObject, long suffix) {
+    public static Expression triple(String varSubject, URI predicate, String varObject, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, NodeTestUtil.createResource(predicate), ANY_OBJECT_NODE);
         LinkedHashMap<Attribute, Node> avp = AVP_HELPER.createLinkedAvo(triple,
             createSubjectObjectVariableAttributes(varSubject, varObject, suffix));
         return new SingleConstraint(avp);
     }
 
-    public static Expression createConstraintExpression(String varSubject, String varPredicate,
-        String varObject) {
+    public static Expression triple(String varSubject, String varPredicate, String varObject) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Attribute[] attributes = createAttributes(new VariableName(varSubject), new VariableName(varPredicate),
                 new VariableName(varObject));
@@ -145,8 +141,7 @@ public class TripleTestUtil {
         return new SingleConstraint(avp);
     }
 
-    public static Expression createConstraintExpression(String varSubject, String varPredicate,
-        Literal constLiteral, long suffix) {
+    public static Expression triple(String varSubject, String varPredicate, Literal constLiteral, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, constLiteral);
         LinkedHashMap<Attribute, Node> avp = AVP_HELPER.createLinkedAvo(triple,
             createSubjectPredicateVariableAttributes(varSubject, varPredicate, suffix));

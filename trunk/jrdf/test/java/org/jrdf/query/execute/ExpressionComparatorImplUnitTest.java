@@ -60,17 +60,18 @@
 package org.jrdf.query.execute;
 
 import junit.framework.TestCase;
-import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
 import org.jrdf.query.expression.Conjunction;
-import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.Union;
+import org.jrdf.util.test.TripleTestUtil;
+
+import static org.jrdf.query.execute.ExpressionComparatorImpl.EXPRESSION_COMPARATOR;
+import static org.jrdf.query.expression.EmptyConstraint.EMPTY_CONSTRAINT;
 import static org.jrdf.util.test.SparqlQueryTestUtil.ANY_SPO;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_3_DC_TITLE_ID_3;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
-import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 
 /**
  * @author Yuan-Fang Li
@@ -82,20 +83,16 @@ public class ExpressionComparatorImplUnitTest extends TestCase {
         = new Conjunction(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression BOOK1_AND_2_AND_3_CONJUNCTION
         = new Conjunction(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
-    private static final Expression BOOK1_AND_2_UNION
-        = new Union(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
-    private static final Expression BOOK1_AND_2_AND_3_UNION
-        = new Union(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
-    private static final Expression ALL_AND_EMPTY = new Conjunction(ANY_SPO,
-        EMPTY_CONSTRAINT);
-    private static final Expression FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
-        "name", 1);
+    private static final Expression BOOK1_AND_2_UNION = new Union(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+    private static final Expression BOOK1_AND_2_AND_3_UNION = new Union(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
+    private static final Expression ALL_AND_EMPTY = new Conjunction(ANY_SPO, EMPTY_CONSTRAINT);
+    private static final Expression FOAF_NAME_EXP_1 = TripleTestUtil.triple("x", FOAF_NAME, "name", 1);
 
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
 
-    private final ExpressionComparator expressionComparator = EXPRESSION_COMPARATOR;
+    private final ExpressionComparator<Integer> expressionComparator = EXPRESSION_COMPARATOR;
 
     public void testSimpleConjunctionSize() {
         final int size = BOOK1_AND_2_CONJUNCTION.size();
