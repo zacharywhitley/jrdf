@@ -60,11 +60,10 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.iterator.IteratorFactory;
 
 public interface ReadWriteGraphFactory extends GraphFactory {
-
+    // TODO AN Remove - this is only used for testing?
     ReadWriteGraph getReadWriteGraph();
 
-    IteratorFactory getIteratorFactory();
+//    void close();
 }

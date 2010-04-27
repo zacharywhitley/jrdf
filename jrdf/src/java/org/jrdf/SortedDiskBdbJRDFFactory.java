@@ -64,7 +64,7 @@ import org.jrdf.collection.BdbMapFactory;
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.local.OrderedGraphFactoryImpl;
+import org.jrdf.graph.local.PersistentGraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.bdb.LongIndexBdb;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
@@ -80,9 +80,10 @@ import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
-import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 public final class SortedDiskBdbJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
@@ -116,7 +117,7 @@ public final class SortedDiskBdbJRDFFactory implements JRDFFactory {
         openIndexes.addAll(asList(indexes));
         openMapFactories.add(factory);
         openFactories.add(nodePoolFactory);
-        final Graph graph = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
+        final Graph graph = new PersistentGraphFactory(indexes, nodePoolFactory, collectionFactory).getGraph();
         graph.clear();
         return graph;
     }

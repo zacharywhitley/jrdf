@@ -61,7 +61,7 @@ package org.jrdf;
 
 import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.local.OrderedGraphFactoryImpl;
+import org.jrdf.graph.local.PersistentGraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
@@ -97,7 +97,7 @@ public final class SortedMemoryJRDFFactory implements JRDFFactory {
     public Graph getNewGraph() {
         LongIndex[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
-        return new OrderedGraphFactoryImpl(indexes, nodePoolFactory, new MemCollectionFactory()).getGraph();
+        return new PersistentGraphFactory(indexes, nodePoolFactory, new MemCollectionFactory()).getGraph();
     }
 
     public SparqlConnection getNewSparqlConnection() {

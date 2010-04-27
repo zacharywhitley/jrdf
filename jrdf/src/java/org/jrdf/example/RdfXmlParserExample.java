@@ -94,7 +94,7 @@ public final class RdfXmlParserExample {
 //    LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
 //    NodePool nodePool = new JeNodePoolFactory().createNewNodePool();
 //    NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
-//    GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePool, comparator);
+//    GraphFactory factory = new PersistentGraphFactory(indexes, nodePool, comparator);
 //    Parser parser = new RdfXmlParser(factory.getGraph().getElementFactory());
 //    parser.parse(in, EscapeURL.toEscapedString(url));
 

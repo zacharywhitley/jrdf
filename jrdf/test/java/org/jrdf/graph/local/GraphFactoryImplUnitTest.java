@@ -70,8 +70,8 @@ import java.lang.reflect.Modifier;
 
 public class GraphFactoryImplUnitTest extends TestCase {
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(GraphFactory.class, GraphFactoryImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(GraphFactoryImpl.class, Modifier.PUBLIC, LongIndex[].class,
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(GraphFactory.class, MemoryGraphFactory.class);
+        ClassPropertiesTestUtil.checkConstructor(MemoryGraphFactory.class, Modifier.PUBLIC, LongIndex[].class,
             NodePoolFactory.class, IteratorTrackingCollectionFactory.class);
     }
 }

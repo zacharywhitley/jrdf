@@ -93,13 +93,6 @@ public interface NodePool {
     Long getNodeIdByString(String str);
 
     /**
-     * Returns all the nodes in the node pool.
-     *
-     * @return The node pool.
-     */
-    List<Map<Long, String>> getNodePoolValues();
-
-    /**
      * Returns a new node id.
      *
      * @return a new node id

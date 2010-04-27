@@ -73,13 +73,13 @@ import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
+import org.jrdf.graph.local.iterator.CopyingLocalIteratorFactory;
 import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.graph.local.iterator.OrderedIteratorFactoryImpl;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
 
-import static java.util.Arrays.asList;
 import java.util.List;
+import static java.util.Arrays.asList;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -87,32 +87,29 @@ import java.util.List;
  * @author Andrew Newman
  * @version $Id$
  */
-public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
+public final class MemoryGraphFactory implements ReadWriteGraphFactory {
     private LongIndex[] longIndexes;
     private List<GraphHandler> graphHandlers;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
-    private IteratorTrackingCollectionFactory collectionFactory;
     private ReadWriteGraph readWriteGraph;
-    private Localizer localizer;
     private GraphElementFactory elementFactory;
     private TripleFactory tripleFactory;
     private ResourceIteratorFactory resourceIteratorFactory;
 
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePool newNodePool,
-        IteratorTrackingCollectionFactory newCollectionFactory) {
-        this.longIndexes = newLongIndexes;
-        this.nodePool = newNodePool;
-        this.collectionFactory = newCollectionFactory;
-        init(newLongIndexes);
-    }
-
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
+    public MemoryGraphFactory(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
         IteratorTrackingCollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNewNodePool();
-        this.collectionFactory = newCollectionFactory;
-        init(newLongIndexes);
+        this.graphHandlers = createGraphHandlers(newLongIndexes);
+        Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
+        this.iteratorFactory = new CopyingLocalIteratorFactory(graphHandlers, localizer, newCollectionFactory);
+        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
+        GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);
+        ResourceFactory resourceFactory = new ResourceFactoryImpl(readWriteGraph, valueFactory);
+        this.elementFactory = new GraphElementFactoryImpl(resourceFactory, localizer, valueFactory);
+        this.tripleFactory = new TripleFactoryImpl(readWriteGraph, elementFactory);
+        this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(longIndexes, resourceFactory, nodePool);
     }
 
     public Graph getGraph() {
@@ -123,20 +120,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         return readWriteGraph;
     }
 
-    public IteratorFactory getIteratorFactory() {
-        return iteratorFactory;
-    }
-
-    private void init(LongIndex[] newLongIndexes) {
-        this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
-        this.graphHandlers = createGraphHandlers(newLongIndexes);
-        this.iteratorFactory = new OrderedIteratorFactoryImpl(localizer, graphHandlers, collectionFactory);
-        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
-        GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);
-        ResourceFactory resourceFactory = new ResourceFactoryImpl(readWriteGraph, valueFactory);
-        this.elementFactory = new GraphElementFactoryImpl(resourceFactory, localizer, valueFactory);
-        this.tripleFactory = new TripleFactoryImpl(readWriteGraph, elementFactory);
-        this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(longIndexes, resourceFactory, nodePool);
+    public void close() {
     }
 
     private List<GraphHandler> createGraphHandlers(LongIndex[] newLongIndexes) {

@@ -68,9 +68,10 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * A GraphElementFactory is a class which create the various components of a graph. It is tied to a specific instance
@@ -89,7 +90,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
      * Package scope constructor.
      */
     public GraphElementFactoryImpl(ResourceFactory newResourceFactory, Localizer newLocalizer,
-        GraphValueFactory newValueFactory) {
+            GraphValueFactory newValueFactory) {
         checkNotNull(newResourceFactory, newLocalizer, newValueFactory);
         this.resourceFactory = newResourceFactory;
         this.localizer = newLocalizer;

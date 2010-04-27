@@ -202,7 +202,7 @@ public class OperatorTestUtil {
         private NoOp(Attribute newAttribute) {
             this.attribute = newAttribute;
         }
-                                               
+
         public <R> R accept(ExpressionVisitor<R> v) {
             return null;
         }
