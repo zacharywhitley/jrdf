@@ -65,12 +65,12 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.LocalizedNode;
 import org.jrdf.graph.local.iterator.NodeTypeIterator;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public final class NodePoolImpl implements NodePool {
     /**
@@ -159,14 +159,6 @@ public final class NodePoolImpl implements NodePool {
             stringPool.remove(node);
         }
         return node;
-    }
-
-    public List<Map<Long, String>> getNodePoolValues() {
-        List<Map<Long, String>> values = new ArrayList<Map<Long, String>>();
-        values.add(nodeTypePool.getBNodeValues());
-        values.add(nodeTypePool.getURINodeValues());
-        values.add(nodeTypePool.getLiteralNodeValues());
-        return values;
     }
 
     public void clear() {

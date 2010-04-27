@@ -62,7 +62,7 @@ package org.jrdf;
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.collection.MemCollectionFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.local.GraphFactoryImpl;
+import org.jrdf.graph.local.MemoryGraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
@@ -99,7 +99,7 @@ public final class MemoryJRDFFactory implements JRDFFactory {
         LongIndex[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
         IteratorTrackingCollectionFactory collectionFactory = new MemCollectionFactory();
-        return new GraphFactoryImpl(indexes, nodePoolFactory, collectionFactory).getGraph();
+        return new MemoryGraphFactory(indexes, nodePoolFactory, collectionFactory).getGraph();
     }
 
     public SparqlConnection getNewSparqlConnection() {
