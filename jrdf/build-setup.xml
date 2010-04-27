@@ -151,22 +151,14 @@
     <patternset id="test.classpath.pattern">
         <include name="${lib.dir}/junit/hamcrest-core-1.2.jar"/>
         <include name="${lib.dir}/junit/hamcrest-library-1.2.jar"/>
-        <include name="${lib.dir}/junit/junit-4.7.jar"/>
+        <include name="${lib.dir}/junit/junit-4.8.1.jar"/>
         <include name="${lib.dir}/junit/cpsuite-1.2.4.jar"/>
-        <include name="${lib.dir}/junit/javassist-3.10.0.GA.jar"/>
-        <include name="${lib.dir}/junit/objenesis-1.1.jar"/>
-        <include name="${lib.dir}/powermock/powermock-api-easymock-1.3.1.jar"/>
-        <include name="${lib.dir}/powermock/powermock-api-support-1.3.1.jar"/>
-        <include name="${lib.dir}/powermock/powermock-classloading-1.3.1.jar"/>
-        <include name="${lib.dir}/powermock/powermock-core-1.3.1.jar"/>
-        <include name="${lib.dir}/powermock/powermock-module-junit3-1.3.1.jar"/>
-        <include name="${lib.dir}/powermock/powermock-module-junit4-1.3.1.jar"/>
-        <include name="${lib.dir}/powermock/powermock-module-junit4-common-1.3.1.jar"/>
-        <include name="${lib.dir}/powermock/powermock-module-junit4-legacy-1.3.1.jar"/>
-        <include name="${lib.dir}/powermock/powermock-reflect-1.3.1.jar"/>
+        <include name="${lib.dir}/powermock/javassist-3.10.0.GA.jar"/>
+        <include name="${lib.dir}/powermock/objenesis-1.2.jar"/>
+        <include name="${lib.dir}/powermock/powermock-easymock-1.3.7-full.jar"/>
         <include name="${lib.dir}/easymock/easymock-2.5.2.jar"/>
-        <include name="${lib.dir}/easymock/easymockclassextension-2.4.0.jar"/>
-        <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
+        <include name="${lib.dir}/easymock/easymockclassextension-2.5.2.jar"/>
+        <include name="${lib.dir}/easymock/cglib-nodep-2.2.jar"/>
         <include name="${lib.dir}/groovy/groovy-${groovy.version}/embeddable/groovy-all-${groovy.version}.jar"/>
     </patternset>
 
