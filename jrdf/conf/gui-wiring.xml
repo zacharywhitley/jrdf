@@ -19,7 +19,7 @@
 
     <bean class="org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory" scope="singleton"/>
 
-    <bean id="graphFactory" class="org.jrdf.graph.local.PersistentGraphFactory" scope="prototype">
+    <bean id="graphFactory" class="org.jrdf.graph.local.SortedResultsGraphFactory" scope="prototype">
         <constructor-arg>
             <list>
                 <ref bean="memIndex"/>

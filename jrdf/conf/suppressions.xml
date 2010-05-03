@@ -9,8 +9,8 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="LocalIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="MemoryGraphFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="PersistentGraphFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedResultsGraphFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>

@@ -62,7 +62,7 @@ package org.jrdf;
 import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.local.PersistentGraphFactory;
+import org.jrdf.graph.local.SortedResultsGraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesameSync;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
@@ -121,7 +121,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
         openIndexes.addAll(asList(indexes));
         openFactories.add(nodePoolFactory);
         collectionFactory = new BdbCollectionFactory(BDB_HANDLER, "collection" + graphNumber);
-        final Graph graph = new PersistentGraphFactory(indexes, nodePoolFactory, collectionFactory).getGraph();
+        final Graph graph = new SortedResultsGraphFactory(indexes, nodePoolFactory, collectionFactory).getGraph();
         graph.clear();
         return graph;
     }

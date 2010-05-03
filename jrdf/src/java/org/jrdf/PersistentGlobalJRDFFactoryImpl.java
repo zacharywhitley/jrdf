@@ -72,7 +72,7 @@ import org.jrdf.graph.global.index.WritableIndexImpl;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesameSync;
-import org.jrdf.graph.local.PersistentGraphFactory;
+import org.jrdf.graph.local.SortedResultsGraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
@@ -171,7 +171,7 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
             new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
         IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
-        Graph graph = new PersistentGraphFactory(longIndexes, nodePool, collectionFactory).getGraph();
+        Graph graph = new SortedResultsGraphFactory(longIndexes, nodePool, collectionFactory).getGraph();
         final long curMaxMoleculeId = readIndex.getMaxMoleculeId();
         Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer, curMaxMoleculeId);
