@@ -62,10 +62,6 @@ package org.jrdf.graph.local.iterator;
 import junit.framework.TestCase;
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -73,19 +69,22 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+
 @RunWith(PowerMockRunner.class)
-public class OrderedIteratorFactoryImplUnitTest extends TestCase {
-    private static final Class<?>[] PARAM_TYPES = {Localizer.class, List.class,
+public class SortedIteratorFactoryImplUnitTest extends TestCase {
+    private static final Class<?>[] PARAM_TYPES = {List.class, Localizer.class,
         IteratorTrackingCollectionFactory.class};
-    private static final String[] PARAMETER_NAMES = new String[]{"newLocalizer", "newGraphHandlers",
-        "newCollectionFactory"};
+    private static final String[] PARAMETER_NAMES = {"newGraphHandlers", "newLocalizer", "newCollectionFactory"};
 
     @Test
     public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(IteratorFactory.class, OrderedIteratorFactoryImpl.class);
-        checkConstructor(OrderedIteratorFactoryImpl.class, Modifier.PUBLIC, PARAM_TYPES);
-        checkConstructNullAssertion(OrderedIteratorFactoryImpl.class, PARAM_TYPES);
-        checkConstructorSetsFieldsAndFieldsPrivateFinal(OrderedIteratorFactoryImpl.class, PARAM_TYPES,
-            PARAMETER_NAMES);
+        checkImplementationOfInterfaceAndFinal(IteratorFactory.class, SortedIteratorFactoryImpl.class);
+        checkConstructor(SortedIteratorFactoryImpl.class, Modifier.PUBLIC, PARAM_TYPES);
+        checkConstructNullAssertion(SortedIteratorFactoryImpl.class, PARAM_TYPES);
+        checkConstructorSetsFieldsAndFieldsPrivateFinal(SortedIteratorFactoryImpl.class, PARAM_TYPES, PARAMETER_NAMES);
     }
 }

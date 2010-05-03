@@ -65,9 +65,10 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EmptyClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.List;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
@@ -86,10 +87,6 @@ public final class CopyingLocalIteratorFactory implements IteratorFactory {
         this.graphHandlers = newGraphHandlers;
         this.localizer = newLocalizer;
         this.collectionFactory = newCollectionFactory;
-    }
-
-    public IteratorFactory getUnsortedIteratorFactory() {
-        return new LocalIteratorFactory(graphHandlers);
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
@@ -118,6 +115,10 @@ public final class CopyingLocalIteratorFactory implements IteratorFactory {
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
         return new FixedResourcePredicateIterator(resource, graphHandlers.get(0), graphHandlers.get(1));
+    }
+
+    public IteratorFactory getUnsortedIteratorFactory() {
+        return new LocalIteratorFactory(graphHandlers);
     }
 
     private ClosableIterator<Triple> copyTriples(ClosableIterator<Triple> closableIterator) {

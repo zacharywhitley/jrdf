@@ -6,7 +6,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="OrderedIteratorFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="LocalIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MemoryGraphFactory"/>
