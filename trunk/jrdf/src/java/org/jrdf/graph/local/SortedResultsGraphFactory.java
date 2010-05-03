@@ -73,12 +73,13 @@ import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
-import org.jrdf.graph.local.iterator.CopyingLocalIteratorFactory;
 import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.graph.local.iterator.SortedIteratorFactoryImpl;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
 
 import java.util.List;
+
 import static java.util.Arrays.asList;
 
 /**
@@ -87,7 +88,7 @@ import static java.util.Arrays.asList;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class MemoryGraphFactory implements ReadWriteGraphFactory {
+public class SortedResultsGraphFactory implements ReadWriteGraphFactory {
     private LongIndex[] longIndexes;
     private List<GraphHandler> graphHandlers;
     private IteratorFactory iteratorFactory;
@@ -100,7 +101,15 @@ public final class MemoryGraphFactory implements ReadWriteGraphFactory {
     private ResourceIteratorFactory resourceIteratorFactory;
     private NodePoolFactory nodePoolFactory;
 
-    public MemoryGraphFactory(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
+    public SortedResultsGraphFactory(LongIndex[] newLongIndexes, NodePool newNodePool,
+        IteratorTrackingCollectionFactory newCollectionFactory) {
+        this.longIndexes = newLongIndexes;
+        this.nodePool = newNodePool;
+        this.collectionFactory = newCollectionFactory;
+        init();
+    }
+
+    public SortedResultsGraphFactory(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
         IteratorTrackingCollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePoolFactory = newNodePoolFactory;
@@ -123,7 +132,7 @@ public final class MemoryGraphFactory implements ReadWriteGraphFactory {
         final GraphHandler graphHandler201 = new GraphHandler201(longIndexes, nodePool);
         this.graphHandlers = asList(graphHandler012, graphHandler120, graphHandler201);
         this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
-        this.iteratorFactory = new CopyingLocalIteratorFactory(graphHandlers, localizer, collectionFactory);
+        this.iteratorFactory = new SortedIteratorFactoryImpl(graphHandlers, localizer, collectionFactory);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);
         ResourceFactory resourceFactory = new ResourceFactoryImpl(readWriteGraph, valueFactory);
@@ -132,6 +141,18 @@ public final class MemoryGraphFactory implements ReadWriteGraphFactory {
         this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(longIndexes, resourceFactory, nodePool);
     }
 
-    public void close() {
-    }
+//    public void close() {
+//        try {
+//            for (LongIndex index : longIndexes) {
+//                index.close();
+//            }
+//        } finally {
+//            try {
+//                nodePoolFactory.close();
+//            } finally {
+//                collectionFactory.close();
+//            }
+//        }
+//    }
+
 }

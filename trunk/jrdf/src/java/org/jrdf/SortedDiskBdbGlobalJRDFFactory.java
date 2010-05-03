@@ -75,7 +75,7 @@ import org.jrdf.graph.global.index.WritableIndexImpl;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.graph.global.index.longindex.mem.MoleculeStructureIndexMem;
-import org.jrdf.graph.local.PersistentGraphFactory;
+import org.jrdf.graph.local.SortedResultsGraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
@@ -144,7 +144,7 @@ public final class SortedDiskBdbGlobalJRDFFactory implements GlobalJRDFFactory {
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
             new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
         collectionFactory = new BdbCollectionFactory(BDB_HANDLER, "collection" + graphNumber);
-        Graph graph = new PersistentGraphFactory(longIndexes, nodePool, collectionFactory).getGraph();
+        Graph graph = new SortedResultsGraphFactory(longIndexes, nodePool, collectionFactory).getGraph();
         graph.clear();
         openMapFactories.add(factory);
         openFactories.add(nodePoolFactory);
