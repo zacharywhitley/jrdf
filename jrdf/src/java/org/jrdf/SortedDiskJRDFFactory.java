@@ -114,7 +114,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     public void refresh() {
     }
 
-    public Graph getNewGraph() {
+    public Graph getGraph() {
         graphNumber++;
         LongIndex[] indexes = createIndexes();
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);

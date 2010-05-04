@@ -107,7 +107,7 @@ public final class SortedDiskBdbJRDFFactory implements JRDFFactory {
     public void refresh() {
     }
 
-    public Graph getNewGraph() {
+    public Graph getGraph() {
         graphNumber++;
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);
         MapFactory factory = new BdbMapFactory(new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()),

@@ -88,29 +88,31 @@ import static java.util.Arrays.asList;
  * @version $Id$
  */
 public final class GraphFactoryImpl implements ReadWriteGraphFactory {
-    private LongIndex[] longIndexes;
-    private List<GraphHandler> graphHandlers;
-    private IteratorFactory iteratorFactory;
-    private NodePool nodePool;
-    private IteratorTrackingCollectionFactory collectionFactory;
+    private final LongIndex[] longIndexes;
+    private final NodePoolFactory nodePoolFactory;
+    private final NodePool nodePool;
+    private final IteratorTrackingCollectionFactory collectionFactory;
     private ReadWriteGraph readWriteGraph;
-    private Localizer localizer;
     private GraphElementFactory elementFactory;
     private TripleFactory tripleFactory;
     private ResourceIteratorFactory resourceIteratorFactory;
-    private NodePoolFactory nodePoolFactory;
+    private Graph currentGraph;
 
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
         IteratorTrackingCollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePoolFactory = newNodePoolFactory;
-        this.nodePool = nodePoolFactory.createNewNodePool();
+        this.nodePool = nodePoolFactory.openExistingNodePool();
         this.collectionFactory = newCollectionFactory;
         init();
     }
 
     public Graph getGraph() {
-        return new GraphImpl(nodePool, readWriteGraph, elementFactory, tripleFactory, resourceIteratorFactory);
+        if (currentGraph == null) {
+            currentGraph = new GraphImpl(nodePool, readWriteGraph, elementFactory, tripleFactory,
+                resourceIteratorFactory);
+        }
+        return currentGraph;
     }
 
     public ReadWriteGraph getReadWriteGraph() {
@@ -121,9 +123,9 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
         final GraphHandler graphHandler012 = new GraphHandler012(longIndexes, nodePool);
         final GraphHandler graphHandler120 = new GraphHandler120(longIndexes, nodePool);
         final GraphHandler graphHandler201 = new GraphHandler201(longIndexes, nodePool);
-        this.graphHandlers = asList(graphHandler012, graphHandler120, graphHandler201);
-        this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
-        this.iteratorFactory = new CopyingLocalIteratorFactory(graphHandlers, localizer, collectionFactory);
+        List<GraphHandler> graphHandlers = asList(graphHandler012, graphHandler120, graphHandler201);
+        Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
+        IteratorFactory iteratorFactory = new CopyingLocalIteratorFactory(graphHandlers, localizer, collectionFactory);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);
         ResourceFactory resourceFactory = new ResourceFactoryImpl(readWriteGraph, valueFactory);
@@ -132,17 +134,17 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
         this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(longIndexes, resourceFactory, nodePool);
     }
 
-//    public void close() {
-//        try {
-//            for (LongIndex index : longIndexes) {
-//                index.close();
-//            }
-//        } finally {
-//            try {
-//                nodePoolFactory.close();
-//            } finally {
-//                collectionFactory.close();
-//            }
-//        }
-//    }
+    public void close() {
+        try {
+            for (LongIndex index : longIndexes) {
+                index.close();
+            }
+        } finally {
+            try {
+                nodePoolFactory.close();
+            } finally {
+                collectionFactory.close();
+            }
+        }
+    }
 }

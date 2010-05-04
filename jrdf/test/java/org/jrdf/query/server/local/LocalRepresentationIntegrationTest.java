@@ -110,7 +110,7 @@ import java.util.Map;
 public class LocalRepresentationIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");
     private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
-    private static final Graph EMPTY_GRAPH = MemoryJRDFFactory.getFactory().getNewGraph();
+    private static final Graph EMPTY_GRAPH = MemoryJRDFFactory.getFactory().getGraph();
     private SpringLocalServer localQueryServer;
     private Client client;
 
@@ -205,7 +205,7 @@ public class LocalRepresentationIntegrationTest {
     }
 
     private Graph addTriplesToGraph(final Method method, final String graphName) throws Exception {
-        final Graph graph = MemoryJRDFFactory.getFactory().getNewGraph();
+        final Graph graph = MemoryJRDFFactory.getFactory().getGraph();
         addTriples(graph);
         addToGraph(method, graphName, graph);
         return graph;
@@ -238,7 +238,7 @@ public class LocalRepresentationIntegrationTest {
     }
 
     private Graph parseResult(Response response) throws Exception {
-        final Graph resultGraph = MemoryJRDFFactory.getFactory().getNewGraph();
+        final Graph resultGraph = MemoryJRDFFactory.getFactory().getGraph();
         final StringReader reader = new StringReader(response.getEntity().getText());
         new GraphRdfXmlParser(resultGraph, new MemMapFactory()).parse(reader, "");
         return resultGraph;

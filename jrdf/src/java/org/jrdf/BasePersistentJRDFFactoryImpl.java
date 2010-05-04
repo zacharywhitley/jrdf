@@ -62,7 +62,7 @@ package org.jrdf;
 import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.parser.RdfReader;
@@ -76,17 +76,18 @@ import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.Models;
 import org.jrdf.util.ModelsImpl;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import static org.jrdf.writer.Writer.writeNTriples;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.jrdf.writer.Writer.writeNTriples;
+
 public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private final Set<NodePoolFactory> openNodePoolFactories = new HashSet<NodePoolFactory>();
+    private final Set<GraphFactory> openNodePoolFactories = new HashSet<GraphFactory>();
     private final BdbEnvironmentHandler bdbHandler;
     private IteratorTrackingCollectionFactory collectionFactory;
     private Models models;
@@ -103,11 +104,8 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
         return new SparqlConnectionImpl(BUILDER, QUERY_ENGINE);
     }
 
-    public NodePool createNodePool(long graphNumber) {
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(bdbHandler, graphNumber);
-        final NodePool nodePool = nodePoolFactory.openExistingNodePool();
-        openNodePoolFactories.add(nodePoolFactory);
-        return nodePool;
+    public NodePoolFactory createNodePoolFactory(long graphNumber) {
+        return new BdbNodePoolFactory(bdbHandler, graphNumber);
     }
 
     public IteratorTrackingCollectionFactory createCollectionFactory(long graphNumber) {
@@ -138,7 +136,7 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     }
 
     public void close() {
-        for (NodePoolFactory openFactory : openNodePoolFactories) {
+        for (GraphFactory openFactory : openNodePoolFactories) {
             openFactory.close();
         }
         if (collectionFactory != null) {

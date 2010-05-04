@@ -76,7 +76,7 @@ import static org.hamcrest.Matchers.is;
 
 public class AnswerIteratorIntegrationTest {
     private JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
-    private Graph graph = factory.getNewGraph();
+    private Graph graph = factory.getGraph();
     private GraphElementFactory ef = graph.getElementFactory();
 
 

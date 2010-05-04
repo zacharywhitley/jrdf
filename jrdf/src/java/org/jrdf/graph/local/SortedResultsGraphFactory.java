@@ -100,30 +100,33 @@ public class SortedResultsGraphFactory implements ReadWriteGraphFactory {
     private TripleFactory tripleFactory;
     private ResourceIteratorFactory resourceIteratorFactory;
     private NodePoolFactory nodePoolFactory;
-
-    public SortedResultsGraphFactory(LongIndex[] newLongIndexes, NodePool newNodePool,
-        IteratorTrackingCollectionFactory newCollectionFactory) {
-        this.longIndexes = newLongIndexes;
-        this.nodePool = newNodePool;
-        this.collectionFactory = newCollectionFactory;
-        init();
-    }
+    private Graph currentGraph;
 
     public SortedResultsGraphFactory(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
         IteratorTrackingCollectionFactory newCollectionFactory) {
         this.longIndexes = newLongIndexes;
         this.nodePoolFactory = newNodePoolFactory;
-        this.nodePool = nodePoolFactory.createNewNodePool();
+        this.nodePool = nodePoolFactory.openExistingNodePool();
         this.collectionFactory = newCollectionFactory;
         init();
     }
 
+    // TODO Hand itself to the graph and offer getNodePool, getReadWriteGraph and getXXXFactories.
     public Graph getGraph() {
-        return new GraphImpl(nodePool, readWriteGraph, elementFactory, tripleFactory, resourceIteratorFactory);
+        if (currentGraph == null) {
+            currentGraph = new GraphImpl(nodePool, readWriteGraph, elementFactory, tripleFactory,
+                resourceIteratorFactory);
+        }
+        return currentGraph;
     }
 
     public ReadWriteGraph getReadWriteGraph() {
         return readWriteGraph;
+    }
+
+    public void close() {
+        // TODO Add closing indexes and CollectionFactory.
+        nodePoolFactory.close();
     }
 
     private void init() {
@@ -140,19 +143,4 @@ public class SortedResultsGraphFactory implements ReadWriteGraphFactory {
         this.tripleFactory = new TripleFactoryImpl(readWriteGraph, elementFactory);
         this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(longIndexes, resourceFactory, nodePool);
     }
-
-//    public void close() {
-//        try {
-//            for (LongIndex index : longIndexes) {
-//                index.close();
-//            }
-//        } finally {
-//            try {
-//                nodePoolFactory.close();
-//            } finally {
-//                collectionFactory.close();
-//            }
-//        }
-//    }
-
 }

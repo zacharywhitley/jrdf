@@ -64,7 +64,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.local.SortedResultsGraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesameSync;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
@@ -107,7 +107,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
         return base.hasGraph(name);
     }
 
-    public Graph getNewGraph() {
+    public Graph getGraph() {
         Graph graph = getGraph("default");
         graph.clear();
         return graph;
@@ -151,7 +151,7 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
 
     private Graph getGraph(long graphNumber) {
         LongIndex[] indexes = createIndexes(graphNumber);
-        final NodePool nodePool = base.createNodePool(graphNumber);
+        final NodePoolFactory nodePool = base.createNodePoolFactory(graphNumber);
         IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
         return new SortedResultsGraphFactory(indexes, nodePool, collectionFactory).getGraph();
     }

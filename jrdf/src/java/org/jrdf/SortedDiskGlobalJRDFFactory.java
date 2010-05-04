@@ -97,9 +97,10 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
 
-import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -131,7 +132,7 @@ public final class SortedDiskGlobalJRDFFactory implements GlobalJRDFFactory {
     public void refresh() {
     }
 
-    public MoleculeGraph getNewGraph() {
+    public MoleculeGraph getGraph() {
         graphNumber++;
         MapFactory factory = new BdbMapFactory(BDB_HANDLER, "database" + graphNumber);
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);
@@ -144,7 +145,7 @@ public final class SortedDiskGlobalJRDFFactory implements GlobalJRDFFactory {
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
             new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
         collectionFactory = new BdbCollectionFactory(BDB_HANDLER, "collection" + graphNumber);
-        Graph graph = new SortedResultsGraphFactory(longIndexes, nodePool, collectionFactory).getGraph();
+        Graph graph = new SortedResultsGraphFactory(longIndexes, nodePoolFactory, collectionFactory).getGraph();
         graph.clear();
         openMapFactories.add(factory);
         openFactories.add(nodePoolFactory);

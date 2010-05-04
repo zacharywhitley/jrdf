@@ -96,7 +96,7 @@ public class AddMoleculeToIndexIntegrationTest extends TestCase {
     private GraphElementFactory elementFactory;
 
     public void setUp() {
-        graph = factory.getNewGraph();
+        graph = factory.getGraph();
         elementFactory = graph.getElementFactory();
     }
 

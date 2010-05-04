@@ -59,13 +59,12 @@
 
 package org.jrdf.query.answer.xml
 
-import junit.framework.TestCase
 import org.jrdf.PersistentGlobalJRDFFactory
 import org.jrdf.PersistentGlobalJRDFFactoryImpl
 import org.jrdf.TestJRDFFactory
 import org.jrdf.graph.Graph
 import org.jrdf.query.answer.Answer
-import org.jrdf.query.answer.SelectAnswer
+
 import static org.jrdf.query.answer.SparqlResultType.LITERAL
 import static org.jrdf.query.answer.SparqlResultType.URI_REFERENCE
 import org.jrdf.sparql.SparqlConnection
@@ -73,7 +72,6 @@ import org.jrdf.util.DirectoryHandler
 import org.jrdf.util.TempDirectoryHandler
 import static org.jrdf.util.test.SetUtil.asSet
 import org.jrdf.query.answer.TypeValueImpl
-import org.jrdf.sparql.SparqlConnection
 
 class SparqlSelectXmlWriterNewIntegrationTest extends GroovyTestCase {
 
@@ -112,7 +110,7 @@ class SparqlSelectXmlWriterNewIntegrationTest extends GroovyTestCase {
         TEST_FACTORY.refresh()
         resultsWriter = new StringWriter()
         sparqlConnection = TEST_FACTORY.newSparqlConnection
-        graph = FACTORY.newGraph
+        graph = FACTORY.graph
         TEST_UTIL.createTestGraph(graph)
         answer = sparqlConnection.executeQuery(graph, QUERY)
         xmlWriter = new SparqlSelectXmlWriter(resultsWriter, answer.getVariableNames(),

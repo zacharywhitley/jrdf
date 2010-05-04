@@ -66,18 +66,15 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE
 import org.jrdf.graph.Graph
 import org.jrdf.graph.Triple
 import org.jrdf.parser.GraphStatementHandler
-import org.jrdf.parser.ParserBlankNodeFactory
+
 import org.jrdf.parser.RDFEventReader
 import org.jrdf.parser.turtle.TurtleParserFactory
 import org.jrdf.util.test.RdfBuilder
 import org.jrdf.collection.MapFactory
-import org.jrdf.parser.line.LineHandler
-import org.jrdf.parser.line.LineParserImpl
+
 import org.jrdf.parser.ntriples.NTriplesParserFactory
-import org.jrdf.parser.turtle.TurtleParserFactory
+
 import java.util.zip.ZipFile
-import java.util.zip.ZipEntry
-import org.jrdf.parser.turtle.TurtleParserFactory
 
 class LineParserTestUtil {
 
@@ -127,7 +124,7 @@ class LineParserTestUtil {
     }
 
     static Set<Triple> standardTestWithN3() {
-        Graph newGraph = TestJRDFFactory.factory.newGraph
+        Graph newGraph = TestJRDFFactory.getFactory().getGraph()
         addStandardValuesToGraph(newGraph)
         addN3ValuesToGraph(newGraph)
         Set<Triple> answers = new HashSet<Triple>()
@@ -138,7 +135,7 @@ class LineParserTestUtil {
     }
 
     static Set<Triple> standardTest() {
-        Graph newGraph = TestJRDFFactory.factory.newGraph
+        Graph newGraph = TestJRDFFactory.getFactory().getGraph()
         addStandardValuesToGraph(newGraph)
         Set<Triple> answers = new HashSet<Triple>()
         newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).each {

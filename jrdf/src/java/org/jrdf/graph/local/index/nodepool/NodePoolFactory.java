@@ -63,18 +63,25 @@ package org.jrdf.graph.local.index.nodepool;
  * One level of indirection for node pools - used to create either in memory or on disk node pools.
  */
 public interface NodePoolFactory {
+
     /**
-     * Create a new node pool.
+     * Create a new node pool.  This will clear the values of the current node pool if it already exists.
      *
      * @return a new node pool.
      */
     NodePool createNewNodePool();
 
     /**
+     * Returns an existing node pool - does not clear the values if it's a persistent node pool.  It will return the
+     * same instance of the node pool if you have called this or createNewNodePool before.
+     *
+     * @return a node pool without clear its values (if it's persistent).
+     */
+    NodePool openExistingNodePool();
+
+    /**
      * Close any resources related to creating node pools.
      */
     void close();
 
-    @SuppressWarnings({ "unchecked" })
-    NodePool openExistingNodePool();
 }

@@ -115,7 +115,7 @@ public final class SortedMemoryGlobalJRDFFactory implements GlobalJRDFFactory {
     public void refresh() {
     }
 
-    public MoleculeGraph getNewGraph() {
+    public MoleculeGraph getGraph() {
         MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes();
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);
@@ -126,7 +126,7 @@ public final class SortedMemoryGlobalJRDFFactory implements GlobalJRDFFactory {
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
             new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
         IteratorTrackingCollectionFactory collectionFactory = new MemCollectionFactory();
-        Graph graph = new SortedResultsGraphFactory(longIndexes, nodePool, collectionFactory).getGraph();
+        Graph graph = new SortedResultsGraphFactory(longIndexes, nodePoolFactory, collectionFactory).getGraph();
         return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph, nodePool);
     }
 

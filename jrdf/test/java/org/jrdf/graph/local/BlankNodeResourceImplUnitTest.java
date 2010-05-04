@@ -80,7 +80,7 @@ public class BlankNodeResourceImplUnitTest {
 
     @Before
     public void setUp() throws Exception {
-        Graph newGraph = TestJRDFFactory.getFactory().getNewGraph();
+        Graph newGraph = TestJRDFFactory.getFactory().getGraph();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
         blankNode1 = graphElementFactory.createBlankNode();
         blankNode2 = graphElementFactory.createBlankNode();

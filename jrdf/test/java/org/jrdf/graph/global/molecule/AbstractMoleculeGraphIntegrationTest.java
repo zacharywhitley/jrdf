@@ -104,7 +104,7 @@ public abstract class AbstractMoleculeGraphIntegrationTest extends TestCase {
 
         new TempDirectoryHandler().removeDir();
         factory = SortedDiskGlobalJRDFFactory.getFactory();
-        graph = factory.getNewGraph();
+        graph = factory.getGraph();
         graph.clear();
         final GraphElementFactory elementFactory = graph.getElementFactory();
         final TripleFactory tripleFactory = graph.getTripleFactory();

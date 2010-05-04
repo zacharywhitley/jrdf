@@ -59,12 +59,6 @@
 
 package org.jrdf.graph.local;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.BlankNode;
@@ -73,16 +67,23 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
-import static org.jrdf.graph.NullURI.NULL_URI;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.AssertThrows.assertThrows;
-import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 import org.junit.Test;
 
 import java.net.URI;
+
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.graph.NullURI.NULL_URI;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
+import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 
 
 /**
@@ -99,7 +100,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
      * @return A new graph implementation object.
      */
     public Graph newGraph() throws GraphException {
-        return TestJRDFFactory.getFactory().getNewGraph();
+        return TestJRDFFactory.getFactory().getGraph();
     }
 
     /**

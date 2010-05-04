@@ -117,7 +117,7 @@ public final class TripleBuilderImplUnitTest {
     public void setUp() throws Exception {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
-        tripleBuilder = new TripleBuilderImpl(FACTORY.getNewGraph(), newSortedAttributeFactory);
+        tripleBuilder = new TripleBuilderImpl(FACTORY.getGraph(), newSortedAttributeFactory);
     }
 
     @Test

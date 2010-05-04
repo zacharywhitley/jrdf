@@ -71,7 +71,7 @@ public class JrdfFactoryImplIntegrationTest {
     @Test
     public void checkWiringIsOkay() {
         TestJRDFFactory jrdfFactory = TestJRDFFactory.getFactory();
-        jrdfFactory.getNewGraph();
+        jrdfFactory.getGraph();
         jrdfFactory.getNewTupleComparator();
         jrdfFactory.getNewSparqlConnection();
         jrdfFactory.getNewNaturalJoin();

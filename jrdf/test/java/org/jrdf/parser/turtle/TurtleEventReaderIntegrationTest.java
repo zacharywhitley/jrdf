@@ -81,7 +81,7 @@ import java.util.Set;
 public class TurtleEventReaderIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/turtle/test.n3";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
+    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
     private static final NamespaceListener LISTENER = new NamespaceListenerImpl(CREATOR);
     private static final RDFEventReaderFactory TURTLE_RDF_INPUT_FACTORY = new TurtleEventReaderFactory(CREATOR,

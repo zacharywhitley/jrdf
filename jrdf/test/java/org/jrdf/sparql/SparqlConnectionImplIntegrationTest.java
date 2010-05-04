@@ -100,7 +100,7 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
     private static final String LITERAL_TITLE = LITERAL_BOOK_TITLE;
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final QueryBuilder QUERY_BUILDER = FACTORY.getNewQueryBuilder();
-    private static final Graph GRAPH = FACTORY.getNewGraph();
+    private static final Graph GRAPH = FACTORY.getGraph();
     private static final QueryEngine QUERY_ENGINE = FACTORY.getNewQueryEngine();
 
     @Override

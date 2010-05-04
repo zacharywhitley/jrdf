@@ -60,13 +60,13 @@
 package org.jrdf;
 
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.sparql.SparqlConnection;
 
 public interface BasePersistentJRDFFactory {
     SparqlConnection createSparqlConnection();
 
-    NodePool createNodePool(long graphNumber);
+    NodePoolFactory createNodePoolFactory(long graphNumber);
 
     IteratorTrackingCollectionFactory createCollectionFactory(long graphNumber);
 

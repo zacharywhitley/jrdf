@@ -83,7 +83,7 @@ import java.io.InputStream;
 public final class RdfReader {
     private LineHandlerFactory ntriplesFactory = new NTriplesParserFactory();
     private LineHandlerFactory n3Factory = new TurtleParserFactory();
-    private Graph graph = MemoryJRDFFactory.getFactory().getNewGraph();
+    private Graph graph = MemoryJRDFFactory.getFactory().getGraph();
     private MapFactory mapFactory = new MemMapFactory();
 
     public RdfReader() {

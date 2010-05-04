@@ -312,7 +312,7 @@ public class MoleculeGraphImplIntegrationTest extends AbstractMoleculeGraphInteg
     private void readTextToGraph() throws IOException {
         final URL resource = getClass().getClassLoader().getResource("org/jrdf/graph/global/molecule/mem/result.txt");
         String text = getAsString(resource);
-        destGraph = factory.getNewGraph();
+        destGraph = factory.getGraph();
         TextToMolecule textToMolecule = new TextToMolecule(new RegexMatcherFactoryImpl(), getTripleParser(destGraph),
             moleculeFactory);
         TextToMoleculeGraph graphBuilder = new TextToMoleculeGraph(textToMolecule);
