@@ -66,6 +66,6 @@ public class SortedMemoryJRDFFactoryIntegrationTest extends AbstractGraphIntegra
     private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
 
     public Graph newGraph() throws Exception {
-        return FACTORY.getNewGraph();
+        return FACTORY.getGraph();
     }
 }

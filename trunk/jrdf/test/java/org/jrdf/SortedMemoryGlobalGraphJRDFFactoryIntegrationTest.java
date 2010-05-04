@@ -72,6 +72,6 @@ public class SortedMemoryGlobalGraphJRDFFactoryIntegrationTest extends AbstractG
     }
 
     public Graph newGraph() throws Exception {
-        return FACTORY.getNewGraph();
+        return FACTORY.getGraph();
     }
 }

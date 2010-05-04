@@ -130,7 +130,7 @@ public class BdbSortedSetFactoryIntegrationTest {
     }
 
     private void createTriples() throws Exception {
-        Graph newGraph = FACTORY.getNewGraph();
+        Graph newGraph = FACTORY.getGraph();
         GraphElementFactory gef = newGraph.getElementFactory();
         BlankNode bn1 = gef.createBlankNode();
         URIReference uri1 = gef.createURIReference(URI.create("urn:foo"));

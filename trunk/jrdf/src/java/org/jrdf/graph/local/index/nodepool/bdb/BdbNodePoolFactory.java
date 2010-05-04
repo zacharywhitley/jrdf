@@ -79,6 +79,7 @@ public class BdbNodePoolFactory implements NodePoolFactory {
     private final long graphNumber;
     private MapFactory nodePoolMapFactory;
     private MapFactory stringPoolMapFactory;
+    private NodePool currentNodePool;
 
     public BdbNodePoolFactory(final BdbEnvironmentHandler newHandler, final long newGraphNumber) {
         this.handler = newHandler;
@@ -86,21 +87,25 @@ public class BdbNodePoolFactory implements NodePoolFactory {
     }
 
     public NodePool createNewNodePool() {
-        final NodePool pool = openExistingNodePool();
-        pool.clear();
-        return pool;
+        openExistingNodePool();
+        currentNodePool.clear();
+        return currentNodePool;
     }
 
     public NodePool openExistingNodePool() {
-        nodePoolMapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
-        stringPoolMapFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
-        StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
-        final Map<Long, String> blankNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "bnp");
-        final Map<Long, String> uriNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "npm");
-        final Map<Long, String> literalNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "lnp");
-        final Map<String, Long> stringPool = stringPoolMapFactory.openExistingMap(String.class, Long.class, "sp");
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
-        return new NodePoolImpl(nodeTypePool, stringPool);
+        if (currentNodePool == null) {
+            nodePoolMapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
+            stringPoolMapFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
+            StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
+            final Map<Long, String> blankNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "bnp");
+            final Map<Long, String> uriNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "npm");
+            final Map<Long, String> literalNodePool =
+                nodePoolMapFactory.openExistingMap(Long.class, String.class, "lnp");
+            final Map<String, Long> stringPool = stringPoolMapFactory.openExistingMap(String.class, Long.class, "sp");
+            final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
+            currentNodePool = new NodePoolImpl(nodeTypePool, stringPool);
+        }
+        return currentNodePool;
     }
 
     public void close() {

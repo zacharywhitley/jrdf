@@ -77,7 +77,7 @@ import java.net.URI;
 
 public class LocalGraphTestUtil {
     private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
-    public static final Graph GRAPH = FACTORY.getNewGraph();
+    public static final Graph GRAPH = FACTORY.getGraph();
     private static final GraphElementFactory ELEMENT_FACTORY = GRAPH.getElementFactory();
     private static final TripleFactory TRIPLE_FACTORY = GRAPH.getTripleFactory();
     private static final TripleComparator TRIPLE_COMPARATOR = new TripleComparatorFactoryImpl().newComparator();

@@ -75,7 +75,7 @@ public class ReadingGraphPerformance extends AbstractGraphPerformance {
     private MapFactory mapFactory;
 
     public Graph getGraph() {
-        return SortedDiskJRDFFactory.getFactory().getNewGraph();
+        return SortedDiskJRDFFactory.getFactory().getGraph();
     }
 
     public MapFactory getMapFactory() {

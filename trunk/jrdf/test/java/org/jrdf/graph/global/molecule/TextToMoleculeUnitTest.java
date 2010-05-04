@@ -92,7 +92,7 @@ import static org.jrdf.util.test.SetUtil.asSet;
 import java.io.StringReader;
 
 public class TextToMoleculeUnitTest extends TestCase {
-    private Graph graph = MemoryJRDFFactory.getFactory().getNewGraph();
+    private Graph graph = MemoryJRDFFactory.getFactory().getGraph();
     private TextToMolecule textToMolecule;
     private TripleParserImpl tripleParser;
     private MoleculeTraverser traverser;

@@ -96,7 +96,7 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
     }
 
     public MoleculeGraph getGraph() {
-        return factory.getNewGraph();
+        return factory.getGraph();
     }
 
     public Answer answerQuery(String graphName, String queryString, long newMaxRows) throws ResourceException {

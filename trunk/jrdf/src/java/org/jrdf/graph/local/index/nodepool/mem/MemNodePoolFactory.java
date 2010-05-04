@@ -73,27 +73,25 @@ import java.util.Map;
 
 public class MemNodePoolFactory implements NodePoolFactory {
     private static final MapFactory MAP_FACTORY = new MemMapFactory();
+    private NodePool currentNodePool;
 
     public NodePool createNewNodePool() {
-        StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
-        final Map<Long, String> blankNodePool = MAP_FACTORY.createMap(Long.class, String.class);
-        final Map<Long, String> uriNodePool = MAP_FACTORY.createMap(Long.class, String.class);
-        final Map<Long, String> literalNodePool = MAP_FACTORY.createMap(Long.class, String.class);
-        final Map<String, Long> stringPool = MAP_FACTORY.createMap(String.class, Long.class);
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
-        final NodePoolImpl pool = new NodePoolImpl(nodeTypePool, stringPool);
-        pool.clear();
-        return pool;
+        openExistingNodePool();
+        currentNodePool.clear();
+        return currentNodePool;
     }
 
     public NodePool openExistingNodePool() {
-        StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
-        final Map<Long, String> blankNodePool = MAP_FACTORY.createMap(Long.class, String.class, "bnp");
-        final Map<Long, String> uriNodePool = MAP_FACTORY.createMap(Long.class, String.class, "unp");
-        final Map<Long, String> literalNodePool = MAP_FACTORY.createMap(Long.class, String.class, "lnp");
-        final Map<String, Long> stringPool = MAP_FACTORY.createMap(String.class, Long.class, "sp");
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
-        return new NodePoolImpl(nodeTypePool, stringPool);
+        if (currentNodePool == null) {
+            StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
+            final Map<Long, String> blankNodePool = MAP_FACTORY.createMap(Long.class, String.class);
+            final Map<Long, String> uriNodePool = MAP_FACTORY.createMap(Long.class, String.class);
+            final Map<Long, String> literalNodePool = MAP_FACTORY.createMap(Long.class, String.class);
+            final Map<String, Long> stringPool = MAP_FACTORY.createMap(String.class, Long.class);
+            final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapper, blankNodePool, uriNodePool, literalNodePool);
+            currentNodePool = new NodePoolImpl(nodeTypePool, stringPool);
+        }
+        return currentNodePool;
     }
 
     public void close() {

@@ -126,7 +126,7 @@ import static org.jrdf.vocabulary.XSD.STRING;
 
 public final class SableCcSparqlParserIntegrationTest {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph GRAPH = FACTORY.getNewGraph();
+    private static final Graph GRAPH = FACTORY.getGraph();
     private static final URI PURL_DATE = create("http://purl.org/dc/elements/1.1/date");
     private static final Literal LITERAL = createLiteral("The Pragmatic Programmer");
     private static final Expression BOOK1_AND_2_CONJUNCTION

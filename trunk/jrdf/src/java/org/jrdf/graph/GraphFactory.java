@@ -65,5 +65,17 @@ package org.jrdf.graph;
  * @version $Id$
  */
 public interface GraphFactory {
+    /**
+     * Returns the same graph instance (with the same underlying data structures - node pools, etc).  A factory
+     * will only ever return one instance of a graph so that nodes taken from graphs from the same factory will be
+     * equal.
+     *
+     * @return a new graph instance.
+     */
     Graph getGraph();
+
+    /**
+     * Any underlying resources will be closed (such as open files).
+     */
+    void close();
 }

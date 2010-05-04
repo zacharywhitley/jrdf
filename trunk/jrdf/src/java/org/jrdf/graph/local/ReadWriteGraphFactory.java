@@ -61,9 +61,8 @@ package org.jrdf.graph.local;
 
 import org.jrdf.graph.GraphFactory;
 
+// TODO AN This interface is to wrap the resources so that the Graph can call close().
+// Add closing indexes and collection factory.
 public interface ReadWriteGraphFactory extends GraphFactory {
-    // TODO AN Remove - this is only used for testing?
     ReadWriteGraph getReadWriteGraph();
-
-//    void close();
 }

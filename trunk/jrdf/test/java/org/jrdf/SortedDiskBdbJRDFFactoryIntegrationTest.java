@@ -84,6 +84,6 @@ public class SortedDiskBdbJRDFFactoryIntegrationTest extends AbstractGraphIntegr
 
     @Override
     public Graph newGraph() throws Exception {
-        return FACTORY.getNewGraph();
+        return FACTORY.getGraph();
     }
 }

@@ -75,7 +75,7 @@ public class ModelsImplUnitTest extends TestCase {
     private static final URI NAME = URI.create(JRDF_NAMESPACE + "name");
     private static final URI ID = URI.create(JRDF_NAMESPACE + "id");
     private static final URI GRAPH = URI.create(JRDF_NAMESPACE + "graph");
-    private Graph newGraph = FACTORY.getNewGraph();
+    private Graph newGraph = FACTORY.getGraph();
     private Models models;
 
     @Override

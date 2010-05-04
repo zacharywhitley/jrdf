@@ -77,6 +77,7 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.sparql.SparqlConnection;
@@ -121,7 +122,7 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         return base.hasGraph(name);
     }
 
-    public MoleculeGraph getNewGraph() {
+    public MoleculeGraph getGraph() {
         final MoleculeGraph moleculeGraph = getGraph("default");
         moleculeGraph.clear();
         return moleculeGraph;
@@ -140,14 +141,14 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
             throw new IllegalArgumentException("Graph already exists: " + name);
         }
         long graphNumber = base.addNewGraph(name);
-        return getGraph(graphNumber);
+        return openGraph(graphNumber);
     }
 
     public MoleculeGraph getExistingGraph(String name) throws IllegalArgumentException {
         if (!base.hasGraph(name)) {
             throw new IllegalArgumentException("Cannot get graph named: " + name);
         } else {
-            return getGraph(base.getGraphId(name));
+            return openGraph(base.getGraphId(name));
         }
     }
 
@@ -163,16 +164,18 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
         openStructureIndexes.clear();
     }
 
-    private MoleculeGraph getGraph(long graphNumber) {
-        final NodePool nodePool = base.createNodePool(graphNumber);
-        MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes(graphNumber);
+    private MoleculeGraph openGraph(long graphNumber) {
+        final MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes(graphNumber);
+        final LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
+            new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
+        final NodePoolFactory nodePoolFactory = base.createNodePoolFactory(graphNumber);
+        final IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
+        Graph graph = new SortedResultsGraphFactory(longIndexes, nodePoolFactory, collectionFactory).getGraph();
+
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);
-        LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
-            new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
-        IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
-        Graph graph = new SortedResultsGraphFactory(longIndexes, nodePool, collectionFactory).getGraph();
         final long curMaxMoleculeId = readIndex.getMaxMoleculeId();
+        NodePool nodePool = nodePoolFactory.openExistingNodePool();
         Localizer localizer = new LocalizerImpl(nodePool, STRING_MAPPER);
         MoleculeLocalizer moleculeLocalizer = new MoleculeLocalizerImpl(localizer, curMaxMoleculeId);
         return new MoleculeGraphImpl(writeIndex, readIndex, moleculeLocalizer, graph, nodePool);
