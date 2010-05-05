@@ -8,7 +8,7 @@
     <title>SPARQL Query Results to XHTML - Graph ${graphName}</title>
 </head>
 <body>
-<h1>SPARQL Query Results to XHTML (FreeMarker)</h1>
+<h1>SPARQL Query Results to XHTML</h1>
 
 <div>
     <h2>

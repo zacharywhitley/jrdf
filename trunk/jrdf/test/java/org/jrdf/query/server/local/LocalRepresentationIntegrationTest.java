@@ -58,15 +58,10 @@
 
 package org.jrdf.query.server.local;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.MemoryJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.collection.MemMapFactory;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
@@ -75,37 +70,43 @@ import org.jrdf.query.server.RdfXmlRepresentationFactory;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
-import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.restlet.Client;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.MediaType;
-import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
 import org.restlet.data.Method;
-import static org.restlet.data.Method.DELETE;
-import static org.restlet.data.Method.GET;
-import static org.restlet.data.Method.POST;
-import static org.restlet.data.Method.PUT;
 import org.restlet.data.Preference;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
-import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND;
-import static org.restlet.data.Status.SUCCESS_CREATED;
-import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.Representation;
 
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import static java.lang.System.currentTimeMillis;
-import static java.net.URI.create;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.lang.System.currentTimeMillis;
+import static java.net.URI.create;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
+import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
+import static org.restlet.data.Method.DELETE;
+import static org.restlet.data.Method.GET;
+import static org.restlet.data.Method.POST;
+import static org.restlet.data.Method.PUT;
+import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
+import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND;
+import static org.restlet.data.Status.SUCCESS_CREATED;
+import static org.restlet.data.Status.SUCCESS_OK;
 
 public class LocalRepresentationIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler("perstMoleculeGraph");

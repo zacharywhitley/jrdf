@@ -77,8 +77,10 @@ public class RdfXmlRepresentationFactory implements RepresentationFactory {
             @Override
             public void write(Writer writer) throws IOException {
                 final Graph graph = (Graph) dataModel.get(GRAPH_REF);
-                final RdfWriter xmlWriter = new MemRdfXmlWriter();
-                xmlWriter.write(graph, writer);
+                if (graph != null) {
+                    final RdfWriter xmlWriter = new MemRdfXmlWriter();
+                    xmlWriter.write(graph, writer);
+                }
             }
         };
     }
