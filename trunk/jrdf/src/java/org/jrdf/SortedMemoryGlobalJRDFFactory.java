@@ -138,7 +138,7 @@ public final class SortedMemoryGlobalJRDFFactory implements GlobalJRDFFactory {
     }
 
     private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes() {
-        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexMem[]{
+        return new MoleculeStructureIndexMem[]{
             new MoleculeStructureIndexMem(
                     new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>()),
             new MoleculeStructureIndexMem(
@@ -148,7 +148,6 @@ public final class SortedMemoryGlobalJRDFFactory implements GlobalJRDFFactory {
             new MoleculeStructureIndexMem(
                     new ClosableMapImpl<Long, ClosableMap<Long, ClosableMap<Long, ClosableMap<Long, Set<Long>>>>>())
         };
-        return indexes;
     }
 
 }

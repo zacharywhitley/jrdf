@@ -119,6 +119,20 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
         return readWriteGraph;
     }
 
+    public void close() {
+        try {
+            for (LongIndex index : longIndexes) {
+                index.close();
+            }
+        } finally {
+            try {
+                nodePoolFactory.close();
+            } finally {
+                collectionFactory.close();
+            }
+        }
+    }
+
     private void init() {
         final GraphHandler graphHandler012 = new GraphHandler012(longIndexes, nodePool);
         final GraphHandler graphHandler120 = new GraphHandler120(longIndexes, nodePool);
@@ -132,19 +146,5 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
         this.elementFactory = new GraphElementFactoryImpl(resourceFactory, localizer, valueFactory);
         this.tripleFactory = new TripleFactoryImpl(readWriteGraph, elementFactory);
         this.resourceIteratorFactory = new ResourceIteratorFactoryImpl(longIndexes, resourceFactory, nodePool);
-    }
-
-    public void close() {
-        try {
-            for (LongIndex index : longIndexes) {
-                index.close();
-            }
-        } finally {
-            try {
-                nodePoolFactory.close();
-            } finally {
-                collectionFactory.close();
-            }
-        }
     }
 }
