@@ -60,12 +60,12 @@
 package org.jrdf.query.answer.xml;
 
 import junit.framework.TestCase;
-import org.jrdf.PersistentGlobalJRDFFactory;
-import org.jrdf.PersistentGlobalJRDFFactoryImpl;
+import org.jrdf.PersistentJRDFFactory;
+import org.jrdf.PersistentJRDFFactoryImpl;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
-import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
@@ -73,18 +73,19 @@ import org.jrdf.util.TempDirectoryHandler;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import static java.net.URI.create;
-import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.net.URI.create;
+import static java.util.Arrays.asList;
 
 public class SparqlSelectXmlWriterIntegrationTest extends TestCase {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static final TestJRDFFactory TEST_FACTORY = TestJRDFFactory.getFactory();
-    private static final PersistentGlobalJRDFFactory FACTORY = PersistentGlobalJRDFFactoryImpl.getFactory(HANDLER);
+    private static final PersistentJRDFFactory FACTORY = PersistentJRDFFactoryImpl.getFactory(HANDLER);
     private static final SparqlXmlStreamWriterTestUtil TEST_UTIL = new SparqlXmlStreamWriterTestUtil();
     private SparqlConnection sparqlConnection;
-    private MoleculeGraph graph;
+    private Graph graph;
     private SparqlXmlWriter xmlWriter;
     private Writer writer = new StringWriter();
 

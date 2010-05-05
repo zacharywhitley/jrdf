@@ -65,27 +65,33 @@ import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.MoleculeGraph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SparqlProtocol;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.test.matcher.GraphEmptyMatcher;
 
 import javax.xml.stream.XMLInputFactory;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import static javax.xml.stream.events.XMLEvent.CHARACTERS;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
+
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static javax.xml.stream.events.XMLEvent.CHARACTERS;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 
 /**
  * @author Yuan-Fang Li
@@ -104,7 +110,7 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
     private Writer writer;
     private XMLStreamReader reader;
     private SparqlXmlWriter xmlWriter;
-    private MoleculeGraph graph;
+    private Graph graph;
     private GraphElementFactory elementFactory;
     private BlankNode b1;
     private BlankNode b2;
@@ -141,6 +147,7 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
         if (xmlWriter != null) {
             xmlWriter.close();
         }
+        FACTORY.close();
         HANDLER.removeDir();
     }
 
@@ -148,6 +155,7 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
         graph.add(b1, p1, l1);
         graph.add(b2, p2, l2);
         graph.add(b3, p3, l3);
+        assertThat(graph, hasNumberOfTriples(3));
         String queryString = "ASK WHERE {?s ?p ?o .}";
         final AskAnswer answer = (AskAnswer) SPARQL_CONNECTION.executeQuery(graph, queryString);
         xmlWriter = new SparqlAskXmlWriter(writer, answer.getResult());
@@ -155,6 +163,7 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
     }
 
     public void testAskEmptyGraph() throws XMLStreamException, InvalidQuerySyntaxException, GraphException {
+        assertThat(graph, GraphEmptyMatcher.isEmpty());
         String queryString = "ASK WHERE {?s ?p ?o .}";
         final AskAnswer answer = (AskAnswer) SPARQL_CONNECTION.executeQuery(graph, queryString);
         xmlWriter = new SparqlAskXmlWriter(writer, answer.getResult());
@@ -163,14 +172,16 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
 
     public void testAskNonMatchingGraph() throws GraphException, XMLStreamException, InvalidQuerySyntaxException {
         graph.add(b1, p1, l1);
-        String queryString = "ASK WHERE {?s ?p ?o FILTER ( str(?o) = \"ab\" ) }";
+        assertThat(graph, hasNumberOfTriples(1));
+        String queryString = "ASK WHERE {?s ?p ?o FILTER ( str(?o) = \"efg\" ) }";
+        TestJRDFFactory.getFactory().refresh();
         final AskAnswer answer = (AskAnswer) SPARQL_CONNECTION.executeQuery(graph, queryString);
         xmlWriter = new SparqlAskXmlWriter(writer, answer.getResult());
         checkResult(false);
     }
 
-    private void checkResult(boolean value) throws XMLStreamException {
-        assertTrue(xmlWriter.hasMoreResults());
+    private void checkResult(boolean expectedValue) throws XMLStreamException {
+        assertThat(xmlWriter.hasMoreResults(), is(true));
         xmlWriter.writeResult();
         String result = writer.toString();
         reader = XML_INPUT_FACTORY.createXMLStreamReader(new StringReader(result));
@@ -178,16 +189,16 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
             int eventType = reader.getEventType();
             switch (eventType) {
                 case START_ELEMENT:
-                    assertEquals(SparqlProtocol.BOOLEAN, reader.getLocalName());
+                    assertThat(reader.getLocalName(), equalTo(SparqlProtocol.BOOLEAN));
                     break;
                 case CHARACTERS:
-                    assertEquals(value, Boolean.parseBoolean(reader.getText()));
+                    assertThat(Boolean.parseBoolean(reader.getText()), equalTo(expectedValue));
                     break;
                 default:
                     break;
             }
             reader.next();
         }
-        assertFalse(xmlWriter.hasMoreResults());
+        assertThat(xmlWriter.hasMoreResults(), is(false));
     }
 }

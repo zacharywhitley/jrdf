@@ -101,7 +101,6 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         File dir = handler.makeDir();
         EnvironmentConfig env = new EnvironmentConfig();
         env.setTransactional(true);
-        env.setSharedCache(true);
         env.setAllowCreate(true);
         env.setSharedCache(true);
         return new Environment(dir, env);
