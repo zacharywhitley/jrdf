@@ -72,7 +72,6 @@ import org.jrdf.graph.global.index.WritableIndexImpl;
 import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesameSync;
-import org.jrdf.graph.local.SortedResultsGraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
@@ -86,11 +85,6 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static java.util.Arrays.asList;
-
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
  *
@@ -99,7 +93,6 @@ import static java.util.Arrays.asList;
  */
 public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJRDFFactory {
     private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
-    private final Set<MoleculeStructureIndex<Long>> openStructureIndexes = new HashSet<MoleculeStructureIndex<Long>>();
     private final DirectoryHandler handler;
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private BasePersistentJRDFFactory base;
@@ -158,19 +151,16 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
 
     public void close() {
         base.close();
-        for (MoleculeStructureIndex<Long> index : openStructureIndexes) {
-            index.close();
-        }
-        openStructureIndexes.clear();
     }
 
     private MoleculeGraph openGraph(long graphNumber) {
         final MoleculeStructureIndex<Long>[] structureIndexes = createMoleculeStructureIndexes(graphNumber);
         final LongIndex[] longIndexes = new LongIndex[]{new LongIndexAdapter(structureIndexes[0]),
-            new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2])};
+            new LongIndexAdapter(structureIndexes[1]), new LongIndexAdapter(structureIndexes[2]),
+            new LongIndexAdapter(structureIndexes[3])};
         final NodePoolFactory nodePoolFactory = base.createNodePoolFactory(graphNumber);
         final IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
-        Graph graph = new SortedResultsGraphFactory(longIndexes, nodePoolFactory, collectionFactory).getGraph();
+        Graph graph = base.createGraphFactory(longIndexes, nodePoolFactory, collectionFactory).getGraph();
 
         ReadableIndex<Long> readIndex = new ReadableIndexImpl(structureIndexes);
         WritableIndex<Long> writeIndex = new WritableIndexImpl(structureIndexes);
@@ -182,13 +172,11 @@ public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJR
     }
 
     private MoleculeStructureIndex<Long>[] createMoleculeStructureIndexes(long graphNumber) {
-        MoleculeStructureIndex<Long>[] indexes = new MoleculeStructureIndexSesameSync[]{
+        return new MoleculeStructureIndexSesameSync[]{
             new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "spomd" + graphNumber)),
             new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "posmd" + graphNumber)),
             new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "ospmd" + graphNumber)),
             new MoleculeStructureIndexSesameSync(btreeFactory.createQuinBTree(handler, "dmspo" + graphNumber)),
         };
-        openStructureIndexes.addAll(asList(indexes));
-        return indexes;
     }
 }

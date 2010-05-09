@@ -63,6 +63,8 @@ import org.jrdf.collection.BdbCollectionFactory;
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
+import org.jrdf.graph.local.SortedResultsGraphFactory;
+import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.parser.RdfReader;
@@ -87,9 +89,8 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private final Set<GraphFactory> openNodePoolFactories = new HashSet<GraphFactory>();
+    private final Set<GraphFactory> openGraphFactories = new HashSet<GraphFactory>();
     private final BdbEnvironmentHandler bdbHandler;
-    private IteratorTrackingCollectionFactory collectionFactory;
     private Models models;
     private File file;
     private Graph modelsGraph;
@@ -109,8 +110,14 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     }
 
     public IteratorTrackingCollectionFactory createCollectionFactory(long graphNumber) {
-        collectionFactory = new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
-        return collectionFactory;
+        return new BdbCollectionFactory(bdbHandler, "collection" + graphNumber);
+    }
+
+    public GraphFactory createGraphFactory(LongIndex[] indexes, NodePoolFactory nodePoolFactory,
+        IteratorTrackingCollectionFactory collectionFactory) {
+        SortedResultsGraphFactory factory = new SortedResultsGraphFactory(indexes, nodePoolFactory, collectionFactory);
+        openGraphFactories.add(factory);
+        return factory;
     }
 
     public boolean hasGraph(String name) {
@@ -136,12 +143,9 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     }
 
     public void close() {
-        for (GraphFactory openFactory : openNodePoolFactories) {
+        for (GraphFactory openFactory : openGraphFactories) {
             openFactory.close();
         }
-        if (collectionFactory != null) {
-            collectionFactory.close();
-        }
-        openNodePoolFactories.clear();
+        openGraphFactories.clear();
     }
 }
