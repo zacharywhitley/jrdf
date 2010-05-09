@@ -61,7 +61,6 @@ package org.jrdf;
 
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.local.SortedResultsGraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesameSync;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
@@ -72,11 +71,6 @@ import org.jrdf.util.btree.BTree;
 import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static java.util.Arrays.asList;
-
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
  *
@@ -84,14 +78,13 @@ import static java.util.Arrays.asList;
  * @version $Id$
  */
 public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
-    private final DirectoryHandler handler;
-    private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
+    private final DirectoryHandler dirHandler;
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private BasePersistentJRDFFactory base;
 
     private PersistentJRDFFactoryImpl(DirectoryHandler newHandler) {
-        this.handler = newHandler;
-        this.base = new BasePersistentJRDFFactoryImpl(newHandler, new BdbEnvironmentHandlerImpl(handler));
+        this.dirHandler = newHandler;
+        this.base = new BasePersistentJRDFFactoryImpl(newHandler, new BdbEnvironmentHandlerImpl(dirHandler));
         refresh();
     }
 
@@ -143,30 +136,29 @@ public final class PersistentJRDFFactoryImpl implements PersistentJRDFFactory {
 
     public void close() {
         base.close();
-        for (LongIndex index : openIndexes) {
-            index.close();
-        }
-        openIndexes.clear();
     }
 
     private Graph getGraph(long graphNumber) {
         LongIndex[] indexes = createIndexes(graphNumber);
         final NodePoolFactory nodePool = base.createNodePoolFactory(graphNumber);
         IteratorTrackingCollectionFactory collectionFactory = base.createCollectionFactory(graphNumber);
-        return new SortedResultsGraphFactory(indexes, nodePool, collectionFactory).getGraph();
+        return base.createGraphFactory(indexes, nodePool, collectionFactory).getGraph();
     }
 
     private LongIndex[] createIndexes(long graphNumber) {
         BTree[] bTrees = createBTrees(graphNumber);
-        final LongIndex[] indexes = {new LongIndexSesameSync(bTrees[0]), new LongIndexSesameSync(bTrees[1]),
-            new LongIndexSesameSync(bTrees[2])};
-        openIndexes.addAll(asList(indexes));
-        return indexes;
+        return new LongIndex[]{newIndex(bTrees[0]), newIndex(bTrees[1]), newIndex(bTrees[2])};
     }
 
     private BTree[] createBTrees(long graphNumber) {
-        return new BTree[]{btreeFactory.createBTree(handler, "spo" + graphNumber),
-                btreeFactory.createBTree(handler, "pos" + graphNumber),
-                btreeFactory.createBTree(handler, "osp" + graphNumber)};
+        return new BTree[]{newBtree("spo" + graphNumber), newBtree("pos" + graphNumber), newBtree("osp" + graphNumber)};
+    }
+
+    private BTree newBtree(String btreeName) {
+        return btreeFactory.createBTree(dirHandler, btreeName);
+    }
+
+    private LongIndexSesameSync newIndex(BTree bTree) {
+        return new LongIndexSesameSync(bTree);
     }
 }

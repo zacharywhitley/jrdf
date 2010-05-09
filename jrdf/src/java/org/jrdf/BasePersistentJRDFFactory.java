@@ -60,6 +60,8 @@
 package org.jrdf;
 
 import org.jrdf.collection.IteratorTrackingCollectionFactory;
+import org.jrdf.graph.GraphFactory;
+import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.sparql.SparqlConnection;
 
@@ -70,6 +72,9 @@ public interface BasePersistentJRDFFactory {
 
     IteratorTrackingCollectionFactory createCollectionFactory(long graphNumber);
 
+    GraphFactory createGraphFactory(LongIndex[] indexes, NodePoolFactory nodePoolFactory,
+        IteratorTrackingCollectionFactory collectionFactory);
+
     boolean hasGraph(String name);
 
     long addNewGraph(String name);
@@ -79,4 +84,5 @@ public interface BasePersistentJRDFFactory {
     void refresh();
 
     void close();
+
 }

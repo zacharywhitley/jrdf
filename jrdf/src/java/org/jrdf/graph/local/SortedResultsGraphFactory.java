@@ -112,6 +112,7 @@ public class SortedResultsGraphFactory implements ReadWriteGraphFactory {
     }
 
     // TODO Hand itself to the graph and offer getNodePool, getReadWriteGraph and getXXXFactories.
+
     public Graph getGraph() {
         if (currentGraph == null) {
             currentGraph = new GraphImpl(nodePool, readWriteGraph, elementFactory, tripleFactory,
@@ -125,8 +126,17 @@ public class SortedResultsGraphFactory implements ReadWriteGraphFactory {
     }
 
     public void close() {
-        // TODO Add closing indexes and CollectionFactory.
-        nodePoolFactory.close();
+        try {
+            for (LongIndex index : longIndexes) {
+                index.close();
+            }
+        } finally {
+            try {
+                nodePoolFactory.close();
+            } finally {
+                collectionFactory.close();
+            }
+        }
     }
 
     private void init() {
