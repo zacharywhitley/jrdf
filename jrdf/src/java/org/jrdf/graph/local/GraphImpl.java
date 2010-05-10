@@ -59,9 +59,6 @@
 
 package org.jrdf.graph.local;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -74,21 +71,25 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
-import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import org.jrdf.query.relation.type.NodeType;
-import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
-import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
-import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.rdfxml.MemRdfXmlWriter;
 
 import java.io.StringWriter;
-import static java.util.Arrays.asList;
 import java.util.Iterator;
+
+import static java.util.Arrays.asList;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
+import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
+import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
+import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * A memory based RDF Graph.
@@ -132,12 +133,18 @@ public class GraphImpl implements Graph {
     private ResourceIteratorFactory resourceIteratorFactory;
 
     /**
+     * Allows access to the node pool and read/write graph as well as closing underlying resources for this graph.
+     */
+    private ReadWriteGraphFactory graphFactory;
+
+    /**
      * Default constructor.
      */
-    public GraphImpl(NodePool newNodePool, ReadWriteGraph newWritableGraph, GraphElementFactory newElementFactory,
+    public GraphImpl(ReadWriteGraphFactory newGraphFactory, GraphElementFactory newElementFactory,
         TripleFactory newTripleFactory, ResourceIteratorFactory newResourceIteratorFactory) {
-        this.nodePool = newNodePool;
-        this.readWriteGraph = newWritableGraph;
+        this.graphFactory = newGraphFactory;
+        this.nodePool = newGraphFactory.getNodePool();
+        this.readWriteGraph = newGraphFactory.getReadWriteGraph();
         this.elementFactory = newElementFactory;
         this.tripleFactory = newTripleFactory;
         this.resourceIteratorFactory = newResourceIteratorFactory;
@@ -281,7 +288,7 @@ public class GraphImpl implements Graph {
     }
 
     public void close() {
-        // no op
+        graphFactory.close();
     }
 
     public ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
