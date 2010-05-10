@@ -109,14 +109,17 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
 
     public Graph getGraph() {
         if (currentGraph == null) {
-            currentGraph = new GraphImpl(nodePool, readWriteGraph, elementFactory, tripleFactory,
-                resourceIteratorFactory);
+            currentGraph = new GraphImpl(this, elementFactory, tripleFactory, resourceIteratorFactory);
         }
         return currentGraph;
     }
 
     public ReadWriteGraph getReadWriteGraph() {
         return readWriteGraph;
+    }
+
+    public NodePool getNodePool() {
+        return nodePool;
     }
 
     public void close() {
