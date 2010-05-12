@@ -66,7 +66,6 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import static org.jrdf.util.param.ParameterUtil.*;
 import org.jrdf.vocabulary.RDF;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
@@ -76,6 +75,8 @@ import org.jrdf.writer.WriteException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.net.URI;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * Represents a statement about a resource.

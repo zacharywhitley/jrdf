@@ -63,8 +63,8 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
-import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 import org.jrdf.util.ClosableIterable;
+import org.jrdf.vocabulary.OWL;
 import org.jrdf.vocabulary.RDF;
 import org.jrdf.vocabulary.RDFS;
 import org.jrdf.writer.NamespaceException;
@@ -74,6 +74,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 
 /**
  * Contains mappings between namespaces and partial URIs.
@@ -134,16 +136,16 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
         initNamespaces();
     }
 
+    public String toString() {
+        return names.toString();
+    }
+
     private void initNamespaces() {
         add("rdf", getPartialUri(RDF.BASE_URI.toString()));
         add("rdfs", getPartialUri(RDFS.BASE_URI.toString()));
-        add("owl", "http://www.w3.org/2002/07/owl#");
+        add("owl", getPartialUri(OWL.BASE_URI.toString()));
         add("dc", "http://purl.org/dc/elements/1.1/");
         add("dcterms", "http://purl.org/dc/terms/");
-    }
-
-    public String toString() {
-        return names.toString();
     }
 
     /**

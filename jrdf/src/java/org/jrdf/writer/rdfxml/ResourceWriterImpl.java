@@ -67,14 +67,15 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.IteratorStack;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
-import org.jrdf.writer.WriteException;
 import org.jrdf.writer.RdfWriter;
+import org.jrdf.writer.WriteException;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * Represents an RDF/XML header for a given resource.
@@ -90,8 +91,8 @@ public class ResourceWriterImpl implements ResourceWriter {
     private Exception exception;
 
     public ResourceWriterImpl(final RdfNamespaceMap names, final BlankNodeRegistry newRegistry,
-        final XMLStreamWriter newXmlStreamWriter, XmlLiteralWriter xmlLiteralWriter) {
-        checkNotNull(names, newRegistry, newXmlStreamWriter);
+        final XMLStreamWriter newXmlStreamWriter, final XmlLiteralWriter xmlLiteralWriter) {
+        checkNotNull(names, newRegistry, newXmlStreamWriter, xmlLiteralWriter);
         this.registry = newRegistry;
         this.xmlStreamWriter = newXmlStreamWriter;
         this.statement = new PredicateObjectWriterImpl(names, registry, xmlStreamWriter, xmlLiteralWriter);
