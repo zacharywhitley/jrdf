@@ -59,15 +59,18 @@
 
 package org.jrdf.writer.rdfxml;
 
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-import org.jrdf.writer.RdfNamespaceMap;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.URIReference;
+import org.jrdf.util.IteratorStack;
 import org.jrdf.writer.WriteException;
-import org.jrdf.writer.RdfWriter;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import java.util.Map.Entry;
-import java.util.Set;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * Represents an RDF/XML header that includes an XML header and opening RDF
@@ -76,89 +79,56 @@ import java.util.Set;
  * @author TurnerRX
  */
 public class RdfXmlDocumentImpl implements RdfXmlDocument {
-    private static final String XML_VERSION = "1.0";
-    private static final String DOC_TYPE = "<!DOCTYPE rdf:RDF[" + RdfWriter.NEW_LINE + " ${entities} ]>";
-    private static final String XML_ENTITY = "    <!ENTITY ${name} '${uri}'>" + RdfWriter.NEW_LINE;
+    private final RdfXmlHeaderFooter headerFooter;
+    private final ResourceWriter resourceWriter;
 
-    /**
-     * Character set to be used when writing header
-     */
-    private final String encoding;
-
-    /**
-     * Used to map partial URIs to RDF namespaces
-     */
-    private final RdfNamespaceMap names;
-
-    /**
-     * Writer for the XML document.
-     */
-    private final XMLStreamWriter xmlStreamWriter;
-
-    /**
-     * Constructor. Specifies the character encoding to be used.
-     *
-     * @param newEncoding charset
-     * @param newNames the namespace maps (from prefix to full name and back).
-     * @param newXmlStreamWriter the writer to add new elements to.
-     */
-    public RdfXmlDocumentImpl(final String newEncoding, final RdfNamespaceMap newNames,
-        final XMLStreamWriter newXmlStreamWriter) {
-        checkNotNull(newEncoding, newNames, newXmlStreamWriter);
-        this.encoding = newEncoding;
-        this.names = newNames;
-        this.xmlStreamWriter = newXmlStreamWriter;
+    public RdfXmlDocumentImpl(final RdfXmlHeaderFooter newHeaderFooter, final ResourceWriter newResourceWriter) {
+        checkNotNull(newHeaderFooter, newResourceWriter);
+        headerFooter = newHeaderFooter;
+        resourceWriter = newResourceWriter;
     }
 
     public void writeHeader() throws WriteException {
-        try {
-            xmlStreamWriter.writeStartDocument(encoding, XML_VERSION);
-            xmlStreamWriter.writeDTD(writeDocTypeDef());
-            xmlStreamWriter.writeStartElement("rdf", "RDF", names.getFullUri("rdf"));
-            for (final Entry<String, String> entry : names.getNameEntries()) {
-                xmlStreamWriter.writeNamespace(entry.getKey(), entry.getValue());
-            }
-            xmlStreamWriter.writeCharacters(RdfWriter.NEW_LINE + "    ");
-        } catch (XMLStreamException e) {
-            throw new WriteException(e);
-        }
+        headerFooter.writeHeader();
     }
 
     public void writeFooter() throws WriteException {
-        try {
-            xmlStreamWriter.writeEndElement();
-            xmlStreamWriter.writeEndDocument();
-        } catch (XMLStreamException e) {
-            throw new WriteException(e);
-        }
+        headerFooter.writeFooter();
     }
 
-    /**
-     * Writes the document type definition including entities.
-     *
-     * @return the DOCTYPE entities.
-     */
-    private String writeDocTypeDef() {
-        String docType = DOC_TYPE;
-        docType = docType.replaceAll("\\$\\{entities\\}", getEntities());
-        return docType;
+    public void setTriple(Triple triple) {
+        resourceWriter.setTriple(triple);
     }
 
-    /**
-     * Returns a list of XML entity declarations for the entries in the
-     * namespace map.
-     *
-     * @return String RDF namespaces as xml entities.
-     */
-    private String getEntities() {
-        final StringBuffer buffer = new StringBuffer();
-        final Set<Entry<String, String>> entries = names.getNameEntries();
-        for (final Entry<String, String> entry : entries) {
-            String entity = XML_ENTITY;
-            entity = entity.replaceAll("\\$\\{name\\}", entry.getKey());
-            entity = entity.replaceAll("\\$\\{uri\\}", entry.getValue());
-            buffer.append(entity);
-        }
-        return buffer.toString();
+    public void writeStart() throws WriteException {
+        resourceWriter.writeStart();
+    }
+
+    public void writeNestedStatements(IteratorStack<Triple> stack) throws WriteException, XMLStreamException {
+        resourceWriter.writeNestedStatements(stack);
+    }
+
+    public void writeEnd() throws WriteException {
+        resourceWriter.writeEnd();
+    }
+
+    public void visitBlankNode(BlankNode blankNode) {
+        resourceWriter.visitBlankNode(blankNode);
+    }
+
+    public void visitURIReference(URIReference uriReference) {
+        resourceWriter.visitURIReference(uriReference);
+    }
+
+    public void visitLiteral(Literal literal) {
+        resourceWriter.visitLiteral(literal);
+    }
+
+    public void visitNode(Node node) {
+        resourceWriter.visitNode(node);
+    }
+
+    public void visitResource(Resource resource) {
+        resourceWriter.visitResource(resource);
     }
 }

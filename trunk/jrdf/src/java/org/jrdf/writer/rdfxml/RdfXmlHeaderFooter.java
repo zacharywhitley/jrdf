@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,10 +54,14 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.writer.rdfxml;
 
-public interface RdfXmlDocument extends RdfXmlHeaderFooter, ResourceWriter {
+import org.jrdf.writer.WriteException;
+
+public interface RdfXmlHeaderFooter {
+    void writeHeader() throws WriteException;
+
+    void writeFooter() throws WriteException;
 }
