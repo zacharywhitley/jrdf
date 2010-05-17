@@ -72,12 +72,6 @@ import javax.xml.stream.XMLStreamException;
 
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-/**
- * Represents an RDF/XML header that includes an XML header and opening RDF
- * element.
- *
- * @author TurnerRX
- */
 public class RdfXmlDocumentImpl implements RdfXmlDocument {
     private final RdfXmlHeaderFooter headerFooter;
     private final ResourceWriter resourceWriter;

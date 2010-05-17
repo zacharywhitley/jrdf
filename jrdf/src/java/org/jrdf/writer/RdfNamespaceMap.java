@@ -82,6 +82,14 @@ public interface RdfNamespaceMap {
     void load(Graph graph) throws GraphException;
 
     /**
+     * Adds a new namespace mapping, if no mapping already exists.
+     *
+     * @param namespace the shortened name to add, e.g. rdf.
+     * @param partialUri the URI to map, e.g. http://www.w3.org/1999/02/22-rdf-syntax-ns#.
+     */
+    void addNamespace(String namespace, String partialUri) throws NamespaceException;
+
+    /**
      * Returns a string representing the resource URI with its URI prefix
      * replaced by the mapped namespace.
      *
@@ -89,7 +97,7 @@ public interface RdfNamespaceMap {
      * @return String namespaced representation of resource URI
      * @throws org.jrdf.writer.NamespaceException If there is no mapping for the partial resource URI.
      */
-    String replaceNamespace(URIReference resource) throws NamespaceException;
+    String replaceWithNamespace(URIReference resource) throws NamespaceException;
 
     /**
      * Returns the prefix that is mapped to the resource or null if the URI is not mapped.  Extracts the uri to the

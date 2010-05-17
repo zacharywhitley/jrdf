@@ -61,9 +61,6 @@ package org.jrdf.writer.rdfxml;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import static org.jrdf.graph.AnyObjectNode.*;
-import static org.jrdf.graph.AnyPredicateNode.*;
-import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -76,13 +73,12 @@ import org.jrdf.graph.operation.Comparison;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import static org.jrdf.vocabulary.RDF.*;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
 import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
-import org.jrdf.writer.mem.RdfNamespaceMapImpl;
+import org.jrdf.writer.mem.MemRdfNamespaceMap;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
@@ -92,6 +88,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
+
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.vocabulary.RDF.XML_LITERAL;
 
 // TODO (AN) Add a test for when there are no triples in the graph - seems to produce something strange.
 
@@ -207,7 +208,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         try {
             BlankNodeRegistry nodeRegistry = new MemBlankNodeRegistryImpl();
             nodeRegistry.clear();
-            RdfNamespaceMap map = new RdfNamespaceMapImpl();
+            RdfNamespaceMap map = new MemRdfNamespaceMap();
             RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
             try {
                 writer.write(graph, out);

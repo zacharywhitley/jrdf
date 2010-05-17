@@ -61,7 +61,7 @@ package org.jrdf.writer;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
-import org.jrdf.writer.mem.RdfNamespaceMapImpl;
+import org.jrdf.writer.mem.MemRdfNamespaceMap;
 import org.jrdf.writer.ntriples.NTriplesWriterImpl;
 import org.jrdf.writer.rdfxml.RdfXmlWriter;
 
@@ -109,7 +109,7 @@ public final class Writer {
 
     private static void tryWriteRdfXml(File file, Graph graph) throws Exception {
         final BlankNodeRegistry nodeRegistry = new MemBlankNodeRegistryImpl();
-        final RdfNamespaceMap map = new RdfNamespaceMapImpl();
+        final RdfNamespaceMap map = new MemRdfNamespaceMap();
         final RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
         final OutputStream fileOutputStream = new FileOutputStream(file);
         try {

@@ -64,9 +64,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterable;
-import org.jrdf.vocabulary.OWL;
 import org.jrdf.vocabulary.RDF;
-import org.jrdf.vocabulary.RDFS;
 import org.jrdf.writer.NamespaceException;
 import org.jrdf.writer.RdfNamespaceMap;
 
@@ -76,23 +74,24 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * Contains mappings between namespaces and partial URIs.
  *
  * @author TurnerRX
  */
-public class RdfNamespaceMapImpl implements RdfNamespaceMap {
+public final class MemRdfNamespaceMap implements RdfNamespaceMap {
     private static final String NS_PREFIX = "ns";
     private Map<String, String> names = new HashMap<String, String>();
     private Map<String, String> uris = new HashMap<String, String>();
 
-    public RdfNamespaceMapImpl() {
-        // add some well known namespaces
-        initNamespaces();
+    public MemRdfNamespaceMap() {
+        createDefaultNamespace();
     }
 
     public void load(Graph graph) throws GraphException {
+        checkNotNull(graph);
         // check for blank nodes
         ClosableIterable<? extends Node> predicates = graph.findNodes(PREDICATE_TYPE);
         for (Node node : predicates) {
@@ -100,12 +99,23 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
             String partial = getPartialUri(uriReference.getURI().toString());
             if (!uris.containsKey(partial)) {
                 String ns = NS_PREFIX + names.size();
-                add(ns, partial);
+                addNamespace(ns, partial);
             }
         }
     }
 
-    public String replaceNamespace(URIReference resource) throws NamespaceException {
+    public void addNamespace(String namespace, String partialUri) throws NamespaceException {
+        checkNotNull(namespace, partialUri);
+        // map bi-directionally
+        if (names.containsKey(namespace)) {
+            throw new NamespaceException("Namespace: " + namespace + " already mapped to " + partialUri);
+        }
+        names.put(namespace, partialUri);
+        uris.put(partialUri, namespace);
+    }
+
+    public String replaceWithNamespace(URIReference resource) throws NamespaceException {
+        checkNotNull(resource);
         URI uri = resource.getURI();
         String full = uri.toString();
         String partial = getPartialUri(full);
@@ -117,12 +127,14 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
     }
 
     public String getPrefix(URIReference resource) {
+        checkNotNull(resource);
         URI uri = resource.getURI();
         String partial = getPartialUri(uri.toString());
         return uris.get(partial);
     }
 
     public String getFullUri(String partial) {
+        checkNotNull(partial);
         return names.get(partial);
     }
 
@@ -133,19 +145,15 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
     public void reset() {
         names.clear();
         uris.clear();
-        initNamespaces();
+        createDefaultNamespace();
     }
 
     public String toString() {
         return names.toString();
     }
 
-    private void initNamespaces() {
-        add("rdf", getPartialUri(RDF.BASE_URI.toString()));
-        add("rdfs", getPartialUri(RDFS.BASE_URI.toString()));
-        add("owl", getPartialUri(OWL.BASE_URI.toString()));
-        add("dc", "http://purl.org/dc/elements/1.1/");
-        add("dcterms", "http://purl.org/dc/terms/");
+    private void createDefaultNamespace() {
+        addNamespace("rdf", getPartialUri(RDF.BASE_URI.toString()));
     }
 
     /**
@@ -160,11 +168,5 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
         int index = Math.max(hashIndex, slashIndex);
         // if there is no '#' or '/', return entire uri
         return (index > 0) && (index < uri.length()) ? uri.substring(0, ++index) : uri;
-    }
-
-    private void add(String name, String uri) {
-        // map bi-directionally
-        uris.put(uri, name);
-        names.put(name, uri);
     }
 }

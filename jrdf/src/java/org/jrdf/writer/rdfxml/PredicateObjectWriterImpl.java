@@ -165,7 +165,7 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
         if (!(predicate instanceof URIReference)) {
             throw new WriteException("Unknown predicate node type: " + predicate.getClass().getName());
         }
-        String resourceName = names.replaceNamespace((URIReference) predicate);
+        String resourceName = names.replaceWithNamespace((URIReference) predicate);
         xmlStreamWriter.writeStartElement(resourceName);
     }
 

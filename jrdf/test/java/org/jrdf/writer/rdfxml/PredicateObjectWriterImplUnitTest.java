@@ -59,34 +59,19 @@
 
 package org.jrdf.writer.rdfxml;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.URIReference;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.ParameterDefinition;
-// org.jrdf.util.test.MockTestUtil.createMock
-import static org.jrdf.util.test.MockTestUtil.createMock;
-import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
-import static org.jrdf.util.test.ReflectTestUtil.getFieldValue;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -94,6 +79,21 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.lang.reflect.Modifier;
 import java.net.URI;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.MockTestUtil.createMock;
+import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
+import static org.jrdf.util.test.ReflectTestUtil.getFieldValue;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 @RunWith(PowerMockRunner.class)
 public class PredicateObjectWriterImplUnitTest {
@@ -137,7 +137,7 @@ public class PredicateObjectWriterImplUnitTest {
     public void testWritePredicateObjectTest() throws Exception {
         URIReference predicate = createMock(URIReference.class);
         URIReference object = createMock(URIReference.class);
-        expect(map.replaceNamespace(predicate)).andReturn(NODE_ID);
+        expect(map.replaceWithNamespace(predicate)).andReturn(NODE_ID);
         xmlStreamWriter.writeStartElement(NODE_ID);
         object.accept(writer);
         xmlStreamWriter.writeEndElement();

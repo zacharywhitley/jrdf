@@ -136,8 +136,7 @@ public class GraphToRdfXmlWithHeader implements GraphToRdfXml {
         RdfXmlHeaderFooter headerFooter = new RdfXmlHeaderFooterImpl(encoding, names, xmlStreamWriter);
         ResourceWriterImpl resourceWriter = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter,
             new XmlLiteralWriterImpl(xmlStreamWriter));
-        RdfXmlDocument document = new RdfXmlDocumentImpl(headerFooter, resourceWriter);
-        return document;
+        return new RdfXmlDocumentImpl(headerFooter, resourceWriter);
     }
 
     /**

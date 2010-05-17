@@ -60,6 +60,12 @@ package org.jrdf.writer.rdfxml;
 
 import org.jrdf.writer.WriteException;
 
+/**
+ * Represents an RDF/XML header that includes an XML header and opening RDF
+ * element.
+ *
+ * @author TurnerRX
+ */
 public interface RdfXmlHeaderFooter {
     void writeHeader() throws WriteException;
 
