@@ -62,7 +62,7 @@ package org.jrdf.example.performance;
 import org.jrdf.graph.Graph;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfWriter;
-import org.jrdf.writer.mem.RdfNamespaceMapImpl;
+import org.jrdf.writer.mem.MemRdfNamespaceMap;
 import org.jrdf.writer.rdfxml.RdfXmlWriter;
 import org.jrdf.util.TempDirectoryHandler;
 
@@ -79,7 +79,7 @@ public class WritePerformanceImpl implements WritePerformance {
         Writer out = new FileWriter(new File(dirHandler.getDir(), "foo.rdf"));
         try {
             registry.clear();
-            RdfWriter writer = new RdfXmlWriter(registry, new RdfNamespaceMapImpl());
+            RdfWriter writer = new RdfXmlWriter(registry, new MemRdfNamespaceMap());
             try {
                 writer.write(graph, out);
             } finally {

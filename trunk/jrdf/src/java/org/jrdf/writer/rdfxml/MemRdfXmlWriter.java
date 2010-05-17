@@ -64,7 +64,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
 import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
-import org.jrdf.writer.mem.RdfNamespaceMapImpl;
+import org.jrdf.writer.mem.MemRdfNamespaceMap;
 
 import java.io.OutputStream;
 import java.io.Writer;
@@ -75,7 +75,7 @@ public class MemRdfXmlWriter implements RdfWriter {
     private RdfXmlWriter rdfXmlWriter;
 
     public MemRdfXmlWriter() {
-        rdfXmlWriter = new RdfXmlWriter(new MemBlankNodeRegistryImpl(), new RdfNamespaceMapImpl());
+        rdfXmlWriter = new RdfXmlWriter(new MemBlankNodeRegistryImpl(), new MemRdfNamespaceMap());
     }
 
     public void write(Graph graph, OutputStream stream) throws WriteException, GraphException {
@@ -86,6 +86,11 @@ public class MemRdfXmlWriter implements RdfWriter {
     public void write(Graph graph, Writer writer) throws WriteException, GraphException {
         checkNotNull(graph, writer);
         rdfXmlWriter.write(graph, writer);
+    }
+
+    public void write(Graph graph, Writer writer, String encoding) throws GraphException {
+        checkNotNull(graph, writer, encoding);
+        rdfXmlWriter.write(graph, writer, encoding);
     }
 
     public void close() throws WriteException {

@@ -59,7 +59,6 @@
 
 package org.jrdf.writer.ntriples;
 
-import static org.jrdf.graph.AnyTriple.ANY_TRIPLE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
@@ -70,7 +69,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TypedNodeVisitable;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterable;
-import static org.jrdf.util.ClosableIterators.with;
 import org.jrdf.util.Function;
 import org.jrdf.writer.WriteException;
 
@@ -79,6 +77,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+
+import static org.jrdf.graph.AnyTriple.ANY_TRIPLE;
+import static org.jrdf.util.ClosableIterators.with;
 
 public class NTriplesWriterImpl implements NTriplesWriter {
     private static final String SPACE = " ";
@@ -101,9 +102,13 @@ public class NTriplesWriterImpl implements NTriplesWriter {
     }
 
     public void write(Graph graph, Writer newWriter) throws WriteException, GraphException {
+        write(graph, newWriter, null);
+    }
+
+    public void write(Graph graph, Writer newWriter, String encoding) throws GraphException {
         printWriter = new PrintWriter(newWriter);
         try {
-            write(graph, (String) null);
+            write(graph, encoding);
         } finally {
             printWriter.close();
         }
