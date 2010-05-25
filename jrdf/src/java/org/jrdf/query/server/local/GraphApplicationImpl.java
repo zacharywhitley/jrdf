@@ -83,10 +83,6 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
         this.sparqlConnection = newConnection;
     }
 
-    public void close() {
-        factory.close();
-    }
-
     public boolean hasGraph(String name) {
         return factory.hasGraph(name);
     }
@@ -100,14 +96,16 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
     }
 
     public Answer answerQuery(String graphName, String queryString, long newMaxRows) throws ResourceException {
+        final MoleculeGraph graph = getGraph(graphName);
         try {
-            final MoleculeGraph graph = getGraph(graphName);
             this.answer = sparqlConnection.executeQuery(graph, queryString);
             this.maxRows = newMaxRows;
             this.tooManyRows = answer.numberOfTuples() > newMaxRows;
             return answer;
         } catch (Exception e) {
             throw new ResourceException(e);
+        } finally {
+            graph.close();
         }
     }
 
@@ -117,10 +115,6 @@ public class GraphApplicationImpl extends Application implements GraphApplicatio
 
     public boolean isTooManyRows() {
         return tooManyRows;
-    }
-
-    public DirectoryHandler getHandler() {
-        return handler;
     }
 
     public void setMaxRows(long newMaxRows) {

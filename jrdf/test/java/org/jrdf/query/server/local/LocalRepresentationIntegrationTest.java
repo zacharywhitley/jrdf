@@ -127,7 +127,6 @@ public class LocalRepresentationIntegrationTest {
 
     @After
     public void tearDown() throws Exception {
-        FACTORY.close();
         localQueryServer.stop();
     }
 

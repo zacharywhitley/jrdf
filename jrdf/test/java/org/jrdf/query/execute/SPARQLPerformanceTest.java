@@ -71,7 +71,6 @@ import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.line.GraphLineParser;
 import org.jrdf.parser.line.LineHandlerFactory;
-import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 import org.jrdf.parser.turtle.TurtleParserFactory;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
@@ -88,6 +87,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 
 /**
  * @author Yuan-Fang Li
@@ -137,9 +138,7 @@ public class SPARQLPerformanceTest extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        graph.clear();
         graph.close();
-        FACTORY.close();
         HANDLER.removeDir();
     }
 

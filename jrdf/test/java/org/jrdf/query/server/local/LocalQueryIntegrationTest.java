@@ -120,7 +120,6 @@ public class LocalQueryIntegrationTest {
     @After
     public void tearDown() throws Exception {
         graph.close();
-        FACTORY.close();
         localQueryServer.stop();
     }
 

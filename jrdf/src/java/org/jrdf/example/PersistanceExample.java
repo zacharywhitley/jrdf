@@ -75,16 +75,12 @@ public class PersistanceExample {
     private static final PersistentJRDFFactory JRDF_FACTORY = PersistentJRDFFactoryImpl.getFactory(HANDLER);
 
     public static void main(String[] args) throws Exception {
-        try {
-            if (!JRDF_FACTORY.hasGraph("foo") || !JRDF_FACTORY.hasGraph("bar")) {
-                HANDLER.removeDir();
-                HANDLER.makeDir();
-                createNewTriples();
-            }
-            getExistingTriples();
-        } finally {
-            JRDF_FACTORY.close();
+        if (!JRDF_FACTORY.hasGraph("foo") || !JRDF_FACTORY.hasGraph("bar")) {
+            HANDLER.removeDir();
+            HANDLER.makeDir();
+            createNewTriples();
         }
+        getExistingTriples();
     }
 
     private static void getExistingTriples() throws GraphException {

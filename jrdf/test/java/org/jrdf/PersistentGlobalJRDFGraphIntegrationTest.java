@@ -59,8 +59,6 @@
 
 package org.jrdf;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
@@ -78,11 +76,13 @@ import org.jrdf.graph.global.molecule.mem.MoleculeHeadTripleComparatorImpl;
 import org.jrdf.graph.local.TripleComparatorFactoryImpl;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URI;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphIntegrationTest {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
@@ -101,11 +101,6 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
         super.setUp();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        FACTORY.close();
-    }
-
     public Graph newGraph() throws Exception {
         MoleculeGraph moleculeGraph = FACTORY.getNewGraph("temp" + graphNumber++);
         moleculeGraph.clear();
@@ -115,19 +110,23 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
     @Test
     public void testMoleculeSize() throws Exception {
         MoleculeGraph moleculeGraph = FACTORY.getNewGraph("foo");
-        moleculeGraph.clear();
-        GraphElementFactory graphElementFactory = moleculeGraph.getElementFactory();
-        TripleFactory tripleFactory = moleculeGraph.getTripleFactory();
-        URIReference ref1 = graphElementFactory.createURIReference(URI.create("urn:foo"));
-        URIReference ref2 = graphElementFactory.createURIReference(URI.create("urn:bar"));
-        URIReference ref3 = graphElementFactory.createURIReference(URI.create("urn:baz"));
-        BlankNode bnode1 = graphElementFactory.createBlankNode();
-        addMolecule(tripleFactory.createTriple(bnode1, ref1, ref1), 1L);
-        addMolecule(tripleFactory.createTriple(bnode1, ref2, ref2), 2L);
-        addMolecule(tripleFactory.createTriple(bnode1, ref3, ref3), 3L);
-        FACTORY.refresh();
-        moleculeGraph = FACTORY.getExistingGraph("foo");
-        assertThat(moleculeGraph.getNumberOfMolecules(), is(3L));
+        try {
+            moleculeGraph.clear();
+            GraphElementFactory graphElementFactory = moleculeGraph.getElementFactory();
+            TripleFactory tripleFactory = moleculeGraph.getTripleFactory();
+            URIReference ref1 = graphElementFactory.createURIReference(URI.create("urn:foo"));
+            URIReference ref2 = graphElementFactory.createURIReference(URI.create("urn:bar"));
+            URIReference ref3 = graphElementFactory.createURIReference(URI.create("urn:baz"));
+            BlankNode bnode1 = graphElementFactory.createBlankNode();
+            addMolecule(tripleFactory.createTriple(bnode1, ref1, ref1), 1L);
+            addMolecule(tripleFactory.createTriple(bnode1, ref2, ref2), 2L);
+            addMolecule(tripleFactory.createTriple(bnode1, ref3, ref3), 3L);
+            FACTORY.refresh();
+            moleculeGraph = FACTORY.getExistingGraph("foo");
+            assertThat(moleculeGraph.getNumberOfMolecules(), is(3L));
+        } finally {
+            moleculeGraph.close();
+        }
     }
 
     private void addMolecule(Triple triple, long expectedMoleculeNumber) throws GraphException {
@@ -136,6 +135,5 @@ public class PersistentGlobalJRDFGraphIntegrationTest extends AbstractGraphInteg
         moleculeGraph.add(MOLECULE_FACTORY.createMolecule(triple));
         assertThat(moleculeGraph.getNumberOfMolecules(), is(expectedMoleculeNumber));
         moleculeGraph.close();
-        FACTORY.close();
     }
 }

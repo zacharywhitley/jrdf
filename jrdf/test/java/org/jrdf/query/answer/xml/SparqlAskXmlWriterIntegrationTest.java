@@ -99,7 +99,7 @@ import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOf
  */
 public class SparqlAskXmlWriterIntegrationTest extends TestCase {
     private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
-    {
+    static {
         XML_INPUT_FACTORY.setProperty(WstxInputProperties.P_INPUT_PARSING_MODE,
             WstxInputProperties.PARSING_MODE_FRAGMENT);
     }
@@ -147,7 +147,6 @@ public class SparqlAskXmlWriterIntegrationTest extends TestCase {
         if (xmlWriter != null) {
             xmlWriter.close();
         }
-        FACTORY.close();
         HANDLER.removeDir();
     }
 
