@@ -67,9 +67,6 @@ import org.jrdf.collection.BdbMapFactory;
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.AbstractBlankNode;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -92,6 +89,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 
 public class CopyGraphUtilImplUnitTest extends TestCase {
     private static final TempDirectoryHandler DIR_HANDLER = new TempDirectoryHandler();
@@ -170,7 +171,8 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         cgUtil.close();
         mapFactory.close();
         setFactory.close();
-        factory.close();
+        graph1.close();
+        graph2.close();
         DIR_HANDLER.removeDir();
     }
 

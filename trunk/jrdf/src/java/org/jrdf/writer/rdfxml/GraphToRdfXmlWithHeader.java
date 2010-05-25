@@ -73,9 +73,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.AnyTriple.ANY_TRIPLE;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class GraphToRdfXmlWithHeader implements GraphToRdfXml {
@@ -149,8 +147,7 @@ public class GraphToRdfXmlWithHeader implements GraphToRdfXml {
      */
     private void writeStatements(final Graph graph, final RdfXmlDocument document) throws GraphException,
         WriteException, XMLStreamException {
-        final ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).
-            iterator();
+        final ClosableIterator<Triple> iter = graph.find(ANY_TRIPLE).iterator();
         try {
             final IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
             while (stack.hasNext()) {

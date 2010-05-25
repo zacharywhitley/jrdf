@@ -128,9 +128,7 @@ public abstract class AbstractMoleculeGraphIntegrationTest extends TestCase {
     }
 
     public void tearDown() {
-        graph.clear();
         graph.close();
-        factory.close();
         new TempDirectoryHandler().removeDir();
     }
 }

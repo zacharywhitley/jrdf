@@ -59,42 +59,44 @@
 
 package org.jrdf.graph;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.hamcrest.Matchers;
-import static org.hamcrest.Matchers.not;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.local.index.nodepool.ExternalBlankNodeException;
 import org.jrdf.query.relation.type.BlankNodeType;
-import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import org.jrdf.query.relation.type.NodeType;
-import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
-import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
-import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.AssertThrows.Block;
-import static org.jrdf.util.test.AssertThrows.assertThrows;
-import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsTriple;
-import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
-import static org.jrdf.util.test.matcher.GraphEmptyMatcher.isEmpty;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URI;
-import static java.net.URI.create;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
+import static java.net.URI.create;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
+import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
+import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
+import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
+import static org.jrdf.util.test.AssertThrows.Block;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
+import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsTriple;
+import static org.jrdf.util.test.matcher.GraphEmptyMatcher.isEmpty;
+import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 
 /**
  * Abstract test case for graph implementations.
@@ -179,6 +181,11 @@ public abstract class AbstractGraphIntegrationTest {
 
         l1 = elementFactory.createLiteral(TEST_STR1);
         l2 = elementFactory.createLiteral(TEST_STR2);
+    }
+
+    @After
+    public void closeGraph() throws Exception {
+        graph.close();
     }
 
     protected abstract Graph newGraph() throws Exception;
@@ -706,12 +713,16 @@ public abstract class AbstractGraphIntegrationTest {
     @Test
     public void testBlankNodesAcrossGraphs() throws Exception {
         final Graph externalGraph = newGraph();
-        GraphElementFactory graphElementFactory = externalGraph.getElementFactory();
-        URI newURI = new URI("http://namespace#somevalue");
-        final URIReference newRes = graphElementFactory.createURIReference(newURI);
-        externalGraph.add(newRes, newRes, newRes);
-        checkIllegalBlankNodeAddition(externalGraph, blank1, newRes, newRes);
-        checkIllegalBlankNodeAddition(externalGraph, blank2, newRes, newRes);
+        try {
+            GraphElementFactory graphElementFactory = externalGraph.getElementFactory();
+            URI newURI = new URI("http://namespace#somevalue");
+            final URIReference newRes = graphElementFactory.createURIReference(newURI);
+            externalGraph.add(newRes, newRes, newRes);
+            checkIllegalBlankNodeAddition(externalGraph, blank1, newRes, newRes);
+            checkIllegalBlankNodeAddition(externalGraph, blank2, newRes, newRes);
+        } finally {
+            externalGraph.close();
+        }
     }
 
     private void checkIllegalBlankNodeAddition(final Graph externalGraph, final SubjectNode subject,
@@ -869,8 +880,12 @@ public abstract class AbstractGraphIntegrationTest {
     public void testSeparateGraphs() throws Exception {
         graph.add(blank2, ref1, l2);
         assertThat(graph.getNumberOfTriples(), equalTo(1L));
-        newGraph();
-        assertThat(graph.getNumberOfTriples(), equalTo(1L));
+        Graph newGraph = newGraph();
+        try {
+            assertThat(graph.getNumberOfTriples(), equalTo(1L));
+        } finally {
+            newGraph.close();
+        }
     }
 
     private void addTriplesToGraph() throws Exception {

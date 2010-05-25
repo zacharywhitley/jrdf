@@ -78,7 +78,6 @@ public class SortedDiskGlobalJRDFFactoryIntegrationTest extends AbstractGraphInt
 
     @After
     public void tearDown() {
-        FACTORY.close();
         HANDLER.removeDir();
     }
 

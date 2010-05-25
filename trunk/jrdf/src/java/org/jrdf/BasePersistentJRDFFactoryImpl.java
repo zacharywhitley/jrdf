@@ -80,8 +80,6 @@ import org.jrdf.util.ModelsImpl;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.jrdf.writer.Writer.writeNTriples;
 
@@ -89,7 +87,6 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private final Set<GraphFactory> openGraphFactories = new HashSet<GraphFactory>();
     private final BdbEnvironmentHandler bdbHandler;
     private Models models;
     private File file;
@@ -116,7 +113,6 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     public GraphFactory createGraphFactory(LongIndex[] indexes, NodePoolFactory nodePoolFactory,
         IteratorTrackingCollectionFactory collectionFactory) {
         SortedResultsGraphFactory factory = new SortedResultsGraphFactory(indexes, nodePoolFactory, collectionFactory);
-        openGraphFactories.add(factory);
         return factory;
     }
 
@@ -143,9 +139,5 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
     }
 
     public void close() {
-        for (GraphFactory openFactory : openGraphFactories) {
-            openFactory.close();
-        }
-        openGraphFactories.clear();
     }
 }

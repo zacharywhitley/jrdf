@@ -61,15 +61,9 @@ package org.jrdf;
 
 import org.jrdf.graph.AbstractGraphIntegrationTest;
 import org.jrdf.graph.Graph;
-import org.junit.After;
 
 public class SortedMemoryGlobalGraphJRDFFactoryIntegrationTest extends AbstractGraphIntegrationTest {
     private static final JRDFFactory FACTORY = SortedMemoryGlobalJRDFFactory.getFactory();
-
-    @After
-    public void tearDown() {
-        FACTORY.close();
-    }
 
     public Graph newGraph() throws Exception {
         return FACTORY.getGraph();

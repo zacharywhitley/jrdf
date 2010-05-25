@@ -139,10 +139,6 @@ public class DistributedQueryGraphApplicationImpl implements DistributedQueryGra
         application.setMaxRows(rows);
     }
 
-    public void close() {
-        application.close();
-    }
-
     public MoleculeGraph getGraph(String name) {
         return application.getGraph(name);
     }

@@ -59,9 +59,6 @@
 
 package org.jrdf.query.server.distributed;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import org.jrdf.PersistentGlobalJRDFFactory;
 import org.jrdf.PersistentGlobalJRDFFactoryImpl;
 import org.jrdf.graph.BlankNode;
@@ -80,26 +77,30 @@ import org.jrdf.query.server.SpringDistributedServer;
 import org.jrdf.query.server.SpringLocalServer;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
-import static org.jrdf.util.test.SetUtil.asSet;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.restlet.Client;
 import org.restlet.data.Method;
-import static org.restlet.data.Protocol.HTTP;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.StringRepresentation;
 
 import java.net.URI;
-import static java.net.URI.create;
 import java.net.URL;
-import static java.util.Collections.EMPTY_MAP;
 import java.util.Iterator;
 import java.util.Set;
+
+import static java.net.URI.create;
+import static java.util.Collections.EMPTY_MAP;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.jrdf.util.test.SetUtil.asSet;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.restlet.data.Protocol.HTTP;
+import static org.restlet.data.Status.SUCCESS_OK;
 
 /**
  * @author Yuan-Fang Li
@@ -135,7 +136,6 @@ public class DistributedQueryIntegrationTest {
         DIST_HANDLER.makeDir();
         FACTORY.refresh();
         graph = FACTORY.getGraph(GRAPH_NAME);
-        graph.clear();
         elementFactory = graph.getElementFactory();
         localQueryServer = new SpringLocalServer();
         localQueryServer.start();
@@ -147,7 +147,7 @@ public class DistributedQueryIntegrationTest {
 
     @After
     public void tearDown() throws Exception {
-        FACTORY.close();
+        graph.close();
         localQueryServer.stop();
         distributedServer.stop();
     }

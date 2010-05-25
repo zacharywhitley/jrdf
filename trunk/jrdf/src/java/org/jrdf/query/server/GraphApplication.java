@@ -73,8 +73,6 @@ public interface GraphApplication {
 
     void setMaxRows(long rows);
 
-    void close();
-
     MoleculeGraph getGraph(String name);
 
     MoleculeGraph getGraph();
