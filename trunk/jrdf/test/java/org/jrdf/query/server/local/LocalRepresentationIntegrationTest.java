@@ -151,14 +151,14 @@ public class LocalRepresentationIntegrationTest {
     }
 
     @Test
-    public void putTwiceRdfXmlTriples() throws Exception {
+    public void putTwiceRdfXmlTriplesReplacesTriples() throws Exception {
         putTriplesToGraph("http://www.example.org/abc");
         final Graph graphToPut = putTriplesToGraph("http://www.example.org/abc");
         assertSameGraph("http://www.example.org/abc", graphToPut);
     }
 
     @Test
-    public void postRdfXmlTriples() throws Exception {
+    public void postRdfXmlTriplesAddsTriples() throws Exception {
         final Graph graph1 = postTriplesToGraph("http://www.example.org/def");
         final Graph graph2 = postTriplesToGraph("http://www.example.org/def");
         for (Triple triple : graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE)) {
@@ -183,15 +183,6 @@ public class LocalRepresentationIntegrationTest {
         assertThat(response.getStatus(), equalTo(CLIENT_ERROR_BAD_REQUEST));
     }
 
-    private void addTriples(final Graph graph) {
-        final TripleFactory tripleFactory = graph.getTripleFactory();
-        long oId = currentTimeMillis();
-        tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
-        tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
-        tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
-        assertThat(graph, hasNumberOfTriples(3L));
-    }
-
     private Reference createRef(final String graphName) throws UnsupportedEncodingException {
         return new Reference("http://127.0.0.1:8182/graph/" + URLEncoder.encode(graphName, "UTF-8"));
     }
@@ -209,6 +200,15 @@ public class LocalRepresentationIntegrationTest {
         addTriples(graph);
         addToGraph(method, graphName, graph);
         return graph;
+    }
+
+    private void addTriples(final Graph graph) {
+        final TripleFactory tripleFactory = graph.getTripleFactory();
+        long oId = currentTimeMillis();
+        tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
+        tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
+        tripleFactory.addTriple(create("urn:s"), create("urn:p"), create("urn:o" + ++oId));
+        assertThat(graph, hasNumberOfTriples(3L));
     }
 
     private Response getGraph(String graphName) throws UnsupportedEncodingException {
