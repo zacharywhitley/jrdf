@@ -81,6 +81,11 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  * @author TurnerRX
  */
 public class RdfXmlWriter implements RdfWriter {
+    /**
+     * If set it will write an xmlns for each predicate rather than finding all the unique predicates in the graph and
+     * creating a unique xmlns at the top of the document.
+     */
+    public static final String WRITE_LOCAL_NAMESPACE = "org.jrdf.writer.rdfxml.writeLocalNamespace";
     private static final String ENCODING_DEFAULT = "UTF-8";
     private OutputStreamWriter streamWriter;
     private PrintWriter printWriter;
@@ -97,7 +102,7 @@ public class RdfXmlWriter implements RdfWriter {
     }
 
     public void write(Graph graph, Writer writer) throws GraphException {
-        write(graph, writer, null);
+        write(graph, writer, ENCODING_DEFAULT);
     }
 
     public void write(Graph graph, Writer writer, String encoding) throws GraphException {
@@ -126,7 +131,6 @@ public class RdfXmlWriter implements RdfWriter {
 
     private void tryWrite(Graph graph, Writer writer, String encoding) throws XMLStreamException, IOException {
         printWriter = new PrintWriter(writer);
-        encoding = (encoding == null) ? ENCODING_DEFAULT : encoding;
         graphToRdfXml.write(graph, encoding, printWriter);
     }
 }

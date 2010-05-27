@@ -73,6 +73,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+import static java.lang.Boolean.parseBoolean;
 import static org.jrdf.graph.AnyTriple.ANY_TRIPLE;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -87,16 +88,6 @@ public class GraphToRdfXmlWithHeader implements GraphToRdfXml {
         this.names = newNames;
     }
 
-    /**
-     * Writes the graph contents to the writer, including the specified encoding
-     * in the XML header.
-     *
-     * @param graph Graph to be written.
-     * @param encoding String XML encoding attribute.
-     * @param writer
-     * @throws GraphException If the graph cannot be read.
-     * @throws WriteException If the contents could not be written
-     */
     public void write(Graph graph, String encoding, Writer writer) throws GraphException, WriteException,
         XMLStreamException, IOException {
         try {
@@ -115,14 +106,16 @@ public class GraphToRdfXmlWithHeader implements GraphToRdfXml {
 
     private void resetRegistryAndNames(Graph graph) {
         blankNodeRegistry.clear();
-        names.reset();
-        names.load(graph);
+        if (!parseBoolean(System.getProperty(RdfXmlWriter.WRITE_LOCAL_NAMESPACE))) {
+            names.reset();
+            names.load(graph);
+        }
     }
 
     private XMLStreamWriter createXmlStreamWriter(Writer writer) {
-        // TODO AN - Remove this is a hack!!!!
         XMLStreamWriter xmlStreamWriter;
         try {
+            FACTORY.setProperty("javax.xml.stream.isRepairingNamespaces", "true");
             xmlStreamWriter = FACTORY.createXMLStreamWriter(writer);
         } catch (XMLStreamException e) {
             throw new WriteException(e);
@@ -140,7 +133,7 @@ public class GraphToRdfXmlWithHeader implements GraphToRdfXml {
     /**
      * Writes all statements in the Graph to the writer.
      *
-     * @param graph  Graph containing statements.
+     * @param graph    Graph containing statements.
      * @param document
      * @throws GraphException If the graph cannot be read.
      * @throws WriteException If the statements could not be written.

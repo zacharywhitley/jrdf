@@ -59,7 +59,6 @@
 
 package org.jrdf.writer.rdfxml;
 
-import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -79,6 +78,8 @@ import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
 import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 import org.jrdf.writer.mem.MemRdfNamespaceMap;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
@@ -93,10 +94,13 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import static org.jrdf.vocabulary.RDF.XML_LITERAL;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 // TODO (AN) Add a test for when there are no triples in the graph - seems to produce something strange.
-
-public class RdfXmlWriterIntegrationTest extends TestCase {
+public class RdfXmlWriterIntegrationTest {
     private static final String GROUNDED = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
     private static final String UNGROUNDED = "org/jrdf/writer/rdfxml/data/rdf/ungrounded.rdf";
     private static final String RDF_LITERAL_PARSE_TYPE = "org/jrdf/writer/rdfxml/data/rdf/literalParseType.rdf";
@@ -108,10 +112,12 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
             "</gml:Point>";
     private Comparison comparison;
 
+    @Before
     public void setUp() {
         comparison = new ComparisonImpl();
     }
 
+    @Test
     public void testWriteOneStatement() throws Exception {
         Graph graph = TestJRDFFactory.getFactory().getGraph();
         GraphElementFactory graphElementFactory = graph.getElementFactory();
@@ -124,6 +130,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         assertTrue(comparison.areIsomorphic(graph, read));
     }
 
+    @Test
     public void testReadWriteParseType() throws Exception {
         Graph graph = readGraph(RDF_LITERAL_PARSE_TYPE);
         Literal literal1 = null;
@@ -139,6 +146,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         assertEquals(literal1, literal2);
     }
 
+    @Test
     public void testWriteParseType2() throws Exception {
         Graph graph = TestJRDFFactory.getFactory().getGraph();
         Resource resource = graph.getElementFactory().createResource();
@@ -146,6 +154,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         writeGraph(graph);
     }
 
+    @Test
     public void testReadWriteGrounded() throws Exception {
         // input
         Graph graph = readGraph(GROUNDED);
@@ -161,6 +170,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
     }
 
+    @Test
     public void testReadWriteUngrounded() throws Exception {
         // input
         Graph graph = readGraph(UNGROUNDED);
@@ -175,6 +185,23 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
             graph.getNumberOfTriples(), read.getNumberOfTriples());
         // TODO (AN) Put this back in when ungrounded isomorphism is complete.
         //        assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
+    }
+
+    @Test
+    public void checkThatWritingWithOrWithoutNameLeadsToSameResult() throws Exception {
+        Graph graph = readGraph(GROUNDED);
+        System.setProperty(RdfXmlWriter.WRITE_LOCAL_NAMESPACE, "true");
+        StringWriter withNameSpace = writeGraph(graph);
+        System.setProperty(RdfXmlWriter.WRITE_LOCAL_NAMESPACE, "false");
+        StringWriter withOutNameSpace = writeGraph(graph);
+        Graph withNameSpaceGraph = readGraph(new StringReader(withNameSpace.toString()), "http://www.example.org/");
+        Graph withoutNameSpaceGraph = readGraph(new StringReader(withOutNameSpace.toString()),
+            "http://www.example.org/");
+        assertTrue("Should be same as original graph", comparison.areIsomorphic(graph, withoutNameSpaceGraph));
+        assertTrue("Should be same as original graph", comparison.areIsomorphic(graph, withNameSpaceGraph));
+        assertFalse("Output of graphs should differ", withNameSpace.toString().equals(withOutNameSpace.toString()));
+        assertTrue("Different output graphs should be equal", comparison.areIsomorphic(withNameSpaceGraph,
+            withoutNameSpaceGraph));
     }
 
     private Graph readGraph(String document) throws Exception {

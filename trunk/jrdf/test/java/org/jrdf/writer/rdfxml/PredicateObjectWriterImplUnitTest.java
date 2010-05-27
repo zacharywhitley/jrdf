@@ -75,6 +75,7 @@ import org.junit.runner.RunWith;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.lang.reflect.Modifier;
@@ -136,9 +137,12 @@ public class PredicateObjectWriterImplUnitTest {
     @Test
     public void testWritePredicateObjectTest() throws Exception {
         URIReference predicate = createMock(URIReference.class);
+        URI uri = URI.create("http://foo/bar");
+        expect(predicate.getURI()).andReturn(uri);
         URIReference object = createMock(URIReference.class);
-        expect(map.replaceWithNamespace(predicate)).andReturn(NODE_ID);
-        xmlStreamWriter.writeStartElement(NODE_ID);
+        QName qname = new QName("http://foo/", "bar");
+        expect(map.getQName(uri.toString())).andReturn(qname);
+        xmlStreamWriter.writeStartElement(qname.getNamespaceURI(), qname.getLocalPart());
         object.accept(writer);
         xmlStreamWriter.writeEndElement();
         xmlStreamWriter.writeCharacters(NEW_LINE);
