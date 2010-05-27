@@ -69,8 +69,7 @@ public final class ClosableIterators {
      * @param func the function to apply to the iterator.
      * @return if the iterator contains values (indicates that the function has been applied).
      */
-    public static <B, T, F extends ClosableIterable<B>> T with(F from,
-        Function<T, ClosableIterable<B>> func) {
+    public static <B, T, F extends ClosableIterable<B>> T with(F from, Function<T, ClosableIterable<B>> func) {
         try {
             return func.apply(from);
         } finally {

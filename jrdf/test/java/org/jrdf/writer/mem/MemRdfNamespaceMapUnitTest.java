@@ -60,10 +60,7 @@ package org.jrdf.writer.mem;
 
 import org.hamcrest.Matchers;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.URIReference;
 import org.jrdf.util.test.ParameterDefinition;
-import org.jrdf.util.test.URIReference1;
-import org.jrdf.vocabulary.OWL;
 import org.jrdf.vocabulary.RDF;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.junit.Before;
@@ -73,13 +70,11 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-public class RdfNamespaceMapImplUnitTest {
+public class MemRdfNamespaceMapUnitTest {
     private MemRdfNamespaceMap subject;
 
     @Before
@@ -98,45 +93,16 @@ public class RdfNamespaceMapImplUnitTest {
             new Class<?>[]{Graph.class}));
         checkMethodNullAssertions(subject, "addNamespace", new ParameterDefinition(
             new String[]{"namespace", "partialUri"}, new Class<?>[]{String.class, String.class}));
-        checkMethodNullAssertions(subject, "replaceWithNamespace", new ParameterDefinition(
-            new String[]{"resource"}, new Class<?>[]{URIReference.class}));
-        checkMethodNullAssertions(subject, "getPrefix", new ParameterDefinition(
-            new String[]{"resource"}, new Class<?>[]{URIReference.class}));
+        checkMethodNullAssertions(subject, "getQName", new ParameterDefinition(
+            new String[]{"uri"}, new Class<?>[]{String.class}));
     }
 
     @Test
     public void testDefaultNamespaceIsRdfMapping() throws Exception {
-        assertThat(subject.getPrefix(new URIReference1(RDF.BASE_URI)), equalTo("rdf"));
         Set<Map.Entry<String, String>> nameEntries = subject.getNameEntries();
         assertThat(nameEntries, Matchers.hasSize(1));
         Map.Entry<String, String> nameUriEntry = nameEntries.iterator().next();
         assertThat(nameUriEntry.getKey(), equalTo("rdf"));
         assertThat(nameUriEntry.getValue(), equalTo(RDF.BASE_URI.toString()));
-    }
-
-    @Test
-    public void testAddReturnsPrefixAndMappingAndThenResetNamespaces() throws Exception {
-        URIReference1 owlReference = new URIReference1(OWL.BASE_URI);
-        String namespace = "owl";
-        subject.addNamespace(namespace, OWL.BASE_URI.toString());
-        assertThat(subject.getPrefix(owlReference), equalTo(namespace));
-        assertThat(subject.getFullUri("owl"), equalTo(owlReference.toString()));
-        subject.reset();
-        assertThat(subject.getPrefix(owlReference), is(nullValue()));
-        assertThat(subject.getFullUri(namespace), is(nullValue()));
-    }
-
-    @Test
-    public void testThatDefaultNamespaceIsTheSameAfterReset() throws Exception {
-        assertThat(subject.getFullUri("rdf"), equalTo(RDF.BASE_URI.toString()));
-        subject.reset();
-        assertThat(subject.getFullUri("rdf"), equalTo(RDF.BASE_URI.toString()));
-    }
-
-    @Test
-    public void testReplaceNamespaceFullOwlUriBecomesOwlSameAs() throws Exception {
-        subject.addNamespace("owl", OWL.BASE_URI.toString());
-        URIReference1 owlSameAs = new URIReference1(OWL.SAME_AS);
-        assertThat(subject.replaceWithNamespace(owlSameAs), equalTo("owl:sameAs"));
     }
 }

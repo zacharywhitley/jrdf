@@ -61,8 +61,8 @@ package org.jrdf.writer;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.URIReference;
 
+import javax.xml.namespace.QName;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,38 +90,21 @@ public interface RdfNamespaceMap {
     void addNamespace(String namespace, String partialUri) throws NamespaceException;
 
     /**
-     * Returns a string representing the resource URI with its URI prefix
-     * replaced by the mapped namespace.
-     *
-     * @param resource URIReference resource URI
-     * @return String namespaced representation of resource URI
-     * @throws org.jrdf.writer.NamespaceException If there is no mapping for the partial resource URI.
-     */
-    String replaceWithNamespace(URIReference resource) throws NamespaceException;
-
-    /**
-     * Returns the prefix that is mapped to the resource or null if the URI is not mapped.  Extracts the uri to the
-     * last '#' or '/' character.
-     *
-     * @param resource prefix to look up.
-     * @return full namespace.
-     */
-    String getPrefix(URIReference resource);
-
-    /**
-     * Returns the URI that is mapped to the prefix or null if the prefix is not mapped.
-     *
-     * @param partial prefix to lookup.
-     * @return full namespace.
-     */
-    String getFullUri(String partial);
-
-    /**
      * Returns the Names mapping entry set.
      *
      * @return name map entries.
      */
     Set<Map.Entry<String, String>> getNameEntries();
+
+    /**
+     * Parses a string and finds the last # or / and treats the characters before that as the namespace URI and the
+     * characters after it as the local part.
+     *
+     * @param uri the uri to parse
+     * @return either a QName with a namespace URI and local part if a # or / is found or a QName with the given
+     *      string as the namespace uri and an empty string as the local part.
+     */
+    QName getQName(String uri);
 
     /**
      * Reset the name and uri mappings.

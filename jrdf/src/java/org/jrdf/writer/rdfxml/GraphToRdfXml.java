@@ -67,6 +67,16 @@ import java.io.IOException;
 import java.io.Writer;
 
 public interface GraphToRdfXml {
-    void write(Graph graph, String encoding, Writer writer)
-        throws GraphException, WriteException, XMLStreamException, IOException;
+    /**
+     * Writes the graph contents to the writer, including the specified encoding
+     * in the XML header.
+     *
+     * @param graph    Graph to be written.
+     * @param encoding String XML encoding attribute.
+     * @param writer   where the result is written to.
+     * @throws GraphException If the graph cannot be read.
+     * @throws WriteException If the contents could not be written
+     */
+    void write(Graph graph, String encoding, Writer writer) throws GraphException, WriteException, XMLStreamException,
+        IOException;
 }

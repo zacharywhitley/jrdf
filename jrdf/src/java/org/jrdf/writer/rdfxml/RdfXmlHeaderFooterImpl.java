@@ -58,6 +58,7 @@
 
 package org.jrdf.writer.rdfxml;
 
+import org.jrdf.vocabulary.RDF;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
@@ -108,7 +109,7 @@ public class RdfXmlHeaderFooterImpl implements RdfXmlHeaderFooter {
         try {
             xmlStreamWriter.writeStartDocument(encoding, XML_VERSION);
             xmlStreamWriter.writeDTD(writeDocTypeDef());
-            xmlStreamWriter.writeStartElement("rdf", "RDF", names.getFullUri("rdf"));
+            xmlStreamWriter.writeStartElement("rdf", "RDF", RDF.BASE_URI.toString());
             for (final Map.Entry<String, String> entry : names.getNameEntries()) {
                 xmlStreamWriter.writeNamespace(entry.getKey(), entry.getValue());
             }

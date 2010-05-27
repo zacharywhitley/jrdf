@@ -59,17 +59,18 @@
 
 package org.jrdf.graph;
 
-import static org.jrdf.graph.NullURI.NULL_URI;
 import org.jrdf.graph.datatype.DatatypeFactory;
 import org.jrdf.graph.datatype.DatatypeFactoryImpl;
 import org.jrdf.graph.datatype.DatatypeValue;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
 import org.jrdf.util.EscapeUtil;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
 import java.net.URI;
+
+import static org.jrdf.graph.NullURI.NULL_URI;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * A base implementation of an RDF {@link Literal}.
@@ -167,8 +168,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      *
      * @param newLexicalForm the text part of the literal
      * @param newDatatypeURI the URI for a datatyped literal
-     * @throws IllegalArgumentException if <var>lexicalForm</var> or
-     *                                  <var>datatype</var> are <code>null</code>
+     * @throws IllegalArgumentException if <var>lexicalForm</var> or <var>datatype</var> are <code>null</code>
      */
     protected AbstractLiteral(String newLexicalForm, URI newDatatypeURI) {
 

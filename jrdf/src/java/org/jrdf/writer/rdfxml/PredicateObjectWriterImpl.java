@@ -72,6 +72,7 @@ import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.net.URI;
@@ -165,8 +166,8 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
         if (!(predicate instanceof URIReference)) {
             throw new WriteException("Unknown predicate node type: " + predicate.getClass().getName());
         }
-        String resourceName = names.replaceWithNamespace((URIReference) predicate);
-        xmlStreamWriter.writeStartElement(resourceName);
+        QName qname = names.getQName(((URIReference) predicate).getURI().toString());
+        xmlStreamWriter.writeStartElement(qname.getNamespaceURI(), qname.getLocalPart());
     }
 
     private void writeObject(ObjectNode object) throws Exception {

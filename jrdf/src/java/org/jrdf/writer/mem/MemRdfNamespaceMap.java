@@ -68,7 +68,7 @@ import org.jrdf.vocabulary.RDF;
 import org.jrdf.writer.NamespaceException;
 import org.jrdf.writer.RdfNamespaceMap;
 
-import java.net.URI;
+import javax.xml.namespace.QName;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -83,8 +83,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  */
 public final class MemRdfNamespaceMap implements RdfNamespaceMap {
     private static final String NS_PREFIX = "ns";
-    private Map<String, String> names = new HashMap<String, String>();
-    private Map<String, String> uris = new HashMap<String, String>();
+    private Map<String, String> prefixToNamespaceUri = new HashMap<String, String>();
 
     public MemRdfNamespaceMap() {
         createDefaultNamespace();
@@ -92,81 +91,58 @@ public final class MemRdfNamespaceMap implements RdfNamespaceMap {
 
     public void load(Graph graph) throws GraphException {
         checkNotNull(graph);
-        // check for blank nodes
         ClosableIterable<? extends Node> predicates = graph.findNodes(PREDICATE_TYPE);
-        for (Node node : predicates) {
-            URIReference uriReference = (URIReference) node;
-            String partial = getPartialUri(uriReference.getURI().toString());
-            if (!uris.containsKey(partial)) {
-                String ns = NS_PREFIX + names.size();
-                addNamespace(ns, partial);
+        try {
+            for (Node node : predicates) {
+                URIReference uriReference = (URIReference) node;
+                QName qname = getQName(uriReference.getURI().toString());
+                if (!prefixToNamespaceUri.containsValue(qname.getNamespaceURI())) {
+                    String ns = NS_PREFIX + prefixToNamespaceUri.size();
+                    addNamespace(ns, qname.getNamespaceURI());
+                }
             }
+        } finally {
+            predicates.iterator().close();
         }
     }
 
     public void addNamespace(String namespace, String partialUri) throws NamespaceException {
         checkNotNull(namespace, partialUri);
-        // map bi-directionally
-        if (names.containsKey(namespace)) {
+        if (prefixToNamespaceUri.containsKey(namespace)) {
             throw new NamespaceException("Namespace: " + namespace + " already mapped to " + partialUri);
         }
-        names.put(namespace, partialUri);
-        uris.put(partialUri, namespace);
-    }
-
-    public String replaceWithNamespace(URIReference resource) throws NamespaceException {
-        checkNotNull(resource);
-        URI uri = resource.getURI();
-        String full = uri.toString();
-        String partial = getPartialUri(full);
-        String ns = uris.get(partial);
-        if (ns == null) {
-            throw new NamespaceException("Partial uri: " + partial + " is not mapped to a namespace.");
-        }
-        return full.replaceFirst(partial, ns + ":");
-    }
-
-    public String getPrefix(URIReference resource) {
-        checkNotNull(resource);
-        URI uri = resource.getURI();
-        String partial = getPartialUri(uri.toString());
-        return uris.get(partial);
-    }
-
-    public String getFullUri(String partial) {
-        checkNotNull(partial);
-        return names.get(partial);
+        prefixToNamespaceUri.put(namespace, partialUri);
     }
 
     public Set<Map.Entry<String, String>> getNameEntries() {
-        return names.entrySet();
+        return prefixToNamespaceUri.entrySet();
     }
 
-    public void reset() {
-        names.clear();
-        uris.clear();
-        createDefaultNamespace();
-    }
-
-    public String toString() {
-        return names.toString();
-    }
-
-    private void createDefaultNamespace() {
-        addNamespace("rdf", getPartialUri(RDF.BASE_URI.toString()));
-    }
-
-    /**
-     * Extracts the uri to the last '#' or '/' character.
-     *
-     * @param uri String URI
-     * @return String partial URI
-     */
-    private String getPartialUri(String uri) {
+    public QName getQName(String uri) {
+        checkNotNull(uri);
         int hashIndex = uri.lastIndexOf('#');
         int slashIndex = uri.lastIndexOf('/');
         int index = Math.max(hashIndex, slashIndex);
         // if there is no '#' or '/', return entire uri
-        return (index > 0) && (index < uri.length()) ? uri.substring(0, ++index) : uri;
+        if (index > 0 && index < uri.length()) {
+            String prefix = uri.substring(0, ++index);
+            String suffix = uri.substring(index, uri.length());
+            return new QName(prefix, suffix);
+        } else {
+            return new QName(uri, "");
+        }
+    }
+
+    public void reset() {
+        prefixToNamespaceUri.clear();
+        createDefaultNamespace();
+    }
+
+    public String toString() {
+        return prefixToNamespaceUri.toString();
+    }
+
+    private void createDefaultNamespace() {
+        addNamespace("rdf", getQName(RDF.BASE_URI.toString()).getNamespaceURI());
     }
 }
