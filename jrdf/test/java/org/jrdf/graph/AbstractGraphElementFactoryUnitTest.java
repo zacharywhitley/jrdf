@@ -59,24 +59,34 @@
 
 package org.jrdf.graph;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.local.index.nodepool.ExternalBlankNodeException;
 import org.jrdf.util.ClosableIterable;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.AssertThrows.assertThrows;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.vocabulary.XSD;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.namespace.QName;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URI;
+import java.util.GregorianCalendar;
+
 import static java.net.URI.create;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.NullURI.NULL_URI;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.matcher.GraphContainsMatcher.containsTriple;
 
 /**
  * Abstract Test case for Graph Element Factories. Implementing packages should extend this class and implement the
@@ -263,6 +273,52 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         assertThat(reference2.getURI(), equalTo(URI_2));
     }
 
+    @Test
+    public void mappingOfJavaTypeToRdfLiteral() throws Exception {
+        assertThat(elementFactory.createLiteral("hello").getDatatypeURI(), sameInstance(NULL_URI));
+        assertThat(elementFactory.createLiteral(false).getDatatypeURI(), equalTo(XSD.BOOLEAN));
+        assertThat(elementFactory.createLiteral(Boolean.TRUE).getDatatypeURI(), equalTo(XSD.BOOLEAN));
+        assertThat(elementFactory.createLiteral(new GregorianCalendar(1, 1, 1)).getDatatypeURI(),
+            equalTo(XSD.DATE_TIME));
+        assertThat(elementFactory.createLiteral(new java.sql.Date(1)).getDatatypeURI(), equalTo(XSD.DATE_TIME));
+        assertThat(elementFactory.createLiteral(new java.util.Date(1)).getDatatypeURI(), equalTo(XSD.DATE_TIME));
+        assertThat(elementFactory.createLiteral(new QName("foo")).getDatatypeURI(), equalTo(XSD.Q_NAME));
+    }
+
+    @Test
+    public void mappingOfJavaNumericTypeToRdfLiteral() throws Exception {
+        assertThat(elementFactory.createLiteral(new BigDecimal(12)).getDatatypeURI(), equalTo(XSD.DECIMAL));
+        assertThat(elementFactory.createLiteral(1f).getDatatypeURI(), equalTo(XSD.FLOAT));
+        assertThat(elementFactory.createLiteral(new Float(12)).getDatatypeURI(), equalTo(XSD.FLOAT));
+        assertThat(elementFactory.createLiteral(1d).getDatatypeURI(), equalTo(XSD.DOUBLE));
+        assertThat(elementFactory.createLiteral(new Double(12)).getDatatypeURI(), equalTo(XSD.DOUBLE));
+        assertThat(elementFactory.createLiteral(new BigInteger("1")).getDatatypeURI(), equalTo(XSD.INTEGER));
+        assertThat(elementFactory.createLiteral(new BigInteger("-1")).getDatatypeURI(), equalTo(XSD.INTEGER));
+        assertThat(elementFactory.createLiteral(1L).getDatatypeURI(), equalTo(XSD.LONG));
+        assertThat(elementFactory.createLiteral(new Long(12)).getDatatypeURI(), equalTo(XSD.LONG));
+        assertThat(elementFactory.createLiteral(1).getDatatypeURI(), equalTo(XSD.INT));
+        assertThat(elementFactory.createLiteral(new Integer(12)).getDatatypeURI(), equalTo(XSD.INT));
+        assertThat(elementFactory.createLiteral((short) 1).getDatatypeURI(), equalTo(XSD.SHORT));
+        assertThat(elementFactory.createLiteral(new Short((short) 12)).getDatatypeURI(), equalTo(XSD.SHORT));
+        assertThat(elementFactory.createLiteral((byte) 1).getDatatypeURI(), equalTo(XSD.BYTE));
+        assertThat(elementFactory.createLiteral(new Byte((byte) 12)).getDatatypeURI(), equalTo(XSD.BYTE));
+    }
+
+    @Test
+    public void missingMappingsThatMightLeadToConfusion() throws Exception {
+        DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
+        expectCreationToFail(datatypeFactory.newDuration(1000));
+        expectCreationToFail(datatypeFactory.newXMLGregorianCalendar());
+    }
+
+    private void expectCreationToFail(final Object object) {
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                Literal literal = elementFactory.createLiteral(object);
+            }
+        });
+    }
+
     /**
      * Tests that each of the createResource methods work as expected.
      *
@@ -282,17 +338,17 @@ public abstract class AbstractGraphElementFactoryUnitTest {
 
         // test ordinary creation
         Triple triple = tripleFactory.createTriple(blank1, ref1, blank2);
-        assertEquals(blank1, triple.getSubject());
-        assertEquals(ref1, triple.getPredicate());
-        assertEquals(blank2, triple.getObject());
+        assertThat(triple.getSubject(), equalTo((SubjectNode) blank1));
+        assertThat(triple.getPredicate(), equalTo((PredicateNode) ref1));
+        assertThat(triple.getObject(), equalTo((ObjectNode) blank2));
 
         // test inequality, particularly against differing blank nodes
         Triple triple2 = tripleFactory.createTriple(blank2, ref1, blank2);
-        assertFalse(triple.equals(triple2));
+        assertThat(triple2, not(equalTo(triple)));
 
         // test equality
         triple2 = tripleFactory.createTriple(blank1, ref1, blank2);
-        assertEquals(triple, triple2);
+        assertThat(triple2, equalTo(triple));
 
         // test all types of statement creation
         tripleFactory.createTriple(blank1, ref1, l1);
@@ -308,24 +364,24 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         URIReference ref4 = elementFactory.createURIReference(uri1);
         URIReference ref5 = elementFactory.createURIReference(uri2);
         Literal l3 = elementFactory.createLiteral(TEST_STR_1);
-        assertEquals(ref4, ref1);
-        assertEquals(ref5, ref2);
-        assertEquals(l1, l3);
-        assertEquals(l1.getEscapedForm(), l3.getEscapedForm());
-        assertTrue(graph.contains(ref4, ref5, blank1));
+        assertThat(ref1, equalTo(ref4));
+        assertThat(ref2, equalTo(ref5));
+        assertThat(l3, equalTo(l1));
+        assertThat(l3.getEscapedForm(), equalTo(l1.getEscapedForm()));
+        assertThat(graph, containsTriple(ref4, ref5, blank1));
 
         ClosableIterable<Triple> triples = graph.find(ref2, ref1, ANY_OBJECT_NODE);
         for (Triple aTriple : triples) {
-            assertEquals(l1, aTriple.getObject());
-            assertTrue(l1.hashCode() == aTriple.getObject().hashCode());
-            assertEquals(l3, aTriple.getObject());
-            assertTrue(l3.hashCode() == aTriple.getObject().hashCode());
+            assertThat(aTriple.getObject(), equalTo((ObjectNode) l1));
+            assertThat(aTriple.getObject().hashCode(), equalTo(l1.hashCode()));
+            assertThat(aTriple.getObject(), equalTo((ObjectNode) l3));
+            assertThat(aTriple.getObject().hashCode(), equalTo(l3.hashCode()));
         }
 
-        assertTrue(graph.find(ref2, ref1, l1).iterator().hasNext());
-        assertTrue(graph.contains(ref2, ref1, l1));
-        assertTrue(graph.find(ref5, ref4, l3).iterator().hasNext());
-        assertTrue(graph.contains(ref5, ref4, l3));
+        assertThat(graph.find(ref2, ref1, l1).iterator().hasNext(), is(true));
+        assertThat(graph.contains(ref2, ref1, l1), is(true));
+        assertThat(graph.find(ref5, ref4, l3).iterator().hasNext(), is(true));
+        assertThat(graph.contains(ref5, ref4, l3), is(true));
     }
 
     /**
@@ -354,39 +410,39 @@ public abstract class AbstractGraphElementFactoryUnitTest {
         URIReference g2u1 = gef2.createURIReference(uri2);
 
         g2.add(new TripleImpl(g1u1, g1u1, g2l1));
-        assertTrue(g2.contains(g1u1, g1u1, g2l1));
+        assertThat(g2, containsTriple(g1u1, g1u1, g2l1));
         g2.add(g2u1, g1u1, g2l1);
-        assertTrue(g2.contains(g2u1, g1u1, g2l1));
+        assertThat(g2, containsTriple(g2u1, g1u1, g2l1));
         g2.add(g2u1, g1u1, g2l2);
-        assertTrue(g2.contains(g2u1, g1u1, g2l2));
+        assertThat(g2, containsTriple(g2u1, g1u1, g2l2));
         g2.add(g2u1, g1u2, g1u2);
-        assertTrue(g2.contains(g2u1, g1u2, g1u2));
+        assertThat(g2, containsTriple(g2u1, g1u2, g1u2));
 
         assertThrows(ExternalBlankNodeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 g2.add(g1b1, g1u2, g1b1);
             }
         });
-        assertFalse(g2.contains(g1b1, g1u2, g1b1));
+        assertThat(g2, not(containsTriple(g1b1, g1u2, g1b1)));
 
         // Test inserting a predicate and object that come from another graph but
         // do exist.
-        assertTrue("Should contain the statemet", g2.contains(g2u1, g2u1, g2u1));
+        assertThat("Should contain the statement", g2, containsTriple(g2u1, g2u1, g2u1));
 
         // Test inserting a statements using objects from the correct graph and then
         // using find and contains with the same, by value, object from another.
         URIReference g2u3 = gef2.createURIReference(uri3);
         g2.add(g2u3, g2u3, g2u3);
 
-        assertTrue("Contains should work by value", g2.contains(g1u3, g1u3, g1u3));
-        assertTrue("Find should work by value", g2.find(g1u3, g1u3, g1u3).iterator().hasNext());
+        assertThat("Contains should work by value", g2.contains(g1u3, g1u3, g1u3), is(true));
+        assertThat("Find should work by value", g2.find(g1u3, g1u3, g1u3).iterator().hasNext(), is(true));
 
         // Test the find(<foo>, *, *) works.
         ClosableIterator<Triple> iter = g2.find(g2u3, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
-        assertTrue("Should get back at least one result", iter.hasNext());
+        assertThat("Should get back at least one result", iter.hasNext(), is(true));
 
         // Test the find(*, *, *) works.
         iter = g2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator();
-        assertTrue("Should get back at least one result", iter.hasNext());
+        assertThat("Should get back at least one result", iter.hasNext(), is(true));
     }
 }

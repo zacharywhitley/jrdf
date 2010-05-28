@@ -113,13 +113,13 @@ public class GraphContainsMatcher extends TypeSafeMatcher<Graph> {
     }
 
     @Factory
-    public static <T> Matcher<Graph> containsTriple(SubjectNode subject, PredicateNode predicate,
+    public static Matcher<Graph> containsTriple(SubjectNode subject, PredicateNode predicate,
         ObjectNode object) {
         return new GraphContainsMatcher(subject, predicate, object);
     }
 
     @Factory
-    public static <T> Matcher<Graph> containsMatchingTriples(SubjectNode subject, PredicateNode predicate,
+    public static Matcher<Graph> containsMatchingTriples(SubjectNode subject, PredicateNode predicate,
         ObjectNode object, long expectedNumberOfTriples) {
         return new GraphContainsMatcher(subject, predicate, object, expectedNumberOfTriples);
     }

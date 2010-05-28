@@ -59,10 +59,6 @@
 
 package org.jrdf.graph.datatype;
 
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -70,6 +66,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 public class DurationValue implements DatatypeValue {
     private static final long serialVersionUID = -7039266563142815725L;

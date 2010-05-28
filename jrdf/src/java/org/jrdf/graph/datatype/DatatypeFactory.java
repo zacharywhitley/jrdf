@@ -93,11 +93,11 @@ public interface DatatypeFactory {
      * XSD Date can be bound to java.util.GregorianCalendar, java.util.Date or java.sql.Date.  The secondary types are
      * java.util.Date and java.sql.Date.
      *
-     * @param aClass the Java class to bind to a given URI and ValueCreator.
      * @param datatypeURI the URI to bind.
+     * @param aClass the Java class to bind to a given URI and ValueCreator.
      * @param creator the creator to use to convert the class to a Value.
      */
-    void addSecondaryValueCreator(Class<?> aClass, URI datatypeURI, ValueCreator creator);
+    void addSecondaryValueCreator(URI datatypeURI, Class<?> aClass, ValueCreator creator);
 
     /**
      * Returns true if a value creator has been registered for a given URI.

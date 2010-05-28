@@ -59,8 +59,6 @@
 
 package org.jrdf.graph.datatype;
 
-import static org.jrdf.graph.NullURI.NULL_URI;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.vocabulary.XSD;
 
 import javax.xml.namespace.QName;
@@ -72,6 +70,12 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.jrdf.graph.NullURI.NULL_URI;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
+// TODO Add byte[], java.awt.Image to base64Binary mapping.
+// TODO Add java.util.Calendar to DateTime mapping.
+// TODO Add Duration and XMLGregorianCalendar by using getSuperClass on the class.
 public class DatatypeFactoryImpl implements DatatypeFactory {
     private static final DatatypeFactory FACTORY_INSTANCE = new DatatypeFactoryImpl();
     private final Map<URI, ValueCreator> factoryMap = new HashMap<URI, ValueCreator>();
@@ -91,8 +95,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(XSD.DOUBLE, Double.class, new DoubleValue());
         addValueCreator(XSD.DURATION, new DurationValue());
         addValueCreator(XSD.DATE_TIME, GregorianCalendar.class, calendarValue);
-        addSecondaryValueCreator(java.sql.Date.class, XSD.DATE_TIME, dateTimeValue);
-        addSecondaryValueCreator(Date.class, XSD.DATE_TIME, dateTimeValue);
+        addSecondaryValueCreator(XSD.DATE_TIME, java.sql.Date.class, dateTimeValue);
+        addSecondaryValueCreator(XSD.DATE_TIME, Date.class, dateTimeValue);
         addValueCreator(XSD.TIME, calendarValue);
         addValueCreator(XSD.DATE, calendarValue);
         addValueCreator(XSD.G_YEAR_MONTH, calendarValue);
@@ -108,8 +112,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(XSD.ANY_URI, new AnyURIValue());
 
         // Derived types
-        addValueCreator(XSD.NON_POSITIVE_INTEGER, BigInteger.class, new NonPositiveIntegerValue());
-        addValueCreator(XSD.NON_NEGATIVE_INTEGER, BigInteger.class, new NonNegativeIntegerValue());
+        addValueCreator(XSD.NON_POSITIVE_INTEGER, new NonPositiveIntegerValue());
+        addValueCreator(XSD.NON_NEGATIVE_INTEGER, new NonNegativeIntegerValue());
         addValueCreator(XSD.INTEGER, BigInteger.class, new IntegerValue());
         addValueCreator(XSD.LONG, Long.class, new LongValue());
         addValueCreator(XSD.INT, Integer.class, new IntValue());
@@ -154,10 +158,10 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
 
     public void addValueCreator(final URI datatypeURI, final Class<?> aClass, final ValueCreator creator) {
         addValueCreator(datatypeURI, creator);
-        addSecondaryValueCreator(aClass, datatypeURI, creator);
+        addSecondaryValueCreator(datatypeURI, aClass, creator);
     }
 
-    public void addSecondaryValueCreator(final Class<?> aClass, final URI datatypeURI, final ValueCreator creator) {
+    public void addSecondaryValueCreator(final URI datatypeURI, final Class<?> aClass, final ValueCreator creator) {
         classToCreator.put(aClass, creator);
         classToURI.put(aClass, datatypeURI);
     }
