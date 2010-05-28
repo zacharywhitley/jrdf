@@ -59,12 +59,12 @@
 
 package org.jrdf.graph.datatype;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 public class IntegerValue implements XSDDecimal {
     private static final long serialVersionUID = 5527716300000508791L;
@@ -78,12 +78,12 @@ public class IntegerValue implements XSDDecimal {
         this.value = new BigDecimal(new BigInteger(newValue));
     }
 
-    public IntegerValue(final BigDecimal newValue) {
-        this.value = newValue;
+    public IntegerValue(final BigInteger newValue) {
+        this.value = new BigDecimal(newValue);
     }
 
     public DatatypeValue create(final Object object) {
-        return new IntegerValue((BigDecimal) object);
+        return new IntegerValue((BigInteger) object);
     }
 
     public DatatypeValue create(final String lexicalForm) {

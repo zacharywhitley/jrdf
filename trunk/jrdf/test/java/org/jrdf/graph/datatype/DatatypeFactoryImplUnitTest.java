@@ -62,15 +62,16 @@ package org.jrdf.graph.datatype;
 import org.jrdf.vocabulary.XSD;
 import org.junit.Before;
 import org.junit.Test;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 
 import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class DatatypeFactoryImplUnitTest {
     private static final int TEN_SECONDS = 10000;
@@ -111,6 +112,7 @@ public class DatatypeFactoryImplUnitTest {
         assertThat(uri, equalTo(XSD.DATE_TIME));
     }
 
+    @Test
     public void testCreatingDateTimeValue() {
         DatatypeValue value = datatypeFactory.createValue(TEN_SECONDS_AFTER_UNIX_EPOCH);
         assertThat(value.getLexicalForm(), equalTo(TEN_SECOND_AFTER_UNIX_EPOCH_STRING));
@@ -118,43 +120,52 @@ public class DatatypeFactoryImplUnitTest {
         assertThat(uri, equalTo(XSD.DATE_TIME));
     }
 
+    @Test
     public void testStringToTime() {
         DatatypeValue value = datatypeFactory.createValue(XSD.TIME, COFFEE_TIME);
         assertThat(value.getLexicalForm(), equalTo(COFFEE_TIME));
     }
 
+    @Test
     public void testStringToGYearMonth() {
         checkWrongStringValueAndCreate(G_YEAR_MONTH_STR, XSD.G_YEAR_MONTH);
     }
 
+    @Test
     public void testStringToGYear() {
         checkWrongStringValueAndCreate(G_YEAR_STR, XSD.G_YEAR);
     }
 
+    @Test
     public void testStringToGMonthDay() {
         checkWrongStringValueAndCreate(G_MONTH_DAY_STR, XSD.G_MONTH_DAY);
     }
 
+    @Test
     public void testGDay() {
         checkWrongStringValueAndCreate(G_DAY_STR, XSD.G_DAY);
     }
 
+    @Test
     public void testGMonth() {
         checkWrongStringValueAndCreate(G_MONTH_STR_1, XSD.G_MONTH);
         checkWrongStringValueAndCreate(G_MONTH_STR_2, XSD.G_MONTH);
         checkWrongStringValueAndCreate(G_MONTH_STR_3, XSD.G_MONTH);
     }
 
+    @Test
     public void testDate() {
         DatatypeValue value = datatypeFactory.createValue(new Date(TEN_SECONDS));
         assertThat(value.getLexicalForm(), equalTo(TEN_SECOND_AFTER_UNIX_EPOCH_STRING));
     }
 
+    @Test
     public void testSQLDate() {
         DatatypeValue value = datatypeFactory.createValue(new java.sql.Date(TEN_SECONDS));
         assertThat(value.getLexicalForm(), equalTo(TEN_SECOND_AFTER_UNIX_EPOCH_STRING));
     }
 
+    @Test
     public void testAnyURI() throws Exception {
         DatatypeValue value = datatypeFactory.createValue(XSD.ANY_URI, URI_STR);
         assertThat(value.getLexicalForm(), equalTo(URI_STR));
@@ -163,6 +174,7 @@ public class DatatypeFactoryImplUnitTest {
         assertThat(value.equals(anyUriValue1), is(true));
     }
 
+    @Test
     public void testNonNegativeIntegerValue() {
         //test different correct format
         checkWrongStringValueAndCreate(ZERO, XSD.NON_NEGATIVE_INTEGER);
@@ -174,6 +186,7 @@ public class DatatypeFactoryImplUnitTest {
         checkStringIsWrongFormat(NEGATIVE_ONE, XSD.NON_NEGATIVE_INTEGER);
     }
 
+    @Test
     public void testNonPositiveIntegerValue() {
         //test different correct format
         checkWrongStringValueAndCreate(ZERO, XSD.NON_POSITIVE_INTEGER);
@@ -187,12 +200,14 @@ public class DatatypeFactoryImplUnitTest {
         checkStringIsWrongFormat(ONE, XSD.NON_POSITIVE_INTEGER);
     }
 
+    @Test
     public void testQName() {
         checkCreatingValue("bar", XSD.Q_NAME);
         checkCreatingValue("foo:bar", XSD.Q_NAME);
         checkEmptyString(XSD.Q_NAME);
     }
 
+    @Test
     public void testDuration() {
         checkCreatingValue(DURATION_1, XSD.DURATION);
         checkCreatingValue(DURATION_2, XSD.DURATION);
