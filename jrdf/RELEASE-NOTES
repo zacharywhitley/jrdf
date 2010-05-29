@@ -9,6 +9,8 @@ JRDF Release 0.5.6.1
  (Feature 3009066).
 * Add manual sync/close to Graph instead of relying on the factories
  (Bug 2059127).
+* Modify setVerifyData not to check absolute URIs too.  Make setVerifyData
+ the default setting for GraphRdfXmlParser (Bug 3009072).
 * Unbound results caused a null pointer exception when serializing results
  (Bug 2978000).
 * SPARQL Grammar incorrectly parsing URIs as relational operations
