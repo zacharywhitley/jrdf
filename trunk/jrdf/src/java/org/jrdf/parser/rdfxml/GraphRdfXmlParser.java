@@ -25,12 +25,13 @@ import org.jrdf.parser.ConfigurableParser;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
-import static org.jrdf.parser.ParserConfiguration.DT_IGNORE;
 import org.jrdf.parser.StatementHandlerException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+
+import static org.jrdf.parser.ParserConfiguration.DT_IGNORE;
 
 // TODO (AN) Can this be made more generic by parsing in a configurable parser instead?
 
@@ -49,7 +50,7 @@ public class GraphRdfXmlParser implements Parser {
         parser = new RdfXmlParser(graph.getElementFactory(), mapFactory);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.setParseStandAloneDocuments(true);
-        parser.setVerifyData(true);
+        parser.setVerifyData(false);
         parser.setDatatypeHandling(DT_IGNORE);
     }
 

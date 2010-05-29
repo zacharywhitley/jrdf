@@ -936,7 +936,11 @@ public final class RdfXmlParser implements ConfigurableParser {
 
     private URIReference createURIReference(URI uri) throws SAXException {
         try {
-            return valueFactory.createURIReference(uri);
+            if (verifyData) {
+                return valueFactory.createURIReference(uri);
+            } else {
+                return valueFactory.createURIReference(uri, false);
+            }
         } catch (GraphElementFactoryException e) {
             throw new SAXException(e);
         }
