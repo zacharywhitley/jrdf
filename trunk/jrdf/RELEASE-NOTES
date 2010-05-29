@@ -5,6 +5,8 @@ JRDF Release 0.5.6.1
  2024302).
 * RDF/XML Writer now allows local namespaces with the
  org.jrdf.writer.rdfxml.writeLocalNamespace property (Feature 3009057).
+* Added ClosableIterators.with to automatically closed iterators
+ (Feature 3009066).
 * Add manual sync/close to Graph instead of relying on the factories
  (Bug 2059127).
 * Unbound results caused a null pointer exception when serializing results
