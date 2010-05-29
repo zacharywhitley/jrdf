@@ -13,6 +13,7 @@ JRDF Release 0.5.6.1
  (Bugs 2969667, 2981067).
 * N3 Parser renamed Turtle - still incomplete support (Bug 3009051).
 * Added null check around non-existent graphs in REST interface (Bug 3009054).
+* BigInteger to Integer Value mapping was incorrect (Bug 3009060).
 
 JRDF Release 0.5.6
 ==================
