@@ -1,15 +1,31 @@
-JRDF Release 0.5.7
-==================
+JRDF Release 0.5.6.1
+====================
+* Implement SPARQL 1.1 RESTful graph management (Feature 3009049).
+* Added greater than support for filter (Bug 2981067, Feature Tracking
+ 2024302).
+* RDF/XML Writer now allows local namespaces with the
+ org.jrdf.writer.rdfxml.writeLocalNamespace property (Feature 3009057).
+* Add manual sync/close to Graph instead of relying on the factories
+ (Bug 2059127).
+* Unbound results caused a null pointer exception when serializing results
+ (Bug 2978000).
+* SPARQL Grammar incorrectly parsing URIs as relational operations
+ (Bugs 2969667, 2981067).
+* N3 Parser renamed Turtle - still incomplete support (Bug 3009051).
+* Added null check around non-existent graphs in REST interface (Bug 3009054).
 
 JRDF Release 0.5.6
 ==================
 * JSON SPARQL Parser and Writer support (Feature 2900728).
 * Calling find uses more and more disk space (Bug 2900731).
-* Make the SPARQL query clients able to use URIs to specify endpoints (Bug 2900734).
+* Make the SPARQL query clients able to use URIs to specify endpoints
+ (Bug 2900734).
 * Path for SPARQL endpoint should use graph not graphs (Bug 2900737).
-* Refactor SortMerge so that it can be made disk based and possibly lazy (Bug 2900740).
+* Refactor SortMerge so that it can be made disk based and possibly lazy
+ (Bug 2900740).
 * TypeValueImpl equal is wrong (Bug 2827711).
-* Upgrade to use JUnit 4 tests, Hamcrest, Powermock and upgrade libraries (Feature 2900764).
+* Upgrade to use JUnit 4 tests, Hamcrest, Powermock and other libraries
+ (Feature 2900764).
 
 JRDF Release 0.5.5.5
 ====================
@@ -27,8 +43,7 @@ JRDF Release 0.5.5.5
 
 JRDF Release 0.5.5.4
 ====================
-* Distribute Server and Local Server for returning SPARQL query results
- (Feature 2037365, 2059027, and 2148831).
+* Distribute Server and Local Server for returning SPARQL query results (Feature 2037365, 2059027, and 2148831).
 * Streaming Answer Support (Feature 2165388).
 * BOUND Support for FILTER (Feature 2183625).
 * Configurable temporary directory (Feature 2148621).
