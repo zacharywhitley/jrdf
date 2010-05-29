@@ -77,7 +77,6 @@ import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
  * @author Yuan-Fang Li
  * @version :$
  */
-
 public class ExpressionComparatorImplUnitTest extends TestCase {
     private static final Expression BOOK1_AND_2_CONJUNCTION
         = new Conjunction(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
