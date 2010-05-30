@@ -21,7 +21,7 @@
         <#list answer.columnValuesIterator() as columnValue>
         <tr>
             <#list columnValue as value>
-            <td>${value.value}</td>
+            <td>${value.value?html}</td>
             </#list>
         </tr>
         </#list>
