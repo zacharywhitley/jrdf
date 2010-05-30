@@ -121,10 +121,12 @@ public class RdfXmlWriterIntegrationTest {
     public void testWriteOneStatement() throws Exception {
         Graph graph = TestJRDFFactory.getFactory().getGraph();
         GraphElementFactory graphElementFactory = graph.getElementFactory();
+        System.setProperty("org.jrdf.writer.rdfxml.writeLocalNamespace", "true");
         URI uri = new URI("http://hello.com/foo");
         URIReference resource = graphElementFactory.createURIReference(uri);
         graph.add(resource, resource, resource);
         StringWriter out = writeGraph(graph);
+        System.err.println("Out: " + out);
         Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
         assertEquals(graph.getNumberOfTriples(), read.getNumberOfTriples());
         assertTrue(comparison.areIsomorphic(graph, read));
