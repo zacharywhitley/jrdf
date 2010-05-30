@@ -85,6 +85,14 @@ public final class Writer {
         }
     }
 
+    public static void writeRdfXml(File file, Graph graph) {
+        try {
+            tryWriteRdfXml(file, graph);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static void tryWriteNTriple(File file, Graph graph) throws Exception {
         final OutputStream fileOutputStream = new FileOutputStream(file);
         try {
@@ -96,14 +104,6 @@ public final class Writer {
             }
         } finally {
             fileOutputStream.close();
-        }
-    }
-
-    public static void writeRdfXml(File file, Graph graph) {
-        try {
-            tryWriteRdfXml(file, graph);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
