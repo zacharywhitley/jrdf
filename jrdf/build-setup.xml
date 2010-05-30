@@ -60,6 +60,7 @@
     <property name="bdbje.version" value="4.0.71"/>
     <property name="groovy.version" value="1.6.3"/>
     <property name="cobertura.version" value="1.9.4.1"/>
+    <property name="cglib.version" value="2.2"/>
 
     <!-- Code coverage data output directory: -->
     <property name="coverage.dir" value="${build.dir}/coverage"/>
@@ -134,7 +135,7 @@
     </patternset>
 
     <patternset id="server.production.classpath.pattern">
-        <include name="${lib.dir}/easymock/cglib-nodep-2.1_3.jar"/>
+        <include name="${lib.dir}/easymock/cglib-nodep-{cglib.version}.jar"/>
         <include name="${lib.dir}/jackson/jackson-core-asl-1.1.1.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet-${restlet.version}.jar"/>
         <include name="${lib.dir}/restlet/com.noelios.restlet.ext.servlet_2.5-${restlet.version}.jar"/>
@@ -158,7 +159,7 @@
         <include name="${lib.dir}/powermock/powermock-easymock-1.3.7-full.jar"/>
         <include name="${lib.dir}/easymock/easymock-2.5.2.jar"/>
         <include name="${lib.dir}/easymock/easymockclassextension-2.5.2.jar"/>
-        <include name="${lib.dir}/easymock/cglib-nodep-2.2.jar"/>
+        <include name="${lib.dir}/easymock/cglib-nodep-{cglib.version}.jar"/>
         <include name="${lib.dir}/groovy/groovy-${groovy.version}/embeddable/groovy-all-${groovy.version}.jar"/>
     </patternset>
 
