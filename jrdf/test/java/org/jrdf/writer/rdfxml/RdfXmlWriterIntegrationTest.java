@@ -126,7 +126,6 @@ public class RdfXmlWriterIntegrationTest {
         URIReference resource = graphElementFactory.createURIReference(uri);
         graph.add(resource, resource, resource);
         StringWriter out = writeGraph(graph);
-        System.err.println("Out: " + out);
         Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
         assertEquals(graph.getNumberOfTriples(), read.getNumberOfTriples());
         assertTrue(comparison.areIsomorphic(graph, read));

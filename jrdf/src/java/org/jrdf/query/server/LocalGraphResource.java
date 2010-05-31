@@ -59,6 +59,7 @@
 
 package org.jrdf.query.server;
 
+import org.jrdf.graph.Graph;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -69,6 +70,13 @@ import org.restlet.resource.Variant;
 
 import java.util.Map;
 
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
+import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
+import static org.restlet.data.Status.SUCCESS_OK;
+
 /**
  * A graph that is stored locally on this server - so can be modified.
  *
@@ -77,7 +85,7 @@ import java.util.Map;
  */
 public class LocalGraphResource extends ConfigurableRestletResource {
     private GraphRepresentation graphRepresentation;
-    private GraphStoreRepresentation graphStoreRepresentation;
+    private GraphApplication graphApplication;
 
     @Override
     public void init(final Context context, final Request request, final Response response) {
@@ -85,35 +93,50 @@ public class LocalGraphResource extends ConfigurableRestletResource {
         setModifiable(true);
     }
 
+    public void setGraphApplication(GraphApplication newGraphApplication) {
+        this.graphApplication = newGraphApplication;
+    }
+
     public void setGraphRepresentation(GraphRepresentation newGraphRepresentation) {
         this.graphRepresentation = newGraphRepresentation;
     }
 
-    public void setGraphStoreRepresentation(GraphStoreRepresentation newGraphStoreRepresentation) {
-        this.graphStoreRepresentation = newGraphStoreRepresentation;
-    }
-
     @Override
     public void storeRepresentation(Representation entity) throws ResourceException {
-        final Status status = graphStoreRepresentation.storeRepresentation(getRequest());
+        AcceptStoreRepresentation storeRepresentation = getStoreRepresentation(entity.getMediaType());
+        Status status = storeRepresentation.storeRepresentation(getRequest());
         getResponse().setStatus(status);
     }
 
     @Override
     public void acceptRepresentation(Representation entity) throws ResourceException {
-        final Status status = graphStoreRepresentation.acceptRepresentation(getRequest());
+        AcceptStoreRepresentation storeRepresentation = getStoreRepresentation(entity.getMediaType());
+        final Status status = storeRepresentation.acceptRepresentation(getRequest());
         getResponse().setStatus(status);
     }
 
     @Override
     public void removeRepresentations() throws ResourceException {
-        final Status status = graphStoreRepresentation.removeRepresentations(getRequest());
-        getResponse().setStatus(status);
+        Request request = getRequest();
+        final String graphName = GRAPH_IN.getValue(request);
+        if (graphApplication.hasGraph(graphName)) {
+            final Graph graph = graphApplication.getGraph(graphName);
+            removeIfThereAreExistingTriples(graph);
+            getResponse().setStatus(SUCCESS_OK);
+        } else {
+            getResponse().setStatus(CLIENT_ERROR_BAD_REQUEST);
+        }
     }
 
     @Override
     public Representation represent(Variant variant) {
         final Map<String, Object> dataModel = graphRepresentation.represent(getRequest(), getResponse());
         return createTemplateRepresentation(variant.getMediaType(), dataModel);
+    }
+
+    private void removeIfThereAreExistingTriples(Graph graph) {
+        if (graph.getNumberOfTriples() != 0) {
+            graph.remove(graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator());
+        }
     }
 }
