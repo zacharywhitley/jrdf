@@ -46,11 +46,15 @@ public class GraphRdfXmlParser implements Parser {
     private ConfigurableParser parser;
 
     public GraphRdfXmlParser(final Graph graph, final MapFactory newMapFactory) {
+        this(graph, newMapFactory, false);
+    }
+
+    public GraphRdfXmlParser(final Graph graph, final MapFactory newMapFactory, final boolean verify) {
         mapFactory = newMapFactory;
         parser = new RdfXmlParser(graph.getElementFactory(), mapFactory);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.setParseStandAloneDocuments(true);
-        parser.setVerifyData(false);
+        parser.setVerifyData(true);
         parser.setDatatypeHandling(DT_IGNORE);
     }
 

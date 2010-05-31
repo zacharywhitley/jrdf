@@ -78,11 +78,12 @@ import java.util.Map;
  * A Spring-configurable Restlet Resource.
  *
  * @author Konstantin Laufer (laufer@cs.luc.edu)
+ * @author Andrew Newman
  */
 public class ConfigurableRestletResource extends Resource {
     private LinkedHashMap<MediaType, RepresentationFactory> representationTemplates;
+    private LinkedHashMap<MediaType, AcceptStoreRepresentation> storeRepresentations;
 
-    // TODO generation of representations of response entities methods other than GET
     // TODO think about how to deal with dependencies on so many concrete representations
 
     @Override
@@ -125,10 +126,28 @@ public class ConfigurableRestletResource extends Resource {
         this.representationTemplates.putAll(newRepresentationTemplates);
     }
 
+    public void setAcceptStoreRepresentations(final Map<MediaType, AcceptStoreRepresentation> newStoreRepresentations) {
+        if (this.storeRepresentations == null) {
+            this.storeRepresentations = new LinkedHashMap<MediaType, AcceptStoreRepresentation>();
+        } else {
+            this.storeRepresentations.clear();
+        }
+        this.storeRepresentations.putAll(newStoreRepresentations);
+    }
+
     protected Representation createTemplateRepresentation(final MediaType mediaType,
         final Map<String, Object> dataModel) {
         final RepresentationFactory factory = representationTemplates.get(mediaType);
         return factory.createRepresentation(mediaType, dataModel);
     }
 
+    protected AcceptStoreRepresentation getStoreRepresentation(final MediaType mediaType) {
+        AcceptStoreRepresentation storeRepresentation;
+        if (storeRepresentations.containsKey(mediaType)) {
+            storeRepresentation = storeRepresentations.get(mediaType);
+        } else {
+            storeRepresentation = new UnsupportMediatTypeRepresentation();
+        }
+        return storeRepresentation;
+    }
 }

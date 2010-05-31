@@ -141,7 +141,7 @@
         <property name="freemarkerConfig" ref="freemarkerConfig"/>
     </bean>
 
-    <bean id="graphStoreRepresentation" class="org.jrdf.query.server.GraphStoreRepresentationImpl" scope="prototype">
+    <bean id="graphAcceptStoreRepresentation" class="org.jrdf.query.server.GraphAcceptStoreRepresentationImpl" scope="prototype">
         <property name="graphApplication" ref="graphApplication"/>
     </bean>
 
@@ -150,8 +150,8 @@
     </bean>
 
     <bean id="localQueryGraphResource" class="org.jrdf.query.server.LocalGraphResource" scope="prototype">
+        <property name="graphApplication" ref="graphApplication"/>
         <property name="graphRepresentation" ref="graphRepresentation"/>
-        <property name="graphStoreRepresentation" ref="graphStoreRepresentation"/>
         <property name="available" value="true"/>
         <property name="viewRepresentation">
             <map>
@@ -159,6 +159,11 @@
                 <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_JSON" value-ref="jsonRepresentationFactory"/>
                 <entry key-ref="org.jrdf.query.MediaTypeExtensions.APPLICATION_SPARQL_XML" value-ref="sparqlXmlRepresentationFactory"/>
                 <entry key-ref="org.restlet.data.MediaType.APPLICATION_RDF_XML" value-ref="rdfXmlRepresentationFactory"/>
+            </map>
+        </property>
+        <property name="acceptStoreRepresentations">
+            <map>
+                <entry key-ref="org.restlet.data.MediaType.APPLICATION_RDF_XML" value-ref="graphAcceptStoreRepresentation"/>
             </map>
         </property>
     </bean>

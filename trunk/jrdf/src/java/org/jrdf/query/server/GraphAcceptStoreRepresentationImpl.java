@@ -59,25 +59,25 @@
 package org.jrdf.query.server;
 
 import org.jrdf.collection.MemMapFactory;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.parser.RdfReader;
-import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
-import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
 import org.restlet.data.Request;
 import org.restlet.data.Status;
-import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
-import static org.restlet.data.Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE;
-import static org.restlet.data.Status.SUCCESS_CREATED;
-import static org.restlet.data.Status.*;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 
 import java.io.IOException;
 
-public class GraphStoreRepresentationImpl implements GraphStoreRepresentation {
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
+import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
+import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
+import static org.restlet.data.Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE;
+import static org.restlet.data.Status.SUCCESS_CREATED;
+
+public class GraphAcceptStoreRepresentationImpl implements GraphAcceptStoreRepresentation {
     private GraphApplication graphApplication;
 
     public void setGraphApplication(GraphApplication newGraphApplication) {
@@ -95,25 +95,9 @@ public class GraphStoreRepresentationImpl implements GraphStoreRepresentation {
         return tryParseAndAddToGraph(request.getEntity(), graph);
     }
 
-
-    public Status removeRepresentations(Request request) throws ResourceException {
-        if (hasGraph(request)) {
-            final Graph graph = getGraph(request);
-            removeIfThereAreExistingTriples(graph);
-            return SUCCESS_OK;
-        } else {
-            return CLIENT_ERROR_BAD_REQUEST;
-        }
-    }
-
     private Graph getGraph(Request newRequest) {
         final String graphName = GRAPH_IN.getValue(newRequest);
         return graphApplication.getGraph(graphName);
-    }
-
-    private boolean hasGraph(Request newRequest) {
-        final String graphName = GRAPH_IN.getValue(newRequest);
-        return graphApplication.hasGraph(graphName);
     }
 
     private void removeIfThereAreExistingTriples(Graph graph) {
@@ -138,5 +122,4 @@ public class GraphStoreRepresentationImpl implements GraphStoreRepresentation {
             return CLIENT_ERROR_BAD_REQUEST;
         }
     }
-
 }

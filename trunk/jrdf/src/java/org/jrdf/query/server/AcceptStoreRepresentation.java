@@ -62,12 +62,9 @@ import org.restlet.data.Request;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
-public interface GraphStoreRepresentation {
-    void setGraphApplication(GraphApplication newGraphApplication);
-
+// Create a form AcceptStoreRepresentation that just handles POST (accept) and reuses representation factories.
+public interface AcceptStoreRepresentation {
     Status storeRepresentation(Request request) throws ResourceException;
 
     Status acceptRepresentation(Request request) throws ResourceException;
-
-    Status removeRepresentations(Request request) throws ResourceException;
 }
