@@ -59,28 +59,30 @@
 
 package org.jrdf.parser.ntriples.parser;
 
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.test.ParameterDefinition;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.regex.Pattern;
+
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.equalTo;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import org.jrdf.util.test.ParameterDefinition;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import org.powermock.api.easymock.annotation.Mock;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.regex.Pattern;
 
 @RunWith(PowerMockRunner.class)
 public class LiteralMatcherImplUnitTest {
@@ -128,6 +130,15 @@ public class LiteralMatcherImplUnitTest {
         expect(matcher.matches()).andReturn(true);
         replayAll();
         parser.matches(LINE);
+        verifyAll();
+    }
+
+    @Test
+    public void doesntMatchReturnsEmptyString() {
+        expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(LINE))).andReturn(matcher);
+        expect(matcher.matches()).andReturn(false);
+        replayAll();
+        assertThat(parser.parse(LINE), equalTo(new String[]{null, null, null}));
         verifyAll();
     }
 
