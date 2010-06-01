@@ -95,8 +95,22 @@ public class AttributeNameComparatorImplUnitTest {
     @Test
     public void twoVariablesTheSame() {
         AttributeName v1 = new VariableName("foo");
+        AttributeName v2 = new VariableName("foo");
+        assertThat(new AttributeNameComparatorImpl().compare(v1, v2), equalTo(0));
+    }
+
+    @Test
+    public void twoVariablesTheSameFirstComesAfter() {
+        AttributeName v1 = new VariableName("foo");
         AttributeName v2 = new VariableName("bar");
         assertThat(new AttributeNameComparatorImpl().compare(v1, v2), equalTo(1));
+    }
+
+    @Test
+    public void twoVariablesTheSameFirstComesBefore() {
+        AttributeName v1 = new VariableName("bar");
+        AttributeName v2 = new VariableName("foo");
+        assertThat(new AttributeNameComparatorImpl().compare(v1, v2), equalTo(-1));
     }
 
     @Test

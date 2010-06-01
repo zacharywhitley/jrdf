@@ -90,10 +90,9 @@ public final class AttributeNameComparatorImpl implements AttributeNameComparato
     private int compareAttributeNames(AttributeName attribute, AttributeName attribute1) {
         boolean attIsVariable = attributeIsVariableName(attribute);
         boolean att2IsVariable = attributeIsVariableName(attribute1);
-
         if (isSameNameType(attIsVariable, att2IsVariable)) {
             return EQUAL;
-        } else if (attIsVariable && !att2IsVariable) {
+        } else if (attIsVariable) {
             return AFTER;
         } else {
             return BEFORE;
