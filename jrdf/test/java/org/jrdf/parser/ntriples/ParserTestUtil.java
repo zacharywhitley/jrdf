@@ -59,14 +59,9 @@
 
 package org.jrdf.parser.ntriples;
 
-import static junit.framework.Assert.assertEquals;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
-import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
@@ -83,16 +78,22 @@ import org.jrdf.parser.RDFEventReaderFactory;
 import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.ClosableIterable;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.test.AssertThrows;
 
 import java.io.IOException;
-import static java.net.URI.create;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import static java.net.URI.create;
+import static junit.framework.Assert.assertEquals;
+import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class ParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
@@ -160,7 +161,7 @@ public class ParserTestUtil {
 
     public static void checkNegativeRdfTestParseException(final URL errorFile, Graph actualGraph,
         MapFactory mapFactory) throws Exception {
-        final Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, mapFactory);
+        final Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, mapFactory, true);
         AssertThrows.assertThrows(ParseException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 rdfXmlParser.parse(errorFile.openStream(), "http://example.org/");
