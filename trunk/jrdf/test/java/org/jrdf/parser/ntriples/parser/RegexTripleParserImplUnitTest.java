@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,71 +54,49 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.query.relation.attributename;
+package org.jrdf.parser.ntriples.parser;
 
-/**
- * Compares attribute names.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
-public final class AttributeNameComparatorImpl implements AttributeNameComparator {
-    private static final long serialVersionUID = -1713813222274855404L;
-    private static final int AFTER = 1;
-    private static final int BEFORE = -1;
-    private static final int EQUAL = 0;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-    public int compare(AttributeName attName1, AttributeName attName2) {
-        ifNullThrowException(attName1, attName2);
+import static org.powermock.api.easymock.PowerMock.expectNew;
 
-        int result = compareAttributeNames(attName1, attName2);
-        if (result == EQUAL) {
-            result = compareByLiteralValue(attName1, attName2);
-        }
-        return result;
+@RunWith(PowerMockRunner.class)
+public class RegexTripleParserImplUnitTest {
+    private RegexTripleParser parser;
+    @Mock private RegexMatcherFactory regexMatcherFactory;
+    @Mock private TripleFactory tripleFactory;
+    @Mock private NodeMaps nodeMaps;
+    @Mock private RegexMatcher subjectMatcher;
+    @Mock private RegexMatcher predicateMatcher;
+    @Mock private RegexMatcher objectMatcher;
+    private NodeParser nodeParser;
+
+    @Before
+    public void create() throws Exception {
+        nodeParser = new NodeParserImpl();
+        expectNew(NodeParserImpl.class).andReturn((NodeParserImpl) nodeParser);
+        parser = new RegexTripleParserImpl(regexMatcherFactory, tripleFactory, nodeMaps);
     }
 
-    private void ifNullThrowException(AttributeName attName1, AttributeName attName2) {
-        if (attName1 == null || attName2 == null) {
-            throw new NullPointerException();
-        }
-    }
-
-    private int compareAttributeNames(AttributeName attribute, AttributeName attribute1) {
-        boolean attIsVariable = attributeIsVariableName(attribute);
-        boolean att2IsVariable = attributeIsVariableName(attribute1);
-
-        if (isSameNameType(attIsVariable, att2IsVariable)) {
-            return EQUAL;
-        } else if (attIsVariable && !att2IsVariable) {
-            return AFTER;
-        } else {
-            return BEFORE;
-        }
-    }
-
-    private int compareByLiteralValue(AttributeName attributeName, AttributeName attributeName1) {
-        String attLit1 = attributeName.getLiteral();
-        String attLit2 = attributeName1.getLiteral();
-        int result = attLit1.compareTo(attLit2);
-        if (result > EQUAL) {
-            return AFTER;
-        } else if (result < EQUAL) {
-            return BEFORE;
-        }
-        return result;
-    }
-
-    private boolean isSameNameType(boolean attIsVariable, boolean att2IsVariable) {
-        boolean bothVariables = attIsVariable && att2IsVariable;
-        boolean bothNoVariables = !attIsVariable && !att2IsVariable;
-        return bothVariables || bothNoVariables;
-    }
-
-    private boolean attributeIsVariableName(AttributeName attribute) {
-        return attribute instanceof VariableName;
-    }
+//    @Test
+//    public void nullSubject() throws Exception {
+//        Map<Integer, RegexNodeParser> subjectMap = new HashMap<Integer, RegexNodeParser>();
+//        Map<Integer, RegexNodeParser> predicateMap = new HashMap<Integer, RegexNodeParser>();
+//        Map<Integer, RegexNodeParser> objectMap = new HashMap<Integer, RegexNodeParser>();
+//        expect(nodeMaps.getSubjectMap()).andReturn(subjectMap);
+//        expect(nodeMaps.getPredicateMap()).andReturn(predicateMap);
+//        expect(nodeMaps.getObjectMap()).andReturn(objectMap);
+//        expect(subjectMatcher.matches()).andReturn(false);
+//        replayAll();
+//        parser.parseTripleLine(subjectMatcher, predicateMatcher, objectMatcher);
+//        verifyAll();
+//    }
 }

@@ -62,9 +62,10 @@ package org.jrdf.parser.ntriples.parser;
 import org.jrdf.graph.Node;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Map;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public final class NodeParserImpl implements NodeParser {
     private static final int LINE_GROUP = 0;

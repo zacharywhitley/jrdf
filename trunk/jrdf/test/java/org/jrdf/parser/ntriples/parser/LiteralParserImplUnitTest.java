@@ -59,26 +59,27 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import static org.easymock.EasyMock.expect;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.parser.ParseException;
-import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import org.jrdf.util.test.ParameterDefinition;
-import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.net.URI;
+
+import static org.easymock.EasyMock.expect;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
+import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 @RunWith(PowerMockRunner.class)
 public class LiteralParserImplUnitTest {
@@ -182,6 +183,24 @@ public class LiteralParserImplUnitTest {
         replayAll();
         checkException(line, "Failed to create literal from line: " + line);
         verifyAll();
+    }
+
+    @Test
+    public void handleNullLiteralButLanguage() throws Exception {
+        final String line = parserExpectations(null, LANGUAGE, null);
+        replayAll();
+        checkException(line, "Didn't find a matching literal: [" + line + "]");
+        verifyAll();
+
+    }
+
+    @Test
+    public void handleNullLiteralButDatatype() throws Exception {
+        final String line = parserExpectations(null, null, DATATYPE.toString());
+        replayAll();
+        checkException(line, "Didn't find a matching literal: [" + line + "]");
+        verifyAll();
+
     }
 
     private String parserExpectations(String literal, String language, String datatype) {
