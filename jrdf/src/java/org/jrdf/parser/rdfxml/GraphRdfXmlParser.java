@@ -54,7 +54,7 @@ public class GraphRdfXmlParser implements Parser {
         parser = new RdfXmlParser(graph.getElementFactory(), mapFactory);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.setParseStandAloneDocuments(true);
-        parser.setVerifyData(true);
+        parser.setVerifyData(verify);
         parser.setDatatypeHandling(DT_IGNORE);
     }
 
