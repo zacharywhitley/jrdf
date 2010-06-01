@@ -59,6 +59,17 @@
 
 package org.jrdf.parser.ntriples.parser;
 
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.test.ParameterDefinition;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.regex.Pattern;
+
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -66,23 +77,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import org.jrdf.util.test.ParameterDefinition;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import org.powermock.api.easymock.annotation.Mock;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.regex.Pattern;
 
 @RunWith(PowerMockRunner.class)
 public class NTripleUtilImplUnitTest {
@@ -148,6 +149,19 @@ public class NTripleUtilImplUnitTest {
     @Test
     public void tabEscaping() {
         checkCharacterEscape("\\t", "\t");
+    }
+
+    @Test
+    public void incorrectEscapeCharacter() {
+        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(LINE))).andReturn(matcher);
+        expect(matcher.find()).andReturn(true);
+        expect(matcher.group(0)).andReturn("\\v");
+        expect(matcher.find()).andReturn(false);
+        matcher.appendTail((StringBuffer) anyObject());
+        replayAll();
+        String s = util.unescapeLiteral(LINE);
+        assertThat(s, equalTo(""));
+        verifyAll();
     }
 
     @Test
