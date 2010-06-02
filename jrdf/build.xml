@@ -8,7 +8,7 @@
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="gen-src" depends="gen-sparql-parser"/>
+    <target name="gen-src" depends="gen-sparql-parser, gen-turtle-parser"/>
 
     <target name="checkstyle" depends="checkstyle-production, checkstyle-test"/>
 

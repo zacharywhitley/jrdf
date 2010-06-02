@@ -39,26 +39,29 @@ Tokens
   {def}                base             = '@base';
   {def}                verb_a           = 'a';
   {def}                comma            = ',';
-  {def}                underscore       = '_';
   {def}                plus             = '+';
   {def}                minus            = '-';
   {def}                true_literal     = 'true';
   {def}                false_literal    = 'false';
+  {def}                start_blank_node = '[';
+  {def}                end_blank_node   = ']';
+  {def}                start_items      = '(';
+  {def}                end_items        = ')';
 
   {def->com}                      hash           = '#';
   {com}                           comment        = [character - [lf + cr]];
   {com->def}                      endcomment     = (lf | cr)+;
   {def}                           blank          = whitespace+;
 
-  {def}                           node_seperator  = ';';
-  {def}                           stmt_seperator  = '.';
+  {def}                           node_separator  = ';';
+  {def}                           stmt_separator  = '.';
 
+  {def}                           blank_node_prefix = '_:';
+  {def}                           empty_blank_node  = '[]';
   {def}                           prefix_name    = letter (letter | digit | '_' | '$' | '?' )*;
 
   {def}                           identifier     = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           resource       = '<' urlchar* '>';
-
-  {def}                           empty_node     = '[]';
 
   {def}                           integer        = digit+;
   {def}                           decimal        = digit+ '.' digit* | '.' digit+;
@@ -87,8 +90,8 @@ Productions
     {statements} statement*;
 
   statement =
-    {directive_stmt} directive stmt_seperator |
-    {triples_stmt} triples stmt_seperator ;
+    {directive_stmt} directive stmt_separator |
+    {triples_stmt} triples stmt_separator ;
 
   directive =
     {prefix_id_directive} prefix prefix_name? colon resource |
@@ -98,7 +101,7 @@ Productions
     subject predicate_object_list;
 
   predicate_object_list =
-    verb object_list verb_object_list* node_seperator?;
+    verb object_list verb_object_list* node_separator?;
 
   verb =
     {predicate_verb} predicate |
@@ -111,7 +114,7 @@ Productions
     comma object;
 
   verb_object_list =
-    node_seperator verb object_list*;
+    node_separator verb object_list;
 
   subject =
     {subject_resource} iri_ref_or_prefixed_name |
@@ -126,8 +129,10 @@ Productions
     {object_literal} literal;
 
   blank_node =
-    {node_id} underscore identifier |
-    {empty_blank_node} empty_node;
+    {blank_node_with_id} blank_node_prefix identifier |
+    {empty_blank_node} empty_blank_node |
+    {node_predicate_object_list} start_blank_node predicate_object_list end_blank_node |
+    {collection} collection;
 
   iri_ref_or_prefixed_name =
     {iri_ref} resource |
@@ -175,3 +180,9 @@ Productions
   boolean_literal =
     {true} true_literal |
     {false} false_literal ;
+
+  collection =
+    {collection_items} start_items items? end_items;
+
+  items =
+    {item_objects} object+;
