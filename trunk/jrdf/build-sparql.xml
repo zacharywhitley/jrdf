@@ -7,6 +7,10 @@
         <sablecc.macro grammar.file="sparql.grammar"/>
     </target>
 
+    <target name="gen-turtle-parser" depends="-turtle-parser-uptodate" unless="turtle-parser-uptodate">
+        <sablecc.macro grammar.file="turtle.grammar"/>
+    </target>
+
     <target name="-sparql-parser-uptodate">
         <uptodate property="sparql-parser-uptodate"
                   targetfile="${gen.src.dir}/org/jrdf/sparql/parser/analysis/DepthFirstAdapter.java">
@@ -14,12 +18,25 @@
         </uptodate>
     </target>
 
-    <!-- FIXME TJA: Is there a better way to do this? Maybe specify in the classpath? -->
+    <target name="-turtle-parser-uptodate">
+        <uptodate property="turtle-parser-uptodate"
+                  targetfile="${gen.src.dir}/org/jrdf/parser/turtle/parser/analysis/DepthFirstAdapter.java">
+            <srcfiles dir="${sablecc.src.dir}" includes="turtle.grammar"/>
+        </uptodate>
+    </target>
+
     <target name="-copy-sparql-sablecc-resources">
         <copy file="${gen.src.dir}/org/jrdf/sparql/parser/lexer/lexer.dat"
               tofile="${prod.classes.dir}/org/jrdf/sparql/parser/lexer/lexer.dat"/>
         <copy file="${gen.src.dir}/org/jrdf/sparql/parser/parser/parser.dat"
               tofile="${prod.classes.dir}/org/jrdf/sparql/parser/parser/parser.dat"/>
+    </target>
+
+    <target name="-copy-turtle-sablecc-resources">
+        <copy file="${gen.src.dir}/org/jrdf/parser/turtle/parser/lexer/lexer.dat"
+              tofile="${prod.classes.dir}/org/jrdf/parser/turtle/parser/lexer/lexer.dat"/>
+        <copy file="${gen.src.dir}/org/jrdf/parser/turtle/parser/parser/parser.dat"
+              tofile="${prod.classes.dir}/org/jrdf/parser/turtle/parser/parser.dat"/>
     </target>
 
 </project>
