@@ -61,20 +61,14 @@ package org.jrdf.util.btree;
 
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.ClosableIteratorImpl;
-import static org.jrdf.util.btree.ByteHandler.fromBytes;
-import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Jul 25, 2008
- * Time: 10:06:07 PM
- * To change this template use File | Settings | File Templates.
- */
+import static org.jrdf.util.btree.ByteHandler.fromBytes;
+import static org.jrdf.util.btree.RecordIteratorHelper.getIterator;
+
 public class EntryIteratorThreeFixedOneArray implements ClosableIterator<Long> {
     private static final int QUIN = 5;
     private RecordIterator iterator;
