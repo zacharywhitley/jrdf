@@ -115,7 +115,7 @@ public class GraphToRdfXmlWithHeader implements GraphToRdfXml {
     private XMLStreamWriter createXmlStreamWriter(Writer writer) {
         XMLStreamWriter xmlStreamWriter;
         try {
-            FACTORY.setProperty("javax.xml.stream.isRepairingNamespaces", "true");
+            FACTORY.setProperty("javax.xml.stream.isRepairingNamespaces", true);
             xmlStreamWriter = FACTORY.createXMLStreamWriter(writer);
         } catch (XMLStreamException e) {
             throw new WriteException(e);
