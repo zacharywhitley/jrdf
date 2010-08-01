@@ -117,7 +117,7 @@
         </sequential>
     </macrodef>
 
-    <target name="dist" depends="compile,-copy-sparql-sablecc-resources">
+    <target name="dist" depends="compile,-copy-sparql-sablecc-resources,-copy-turtle-sablecc-resources">
         <antcall target="-dist-jar"/>
         <antcall target="-dist-src-jar"/>
         <antcall target="-dist-gui"/>

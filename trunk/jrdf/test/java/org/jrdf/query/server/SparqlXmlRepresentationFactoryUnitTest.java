@@ -58,21 +58,15 @@
 
 package org.jrdf.query.server;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.AskAnswerImpl;
 import org.jrdf.query.answer.SelectAnswer;
 import org.jrdf.query.answer.SelectAnswerImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.EvaluatedRelation;
-import static org.jrdf.util.test.MockTestUtil.createMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
@@ -80,6 +74,14 @@ import org.restlet.resource.Representation;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.query.server.GraphRepresentationParameters.ANSWER;
+import static org.jrdf.util.test.MockTestUtil.createMock;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 @RunWith(PowerMockRunner.class)
 public class SparqlXmlRepresentationFactoryUnitTest {
@@ -95,7 +97,7 @@ public class SparqlXmlRepresentationFactoryUnitTest {
         final MediaType type = createMock(MediaType.class);
         final Map<String, Object> map = new HashMap<String, Object>();
         final AskAnswer answer = new AskAnswerImpl(-1, false);
-        map.put("answer", answer);
+        map.put(ANSWER.toString(), answer);
         replayAll();
         final Representation representation = factory.createRepresentation(type, map);
         verifyAll();
@@ -108,7 +110,7 @@ public class SparqlXmlRepresentationFactoryUnitTest {
         final Map<String, Object> map = new HashMap<String, Object>();
         final SelectAnswer answer = new SelectAnswerImpl(new LinkedHashSet<Attribute>(),
             createMock(EvaluatedRelation.class), -1, true);
-        map.put("answer", answer);
+        map.put(ANSWER.toString(), answer);
         replayAll();
         final Representation representation = factory.createRepresentation(type, map);
         verifyAll();

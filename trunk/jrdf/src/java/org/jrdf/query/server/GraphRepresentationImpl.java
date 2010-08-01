@@ -61,28 +61,30 @@ package org.jrdf.query.server;
 import org.jrdf.query.answer.Answer;
 import org.jrdf.query.answer.AskAnswer;
 import org.jrdf.query.answer.SelectAnswer;
-import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
-import static org.jrdf.query.server.GraphResourceRequestParameters.MAX_ROWS_IN;
-import static org.jrdf.query.server.GraphResourceRequestParameters.QUERY_IN;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND;
-import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
-import static org.restlet.data.Status.SUCCESS_OK;
 import org.restlet.resource.ResourceException;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.jrdf.query.server.GraphRepresentationParameters.ANSWER;
+import static org.jrdf.query.server.GraphRepresentationParameters.ANSWER_TYPE;
+import static org.jrdf.query.server.GraphRepresentationParameters.GRAPH_NAME_REP;
+import static org.jrdf.query.server.GraphRepresentationParameters.GRAPH_RETURNED;
+import static org.jrdf.query.server.GraphRepresentationParameters.MAX_ROWS_TO_RETURN;
+import static org.jrdf.query.server.GraphRepresentationParameters.TIME_TAKEN;
+import static org.jrdf.query.server.GraphRepresentationParameters.TOO_MANY_RESULTS;
+import static org.jrdf.query.server.GraphRequestParameters.GRAPH_NAME_IN;
+import static org.jrdf.query.server.GraphRequestParameters.MAX_ROWS_IN;
+import static org.jrdf.query.server.GraphRequestParameters.QUERY_IN;
+import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND;
+import static org.restlet.data.Status.SERVER_ERROR_INTERNAL;
+import static org.restlet.data.Status.SUCCESS_OK;
+
 public class GraphRepresentationImpl implements GraphRepresentation {
     private static final long DEFAULT_MAX_ROWS = 1000;
-    private static final String GRAPH = "graphName";
-    private static final String GRAPH_REF = "graphRef";
-    private static final String TIME_TAKEN = "timeTaken";
-    private static final String MAX_ROWS = "maxRows";
-    private static final String TOO_MANY_ROWS = "tooManyRows";
-    private static final String ANSWER = "answer";
     private String graphName;
     private String queryString;
     private long maxRows;
@@ -109,7 +111,7 @@ public class GraphRepresentationImpl implements GraphRepresentation {
     }
 
     private void getValues(Request request) {
-        graphName = GRAPH_IN.getValue(request);
+        graphName = GRAPH_NAME_IN.getValue(request);
         maxRows = getMaxRows(request);
         queryString = QUERY_IN.getValue(request);
     }
@@ -142,23 +144,23 @@ public class GraphRepresentationImpl implements GraphRepresentation {
 
     private Map<String, Object> nonQueryRepresentation() throws IOException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put(GRAPH, graphName);
-        dataModel.put(GRAPH_REF, graphApplication.getGraph(graphName));
+        dataModel.put(GRAPH_NAME_REP.toString(), graphName);
+        dataModel.put(GRAPH_RETURNED.toString(), graphApplication.getGraph(graphName));
         return dataModel;
     }
 
     private Map<String, Object> queryRepresentation() throws ResourceException {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         Answer answer = graphApplication.answerQuery(graphName, queryString, maxRows);
-        dataModel.put(GRAPH, graphName);
-        dataModel.put(MAX_ROWS, graphApplication.getMaxRows());
-        dataModel.put(TIME_TAKEN, graphApplication.getTimeTaken());
-        dataModel.put(TOO_MANY_ROWS, graphApplication.isTooManyRows());
-        dataModel.put(ANSWER, answer);
+        dataModel.put(GRAPH_NAME_REP.toString(), graphName);
+        dataModel.put(MAX_ROWS_TO_RETURN.toString(), graphApplication.getMaxRows());
+        dataModel.put(TIME_TAKEN.toString(), graphApplication.getTimeTaken());
+        dataModel.put(TOO_MANY_RESULTS.toString(), graphApplication.isTooManyRows());
+        dataModel.put(ANSWER.toString(), answer);
         if (answer instanceof SelectAnswer) {
-            dataModel.put("answerType", "select");
+            dataModel.put(ANSWER_TYPE.toString(), "select");
         } else if (answer instanceof AskAnswer) {
-            dataModel.put("answerType", "ask");
+            dataModel.put(ANSWER_TYPE.toString(), "ask");
         }
         return dataModel;
     }

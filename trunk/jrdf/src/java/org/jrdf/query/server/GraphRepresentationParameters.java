@@ -58,68 +58,50 @@
 
 package org.jrdf.query.server;
 
-import org.jrdf.collection.MemMapFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.RdfReader;
-import org.restlet.data.Request;
-import org.restlet.data.Status;
-import org.restlet.resource.Representation;
-import org.restlet.resource.ResourceException;
+public enum GraphRepresentationParameters {
+    /**
+     * Name of the graph.
+     */
+    GRAPH_NAME_REP("graphName"),
 
-import java.io.IOException;
+    /**
+     * Reference to the values in the graph (a JRDF Graph).
+     */
+    GRAPH_RETURNED("graphReturned"),
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import static org.jrdf.query.server.GraphRequestParameters.GRAPH_NAME_IN;
-import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
-import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
-import static org.restlet.data.Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE;
-import static org.restlet.data.Status.SUCCESS_CREATED;
+    /**
+     * Number of rows returned.
+     */
+    MAX_ROWS_TO_RETURN("maxRows"),
 
-public class GraphAcceptStoreRepresentationImpl implements GraphAcceptStoreRepresentation {
-    private GraphApplication graphApplication;
+    /**
+     * Time taken to resolve query.
+     */
+    TIME_TAKEN("timeTaken"),
 
-    public void setGraphApplication(GraphApplication newGraphApplication) {
-        this.graphApplication = newGraphApplication;
+    /**
+     * Too many results returned by the query.
+     */
+    TOO_MANY_RESULTS("tooManyRows"),
+
+    /**
+     * The type of answer returns (currently either select or ask).
+     */
+    ANSWER_TYPE("answerType"),
+
+    /**
+     * Reference to the answer from the query (a JRDF Answer).
+     */
+    ANSWER("answer");
+
+    private final String value;
+
+    GraphRepresentationParameters(String newValue) {
+        this.value = newValue;
     }
 
-    public Status acceptRepresentation(Request request) throws ResourceException {
-        final Graph graph = getGraph(request);
-        return tryParseAndAddToGraph(request.getEntity(), graph);
-    }
-
-    public Status storeRepresentation(Request request) throws ResourceException {
-        final Graph graph = getGraph(request);
-        removeIfThereAreExistingTriples(graph);
-        return tryParseAndAddToGraph(request.getEntity(), graph);
-    }
-
-    private Graph getGraph(Request newRequest) {
-        final String graphName = GRAPH_NAME_IN.getValue(newRequest);
-        return graphApplication.getGraph(graphName);
-    }
-
-    private void removeIfThereAreExistingTriples(Graph graph) {
-        if (graph.getNumberOfTriples() != 0) {
-            graph.remove(graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).iterator());
-        }
-    }
-
-    private Status tryParseAndAddToGraph(Representation entity, Graph graph) {
-        if (entity.getMediaType().equals(APPLICATION_RDF_XML)) {
-            return tryParseRdfXml(entity, graph);
-        } else {
-            return CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE;
-        }
-    }
-
-    private Status tryParseRdfXml(Representation entity, Graph graph) {
-        try {
-            new RdfReader(graph, new MemMapFactory()).parseRdfXml(entity.getStream());
-            return SUCCESS_CREATED;
-        } catch (IOException e) {
-            return CLIENT_ERROR_BAD_REQUEST;
-        }
+    @Override
+    public String toString() {
+        return value;
     }
 }

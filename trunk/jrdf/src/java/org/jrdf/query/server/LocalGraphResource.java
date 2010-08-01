@@ -73,7 +73,7 @@ import java.util.Map;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import static org.jrdf.query.server.GraphResourceRequestParameters.GRAPH_IN;
+import static org.jrdf.query.server.GraphRequestParameters.GRAPH_NAME_IN;
 import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST;
 import static org.restlet.data.Status.SUCCESS_OK;
 
@@ -118,7 +118,7 @@ public class LocalGraphResource extends ConfigurableRestletResource {
     @Override
     public void removeRepresentations() throws ResourceException {
         Request request = getRequest();
-        final String graphName = GRAPH_IN.getValue(request);
+        final String graphName = GRAPH_NAME_IN.getValue(request);
         if (graphApplication.hasGraph(graphName)) {
             final Graph graph = graphApplication.getGraph(graphName);
             removeIfThereAreExistingTriples(graph);
