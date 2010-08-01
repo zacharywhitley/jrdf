@@ -97,6 +97,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.query.server.GraphRepresentationParameters.GRAPH_RETURNED;
 import static org.jrdf.util.test.matcher.GraphNumberOfTriplesMatcher.hasNumberOfTriples;
 import static org.restlet.data.MediaType.APPLICATION_RDF_XML;
 import static org.restlet.data.Method.DELETE;
@@ -183,10 +184,6 @@ public class LocalRepresentationIntegrationTest {
         assertThat(response.getStatus(), equalTo(CLIENT_ERROR_BAD_REQUEST));
     }
 
-    private Reference createRef(final String graphName) throws UnsupportedEncodingException {
-        return new Reference("http://127.0.0.1:8182/graph/" + URLEncoder.encode(graphName, "UTF-8"));
-    }
-
     private Graph putTriplesToGraph(final String graphName) throws Exception {
         return addTriplesToGraph(PUT, graphName);
     }
@@ -228,13 +225,20 @@ public class LocalRepresentationIntegrationTest {
     }
 
     private void addToGraph(final Method method, final String graphName, final Graph graph) throws Exception {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put("graphRef", graph);
-        final Representation representation = new RdfXmlRepresentationFactory().createRepresentation(
-            APPLICATION_RDF_XML, dataModel);
-        Request request = new Request(method, createRef(graphName), representation);
+        Request request = new Request(method, createRef(graphName), createGraphRepresentation(graph));
         Response response = client.handle(request);
         assertThat(response.getStatus(), equalTo(SUCCESS_CREATED));
+    }
+
+    private Reference createRef(final String graphName) throws UnsupportedEncodingException {
+        return new Reference("http://127.0.0.1:8182/graph/" + URLEncoder.encode(graphName, "UTF-8"));
+    }
+
+    // Use an internal JRDF/Restlet way of creating a representation of a graph.
+    private Representation createGraphRepresentation(Graph graph) {
+        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put(GRAPH_RETURNED.toString(), graph);
+        return new RdfXmlRepresentationFactory().createRepresentation(APPLICATION_RDF_XML, dataModel);
     }
 
     private Graph parseResult(Response response) throws Exception {

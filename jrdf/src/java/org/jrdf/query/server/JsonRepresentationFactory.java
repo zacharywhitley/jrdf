@@ -68,13 +68,15 @@ import org.restlet.resource.Representation;
 
 import java.util.Map;
 
+import static org.jrdf.query.server.GraphRepresentationParameters.ANSWER;
+
 public class JsonRepresentationFactory implements RepresentationFactory, AnswerVisitor<Representation> {
     private MediaType mediaType;
 
     public Representation createRepresentation(MediaType defaultMediaType, Map<String, Object> dataModel) {
         try {
             Representation representation = Representation.createEmpty();
-            final Answer answer = (Answer) dataModel.get("answer");
+            final Answer answer = (Answer) dataModel.get(ANSWER.toString());
             if (answer != null) {
                 mediaType = defaultMediaType;
                 representation = answer.accept(this);

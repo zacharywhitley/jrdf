@@ -61,7 +61,7 @@ package org.jrdf.query.server;
 import org.restlet.data.Form;
 import org.restlet.data.Request;
 
-public enum GraphResourceRequestParameters {
+public enum GraphRequestParameters {
     /**
      * Expected name of the query value.
      */
@@ -70,7 +70,7 @@ public enum GraphResourceRequestParameters {
     /**
      * Expected name of the graph value.
      */
-    GRAPH_IN("graph"),
+    GRAPH_NAME_IN("graph"),
 
     /**
      * Expected name of the max rows value.
@@ -79,7 +79,7 @@ public enum GraphResourceRequestParameters {
 
     private final String value;
 
-    GraphResourceRequestParameters(String newValue) {
+    GraphRequestParameters(String newValue) {
         this.value = newValue;
     }
 

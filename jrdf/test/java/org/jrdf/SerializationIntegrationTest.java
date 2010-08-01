@@ -61,7 +61,8 @@ package org.jrdf;
 
 import org.jrdf.query.answer.DatatypeType;
 import org.jrdf.query.answer.SparqlResultType;
-import org.jrdf.query.server.GraphResourceRequestParameters;
+import org.jrdf.query.server.GraphRepresentationParameters;
+import org.jrdf.query.server.GraphRequestParameters;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.NodeTypeEnum;
@@ -121,9 +122,12 @@ public final class SerializationIntegrationTest {
     private Collection<Class<?>> getExcludedClasses() {
         Collection<Class<?>> excludedClasses = new ArrayList<Class<?>>();
         excludedClasses.add(LexerException.class);
+        excludedClasses.add(org.jrdf.parser.turtle.parser.lexer.LexerException.class);
         excludedClasses.add(ParserException.class);
+        excludedClasses.add(org.jrdf.parser.turtle.parser.parser.ParserException.class);
         excludedClasses.add(NodeTypeEnum.class);
-        excludedClasses.add(GraphResourceRequestParameters.class);
+        excludedClasses.add(GraphRepresentationParameters.class);
+        excludedClasses.add(GraphRequestParameters.class);
         excludedClasses.add(DatatypeType.class);
         excludedClasses.add(SparqlResultType.class);
         return excludedClasses;

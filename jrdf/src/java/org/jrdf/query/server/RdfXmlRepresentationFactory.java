@@ -69,14 +69,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import static org.jrdf.query.server.GraphRepresentationParameters.GRAPH_RETURNED;
+
 public class RdfXmlRepresentationFactory implements RepresentationFactory {
-    private static final String GRAPH_REF = "graphRef";
 
     public Representation createRepresentation(final MediaType defaultMediaType, final Map<String, Object> dataModel) {
         return new WriterRepresentation(defaultMediaType) {
             @Override
             public void write(Writer writer) throws IOException {
-                final Graph graph = (Graph) dataModel.get(GRAPH_REF);
+                final Graph graph = (Graph) dataModel.get(GRAPH_RETURNED.toString());
                 if (graph != null) {
                     final RdfWriter xmlWriter = new MemRdfXmlWriter();
                     xmlWriter.write(graph, writer);

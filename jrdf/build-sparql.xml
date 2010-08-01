@@ -36,7 +36,7 @@
         <copy file="${gen.src.dir}/org/jrdf/parser/turtle/parser/lexer/lexer.dat"
               tofile="${prod.classes.dir}/org/jrdf/parser/turtle/parser/lexer/lexer.dat"/>
         <copy file="${gen.src.dir}/org/jrdf/parser/turtle/parser/parser/parser.dat"
-              tofile="${prod.classes.dir}/org/jrdf/parser/turtle/parser/parser.dat"/>
+              tofile="${prod.classes.dir}/org/jrdf/parser/turtle/parser/parser/parser.dat"/>
     </target>
 
 </project>
