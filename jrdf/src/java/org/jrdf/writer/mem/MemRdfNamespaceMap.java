@@ -120,10 +120,8 @@ public final class MemRdfNamespaceMap implements RdfNamespaceMap {
 
     public QName getQName(String uri) {
         checkNotNull(uri);
-        int hashIndex = uri.lastIndexOf('#');
-        int slashIndex = uri.lastIndexOf('/');
-        int index = Math.max(hashIndex, slashIndex);
-        // if there is no '#' or '/', return entire uri
+        int index = findLastHashSlashOrColon(uri);
+        // if there is no ':', '#' or '/', return entire uri
         if (index > 0 && index < uri.length()) {
             String prefix = uri.substring(0, ++index);
             String suffix = uri.substring(index, uri.length());
@@ -144,5 +142,13 @@ public final class MemRdfNamespaceMap implements RdfNamespaceMap {
 
     private void createDefaultNamespace() {
         addNamespace("rdf", getQName(RDF.BASE_URI.toString()).getNamespaceURI());
+    }
+
+    private int findLastHashSlashOrColon(String uri) {
+        int hashIndex = uri.lastIndexOf('#');
+        int slashIndex = uri.lastIndexOf('/');
+        int colonIndex = uri.lastIndexOf(":");
+        int index = Math.max(hashIndex, slashIndex);
+        return Math.max(index, colonIndex);
     }
 }

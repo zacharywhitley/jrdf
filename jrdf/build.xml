@@ -242,7 +242,7 @@
                 <include name="**/*.java"/>
             </fileset>
         </cobertura-report>
-        <cobertura-check linerate="0" branchrate="0" totallinerate="62" totalbranchrate="46"
+        <cobertura-check linerate="0" branchrate="0" totallinerate="51" totalbranchrate="39"
                          haltonfailure="yes" datafile="${basedir}/cobertura.ser"/>
     </target>
 
