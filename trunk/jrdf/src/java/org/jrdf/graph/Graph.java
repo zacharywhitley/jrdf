@@ -62,7 +62,6 @@ package org.jrdf.graph;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterable;
-import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 
@@ -266,6 +265,4 @@ public interface Graph {
      * @throws GraphException If the statements number of statements in the graph fails to be found.
      */
     boolean isEmpty() throws GraphException;
-
-    ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 }

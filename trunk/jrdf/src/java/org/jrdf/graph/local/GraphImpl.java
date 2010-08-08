@@ -291,10 +291,6 @@ public class GraphImpl implements Graph {
         graphFactory.close();
     }
 
-    public ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return readWriteGraph.findUnsorted(subject, predicate, object);
-    }
-
     @Override
     public String toString() {
         RdfWriter writer = new MemRdfXmlWriter();
