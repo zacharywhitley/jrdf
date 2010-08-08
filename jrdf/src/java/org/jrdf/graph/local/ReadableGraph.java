@@ -77,6 +77,4 @@ public interface ReadableGraph {
     ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException;
 
     ClosableIterator<PredicateNode> findUniquePredicates();
-
-    ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 }

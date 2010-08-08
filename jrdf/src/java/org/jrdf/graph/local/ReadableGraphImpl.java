@@ -114,14 +114,6 @@ public class ReadableGraphImpl implements ReadableGraph {
         return findNonEmptyIterator(subject, predicate, object, values);
     }
 
-    public ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        if (unsortedReadableGraph == null) {
-            this.unsortedReadableGraph = new ReadableGraphImpl(longIndexes, localizer,
-                iteratorFactory.getUnsortedIteratorFactory());
-        }
-        return unsortedReadableGraph.find(subject, predicate, object);
-    }
-
     public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException {
         Long value = localizer.localize(resource);
         return iteratorFactory.newPredicateIterator(value);

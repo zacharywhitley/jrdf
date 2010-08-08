@@ -227,10 +227,6 @@ public class MoleculeGraphImpl implements MoleculeGraph {
         return graph.find(subject, predicate, object);
     }
 
-    public ClosableIterator<Triple> findUnsorted(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return graph.findUnsorted(subject, predicate, object);
-    }
-
     public ClosableIterable<? extends Node> findNodes(NodeType type) {
         return graph.findNodes(type);
     }
