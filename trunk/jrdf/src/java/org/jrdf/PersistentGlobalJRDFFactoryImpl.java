@@ -73,12 +73,12 @@ import org.jrdf.graph.global.index.adapter.LongIndexAdapter;
 import org.jrdf.graph.global.index.longindex.MoleculeStructureIndex;
 import org.jrdf.graph.global.index.longindex.sesame.MoleculeStructureIndexSesameSync;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.LocalStringNodeMapperFactory;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
+import org.jrdf.graph.util.StringNodeMapper;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
@@ -92,7 +92,7 @@ import org.jrdf.util.btree.BTreeFactoryImpl;
  * @version $Id$
  */
 public final class PersistentGlobalJRDFFactoryImpl implements PersistentGlobalJRDFFactory {
-    private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
+    private static final StringNodeMapper STRING_MAPPER = new LocalStringNodeMapperFactory().createMapper();
     private final DirectoryHandler handler;
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private BasePersistentJRDFFactory base;

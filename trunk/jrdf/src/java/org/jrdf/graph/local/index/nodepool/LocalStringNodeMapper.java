@@ -60,133 +60,98 @@
 package org.jrdf.graph.local.index.nodepool;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.BlankNodeImpl;
-import org.jrdf.graph.local.LocalizedNode;
+import org.jrdf.graph.local.LiteralImpl;
+import org.jrdf.graph.local.LiteralMutableId;
 import org.jrdf.graph.local.URIReferenceImpl;
 import org.jrdf.graph.util.StringNodeMapper;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 
+import java.io.Serializable;
 import java.net.URI;
-import java.util.UUID;
 
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public class LocalizerImpl implements Localizer {
-    private static final int TRIPLE = 3;
-    private Long currentId;
-    private GraphException exception;
-    private final NodePool nodePool;
-    private final StringNodeMapper mapper;
+public class LocalStringNodeMapper implements StringNodeMapper, Serializable {
+    private static final long serialVersionUID = 6290485805443126422L;
+    private LiteralMatcher literalMatcher;
+    private String currentString;
 
-    public LocalizerImpl(NodePool newNodePool, StringNodeMapper newMapper) {
-        checkNotNull(newNodePool, newMapper);
-        this.nodePool = newNodePool;
-        this.mapper = newMapper;
+    private LocalStringNodeMapper() {
     }
 
-    public Long[] localize(Node first, Node second, Node third) throws GraphException {
-        Long[] localValues = new Long[TRIPLE];
-        localValues[0] = localize(first);
-        localValues[1] = localize(second);
-        localValues[2] = localize(third);
-        return localValues;
+    public LocalStringNodeMapper(LiteralMatcher newLiteralMatcher) {
+        checkNotNull(newLiteralMatcher);
+        literalMatcher = newLiteralMatcher;
     }
 
-    public Long localize(Node node) throws GraphException {
-        if (ANY_SUBJECT_NODE != node && ANY_PREDICATE_NODE != node && ANY_OBJECT_NODE != node) {
-            if (node instanceof LocalizedNode) {
-                return getId(node);
-            }
-            throw new GraphException("Node id was not found in the graph: " + node);
+    public String convertToString(Node node) {
+        checkNotNull(node);
+        if (node != ANY_SUBJECT_NODE && node != ANY_PREDICATE_NODE && node != ANY_OBJECT_NODE) {
+            node.accept(this);
+            return currentString;
         } else {
             return null;
         }
     }
 
-    public BlankNode createLocalBlankNode() {
-        String uid = UUID.randomUUID().toString();
-        currentId = nodePool.getNewNodeId();
-        BlankNode node = new BlankNodeImpl(uid, currentId);
-        nodePool.registerLocalBlankNode(node);
-        return node;
+    public BlankNode convertToBlankNode(String string) {
+        checkNotNull(string);
+        return BlankNodeImpl.valueOf(string);
     }
 
-    public URIReference createLocalURIReference(URI uri, boolean validate) {
-        currentId = nodePool.getNewNodeId();
-        URIReference node = new URIReferenceImpl(uri, validate, currentId);
-        nodePool.registerURIReference(node);
-        return node;
+    public URIReference convertToURIReference(String string, Long nodeId) {
+        checkNotNull(string, nodeId);
+        return new URIReferenceImpl(URI.create(string), false, nodeId);
     }
 
-    public Literal createLocalLiteral(String escapedForm) {
-        currentId = nodePool.getNewNodeId();
-        Literal node = mapper.convertToLiteral(escapedForm, currentId);
-        nodePool.registerLiteral(node);
-        return node;
+    public Literal convertToLiteral(String string, Long nodeId) {
+        checkNotNull(string, nodeId);
+        String[] literalParts = literalMatcher.parse(string);
+        return createLiteral(nodeId, literalParts[0], literalParts[1], literalParts[2]);
     }
 
     public void visitBlankNode(BlankNode blankNode) {
-        currentId = ((LocalizedNode) blankNode).getId();
-        Node node = nodePool.getNodeIfExists(currentId);
-        if (node == null) {
-            try {
-                node = createLocalBlankNode();
-                currentId = ((LocalizedNode) node).getId();
-            } catch (GraphException e) {
-                exception = e;
-            }
-        }
-        if (!blankNode.equals(node)) {
-            exception = new ExternalBlankNodeException("The node returned by the nodeId (" + currentId + ") was " +
-                "not the same blank node.  Got: " + node + ", expected: " + blankNode);
-        }
+        currentString = blankNode.toString();
     }
 
     public void visitURIReference(URIReference uriReference) {
-        String uriAsString = uriReference.getURI().toString();
-        currentId = nodePool.getNodeIdByString(uriAsString);
-        if (currentId == null) {
-            currentId = ((LocalizedNode) createLocalURIReference(uriReference.getURI(), false)).getId();
-        }
+        currentString = uriReference.getURI().toString();
     }
 
     public void visitLiteral(Literal literal) {
-        String escapedForm = literal.getEscapedForm();
-        currentId = nodePool.getNodeIdByString(escapedForm);
-        if (currentId == null) {
-            currentId = ((LocalizedNode) createLocalLiteral(escapedForm)).getId();
-        }
+        currentString = literal.getEscapedForm();
     }
 
     public void visitNode(Node node) {
-        exception = new GraphException("Unknown node type: " + node + " class: " + node.getClass());
+        illegalNode(node);
     }
 
     public void visitResource(Resource resource) {
-        if (resource.isURIReference()) {
-            currentId = nodePool.getNodeIdByString(resource.getURI().toString());
-        } else {
-            visitBlankNode(resource);
-        }
+        illegalNode(resource);
     }
 
-    private Long getId(Node node) throws GraphException {
-        exception = null;
-        currentId = null;
-        node.accept(this);
-        if (exception != null) {
-            throw exception;
-        } else if (currentId == null) {
-            throw new GraphException("Node id was not found in the graph: " + node);
+    private void illegalNode(Node node) {
+        throw new IllegalArgumentException("Failed to convert node: " + node);
+    }
+
+    private Literal createLiteral(Long nodeId, String lexicalForm, String language, String datatype) {
+        Literal literal;
+        if (language != null) {
+            literal = new LiteralImpl(lexicalForm, language);
+        } else if (datatype != null) {
+            literal = new LiteralImpl(lexicalForm, URI.create(datatype));
         } else {
-            return currentId;
+            literal = new LiteralImpl(lexicalForm);
         }
+        ((LiteralMutableId) literal).setId(nodeId);
+        return literal;
     }
 }

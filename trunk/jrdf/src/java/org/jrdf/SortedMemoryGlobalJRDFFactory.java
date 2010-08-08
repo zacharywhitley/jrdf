@@ -79,8 +79,8 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
+import org.jrdf.graph.util.StringNodeMapper;
+import org.jrdf.graph.local.index.nodepool.LocalStringNodeMapperFactory;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
@@ -103,7 +103,7 @@ public final class SortedMemoryGlobalJRDFFactory implements GlobalJRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
-    private static final StringNodeMapper STRING_MAPPER = new StringNodeMapperFactoryImpl().createMapper();
+    private static final StringNodeMapper STRING_MAPPER = new LocalStringNodeMapperFactory().createMapper();
 
     private SortedMemoryGlobalJRDFFactory() {
     }

@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,10 +54,9 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.graph.local;
+package org.jrdf.graph.trie;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
@@ -65,64 +64,42 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.LocalStringNodeMapperFactory;
-import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.graph.local.ReadWriteGraph;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
-public class ReadWriteGraphImpl implements ReadWriteGraph {
-    private final ReadableGraph readableGraph;
-    private final WritableGraph writableGraph;
-
-    // TODO Take in Readable and Writable graphs instead??
-    public ReadWriteGraphImpl(LongIndex[] newIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
-        checkNotNull(newIndexes, newNodePool, newIteratorFactory);
-        Localizer localizer = new LocalizerImpl(newNodePool, new LocalStringNodeMapperFactory().createMapper());
-        this.readableGraph = new ReadableGraphImpl(newIndexes, localizer, newIteratorFactory);
-        this.writableGraph = new WritableGraphImpl(newIndexes, newNodePool, localizer);
-    }
-
+public class ReadWriteGraphTrie implements ReadWriteGraph {
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return readableGraph.contains(subject, predicate, object);
+        return false;
     }
 
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return readableGraph.find(subject, predicate, object);
+        return null;
     }
 
     public long getSize() {
-        return readableGraph.getSize();
+        return 0;
     }
 
     public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException {
-        return readableGraph.findUniquePredicates(resource);
+        return null;
     }
 
     public ClosableIterator<PredicateNode> findUniquePredicates() {
-        return readableGraph.findUniquePredicates();
+        return null;
     }
 
     public void localizeAndAdd(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
-        writableGraph.localizeAndAdd(subject, predicate, object);
     }
 
     public void localizeAndRemove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
         throws GraphException {
-        writableGraph.localizeAndRemove(subject, predicate, object);
     }
 
     public void removeIterator(Iterator<Triple> triples) throws GraphException {
-        writableGraph.removeIterator(triples);
     }
 
     public void clear() {
-        writableGraph.clear();
     }
 }
