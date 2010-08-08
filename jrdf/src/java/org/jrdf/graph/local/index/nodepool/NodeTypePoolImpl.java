@@ -65,6 +65,7 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.LocalizedNode;
+import org.jrdf.graph.util.StringNodeMapper;
 
 import java.util.List;
 import java.util.Map;

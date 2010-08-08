@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,75 +54,56 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.graph.local;
+package org.jrdf.graph.trie;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
+import org.ardverk.collection.KeyAnalyzer;
+import org.ardverk.collection.StringKeyAnalyzer;
 import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
-import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.LocalStringNodeMapperFactory;
-import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.util.StringNodeMapper;
 
-import java.util.Iterator;
+public final class PredicateNodeKeyAnalyzer implements KeyAnalyzer<PredicateNode> {
+    private static final long serialVersionUID = 4605044508960821424L;
+    private KeyAnalyzer<String> keyAnalyzer = new StringKeyAnalyzer();
+    private StringNodeMapper mapper = new LocalStringNodeMapperFactory().createMapper();
 
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+    /**
+     * Static instance - there is only one.
+     */
+    public static final KeyAnalyzer<? super PredicateNode> INSTANCE = new PredicateNodeKeyAnalyzer();
 
-public class ReadWriteGraphImpl implements ReadWriteGraph {
-    private final ReadableGraph readableGraph;
-    private final WritableGraph writableGraph;
-
-    // TODO Take in Readable and Writable graphs instead??
-    public ReadWriteGraphImpl(LongIndex[] newIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
-        checkNotNull(newIndexes, newNodePool, newIteratorFactory);
-        Localizer localizer = new LocalizerImpl(newNodePool, new LocalStringNodeMapperFactory().createMapper());
-        this.readableGraph = new ReadableGraphImpl(newIndexes, localizer, newIteratorFactory);
-        this.writableGraph = new WritableGraphImpl(newIndexes, newNodePool, localizer);
+    private PredicateNodeKeyAnalyzer() {
     }
 
-    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return readableGraph.contains(subject, predicate, object);
+    public int bitsPerElement() {
+        return keyAnalyzer.bitsPerElement();
     }
 
-    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return readableGraph.find(subject, predicate, object);
+    public int lengthInBits(PredicateNode predicateNode) {
+        return keyAnalyzer.lengthInBits(toString(predicateNode));
     }
 
-    public long getSize() {
-        return readableGraph.getSize();
+    public boolean isBitSet(PredicateNode predicateNode, int bitIndex, int lengthInBits) {
+        return keyAnalyzer.isBitSet(toString(predicateNode), bitIndex, lengthInBits);
     }
 
-    public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException {
-        return readableGraph.findUniquePredicates(resource);
+    public int bitIndex(PredicateNode key, int offsetInBits, int lengthInBits, PredicateNode other,
+        int otherOffsetInBits, int otherLengthInBits) {
+        return keyAnalyzer.bitIndex(toString(key), offsetInBits, lengthInBits, toString(other), otherOffsetInBits,
+            otherLengthInBits);
     }
 
-    public ClosableIterator<PredicateNode> findUniquePredicates() {
-        return readableGraph.findUniquePredicates();
+    public boolean isPrefix(PredicateNode prefix, int offsetInBits, int lengthInBits, PredicateNode key) {
+        return keyAnalyzer.isPrefix(toString(prefix), offsetInBits, lengthInBits, toString(key));
     }
 
-    public void localizeAndAdd(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
-        writableGraph.localizeAndAdd(subject, predicate, object);
+    public int compare(PredicateNode o1, PredicateNode o2) {
+        return keyAnalyzer.compare(toString(o1), toString(o2)) * -1;
     }
 
-    public void localizeAndRemove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-        throws GraphException {
-        writableGraph.localizeAndRemove(subject, predicate, object);
-    }
-
-    public void removeIterator(Iterator<Triple> triples) throws GraphException {
-        writableGraph.removeIterator(triples);
-    }
-
-    public void clear() {
-        writableGraph.clear();
+    private String toString(PredicateNode node) {
+        return node == null ? null : mapper.convertToString(node);
     }
 }

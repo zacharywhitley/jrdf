@@ -78,6 +78,9 @@
     <suppress checks="ReturnCount" files="SingleRdfNodeParser"/>
 
     <!-- Import -->
+    <!-- Trie -->
+    <suppress checks="ParameterNumber" files="PredicateNodeKeyAnalyzer"/>
+
     <!-- BTree -->
     <suppress checks="BooleanExpressionComplexity" files="ByteArrayUtil"/>
     <suppress checks="BooleanExpressionComplexity" files="ByteHandler"/>

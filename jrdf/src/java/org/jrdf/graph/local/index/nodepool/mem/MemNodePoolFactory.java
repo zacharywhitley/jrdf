@@ -59,13 +59,13 @@
 
 package org.jrdf.graph.local.index.nodepool.mem;
 
+import org.jrdf.graph.local.index.nodepool.LocalStringNodeMapperFactory;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
 import org.jrdf.graph.local.index.nodepool.NodeTypePool;
 import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
+import org.jrdf.graph.util.StringNodeMapper;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 
@@ -83,7 +83,7 @@ public class MemNodePoolFactory implements NodePoolFactory {
 
     public NodePool openExistingNodePool() {
         if (currentNodePool == null) {
-            StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
+            StringNodeMapper mapper = new LocalStringNodeMapperFactory().createMapper();
             final Map<Long, String> blankNodePool = MAP_FACTORY.createMap(Long.class, String.class);
             final Map<Long, String> uriNodePool = MAP_FACTORY.createMap(Long.class, String.class);
             final Map<Long, String> literalNodePool = MAP_FACTORY.createMap(Long.class, String.class);

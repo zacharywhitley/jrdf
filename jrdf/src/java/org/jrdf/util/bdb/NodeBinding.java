@@ -69,8 +69,8 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.LocalizedNode;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
+import org.jrdf.graph.local.index.nodepool.LocalStringNodeMapperFactory;
+import org.jrdf.graph.util.StringNodeMapper;
 
 import java.io.Serializable;
 
@@ -79,7 +79,7 @@ public class NodeBinding extends TupleBinding<Node> implements TypedNodeVisitor,
     private static final byte BLANK_NODE = 0;
     private static final byte URI_REFERENCE = 1;
     private static final byte LITERAL = 2;
-    private StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
+    private StringNodeMapper mapper = new LocalStringNodeMapperFactory().createMapper();
     private TupleOutput tupleOutput;
     private Object node;
 

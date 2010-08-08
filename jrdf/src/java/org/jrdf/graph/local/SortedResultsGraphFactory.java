@@ -72,7 +72,7 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
+import org.jrdf.graph.local.index.nodepool.LocalStringNodeMapperFactory;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.SortedIteratorFactoryImpl;
 import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
@@ -147,7 +147,7 @@ public class SortedResultsGraphFactory implements ReadWriteGraphFactory {
         final GraphHandler graphHandler120 = new GraphHandler120(longIndexes, nodePool);
         final GraphHandler graphHandler201 = new GraphHandler201(longIndexes, nodePool);
         this.graphHandlers = asList(graphHandler012, graphHandler120, graphHandler201);
-        this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
+        this.localizer = new LocalizerImpl(nodePool, new LocalStringNodeMapperFactory().createMapper());
         this.iteratorFactory = new SortedIteratorFactoryImpl(graphHandlers, localizer, collectionFactory);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         GraphValueFactory valueFactory = new GraphValueFactoryImpl(nodePool, localizer);

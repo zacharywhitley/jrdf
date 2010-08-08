@@ -59,13 +59,13 @@
 
 package org.jrdf.graph.local.index.nodepool.bdb;
 
+import org.jrdf.graph.local.index.nodepool.LocalStringNodeMapperFactory;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
 import org.jrdf.graph.local.index.nodepool.NodeTypePool;
 import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
+import org.jrdf.graph.util.StringNodeMapper;
 import org.jrdf.collection.BdbMapFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
@@ -96,7 +96,7 @@ public class BdbNodePoolFactory implements NodePoolFactory {
         if (currentNodePool == null) {
             nodePoolMapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
             stringPoolMapFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
-            StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
+            StringNodeMapper mapper = new LocalStringNodeMapperFactory().createMapper();
             final Map<Long, String> blankNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "bnp");
             final Map<Long, String> uriNodePool = nodePoolMapFactory.openExistingMap(Long.class, String.class, "npm");
             final Map<Long, String> literalNodePool =

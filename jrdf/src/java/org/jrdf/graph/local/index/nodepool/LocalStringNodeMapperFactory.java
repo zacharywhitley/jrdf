@@ -59,6 +59,18 @@
 
 package org.jrdf.graph.local.index.nodepool;
 
-public interface StringNodeMapperFactory {
-    StringNodeMapper createMapper();
+import org.jrdf.graph.util.StringNodeMapper;
+import org.jrdf.graph.util.nodepool.StringNodeMapperFactory;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
+import org.jrdf.parser.ntriples.parser.LiteralMatcherImpl;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+
+public class LocalStringNodeMapperFactory implements StringNodeMapperFactory {
+    public StringNodeMapper createMapper() {
+        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
+        LiteralMatcher matcher = new LiteralMatcherImpl(regexFactory, new NTripleUtilImpl(regexFactory));
+        return new LocalStringNodeMapper(matcher);
+    }
 }

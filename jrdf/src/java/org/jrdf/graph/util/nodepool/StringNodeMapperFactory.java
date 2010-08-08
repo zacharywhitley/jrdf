@@ -57,18 +57,10 @@
  *
  */
 
-package org.jrdf.graph.local.index.nodepool;
+package org.jrdf.graph.util.nodepool;
 
-import org.jrdf.parser.ntriples.parser.LiteralMatcher;
-import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.LiteralMatcherImpl;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.graph.util.StringNodeMapper;
 
-public class StringNodeMapperFactoryImpl implements StringNodeMapperFactory {
-    public StringNodeMapper createMapper() {
-        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
-        LiteralMatcher matcher = new LiteralMatcherImpl(regexFactory, new NTripleUtilImpl(regexFactory));
-        return new StringNodeMapperImpl(matcher);
-    }
+public interface StringNodeMapperFactory {
+    StringNodeMapper createMapper();
 }

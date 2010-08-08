@@ -121,6 +121,7 @@
         <include name="${lib.dir}/spring/spring-core-${spring.version}.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.1.jar"/>
         <include name="${lib.dir}/je/je-${bdbje.version}.jar"/>
+        <include name="${lib.dir}/trie/patricia-trie-0.2.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/stax2-api-3.0.2.jar"/>
         <include name="${lib.dir}/woodstox/woodstox-core-asl-4.0.8.jar"/>
@@ -261,7 +262,7 @@
              classpath="${one-jar.lib.dir}/one-jar-ant-task-0.96.jar" onerror="report"/>
 
     <taskdef resource="checkstyletask.properties"
-             classpath="${checkstyle.lib.dir}/checkstyle-all-5.0.jar"/>
+             classpath="${checkstyle.lib.dir}/checkstyle-all-5.1.jar"/>
 
     <target name="default">
         <echo message="Nothing to see here..."/>

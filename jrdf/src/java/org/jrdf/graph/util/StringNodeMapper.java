@@ -57,92 +57,20 @@
  *
  */
 
-package org.jrdf.graph.local.index.nodepool;
+package org.jrdf.graph.util;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.Resource;
+import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.BlankNodeImpl;
-import org.jrdf.graph.local.LiteralImpl;
-import org.jrdf.graph.local.LiteralMutableId;
-import org.jrdf.graph.local.URIReferenceImpl;
-import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 
-import java.io.Serializable;
-import java.net.URI;
+public interface StringNodeMapper extends TypedNodeVisitor {
+    String convertToString(Node node);
 
-public class StringNodeMapperImpl implements StringNodeMapper, Serializable {
-    private static final long serialVersionUID = 6290485805443126422L;
-    private LiteralMatcher literalMatcher;
-    private String currentString;
+    BlankNode convertToBlankNode(String string);
 
-    private StringNodeMapperImpl() {
-    }
+    URIReference convertToURIReference(String string, Long nodeId);
 
-    public StringNodeMapperImpl(LiteralMatcher newLiteralMatcher) {
-        literalMatcher = newLiteralMatcher;
-    }
-
-    public String convertToString(Node node) {
-        if (node != ANY_SUBJECT_NODE && node != ANY_PREDICATE_NODE && node != ANY_OBJECT_NODE) {
-            node.accept(this);
-            return currentString;
-        } else {
-            return null;
-        }
-    }
-
-    public BlankNode convertToBlankNode(String string) {
-        return BlankNodeImpl.valueOf(string);
-    }
-
-    public URIReference convertToURIReference(String string, Long nodeId) {
-        return new URIReferenceImpl(URI.create(string), false, nodeId);
-    }
-
-    public Literal convertToLiteral(String string, Long nodeId) {
-        String[] strings = literalMatcher.parse(string);
-        String lexicalForm = strings[0];
-        String language = strings[1];
-        String datatype = strings[2];
-        Literal literal;
-        if (language != null) {
-            literal = new LiteralImpl(lexicalForm, language);
-        } else if (datatype != null) {
-            literal = new LiteralImpl(lexicalForm, URI.create(datatype));
-        } else {
-            literal = new LiteralImpl(lexicalForm);
-        }
-        ((LiteralMutableId) literal).setId(nodeId);
-        return literal;
-    }
-
-    public void visitBlankNode(BlankNode blankNode) {
-        currentString = blankNode.toString();
-    }
-
-    public void visitURIReference(URIReference uriReference) {
-        currentString = uriReference.getURI().toString();
-    }
-
-    public void visitLiteral(Literal literal) {
-        currentString = literal.getEscapedForm();
-    }
-
-    public void visitNode(Node node) {
-        illegalNode(node);
-    }
-
-    public void visitResource(Resource resource) {
-        illegalNode(resource);
-    }
-
-    private void illegalNode(Node node) {
-        throw new IllegalArgumentException("Failed to convert node: " + node);
-    }
+    Literal convertToLiteral(String string, Long nodeId);
 }
