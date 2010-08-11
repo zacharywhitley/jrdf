@@ -17,15 +17,22 @@ Helpers
   sl         = 47;
   whitespace = ' ' | tab | lf | cr;
   nonblank   = [33..126];
+  otherchars = [0x00C0..0x00D6] | [0x00D8..0x00F6] | [0x00F8..0x02FF] | [0x0370..0x037D] | [0x037F..0x1FFF] |
+               [0x200C..0x200D] | [0x2070..0x218F] | [0x2C00..0x2FEF] | [0x3001..0xD7FF] | [0xF900..0xFDCF] |
+               [0xFDF0..0xFFFD] | [0x10000..0xEFFFF];
   nonquote   = [character - [quote + '\']];
   nondbquote = [character - [dbquote + '\']];
   nonslash   = [[33..126] - sl];
   urlchar    = [character - '>'];
   echar      = 't' | 'b' | 'n' | 'r' | 'f' | '\' | dbquote | quote;
   digitstart = digit+ '.' digit* | '.' digit+ | digit+;
+  namestart  = letter | '_' | otherchars;
+  namechar   = namestart | '-' | digit | 0x00B7 | [0x0300..0x036F] | [0x203F..0x2040];
+  prefixnamestart = letter | otherchars;
 
 States
   def,      /* default state */
+  bnodeprefix, /* bnode prefix */
   qesc,     /* escaping character in quoted literal with '\' */
   dbqesc,   /* escaping character in double quoted literal with '\' */
   qlit,     /* quoted literal */
@@ -56,11 +63,12 @@ Tokens
   {def}                           node_separator  = ';';
   {def}                           stmt_separator  = '.';
 
-  {def}                           blank_node_prefix = '_:';
+  {def->bnodeprefix}              node_id_prefix    = '_:';
+  {bnodeprefix->def}              node_id           = namestart namechar*;
   {def}                           empty_blank_node  = '[]';
-  {def}                           prefix_name    = letter (letter | digit | '_' | '$' | '?' )*;
+  {def}                           prefix_name       = prefixnamestart namechar*;
+  {def}                           name              = namestart namechar*;
 
-  {def}                           identifier     = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                           resource       = '<' urlchar* '>';
 
   {def}                           integer        = digit+;
@@ -129,7 +137,7 @@ Productions
     {object_literal} literal;
 
   blank_node =
-    {blank_node_with_id} blank_node_prefix identifier |
+    {blank_node_with_id} node_id_prefix node_id |
     {empty_blank_node} empty_blank_node |
     {node_predicate_object_list} start_blank_node predicate_object_list end_blank_node |
     {collection} collection;
@@ -139,7 +147,7 @@ Productions
     {prefixed_name} qname_element;
 
   qname_element =
-      {qname} [ncname_prefix]:identifier colon [nc_name]:identifier;
+      {qname} [ncname_prefix]:prefix_name colon [nc_name]:name;
 
   literal =
     {rdf_literal} rdf_literal |
