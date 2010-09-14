@@ -78,26 +78,19 @@ import java.io.IOException;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public final class SableCcSparqllParser implements SparqlParser {
+public final class SableCcSparqlParser implements SparqlParser {
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
     private final SortedAttributeFactory sortedAttributeFactory;
     private ParserFactory parserFactory;
     private GraphRelationFactory graphRelationFactory;
 
-    public SableCcSparqllParser(ParserFactory newParserFactory, GraphRelationFactory newGraphRelationFactory,
+    public SableCcSparqlParser(ParserFactory newParserFactory, GraphRelationFactory newGraphRelationFactory,
         SortedAttributeFactory newSortedAttributeFactory) {
         this.parserFactory =  newParserFactory;
         this.graphRelationFactory = newGraphRelationFactory;
         this.sortedAttributeFactory = newSortedAttributeFactory;
     }
 
-    /**
-     * Parses a textual query into a {@link org.jrdf.query.Query} object.
-     *
-     * @param queryText The textual query to applyAnalyser.
-     * @return A query object representing the queryText, will never be null.
-     * @throws InvalidQuerySyntaxException If the syntax of the query is incorrect.
-     */
     public Query parseQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
         checkNotNull(graph);
         checkNotEmptyString("queryText", queryText);

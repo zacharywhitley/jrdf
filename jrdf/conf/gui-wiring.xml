@@ -88,7 +88,7 @@
         <constructor-arg ref="sparqlParser"/>
     </bean>
 
-    <bean id="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqllParser">
+    <bean id="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqlParser">
         <constructor-arg ref="parserFactory"/>
         <constructor-arg ref="graphRelationFactory"/>
         <constructor-arg ref="sortedAttributeFactory"/>

@@ -113,7 +113,7 @@ import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.sparql.builder.SparqlQueryBuilder;
 import org.jrdf.sparql.parser.ParserFactory;
 import org.jrdf.sparql.parser.ParserFactoryImpl;
-import org.jrdf.sparql.parser.SableCcSparqllParser;
+import org.jrdf.sparql.parser.SableCcSparqlParser;
 import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
@@ -144,7 +144,7 @@ public class QueryFactoryImpl implements QueryFactory {
         GraphRelationFactory graphRelationFactory = new GraphRelationFactoryImpl(ATTRIBUTE_FACTORY, avpHelper,
             ATT_TUPLE_COMPARATOR, TUPLE_FACTORY);
         ParserFactory parserFactory = new ParserFactoryImpl();
-        SparqlParser sparqlParser = new SableCcSparqllParser(parserFactory, graphRelationFactory,
+        SparqlParser sparqlParser = new SableCcSparqlParser(parserFactory, graphRelationFactory,
             ATTRIBUTE_FACTORY);
         return new SparqlQueryBuilder(sparqlParser);
     }

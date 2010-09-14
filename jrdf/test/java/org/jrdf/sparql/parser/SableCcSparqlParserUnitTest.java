@@ -106,8 +106,8 @@ public final class SableCcSparqlParserUnitTest {
 
     @Test
     public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqllParser.class);
-        checkConstructor(SableCcSparqllParser.class, Modifier.PUBLIC, ParserFactory.class, GraphRelationFactory.class,
+        checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
+        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, GraphRelationFactory.class,
             SortedAttributeFactory.class);
     }
 
@@ -122,7 +122,7 @@ public final class SableCcSparqlParserUnitTest {
         final Start start = createStart();
         final Parser parser = createParserReturnStart(start);
         addGetParserExpectationsToParserFactory(parser);
-        final SableCcSparqllParser ccSparqlParser = createSableCcSparqlParser();
+        final SableCcSparqlParser ccSparqlParser = createSableCcSparqlParser();
         replayAll();
         ccSparqlParser.parseQuery(graph, QUERY_BOOK_1_DC_TITLE);
         verifyAll();
@@ -152,14 +152,14 @@ public final class SableCcSparqlParserUnitTest {
         return start;
     }
 
-    private SableCcSparqllParser createSableCcSparqlParser() {
-        return new SableCcSparqllParser(parserFactory, graphRelationFactory, attributeFactory);
+    private SableCcSparqlParser createSableCcSparqlParser() {
+        return new SableCcSparqlParser(parserFactory, graphRelationFactory, attributeFactory);
     }
 
     private void checkThrowsException(Exception exception, String errorMsg) throws Exception {
         Parser parser = createParserWithException(exception);
         addGetParserExpectationsToParserFactory(parser);
-        final SableCcSparqllParser ccSparqlParser = createSableCcSparqlParser();
+        final SableCcSparqlParser ccSparqlParser = createSableCcSparqlParser();
         replayAll();
         AssertThrows.assertThrows(InvalidQuerySyntaxException.class, errorMsg, new AssertThrows.Block() {
             public void execute() throws Throwable {
