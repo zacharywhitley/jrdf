@@ -155,7 +155,7 @@ public final class SableCcSparqlParserIntegrationTest {
     public void setUp() throws Exception {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
-        parser = new SableCcSparqllParser(FACTORY.getNewParserFactory(), FACTORY.getNewGraphRelationFactory(),
+        parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), FACTORY.getNewGraphRelationFactory(),
             newSortedAttributeFactory);
     }
 
