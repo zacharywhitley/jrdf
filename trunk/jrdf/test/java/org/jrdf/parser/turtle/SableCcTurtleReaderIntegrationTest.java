@@ -58,13 +58,17 @@
 
 package org.jrdf.parser.turtle;
 
+import org.jrdf.parser.turtle.parser.lexer.LexerException;
 import org.jrdf.parser.turtle.parser.parser.Parser;
+import org.jrdf.parser.turtle.parser.parser.ParserException;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 
 public class SableCcTurtleReaderIntegrationTest {
@@ -78,5 +82,38 @@ public class SableCcTurtleReaderIntegrationTest {
         final Parser parser = factory.getParser(streamReader);
         parser.parse();
         factory.close();
+    }
+
+    @Test
+    public void testBadTurtleFiles() throws Exception {
+        final SableCcTurtleParserFactoryImpl factory = new SableCcTurtleParserFactoryImpl();
+        for (int i = 0; i <= 14; i++) {
+            String fileName = "bad-" + String.format("%02d", i) + ".ttl";
+            final InputStream input = getSampleData(getClass(), "org/jrdf/parser/turtle/tests.zip", fileName);
+            try {
+                checkParsingFileFails(factory, input);
+            } finally {
+                input.close();
+            }
+        }
+    }
+
+    private void checkParsingFileFails(SableCcTurtleParserFactoryImpl factory, InputStream input) throws Exception {
+        try {
+            InputStreamReader streamReader = new InputStreamReader(input);
+            try {
+                final Parser parser = factory.getParser(streamReader);
+                parser.parse();
+            } finally {
+                streamReader.close();
+            }
+            fail("Should throw an exception");
+        } catch (ParserException pe) {
+            // This is good.
+            assertTrue(true);
+        } catch (LexerException le) {
+            // This too is good.
+            assertTrue(true);
+        }
     }
 }

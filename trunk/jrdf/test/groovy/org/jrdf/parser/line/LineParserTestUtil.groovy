@@ -59,22 +59,20 @@
 
 package org.jrdf.parser.line
 
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
 import org.jrdf.TestJRDFFactory
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE
+import org.jrdf.collection.MapFactory
 import org.jrdf.graph.Graph
 import org.jrdf.graph.Triple
 import org.jrdf.parser.GraphStatementHandler
-
 import org.jrdf.parser.RDFEventReader
+import org.jrdf.parser.ntriples.NTriplesParserFactory
 import org.jrdf.parser.turtle.TurtleParserFactory
 import org.jrdf.util.test.RdfBuilder
-import org.jrdf.collection.MapFactory
-
-import org.jrdf.parser.ntriples.NTriplesParserFactory
-
-import java.util.zip.ZipFile
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE
 
 class LineParserTestUtil {
 
@@ -84,11 +82,23 @@ class LineParserTestUtil {
     static InputStream getSampleData(Class clazz, String fileName) throws IOException {
         URL source = clazz.getClassLoader().getResource(fileName)
         if (fileName.endsWith("zip")) {
-            def file = new ZipFile(new File(source.getFile()))
-            def entry = file.entries().nextElement()
+            ZipFile file = new ZipFile(new File(source.getFile()))
+            ZipEntry entry = file.entries().nextElement()
             return file.getInputStream(entry)
         } else {
             return source.openStream()
+        }
+    }
+
+    static InputStream getSampleData(Class clazz, String zipFileName, String fileName) throws IOException {
+        assert zipFileName.endsWith("zip"), 'Must be a zip file'
+        URL source = clazz.getClassLoader().getResource(zipFileName)
+        ZipFile file = new ZipFile(new File(source.getFile()))
+        ZipEntry entry = file.entries().find { it.getName().equals(fileName) }
+        if (entry == null) {
+            throw new IOException("Couldn't find: " + fileName + " in " + zipFileName)
+        } else {
+            return file.getInputStream(entry);
         }
     }
 

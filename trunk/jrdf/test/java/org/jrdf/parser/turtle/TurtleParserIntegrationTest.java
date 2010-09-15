@@ -64,14 +64,15 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
-import static org.jrdf.parser.line.LineParserTestUtil.parseN3File;
-import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
-import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.Set;
+
+import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
+import static org.jrdf.parser.line.LineParserTestUtil.parseN3File;
+import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
+import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
 
 public class TurtleParserIntegrationTest {
     private static final String GOOD_NTRIPLE_FILE = "org/jrdf/parser/turtle/test.n3";
@@ -90,21 +91,4 @@ public class TurtleParserIntegrationTest {
             input.close();
         }
     }
-
-//    @Test
-//    public void testBadTurtleFiles() throws Exception {
-//        for (int i = 0; i <= 14; i++) {
-//            final InputStream input = getSampleData(getClass(), "org/jrdf/parser/turtle/tests/bad-0" + i + ".ttl");
-//            try {
-//                System.err.println("Parsing: " + i);
-//                assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-//                    public void execute() throws Throwable {
-//                        parseN3File(input, NEW_GRAPH, CREATOR);
-//                    }
-//                });
-//            } finally {
-//                input.close();
-//            }
-//        }
-//    }
 }

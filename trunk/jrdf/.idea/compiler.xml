@@ -23,6 +23,7 @@
       <entry name="?*.ftl" />
       <entry name="?*.sparql" />
       <entry name="?*.n3" />
+      <entry name="?*.zip" />
     </wildcardResourcePatterns>
     <annotationProcessing enabled="false" useClasspath="true" />
   </component>
