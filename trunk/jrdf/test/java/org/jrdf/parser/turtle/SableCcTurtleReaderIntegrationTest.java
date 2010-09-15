@@ -58,8 +58,6 @@
 
 package org.jrdf.parser.turtle;
 
-import org.jrdf.parser.turtle.parser.analysis.DepthFirstAdapter;
-import org.jrdf.parser.turtle.parser.node.Start;
 import org.jrdf.parser.turtle.parser.parser.Parser;
 import org.junit.Test;
 
@@ -70,7 +68,7 @@ import java.io.Reader;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 
 public class SableCcTurtleReaderIntegrationTest {
-    private static final String TEST_DATA = "org/jrdf/parser/turtle/minimaltest.n3";
+    private static final String TEST_DATA = "org/jrdf/parser/turtle/test.n3";
 
     @Test
     public void testParseFile() throws Exception {
@@ -78,11 +76,7 @@ public class SableCcTurtleReaderIntegrationTest {
         final Reader streamReader = new InputStreamReader(input);
         SableCcTurtleParserFactoryImpl factory = new SableCcTurtleParserFactoryImpl();
         final Parser parser = factory.getParser(streamReader);
-        final Start start = parser.parse();
-        start.apply(new SableCcTurtleAnalysis());
+        parser.parse();
         factory.close();
-    }
-
-    private class SableCcTurtleAnalysis extends DepthFirstAdapter {
     }
 }

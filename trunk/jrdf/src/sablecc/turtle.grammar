@@ -32,17 +32,17 @@ Helpers
 
 States
   def,         /* default state */
-//  bnodeprefix, /* bnode prefix */
-//  qesc,        /* escaping character in quoted literal with '\' */
-//  dbqesc,      /* escaping character in double quoted literal with '\' */
-//  qlit,        /* quoted literal */
-//  dbqlit,      /* double quoted literal */
-//  lang,        /* language tag after literal */
+  qnameprefix, /* qname prefix */
+  bnodeprefix, /* bnode prefix */
+  qesc,        /* escaping character in quoted literal with '\' */
+  dbqesc,      /* escaping character in double quoted literal with '\' */
+  qlit,        /* quoted literal */
+  dbqlit,      /* double quoted literal */
+  lang,        /* language tag after literal */
   com;         /* comment */
 
 Tokens
   {def}                prefix           = '@prefix';
-  {def}                colon            = ':';
   {def}                base             = '@base';
   {def}                verb_a           = 'a';
   {def}                comma            = ',';
@@ -55,26 +55,26 @@ Tokens
   {def}                start_items      = '(';
   {def}                end_items        = ')';
 
-  {def}                           blank             = whitespace+;
+  {def, qnameprefix}              blank             = whitespace+;
   {def}                           stmt_separator    = '.';
-  {def}                           prefix_name       = prefixnamestart namechar*;
-  {def}                           resource          = '<' urlchar* '>';
+  {def->qnameprefix}              prefix_name       = prefixnamestart namechar*;
+  {qnameprefix}                   colon             = ':';
+  {qnameprefix->def}              name              = namestart namechar*;
+  {qnameprefix->def, def}         resource          = '<' urlchar* '>';
 
   {def->com}                      hash           = '#';
   {com}                           comment        = [character - [lf + cr]];
   {com->def}                      endcomment     = (lf | cr)+;
-/*
+
   {def}                           node_separator  = ';';
 
   {def->bnodeprefix}              node_id_prefix    = '_:';
   {bnodeprefix->def}              node_id           = namestart namechar*;
   {def}                           empty_blank_node  = '[]';
-  {def}                           name              = namestart namechar*;
 
   {def}                           integer        = digit+;
   {def}                           decimal        = digit+ '.' digit* | '.' digit+;
   {def}                           double         = digitstart ('e' | 'E') digit+;
-  {def}                           prefix_name       = prefixnamestart namechar*;
 
   {def->qlit, qlit->def}          quote          = quote;
   {qlit}                          qtext          = nonquote+;
@@ -89,24 +89,24 @@ Tokens
   {def->lang}                     at             = '@';
   {lang->def}                     langtag        = letter+ ('-' | letter)*;
 
-  {def}                           datatypeprefix = '^^';*/
+  {def}                           datatypeprefix = '^^';
 
 Ignored Tokens
-  blank, hash, comment, endcomment;
+  blank, hash, comment, endcomment, qescape, dbqescape;
 
 Productions
   start =
     {statements} statement*;
 
   statement =
-    {directive_stmt} directive stmt_separator;
-/*    {triples_stmt} triples stmt_separator ; */
+    {directive_stmt} directive stmt_separator |
+    {triples_stmt} triples stmt_separator ;
 
   directive =
     {prefix_id_directive} prefix prefix_name? colon resource |
     {base_directive} base resource;
 
-/*  triples =
+  triples =
     subject predicate_object_list;
 
   predicate_object_list =
@@ -148,7 +148,7 @@ Productions
     {prefixed_name} qname_element;
 
   qname_element =
-      {qname} [ncname_prefix]:prefix_name colon [nc_name]:name;
+      [ncname_prefix]:prefix_name colon [nc_name]:name;
 
   literal =
     {rdf_literal} rdf_literal |
@@ -194,4 +194,4 @@ Productions
     {collection_items} start_items items? end_items;
 
   items =
-    {item_objects} object+;*/
+    {item_objects} object+;
