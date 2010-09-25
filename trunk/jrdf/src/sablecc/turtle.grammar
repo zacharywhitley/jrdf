@@ -1,7 +1,7 @@
 Package org.jrdf.parser.turtle.parser;
 
 /*
- * N3 SableCC grammar.
+ * Turtle SableCC grammar.
  * $Id: n3.grammar 3164 2009-10-31 20:54:58Z newmana $
  */
 
@@ -58,7 +58,7 @@ Tokens
   {def, qnameprefix}              blank             = whitespace+;
   {def}                           stmt_separator    = '.';
   {def->qnameprefix}              prefix_name       = prefixnamestart namechar*;
-  {qnameprefix}                   colon             = ':';
+  {def->qnameprefix, qnameprefix} colon             = ':';
   {qnameprefix->def}              name              = namestart namechar*;
   {qnameprefix->def, def}         resource          = '<' urlchar* '>';
 
@@ -148,7 +148,7 @@ Productions
     {prefixed_name} qname_element;
 
   qname_element =
-      [ncname_prefix]:prefix_name colon [nc_name]:name;
+      [ncname_prefix]:prefix_name? colon [nc_name]:name;
 
   literal =
     {rdf_literal} rdf_literal |

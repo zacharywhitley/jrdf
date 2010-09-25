@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,38 +54,69 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.parser;
 
-/**
- * An interface defining methods for receiving namespace declarations from an RDF parser.
- */
-public interface NamespaceListener {
+import org.jrdf.collection.MemMapFactory;
+import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ParameterDefinition;
+import org.junit.Before;
+import org.junit.Test;
 
-    /**
-     * Return true if the prefix has a mapping.
-     *
-     * @param prefix the prefix to test.
-     * @return true if the prefix has a mapping.
-     */
-    boolean hasPrefix(String prefix);
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-    /**
-     * Called by an RDF parser when it has encountered a new namespace
-     * declaration.
-     *
-     * @param prefix The prefix that is used in the namespace declaration.
-     * @param uri The URI of the namespace.
-     */
-    void handleNamespace(String prefix, String uri);
+public class NamespaceListenerImplUnitTest {
+    private NamespaceListener subject;
 
-    /**
-     * Given a prefix return the full URI.
-     *
-     * @param prefix the local name/prefix of the uri.
-     * @return the fully qualified URI.
-     */
-    String getFullURI(String prefix);
+    @Before
+    public void createSubject() {
+        subject = new NamespaceListenerImpl(new MemMapFactory());
+    }
+
+    @Test
+    public void classProperties() {
+        checkImplementationOfInterfaceAndFinal(NamespaceListener.class, NamespaceListenerImpl.class);
+    }
+
+    @Test
+    public void badParams() throws Exception {
+        checkMethodNullAssertions(subject, "hasPrefix", new ParameterDefinition(new String[]{"prefix"},
+            new Class<?>[]{String.class}));
+        checkMethodNullAssertions(subject, "handleNamespace", new ParameterDefinition(new String[]{"prefix", "uri"},
+            new Class<?>[]{String.class, String.class}));
+        checkMethodNullAssertions(subject, "getFullURI", new ParameterDefinition(new String[]{"prefix"},
+            new Class<?>[]{String.class}));
+    }
+
+    @Test
+    public void createAPrefix() throws Exception {
+        subject.handleNamespace("example", "http://example.com");
+        assertThat(subject.getFullURI("example"), equalTo("http://example.com"));
+        assertThat(subject.hasPrefix("example"), is(true));
+        assertThat(subject.hasPrefix("nothing"), is(false));
+    }
+
+    @Test
+    public void createDefaultPrefix() throws Exception {
+        subject.handleNamespace("", "http://example.com");
+        assertThat(subject.getFullURI(""), equalTo("http://example.com"));
+        subject.handleNamespace("", "/bit/more");
+        assertThat(subject.getFullURI(""), equalTo("http://example.com/bit/more"));
+    }
+
+    @Test
+    public void mapTwiceThrowsException() throws Exception {
+        subject.handleNamespace("foo", "http://foo");
+        AssertThrows.assertThrows(IllegalArgumentException.class, "Existing prefix mapping for: foo and http://bar",
+            new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    subject.handleNamespace("foo", "http://bar");
+                }
+            });
+    }
 }

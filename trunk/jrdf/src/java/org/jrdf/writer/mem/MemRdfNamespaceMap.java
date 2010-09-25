@@ -85,6 +85,7 @@ public final class MemRdfNamespaceMap implements RdfNamespaceMap {
     private static final String NS_PREFIX = "ns";
     private Map<String, String> prefixToNamespaceUri = new HashMap<String, String>();
 
+    // TODO AN Replace with MapFactory mapFactory
     public MemRdfNamespaceMap() {
         createDefaultNamespace();
     }
