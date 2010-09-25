@@ -83,12 +83,12 @@ public class MemRdfNamespaceMapUnitTest {
     }
 
     @Test
-    public void testClassProperties() {
+    public void classProperties() {
         checkImplementationOfInterfaceAndFinal(RdfNamespaceMap.class, MemRdfNamespaceMap.class);
     }
 
     @Test
-    public void testBadParams() throws Exception {
+    public void badParams() throws Exception {
         checkMethodNullAssertions(subject, "load", new ParameterDefinition(new String[]{"graph"},
             new Class<?>[]{Graph.class}));
         checkMethodNullAssertions(subject, "addNamespace", new ParameterDefinition(
@@ -98,7 +98,7 @@ public class MemRdfNamespaceMapUnitTest {
     }
 
     @Test
-    public void testDefaultNamespaceIsRdfMapping() throws Exception {
+    public void defaultNamespaceIsRdfMapping() throws Exception {
         Set<Map.Entry<String, String>> nameEntries = subject.getNameEntries();
         assertThat(nameEntries, Matchers.hasSize(1));
         Map.Entry<String, String> nameUriEntry = nameEntries.iterator().next();

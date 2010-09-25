@@ -24,6 +24,7 @@
       <entry name="?*.sparql" />
       <entry name="?*.n3" />
       <entry name="?*.zip" />
+      <entry name="?*.ttl" />
     </wildcardResourcePatterns>
     <annotationProcessing enabled="false" useClasspath="true" />
   </component>

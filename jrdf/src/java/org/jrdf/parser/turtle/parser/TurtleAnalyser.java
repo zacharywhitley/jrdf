@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,38 +54,16 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.parser;
+package org.jrdf.parser.turtle.parser;
 
-/**
- * An interface defining methods for receiving namespace declarations from an RDF parser.
- */
-public interface NamespaceListener {
+import org.jrdf.graph.Triple;
+import org.jrdf.parser.turtle.parser.analysis.Analysis;
+import org.jrdf.parser.turtle.parser.parser.ParserException;
 
-    /**
-     * Return true if the prefix has a mapping.
-     *
-     * @param prefix the prefix to test.
-     * @return true if the prefix has a mapping.
-     */
-    boolean hasPrefix(String prefix);
+import java.util.Set;
 
-    /**
-     * Called by an RDF parser when it has encountered a new namespace
-     * declaration.
-     *
-     * @param prefix The prefix that is used in the namespace declaration.
-     * @param uri The URI of the namespace.
-     */
-    void handleNamespace(String prefix, String uri);
-
-    /**
-     * Given a prefix return the full URI.
-     *
-     * @param prefix the local name/prefix of the uri.
-     * @return the fully qualified URI.
-     */
-    String getFullURI(String prefix);
+public interface TurtleAnalyser extends Analysis {
+    Set<Triple> getTriples() throws ParserException;
 }

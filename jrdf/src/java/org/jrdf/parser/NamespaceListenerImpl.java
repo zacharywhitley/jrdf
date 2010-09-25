@@ -64,11 +64,13 @@ import org.jrdf.collection.MapFactory;
 import java.io.Serializable;
 import java.util.Map;
 
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
 /**
  * @author Yuan-Fang Li
  * @version $Id$
  */
-public class NamespaceListenerImpl implements NamespaceListener, Serializable {
+public final class NamespaceListenerImpl implements NamespaceListener, Serializable {
     private static final long serialVersionUID = 6725027316200321078L;
     private Map<String, String> map;
 
@@ -79,18 +81,25 @@ public class NamespaceListenerImpl implements NamespaceListener, Serializable {
         map = mapFactory.createMap(String.class, String.class);
     }
 
+    public boolean hasPrefix(String prefix) {
+        checkNotNull(prefix);
+        return map.containsKey(prefix);
+    }
+
     public void handleNamespace(String prefix, String uri) {
+        checkNotNull(prefix, uri);
         final String currentValue = map.get(prefix);
         if (currentValue == null) {
             map.put(prefix, uri);
         } else if ("".equals(prefix)) {
             map.put("", currentValue + uri);
         } else {
-            throw new IllegalArgumentException("Existing prefix mapping for: " + prefix + "and " + uri);
+            throw new IllegalArgumentException("Existing prefix mapping for: " + prefix + " and " + uri);
         }
     }
 
     public String getFullURI(String prefix) {
+        checkNotNull(prefix);
         return map.get(prefix);
     }
 }
