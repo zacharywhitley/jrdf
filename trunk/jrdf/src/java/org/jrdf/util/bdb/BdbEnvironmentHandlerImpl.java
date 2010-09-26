@@ -62,7 +62,6 @@ package org.jrdf.util.bdb;
 import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
 import com.sleepycat.bind.tuple.TupleBinding;
-import com.sleepycat.collections.StoredList;
 import com.sleepycat.collections.StoredMap;
 import com.sleepycat.collections.StoredSortedKeySet;
 import com.sleepycat.je.Database;
@@ -78,7 +77,6 @@ import org.jrdf.util.DirectoryHandler;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
@@ -129,11 +127,6 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         TupleBinding<T> keyBinding = getBinding(clazz1);
         TupleBinding<U> dataBinding = getBinding(clazz2);
         return new StoredMap<T, U>(database, keyBinding, dataBinding, true);
-    }
-
-    public <T> List<T> createList(Database database, Class<T> clazz) {
-        TupleBinding<T> valueBinding = getBinding(clazz);
-        return new StoredList<T>(database, valueBinding, true);
     }
 
     @SuppressWarnings({ "unchecked" })

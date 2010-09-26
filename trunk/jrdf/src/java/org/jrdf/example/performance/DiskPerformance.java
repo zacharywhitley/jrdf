@@ -61,14 +61,13 @@ package org.jrdf.example.performance;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedDiskJRDFFactory;
-import org.jrdf.graph.Graph;
 import org.jrdf.collection.BdbMapFactory;
-import org.jrdf.collection.MapFactory;
+import org.jrdf.graph.Graph;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.bdb.BdbBlankNodeRegistryImpl;
+import org.jrdf.writer.MappedBlankNodeRegistry;
 
 public class DiskPerformance extends AbstractGraphPerformance {
     private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
@@ -82,11 +81,7 @@ public class DiskPerformance extends AbstractGraphPerformance {
 
     protected BlankNodeRegistry getBlankNodeRegistry() {
         final BdbEnvironmentHandler newHandler = new BdbEnvironmentHandlerImpl(dirHandler);
-        return new BdbBlankNodeRegistryImpl(new BdbMapFactory(newHandler, "foobarbaz"));
-    }
-
-    protected MapFactory getMapFactory() {
-        return new BdbMapFactory(new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()), "database");
+        return new MappedBlankNodeRegistry(new BdbMapFactory(newHandler, "foobarbaz"));
     }
 
     public static void main(String[] args) throws Exception {

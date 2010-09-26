@@ -61,7 +61,6 @@ package org.jrdf.collection;
 
 import java.util.Comparator;
 import java.util.SortedSet;
-import java.util.List;
 
 /**
  * An abstract from specifically knowing how to create sorted sets and lists.  This allows different implementations
@@ -91,14 +90,6 @@ public interface CollectionFactory {
      * @return A sorted set.
      */
     <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator);
-
-    /**
-     * Creates a list for a known type.
-     *
-     * @param clazz The type of list to create.
-     * @return A list.
-     */
-    <T> List<T> createList(Class<T> clazz);
 
     /**
      * Close any resources used by the factory - possibly database connections, file handles and the like.  It is

@@ -60,6 +60,7 @@
 package org.jrdf.writer.rdfxml;
 
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -73,11 +74,11 @@ import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.MappedBlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
+import org.jrdf.writer.RdfNamespaceMapImpl;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
-import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
-import org.jrdf.writer.mem.MemRdfNamespaceMap;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -234,9 +235,9 @@ public class RdfXmlWriterIntegrationTest {
         // do write
         StringWriter out = new StringWriter();
         try {
-            BlankNodeRegistry nodeRegistry = new MemBlankNodeRegistryImpl();
+            BlankNodeRegistry nodeRegistry = new MappedBlankNodeRegistry(new MemMapFactory());
             nodeRegistry.clear();
-            RdfNamespaceMap map = new MemRdfNamespaceMap();
+            RdfNamespaceMap map = new RdfNamespaceMapImpl(new MemMapFactory());
             RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
             try {
                 writer.write(graph, out);

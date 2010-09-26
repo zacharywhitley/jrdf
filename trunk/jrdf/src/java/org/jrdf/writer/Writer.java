@@ -59,9 +59,8 @@
 
 package org.jrdf.writer;
 
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
-import org.jrdf.writer.mem.MemRdfNamespaceMap;
 import org.jrdf.writer.ntriples.NTriplesWriterImpl;
 import org.jrdf.writer.rdfxml.RdfXmlWriter;
 
@@ -74,6 +73,8 @@ import java.io.OutputStream;
  * runtime.
  */
 public final class Writer {
+    private static final MemMapFactory MAP_FACTORY = new MemMapFactory();
+
     private Writer() {
     }
 
@@ -108,8 +109,8 @@ public final class Writer {
     }
 
     private static void tryWriteRdfXml(File file, Graph graph) throws Exception {
-        final BlankNodeRegistry nodeRegistry = new MemBlankNodeRegistryImpl();
-        final RdfNamespaceMap map = new MemRdfNamespaceMap();
+        final RdfNamespaceMap map = new RdfNamespaceMapImpl(MAP_FACTORY);
+        BlankNodeRegistry nodeRegistry = new MappedBlankNodeRegistry(new MemMapFactory());
         final RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
         final OutputStream fileOutputStream = new FileOutputStream(file);
         try {

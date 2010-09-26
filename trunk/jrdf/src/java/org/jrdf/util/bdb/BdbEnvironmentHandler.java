@@ -64,7 +64,6 @@ import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 
-import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
@@ -78,6 +77,4 @@ public interface BdbEnvironmentHandler {
     <T> SortedSet<T> createSet(Database database, Class<T> clazz);
 
     <T, A, U extends A> Map<T, U> createMap(Database database, Class<T> clazz1, Class<A> clazz2);
-
-    <T> List<T> createList(Database database, Class<T> clazz);
 }

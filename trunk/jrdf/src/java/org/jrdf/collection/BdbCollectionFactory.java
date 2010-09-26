@@ -64,15 +64,15 @@ import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.Stack;
+
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * An on disk implementation that uses Java BDB edition.
@@ -100,15 +100,6 @@ public class BdbCollectionFactory implements IteratorTrackingCollectionFactory {
         try {
             final Database database = createDatabase((Comparator<byte[]>) comparator);
             return handler.createSet(database, clazz);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <T> List<T> createList(Class<T> clazz) {
-        try {
-            final Database database = createDatabase(null);
-            return handler.createList(database, clazz);
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }

@@ -67,6 +67,7 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EmptyClosableIterator;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -122,7 +123,7 @@ public final class CopyingLocalIteratorFactory implements IteratorFactory {
     }
 
     private ClosableIterator<Triple> copyTriples(ClosableIterator<Triple> closableIterator) {
-        List<Triple> list = collectionFactory.createList(Triple.class);
+        Set<Triple> list = collectionFactory.createSet(Triple.class);
         while (closableIterator.hasNext()) {
             list.add(closableIterator.next());
         }

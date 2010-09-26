@@ -59,9 +59,9 @@
 
 package org.jrdf.example.performance;
 
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.collection.MapFactory;
 import org.jrdf.writer.BlankNodeRegistry;
 
 public abstract class AbstractGraphPerformance implements GraphPerformance {
@@ -89,9 +89,9 @@ public abstract class AbstractGraphPerformance implements GraphPerformance {
         //new ParsePerformanceImpl(getMapFactory()).parse(graph, this);
         new AddPerformanceImpl(NUMBER_OF_PREDICATES, SUBJECT_PREFIX, PREDICATE_PREFIX, OBJECT_PREFIX).addPerformance(
             numberToAdd == 0 ? NUMBER_OF_NODES_TO_ADD : numberToAdd, graph, this);
-        new WritePerformanceImpl().writePerformance(graph, this, getBlankNodeRegistry());
-        new FindPerformanceImpl(numberToFind == 0 ? NUMBER_OF_NODES_TO_FIND : numberToFind, SUBJECT_PREFIX
-        ).findPerformance(graph, this);
+        new WritePerformanceImpl().writePerformance(graph, this, getBlankNodeRegistry(), new MemMapFactory());
+        new FindPerformanceImpl(numberToFind == 0 ? NUMBER_OF_NODES_TO_FIND : numberToFind, SUBJECT_PREFIX).
+            findPerformance(graph, this);
         new UpdatePerformanceImpl(numberToUpdate == 0 ? NUMBER_OF_NODES_TO_UPDATE : numberToUpdate, SUBJECT_PREFIX).
             updatePerformance(graph, this);
     }
@@ -103,8 +103,6 @@ public abstract class AbstractGraphPerformance implements GraphPerformance {
     }
 
     protected abstract Graph getGraph();
-
-    protected abstract MapFactory getMapFactory();
 
     protected abstract BlankNodeRegistry getBlankNodeRegistry();
 

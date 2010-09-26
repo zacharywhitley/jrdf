@@ -57,41 +57,40 @@
  *
  */
 
-package org.jrdf.example.performance;
+package org.jrdf.writer;
 
-import org.jrdf.SortedDiskJRDFFactory;
-import org.jrdf.collection.BdbMapFactory;
-import org.jrdf.graph.Graph;
 import org.jrdf.collection.MapFactory;
-import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.TempDirectoryHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
-import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.graph.BlankNode;
 
-public class ReadingGraphPerformance extends AbstractGraphPerformance {
-    private DirectoryHandler handler = new TempDirectoryHandler();
-    private BdbEnvironmentHandler newHandler;
-    private MapFactory mapFactory;
+import java.util.Map;
 
-    public Graph getGraph() {
-        return SortedDiskJRDFFactory.getFactory().getGraph();
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
+public final class MappedBlankNodeRegistry implements BlankNodeRegistry {
+    private final MapFactory mapFactory;
+    private final Map<BlankNode, Long> blankNodeList;
+
+    public MappedBlankNodeRegistry(final MapFactory newMapFactory) {
+        checkNotNull(newMapFactory);
+        this.mapFactory = newMapFactory;
+        this.blankNodeList = mapFactory.createMap(BlankNode.class, Long.class);
     }
 
-    public MapFactory getMapFactory() {
-        handler.removeDir();
-        handler.makeDir();
-        newHandler = new BdbEnvironmentHandlerImpl(handler);
-        mapFactory = new BdbMapFactory(newHandler, "map");
-        return mapFactory;
+    public String getNodeId(final BlankNode node) {
+        checkNotNull(node);
+        Long id = blankNodeList.get(node);
+        if (id == null) {
+            id = (long) blankNodeList.size();
+            blankNodeList.put(node, id);
+        }
+        return "bNode_" + id;
     }
 
-    public BlankNodeRegistry getBlankNodeRegistry() {
-        return null;
+    public void clear() {
+        blankNodeList.clear();
     }
 
-    public static void main(String [] args) throws Exception {
-        ReadingGraphPerformance perf = new ReadingGraphPerformance();
-        perf.testPerformance(new String[] {"0", "0", "0"});
+    public void close() {
+        mapFactory.close();
     }
 }

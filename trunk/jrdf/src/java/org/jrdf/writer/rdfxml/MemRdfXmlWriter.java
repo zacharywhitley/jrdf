@@ -59,12 +59,14 @@
 
 package org.jrdf.writer.rdfxml;
 
+import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.MappedBlankNodeRegistry;
+import org.jrdf.writer.RdfNamespaceMapImpl;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
-import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
-import org.jrdf.writer.mem.MemRdfNamespaceMap;
 
 import java.io.OutputStream;
 import java.io.Writer;
@@ -72,10 +74,13 @@ import java.io.Writer;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class MemRdfXmlWriter implements RdfWriter {
+    private static final MemMapFactory MAP_FACTORY = new MemMapFactory();
     private RdfXmlWriter rdfXmlWriter;
 
     public MemRdfXmlWriter() {
-        rdfXmlWriter = new RdfXmlWriter(new MemBlankNodeRegistryImpl(), new MemRdfNamespaceMap());
+        RdfNamespaceMapImpl map = new RdfNamespaceMapImpl(MAP_FACTORY);
+        BlankNodeRegistry nodeRegistry = new MappedBlankNodeRegistry(MAP_FACTORY);
+        rdfXmlWriter = new RdfXmlWriter(nodeRegistry, map);
     }
 
     public void write(Graph graph, OutputStream stream) throws WriteException, GraphException {
