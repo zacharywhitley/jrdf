@@ -59,9 +59,11 @@
 
 package org.jrdf.example.performance;
 
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.writer.BlankNodeRegistry;
 
 public interface WritePerformance {
-    void writePerformance(Graph graph, GraphPerformance performance, BlankNodeRegistry registry) throws Exception;
+    void writePerformance(Graph graph, GraphPerformance performance, BlankNodeRegistry registry,
+        MapFactory mapFactory) throws Exception;
 }

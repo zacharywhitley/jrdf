@@ -84,10 +84,10 @@ import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 public class SableCcTurtleReaderIntegrationTest {
     private static final String TEST_DATA = "org/jrdf/parser/turtle/test.n3";
     private static final String TEST_ZIP_FILE = "org/jrdf/parser/turtle/tests.zip";
-//    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-//    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
     private static final MapFactory CREATOR = new MemMapFactory();
     private static final NamespaceListener LISTENER = new NamespaceListenerImpl(CREATOR);
+//    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
+//    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
 //    private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesEventReaderFactory(CREATOR);
     private SableCcTurtleParserFactory factory;
     private TurtleAnalyser analyser;

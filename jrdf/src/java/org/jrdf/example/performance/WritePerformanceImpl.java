@@ -59,27 +59,28 @@
 
 package org.jrdf.example.performance;
 
+import org.jrdf.collection.MapFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.RdfWriter;
-import org.jrdf.writer.mem.MemRdfNamespaceMap;
-import org.jrdf.writer.rdfxml.RdfXmlWriter;
 import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.RdfNamespaceMapImpl;
+import org.jrdf.writer.RdfWriter;
+import org.jrdf.writer.rdfxml.RdfXmlWriter;
 
-import java.io.Writer;
-import java.io.FileWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
 
 public class WritePerformanceImpl implements WritePerformance {
     private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
 
-    public void writePerformance(Graph graph, GraphPerformance performance, BlankNodeRegistry registry)
-        throws Exception {
+    public void writePerformance(Graph graph, GraphPerformance performance, BlankNodeRegistry registry,
+        MapFactory mapFactory) throws Exception {
         long startTime = System.currentTimeMillis();
         Writer out = new FileWriter(new File(dirHandler.getDir(), "foo.rdf"));
         try {
             registry.clear();
-            RdfWriter writer = new RdfXmlWriter(registry, new MemRdfNamespaceMap());
+            RdfWriter writer = new RdfXmlWriter(registry, new RdfNamespaceMapImpl(mapFactory));
             try {
                 writer.write(graph, out);
             } finally {
