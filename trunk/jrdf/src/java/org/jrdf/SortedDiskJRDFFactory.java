@@ -87,7 +87,11 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 
 /**
- * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
+ * A factory for that used secondary storage to store JRDF Graphs using BDB JE and a BTree.  These graphs are meant
+ * to be transistory i.e. used to store graphs that would not fit in memory but are not meant to be kept permanently.
+ * Returns sorted results.
+ * <p/>
+ * For graphs that need to be retrieved over many calls {@see org.jrdf.PersistentJRDFFactoryImpl}.
  *
  * @author Andrew Newman
  * @version $Id$
@@ -150,7 +154,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
 
     private BTree[] createBTrees() {
         return new BTree[]{btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
-                btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
-                btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
+            btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
+            btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
     }
 }

@@ -85,6 +85,16 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 
+/**
+ * A factory for that used secondary storage to store JRDF Graphs using only BDB JE.  These graphs are meant
+ * to be transistory i.e. used to store graphs that would not fit in memory but are not meant to be kept permanently.
+ * Returns sorted results.
+ * <p/>
+ * For graphs that need to be retrieved over many calls {@see org.jrdf.PersistentJRDFFactoryImpl}.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public final class SortedDiskBdbJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
