@@ -58,11 +58,17 @@
 
 package org.jrdf.parser.turtle;
 
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.NamespaceListenerImpl;
+import org.jrdf.parser.RDFEventReader;
+import org.jrdf.parser.RDFEventReaderFactory;
+import org.jrdf.parser.line.LineParserTestUtil;
+import org.jrdf.parser.ntriples.NTriplesEventReaderFactory;
 import org.jrdf.parser.turtle.parser.TurtleAnalyser;
 import org.jrdf.parser.turtle.parser.TurtleAnalyserImpl;
 import org.jrdf.parser.turtle.parser.lexer.LexerException;
@@ -77,6 +83,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Set;
 
+import static java.net.URI.create;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
@@ -86,9 +93,9 @@ public class SableCcTurtleReaderIntegrationTest {
     private static final String TEST_ZIP_FILE = "org/jrdf/parser/turtle/tests.zip";
     private static final MapFactory CREATOR = new MemMapFactory();
     private static final NamespaceListener LISTENER = new NamespaceListenerImpl(CREATOR);
-//    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-//    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
-//    private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesEventReaderFactory(CREATOR);
+    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
+    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getGraph();
+    private static final RDFEventReaderFactory NTRIPLES_RDF_INPUT_FACTORY = new NTriplesEventReaderFactory(CREATOR);
     private SableCcTurtleParserFactory factory;
     private TurtleAnalyser analyser;
 
@@ -99,7 +106,7 @@ public class SableCcTurtleReaderIntegrationTest {
     }
 
     @Test
-    public void testParseFile() throws Exception {
+    public void parseFile() throws Exception {
         final InputStream input = getSampleData(getClass(), TEST_DATA);
         final Reader streamReader = new InputStreamReader(input);
         final Parser parser = factory.getParser(streamReader);
@@ -108,23 +115,21 @@ public class SableCcTurtleReaderIntegrationTest {
     }
 
     @Test
-    public void testBadTurtleFiles() throws Exception {
+    public void badTurtleFiles() throws Exception {
         for (int i = 0; i <= 14; i++) {
             String fileName = "bad-" + String.format("%02d", i) + ".ttl";
             checkParsingFileFailsFromZip(fileName);
         }
     }
 
-//    @Test
-//    public void testGoodTurtleFiles() throws Exception {
-//        for (int i = 0; i <= 14; i++) {
-//            String fileName = "test-" + String.format("%02d", i);
-//            System.err.println("File: " + fileName);
-//            getActualTriplesFromZip(fileName);
-//            final Set<Triple> actualResults = getExpectedTriples(fileName);
-//            System.err.println("Got: " + actualResults);
-//        }
-//    }
+    @Test
+    public void goodTurtleFiles() throws Exception {
+        for (int i = 0; i <= 16; i++) {
+            String fileName = "test-" + String.format("%02d", i);
+            getActualTriplesFromZip(fileName);
+            final Set<Triple> actualResults = getExpectedTriples(fileName);
+        }
+    }
 
     private void checkParsingFileFailsFromZip(String fileName) throws Exception {
         final InputStream input = getSampleData(getClass(), TEST_ZIP_FILE, fileName);
@@ -148,14 +153,14 @@ public class SableCcTurtleReaderIntegrationTest {
         }
     }
 
-//    private void getActualTriplesFromZip(String fileName) throws Exception {
-//        final InputStream input = getSampleData(getClass(), TEST_ZIP_FILE, fileName + ".ttl");
-//        try {
-//            getActualTriples(input);
-//        } finally {
-//            input.close();
-//        }
-//    }
+    private void getActualTriplesFromZip(String fileName) throws Exception {
+        final InputStream input = getSampleData(getClass(), TEST_ZIP_FILE, fileName + ".ttl");
+        try {
+            getActualTriples(input);
+        } finally {
+            input.close();
+        }
+    }
 
     private Set<Triple> getActualTriples(InputStream input) throws Exception {
         Reader streamReader = new InputStreamReader(input);
@@ -169,14 +174,14 @@ public class SableCcTurtleReaderIntegrationTest {
         }
     }
 
-//    private Set<Triple> getExpectedTriples(String fileName) throws Exception {
-//        final InputStream expectedOutput = getSampleData(getClass(), TEST_ZIP_FILE, fileName + ".out");
-//        try {
-//            final RDFEventReader eventReader = NTRIPLES_RDF_INPUT_FACTORY.createRDFEventReader(expectedOutput,
-//                create("foo"), NEW_GRAPH);
-//            return getTriplesWithReader(eventReader);
-//        } finally {
-//            expectedOutput.close();
-//        }
-//    }
+    private Set<Triple> getExpectedTriples(String fileName) throws Exception {
+        final InputStream expectedOutput = getSampleData(getClass(), TEST_ZIP_FILE, fileName + ".out");
+        try {
+            final RDFEventReader eventReader = NTRIPLES_RDF_INPUT_FACTORY.createRDFEventReader(expectedOutput,
+                create("foo"), NEW_GRAPH);
+            return LineParserTestUtil.getTriplesWithReader(eventReader);
+        } finally {
+            expectedOutput.close();
+        }
+    }
 }
