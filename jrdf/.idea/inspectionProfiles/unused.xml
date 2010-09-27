@@ -102,7 +102,7 @@
       <option name="m_reportEmptyBlocks" value="false" />
     </inspection_tool>
     <inspection_tool class="EmptyTryBlock" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="EmptyWebServiceClass" level="WARNING" enabled="false" />
+    <inspection_tool class="EmptyWebServiceClass" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="EqualsBetweenInconvertibleTypes" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="EqualsWhichDoesntCheckParameterClass" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ExceptionCaughtLocallyJS" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -114,7 +114,8 @@
     <inspection_tool class="FinalPrivateMethod" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="FinalStaticMethod" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="FinalizeCallsSuperFinalize" enabled="false" level="WARNING" enabled_by_default="false">
-      <option name="m_ignoreForObjectSubclasses" value="false" />
+      <option name="ignoreObjectSubclasses" value="false" />
+      <option name="ignoreTrivialFinalizers" value="true" />
     </inspection_tool>
     <inspection_tool class="FinallyBlockCannotCompleteNormally" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ForCanBeForeach" enabled="false" level="WARNING" enabled_by_default="false">
@@ -205,7 +206,7 @@
       <option name="FLAG_EXPLICIT_CONVERSION" value="true" />
       <option name="IGNORE_NODESET_TO_BOOLEAN_VIA_STRING" value="true" />
     </inspection_tool>
-    <inspection_tool class="ImplicitlyExposedWebServiceMethods" level="INFO" enabled="false" />
+    <inspection_tool class="ImplicitlyExposedWebServiceMethods" enabled="false" level="INFO" enabled_by_default="false" />
     <inspection_tool class="IncompatibleMask" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="IncompatibleMaskJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="InconsistentResourceBundle" enabled="false" level="ERROR" enabled_by_default="false">
@@ -291,7 +292,7 @@
     <inspection_tool class="MimeType" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="MismatchedArrayReadWrite" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MismatchedCollectionQueryUpdate" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="MissedExecutable" level="WARNING" enabled="false" />
+    <inspection_tool class="MissedExecutable" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MissingMnemonic" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MultipleBindingAnnotations" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MultipleInjectedConstructorsForClass" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -302,7 +303,7 @@
     <inspection_tool class="NoResourceMethodsFound" level="WARNING" enabled="false" />
     <inspection_tool class="NoScrollPane" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="NonJREEmulationClassesInClientCode" level="ERROR" enabled="false" />
-    <inspection_tool class="NonJaxWsWebServices" level="WARNING" enabled="false" />
+    <inspection_tool class="NonJaxWsWebServices" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="NonSerializableServiceParameters" level="ERROR" enabled="false" />
     <inspection_tool class="NullArgumentToVariableArgMethod" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="NullableProblems" enabled="false" level="WARNING" enabled_by_default="false">
@@ -318,7 +319,7 @@
     <inspection_tool class="ObjectEqualsNull" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="OctalLiteral" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="OneButtonGroup" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="OneWayWebMethod" level="ERROR" enabled="false" />
+    <inspection_tool class="OneWayWebMethod" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PageflowModelInspection" level="ERROR" enabled="false" />
     <inspection_tool class="PagesFileModelInspection" level="ERROR" enabled="false" />
     <inspection_tool class="PagesModelInspection" level="ERROR" enabled="false" />
@@ -488,14 +489,14 @@
     <inspection_tool class="UnusedLibrary" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnusedMessageFormatParameter" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UtilSchemaInspection" enabled="false" level="ERROR" enabled_by_default="false" />
-    <inspection_tool class="ValidExternallyBoundObject" level="ERROR" enabled="false" />
+    <inspection_tool class="ValidExternallyBoundObject" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="ValidatorConfigModelInspection" level="ERROR" enabled="false" />
     <inspection_tool class="ValidatorModelInspection" level="ERROR" enabled="false" />
-    <inspection_tool class="VoidMethodAnnotatedWithGET" level="WARNING" enabled="false" />
-    <inspection_tool class="VtlFileReferencesInspection" level="WARNING" enabled="false" />
-    <inspection_tool class="VtlInterpolationsInspection" level="ERROR" enabled="false" />
-    <inspection_tool class="VtlReferencesInspection" level="WARNING" enabled="false" />
-    <inspection_tool class="VtlTypesInspection" level="WARNING" enabled="false" />
+    <inspection_tool class="VoidMethodAnnotatedWithGET" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="VtlFileReferencesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="VtlInterpolationsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="VtlReferencesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="VtlTypesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="W3CssValidation" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="myCssVersion" value="css3" />
     </inspection_tool>
@@ -516,8 +517,8 @@
     <inspection_tool class="XsltDeclarations" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="XsltTemplateInvocation" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="XsltUnusedDeclaration" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="dependsOnMethodTestNG" level="WARNING" enabled="false" />
-    <inspection_tool class="groupsTestNG" level="WARNING" enabled="false">
+    <inspection_tool class="dependsOnMethodTestNG" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="groupsTestNG" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="groups">
         <value>
           <list size="0" />

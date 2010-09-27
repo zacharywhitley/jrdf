@@ -33,6 +33,8 @@ Helpers
 States
   def,         /* default state */
   qnameprefix, /* qname prefix */
+  inprefix,    /* prefix */
+  inbase,      /* base prefix */
   bnodeprefix, /* bnode prefix */
   qesc,        /* escaping character in quoted literal with '\' */
   dbqesc,      /* escaping character in double quoted literal with '\' */
@@ -42,8 +44,8 @@ States
   com;         /* comment */
 
 Tokens
-  {def}                prefix           = '@prefix';
-  {def}                base             = '@base';
+  {def->inprefix}      prefix           = '@prefix';
+  {def->inbase}        base             = '@base';
   {def}                verb_a           = 'a';
   {def}                comma            = ',';
   {def}                plus             = '+';
@@ -55,12 +57,12 @@ Tokens
   {def}                start_items      = '(';
   {def}                end_items        = ')';
 
-  {def, qnameprefix}              blank             = whitespace+;
-  {def}                           stmt_separator    = '.';
-  {def->qnameprefix}              prefix_name       = prefixnamestart namechar*;
-  {def->qnameprefix, qnameprefix} colon             = ':';
-  {qnameprefix->def}              name              = namestart namechar*;
-  {qnameprefix->def, def}         resource          = '<' urlchar* '>';
+  {def, inprefix, inbase, qnameprefix}       blank           = whitespace+;
+  {def}                                      stmt_separator  = '.';
+  {inprefix, def->qnameprefix}               prefix_name     = prefixnamestart namechar*;
+  {inprefix, qnameprefix, def->qnameprefix}  colon           = ':';
+  {qnameprefix->def}                         name            = namestart namechar*;
+  {inprefix->def, inbase->def, def}          resource        = '<' urlchar* '>';
 
   {def->com}                      hash           = '#';
   {com}                           comment        = [character - [lf + cr]];
@@ -113,8 +115,9 @@ Productions
     verb object_list verb_object_list* node_separator?;
 
   verb =
-    {predicate_verb} predicate |
-    {a_verb} verb_a;
+    {predicate_verb} predicate;
+/*     |
+    {a_verb} verb_a;*/
 
   object_list =
     object more_objects*;
