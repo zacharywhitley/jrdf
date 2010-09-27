@@ -170,10 +170,7 @@ class SAXFilter implements ContentHandler {
 
     public void setParseLocationListener(ParseLocationListener el) {
         locListener = el;
-
-        if (null != locator) {
-            locListener.parseLocationUpdate(locator.getLineNumber(), locator.getColumnNumber());
-        }
+        updateLineAndColumnNumber();
     }
 
     public ParseLocationListener getParseLocationListener() {
@@ -221,10 +218,7 @@ class SAXFilter implements ContentHandler {
 
     public void setDocumentLocator(Locator newLocator) {
         this.locator = newLocator;
-        if (null != locListener) {
-            locListener.parseLocationUpdate(newLocator.getLineNumber(),
-                newLocator.getColumnNumber());
-        }
+        updateLineAndColumnNumber();
     }
 
     public void startDocument() throws SAXException {
@@ -254,6 +248,7 @@ class SAXFilter implements ContentHandler {
         if (null != nsListener) {
             nsListener.handleNamespace(prefix, uri);
         }
+        updateLineAndColumnNumber();
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
@@ -315,6 +310,7 @@ class SAXFilter implements ContentHandler {
                 deferredElement = elInfo;
             }
         }
+        updateLineAndColumnNumber();
     }
 
     private void reportDeferredStartElement() throws SAXException {
@@ -497,6 +493,12 @@ class SAXFilter implements ContentHandler {
         }
 
         elInfo.setAtts(atts);
+    }
+
+    private void updateLineAndColumnNumber() {
+        if (null != locator && null != locListener) {
+            locListener.parseLocationUpdate(locator.getLineNumber(), locator.getColumnNumber());
+        }
     }
 
     public void setParseLiteralMode() {

@@ -116,7 +116,7 @@ public class TurtleAnalyserImpl extends DepthFirstAdapter implements TurtleAnaly
         String prefix = node.getNcnamePrefix().getText();
         if (!listener.hasPrefix(prefix)) {
             t = new ParserException(node.getNcnamePrefix(), "No prefix, " + prefix + ", defined for node: " +
-                node.toString());
+                    node.toString());
         }
     }
 }
