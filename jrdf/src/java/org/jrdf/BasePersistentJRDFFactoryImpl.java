@@ -112,8 +112,7 @@ public class BasePersistentJRDFFactoryImpl implements BasePersistentJRDFFactory 
 
     public GraphFactory createGraphFactory(LongIndex[] indexes, NodePoolFactory nodePoolFactory,
         IteratorTrackingCollectionFactory collectionFactory) {
-        SortedResultsGraphFactory factory = new SortedResultsGraphFactory(indexes, nodePoolFactory, collectionFactory);
-        return factory;
+        return new SortedResultsGraphFactory(indexes, nodePoolFactory, collectionFactory);
     }
 
     public boolean hasGraph(String name) {

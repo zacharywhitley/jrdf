@@ -73,7 +73,8 @@ import org.jrdf.util.btree.BTreeFactory;
 import org.jrdf.util.btree.BTreeFactoryImpl;
 
 /**
- * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
+ * Uses BDB JE and a BTree to store graphs, that can be accessed by name (using hasGraph and getGraph). Returns
+ * sorted results.
  *
  * @author Andrew Newman
  * @version $Id$

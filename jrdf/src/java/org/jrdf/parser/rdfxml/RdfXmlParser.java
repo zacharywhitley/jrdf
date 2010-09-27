@@ -236,11 +236,11 @@ public final class RdfXmlParser implements ConfigurableParser {
     }
 
     /**
-     * Creates a new RdfXmlParser that will use the supplied BlankNodeFactoryCreator and create a new map to be used
+     * Creates a new RdfXmlParser that will use the supplied MapFactory and create a new map to be used
      * by the generic ParserBlankNodeFactoryImpl.
      *
      * @param graphElementFactory A GraphElementFactory.
-     * @param creator A BlankNodeFactoryCreator.
+     * @param creator a map factory.
      */
     public RdfXmlParser(GraphElementFactory graphElementFactory, MapFactory creator) {
         this(graphElementFactory, new ParserBlankNodeFactoryImpl(creator, graphElementFactory));
