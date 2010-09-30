@@ -36,10 +36,10 @@ States
   inprefix,    /* prefix */
   inbase,      /* base prefix */
   bnodeprefix, /* bnode prefix */
-  qesc,        /* escaping character in quoted literal with '\' */
   dbqesc,      /* escaping character in double quoted literal with '\' */
-  qlit,        /* quoted literal */
+  trqesc,      /* escaping character in triple quoted literal with '\' */
   dbqlit,      /* double quoted literal */
+  trqlit,      /* triple quoted literal */
   lang,        /* language tag after literal */
   com;         /* comment */
 
@@ -64,7 +64,7 @@ Tokens
   {inprefix, def->qnameprefix}               prefix_name     = prefixnamestart namechar*;
   {inprefix, qnameprefix, def->qnameprefix}  colon           = ':';
   {qnameprefix->def}                         name            = namestart namechar*;
-  {inprefix->def, inbase->def, def}          resource        = '<' urlchar* '>';
+  {inprefix->def, inbase->def, def}          uri_ref         = '<' urlchar* '>';
 
   {def->com}                      hash           = '#';
   {com}                           comment        = [character - [lf + cr]];
@@ -77,15 +77,15 @@ Tokens
   {def}                           decimal        = digit+ '.' digit* | '.' digit+;
   {def}                           double         = digitstart ('e' | 'E') digit+;
 
-  {def->qlit, qlit->def}          quote          = quote;
-  {qlit}                          qtext          = nonquote+;
-  {qlit->qesc}                    qescape        = '\';
-  {qesc->qlit}                    qescapedtext   = character;
+  {def->dbqlit, dbqlit->def}      db_quote          = dbquote;
+  {dbqlit}                        db_q_text         = nondbquote+;
+  {dbqlit->dbqesc}                db_q_escape       = '\';
+  {dbqesc->dbqlit}                db_q_escaped_text = character;
 
-  {def->dbqlit, dbqlit->def}      dbquote        = dbquote;
-  {dbqlit}                        dbqtext        = nondbquote+;
-  {dbqlit->dbqesc}                dbqescape      = '\';
-  {dbqesc->dbqlit}                dbqescapedtext = character;
+  {def->trqlit, trqlit->def}      tr_quote          = dbquote dbquote dbquote;
+  {trqlit}                        tr_q_text         = nonquote+ | tab | lf | cr;
+  {trqlit->trqesc}                tr_q_escape       = '\';
+  {trqesc->trqlit}                tr_q_escaped_text = character;
 
   {def->lang}                     at             = '@';
   {lang->def}                     langtag        = letter+ ('-' | letter)*;
@@ -93,7 +93,7 @@ Tokens
   {def}                           datatypeprefix = '^^';
 
 Ignored Tokens
-  blank, hash, comment, endcomment, qescape, dbqescape;
+  blank, hash, comment, endcomment, db_q_escape, tr_q_escape;
 
 Productions
   start =
@@ -104,8 +104,8 @@ Productions
     {triples_stmt} triples stmt_separator ;
 
   directive =
-    {prefix_id_directive} prefix prefix_name? colon resource |
-    {base_directive} base resource;
+    {prefix_id_directive} prefix prefix_name? colon uri_ref |
+    {base_directive} base uri_ref;
 
   triples =
     subject predicate_object_list;
@@ -127,14 +127,14 @@ Productions
     node_separator verb object_list;
 
   subject =
-    {subject_resource} iri_ref_or_prefixed_name |
+    {subject_uriref} resource |
     {subject_blank} blank_node;
 
   predicate =
-    {predicate_resource} iri_ref_or_prefixed_name;
+    {predicate_uriref} resource;
 
   object =
-    {object_resource} iri_ref_or_prefixed_name |
+    {object_uriref} resource |
     {object_blank} blank_node |
     {object_literal} literal;
 
@@ -144,8 +144,8 @@ Productions
     {node_predicate_object_list} start_blank_node predicate_object_list end_blank_node |
     {collection} collection;
 
-  iri_ref_or_prefixed_name =
-    {iri_ref} resource |
+  resource =
+    uri_ref |
     {prefixed_name} qname_element;
 
   qname_element =
@@ -159,23 +159,19 @@ Productions
   rdf_literal =
     {untyped_literal} literal_value |
     {lang_literal} literal_value at [language]:langtag |
-    {typed_literal} literal_value datatype ;
+    {typed_literal} literal_value datatypeprefix resource ;
 
   literal_value =
-      {quoted_literal} [opening_quote]:quote quoted_strand* [closing_quote]:quote |
-      {db_quoted_literal} [opening_db_quote]:dbquote db_quoted_strand* [closing_db_quote]:dbquote;
-
-  quoted_strand =
-    {quoted_unescaped} qtext |
-    {quoted_escaped} qescapedtext;
+    {db_quoted_literal} [opening_db_quote]:db_quote db_quoted_strand* [closing_db_quote]:db_quote |
+    {long_db_quoted_literal} [opening_quote]:tr_quote long_db_quoted_strand* [closing_quote]:tr_quote;
 
   db_quoted_strand =
-    {db_quoted_unescaped} dbqtext |
-    {db_quoted_escaped} dbqescapedtext;
+    {db_quoted_unescaped} db_q_text |
+    {db_quoted_escaped} db_q_escaped_text;
 
-  datatype =
-    {qname_datatype} datatypeprefix qname_element |
-    {resource_datatype} datatypeprefix resource;
+  long_db_quoted_strand =
+    {triple_quoted_unescaped} tr_q_text |
+    {triple_quoted_escaped} tr_q_escaped_text;
 
   numeric_literal =
     {unsigned_numeric_literal} unsigned_numeric_literal |

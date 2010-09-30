@@ -82,9 +82,9 @@ public class TurtleAnalyserImpl extends DepthFirstAdapter implements TurtleAnaly
         super.inAPrefixIdDirectiveDirective(node);
         TPrefixName prefixName = node.getPrefixName();
         if (prefixName == null) {
-            listener.handleNamespace("", node.getResource().getText());
+            listener.handleNamespace("", node.getUriRef().getText());
         } else {
-            listener.handleNamespace(prefixName.getText(), node.getResource().getText());
+            listener.handleNamespace(prefixName.getText(), node.getUriRef().getText());
         }
     }
 
