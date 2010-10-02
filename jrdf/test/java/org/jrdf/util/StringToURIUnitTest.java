@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,34 +54,69 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.util;
 
-import junit.framework.TestCase;
+import org.jrdf.util.test.AssertThrows;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.jrdf.util.EscapeURL.toEscapedString;
+import static org.jrdf.util.StringToURI.*;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.expectNew;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
-public class EscapeURLUnitTest {
-
+@RunWith(PowerMockRunner.class)
+public class StringToURIUnitTest {
     @Test
-    public void spacesEncodeToPercent20() {
-        assertThat(toEscapedString(getURL("file:/foo bar")), equalTo("file:///foo%20bar"));
-        assertThat(toEscapedString(getURL("file:///foo bar")), equalTo("file:///foo%20bar"));
+    public void stringThatMightBeAURI() {
+        assertThat(toURI("steve"), equalTo(URI.create("steve")));
     }
 
-    private URL getURL(String url) {
-        try {
-            return new URL(url);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+    @Test
+    public void stringThatIsntAURI() {
+        assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                toURI("\u0001");
+            }
+        });
+    }
+
+    @Test
+    public void stringThatIsAURIWithAScheme() {
+        assertThat(toURI("http://foo"), equalTo(URI.create("http://foo")));
+    }
+
+    @Test
+    public void stringThatIsAURIWithASchemeAndUnicodeCharacterToEscape() throws Exception {
+        assertThat(toURI("http://foo\u0001 "), equalTo(URI.create("http://foo%01%20")));
+    }
+
+    @Test
+    public void stringThatIsAURIWithASchemeAndFragment() {
+        assertThat(toURI("http://foo#bar"), equalTo(URI.create("http://foo#bar")));
+    }
+
+    @Test
+    @PrepareForTest(StringToURI.class)
+    public void throwsAnExceptionWhenTryingToCreateURI() throws Exception {
+        expectNew(URI.class, "foo", "bar", null).andThrow(new URISyntaxException("foo:bar", "Bad"));
+        replayAll();
+        assertThrows(IllegalArgumentException.class, "Not a valid URI: foo:bar", new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                toURI("foo:bar");
+            }
+        });
+        verifyAll();
     }
 }

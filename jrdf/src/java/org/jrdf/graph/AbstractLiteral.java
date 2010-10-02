@@ -299,7 +299,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     public String getEscapedForm() {
         if (escapedForm == null) {
-            StringBuffer buffer = EscapeUtil.escape(getLexicalForm());
+            StringBuffer buffer = new StringBuffer(EscapeUtil.escape(getLexicalForm()));
             buffer.insert(0, "\"");
             buffer.append("\"");
             appendType(buffer);

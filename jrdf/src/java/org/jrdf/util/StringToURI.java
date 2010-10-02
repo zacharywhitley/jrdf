@@ -3,7 +3,7 @@
  * $Revision: 982 $
  * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,34 +54,44 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
 package org.jrdf.util;
 
-import junit.framework.TestCase;
-import org.junit.Test;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import static java.net.URI.*;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.jrdf.util.EscapeURL.toEscapedString;
-
-public class EscapeURLUnitTest {
-
-    @Test
-    public void spacesEncodeToPercent20() {
-        assertThat(toEscapedString(getURL("file:/foo bar")), equalTo("file:///foo%20bar"));
-        assertThat(toEscapedString(getURL("file:///foo bar")), equalTo("file:///foo%20bar"));
+public final class StringToURI {
+    private StringToURI() {
     }
 
-    private URL getURL(String url) {
+    public static URI toURI(String resource) {
+        int schemeIndex = resource.indexOf(":");
+        if (schemeIndex > 0) {
+            return handleURIWithScheme(schemeIndex, resource);
+        } else {
+            return create(resource);
+        }
+    }
+
+    private static URI handleURIWithScheme(int schemeIndex, String resource) {
+        int fragmentIndex = resource.indexOf("#");
+        if (fragmentIndex > 0) {
+            return createURI(resource.substring(0, schemeIndex), resource.substring(schemeIndex + 1, fragmentIndex),
+                    resource.substring(fragmentIndex + 1, resource.length()), resource);
+        } else {
+            return createURI(resource.substring(0, schemeIndex), resource.substring(schemeIndex + 1),
+                    null, resource);
+        }
+    }
+
+    private static URI createURI(String scheme, String schemeSpecificPart, String fragment, String resource) {
         try {
-            return new URL(url);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            return new URI(scheme, schemeSpecificPart, fragment);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Not a valid URI: " + resource);
         }
     }
 }

@@ -124,7 +124,7 @@ public class SableCcTurtleReaderIntegrationTest {
 
     @Test
     public void goodTurtleFiles() throws Exception {
-        for (int i = 0; i <= 28; i++) {
+        for (int i = 0; i <= 30; i++) {
             String fileName = "test-" + String.format("%02d", i);
             getActualTriplesFromZip(fileName);
             final Set<Triple> actualResults = getExpectedTriples(fileName);
