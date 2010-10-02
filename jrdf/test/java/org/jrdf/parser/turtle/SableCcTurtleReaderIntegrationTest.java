@@ -89,7 +89,7 @@ import static junit.framework.Assert.fail;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 
 public class SableCcTurtleReaderIntegrationTest {
-    private static final String TEST_DATA = "org/jrdf/parser/turtle/test-16.ttl";
+    private static final String TEST_DATA = "org/jrdf/parser/turtle/test.n3";
     private static final String TEST_ZIP_FILE = "org/jrdf/parser/turtle/tests.zip";
     private static final MapFactory CREATOR = new MemMapFactory();
     private static final NamespaceListener LISTENER = new NamespaceListenerImpl(CREATOR);
@@ -124,7 +124,7 @@ public class SableCcTurtleReaderIntegrationTest {
 
     @Test
     public void goodTurtleFiles() throws Exception {
-        for (int i = 0; i <= 22; i++) {
+        for (int i = 1; i <= 28; i++) {
             String fileName = "test-" + String.format("%02d", i);
             getActualTriplesFromZip(fileName);
             final Set<Triple> actualResults = getExpectedTriples(fileName);

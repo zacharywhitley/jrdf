@@ -88,4 +88,12 @@ public interface NamespaceListener {
      * @return the fully qualified URI.
      */
     String getFullURI(String prefix);
+
+    /**
+     * Allows the removal of a prefix to URI binding.
+     *
+     * @param prefix the prefix to remove.
+     * @return true if there was a prefix already bound.
+     */
+    boolean removePrefix(String prefix);
 }

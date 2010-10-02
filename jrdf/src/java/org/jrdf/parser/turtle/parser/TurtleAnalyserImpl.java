@@ -84,7 +84,11 @@ public class TurtleAnalyserImpl extends DepthFirstAdapter implements TurtleAnaly
         if (prefixName == null) {
             listener.handleNamespace("", node.getUriRef().getText());
         } else {
-            listener.handleNamespace(prefixName.getText(), node.getUriRef().getText());
+            String prefix = prefixName.getText();
+            if (listener.hasPrefix(prefix)) {
+                listener.removePrefix(prefix);
+            }
+            listener.handleNamespace(prefix, node.getUriRef().getText());
         }
     }
 

@@ -86,6 +86,15 @@ public final class NamespaceListenerImpl implements NamespaceListener, Serializa
         return map.containsKey(prefix);
     }
 
+    public boolean removePrefix(String prefix) {
+        checkNotNull(prefix);
+        if (hasPrefix(prefix)) {
+            map.remove(prefix);
+            return true;
+        }
+        return false;
+    }
+
     public void handleNamespace(String prefix, String uri) {
         checkNotNull(prefix, uri);
         final String currentValue = map.get(prefix);
