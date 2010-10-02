@@ -20,7 +20,9 @@ Helpers
   otherchars = [0x00C0..0x00D6] | [0x00D8..0x00F6] | [0x00F8..0x02FF] | [0x0370..0x037D] | [0x037F..0x1FFF] |
                [0x200C..0x200D] | [0x2070..0x218F] | [0x2C00..0x2FEF] | [0x3001..0xD7FF] | [0xF900..0xFDCF] |
                [0xFDF0..0xFFFD] ;
-  nondbquote = [character - [dbquote + '\']];
+  echaracter = [character - '\'];
+  scharacter = [echaracter - dbquote];
+  lcharacter = scharacter | tab | lf | cr;
   nonslash   = [[33..126] - sl];
   urlchar    = [character - '>'];
   echar      = 't' | 'b' | 'n' | 'r' | 'f' | '\' | dbquote | quote;
@@ -77,14 +79,15 @@ Tokens
   {def}                           double         = digitstart ('e' | 'E') digit+;
 
   {def->dbqlit, dbqlit->def}      db_quote          = dbquote;
-  {dbqlit}                        db_q_text         = nondbquote+;
+  {dbqlit}                        db_q_text         = scharacter*;
   {dbqlit->dbqesc}                db_q_escape       = '\';
   {dbqesc->dbqlit}                db_q_escaped_text = character;
 
   {def->trqlit, trqlit->def}      tr_quote          = dbquote dbquote dbquote;
-  {trqlit}                        tr_q_text         = nondbquote+ | tab | lf | cr;
+  {trqlit}                        tr_q_text         = dbquote | lcharacter*;
   {trqlit->trqesc}                tr_q_escape       = '\';
   {trqesc->trqlit}                tr_q_escaped_text = character;
+
 
   {def->lang}                     at             = '@';
   {lang->def}                     langtag        = letter+ ('-' | letter)*;

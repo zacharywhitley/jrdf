@@ -119,4 +119,13 @@ public class NamespaceListenerImplUnitTest {
                 }
             });
     }
+
+    @Test
+    public void removeAnExistingAndNonExistingNamespaces() throws Exception {
+        subject.handleNamespace("foo", "http://foo");
+        assertThat(subject.hasPrefix("foo"), is(true));
+        assertThat(subject.removePrefix("foo"), is(true));
+        assertThat(subject.hasPrefix("foo"), is(false));
+        assertThat(subject.removePrefix("foo"), is(false));
+    }
 }
