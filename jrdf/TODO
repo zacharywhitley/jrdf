@@ -13,3 +13,4 @@ o Implement SPARQL parser.
         o Aggregates (Summarize),
         o ???
 o Write a pull based RDF/XML parser.
+o Switch to parboiled (http://github.com/sirthias/parboiled/wiki) instead of SableCC.
