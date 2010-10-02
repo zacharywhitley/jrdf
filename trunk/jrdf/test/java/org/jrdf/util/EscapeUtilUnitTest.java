@@ -59,53 +59,58 @@
 package org.jrdf.util;
 
 import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.jrdf.util.EscapeUtil.escape;
 
 /**
  * Unit test for {@link EscapeUtil}.
  *
  * @author Andrew Newman
  */
-public class EscapeUtilUnitTest extends TestCase {
+public class EscapeUtilUnitTest {
 
-    public void testSurrgates() {
+    @Test
+    public void surrogateEscaping() {
         // ISO 10646 Amendment 1
         // High surrogates from D800...DBFF, low surrogates from DC00...DFFF.
-        testEscapedValue("\\U00010000", "\uD800\uDC00");
-        testEscapedValue("\\U00010001", "\uD800\uDC01");
-        testEscapedValue("\\U00010401", "\uD801\uDC01");
-        testEscapedValue("\\U00020000", "\uD840\uDC00");
-        testEscapedValue("\\U00030000", "\uD880\uDC00");
-        testEscapedValue("\\U00100000", "\uDBC0\uDC00");
-        testEscapedValue("\\U0010FFFF", "\uDBFF\uDFFF");
+        assertThat(escape("\uD800\uDC00").toString(), equalTo("\\U00010000"));
+        assertThat(escape("\uD800\uDC01").toString(), equalTo("\\U00010001"));
+        assertThat(escape("\uD801\uDC01").toString(), equalTo("\\U00010401"));
+        assertThat(escape("\uD840\uDC00").toString(), equalTo("\\U00020000"));
+        assertThat(escape("\uD880\uDC00").toString(), equalTo("\\U00030000"));
+        assertThat(escape("\uDBC0\uDC00").toString(), equalTo("\\U00100000"));
+        assertThat(escape("\uDBFF\uDFFF").toString(), equalTo("\\U0010FFFF"));
     }
 
-    public void testNearSurrogates() {
+    @Test
+    public void surrogateBoundaryEscaping() {
         // ISO 10646 Amendment 1
         // High surrogates from D800...DBFF, low surrogates from DC00...DFFF.
-        testEscapedValue("\\uD799\\uDC00", "\uD799\uDC00");
-        testEscapedValue("\\uD799\\uDC01", "\uD799\uDC01");
-        testEscapedValue("\\uD800\\uDBFF", "\uD800\uDBFF");
-        testEscapedValue("\\uD801\\uDBFF", "\uD801\uDBFF");
-        testEscapedValue("\\uDC00\\uDFFF", "\uDC00\uDFFF");
-        testEscapedValue("\\uDBFF\\uE000", "\uDBFF\uE000");
+        assertThat(escape("\uD799\uDC00").toString(), equalTo("\\uD799\\uDC00"));
+        assertThat(escape("\uD799\uDC01").toString(), equalTo("\\uD799\\uDC01"));
+        assertThat(escape("\uD800\uDBFF").toString(), equalTo("\\uD800\\uDBFF"));
+        assertThat(escape("\uD801\uDBFF").toString(), equalTo("\\uD801\\uDBFF"));
+        assertThat(escape("\uDC00\uDFFF").toString(), equalTo("\\uDC00\\uDFFF"));
+        assertThat(escape("\uDBFF\uE000").toString(), equalTo("\\uDBFF\\uE000"));
     }
 
-    public void testExampleCodePoints() {
-        testEscapedValue("\\U000233B4", "\uD84C\uDFB4");
-        testEscapedValue("\\u2260", "\u2260");
-        testEscapedValue("q", "\u0071");
-        testEscapedValue("\\u030C", "\u030c");
+    @Test
+    public void exampleCodePoints() {
+        assertThat(escape("\uD84C\uDFB4").toString(), equalTo("\\U000233B4"));
+        assertThat(escape("\u2260").toString(), equalTo("\\u2260"));
+        assertThat(escape("\u0071").toString(), equalTo("q"));
+        assertThat(escape("\u030c").toString(), equalTo("\\u030C"));
     }
 
-    public void testControlCharacters() {
-        testEscapedValue("\\\\", new String(new char[]{(char) 92}));
-        testEscapedValue("\\\"", new String(new char[]{(char) 34}));
-        testEscapedValue("\\r", new String(new char[]{(char) 13}));
-        testEscapedValue("\\n", new String(new char[]{(char) 10}));
-        testEscapedValue("\\t", new String(new char[]{(char) 9}));
-    }
-
-    private void testEscapedValue(String expectedValue, String testString) {
-        assertEquals(expectedValue, EscapeUtil.escape(testString).toString());
+    @Test
+    public void controlCharacters() {
+        assertThat(escape("\\").toString(), equalTo("\\\\"));
+        assertThat(escape("\"").toString(), equalTo("\\\""));
+        assertThat(escape("\r").toString(), equalTo("\\r"));
+        assertThat(escape("\n").toString(), equalTo("\\n"));
+        assertThat(escape("\t").toString(), equalTo("\\t"));
     }
 }

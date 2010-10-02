@@ -61,6 +61,7 @@ package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import org.jrdf.util.test.ParameterDefinition;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,6 +69,8 @@ import org.junit.runner.RunWith;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.net.URI;
+import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
 import static org.easymock.EasyMock.anyObject;
@@ -93,9 +96,10 @@ public class NTripleUtilImplUnitTest {
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
         "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
     private static final String LINE = "string" + Math.random();
-    @Mock private RegexMatcherFactory regexMatcherFactory;
-    @Mock private RegexMatcher matcher;
+    private RegexMatcherFactory regexMatcherFactory = new RegexMatcherFactoryImpl();
     private NTripleUtil util;
+    @Mock private RegexMatcher mockMatcher;
+    @Mock private RegexMatcherFactory mockRegexMatcherFactory;
 
     @Before
     public void setUp() {
@@ -118,9 +122,11 @@ public class NTripleUtilImplUnitTest {
 
     @Test
     public void unescapeLiteralCallsCreateMatcherAndFailsToFind() {
+        util = new NTripleUtilImpl(mockRegexMatcherFactory);
         final String expectedLine = "string" + Math.random();
-        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(expectedLine))).andReturn(matcher);
-        expect(matcher.find()).andReturn(false);
+        expect(mockRegexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(expectedLine))).
+                andReturn(mockMatcher);
+        expect(mockMatcher.find()).andReturn(false);
         replayAll();
         assertThat(expectedLine, is(util.unescapeLiteral(expectedLine)));
         verifyAll();
@@ -128,12 +134,12 @@ public class NTripleUtilImplUnitTest {
 
     @Test
     public void backslashEscaping() {
-        checkCharacterEscape("\\\\", "\\\\");
+        checkCharacterEscape("\\\\", "\\");
     }
 
     @Test
     public void quoteEscaping() {
-        checkCharacterEscape("\\\"", "\\\"");
+        checkCharacterEscape("\\\"", "\"");
     }
 
     @Test
@@ -153,11 +159,12 @@ public class NTripleUtilImplUnitTest {
 
     @Test
     public void incorrectEscapeCharacter() {
-        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(LINE))).andReturn(matcher);
-        expect(matcher.find()).andReturn(true);
-        expect(matcher.group(0)).andReturn("\\v");
-        expect(matcher.find()).andReturn(false);
-        matcher.appendTail((StringBuffer) anyObject());
+        util = new NTripleUtilImpl(mockRegexMatcherFactory);
+        expect(mockRegexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(LINE))).andReturn(mockMatcher);
+        expect(mockMatcher.find()).andReturn(true);
+        expect(mockMatcher.group(0)).andReturn("\\v");
+        expect(mockMatcher.find()).andReturn(false);
+        mockMatcher.appendTail((StringBuffer) anyObject());
         replayAll();
         String s = util.unescapeLiteral(LINE);
         assertThat(s, equalTo(""));
@@ -165,39 +172,26 @@ public class NTripleUtilImplUnitTest {
     }
 
     @Test
-    public void testEscapeLiteral4DigitUnicode() {
-        checkUnicode("\\u000f", 9);
+    public void escapeLiteral4DigitUnicode() {
+        checkCharacterEscape("\\u000f", "\u000f");
     }
 
     @Test
-    public void testEscapeLiteral8DigitUnicode() {
-        checkUnicode("\\U00000000f", 11);
+    public void escapeLiteral8DigitUnicode() {
+        checkCharacterEscape("\\U0000000f", "\u000f");
     }
 
-    private void checkCharacterEscape(String key, String value) {
-        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(LINE))).andReturn(matcher);
-        expect(matcher.find()).andReturn(true);
-        expect(matcher.group(0)).andReturn(key);
-        matcher.appendReplacement((StringBuffer) anyObject(), eq(value));
-        expect(matcher.find()).andReturn(false);
-        matcher.appendTail((StringBuffer) anyObject());
-        replayAll();
-        String s = util.unescapeLiteral(LINE);
-        assertThat(s, equalTo(""));
-        verifyAll();
+    @Test
+    public void testBigString() throws Exception {
+        NTripleUtilImpl util2 = new NTripleUtilImpl(new RegexMatcherFactoryImpl());
+        String s = util2.unescapeLiteral("scheme:\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\u0008\\t\\n");
+        String[] uriBits = s.split(":");
+        String enc = URLEncoder.encode(uriBits[1], "utf-8");
+        System.err.println("Got ["+ enc + "], " + new URI(uriBits[0], uriBits[1], null));
     }
 
-    private void checkUnicode(String string, int group) {
-        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(LINE))).andReturn(matcher);
-        expect(matcher.find()).andReturn(true);
-        expect(matcher.group(0)).andReturn(string);
-        expect(matcher.group(group)).andReturn("0f");
-        matcher.appendReplacement((StringBuffer) anyObject(), eq(new String(Character.toChars(15))));
-        expect(matcher.find()).andReturn(false);
-        matcher.appendTail((StringBuffer) anyObject());
-        replayAll();
-        String s = util.unescapeLiteral(LINE);
-        assertThat(s, equalTo(""));
-        verifyAll();
+    private void checkCharacterEscape(String line, String expected) {
+        String escaped = util.unescapeLiteral(line);
+        assertThat(escaped, equalTo(expected));
     }
 }
