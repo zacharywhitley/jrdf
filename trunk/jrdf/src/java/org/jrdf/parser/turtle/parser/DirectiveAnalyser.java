@@ -56,42 +56,9 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util;
+package org.jrdf.parser.turtle.parser;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import org.jrdf.parser.turtle.parser.node.Switch;
 
-import static java.net.URI.*;
-
-public final class StringToURI {
-    private StringToURI() {
-    }
-
-    public static URI toURI(String resource) {
-        int schemeIndex = resource.indexOf(":");
-        if (schemeIndex > 0) {
-            return handleURIWithScheme(schemeIndex, resource);
-        } else {
-            return create(resource);
-        }
-    }
-
-    private static URI handleURIWithScheme(int schemeIndex, String resource) {
-        int fragmentIndex = resource.indexOf("#");
-        if (fragmentIndex > 0) {
-            return createURI(resource.substring(0, schemeIndex), resource.substring(schemeIndex + 1, fragmentIndex),
-                    resource.substring(fragmentIndex + 1, resource.length()), resource);
-        } else {
-            return createURI(resource.substring(0, schemeIndex), resource.substring(schemeIndex + 1),
-                    null, resource);
-        }
-    }
-
-    private static URI createURI(String scheme, String schemeSpecificPart, String fragment, String resource) {
-        try {
-            return new URI(scheme, schemeSpecificPart, fragment);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Not a valid URI: " + resource);
-        }
-    }
+public interface DirectiveAnalyser extends Switch {
 }

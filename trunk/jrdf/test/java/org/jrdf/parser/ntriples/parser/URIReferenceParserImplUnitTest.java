@@ -107,7 +107,7 @@ public class URIReferenceParserImplUnitTest {
     @Test
     public void methodProperties() {
         checkMethodNullAndEmptyAssertions(uriReferenceParser, "parseURIReference", new ParameterDefinition(
-            new String[]{"s"}, new Class[]{String.class}));
+            new String[]{"reference"}, new Class[]{String.class}));
     }
 
     @Test

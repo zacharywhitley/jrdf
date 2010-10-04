@@ -58,38 +58,35 @@
 
 package org.jrdf.parser.turtle.parser;
 
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.turtle.parser.analysis.DepthFirstAdapter;
-import org.jrdf.parser.turtle.parser.node.APrefixIdDirectiveDirective;
+import org.jrdf.parser.turtle.parser.node.ADirectiveStmtStatement;
 import org.jrdf.parser.turtle.parser.node.AQnameElement;
-import org.jrdf.parser.turtle.parser.node.TPrefixName;
 import org.jrdf.parser.turtle.parser.parser.ParserException;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class TurtleAnalyserImpl extends DepthFirstAdapter implements TurtleAnalyser {
     private NamespaceListener listener;
     private ParserException t;
+    private Set<Triple> triples = new HashSet<Triple>();
+    private SubjectNode currentSubject;
+    private PredicateNode currentPredicate;
+    private ObjectNode currentObject;
 
     public TurtleAnalyserImpl(final NamespaceListener newListener) {
         this.listener = newListener;
     }
 
     @Override
-    public void inAPrefixIdDirectiveDirective(APrefixIdDirectiveDirective node) {
-        super.inAPrefixIdDirectiveDirective(node);
-        TPrefixName prefixName = node.getPrefixName();
-        if (prefixName == null) {
-            listener.handleNamespace("", node.getUriRef().getText());
-        } else {
-            String prefix = prefixName.getText();
-            if (listener.hasPrefix(prefix)) {
-                listener.removePrefix(prefix);
-            }
-            listener.handleNamespace(prefix, node.getUriRef().getText());
-        }
+    public void caseADirectiveStmtStatement(ADirectiveStmtStatement node) {
+        DirectiveAnalyser analyser = new DirectiveAnalyserImpl(listener);
+        node.apply(analyser);
     }
 
     @Override
@@ -106,7 +103,7 @@ public class TurtleAnalyserImpl extends DepthFirstAdapter implements TurtleAnaly
         if (t != null) {
             throw t;
         } else {
-            return Collections.emptySet();
+            return triples;
         }
     }
 

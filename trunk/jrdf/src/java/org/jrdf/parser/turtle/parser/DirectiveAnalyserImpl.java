@@ -58,48 +58,37 @@
 
 package org.jrdf.parser.turtle.parser;
 
-import org.jrdf.graph.URIReference;
 import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.ParseException;
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.parser.turtle.parser.analysis.DepthFirstAdapter;
+import org.jrdf.parser.turtle.parser.node.ABaseDirectiveDirective;
+import org.jrdf.parser.turtle.parser.node.APrefixIdDirectiveDirective;
+import org.jrdf.parser.turtle.parser.node.TPrefixName;
 
-import java.util.regex.Pattern;
-import static java.util.regex.Pattern.compile;
-
-public final class NamespaceAwareQNameAndUriRefParserImpl implements NamespaceAwareQNameParser {
-    private static final int PREFIX_GROUP = 2;
-    private static final int LOCAL_GROUP = 3;
-    private static final int URI_REF_GROUP = 4;
-    private static final Pattern REGEX = compile("((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))|" +
-        "(\\<(\\p{Alpha}[\\x20-\\x7E]*?)\\>)");
-    private final NamespaceAwareQNameParser nameParser;
-    private final RegexMatcherFactory matcherFactory;
+public class DirectiveAnalyserImpl extends DepthFirstAdapter implements DirectiveAnalyser {
     private final NamespaceListener listener;
 
-    public NamespaceAwareQNameAndUriRefParserImpl(final NamespaceAwareQNameParser newNameParser,
-        final RegexMatcherFactory newMatcherFactory, final NamespaceListener newListener) {
-        this.nameParser = newNameParser;
-        this.matcherFactory = newMatcherFactory;
-        this.listener = newListener;
+    public DirectiveAnalyserImpl(NamespaceListener newListener) {
+        listener = newListener;
     }
 
-    public URIReference parseURIReference(String s) throws ParseException {
-        return nameParser.parseURIReference(s);
-    }
-
-    public URIReference parseURIReferenceWithNamespace(String s) throws ParseException {
-        final RegexMatcher regexMatcher = matcherFactory.createMatcher(REGEX, s);
-        if (regexMatcher.matches()) {
-            String prefix = regexMatcher.group(PREFIX_GROUP);
-            String local = regexMatcher.group(LOCAL_GROUP);
-            String uriRef = regexMatcher.group(URI_REF_GROUP);
-            if (prefix != null && local != null) {
-                return parseURIReference(listener.getFullURI(prefix) + local);
-            } else if (uriRef != null) {
-                return parseURIReference(listener.getFullURI("") + uriRef);
+    @Override
+    public void caseAPrefixIdDirectiveDirective(APrefixIdDirectiveDirective node) {
+        super.inAPrefixIdDirectiveDirective(node);
+        TPrefixName prefixName = node.getPrefixName();
+        if (prefixName == null) {
+            listener.handleNamespace("", node.getUriRef().getText());
+        } else {
+            String prefix = prefixName.getText();
+            if (listener.hasPrefix(prefix)) {
+                listener.removePrefix(prefix);
             }
+            listener.handleNamespace(prefix, node.getUriRef().getText());
         }
-        return null;
+    }
+
+    @Override
+    public void caseABaseDirectiveDirective(ABaseDirectiveDirective node) {
+        super.caseABaseDirectiveDirective(node);
+        listener.handleNamespace("", node.getUriRef().getText());
     }
 }
