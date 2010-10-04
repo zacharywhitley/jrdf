@@ -69,8 +69,6 @@ import org.junit.runner.RunWith;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.net.URI;
-import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
 import static org.easymock.EasyMock.anyObject;
@@ -94,7 +92,7 @@ public class NTripleUtilImplUnitTest {
     private static final Class<?> TEST_CLASS = NTripleUtilImpl.class;
     private static final Class[] PARAM_TYPES = {RegexMatcherFactory.class};
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
-        "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
+            "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
     private static final String LINE = "string" + Math.random();
     private RegexMatcherFactory regexMatcherFactory = new RegexMatcherFactoryImpl();
     private NTripleUtil util;
@@ -117,7 +115,7 @@ public class NTripleUtilImplUnitTest {
     @Test
     public void methodProperties() {
         checkMethodNullAssertions(util, "unescapeLiteral", new ParameterDefinition(
-            new String[]{"literal"}, new Class[]{String.class}));
+                new String[]{"literal"}, new Class[]{String.class}));
     }
 
     @Test
@@ -179,15 +177,6 @@ public class NTripleUtilImplUnitTest {
     @Test
     public void escapeLiteral8DigitUnicode() {
         checkCharacterEscape("\\U0000000f", "\u000f");
-    }
-
-    @Test
-    public void testBigString() throws Exception {
-        NTripleUtilImpl util2 = new NTripleUtilImpl(new RegexMatcherFactoryImpl());
-        String s = util2.unescapeLiteral("scheme:\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\u0008\\t\\n");
-        String[] uriBits = s.split(":");
-        String enc = URLEncoder.encode(uriBits[1], "utf-8");
-        System.err.println("Got ["+ enc + "], " + new URI(uriBits[0], uriBits[1], null));
     }
 
     private void checkCharacterEscape(String line, String expected) {

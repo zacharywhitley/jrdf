@@ -58,7 +58,6 @@
  */
 package org.jrdf.util;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

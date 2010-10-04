@@ -59,7 +59,6 @@
 
 package org.jrdf.util;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
