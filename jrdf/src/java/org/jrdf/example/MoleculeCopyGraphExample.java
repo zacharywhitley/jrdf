@@ -98,7 +98,7 @@ import static org.jrdf.example.performance.ReadRdfUrlTestUtil.getDocumentURL;
 import static org.jrdf.example.performance.ReadRdfUrlTestUtil.getInputStream;
 import static org.jrdf.util.EscapeURL.toEscapedString;
 
-public class CopyGraphExample {
+public class MoleculeCopyGraphExample {
     private static final String DEFAULT_RDF_URL = "http://planetrdf.com/index.rdf";
     private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactory.getFactory();
     private static final GlobalJRDFFactory GLOBAL_JRDF_FACTORY = SortedMemoryGlobalJRDFFactory.getFactory();
@@ -120,6 +120,7 @@ public class CopyGraphExample {
                 Molecule molecule = graphBuilder.next();
                 destGraph.add(molecule);
             }
+            System.out.println("Graph: " + destGraph);
         } finally {
             in.close();
         }
