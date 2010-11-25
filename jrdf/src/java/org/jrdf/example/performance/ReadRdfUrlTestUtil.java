@@ -1,9 +1,9 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
- * ====================================================================
+ *  ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
@@ -54,58 +54,50 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.example;
-
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactory;
-import org.jrdf.collection.MemMapFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.util.ClosableIterable;
+package org.jrdf.example.performance;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
-
-import static org.jrdf.example.performance.ReadRdfUrlTestUtil.getDocumentURL;
-import static org.jrdf.example.performance.ReadRdfUrlTestUtil.getInputStream;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import static org.jrdf.util.EscapeURL.toEscapedString;
+import java.net.URLConnection;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 /**
- * A simple example of parsing in a RDF/XML file into an in memory JRDF graph.
- *
- * @author Andrew Newman
- * @version $Revision$
+ * Tries to get a resource with Gzip or Deflate.
  */
-public final class RdfXmlParserExample {
-    private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactory.getFactory();
-    private static final String DEFAULT_RDF_URL = "http://planetrdf.com/index.rdf";
+public final class ReadRdfUrlTestUtil {
 
-    public static void main(String[] args) throws Exception {
-        URL url = getDocumentURL(args, DEFAULT_RDF_URL);
-        InputStream in = getInputStream(url);
-        try {
-            final Graph jrdfMem = JRDF_FACTORY.getGraph();
-            Parser parser = new GraphRdfXmlParser(jrdfMem, new MemMapFactory());
-            parser.parse(in, toEscapedString(url));
-            ClosableIterable<Triple> triples = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-            try {
-                for (Triple triple : triples) {
-                    System.out.println("Graph: " + triple);
-                }
-                System.out.println("Total number of statements: " + jrdfMem.getNumberOfTriples());
-            } finally {
-                triples.iterator().close();
-            }
-        } finally {
-            in.close();
+    private ReadRdfUrlTestUtil() {
+    }
+
+    public static URL getDocumentURL(String[] args, String defaultRdfUrl) throws MalformedURLException {
+        String baseURL;
+        if (args.length == 0 || args[0].length() == 0) {
+            System.out.println("First argument empty so using: " + defaultRdfUrl);
+            baseURL = defaultRdfUrl;
+        } else {
+            baseURL = args[0];
         }
+        return new URL(baseURL);
+    }
+
+    public static InputStream getInputStream(URL url) throws Exception {
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+        urlConnection.connect();
+        String encoding = urlConnection.getContentEncoding();
+        InputStream in;
+        if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
+            in = new GZIPInputStream(urlConnection.getInputStream());
+        } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
+            in = new InflaterInputStream(urlConnection.getInputStream(), new Inflater(true));
+        } else {
+            in = urlConnection.getInputStream();
+        }
+        return in;
     }
 }
