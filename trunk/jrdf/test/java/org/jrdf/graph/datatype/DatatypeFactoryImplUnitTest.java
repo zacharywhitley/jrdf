@@ -187,6 +187,13 @@ public class DatatypeFactoryImplUnitTest {
     }
 
     @Test
+    public void integerCanonicalValues() {
+        checkCreatingValue("000", XSD.INTEGER, "0");
+        DatatypeValue value = new IntegerValue().create("001");
+        assertThat(value.getLexicalForm(), equalTo("1"));
+    }
+
+    @Test
     public void testNonPositiveIntegerValue() {
         //test different correct format
         checkWrongStringValueAndCreate(ZERO, XSD.NON_POSITIVE_INTEGER);
@@ -231,9 +238,13 @@ public class DatatypeFactoryImplUnitTest {
     }
 
     private void checkCreatingValue(String strToParse, URI uri) {
+        checkCreatingValue(strToParse, uri, strToParse);
+    }
+
+    private void checkCreatingValue(String strToParse, URI uri, String lexicalValue) {
         DatatypeValue value = datatypeFactory.createValue(uri, strToParse);
         assertThat("Should parse correctly with expected value, got: " + value.getClass(),
             datatypeFactory.correctValueType(value, uri), is(true));
-        assertThat(value.getLexicalForm(), equalTo(strToParse));
+        assertThat(value.getLexicalForm(), equalTo(lexicalValue));
     }
 }

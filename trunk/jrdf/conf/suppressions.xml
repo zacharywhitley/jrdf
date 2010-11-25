@@ -32,6 +32,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="TurtleEventReaderFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="TurtleParserFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="NumericExpressionAnalyserImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="CopyGraphExample"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
