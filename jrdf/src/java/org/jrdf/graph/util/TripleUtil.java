@@ -57,46 +57,51 @@
  *
  */
 
-package org.jrdf.graph.local.util;
+package org.jrdf.graph.util;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 
-import java.util.Iterator;
+import java.util.Set;
 
-public interface GraphToGraphMapper {
+/**
+ * Provides methods for returning all the triples in a given graph for a given node including the blank nodes that are
+ * found in any of the triples.  So a graph <u1> <u1> <_1>, <_1> <u2> <_2> will return the all of triples if you call
+ * getAllTriplesForSubjectNode(<u1>, graph) - as the first triple has _1 in it and the blank node _1 in the first
+ * triple is found in the second.
+ */
+public interface TripleUtil {
     /**
-     * Returns the target graph.
+     * Get all the triples (including any blank nodes that are found) for a given node.
      *
-     * @return the target graph.
+     * @param graph the graph to search
+     * @param node to find(node, *, *), find (*, node, *), find (*, *, node)
+     * @return a set of triples for the node and any blank nodes found in any triples it is found in.
+     * @throws GraphException
      */
-    Graph getGraph();
+    Set<Triple> getAllTriplesForNode(Graph graph, Node node) throws GraphException;
 
     /**
-     *  Converts a triple from one graph and puts it into the target graph.
+     * Get all triples (including any blank nodes that are found) for a given subject node.
      *
-     * @param triple The source graph triple.
-     * @throws GraphElementFactoryException if there was an error creating the new resources.
-     * @throws GraphException if there was an error adding the new resources.
+     * @param graph the graph to search
+     * @param subjectNode to find(subjectNode, *, *)
+     * @return a set of triples that contain the subject node and any blank nodes found in any triples it is found in.
+     * @throws GraphException if there is an exception finding the nodes in the graph.
      */
-    void addTripleToGraph(Triple triple) throws GraphException;
+    Set<Triple> getAllTriplesForSubjectNode(Graph graph, SubjectNode subjectNode) throws GraphException;
 
-    void updateBlankNodes(Triple triple) throws GraphElementFactoryException;
-
-    Graph createNewTriples(Iterator<Triple> it) throws GraphException;
-
-    Node createNewNode(Node node) throws GraphElementFactoryException;
-
-    void replaceObjectNode(Node node, Node newNode) throws GraphException;
-
-    void replaceSubjectNode(Node node, Node newNode) throws GraphException;
-
-    void replacePredicateNode(Node node, Node newNode) throws GraphException;
-
-    void replaceNode(Node node, Node newNode) throws GraphException;
-
-    void close();
+    /**
+     * Get all triples (including any blank nodes that are found) for a given object node.
+     *
+     * @param graph the graph to search
+     * @param objectNode to find(*, *, objectNode)
+     * @return a set of triples contain the object node and any blank nodes found in any triples it is found in.
+     * @throws GraphException if there is an exception finding the nodes in the graph.
+     */
+    Set<Triple> getAllTriplesForObjectNode(Graph graph, ObjectNode objectNode) throws GraphException;
 }
