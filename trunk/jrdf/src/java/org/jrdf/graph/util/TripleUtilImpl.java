@@ -57,13 +57,9 @@
  *
  */
 
-package org.jrdf.graph.local.util;
+package org.jrdf.graph.util;
 
 import org.jrdf.collection.CollectionFactory;
-import org.jrdf.graph.AbstractBlankNode;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
@@ -73,139 +69,93 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.util.ClosableIterable;
 
 import java.util.Set;
+import java.util.SortedSet;
+
+import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 
 public class TripleUtilImpl implements TripleUtil {
     private final CollectionFactory setFactory;
-    private Set<Triple> triplesWithNode;
     private Set<BlankNode> blankNodes;
-    private Graph graph;
-    private TripleComparator tripleComparator;
+    private GraphToSetOfTriples triples;
 
     public TripleUtilImpl(CollectionFactory newSetFactory) {
-        this.setFactory = newSetFactory;
+        this(newSetFactory, null);
     }
 
     public TripleUtilImpl(CollectionFactory newSetFactory, TripleComparator comparator) {
         this.setFactory = newSetFactory;
-        this.tripleComparator = comparator;
+        this.triples = new GraphToSetOfTriplesImpl(setFactory, comparator);
     }
 
-    public Set<Triple> getAllTriplesForSubjectNode(SubjectNode node, Graph newGraph) throws GraphException {
-        graph = newGraph;
-        createTriplesSet();
+    public SortedSet<Triple> getAllTriplesForSubjectNode(Graph newGraph, SubjectNode node) throws GraphException {
         blankNodes = setFactory.createSet(BlankNode.class);
-        addTriplesToSet(triplesWithNode, node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        getAllTriplesForNode(node);
+        SortedSet<Triple> triplesWithNode = triples.graphToSetOfTriples(newGraph, node, ANY_PREDICATE_NODE,
+            ANY_OBJECT_NODE);
+        getAllTriplesForNodeAndAnyBlankNodes(triplesWithNode, node, newGraph);
         return triplesWithNode;
     }
 
-    public Set<Triple> getAllTriplesForObjectNode(ObjectNode node, Graph newGraph) throws GraphException {
-        graph = newGraph;
-        createTriplesSet();
+    public SortedSet<Triple> getAllTriplesForObjectNode(Graph newGraph, ObjectNode node) throws GraphException {
         blankNodes = setFactory.createSet(BlankNode.class);
-        addTriplesToSet(triplesWithNode, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, node);
-        getAllTriplesForNode(node);
+        SortedSet<Triple> triplesWithNode = triples.graphToSetOfTriples(newGraph, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+            node);
+        getAllTriplesForNodeAndAnyBlankNodes(triplesWithNode, node, newGraph);
         return triplesWithNode;
     }
 
-    public Set<Triple> getAllTriplesForNode(Node node, Graph newGraph) throws GraphException {
-        graph = newGraph;
-        createTriplesSet();
+    public SortedSet<Triple> getAllTriplesForNode(Graph newGraph, Node node) throws GraphException {
         blankNodes = setFactory.createSet(BlankNode.class);
-        // TODO Change to use NodePositionVisitor if waranted
+        // Nodes are always object nodes
+        SortedSet<Triple> triplesWithNode = triples.graphToSetOfTriples(newGraph, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+            (ObjectNode) node);
+        // Add any if it's a bnode or URIRef
         if (SubjectNode.class.isAssignableFrom(node.getClass())) {
-            addTriplesToSet(triplesWithNode, (SubjectNode) node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            triples.addGraphToSetOfTriples(triplesWithNode, newGraph, (SubjectNode) node, ANY_PREDICATE_NODE,
+                ANY_OBJECT_NODE);
         }
+        // Add any if it's a URIRef
         if (PredicateNode.class.isAssignableFrom(node.getClass())) {
-            addTriplesToSet(triplesWithNode, ANY_SUBJECT_NODE, (PredicateNode) node, ANY_OBJECT_NODE);
+            triples.addGraphToSetOfTriples(triplesWithNode, newGraph, ANY_SUBJECT_NODE, (PredicateNode) node,
+                ANY_OBJECT_NODE);
         }
-        if (ObjectNode.class.isAssignableFrom(node.getClass())) {
-            addTriplesToSet(triplesWithNode, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, (ObjectNode) node);
-        }
-        getAllTriplesForNode(node);
+        getAllTriplesForNodeAndAnyBlankNodes(triplesWithNode, node, newGraph);
         return triplesWithNode;
     }
 
-    public Set<Triple> getAllTriplesForTriple(Triple triple, Graph newGraph) throws GraphException {
-        graph = newGraph;
-        createTriplesSet();
-        triplesWithNode.add(triple);
-        if (AbstractBlankNode.isBlankNode(triple.getSubject())) {
-            triplesWithNode = this.getAllTriplesForSubjectNode(triple.getSubject(), graph);
-        }
-        if (AbstractBlankNode.isBlankNode(triple.getObject())) {
-            triplesWithNode.addAll(this.getAllTriplesForObjectNode(triple.getObject(), graph));
-        }
-        return triplesWithNode;
-    }
-
-    private void createTriplesSet() {
-        if (tripleComparator == null) {
-            triplesWithNode = setFactory.createSet(Triple.class);
-        } else {
-            triplesWithNode = setFactory.createSet(Triple.class, tripleComparator);
-        }
-    }
-
-    /**
-     * Get all the triples that contain node, and all the other triples that contain blank nodes appear
-     * in the existing triples recursively.
-     *
-     * @param node
-     * @return
-     * @throws GraphException
-     */
-    private void getAllTriplesForNode(Node node) throws GraphException {
-        getAllBNodesForNode(node);
+    private void getAllTriplesForNodeAndAnyBlankNodes(SortedSet<Triple> triplesWithNode, Node node, Graph newGraph)
+        throws GraphException {
+        getAllBNodesForNode(node, newGraph);
         for (BlankNode bNode : blankNodes) {
-            addTriplesToSet(triplesWithNode, bNode, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-            addTriplesToSet(triplesWithNode, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, bNode);
+            triples.addGraphToSetOfTriples(triplesWithNode, newGraph, bNode, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            triples.addGraphToSetOfTriples(triplesWithNode, newGraph, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, bNode);
         }
     }
 
-    private void addTriplesToSet(Set<Triple> set, SubjectNode subjectNode, PredicateNode predicateNode,
-        ObjectNode objectNode) throws GraphException {
-        ClosableIterable<Triple> triples = graph.find(subjectNode, predicateNode, objectNode);
-        try {
-            for (Triple triple : triples) {
-                set.add(triple);
-            }
-        } finally {
-            triples.iterator().close();
-        }
-    }
-
-    /**
-     * Return all blank nodes related to this particular node.
-     *
-     * @param node
-     * @return
-     * @throws GraphException
-     */
-    private void getAllBNodesForNode(Node node) throws GraphException {
-        Set<Triple> tmpSet = setFactory.createSet(Triple.class);
+    private void getAllBNodesForNode(Node node, Graph newGraph) throws GraphException {
+        SortedSet<Triple> tmpSet = setFactory.createSet(Triple.class);
         if (SubjectNode.class.isAssignableFrom(node.getClass())) {
-            addTriplesToSet(tmpSet, (SubjectNode) node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            triples.addGraphToSetOfTriples(tmpSet, newGraph, (SubjectNode) node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         }
         if (ObjectNode.class.isAssignableFrom(node.getClass())) {
-            addTriplesToSet(tmpSet, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, (ObjectNode) node);
+            triples.addGraphToSetOfTriples(tmpSet, newGraph, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, (ObjectNode) node);
         }
         for (Triple triple : tmpSet) {
             final SubjectNode sNode = triple.getSubject();
-            addBlankNodeToSet(sNode);
+            addBlankNodeToSet(sNode, newGraph);
             final ObjectNode oNode = triple.getObject();
-            addBlankNodeToSet(oNode);
+            addBlankNodeToSet(oNode, newGraph);
         }
-        tmpSet.clear();
     }
 
-    private void addBlankNodeToSet(Node sNode) throws GraphException {
-        if (AbstractBlankNode.isBlankNode(sNode) && !blankNodes.contains(sNode)) {
+    private void addBlankNodeToSet(Node sNode, Graph newGraph) throws GraphException {
+        if (isBlankNode(sNode) && !blankNodes.contains(sNode)) {
             blankNodes.add((BlankNode) sNode);
-            getAllBNodesForNode(sNode);
+            getAllBNodesForNode(sNode, newGraph);
         }
     }
 }

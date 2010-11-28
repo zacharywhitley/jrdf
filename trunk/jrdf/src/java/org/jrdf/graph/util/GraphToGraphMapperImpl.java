@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.util;
+package org.jrdf.graph.util;
 
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.collection.MapFactory;

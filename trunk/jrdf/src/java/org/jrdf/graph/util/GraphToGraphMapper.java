@@ -57,49 +57,46 @@
  *
  */
 
-package org.jrdf.graph.local.util;
+package org.jrdf.graph.util;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 
-public interface CopyGraphUtil {
+import java.util.Iterator;
+
+public interface GraphToGraphMapper {
     /**
-     * Copies all the triples in source graph to target graph, respecting the blank node "identifies".
+     * Returns the target graph.
      *
-     * @param sourceGraph
-     * @param targetGraph
-     * @return a merged graph.
-     * @throws GraphException
+     * @return the target graph.
      */
-    Graph copyGraph(Graph sourceGraph, Graph targetGraph) throws GraphException;
-
-    /**
-     * Given a node, copies all the triples that include.
-     * (1) triples that contain this node
-     * (2) triples in (1) & (2) that contain blank nodes (recursively)
-     *
-     * @param sourceGraph
-     * @param targetGraph
-     * @param node @return
-     * @throws GraphException
-     */
-    Node copyTriplesForNode(Graph sourceGraph, Graph targetGraph, Node node, Node newNode)
-        throws GraphException;
-
     Graph getGraph();
 
-    SubjectNode copyTriplesForSubjectNode(Graph newSourceGraph, Graph newTargetGraph,
-        SubjectNode node, SubjectNode newNode)
-        throws GraphException;
+    /**
+     *  Converts a triple from one graph and puts it into the target graph.
+     *
+     * @param triple The source graph triple.
+     * @throws GraphElementFactoryException if there was an error creating the new resources.
+     * @throws GraphException if there was an error adding the new resources.
+     */
+    void addTripleToGraph(Triple triple) throws GraphException;
 
-    ObjectNode copyTriplesForObjectNode(Graph newSourceGraph, Graph newTargetGraph,
-        ObjectNode node, ObjectNode newNode)
-        throws GraphException;
+    void updateBlankNodes(Triple triple) throws GraphElementFactoryException;
 
-    void replaceNode(Graph newTargetGraph, Node oldNode, Node newNode) throws GraphException;
+    Graph createNewTriples(Iterator<Triple> it) throws GraphException;
+
+    Node createNewNode(Node node) throws GraphElementFactoryException;
+
+    void replaceObjectNode(Node node, Node newNode) throws GraphException;
+
+    void replaceSubjectNode(Node node, Node newNode) throws GraphException;
+
+    void replacePredicateNode(Node node, Node newNode) throws GraphException;
+
+    void replaceNode(Node node, Node newNode) throws GraphException;
 
     void close();
 }

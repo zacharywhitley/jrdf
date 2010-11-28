@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.util;
+package org.jrdf.graph.util;
 
 import org.jrdf.collection.CollectionFactory;
 import org.jrdf.collection.MapFactory;
@@ -126,7 +126,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
             mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory, setFactory);
         }
         try {
-            Set<Triple> set = tripleUtil.getAllTriplesForNode(node, newSourceGraph);
+            Set<Triple> set = tripleUtil.getAllTriplesForNode(newSourceGraph, node);
             createNewGraph(set);
             return newNode;
         } catch (Exception e) {
@@ -149,7 +149,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         SubjectNode node, SubjectNode newNode) throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory, setFactory);
         try {
-            Set<Triple> set = tripleUtil.getAllTriplesForSubjectNode(node, newSourceGraph);
+            Set<Triple> set = tripleUtil.getAllTriplesForSubjectNode(newSourceGraph, node);
             createNewGraph(set);
             set.clear();
             mapper.replaceSubjectNode(node, newNode);
@@ -163,7 +163,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         ObjectNode newNode) throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory, setFactory);
         try {
-            Set<Triple> set = tripleUtil.getAllTriplesForObjectNode(node, newSourceGraph);
+            Set<Triple> set = tripleUtil.getAllTriplesForObjectNode(newSourceGraph, node);
             createNewGraph(set);
             mapper.replaceObjectNode(node, newNode);
             set.clear();
