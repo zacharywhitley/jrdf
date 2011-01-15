@@ -1,3 +1,9 @@
+JRDF Release 0.5.6.2
+====================
+* Implemented an in memory Turtle parser which complete W3C compliance (http://www.w3.org/TeamSubmission/turtle/tests/)
+* Added line numbers to RDF/XML parsing (Bug 3076478).
+* Fixed bug with RDF/XML writer being used with default Java 6 parser libraries (Bug 3025409).
+
 JRDF Release 0.5.6.1
 ====================
 * Implement SPARQL 1.1 RESTful graph management (Feature 3009049).
