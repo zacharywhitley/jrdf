@@ -200,14 +200,14 @@
         <javadoc destdir="${javadoc.dir}" author="true" version="true"
                  packagenames="org.jrdf.*"
                  sourcepath="${prod.src.dir};${gen.src.dir}"
-                 classpath="${prod.classes.dir};${lib.dir}/jackson/jackson-core-asl-1.1.1.jar;${lib.dir}/je/je-${bdbje.version}.jar;${lib.dir}/woodstox/stax2-api-1.0.1.jar;${lib.dir}/woodstox/stax2-api-3.0.2.jar;${lib.dir}/woodstox/woodstox-core-asl-4.0.8.jar;${lib.dir}/spring-rcp/swingx-0.9.3.jar;${lib.dir}/spring/spring-beans-${spring.version}.jar;${lib.dir}/spring/spring-context-${spring.version}.jar;${lib.dir}/spring/spring-core-${spring.version}.jar;${lib.dir}/spring-rcp/spring-richclient-core-1.1.0.jar;${lib.dir}/restlet/org.restlet-${restlet.version}.jar;${lib.dir}/restlet/org.restlet.ext.json_2.0-${restlet.version}.jar;${lib.dir}/restlet/org.json_2.0-${restlet.version}.jar;${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar;${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"
+                 classpath="${prod.classes.dir};${lib.dir}/jackson/jackson-core-asl-1.1.1.jar;${lib.dir}/je/je-${bdbje.version}.jar;${lib.dir}/spring-rcp/swingx-0.9.3.jar;${lib.dir}/spring/spring-beans-${spring.version}.jar;${lib.dir}/spring/spring-context-${spring.version}.jar;${lib.dir}/spring/spring-core-${spring.version}.jar;${lib.dir}/spring-rcp/spring-richclient-core-1.1.0.jar;${lib.dir}/restlet/org.restlet-${restlet.version}.jar;${lib.dir}/restlet/org.restlet.ext.json_2.0-${restlet.version}.jar;${lib.dir}/restlet/org.json_2.0-${restlet.version}.jar;${lib.dir}/restlet/org.restlet.ext.freemarker_2.3-${restlet.version}.jar;${lib.dir}/freemarker/freemarker-${freemarker.version}.jar"
                  failonerror="true"
                  additionalparam="-breakiterator" Use="true"
                  source="${java.src.version}"
                  windowtitle="${project.longname} Framework ${project.version.full}"
                  doctitle="${project.longname} Framework ${project.version.full}"
                  excludepackagenames="org.jrdf.sparqlql.parser.analysis.*org.jrdf.sparqlarql.parser.lexerorg.jrdf.sparqlarqlql.parser.noorg.jrdf.sparqlsparqlql.parser.parser.*">
-            <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
+            <link href="http://download.oracle.com/javase/6/docs/api/"/>
         </javadoc>
     </target>
 

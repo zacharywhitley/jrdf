@@ -33,7 +33,6 @@
     <orderEntry type="library" name="groovy-1.6.3" level="project" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="easymock" level="project" />
-    <orderEntry type="library" name="wstx-asl" level="project" />
     <orderEntry type="library" name="je" level="project" />
     <orderEntry type="library" name="spring-rcp" level="project" />
     <orderEntry type="library" name="restlet" level="project" />

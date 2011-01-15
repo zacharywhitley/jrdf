@@ -1,11 +1,16 @@
+General
+=======
+Original code was devoped by Paul Gearon, Andrew Newman, and Simon Raboczi.  With contributions 
+from Tom Adams, Yuan-Fang Li and Robert Turner. Licensed under Apache
+version 1.1 (see LICENSE).
+
+BTree Implementation
+====================
+The BTree implmentation (found in org.jrdf.util.btree) is from version 2.0
+of the Sesame project (http://www.openrdf.org).  Licenced under Aduna BSD Style (see 
+ADUNA-BSD.txt).
+
 RDF/XML Parser
 ==============
-Original source is from Aduna's RIO Parser (found in org.jrdf.parser).  Part of
-the Sesame project (http://www.openrdf.org).  Licenced under LGPL (see LGPL-LICENCE file).
-
-Original BTree implmentation also part of Sesame 2.0 (found in org.jrdf.graph.local.index.nodepool.sesame and
-org.jrdf.graph.local.index.nodepool.sesame).  Part of the Sesame project (http://www.openrdf.org).  Licenced under
-Apache.
-
-Original code was devoped by Paul Gearon, Andrew Newman, and Simon Raboczi.  With contributions from Tom Adams
-Yuan-Fang Li and Robert Turner.
+Aduna's RIO Parser (found in org.jrdf.parser) is from version 1.0 of the Sesame project 
+(http://www.openrdf.org).  Licenced under LGPL (see LGPL-LICENCE file).
