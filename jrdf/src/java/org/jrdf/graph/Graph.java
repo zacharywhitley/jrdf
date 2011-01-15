@@ -128,7 +128,8 @@ public interface Graph {
         throws GraphException;
 
     /**
-     * Returns all unique values of a given type.
+     * Returns all unique values of a given type.  For example, searching for BlankNodeType will return all blank nodes
+     * in the graph.
      *
      * @param type the node type can be positional (SPO) or node type (Resource, URIReference, Literal or BNode).
      * @return all unique values of a given type.
