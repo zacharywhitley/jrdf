@@ -4,7 +4,7 @@
     <property name="project.longname" value="Java RDF API"/>
     <property name="project.shortname" value="jrdf"/>
     <property name="project.version.major" value="0"/>
-    <property name="project.version.minor" value="5.6.2"/>
+    <property name="project.version.minor" value="6.0"/>
     <property name="gui.version" value="${project.version.major}.${project.version.minor}"/>
     <property name="server.version" value="${project.version.major}.${project.version.minor}"/>
     <property name="version-status" value=""/>
@@ -39,7 +39,7 @@
     <property name="compile.debuglevel" value="source,lines,vars"/>
     <property name="compile.deprecation" value="false"/>
     <property name="compile.optimize" value="true"/>
-    <property name="java.src.version" value="1.5"/>
+    <property name="java.src.version" value="1.6"/>
     <property name="web.site.url" value="http://jrdf.sourceforge.net/"/>
     <property name="unit.test.src.dir" value="${test.src.dir}"/>
     <property name="unit.test.classes.dir" value="${test.classes.dir}"/>
@@ -122,9 +122,6 @@
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.1.jar"/>
         <include name="${lib.dir}/je/je-${bdbje.version}.jar"/>
         <include name="${lib.dir}/trie/patricia-trie-0.2.jar"/>
-        <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
-        <include name="${lib.dir}/woodstox/stax2-api-3.0.2.jar"/>
-        <include name="${lib.dir}/woodstox/woodstox-core-asl-4.0.8.jar"/>
     </patternset>
 
     <patternset id="gui.production.classpath.pattern">
