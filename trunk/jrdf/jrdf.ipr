@@ -1223,6 +1223,15 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="wstx-asl">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/woodstox/stax2-api-3.0.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/woodstox/stax-api-1.0.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/woodstox/woodstox-core-asl-4.0.8.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
 </project>
 
