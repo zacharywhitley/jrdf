@@ -106,7 +106,7 @@ public class QueryModelImpl implements QueryModel {
         if (fileName.endsWith(".nt")) {
             rdfReader.parseNTriples(url.openStream());
         } else if (fileName.endsWith(".turtle")) {
-            rdfReader.parseN3(url.openStream());
+            rdfReader.parseTurtle(url.openStream());
         } else if (fileName.endsWith(".rdf")) {
             rdfReader.parseRdfXml(url.openStream());
         } else {

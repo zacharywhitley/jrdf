@@ -102,7 +102,7 @@ class LineParserTestUtil {
         }
     }
 
-    static Set<Triple> getTriplesWithReader(RDFEventReader eventReader) {
+    static Set<Triple> getTriplesWithReader(Iterator<Triple> eventReader) {
         def actualResults = new HashSet<Triple>()
         eventReader.each {
             actualResults.add(it);

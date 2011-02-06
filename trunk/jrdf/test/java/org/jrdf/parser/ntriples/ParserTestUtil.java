@@ -126,7 +126,7 @@ public class ParserTestUtil {
         Set<Triple> expectedTriples) {
         assertEquals("Wrong number of triples returned: Expected: " + expectedFile + ", Result " + actualFile,
             expectedTriples.size(), resultTriples.size());
-        int noTriples = findNumberOfEqualTriples(expectedTriples, resultTriples);
+        int noTriples = findNumberOfEqualTriples(resultTriples, expectedTriples);
         assertEquals("Invalid result for positive test.  Expected: " + expectedFile + ", Result " + actualFile + ". " +
             "Should contain: " + expectedTriples + " but was: " + resultTriples, expectedTriples.size(), noTriples);
     }
@@ -178,11 +178,11 @@ public class ParserTestUtil {
      * @throws Exception if anything goes wrong.
      */
     public static void checkGraph(Set<Triple> expectedTriples, Set<Triple> actualTriples) throws Exception {
-        int numberFound = findNumberOfEqualTriples(actualTriples, expectedTriples);
+        int numberFound = findNumberOfEqualTriples(expectedTriples, actualTriples);
         assertEquals(expectedTriples.size(), numberFound);
     }
 
-    public static int findNumberOfEqualTriples(Set<Triple> actualTriples, Set<Triple> expectedTriples) {
+    public static int findNumberOfEqualTriples(Set<Triple> expectedTriples, Set<Triple> actualTriples) {
         assertEquals("Wrong number of triples returned", expectedTriples.size(), actualTriples.size());
         int numberFound = 0;
         for (Triple tripleToFind : expectedTriples) {
