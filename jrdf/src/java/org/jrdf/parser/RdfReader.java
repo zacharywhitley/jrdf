@@ -105,11 +105,11 @@ public final class RdfReader {
         return graph;
     }
 
-    public Graph parseN3(final File file) {
-        return parseN3(getInputStream(file));
+    public Graph parseTurtle(final File file) {
+        return parseTurtle(getInputStream(file));
     }
 
-    public Graph parseN3(final InputStream stream) {
+    public Graph parseTurtle(final InputStream stream) {
         final LineHandler lineHandler = n3Factory.createParser(graph, mapFactory);
         final GraphLineParser lineParser = new GraphLineParser(graph, lineHandler);
         tryParse(lineParser, stream);

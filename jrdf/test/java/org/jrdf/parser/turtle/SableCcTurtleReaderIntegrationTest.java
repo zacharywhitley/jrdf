@@ -78,15 +78,20 @@ import org.jrdf.parser.turtle.parser.parser.ParserException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Scanner;
 import java.util.Set;
 
 import static java.net.URI.create;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
+import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
 
 public class SableCcTurtleReaderIntegrationTest {
     private static final String TEST_DATA = "org/jrdf/parser/turtle/test.n3";
@@ -108,7 +113,9 @@ public class SableCcTurtleReaderIntegrationTest {
     @Test
     public void parseFile() throws Exception {
         final InputStream input = getSampleData(getClass(), TEST_DATA);
-        getActualTriples(input);
+        final Set<Triple> expectedTriples = standardTestWithN3();
+        final Set<Triple> actualTriples = getActualTriples(input);
+        //assertThat(actualTriples, equalTo(expectedTriples));
     }
 
     @Test
@@ -125,8 +132,9 @@ public class SableCcTurtleReaderIntegrationTest {
             // 29 looks like it's an invalid URI.
             if (i != 29) {
                 String fileName = "test-" + String.format("%02d", i);
-                getActualTriplesFromZip(fileName);
-                final Set<Triple> actualResults = getExpectedTriples(fileName);
+                final Set<Triple> actualTriples = getActualTriplesFromZip(fileName);
+                final Set<Triple> expectedTriples = getExpectedTriples(fileName);
+                assertThat("For test " + i, actualTriples, equalTo(expectedTriples));
             }
         }
     }
@@ -153,10 +161,10 @@ public class SableCcTurtleReaderIntegrationTest {
         }
     }
 
-    private void getActualTriplesFromZip(String fileName) throws Exception {
+    private Set<Triple> getActualTriplesFromZip(String fileName) throws Exception {
         final InputStream input = getSampleData(getClass(), TEST_ZIP_FILE, fileName + ".ttl");
         try {
-            getActualTriples(input);
+            return getActualTriples(input);
         } finally {
             input.close();
         }
@@ -178,7 +186,7 @@ public class SableCcTurtleReaderIntegrationTest {
         final InputStream expectedOutput = getSampleData(getClass(), TEST_ZIP_FILE, fileName + ".out");
         try {
             final RDFEventReader eventReader = NTRIPLES_RDF_INPUT_FACTORY.createRDFEventReader(expectedOutput,
-                create("foo"), NEW_GRAPH);
+                    create("foo"), NEW_GRAPH);
             return LineParserTestUtil.getTriplesWithReader(eventReader);
         } finally {
             expectedOutput.close();

@@ -82,7 +82,10 @@ public class PrefixParserImpl implements PrefixParser {
         final RegexMatcher prefixMatcher = regexMatcherFactory.createMatcher(PREFIX_REGEX, line);
         final boolean matched = prefixMatcher.matches();
         if (matched) {
-            final String prefix = prefixMatcher.group(PREFIX_GROUP);
+            String prefix = prefixMatcher.group(PREFIX_GROUP);
+            if (prefix == null) {
+                prefix = "";
+            }
             final String uri = prefixMatcher.group(URI_GROUP);
             listener.handleNamespace(prefix, uri);
         } else {
