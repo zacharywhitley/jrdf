@@ -99,14 +99,14 @@ public class NTriplesEventReaderFactory implements RDFEventReaderFactory {
         init(graph);
         final TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, blankNodeParser,
             regexTripleFactory);
-        return new RDFEventReaderImpl(stream, baseURI, new NTriplesFormatParser(new TriplesParserImpl(tripleParser)));
+        return new RDFEventReaderImpl(stream, new NTriplesFormatParser(new TriplesParserImpl(tripleParser)));
     }
 
     public RDFEventReader createRDFEventReader(final Reader reader, final URI baseURI, final Graph graph) {
         init(graph);
         final TripleParser tripleParser = new TripleParserImpl(REGEX_MATCHER_FACTORY, blankNodeParser,
             regexTripleFactory);
-        return new RDFEventReaderImpl(reader, baseURI, new NTriplesFormatParser(new TriplesParserImpl(tripleParser)));
+        return new RDFEventReaderImpl(reader, new NTriplesFormatParser(new TriplesParserImpl(tripleParser)));
     }
 
     private void init(final Graph graph) {

@@ -65,7 +65,6 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFEventReaderFactory;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
@@ -90,7 +89,7 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
         try {
             final Set<Triple> expectedTriples = standardTest();
             final Set<Triple> actualResults = getTriplesWithReader(eventReader);
-            checkGraph(expectedTriples, actualResults);
+            ParserTestUtil.findNumberOfEqualTriples(expectedTriples, actualResults);
         } finally {
             eventReader.close();
         }

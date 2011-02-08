@@ -65,13 +65,13 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFEventReaderFactory;
 import static org.jrdf.parser.line.LineParserTestUtil.addStandardValuesToGraph;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 import static org.jrdf.parser.line.LineParserTestUtil.parseNTriplesFile;
 import org.jrdf.parser.ntriples.NTriplesEventReaderFactory;
+import org.jrdf.parser.ntriples.ParserTestUtil;
 import org.jrdf.writer.RdfWriter;
 
 import java.io.IOException;
@@ -120,7 +120,7 @@ public class NTriplesWriterIntegrationTest extends TestCase {
     public void testRoundTriple() throws Exception {
         final Set<Triple> expectedResults = expectedResults();
         final Set<Triple> actualResults = getActualResults();
-        checkGraph(expectedResults, actualResults);
+        ParserTestUtil.findNumberOfEqualTriples(expectedResults, actualResults);
     }
 
     private Set<Triple> expectedResults() throws IOException {

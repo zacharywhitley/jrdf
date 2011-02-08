@@ -75,9 +75,9 @@ import java.util.regex.Pattern;
 
 public class NamespaceAwareTripleParser implements TripleParser {
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(<(.+?)>|((.+?):(.+?))|_:(.+?))\\p{Blank}+" +
-        "(<(.+?)>|((.+?):(.+?)))\\p{Blank}+" +
-        "(<(.+?)>|((.+?):(.+?))|_:(.+?)|(.+?))\\p{Blank}*\\.\\p{Blank}*");
+        "(<(.+?)>|((.*?):(.+?))|_:(.+?))\\p{Blank}+" +
+        "(<(.+?)>|((.*?):(.+?)))\\p{Blank}+" +
+        "(<(.+?)>|((.*?):(.+?))|_:(.+?)|(.+?))\\p{Blank}*\\.\\p{Blank}*");
     private static final int SUBJECT_GROUP = 1;
     private static final int PREDICATE_GROUP = 7;
     private static final int OBJECT_GROUP = 12;
