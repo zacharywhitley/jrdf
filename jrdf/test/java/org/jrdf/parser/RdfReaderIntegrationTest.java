@@ -87,6 +87,6 @@ public class RdfReaderIntegrationTest {
     public void readingFromN3() throws Exception {
         final InputStream in = getSampleData(this.getClass(), "org/jrdf/parser/turtle/test.n3");
         Graph graph = new RdfReader().parseTurtle(in);
-        assertThat(graph.getNumberOfTriples(), is(35L));
+        assertThat(graph.getNumberOfTriples(), is(36L));
     }
 }

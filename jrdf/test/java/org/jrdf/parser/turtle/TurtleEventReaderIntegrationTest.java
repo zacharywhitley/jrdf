@@ -67,9 +67,10 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.NamespaceListenerImpl;
-import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFEventReaderFactory;
+import org.jrdf.parser.ntriples.ParserTestUtil;
+
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 import static org.jrdf.parser.line.LineParserTestUtil.getTriplesWithReader;
 import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
@@ -94,7 +95,7 @@ public class TurtleEventReaderIntegrationTest extends TestCase {
         try {
             final Set<Triple> expectedTriples = standardTestWithN3();
             final Set<Triple> actualResults = getTriplesWithReader(eventReader);
-            checkGraph(expectedTriples, actualResults);
+            ParserTestUtil.findNumberOfEqualTriples(expectedTriples, actualResults);
         } finally {
             eventReader.close();
         }

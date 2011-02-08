@@ -77,21 +77,21 @@ public class NamespaceAwareNodeMaps implements NodeMaps {
      * Pattern for Subject in N3 triple pattern.
      */
     public static final Pattern SUBJECT_REGEX = compile(
-        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
+        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?)?:(\\p{Alpha}[\\x20-\\x7E]*?))" +
             "|_:(\\p{Alpha}[\\x20-\\x7E]*?))");
 
     /**
      * Pattern for Predicate in N3 triple pattern.
      */
     public static final Pattern PREDICATE_REGEX = compile(
-        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))" +
+        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?)?:([\\x20-\\x7E]*?))" +
             "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
 
     /**
      * Pattern for Object in N3 triple pattern.
      */
     public static final Pattern OBJECT_REGEX = compile(
-        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?):(\\p{Alpha}[\\x20-\\x7E]*?))" +
+        "(<([\\x20-\\x7E]+?)>||((\\p{Alpha}[\\x20-\\x7E]*?)?:(\\p{Alpha}[\\x20-\\x7E]*?))" +
             "|_:(\\p{Alpha}[\\x20-\\x7E]*?)|([\\x20-\\x7E]+?))");
     private static final int URI_GROUP = 2;
     private static final int NS_LOCAL_NAME_GROUP = 3;

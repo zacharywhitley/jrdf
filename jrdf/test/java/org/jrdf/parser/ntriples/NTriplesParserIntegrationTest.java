@@ -64,7 +64,6 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 import static org.jrdf.parser.line.LineParserTestUtil.parseNTriplesFile;
 import static org.jrdf.parser.line.LineParserTestUtil.standardTest;
@@ -105,14 +104,14 @@ public class NTriplesParserIntegrationTest extends TestCase {
     public void testStandardTest() throws Exception {
         final Set<Triple> expectedResults = standardTest();
         final Set<Triple> actualResults = getResults(TEST_DATA);
-        checkGraph(expectedResults, actualResults);
+        ParserTestUtil.findNumberOfEqualTriples(expectedResults, actualResults);
     }
 
     public void testPositiveTests() throws Exception {
         for (final String fileName : POSITIVE_TESTS.keySet()) {
             final Set<Triple> expectedResults = getResults(POSITIVE_TESTS.get(fileName));
             final Set<Triple> actualResults = getResults(fileName);
-            checkGraph(expectedResults, actualResults);
+            ParserTestUtil.findNumberOfEqualTriples(expectedResults, actualResults);
         }
     }
 

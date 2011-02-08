@@ -76,7 +76,7 @@ import static java.util.regex.Pattern.compile;
 public final class NamespaceAwareQNameParserImpl implements NamespaceAwareQNameParser {
     private static final int PREFIX_GROUP = 2;
     private static final int LOCAL_GROUP = 3;
-    private static final Pattern REGEX = compile("((\\p{Alpha}[\\x20-\\x7E]*?):([\\x20-\\x7E]*?))");
+    private static final Pattern REGEX = compile("((\\p{Alpha}[\\x20-\\x7E]*?)?:([\\x20-\\x7E]*?))");
     private final GraphElementFactory graphElementFactory;
     private final NTripleUtil nTripleUtil;
     private final NamespaceListener listener;
@@ -106,7 +106,11 @@ public final class NamespaceAwareQNameParserImpl implements NamespaceAwareQNameP
     public URIReference parseURIReferenceWithNamespace(String s) throws ParseException {
         final RegexMatcher regexMatcher = matcherFactory.createMatcher(REGEX, s);
         if (regexMatcher.matches()) {
-            final String fullURI = listener.getFullURI(regexMatcher.group(PREFIX_GROUP));
+            String prefix = regexMatcher.group(PREFIX_GROUP);
+            if (prefix == null) {
+                prefix = "";
+            }
+            final String fullURI = listener.getFullURI(prefix);
             final String local = regexMatcher.group(LOCAL_GROUP);
             return parseURIReference(fullURI + local);
         } else {

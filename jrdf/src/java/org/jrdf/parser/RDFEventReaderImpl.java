@@ -67,22 +67,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
-import java.net.URI;
 import java.util.NoSuchElementException;
 
 public class RDFEventReaderImpl implements RDFEventReader {
     private final LineNumberReader bufferedReader;
-    private final URI baseURI;
     private Triple nextTriple;
     private FormatParser formatParser;
 
-    public RDFEventReaderImpl(final InputStream in, final URI newBaseURI, final FormatParser newFormatParser) {
-        this(new InputStreamReader(in), newBaseURI, newFormatParser);
+    public RDFEventReaderImpl(final InputStream in, final FormatParser newFormatParser) {
+        this(new InputStreamReader(in), newFormatParser);
     }
 
-    public RDFEventReaderImpl(final Reader reader, final URI newBaseURI, final FormatParser newFormatParser) {
+    public RDFEventReaderImpl(final Reader reader, final FormatParser newFormatParser) {
         bufferedReader = new LineNumberReader(reader);
-        baseURI = newBaseURI;
         formatParser = newFormatParser;
         parseNext();
     }

@@ -191,8 +191,12 @@ class LineParserTestUtil {
 
     static def addN3ValuesToGraph(Graph newGraph) {
         def rdf = new RdfBuilder(newGraph)
-        rdf.namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
-        rdf."_:references1" "rdf:type": "rdf:Bag"
-        rdf."_:references1" "rdf:_1": "<http://localhost/misc/UnknownDocument>"
+        rdf.with {
+            namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+            namespace("test", "http://test#")
+            "_:references1" "rdf:type": "rdf:Bag"
+            "_:references1" "rdf:_1": "<http://localhost/misc/UnknownDocument>"
+            "test:Test" "test:Test": "test:Test"
+        }
     }
 }

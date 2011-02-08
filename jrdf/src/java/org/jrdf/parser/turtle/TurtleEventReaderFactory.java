@@ -110,7 +110,7 @@ public class TurtleEventReaderFactory implements RDFEventReaderFactory {
         final DirectiveParser directiveParser = new DirectiveParserImpl(REGEX_MATCHER_FACTORY, prefixParser,
             baseParser);
         final FormatParser parser = new TurtleFormatParser(triplesParser, directiveParser);
-        return new RDFEventReaderImpl(stream, baseURI, parser);
+        return new RDFEventReaderImpl(stream, parser);
     }
 
     public RDFEventReader createRDFEventReader(final Reader reader, final URI baseURI, final Graph graph) {
@@ -120,7 +120,7 @@ public class TurtleEventReaderFactory implements RDFEventReaderFactory {
         final DirectiveParser directiveParser = new DirectiveParserImpl(REGEX_MATCHER_FACTORY, prefixParser,
             baseParser);
         final FormatParser parser = new TurtleFormatParser(triplesParser, directiveParser);
-        return new RDFEventReaderImpl(reader, baseURI, parser);
+        return new RDFEventReaderImpl(reader, parser);
     }
 
     private TripleParser init(final Graph graph) {

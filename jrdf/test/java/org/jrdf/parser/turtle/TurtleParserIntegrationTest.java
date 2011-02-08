@@ -64,6 +64,7 @@ import org.jrdf.collection.MapFactory;
 import org.jrdf.collection.MemMapFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
+import org.jrdf.parser.ntriples.ParserTestUtil;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -72,7 +73,6 @@ import java.util.Set;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 import static org.jrdf.parser.line.LineParserTestUtil.parseN3File;
 import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
-import static org.jrdf.parser.ntriples.ParserTestUtil.checkGraph;
 
 public class TurtleParserIntegrationTest {
     private static final String GOOD_NTRIPLE_FILE = "org/jrdf/parser/turtle/test.n3";
@@ -86,7 +86,7 @@ public class TurtleParserIntegrationTest {
         try {
             final Set<Triple> expectedTriples = standardTestWithN3();
             final Set<Triple> actualResults = parseN3File(input, NEW_GRAPH, CREATOR);
-            checkGraph(expectedTriples, actualResults);
+            ParserTestUtil.findNumberOfEqualTriples(expectedTriples, actualResults);
         } finally {
             input.close();
         }
