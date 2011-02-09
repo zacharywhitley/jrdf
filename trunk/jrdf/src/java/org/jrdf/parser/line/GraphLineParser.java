@@ -72,7 +72,7 @@ import java.io.Reader;
 // TODO (AN) Can this be made more generic by parsing in a configurable parser instead?
 
 /**
- * An line parser (N3 or NTriples) that adds every triple encountered to a Graph.
+ * An line parser (Turtle or NTriples) that adds every triple encountered to a Graph.
  *
  * @author Andrew Newman
  * @version $Revision: 544 $

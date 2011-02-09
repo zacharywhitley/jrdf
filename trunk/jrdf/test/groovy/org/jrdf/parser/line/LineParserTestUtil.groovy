@@ -66,7 +66,7 @@ import org.jrdf.collection.MapFactory
 import org.jrdf.graph.Graph
 import org.jrdf.graph.Triple
 import org.jrdf.parser.GraphStatementHandler
-import org.jrdf.parser.RDFEventReader
+
 import org.jrdf.parser.ntriples.NTriplesParserFactory
 import org.jrdf.parser.turtle.TurtleParserFactory
 import org.jrdf.util.test.RdfBuilder
@@ -116,7 +116,7 @@ class LineParserTestUtil {
         return parseFile(ntriplesParser, input, graph)
     }
 
-    static Set<Triple> parseN3File(InputStream input, Graph graph, MapFactory mapFactory) {
+    static Set<Triple> parseTurtleFile(InputStream input, Graph graph, MapFactory mapFactory) {
         def parserFactory = new TurtleParserFactory()
         def ntriplesParser = parserFactory.createParser(graph, mapFactory)
         return parseFile(ntriplesParser, input, graph)
@@ -133,10 +133,10 @@ class LineParserTestUtil {
         return actualResults
     }
 
-    static Set<Triple> standardTestWithN3() {
+    static Set<Triple> standardTestWithTurtle() {
         Graph newGraph = TestJRDFFactory.getFactory().getGraph()
         addStandardValuesToGraph(newGraph)
-        addN3ValuesToGraph(newGraph)
+        addTurtleValuesToGraph(newGraph)
         Set<Triple> answers = new HashSet<Triple>()
         newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).each {
             answers.add(it)
@@ -189,7 +189,7 @@ class LineParserTestUtil {
         }
     }
 
-    static def addN3ValuesToGraph(Graph newGraph) {
+    static def addTurtleValuesToGraph(Graph newGraph) {
         def rdf = new RdfBuilder(newGraph)
         rdf.with {
             namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#")

@@ -71,8 +71,8 @@ import java.io.InputStream;
 import java.util.Set;
 
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
-import static org.jrdf.parser.line.LineParserTestUtil.parseN3File;
-import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
+import static org.jrdf.parser.line.LineParserTestUtil.parseTurtleFile;
+import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithTurtle;
 
 public class TurtleParserIntegrationTest {
     private static final String GOOD_NTRIPLE_FILE = "org/jrdf/parser/turtle/test.n3";
@@ -84,8 +84,8 @@ public class TurtleParserIntegrationTest {
     public void successfullyParseNTriplesFile() throws Exception {
         final InputStream input = getSampleData(getClass(), GOOD_NTRIPLE_FILE);
         try {
-            final Set<Triple> expectedTriples = standardTestWithN3();
-            final Set<Triple> actualResults = parseN3File(input, NEW_GRAPH, CREATOR);
+            final Set<Triple> expectedTriples = standardTestWithTurtle();
+            final Set<Triple> actualResults = parseTurtleFile(input, NEW_GRAPH, CREATOR);
             ParserTestUtil.findNumberOfEqualTriples(expectedTriples, actualResults);
         } finally {
             input.close();
