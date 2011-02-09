@@ -82,7 +82,7 @@ import java.io.InputStream;
  */
 public final class RdfReader {
     private LineHandlerFactory ntriplesFactory = new NTriplesParserFactory();
-    private LineHandlerFactory n3Factory = new TurtleParserFactory();
+    private LineHandlerFactory turtleFactory = new TurtleParserFactory();
     private Graph graph = MemoryJRDFFactory.getFactory().getGraph();
     private MapFactory mapFactory = new MemMapFactory();
 
@@ -110,7 +110,7 @@ public final class RdfReader {
     }
 
     public Graph parseTurtle(final InputStream stream) {
-        final LineHandler lineHandler = n3Factory.createParser(graph, mapFactory);
+        final LineHandler lineHandler = turtleFactory.createParser(graph, mapFactory);
         final GraphLineParser lineParser = new GraphLineParser(graph, lineHandler);
         tryParse(lineParser, stream);
         return graph;

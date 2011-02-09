@@ -73,7 +73,7 @@ import org.jrdf.parser.ntriples.ParserTestUtil;
 
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
 import static org.jrdf.parser.line.LineParserTestUtil.getTriplesWithReader;
-import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
+import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithTurtle;
 
 import java.io.InputStream;
 import static java.net.URI.create;
@@ -93,7 +93,7 @@ public class TurtleEventReaderIntegrationTest extends TestCase {
         final RDFEventReader eventReader = TURTLE_RDF_INPUT_FACTORY.createRDFEventReader(input, create("foo"),
             NEW_GRAPH);
         try {
-            final Set<Triple> expectedTriples = standardTestWithN3();
+            final Set<Triple> expectedTriples = standardTestWithTurtle();
             final Set<Triple> actualResults = getTriplesWithReader(eventReader);
             ParserTestUtil.findNumberOfEqualTriples(expectedTriples, actualResults);
         } finally {

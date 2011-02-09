@@ -93,8 +93,8 @@ public class NamespaceAwareTripleParser implements TripleParser {
         tripleParser = newTripleParser;
     }
 
-    // This is a duplicate with TripleParserImpl - but it will stop being a duplicate when all the features of N3 are
-    // implemented (such as blank nodes, short hand for predicates, etc).
+    // This is a duplicate with TripleParserImpl - but it will stop being a duplicate when all the features of
+    // Turtle are implemented (such as blank nodes, short hand for predicates, etc).
     public Triple parseTriple(final CharSequence line) {
         try {
             final RegexMatcher regexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);

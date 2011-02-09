@@ -87,7 +87,7 @@ import static java.net.URI.create;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.jrdf.parser.line.LineParserTestUtil.getSampleData;
-import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithN3;
+import static org.jrdf.parser.line.LineParserTestUtil.standardTestWithTurtle;
 
 public class SableCcTurtleReaderIntegrationTest {
     private static final String TEST_DATA = "org/jrdf/parser/turtle/test.n3";
@@ -109,7 +109,7 @@ public class SableCcTurtleReaderIntegrationTest {
     @Test
     public void parseFile() throws Exception {
         final InputStream input = getSampleData(getClass(), TEST_DATA);
-        final Set<Triple> expectedTriples = standardTestWithN3();
+        final Set<Triple> expectedTriples = standardTestWithTurtle();
         final Set<Triple> actualTriples = getActualTriples(input);
         //assertThat(actualTriples, equalTo(expectedTriples));
     }
